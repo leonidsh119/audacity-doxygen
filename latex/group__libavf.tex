@@ -1,0 +1,43 @@
+\hypertarget{group__libavf}{}\section{I/O and Muxing/\+Demuxing Library}
+\label{group__libavf}\index{I/\+O and Muxing/\+Demuxing Library@{I/\+O and Muxing/\+Demuxing Library}}
+\subsection*{Modules}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{group__lavf__decoding}{Demuxing}
+\item 
+\hyperlink{group__lavf__encoding}{Muxing}
+\item 
+\hyperlink{group__lavf__io}{I/\+O Read/\+Write}
+\item 
+\hyperlink{group__lavf__codec}{Demuxers}
+\item 
+\hyperlink{group__lavf__protos}{I/\+O Protocols}
+\item 
+\hyperlink{group__lavf__internal}{Internal}
+\item 
+\hyperlink{group__metadata__api}{Public Metadata A\+PI}
+\item 
+\hyperlink{group__lavf__core}{Core functions}
+\item 
+\hyperlink{group__lavf__misc}{Utility functions}
+\end{DoxyCompactItemize}
+\subsection*{Files}
+\begin{DoxyCompactItemize}
+\item 
+file \hyperlink{avformat_8h}{avformat.\+h}
+\item 
+file \hyperlink{ffmpeg_2libavformat_2version_8h}{version.\+h}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Libavformat (lavf) is a library for dealing with various media container formats. Its main two purposes are demuxing -\/ i.\+e. splitting a media file into component streams, and the reverse process of muxing -\/ writing supplied data in a specified container format. It also has an \hyperlink{group__lavf__io}{I/O module} which supports a number of protocols for accessing the data (e.\+g. file, tcp, http and others). Before using lavf, you need to call \hyperlink{group__lavf__core_ga917265caec45ef5a0646356ed1a507e3}{av\+\_\+register\+\_\+all()} to register all compiled muxers, demuxers and protocols. Unless you are absolutely sure you won\textquotesingle{}t use libavformat\textquotesingle{}s network capabilities, you should also call \hyperlink{group__lavf__core_ga84542023693d61e8564c5d457979c932}{avformat\+\_\+network\+\_\+init()}.
+
+A supported input format is described by an \hyperlink{struct_a_v_input_format}{A\+V\+Input\+Format} struct, conversely an output format is described by \hyperlink{struct_a_v_output_format}{A\+V\+Output\+Format}. You can iterate over all registered input/output formats using the \hyperlink{group__lavf__core_ga5a9e27c9e2b04abcf6ed2e0f9b68da4f}{av\+\_\+iformat\+\_\+next()} / \hyperlink{group__lavf__core_ga9c169031f490901218b1e6bcd9993967}{av\+\_\+oformat\+\_\+next()} functions. The protocols layer is not part of the public A\+PI, so you can only get the names of supported protocols with the \hyperlink{avio_8h_a50fda7362db877e8b9e493650c9e3fb3}{avio\+\_\+enum\+\_\+protocols()} function.
+
+Main lavf structure used for both muxing and demuxing is \hyperlink{struct_a_v_format_context}{A\+V\+Format\+Context}, which exports all information about the file being read or written. As with most Libavformat structures, its size is not part of public A\+BI, so it cannot be allocated on stack or directly with \hyperlink{group__lavu__mem_gacbca30ebc510a7e4156d66e7aceb2dc8}{av\+\_\+malloc()}. To create an \hyperlink{struct_a_v_format_context}{A\+V\+Format\+Context}, use \hyperlink{group__lavf__core_gac7a91abf2f59648d995894711f070f62}{avformat\+\_\+alloc\+\_\+context()} (some functions, like \hyperlink{group__lavf__decoding_ga10a404346c646e4ab58f4ed798baca32}{avformat\+\_\+open\+\_\+input()} might do that for you).
+
+Most importantly an \hyperlink{struct_a_v_format_context}{A\+V\+Format\+Context} contains\+: \begin{DoxyItemize}
+\item the \hyperlink{struct_a_v_format_context_a78efc5a53c21c8d81197445207ac4374}{input} or \hyperlink{struct_a_v_format_context_a20d80ac07e38ff5c268d15aaf2798b98}{output} format. It is either autodetected or set by user for input; always set by user for output. \item an \hyperlink{struct_a_v_format_context_acfefb6b6cf21e87a0dcbd1a547ba2348}{array} of A\+V\+Streams, which describe all elementary streams stored in the file. A\+V\+Streams are typically referred to using their index in this array. \item an \hyperlink{struct_a_v_format_context_a1e7324262b6b78522e52064daaa7bc87}{I/O context}. It is either opened by lavf or set by user for input, always set by user for output (unless you are dealing with an A\+V\+F\+M\+T\+\_\+\+N\+O\+F\+I\+LE format).\end{DoxyItemize}
+\hypertarget{group__libavf_lavf_options}{}\subsection{Passing options to (de)muxers}\label{group__libavf_lavf_options}
+Lavf allows to configure muxers and demuxers using the \hyperlink{group__avoptions}{A\+V\+Options} mechanism. Generic (format-\/independent) libavformat options are provided by \hyperlink{struct_a_v_format_context}{A\+V\+Format\+Context}, they can be examined from a user program by calling \hyperlink{group__avoptions_ga78edbb7da1fdc8626d8a52f8ab7e7a0c}{av\+\_\+opt\+\_\+next()} / \hyperlink{group__avoptions_gae31ae7fb20113b00108d0ecf53f25664}{av\+\_\+opt\+\_\+find()} on an allocated \hyperlink{struct_a_v_format_context}{A\+V\+Format\+Context} (or its \hyperlink{struct_a_v_class}{A\+V\+Class} from \hyperlink{group__lavf__core_ga6030789ce395ef543306bbe933619749}{avformat\+\_\+get\+\_\+class()}). Private (format-\/specific) options are provided by \hyperlink{struct_a_v_format_context_ac4c0777e54085af2f3f1b27130e2b21b}{A\+V\+Format\+Context.\+priv\+\_\+data} if and only if \hyperlink{struct_a_v_input_format_afaac829559ad9e07618c01a51d8a4c5f}{A\+V\+Input\+Format.\+priv\+\_\+class} / \hyperlink{struct_a_v_output_format_ae030463c5c08de99f8c9e727c822ca87}{A\+V\+Output\+Format.\+priv\+\_\+class} of the corresponding format struct is non-\/\+N\+U\+LL. Further options may be provided by the \hyperlink{struct_a_v_format_context_a1e7324262b6b78522e52064daaa7bc87}{I/O context}, if its \hyperlink{struct_a_v_class}{A\+V\+Class} is non-\/\+N\+U\+LL, and the protocols layer. See the discussion on nesting in \hyperlink{group__avoptions}{A\+V\+Options} documentation to learn how to access those. 

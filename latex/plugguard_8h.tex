@@ -1,0 +1,85 @@
+\hypertarget{plugguard_8h}{}\section{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/libvamp/vamp-\/sdk/plugguard.h File Reference}
+\label{plugguard_8h}\index{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/libvamp/vamp-\/sdk/plugguard.\+h@{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/libvamp/vamp-\/sdk/plugguard.\+h}}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{plugguard_8h_a3bf4e97f131677e5e1505a7a9582d68a}{\+\_\+\+V\+A\+M\+P\+\_\+\+I\+N\+\_\+\+P\+L\+U\+G\+I\+N\+S\+DK}~1
+\item 
+\#define \hyperlink{plugguard_8h_a9b7a8e1ac1c91366bec5f2f33c137a2f}{V\+A\+M\+P\+\_\+\+S\+D\+K\+\_\+\+V\+E\+R\+S\+I\+ON}~\char`\"{}2.\+5\char`\"{}
+\item 
+\#define \hyperlink{plugguard_8h_ab5f7da6acf45065a6c7b7cd38a0bf588}{V\+A\+M\+P\+\_\+\+S\+D\+K\+\_\+\+M\+A\+J\+O\+R\+\_\+\+V\+E\+R\+S\+I\+ON}~2
+\item 
+\#define \hyperlink{plugguard_8h_ad5eef1e2154b42769cd642d2a1d42257}{V\+A\+M\+P\+\_\+\+S\+D\+K\+\_\+\+M\+I\+N\+O\+R\+\_\+\+V\+E\+R\+S\+I\+ON}~5
+\item 
+\#define \hyperlink{plugguard_8h_a1a2724ea453971288d3218e4eab3072c}{\+\_\+\+V\+A\+M\+P\+\_\+\+S\+D\+K\+\_\+\+P\+L\+U\+G\+S\+P\+A\+C\+E\+\_\+\+B\+E\+G\+IN}(h)~namespace \+\_\+\+Vamp\+Plugin \{
+\item 
+\#define \hyperlink{plugguard_8h_ac879bb1077ecc6132ea3581ef9033753}{\+\_\+\+V\+A\+M\+P\+\_\+\+S\+D\+K\+\_\+\+P\+L\+U\+G\+S\+P\+A\+C\+E\+\_\+\+E\+ND}(h)
+\end{DoxyCompactItemize}
+
+
+\subsection{Macro Definition Documentation}
+\index{plugguard.\+h@{plugguard.\+h}!\+\_\+\+V\+A\+M\+P\+\_\+\+I\+N\+\_\+\+P\+L\+U\+G\+I\+N\+S\+DK@{\+\_\+\+V\+A\+M\+P\+\_\+\+I\+N\+\_\+\+P\+L\+U\+G\+I\+N\+S\+DK}}
+\index{\+\_\+\+V\+A\+M\+P\+\_\+\+I\+N\+\_\+\+P\+L\+U\+G\+I\+N\+S\+DK@{\+\_\+\+V\+A\+M\+P\+\_\+\+I\+N\+\_\+\+P\+L\+U\+G\+I\+N\+S\+DK}!plugguard.\+h@{plugguard.\+h}}
+\subsubsection[{\texorpdfstring{\+\_\+\+V\+A\+M\+P\+\_\+\+I\+N\+\_\+\+P\+L\+U\+G\+I\+N\+S\+DK}{_VAMP_IN_PLUGINSDK}}]{\setlength{\rightskip}{0pt plus 5cm}\#define \+\_\+\+V\+A\+M\+P\+\_\+\+I\+N\+\_\+\+P\+L\+U\+G\+I\+N\+S\+DK~1}\hypertarget{plugguard_8h_a3bf4e97f131677e5e1505a7a9582d68a}{}\label{plugguard_8h_a3bf4e97f131677e5e1505a7a9582d68a}
+Normal usage should be\+:
+
+
+\begin{DoxyItemize}
+\item Plugins include \hyperlink{libvamp_2vamp-sdk_2plugin_8h}{vamp-\/sdk/\+Plugin.\+h} or \hyperlink{vamp-sdk_2_plugin_base_8h}{vamp-\/sdk/\+Plugin\+Base.\+h}. These files include this header, which specifies an appropriate namespace for the plugin classes to avoid any risk of conflict with non-\/plugin class implementations in the host on load.
+\item Hosts include \hyperlink{libvamp_2vamp-hostsdk_2plugin_8h}{vamp-\/hostsdk/\+Plugin.\+h}, \hyperlink{vamp-hostsdk_2_plugin_base_8h}{vamp-\/hostsdk/\+Plugin\+Base.\+h}, vamp-\/hostsdk/\+Plugin\+Host\+Adapter, \hyperlink{_plugin_loader_8h}{vamp-\/hostsdk/\+Plugin\+Loader.\+h} etc. These files include \hyperlink{hostguard_8h}{vamp-\/hostsdk/hostguard.\+h}, which makes a note that we are in a host. A file such as \hyperlink{libvamp_2vamp-hostsdk_2plugin_8h}{vamp-\/hostsdk/\+Plugin.\+h} then simply includes \hyperlink{libvamp_2vamp-sdk_2plugin_8h}{vamp-\/sdk/\+Plugin.\+h}, and this guard header takes notice of the fact that it has been included from a host and leaves the plugin namespace unset.
+\end{DoxyItemize}
+
+Problems will occur when a host includes files directly from the vamp-\/sdk directory. There are two reasons this might happen\+: mistake, perhaps owing to ignorance of the fact that this isn\textquotesingle{}t allowed (particularly since it was the normal mechanism in v1 of the S\+DK); and a wish to incorporate plugin code directly into the host rather than having to load it.
+
+What if the host does include a vamp-\/sdk header by mistake? We can catch it if it\textquotesingle{}s included before something from vamp-\/hostsdk. If it\textquotesingle{}s included after something from vamp-\/hostsdk, it will work OK anyway. The remaining problem case is where nothing from vamp-\/hostsdk is included in the same file. We can\textquotesingle{}t catch that. 
+
+Definition at line 72 of file plugguard.\+h.
+
+\index{plugguard.\+h@{plugguard.\+h}!\+\_\+\+V\+A\+M\+P\+\_\+\+S\+D\+K\+\_\+\+P\+L\+U\+G\+S\+P\+A\+C\+E\+\_\+\+B\+E\+G\+IN@{\+\_\+\+V\+A\+M\+P\+\_\+\+S\+D\+K\+\_\+\+P\+L\+U\+G\+S\+P\+A\+C\+E\+\_\+\+B\+E\+G\+IN}}
+\index{\+\_\+\+V\+A\+M\+P\+\_\+\+S\+D\+K\+\_\+\+P\+L\+U\+G\+S\+P\+A\+C\+E\+\_\+\+B\+E\+G\+IN@{\+\_\+\+V\+A\+M\+P\+\_\+\+S\+D\+K\+\_\+\+P\+L\+U\+G\+S\+P\+A\+C\+E\+\_\+\+B\+E\+G\+IN}!plugguard.\+h@{plugguard.\+h}}
+\subsubsection[{\texorpdfstring{\+\_\+\+V\+A\+M\+P\+\_\+\+S\+D\+K\+\_\+\+P\+L\+U\+G\+S\+P\+A\+C\+E\+\_\+\+B\+E\+G\+IN}{_VAMP_SDK_PLUGSPACE_BEGIN}}]{\setlength{\rightskip}{0pt plus 5cm}\#define \+\_\+\+V\+A\+M\+P\+\_\+\+S\+D\+K\+\_\+\+P\+L\+U\+G\+S\+P\+A\+C\+E\+\_\+\+B\+E\+G\+IN(
+\begin{DoxyParamCaption}
+\item[{}]{h}
+\end{DoxyParamCaption}
+)~namespace \+\_\+\+Vamp\+Plugin \{}\hypertarget{plugguard_8h_a1a2724ea453971288d3218e4eab3072c}{}\label{plugguard_8h_a1a2724ea453971288d3218e4eab3072c}
+
+
+Definition at line 90 of file plugguard.\+h.
+
+\index{plugguard.\+h@{plugguard.\+h}!\+\_\+\+V\+A\+M\+P\+\_\+\+S\+D\+K\+\_\+\+P\+L\+U\+G\+S\+P\+A\+C\+E\+\_\+\+E\+ND@{\+\_\+\+V\+A\+M\+P\+\_\+\+S\+D\+K\+\_\+\+P\+L\+U\+G\+S\+P\+A\+C\+E\+\_\+\+E\+ND}}
+\index{\+\_\+\+V\+A\+M\+P\+\_\+\+S\+D\+K\+\_\+\+P\+L\+U\+G\+S\+P\+A\+C\+E\+\_\+\+E\+ND@{\+\_\+\+V\+A\+M\+P\+\_\+\+S\+D\+K\+\_\+\+P\+L\+U\+G\+S\+P\+A\+C\+E\+\_\+\+E\+ND}!plugguard.\+h@{plugguard.\+h}}
+\subsubsection[{\texorpdfstring{\+\_\+\+V\+A\+M\+P\+\_\+\+S\+D\+K\+\_\+\+P\+L\+U\+G\+S\+P\+A\+C\+E\+\_\+\+E\+ND}{_VAMP_SDK_PLUGSPACE_END}}]{\setlength{\rightskip}{0pt plus 5cm}\#define \+\_\+\+V\+A\+M\+P\+\_\+\+S\+D\+K\+\_\+\+P\+L\+U\+G\+S\+P\+A\+C\+E\+\_\+\+E\+ND(
+\begin{DoxyParamCaption}
+\item[{}]{h}
+\end{DoxyParamCaption}
+)}\hypertarget{plugguard_8h_ac879bb1077ecc6132ea3581ef9033753}{}\label{plugguard_8h_ac879bb1077ecc6132ea3581ef9033753}
+{\bfseries Value\+:}
+\begin{DoxyCode}
+\} \(\backslash\)
+    using \textcolor{keyword}{namespace }\_VampPlugin;
+\end{DoxyCode}
+
+
+Definition at line 93 of file plugguard.\+h.
+
+\index{plugguard.\+h@{plugguard.\+h}!V\+A\+M\+P\+\_\+\+S\+D\+K\+\_\+\+M\+A\+J\+O\+R\+\_\+\+V\+E\+R\+S\+I\+ON@{V\+A\+M\+P\+\_\+\+S\+D\+K\+\_\+\+M\+A\+J\+O\+R\+\_\+\+V\+E\+R\+S\+I\+ON}}
+\index{V\+A\+M\+P\+\_\+\+S\+D\+K\+\_\+\+M\+A\+J\+O\+R\+\_\+\+V\+E\+R\+S\+I\+ON@{V\+A\+M\+P\+\_\+\+S\+D\+K\+\_\+\+M\+A\+J\+O\+R\+\_\+\+V\+E\+R\+S\+I\+ON}!plugguard.\+h@{plugguard.\+h}}
+\subsubsection[{\texorpdfstring{V\+A\+M\+P\+\_\+\+S\+D\+K\+\_\+\+M\+A\+J\+O\+R\+\_\+\+V\+E\+R\+S\+I\+ON}{VAMP_SDK_MAJOR_VERSION}}]{\setlength{\rightskip}{0pt plus 5cm}\#define V\+A\+M\+P\+\_\+\+S\+D\+K\+\_\+\+M\+A\+J\+O\+R\+\_\+\+V\+E\+R\+S\+I\+ON~2}\hypertarget{plugguard_8h_ab5f7da6acf45065a6c7b7cd38a0bf588}{}\label{plugguard_8h_ab5f7da6acf45065a6c7b7cd38a0bf588}
+
+
+Definition at line 75 of file plugguard.\+h.
+
+\index{plugguard.\+h@{plugguard.\+h}!V\+A\+M\+P\+\_\+\+S\+D\+K\+\_\+\+M\+I\+N\+O\+R\+\_\+\+V\+E\+R\+S\+I\+ON@{V\+A\+M\+P\+\_\+\+S\+D\+K\+\_\+\+M\+I\+N\+O\+R\+\_\+\+V\+E\+R\+S\+I\+ON}}
+\index{V\+A\+M\+P\+\_\+\+S\+D\+K\+\_\+\+M\+I\+N\+O\+R\+\_\+\+V\+E\+R\+S\+I\+ON@{V\+A\+M\+P\+\_\+\+S\+D\+K\+\_\+\+M\+I\+N\+O\+R\+\_\+\+V\+E\+R\+S\+I\+ON}!plugguard.\+h@{plugguard.\+h}}
+\subsubsection[{\texorpdfstring{V\+A\+M\+P\+\_\+\+S\+D\+K\+\_\+\+M\+I\+N\+O\+R\+\_\+\+V\+E\+R\+S\+I\+ON}{VAMP_SDK_MINOR_VERSION}}]{\setlength{\rightskip}{0pt plus 5cm}\#define V\+A\+M\+P\+\_\+\+S\+D\+K\+\_\+\+M\+I\+N\+O\+R\+\_\+\+V\+E\+R\+S\+I\+ON~5}\hypertarget{plugguard_8h_ad5eef1e2154b42769cd642d2a1d42257}{}\label{plugguard_8h_ad5eef1e2154b42769cd642d2a1d42257}
+
+
+Definition at line 76 of file plugguard.\+h.
+
+\index{plugguard.\+h@{plugguard.\+h}!V\+A\+M\+P\+\_\+\+S\+D\+K\+\_\+\+V\+E\+R\+S\+I\+ON@{V\+A\+M\+P\+\_\+\+S\+D\+K\+\_\+\+V\+E\+R\+S\+I\+ON}}
+\index{V\+A\+M\+P\+\_\+\+S\+D\+K\+\_\+\+V\+E\+R\+S\+I\+ON@{V\+A\+M\+P\+\_\+\+S\+D\+K\+\_\+\+V\+E\+R\+S\+I\+ON}!plugguard.\+h@{plugguard.\+h}}
+\subsubsection[{\texorpdfstring{V\+A\+M\+P\+\_\+\+S\+D\+K\+\_\+\+V\+E\+R\+S\+I\+ON}{VAMP_SDK_VERSION}}]{\setlength{\rightskip}{0pt plus 5cm}\#define V\+A\+M\+P\+\_\+\+S\+D\+K\+\_\+\+V\+E\+R\+S\+I\+ON~\char`\"{}2.\+5\char`\"{}}\hypertarget{plugguard_8h_a9b7a8e1ac1c91366bec5f2f33c137a2f}{}\label{plugguard_8h_a9b7a8e1ac1c91366bec5f2f33c137a2f}
+
+
+Definition at line 74 of file plugguard.\+h.
+

@@ -1,0 +1,470 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/lib-src/portaudio-v19/src/hostapi/wmme/pa_win_wmme.c" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/lib-src/portaudio-v19/src/hostapi/wmme/pa_win_wmme.c \- Win32 host API implementation for the Windows MultiMedia Extensions (WMME) audio API\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <stdio\&.h>\fP
+.br
+\fC#include <stdlib\&.h>\fP
+.br
+\fC#include <limits\&.h>\fP
+.br
+\fC#include <math\&.h>\fP
+.br
+\fC#include <windows\&.h>\fP
+.br
+\fC#include <mmsystem\&.h>\fP
+.br
+\fC#include <process\&.h>\fP
+.br
+\fC#include <assert\&.h>\fP
+.br
+\fC#include <malloc\&.h>\fP
+.br
+\fC#include <memory\&.h>\fP
+.br
+\fC#include 'portaudio\&.h'\fP
+.br
+\fC#include 'pa_trace\&.h'\fP
+.br
+\fC#include 'pa_util\&.h'\fP
+.br
+\fC#include 'pa_allocation\&.h'\fP
+.br
+\fC#include 'pa_hostapi\&.h'\fP
+.br
+\fC#include 'pa_stream\&.h'\fP
+.br
+\fC#include 'pa_cpuload\&.h'\fP
+.br
+\fC#include 'pa_process\&.h'\fP
+.br
+\fC#include 'pa_debugprint\&.h'\fP
+.br
+\fC#include 'pa_win_wmme\&.h'\fP
+.br
+\fC#include 'pa_win_waveformat\&.h'\fP
+.br
+
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "struct \fBPaWinMmeHostApiRepresentation\fP"
+.br
+.ti -1c
+.RI "struct \fBPaWinMmeDeviceInfo\fP"
+.br
+.ti -1c
+.RI "struct \fBPaWinMmeSingleDirectionHandlesAndBuffers\fP"
+.br
+.ti -1c
+.RI "struct \fBPaWinMmeStream\fP"
+.br
+.in -1c
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBCREATE_THREAD\fP   (\fBHANDLE\fP)_beginthreadex( 0, 0, \fBProcessingThreadProc\fP, stream, 0, &stream\->processingThreadId )"
+.br
+.ti -1c
+.RI "#define \fBPA_THREAD_FUNC\fP   static unsigned \fBWINAPI\fP"
+.br
+.ti -1c
+.RI "#define \fBPA_THREAD_ID\fP   unsigned"
+.br
+.ti -1c
+.RI "#define \fBDWORD_PTR\fP   unsigned long"
+.br
+.ti -1c
+.RI "#define \fBPA_MME_USE_HIGH_DEFAULT_LATENCY_\fP   (0)  /* For debugging glitches\&. */"
+.br
+.ti -1c
+.RI "#define \fBPA_MME_WIN_9X_DEFAULT_LATENCY_\fP   (0\&.2)"
+.br
+.ti -1c
+.RI "#define \fBPA_MME_MIN_HOST_OUTPUT_BUFFER_COUNT_\fP   (2)"
+.br
+.ti -1c
+.RI "#define \fBPA_MME_MIN_HOST_INPUT_BUFFER_COUNT_FULL_DUPLEX_\fP   (3)         /* always use at least 3 input buffers \fBfor\fP full duplex */"
+.br
+.ti -1c
+.RI "#define \fBPA_MME_MIN_HOST_INPUT_BUFFER_COUNT_HALF_DUPLEX_\fP   (2)"
+.br
+.ti -1c
+.RI "#define \fBPA_MME_HOST_BUFFER_GRANULARITY_FRAMES_WHEN_UNSPECIFIED_\fP   (16)"
+.br
+.ti -1c
+.RI "#define \fBPA_MME_MAX_HOST_BUFFER_SECS_\fP   (0\&.1)       /* Do not exceed unless user \fBbuffer\fP exceeds */"
+.br
+.ti -1c
+.RI "#define \fBPA_MME_MAX_HOST_BUFFER_BYTES_\fP   (32 * 1024) /* Has precedence over \fBPA_MME_MAX_HOST_BUFFER_SECS_\fP, some drivers are known to crash with \fBbuffer\fP sizes > 32k */"
+.br
+.ti -1c
+.RI "#define \fBPA_MME_WIN_NT_DEFAULT_LATENCY_\fP   (0\&.4)"
+.br
+.ti -1c
+.RI "#define \fBPA_MME_WIN_WDM_DEFAULT_LATENCY_\fP   (0\&.090)"
+.br
+.ti -1c
+.RI "#define \fBPA_MME_TARGET_HOST_BUFFER_COUNT_\fP   8"
+.br
+.ti -1c
+.RI "#define \fBPA_MME_MIN_TIMEOUT_MSEC_\fP   (1000)"
+.br
+.ti -1c
+.RI "#define \fBPA_MME_SET_LAST_WAVEIN_ERROR\fP(mmresult)"
+.br
+.ti -1c
+.RI "#define \fBPA_MME_SET_LAST_WAVEOUT_ERROR\fP(mmresult)"
+.br
+.ti -1c
+.RI "#define \fBPA_MME_SET_LAST_SYSTEM_ERROR\fP(\fBerrorCode\fP)   PaMme_SetLastSystemError( \fBerrorCode\fP )"
+.br
+.ti -1c
+.RI "#define \fBPA_ENV_BUF_SIZE_\fP   (32)"
+.br
+.ti -1c
+.RI "#define \fBPA_REC_IN_DEV_ENV_NAME_\fP   ('PA_RECOMMENDED_INPUT_DEVICE')"
+.br
+.ti -1c
+.RI "#define \fBPA_REC_OUT_DEV_ENV_NAME_\fP   ('PA_RECOMMENDED_OUTPUT_DEVICE')"
+.br
+.ti -1c
+.RI "#define \fBPA_DEFAULTSAMPLERATESEARCHORDER_COUNT_\fP   (13) /* must \fBmatch\fP array \fBlength\fP below */"
+.br
+.ti -1c
+.RI "#define \fBDRVM_MAPPER_PREFERRED_GET\fP   (0x2000+21)"
+.br
+.ti -1c
+.RI "#define \fBPA_IS_INPUT_STREAM_\fP(stream)   ( stream \->input\&.waveHandles )"
+.br
+.ti -1c
+.RI "#define \fBPA_IS_OUTPUT_STREAM_\fP(stream)   ( stream \->output\&.waveHandles )"
+.br
+.ti -1c
+.RI "#define \fBPA_IS_FULL_DUPLEX_STREAM_\fP(stream)   ( stream \->input\&.waveHandles && stream \->output\&.waveHandles )"
+.br
+.ti -1c
+.RI "#define \fBPA_IS_HALF_DUPLEX_STREAM_\fP(stream)   ( !(stream \->input\&.waveHandles && stream \->output\&.waveHandles) )"
+.br
+.ti -1c
+.RI "#define \fBPA_CIRCULAR_INCREMENT_\fP(current,  \fBmax\fP)   ( (((current) + 1) >= (\fBmax\fP)) ? (0) : (current+1) )"
+.br
+.ti -1c
+.RI "#define \fBPA_CIRCULAR_DECREMENT_\fP(current,  \fBmax\fP)   ( ((current) == 0) ? ((\fBmax\fP)\-1) : (current\-1) )"
+.br
+.in -1c
+.SS "Typedefs"
+
+.in +1c
+.ti -1c
+.RI "typedef struct \fBPaWinMmeStream\fP \fBPaWinMmeStream\fP"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBPaError\fP \fBPaWinMme_Initialize\fP (\fBPaUtilHostApiRepresentation\fP **hostApi, \fBPaHostApiIndex\fP index)"
+.br
+.ti -1c
+.RI "\fBPA_THREAD_FUNC\fP \fBProcessingThreadProc\fP (\fBvoid\fP *pArg)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBPaWinMME_GetStreamInputHandleCount\fP (\fBPaStream\fP *\fBs\fP)"
+.br
+.ti -1c
+.RI "HWAVEIN \fBPaWinMME_GetStreamInputHandle\fP (\fBPaStream\fP *\fBs\fP, \fBint\fP handleIndex)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBPaWinMME_GetStreamOutputHandleCount\fP (\fBPaStream\fP *\fBs\fP)"
+.br
+.ti -1c
+.RI "HWAVEOUT \fBPaWinMME_GetStreamOutputHandle\fP (\fBPaStream\fP *\fBs\fP, \fBint\fP handleIndex)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Win32 host API implementation for the Windows MultiMedia Extensions (WMME) audio API\&. 
+
+
+.PP
+Definition in file \fBpa_win_wmme\&.c\fP\&.
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define CREATE_THREAD   (\fBHANDLE\fP)_beginthreadex( 0, 0, \fBProcessingThreadProc\fP, stream, 0, &stream\->processingThreadId )"
+
+.PP
+Definition at line 128 of file pa_win_wmme\&.c\&.
+.SS "#define DRVM_MAPPER_PREFERRED_GET   (0x2000+21)"
+
+.SS "#define DWORD_PTR   unsigned long"
+
+.PP
+Definition at line 149 of file pa_win_wmme\&.c\&.
+.SS "#define PA_CIRCULAR_DECREMENT_(current, \fBmax\fP)   ( ((current) == 0) ? ((\fBmax\fP)\-1) : (current\-1) )"
+
+.PP
+Definition at line 2709 of file pa_win_wmme\&.c\&.
+.SS "#define PA_CIRCULAR_INCREMENT_(current, \fBmax\fP)   ( (((current) + 1) >= (\fBmax\fP)) ? (0) : (current+1) )"
+
+.PP
+Definition at line 2706 of file pa_win_wmme\&.c\&.
+.SS "#define PA_DEFAULTSAMPLERATESEARCHORDER_COUNT_   (13) /* must \fBmatch\fP array \fBlength\fP below */"
+
+.PP
+Definition at line 643 of file pa_win_wmme\&.c\&.
+.SS "#define PA_ENV_BUF_SIZE_   (32)"
+
+.PP
+Definition at line 463 of file pa_win_wmme\&.c\&.
+.SS "#define PA_IS_FULL_DUPLEX_STREAM_(stream)   ( stream \->input\&.waveHandles && stream \->output\&.waveHandles )"
+
+.PP
+Definition at line 2327 of file pa_win_wmme\&.c\&.
+.SS "#define PA_IS_HALF_DUPLEX_STREAM_(stream)   ( !(stream \->input\&.waveHandles && stream \->output\&.waveHandles) )"
+
+.PP
+Definition at line 2328 of file pa_win_wmme\&.c\&.
+.SS "#define PA_IS_INPUT_STREAM_(stream)   ( stream \->input\&.waveHandles )"
+
+.PP
+Definition at line 2325 of file pa_win_wmme\&.c\&.
+.SS "#define PA_IS_OUTPUT_STREAM_(stream)   ( stream \->output\&.waveHandles )"
+
+.PP
+Definition at line 2326 of file pa_win_wmme\&.c\&.
+.SS "#define PA_MME_HOST_BUFFER_GRANULARITY_FRAMES_WHEN_UNSPECIFIED_   (16)"
+
+.PP
+Definition at line 170 of file pa_win_wmme\&.c\&.
+.SS "#define PA_MME_MAX_HOST_BUFFER_BYTES_   (32 * 1024) /* Has precedence over \fBPA_MME_MAX_HOST_BUFFER_SECS_\fP, some drivers are known to crash with \fBbuffer\fP sizes > 32k */"
+
+.PP
+Definition at line 172 of file pa_win_wmme\&.c\&.
+.SS "#define PA_MME_MAX_HOST_BUFFER_SECS_   (0\&.1)       /* Do not exceed unless user \fBbuffer\fP exceeds */"
+
+.PP
+Definition at line 171 of file pa_win_wmme\&.c\&.
+.SS "#define PA_MME_MIN_HOST_INPUT_BUFFER_COUNT_FULL_DUPLEX_   (3)         /* always use at least 3 input buffers \fBfor\fP full duplex */"
+
+.PP
+Definition at line 168 of file pa_win_wmme\&.c\&.
+.SS "#define PA_MME_MIN_HOST_INPUT_BUFFER_COUNT_HALF_DUPLEX_   (2)"
+
+.PP
+Definition at line 169 of file pa_win_wmme\&.c\&.
+.SS "#define PA_MME_MIN_HOST_OUTPUT_BUFFER_COUNT_   (2)"
+
+.PP
+Definition at line 167 of file pa_win_wmme\&.c\&.
+.SS "#define PA_MME_MIN_TIMEOUT_MSEC_   (1000)"
+
+.PP
+Definition at line 200 of file pa_win_wmme\&.c\&.
+.SS "#define PA_MME_SET_LAST_SYSTEM_ERROR(\fBerrorCode\fP)   PaMme_SetLastSystemError( \fBerrorCode\fP )"
+
+.PP
+Definition at line 358 of file pa_win_wmme\&.c\&.
+.SS "#define PA_MME_SET_LAST_WAVEIN_ERROR(mmresult)"
+\fBValue:\fP
+.PP
+.nf
+{                                                                   \
+        char mmeErrorText[ MAXERRORLENGTH ];                            \
+        waveInGetErrorText( mmresult, mmeErrorText, MAXERRORLENGTH );   \
+        PaUtil_SetLastHostErrorInfo( paMME, mmresult, mmeErrorText );   \
+    }
+.fi
+.PP
+Definition at line 325 of file pa_win_wmme\&.c\&.
+.SS "#define PA_MME_SET_LAST_WAVEOUT_ERROR(mmresult)"
+\fBValue:\fP
+.PP
+.nf
+{                                                                   \
+        char mmeErrorText[ MAXERRORLENGTH ];                            \
+        waveOutGetErrorText( mmresult, mmeErrorText, MAXERRORLENGTH );  \
+        PaUtil_SetLastHostErrorInfo( paMME, mmresult, mmeErrorText );   \
+    }
+.fi
+.PP
+Definition at line 332 of file pa_win_wmme\&.c\&.
+.SS "#define PA_MME_TARGET_HOST_BUFFER_COUNT_   8"
+
+.PP
+Definition at line 198 of file pa_win_wmme\&.c\&.
+.SS "#define PA_MME_USE_HIGH_DEFAULT_LATENCY_   (0)  /* For debugging glitches\&. */"
+
+.PP
+Definition at line 155 of file pa_win_wmme\&.c\&.
+.SS "#define PA_MME_WIN_9X_DEFAULT_LATENCY_   (0\&.2)"
+
+.PP
+Definition at line 166 of file pa_win_wmme\&.c\&.
+.SS "#define PA_MME_WIN_NT_DEFAULT_LATENCY_   (0\&.4)"
+
+.PP
+Definition at line 178 of file pa_win_wmme\&.c\&.
+.SS "#define PA_MME_WIN_WDM_DEFAULT_LATENCY_   (0\&.090)"
+
+.PP
+Definition at line 190 of file pa_win_wmme\&.c\&.
+.SS "#define PA_REC_IN_DEV_ENV_NAME_   ('PA_RECOMMENDED_INPUT_DEVICE')"
+
+.PP
+Definition at line 464 of file pa_win_wmme\&.c\&.
+.SS "#define PA_REC_OUT_DEV_ENV_NAME_   ('PA_RECOMMENDED_OUTPUT_DEVICE')"
+
+.PP
+Definition at line 465 of file pa_win_wmme\&.c\&.
+.SS "#define PA_THREAD_FUNC   static unsigned \fBWINAPI\fP"
+
+.PP
+Definition at line 129 of file pa_win_wmme\&.c\&.
+.SS "#define PA_THREAD_ID   unsigned"
+
+.PP
+Definition at line 130 of file pa_win_wmme\&.c\&.
+.SH "Typedef Documentation"
+.PP 
+.SS "typedef struct \fBPaWinMmeStream\fP \fBPaWinMmeStream\fP"
+
+.PP
+Definition at line 256 of file pa_win_wmme\&.c\&.
+.SH "Function Documentation"
+.PP 
+.SS "HWAVEIN PaWinMME_GetStreamInputHandle (\fBPaStream\fP * stream, \fBint\fP handleIndex)"
+Retrieve a wave in handle used by a PortAudio WinMME stream\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIstream\fP The stream to query\&. 
+.br
+\fIhandleIndex\fP The zero based index of the wave in handle to retrieve\&. This should be in the range [0, PaWinMME_GetStreamInputHandleCount(stream)-1]\&.
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+A valid wave in handle, or NULL if an error occurred\&.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBPaWinMME_GetStreamInputHandle\fP 
+.RE
+.PP
+
+.PP
+Definition at line 4016 of file pa_win_wmme\&.c\&.
+.SS "\fBint\fP PaWinMME_GetStreamInputHandleCount (\fBPaStream\fP * stream)"
+Retrieve the number of wave in handles used by a PortAudio WinMME stream\&. Returns zero if the stream is output only\&.
+.PP
+\fBReturns:\fP
+.RS 4
+A non-negative value indicating the number of wave in handles or, a PaErrorCode (which are always negative) if PortAudio is not initialized or an error is encountered\&.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBPaWinMME_GetStreamInputHandle\fP 
+.RE
+.PP
+
+.PP
+Definition at line 4004 of file pa_win_wmme\&.c\&.
+.SS "HWAVEOUT PaWinMME_GetStreamOutputHandle (\fBPaStream\fP * stream, \fBint\fP handleIndex)"
+Retrieve a wave out handle used by a PortAudio WinMME stream\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIstream\fP The stream to query\&. 
+.br
+\fIhandleIndex\fP The zero based index of the wave out handle to retrieve\&. This should be in the range [0, PaWinMME_GetStreamOutputHandleCount(stream)-1]\&.
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+A valid wave out handle, or NULL if an error occurred\&.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBPaWinMME_GetStreamOutputHandleCount\fP 
+.RE
+.PP
+
+.PP
+Definition at line 4043 of file pa_win_wmme\&.c\&.
+.SS "\fBint\fP PaWinMME_GetStreamOutputHandleCount (\fBPaStream\fP * stream)"
+Retrieve the number of wave out handles used by a PortAudio WinMME stream\&. Returns zero if the stream is input only\&.
+.PP
+\fBReturns:\fP
+.RS 4
+A non-negative value indicating the number of wave out handles or, a PaErrorCode (which are always negative) if PortAudio is not initialized or an error is encountered\&.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBPaWinMME_GetStreamOutputHandle\fP 
+.RE
+.PP
+
+.PP
+Definition at line 4031 of file pa_win_wmme\&.c\&.
+.SS "\fBPaError\fP PaWinMme_Initialize (\fBPaUtilHostApiRepresentation\fP ** hostApi, \fBPaHostApiIndex\fP index)"
+
+.PP
+Definition at line 970 of file pa_win_wmme\&.c\&.
+.SS "\fBPA_THREAD_FUNC\fP ProcessingThreadProc (\fBvoid\fP * pArg)"
+
+.PP
+\fBTodo\fP
+.RS 4
+support paInputUnderflow, paOutputOverflow and paNeverDropInput 
+.RE
+.PP
+.PP
+\fBTodo\fP
+.RS 4
+FIXME/REVIEW: can't return host error info from an asyncronous thread\&. see http://www.portaudio.com/trac/ticket/143 
+.RE
+.PP
+.PP
+\fBTodo\fP
+.RS 4
+if all of the other buffers are also ready then we discard all but the most recent\&. This is an input buffer overflow\&. FIXME: these buffers should be passed to the callback in a paNeverDropInput stream\&. http://www.portaudio.com/trac/ticket/142
+.RE
+.PP
+.PP
+note that it is also possible for an input overflow to happen while the callback is processing a buffer\&. that is handled further down\&.
+.PP
+\fBTodo\fP
+.RS 4
+implement inputBufferAdcTime 
+.RE
+.PP
+.PP
+\fBTodo\fP
+.RS 4
+FIXME: should probably reset the output device immediately once the callback returns paAbort see: http://www.portaudio.com/trac/ticket/141 
+.RE
+.PP
+.PP
+\fBTodo\fP
+.RS 4
+need to handle PaNeverDropInput here where necessary 
+.RE
+.PP
+
+.PP
+Definition at line 2846 of file pa_win_wmme\&.c\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

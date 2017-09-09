@@ -1,0 +1,87 @@
+.TH "LV2_Event_Buffer" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+LV2_Event_Buffer \- 
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <event\&.h>\fP
+.SS "Public Attributes"
+
+.in +1c
+.ti -1c
+.RI "\fBuint8_t\fP * \fBdata\fP"
+.br
+.ti -1c
+.RI "\fBuint16_t\fP \fBheader_size\fP"
+.br
+.ti -1c
+.RI "\fBuint16_t\fP \fBstamp_type\fP"
+.br
+.ti -1c
+.RI "\fBuint32_t\fP \fBevent_count\fP"
+.br
+.ti -1c
+.RI "\fBuint32_t\fP \fBcapacity\fP"
+.br
+.ti -1c
+.RI "\fBuint32_t\fP \fBsize\fP"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+A buffer of LV2 events (header only)\&.
+.PP
+Like events (which this contains) an event buffer is a single chunk of POD: the entire buffer (including contents) can be copied with a single memcpy\&. The first contained event begins sizeof(LV2_EventBuffer) bytes after the start of this struct\&.
+.PP
+After this header, the buffer contains an event header (defined by struct \fBLV2_Event\fP), followed by that event's contents (padded to 64 bits), followed by another header, etc:
+.PP
+| | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | |FRAMES |SUBFRMS|TYP|LEN|DATA\&.\&.DATA\&.\&.PAD|FRAMES | \&.\&.\&. 
+.PP
+Definition at line 138 of file event\&.h\&.
+.SH "Member Data Documentation"
+.PP 
+.SS "\fBuint32_t\fP LV2_Event_Buffer::capacity"
+The size of the data buffer in bytes\&. This is set by the host and must not be changed by the plugin\&. The host is allowed to change this between \fBrun()\fP calls\&. 
+.PP
+Definition at line 199 of file event\&.h\&.
+.SS "\fBuint8_t\fP* LV2_Event_Buffer::data"
+The contents of the event buffer\&. This may or may not reside in the same block of memory as this header, plugins must not assume either\&. The host guarantees this points to at least capacity bytes of allocated memory (though only size bytes of that are valid events)\&. 
+.PP
+Definition at line 145 of file event\&.h\&.
+.SS "\fBuint32_t\fP LV2_Event_Buffer::event_count"
+The number of events in this buffer\&.
+.PP
+INPUTS: The host must set this field to the number of events contained in the data buffer before calling \fBrun()\fP\&. The plugin must not change this field\&.
+.PP
+OUTPUTS: The plugin must set this field to the number of events it has written to the buffer before returning from \fBrun()\fP\&. Any initial value should be ignored by the plugin\&. 
+.PP
+Definition at line 192 of file event\&.h\&.
+.SS "\fBuint16_t\fP LV2_Event_Buffer::header_size"
+The size of this event header in bytes (including everything)\&.
+.PP
+This is to allow for extending this header in the future without breaking binary compatibility\&. Whenever this header is copied, it MUST be done using this field (and NOT the sizeof this struct)\&. 
+.PP
+Definition at line 154 of file event\&.h\&.
+.SS "\fBuint32_t\fP LV2_Event_Buffer::size"
+The size of the initial portion of the data buffer containing data\&.
+.PP
+INPUTS: The host must set this field to the number of bytes used by all events it has written to the buffer (including headers) before calling the plugin's \fBrun()\fP\&. The plugin must not change this field\&.
+.PP
+OUTPUTS: The plugin must set this field to the number of bytes used by all events it has written to the buffer (including headers) before returning from \fBrun()\fP\&. Any initial value should be ignored by the plugin\&. 
+.PP
+Definition at line 214 of file event\&.h\&.
+.SS "\fBuint16_t\fP LV2_Event_Buffer::stamp_type"
+The type of the time stamps for events in this buffer\&. As a special exception, '0' always means audio frames and subframes (1/UINT32_MAX'th of a frame) in the sample rate passed to instantiate\&.
+.PP
+INPUTS: The host must set this field to the numeric ID of some URI defining the meaning of the frames/subframes fields of contained events (obtained by the LV2 URI Map uri_to_id function with the URI of this extension as the 'map' argument, see lv2_uri_map\&.h)\&. The host must never pass a plugin a buffer which uses a stamp type the plugin does not 'understand'\&. The value of this field must never change, except when connect_port is called on the input port, at which time the host MUST have set the stamp_type field to the value that will be used for all subsequent run calls\&.
+.PP
+OUTPUTS: The plugin may set this to any value that has been returned from uri_to_id with the URI of this extension for a 'map' argument\&. When connected to a buffer with connect_port, output ports MUST set this field to the type of time stamp they will be writing\&. On any call to connect_port on an event input port, the plugin may change this field on any output port, it is the responsibility of the host to check if any of these values have changed and act accordingly\&. 
+.PP
+Definition at line 179 of file event\&.h\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

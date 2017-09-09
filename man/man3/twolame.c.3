@@ -1,0 +1,252 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/lib-src/twolame/libtwolame/twolame.c" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/lib-src/twolame/libtwolame/twolame.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <stdio\&.h>\fP
+.br
+\fC#include <stdlib\&.h>\fP
+.br
+\fC#include <string\&.h>\fP
+.br
+\fC#include <math\&.h>\fP
+.br
+\fC#include <assert\&.h>\fP
+.br
+\fC#include <limits\&.h>\fP
+.br
+\fC#include 'twolame\&.h'\fP
+.br
+\fC#include 'common\&.h'\fP
+.br
+\fC#include 'bitbuffer\&.h'\fP
+.br
+\fC#include 'mem\&.h'\fP
+.br
+\fC#include 'crc\&.h'\fP
+.br
+\fC#include 'dab\&.h'\fP
+.br
+\fC#include 'psycho_n1\&.h'\fP
+.br
+\fC#include 'psycho_0\&.h'\fP
+.br
+\fC#include 'psycho_1\&.h'\fP
+.br
+\fC#include 'psycho_2\&.h'\fP
+.br
+\fC#include 'psycho_3\&.h'\fP
+.br
+\fC#include 'psycho_4\&.h'\fP
+.br
+\fC#include 'availbits\&.h'\fP
+.br
+\fC#include 'subband\&.h'\fP
+.br
+\fC#include 'encode\&.h'\fP
+.br
+\fC#include 'energy\&.h'\fP
+.br
+\fC#include 'util\&.h'\fP
+.br
+\fC#include 'bitbuffer_inline\&.h'\fP
+.br
+
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBtwolame_options\fP * \fBtwolame_init\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBtwolame_init_params\fP (\fBtwolame_options\fP *glopts)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBtwolame_encode_buffer\fP (\fBtwolame_options\fP *glopts, \fBconst\fP short \fBint\fP leftpcm[], \fBconst\fP short \fBint\fP rightpcm[], \fBint\fP num_samples, unsigned char *mp2buffer, \fBint\fP mp2buffer_size)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBtwolame_encode_buffer_interleaved\fP (\fBtwolame_options\fP *glopts, \fBconst\fP short \fBint\fP pcm[], \fBint\fP num_samples, unsigned char *mp2buffer, \fBint\fP mp2buffer_size)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBtwolame_encode_buffer_float32\fP (\fBtwolame_options\fP *glopts, \fBconst\fP float leftpcm[], \fBconst\fP float rightpcm[], \fBint\fP num_samples, unsigned char *mp2buffer, \fBint\fP mp2buffer_size)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBtwolame_encode_buffer_float32_interleaved\fP (\fBtwolame_options\fP *glopts, \fBconst\fP float pcm[], \fBint\fP num_samples, unsigned char *mp2buffer, \fBint\fP mp2buffer_size)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBtwolame_encode_flush\fP (\fBtwolame_options\fP *glopts, unsigned char *mp2buffer, \fBint\fP mp2buffer_size)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBtwolame_close\fP (\fBtwolame_options\fP **glopts)"
+.br
+.in -1c
+.SH "Function Documentation"
+.PP 
+.SS "\fBvoid\fP twolame_close (\fBtwolame_options\fP ** glopts)"
+Shut down the twolame encoder\&.
+.PP
+Shuts down the twolame encoder and frees all memory that it previously allocated\&. You should call this once you have finished all your encoding\&. This function will set your glopts pointer to NULL for you\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIglopts\fP pointer to twolame options pointer 
+.RE
+.PP
+
+.PP
+Definition at line 908 of file twolame\&.c\&.
+.SS "\fBint\fP twolame_encode_buffer (\fBtwolame_options\fP * glopts, \fBconst\fP short \fBint\fP leftpcm[], \fBconst\fP short \fBint\fP rightpcm[], \fBint\fP num_samples, unsigned char * mp2buffer, \fBint\fP mp2buffer_size)"
+Encode some 16-bit PCM audio to MP2\&.
+.PP
+Takes 16-bit PCM audio samples from seperate left and right buffers and places encoded audio into mp2buffer\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIglopts\fP twolame options pointer 
+.br
+\fIleftpcm\fP Left channel audio samples 
+.br
+\fIrightpcm\fP Right channel audio samples 
+.br
+\fInum_samples\fP Number of samples per channel 
+.br
+\fImp2buffer\fP Buffer to place encoded audio into 
+.br
+\fImp2buffer_size\fP Size of the output buffer 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+The number of bytes put in output buffer or a negative value on error 
+.RE
+.PP
+
+.PP
+Definition at line 618 of file twolame\&.c\&.
+.SS "\fBint\fP twolame_encode_buffer_float32 (\fBtwolame_options\fP * glopts, \fBconst\fP float leftpcm[], \fBconst\fP float rightpcm[], \fBint\fP num_samples, unsigned char * mp2buffer, \fBint\fP mp2buffer_size)"
+Encode some 32-bit PCM audio to MP2\&.
+.PP
+Takes 32-bit floating point PCM audio samples from seperate left and right buffers and places encoded audio into mp2buffer\&.
+.PP
+Note: the 32-bit samples are currently scaled down to 16-bit samples internally\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIglopts\fP twolame options pointer 
+.br
+\fIleftpcm\fP Left channel audio samples 
+.br
+\fIrightpcm\fP Right channel audio samples 
+.br
+\fInum_samples\fP Number of samples per channel 
+.br
+\fImp2buffer\fP Buffer to place encoded audio into 
+.br
+\fImp2buffer_size\fP Size of the output buffer 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+The number of bytes put in output buffer or a negative value on error 
+.RE
+.PP
+
+.PP
+Definition at line 760 of file twolame\&.c\&.
+.SS "\fBint\fP twolame_encode_buffer_float32_interleaved (\fBtwolame_options\fP * glopts, \fBconst\fP float pcm[], \fBint\fP num_samples, unsigned char * mp2buffer, \fBint\fP mp2buffer_size)"
+Encode some 32-bit PCM audio to MP2\&.
+.PP
+Takes 32-bit floating point PCM audio samples from a single buffer and places encoded audio into mp2buffer\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIglopts\fP twolame options pointer 
+.br
+\fIpcm\fP Audio samples for left AND right channels 
+.br
+\fInum_samples\fP Number of samples per channel 
+.br
+\fImp2buffer\fP Buffer to place encoded audio into 
+.br
+\fImp2buffer_size\fP Size of the output buffer 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+The number of bytes put in output buffer or a negative value on error 
+.RE
+.PP
+
+.PP
+Definition at line 818 of file twolame\&.c\&.
+.SS "\fBint\fP twolame_encode_buffer_interleaved (\fBtwolame_options\fP * glopts, \fBconst\fP short \fBint\fP pcm[], \fBint\fP num_samples, unsigned char * mp2buffer, \fBint\fP mp2buffer_size)"
+Encode some 16-bit PCM audio to MP2\&.
+.PP
+Takes interleaved 16-bit PCM audio samples from a single buffer and places encoded audio into mp2buffer\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIglopts\fP twolame options pointer 
+.br
+\fIpcm\fP Audio samples for left AND right channels 
+.br
+\fInum_samples\fP Number of samples per channel 
+.br
+\fImp2buffer\fP Buffer to place encoded audio into 
+.br
+\fImp2buffer_size\fP Size of the output buffer 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+The number of bytes put in output buffer or a negative value on error 
+.RE
+.PP
+
+.PP
+Definition at line 676 of file twolame\&.c\&.
+.SS "\fBint\fP twolame_encode_flush (\fBtwolame_options\fP * glopts, unsigned char * mp2buffer, \fBint\fP mp2buffer_size)"
+Encode any remains buffered PCM audio to MP2\&.
+.PP
+Encodes any remaining audio samples in the libtwolame internal sample buffer\&. This function will return at most a single frame of MPEG Audio, and at least 0 frames\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIglopts\fP twolame options pointer 
+.br
+\fImp2buffer\fP Buffer to place encoded audio into 
+.br
+\fImp2buffer_size\fP Size of the output buffer 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+The number of bytes put in output buffer or a negative value on error 
+.RE
+.PP
+
+.PP
+Definition at line 877 of file twolame\&.c\&.
+.SS "\fBtwolame_options\fP* twolame_init (\fBvoid\fP)"
+Initialise the twolame encoder\&.
+.PP
+Sets defaults for all parameters\&. Will return NULL if malloc() failed, otherwise returns a pointer which you then need to pass to all future API calls\&.
+.PP
+\fBReturns:\fP
+.RS 4
+a pointer to your new options data structure 
+.RE
+.PP
+
+.PP
+Definition at line 60 of file twolame\&.c\&.
+.SS "\fBint\fP twolame_init_params (\fBtwolame_options\fP * glopts)"
+This function should actually \fIcheck\fP the parameters to see if they make sense\&. 
+.PP
+Definition at line 177 of file twolame\&.c\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

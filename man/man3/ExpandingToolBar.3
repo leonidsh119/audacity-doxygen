@@ -1,0 +1,439 @@
+.TH "ExpandingToolBar" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+ExpandingToolBar \- A smart \fBToolBar\fP class that has a 'MainPanel' which is always displayed, and an 'ExtraPanel' that can be hidden to save space\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <ExpandingToolBar\&.h>\fP
+.PP
+Inherits wxPanel\&.
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBExpandingToolBar\fP (wxWindow *parent, wxWindowID id, \fBconst\fP wxPoint &pos=wxDefaultPosition, \fBconst\fP wxSize &\fBsize\fP=wxDefaultSize)"
+.br
+.ti -1c
+.RI "virtual \fB~ExpandingToolBar\fP ()"
+.br
+.ti -1c
+.RI "wxPanel * \fBGetMainPanel\fP ()"
+.br
+.ti -1c
+.RI "wxPanel * \fBGetExtraPanel\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBSetAutoExpand\fP (\fBbool\fP enabled)"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBGetAutoExpand\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBExpand\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBCollapse\fP (\fBbool\fP now=\fBfalse\fP)"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBIsExpanded\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnSize\fP (wxSizeEvent &evt)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnToggle\fP (wxCommandEvent &evt)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnTimer\fP (wxTimerEvent &evt)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBStartMoving\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBUpdateMoving\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBFinishMoving\fP ()"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBLayout\fP () override"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBFit\fP () override"
+.br
+.in -1c
+.SS "Protected Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBvoid\fP \fBRecursivelyPushEventHandlers\fP (wxWindow *win)"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBIsCursorInWindow\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBReparentExtraPanel\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBMoveDrawer\fP (wxSize prevSize)"
+.br
+.ti -1c
+.RI "wxBitmap \fBGetToolbarBitmap\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBTryAutoExpand\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBTryAutoCollapse\fP ()"
+.br
+.ti -1c
+.RI "\fBDECLARE_EVENT_TABLE\fP ()"
+.br
+.in -1c
+.SS "Protected Attributes"
+
+.in +1c
+.ti -1c
+.RI "wxPanel * \fBmMainPanel\fP"
+.br
+.ti -1c
+.RI "wxPanel * \fBmExtraPanel\fP"
+.br
+.ti -1c
+.RI "\fBToolBarGrabber\fP * \fBmGrabber\fP"
+.br
+.ti -1c
+.RI "\fBAButton\fP * \fBmToggleButton\fP"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBmIsAutoExpanded\fP"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBmIsManualExpanded\fP"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBmIsExpanded\fP"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBmAutoExpand\fP"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBmFirstTime\fP"
+.br
+.ti -1c
+.RI "wxSize \fBmMainSize\fP"
+.br
+.ti -1c
+.RI "wxSize \fBmExtraSize\fP"
+.br
+.ti -1c
+.RI "wxSize \fBmButtonSize\fP"
+.br
+.ti -1c
+.RI "wxSize \fBmGrabberSize\fP"
+.br
+.ti -1c
+.RI "wxSize \fBmCurrentDrawerSize\fP"
+.br
+.ti -1c
+.RI "wxSize \fBmTargetDrawerSize\fP"
+.br
+.ti -1c
+.RI "wxSize \fBmCurrentTotalSize\fP"
+.br
+.ti -1c
+.RI "WindowHash \fBmWindowHash\fP"
+.br
+.ti -1c
+.RI "wxTimer \fBmTimer\fP"
+.br
+.ti -1c
+.RI "\fBToolBarFrame\fP * \fBmFrameParent\fP"
+.br
+.ti -1c
+.RI "\fBToolBarDialog\fP * \fBmDialogParent\fP"
+.br
+.ti -1c
+.RI "\fBToolBarArea\fP * \fBmAreaParent\fP"
+.br
+.ti -1c
+.RI "\fBToolBarArrangement\fP * \fBmSavedArrangement\fP"
+.br
+.ti -1c
+.RI "\fBImageRollPanel\fP * \fBmTargetPanel\fP"
+.br
+.ti -1c
+.RI "wxDragImage * \fBmDragImage\fP"
+.br
+.ti -1c
+.RI "wxWindow * \fBmTopLevelParent\fP"
+.br
+.ti -1c
+.RI "wxArrayRect \fBmDropTargets\fP"
+.br
+.ti -1c
+.RI "wxRect \fBmDropTarget\fP"
+.br
+.in -1c
+.SS "Static Protected Attributes"
+
+.in +1c
+.ti -1c
+.RI "static \fBint\fP \fBmsNoAutoExpandStack\fP = 0"
+.br
+.in -1c
+.SS "Friends"
+
+.in +1c
+.ti -1c
+.RI "class \fBExpandingToolBarEvtHandler\fP"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+A smart \fBToolBar\fP class that has a 'MainPanel' which is always displayed, and an 'ExtraPanel' that can be hidden to save space\&. 
+
+Can be docked into a \fBToolBarArea\fP or floated in an \fBToolBarFrame\fP;
+.PP
+If auto-expanding is off, behavior is very simple: clicking the toggle button expands, clicking it again collapses\&.
+.PP
+If auto-expanding is on, behavior is a little more complicated\&. When the mouse movers over a toolbar and it is collapsed, it gets auto-expanded, and it gets auto-collapsed as soon as the mouse leaves\&. However, if they manually toggle it collapsed while it was auto-expanded, it will stay collapsed until you move the mouse completely away and then back again later\&. If you manually expand it, it will stay manually expanded until you manually collapse it\&. 
+.PP
+Definition at line 46 of file ExpandingToolBar\&.h\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "ExpandingToolBar::ExpandingToolBar (wxWindow * parent, wxWindowID id, \fBconst\fP wxPoint & pos = \fCwxDefaultPosition\fP, \fBconst\fP wxSize & size = \fCwxDefaultSize\fP)"
+
+.PP
+\fBTodo\fP
+.RS 4
+check whether this is a memory leak (and check similar code) 
+.RE
+.PP
+
+.PP
+Definition at line 121 of file ExpandingToolBar\&.cpp\&.
+.SS "ExpandingToolBar::~ExpandingToolBar ()\fC [virtual]\fP"
+
+.PP
+Definition at line 172 of file ExpandingToolBar\&.cpp\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "\fBvoid\fP ExpandingToolBar::Collapse (\fBbool\fP now = \fC\fBfalse\fP\fP)"
+
+.PP
+Definition at line 238 of file ExpandingToolBar\&.cpp\&.
+.SS "ExpandingToolBar::DECLARE_EVENT_TABLE ()\fC [protected]\fP"
+
+.SS "\fBvoid\fP ExpandingToolBar::Expand ()"
+
+.PP
+Definition at line 224 of file ExpandingToolBar\&.cpp\&.
+.SS "\fBvoid\fP ExpandingToolBar::FinishMoving ()"
+
+.PP
+Definition at line 620 of file ExpandingToolBar\&.cpp\&.
+.SS "\fBvoid\fP ExpandingToolBar::Fit ()\fC [override]\fP"
+
+.PP
+Definition at line 354 of file ExpandingToolBar\&.cpp\&.
+.SS "\fBbool\fP ExpandingToolBar::GetAutoExpand ()\fC [inline]\fP"
+
+.PP
+Definition at line 61 of file ExpandingToolBar\&.h\&.
+.SS "wxPanel* ExpandingToolBar::GetExtraPanel ()\fC [inline]\fP"
+
+.PP
+Definition at line 58 of file ExpandingToolBar\&.h\&.
+.SS "wxPanel* ExpandingToolBar::GetMainPanel ()\fC [inline]\fP"
+
+.PP
+Definition at line 57 of file ExpandingToolBar\&.h\&.
+.SS "wxBitmap ExpandingToolBar::GetToolbarBitmap ()\fC [protected]\fP"
+
+.PP
+Definition at line 492 of file ExpandingToolBar\&.cpp\&.
+.SS "\fBbool\fP ExpandingToolBar::IsCursorInWindow ()\fC [protected]\fP"
+
+.PP
+Definition at line 393 of file ExpandingToolBar\&.cpp\&.
+.SS "\fBbool\fP ExpandingToolBar::IsExpanded ()\fC [inline]\fP"
+
+.PP
+Definition at line 66 of file ExpandingToolBar\&.h\&.
+.SS "\fBbool\fP ExpandingToolBar::Layout ()\fC [override]\fP"
+
+.PP
+Definition at line 324 of file ExpandingToolBar\&.cpp\&.
+.SS "\fBvoid\fP ExpandingToolBar::MoveDrawer (wxSize prevSize)\fC [protected]\fP"
+
+.PP
+Definition at line 427 of file ExpandingToolBar\&.cpp\&.
+.SS "\fBvoid\fP ExpandingToolBar::OnSize (wxSizeEvent & evt)"
+
+.PP
+Definition at line 176 of file ExpandingToolBar\&.cpp\&.
+.SS "\fBvoid\fP ExpandingToolBar::OnTimer (wxTimerEvent & evt)"
+
+.PP
+Definition at line 468 of file ExpandingToolBar\&.cpp\&.
+.SS "\fBvoid\fP ExpandingToolBar::OnToggle (wxCommandEvent & evt)"
+
+.PP
+Definition at line 216 of file ExpandingToolBar\&.cpp\&.
+.SS "\fBvoid\fP ExpandingToolBar::RecursivelyPushEventHandlers (wxWindow * win)\fC [protected]\fP"
+
+.PP
+Definition at line 306 of file ExpandingToolBar\&.cpp\&.
+.SS "\fBvoid\fP ExpandingToolBar::ReparentExtraPanel ()\fC [protected]\fP"
+
+.PP
+Definition at line 409 of file ExpandingToolBar\&.cpp\&.
+.SS "\fBvoid\fP ExpandingToolBar::SetAutoExpand (\fBbool\fP enabled)\fC [inline]\fP"
+
+.PP
+Definition at line 60 of file ExpandingToolBar\&.h\&.
+.SS "\fBvoid\fP ExpandingToolBar::StartMoving ()"
+
+.PP
+Definition at line 504 of file ExpandingToolBar\&.cpp\&.
+.SS "\fBvoid\fP ExpandingToolBar::TryAutoCollapse ()\fC [protected]\fP"
+
+.PP
+Definition at line 268 of file ExpandingToolBar\&.cpp\&.
+.SS "\fBvoid\fP ExpandingToolBar::TryAutoExpand ()\fC [protected]\fP"
+
+.PP
+Definition at line 258 of file ExpandingToolBar\&.cpp\&.
+.SS "\fBvoid\fP ExpandingToolBar::UpdateMoving ()"
+
+.PP
+Definition at line 565 of file ExpandingToolBar\&.cpp\&.
+.SH "Friends And Related Function Documentation"
+.PP 
+.SS "friend class \fBExpandingToolBarEvtHandler\fP\fC [friend]\fP"
+
+.PP
+Definition at line 121 of file ExpandingToolBar\&.h\&.
+.SH "Member Data Documentation"
+.PP 
+.SS "\fBToolBarArea\fP* ExpandingToolBar::mAreaParent\fC [protected]\fP"
+
+.PP
+Definition at line 109 of file ExpandingToolBar\&.h\&.
+.SS "\fBbool\fP ExpandingToolBar::mAutoExpand\fC [protected]\fP"
+
+.PP
+Definition at line 96 of file ExpandingToolBar\&.h\&.
+.SS "wxSize ExpandingToolBar::mButtonSize\fC [protected]\fP"
+
+.PP
+Definition at line 100 of file ExpandingToolBar\&.h\&.
+.SS "wxSize ExpandingToolBar::mCurrentDrawerSize\fC [protected]\fP"
+
+.PP
+Definition at line 102 of file ExpandingToolBar\&.h\&.
+.SS "wxSize ExpandingToolBar::mCurrentTotalSize\fC [protected]\fP"
+
+.PP
+Definition at line 104 of file ExpandingToolBar\&.h\&.
+.SS "\fBToolBarDialog\fP* ExpandingToolBar::mDialogParent\fC [protected]\fP"
+
+.PP
+Definition at line 108 of file ExpandingToolBar\&.h\&.
+.SS "wxDragImage* ExpandingToolBar::mDragImage\fC [protected]\fP"
+
+.PP
+Definition at line 112 of file ExpandingToolBar\&.h\&.
+.SS "wxRect ExpandingToolBar::mDropTarget\fC [protected]\fP"
+
+.PP
+Definition at line 115 of file ExpandingToolBar\&.h\&.
+.SS "wxArrayRect ExpandingToolBar::mDropTargets\fC [protected]\fP"
+
+.PP
+Definition at line 114 of file ExpandingToolBar\&.h\&.
+.SS "wxPanel* ExpandingToolBar::mExtraPanel\fC [protected]\fP"
+
+.PP
+Definition at line 90 of file ExpandingToolBar\&.h\&.
+.SS "wxSize ExpandingToolBar::mExtraSize\fC [protected]\fP"
+
+.PP
+Definition at line 99 of file ExpandingToolBar\&.h\&.
+.SS "\fBbool\fP ExpandingToolBar::mFirstTime\fC [protected]\fP"
+
+.PP
+Definition at line 97 of file ExpandingToolBar\&.h\&.
+.SS "\fBToolBarFrame\fP* ExpandingToolBar::mFrameParent\fC [protected]\fP"
+
+.PP
+Definition at line 107 of file ExpandingToolBar\&.h\&.
+.SS "\fBToolBarGrabber\fP* ExpandingToolBar::mGrabber\fC [protected]\fP"
+
+.PP
+Definition at line 91 of file ExpandingToolBar\&.h\&.
+.SS "wxSize ExpandingToolBar::mGrabberSize\fC [protected]\fP"
+
+.PP
+Definition at line 101 of file ExpandingToolBar\&.h\&.
+.SS "\fBbool\fP ExpandingToolBar::mIsAutoExpanded\fC [protected]\fP"
+
+.PP
+Definition at line 93 of file ExpandingToolBar\&.h\&.
+.SS "\fBbool\fP ExpandingToolBar::mIsExpanded\fC [protected]\fP"
+
+.PP
+Definition at line 95 of file ExpandingToolBar\&.h\&.
+.SS "\fBbool\fP ExpandingToolBar::mIsManualExpanded\fC [protected]\fP"
+
+.PP
+Definition at line 94 of file ExpandingToolBar\&.h\&.
+.SS "wxPanel* ExpandingToolBar::mMainPanel\fC [protected]\fP"
+
+.PP
+Definition at line 89 of file ExpandingToolBar\&.h\&.
+.SS "wxSize ExpandingToolBar::mMainSize\fC [protected]\fP"
+
+.PP
+Definition at line 98 of file ExpandingToolBar\&.h\&.
+.SS "\fBToolBarArrangement\fP* ExpandingToolBar::mSavedArrangement\fC [protected]\fP"
+
+.PP
+Definition at line 110 of file ExpandingToolBar\&.h\&.
+.SS "\fBint\fP ExpandingToolBar::msNoAutoExpandStack = 0\fC [static]\fP, \fC [protected]\fP"
+
+.PP
+Definition at line 117 of file ExpandingToolBar\&.h\&.
+.SS "wxSize ExpandingToolBar::mTargetDrawerSize\fC [protected]\fP"
+
+.PP
+Definition at line 103 of file ExpandingToolBar\&.h\&.
+.SS "\fBImageRollPanel\fP* ExpandingToolBar::mTargetPanel\fC [protected]\fP"
+
+.PP
+Definition at line 111 of file ExpandingToolBar\&.h\&.
+.SS "wxTimer ExpandingToolBar::mTimer\fC [protected]\fP"
+
+.PP
+Definition at line 106 of file ExpandingToolBar\&.h\&.
+.SS "\fBAButton\fP* ExpandingToolBar::mToggleButton\fC [protected]\fP"
+
+.PP
+Definition at line 92 of file ExpandingToolBar\&.h\&.
+.SS "wxWindow* ExpandingToolBar::mTopLevelParent\fC [protected]\fP"
+
+.PP
+Definition at line 113 of file ExpandingToolBar\&.h\&.
+.SS "WindowHash ExpandingToolBar::mWindowHash\fC [protected]\fP"
+
+.PP
+Definition at line 105 of file ExpandingToolBar\&.h\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

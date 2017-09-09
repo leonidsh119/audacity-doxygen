@@ -1,0 +1,272 @@
+\hypertarget{pffft_8c}{}\section{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/libsoxr/src/pffft.c File Reference}
+\label{pffft_8c}\index{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/libsoxr/src/pffft.\+c@{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/libsoxr/src/pffft.\+c}}
+{\ttfamily \#include \char`\"{}pffft.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}simd.\+h\char`\"{}}\\*
+{\ttfamily \#include $<$string.\+h$>$}\\*
+{\ttfamily \#include $<$stdlib.\+h$>$}\\*
+{\ttfamily \#include $<$math.\+h$>$}\\*
+{\ttfamily \#include $<$assert.\+h$>$}\\*
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{struct_p_f_f_f_t___setup}{P\+F\+F\+F\+T\+\_\+\+Setup}
+\end{DoxyCompactItemize}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{pffft_8c_a659b995ebc7e2c31a877cd3552875391}{pffft\+\_\+aligned\+\_\+free}~\hyperlink{simd_8h_a3ce083fe0e094f9619e8bf14798444f2}{\+\_\+soxr\+\_\+simd\+\_\+aligned\+\_\+free}
+\item 
+\#define \hyperlink{pffft_8c_a68ab1a6f8cf7d3c6f317c8c207fc4e2a}{pffft\+\_\+aligned\+\_\+malloc}~\hyperlink{simd_8h_a9085552d1234a8d3d02487fecb3da5cd}{\+\_\+soxr\+\_\+simd\+\_\+aligned\+\_\+malloc}
+\item 
+\#define \hyperlink{pffft_8c_a3a15779d66e1bb38882ce1a76c7439e5}{pffft\+\_\+aligned\+\_\+calloc}~\hyperlink{simd_8h_a0961e33fc1a87b6e4fe44e5bf3cd8b29}{\+\_\+soxr\+\_\+simd\+\_\+aligned\+\_\+calloc}
+\item 
+\#define \hyperlink{pffft_8c_a689b73aca835247e173b8e2c9b2907b0}{P\+F\+F\+F\+T\+\_\+\+S\+I\+M\+D\+\_\+\+D\+I\+S\+A\+B\+LE}~/$\ast$ fallback to scalar code $\ast$/
+\item 
+\#define \hyperlink{pffft_8c_a846721193721413578b2d26c223b42cd}{S\+I\+M\+D\+\_\+\+SZ}~1
+\item 
+\#define \hyperlink{pffft_8c_ae65c737e16e4d79390822edf1d118656}{V\+Z\+E\+RO}()~0.\hyperlink{checksum_8c_ae747d72a1a803f5ff4a4b2602857d93b}{f}
+\item 
+\#define \hyperlink{pffft_8c_a1b059bdd5e00c04f357920a2caa4ab17}{V\+M\+UL}(\hyperlink{rfft2d_test_m_l_8m_a4124bc0a9335c27f086f24ba207a4912}{a},  \hyperlink{convtest_8m_a21ad0bd836b90d08f4cf640b4c298e7c}{b})~((\hyperlink{rfft2d_test_m_l_8m_a4124bc0a9335c27f086f24ba207a4912}{a})$\ast$(\hyperlink{convtest_8m_a21ad0bd836b90d08f4cf640b4c298e7c}{b}))
+\item 
+\#define \hyperlink{pffft_8c_a5ba194f0c52d11f771f155b1a7740d56}{V\+A\+DD}(\hyperlink{rfft2d_test_m_l_8m_a4124bc0a9335c27f086f24ba207a4912}{a},  \hyperlink{convtest_8m_a21ad0bd836b90d08f4cf640b4c298e7c}{b})~((\hyperlink{rfft2d_test_m_l_8m_a4124bc0a9335c27f086f24ba207a4912}{a})+(\hyperlink{convtest_8m_a21ad0bd836b90d08f4cf640b4c298e7c}{b}))
+\item 
+\#define \hyperlink{pffft_8c_a36c509112d032c08aab512c603ef82be}{V\+M\+A\+DD}(\hyperlink{rfft2d_test_m_l_8m_a4124bc0a9335c27f086f24ba207a4912}{a},  \hyperlink{convtest_8m_a21ad0bd836b90d08f4cf640b4c298e7c}{b},  \hyperlink{rfft2d_test_m_l_8m_ae0323a9039add2978bf5b49550572c7c}{c})~((\hyperlink{rfft2d_test_m_l_8m_a4124bc0a9335c27f086f24ba207a4912}{a})$\ast$(\hyperlink{convtest_8m_a21ad0bd836b90d08f4cf640b4c298e7c}{b})+(\hyperlink{rfft2d_test_m_l_8m_ae0323a9039add2978bf5b49550572c7c}{c}))
+\item 
+\#define \hyperlink{pffft_8c_aa718c9ed99018c9ef37ddaa8cfb1f697}{V\+S\+UB}(\hyperlink{rfft2d_test_m_l_8m_a4124bc0a9335c27f086f24ba207a4912}{a},  \hyperlink{convtest_8m_a21ad0bd836b90d08f4cf640b4c298e7c}{b})~((\hyperlink{rfft2d_test_m_l_8m_a4124bc0a9335c27f086f24ba207a4912}{a})-\/(\hyperlink{convtest_8m_a21ad0bd836b90d08f4cf640b4c298e7c}{b}))
+\item 
+\#define \hyperlink{pffft_8c_a7b258d80a0163d7981e070c53a2c4558}{L\+D\+\_\+\+P\+S1}(\hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p})~(\hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p})
+\item 
+\#define \hyperlink{pffft_8c_a717b8f27ff2bfe8df7934c7df9f62af7}{V\+A\+L\+I\+G\+N\+ED}(ptr)~((((long)(ptr)) \& 0x3) == 0)
+\item 
+\#define \hyperlink{pffft_8c_a693b3e5107191c7ad5bc6b42693631dd}{V\+C\+P\+L\+X\+M\+UL}(ar,  ai,  br,  bi)~\{ \hyperlink{pffft_8c_a86dc70e405aed6b6ea7e66b134e00088}{v4sf} tmp; tmp=\hyperlink{pffft_8c_a1b059bdd5e00c04f357920a2caa4ab17}{V\+M\+UL}(ar,bi); ar=\hyperlink{pffft_8c_a1b059bdd5e00c04f357920a2caa4ab17}{V\+M\+UL}(ar,br); ar=\hyperlink{pffft_8c_aa718c9ed99018c9ef37ddaa8cfb1f697}{V\+S\+UB}(ar,\hyperlink{pffft_8c_a1b059bdd5e00c04f357920a2caa4ab17}{V\+M\+UL}(ai,bi)); ai=\hyperlink{pffft_8c_a1b059bdd5e00c04f357920a2caa4ab17}{V\+M\+UL}(ai,br); ai=\hyperlink{pffft_8c_a5ba194f0c52d11f771f155b1a7740d56}{V\+A\+DD}(ai,tmp); \}
+\item 
+\#define \hyperlink{pffft_8c_ad63f2a81495a70ecb612fb189dd527a3}{V\+C\+P\+L\+X\+M\+U\+L\+C\+O\+NJ}(ar,  ai,  br,  bi)~\{ \hyperlink{pffft_8c_a86dc70e405aed6b6ea7e66b134e00088}{v4sf} tmp; tmp=\hyperlink{pffft_8c_a1b059bdd5e00c04f357920a2caa4ab17}{V\+M\+UL}(ar,bi); ar=\hyperlink{pffft_8c_a1b059bdd5e00c04f357920a2caa4ab17}{V\+M\+UL}(ar,br); ar=\hyperlink{pffft_8c_a5ba194f0c52d11f771f155b1a7740d56}{V\+A\+DD}(ar,\hyperlink{pffft_8c_a1b059bdd5e00c04f357920a2caa4ab17}{V\+M\+UL}(ai,bi)); ai=\hyperlink{pffft_8c_a1b059bdd5e00c04f357920a2caa4ab17}{V\+M\+UL}(ai,br); ai=\hyperlink{pffft_8c_aa718c9ed99018c9ef37ddaa8cfb1f697}{V\+S\+UB}(ai,tmp); \}
+\item 
+\#define \hyperlink{pffft_8c_a28642ecbd9d1e77ab5a140a460f47d83}{sin}~sinf
+\item 
+\#define \hyperlink{pffft_8c_a57a66355e043ccefc17aca9338a2b748}{cos}~cosf
+\item 
+\#define \hyperlink{pffft_8c_aa24b1d9ff30bffebb698183fffa3a5a9}{pffft\+\_\+zreorder\+\_\+nosimd}~pffft\+\_\+zreorder
+\item 
+\#define \hyperlink{pffft_8c_a471a24df0565a6d00f7d0307a269e26e}{pffft\+\_\+transform\+\_\+internal\+\_\+nosimd}~pffft\+\_\+transform\+\_\+internal
+\item 
+\#define \hyperlink{pffft_8c_a6bd4f36c3cafbf7e2d74a0cd770a245b}{pffft\+\_\+zconvolve\+\_\+nosimd}~pffft\+\_\+zconvolve
+\end{DoxyCompactItemize}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef float \hyperlink{pffft_8c_a86dc70e405aed6b6ea7e66b134e00088}{v4sf}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{struct_p_f_f_f_t___setup}{P\+F\+F\+F\+T\+\_\+\+Setup} $\ast$ \hyperlink{pffft_8c_a7a523ab656e85367f1d256f89ee39974}{pffft\+\_\+new\+\_\+setup} (\hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{rfft2d_test_m_l_8m_af6d1246b147a7c5763d9fc83082020ff}{N}, \hyperlink{pffft_8h_af5506e26b5d8295b89aa0186261dfef1}{pffft\+\_\+transform\+\_\+t} transform)
+\end{DoxyCompactItemize}
+
+
+\subsection{Macro Definition Documentation}
+\index{pffft.\+c@{pffft.\+c}!cos@{cos}}
+\index{cos@{cos}!pffft.\+c@{pffft.\+c}}
+\subsubsection[{\texorpdfstring{cos}{cos}}]{\setlength{\rightskip}{0pt plus 5cm}\#define cos~cosf}\hypertarget{pffft_8c_a57a66355e043ccefc17aca9338a2b748}{}\label{pffft_8c_a57a66355e043ccefc17aca9338a2b748}
+
+
+Definition at line 263 of file pffft.\+c.
+
+\index{pffft.\+c@{pffft.\+c}!L\+D\+\_\+\+P\+S1@{L\+D\+\_\+\+P\+S1}}
+\index{L\+D\+\_\+\+P\+S1@{L\+D\+\_\+\+P\+S1}!pffft.\+c@{pffft.\+c}}
+\subsubsection[{\texorpdfstring{L\+D\+\_\+\+P\+S1}{LD_PS1}}]{\setlength{\rightskip}{0pt plus 5cm}\#define L\+D\+\_\+\+P\+S1(
+\begin{DoxyParamCaption}
+\item[{}]{{\bf p}}
+\end{DoxyParamCaption}
+)~({\bf p})}\hypertarget{pffft_8c_a7b258d80a0163d7981e070c53a2c4558}{}\label{pffft_8c_a7b258d80a0163d7981e070c53a2c4558}
+
+
+Definition at line 196 of file pffft.\+c.
+
+\index{pffft.\+c@{pffft.\+c}!pffft\+\_\+aligned\+\_\+calloc@{pffft\+\_\+aligned\+\_\+calloc}}
+\index{pffft\+\_\+aligned\+\_\+calloc@{pffft\+\_\+aligned\+\_\+calloc}!pffft.\+c@{pffft.\+c}}
+\subsubsection[{\texorpdfstring{pffft\+\_\+aligned\+\_\+calloc}{pffft_aligned_calloc}}]{\setlength{\rightskip}{0pt plus 5cm}\#define pffft\+\_\+aligned\+\_\+calloc~{\bf \+\_\+soxr\+\_\+simd\+\_\+aligned\+\_\+calloc}}\hypertarget{pffft_8c_a3a15779d66e1bb38882ce1a76c7439e5}{}\label{pffft_8c_a3a15779d66e1bb38882ce1a76c7439e5}
+
+
+Definition at line 70 of file pffft.\+c.
+
+\index{pffft.\+c@{pffft.\+c}!pffft\+\_\+aligned\+\_\+free@{pffft\+\_\+aligned\+\_\+free}}
+\index{pffft\+\_\+aligned\+\_\+free@{pffft\+\_\+aligned\+\_\+free}!pffft.\+c@{pffft.\+c}}
+\subsubsection[{\texorpdfstring{pffft\+\_\+aligned\+\_\+free}{pffft_aligned_free}}]{\setlength{\rightskip}{0pt plus 5cm}\#define pffft\+\_\+aligned\+\_\+free~{\bf \+\_\+soxr\+\_\+simd\+\_\+aligned\+\_\+free}}\hypertarget{pffft_8c_a659b995ebc7e2c31a877cd3552875391}{}\label{pffft_8c_a659b995ebc7e2c31a877cd3552875391}
+
+
+Definition at line 68 of file pffft.\+c.
+
+\index{pffft.\+c@{pffft.\+c}!pffft\+\_\+aligned\+\_\+malloc@{pffft\+\_\+aligned\+\_\+malloc}}
+\index{pffft\+\_\+aligned\+\_\+malloc@{pffft\+\_\+aligned\+\_\+malloc}!pffft.\+c@{pffft.\+c}}
+\subsubsection[{\texorpdfstring{pffft\+\_\+aligned\+\_\+malloc}{pffft_aligned_malloc}}]{\setlength{\rightskip}{0pt plus 5cm}\#define pffft\+\_\+aligned\+\_\+malloc~{\bf \+\_\+soxr\+\_\+simd\+\_\+aligned\+\_\+malloc}}\hypertarget{pffft_8c_a68ab1a6f8cf7d3c6f317c8c207fc4e2a}{}\label{pffft_8c_a68ab1a6f8cf7d3c6f317c8c207fc4e2a}
+
+
+Definition at line 69 of file pffft.\+c.
+
+\index{pffft.\+c@{pffft.\+c}!P\+F\+F\+F\+T\+\_\+\+S\+I\+M\+D\+\_\+\+D\+I\+S\+A\+B\+LE@{P\+F\+F\+F\+T\+\_\+\+S\+I\+M\+D\+\_\+\+D\+I\+S\+A\+B\+LE}}
+\index{P\+F\+F\+F\+T\+\_\+\+S\+I\+M\+D\+\_\+\+D\+I\+S\+A\+B\+LE@{P\+F\+F\+F\+T\+\_\+\+S\+I\+M\+D\+\_\+\+D\+I\+S\+A\+B\+LE}!pffft.\+c@{pffft.\+c}}
+\subsubsection[{\texorpdfstring{P\+F\+F\+F\+T\+\_\+\+S\+I\+M\+D\+\_\+\+D\+I\+S\+A\+B\+LE}{PFFFT_SIMD_DISABLE}}]{\setlength{\rightskip}{0pt plus 5cm}\#define P\+F\+F\+F\+T\+\_\+\+S\+I\+M\+D\+\_\+\+D\+I\+S\+A\+B\+LE~/$\ast$ fallback to scalar code $\ast$/}\hypertarget{pffft_8c_a689b73aca835247e173b8e2c9b2907b0}{}\label{pffft_8c_a689b73aca835247e173b8e2c9b2907b0}
+
+
+Definition at line 183 of file pffft.\+c.
+
+\index{pffft.\+c@{pffft.\+c}!pffft\+\_\+transform\+\_\+internal\+\_\+nosimd@{pffft\+\_\+transform\+\_\+internal\+\_\+nosimd}}
+\index{pffft\+\_\+transform\+\_\+internal\+\_\+nosimd@{pffft\+\_\+transform\+\_\+internal\+\_\+nosimd}!pffft.\+c@{pffft.\+c}}
+\subsubsection[{\texorpdfstring{pffft\+\_\+transform\+\_\+internal\+\_\+nosimd}{pffft_transform_internal_nosimd}}]{\setlength{\rightskip}{0pt plus 5cm}\#define pffft\+\_\+transform\+\_\+internal\+\_\+nosimd~pffft\+\_\+transform\+\_\+internal}\hypertarget{pffft_8c_a471a24df0565a6d00f7d0307a269e26e}{}\label{pffft_8c_a471a24df0565a6d00f7d0307a269e26e}
+
+
+Definition at line 1613 of file pffft.\+c.
+
+\index{pffft.\+c@{pffft.\+c}!pffft\+\_\+zconvolve\+\_\+nosimd@{pffft\+\_\+zconvolve\+\_\+nosimd}}
+\index{pffft\+\_\+zconvolve\+\_\+nosimd@{pffft\+\_\+zconvolve\+\_\+nosimd}!pffft.\+c@{pffft.\+c}}
+\subsubsection[{\texorpdfstring{pffft\+\_\+zconvolve\+\_\+nosimd}{pffft_zconvolve_nosimd}}]{\setlength{\rightskip}{0pt plus 5cm}\#define pffft\+\_\+zconvolve\+\_\+nosimd~pffft\+\_\+zconvolve}\hypertarget{pffft_8c_a6bd4f36c3cafbf7e2d74a0cd770a245b}{}\label{pffft_8c_a6bd4f36c3cafbf7e2d74a0cd770a245b}
+
+
+Definition at line 1693 of file pffft.\+c.
+
+\index{pffft.\+c@{pffft.\+c}!pffft\+\_\+zreorder\+\_\+nosimd@{pffft\+\_\+zreorder\+\_\+nosimd}}
+\index{pffft\+\_\+zreorder\+\_\+nosimd@{pffft\+\_\+zreorder\+\_\+nosimd}!pffft.\+c@{pffft.\+c}}
+\subsubsection[{\texorpdfstring{pffft\+\_\+zreorder\+\_\+nosimd}{pffft_zreorder_nosimd}}]{\setlength{\rightskip}{0pt plus 5cm}\#define pffft\+\_\+zreorder\+\_\+nosimd~pffft\+\_\+zreorder}\hypertarget{pffft_8c_aa24b1d9ff30bffebb698183fffa3a5a9}{}\label{pffft_8c_aa24b1d9ff30bffebb698183fffa3a5a9}
+
+
+Definition at line 1593 of file pffft.\+c.
+
+\index{pffft.\+c@{pffft.\+c}!S\+I\+M\+D\+\_\+\+SZ@{S\+I\+M\+D\+\_\+\+SZ}}
+\index{S\+I\+M\+D\+\_\+\+SZ@{S\+I\+M\+D\+\_\+\+SZ}!pffft.\+c@{pffft.\+c}}
+\subsubsection[{\texorpdfstring{S\+I\+M\+D\+\_\+\+SZ}{SIMD_SZ}}]{\setlength{\rightskip}{0pt plus 5cm}\#define S\+I\+M\+D\+\_\+\+SZ~1}\hypertarget{pffft_8c_a846721193721413578b2d26c223b42cd}{}\label{pffft_8c_a846721193721413578b2d26c223b42cd}
+
+
+Definition at line 190 of file pffft.\+c.
+
+\index{pffft.\+c@{pffft.\+c}!sin@{sin}}
+\index{sin@{sin}!pffft.\+c@{pffft.\+c}}
+\subsubsection[{\texorpdfstring{sin}{sin}}]{\setlength{\rightskip}{0pt plus 5cm}\#define sin~sinf}\hypertarget{pffft_8c_a28642ecbd9d1e77ab5a140a460f47d83}{}\label{pffft_8c_a28642ecbd9d1e77ab5a140a460f47d83}
+P\+F\+F\+F\+T\+\_\+\+S\+I\+M\+D\+\_\+\+D\+I\+S\+A\+B\+LE 
+
+Definition at line 262 of file pffft.\+c.
+
+\index{pffft.\+c@{pffft.\+c}!V\+A\+DD@{V\+A\+DD}}
+\index{V\+A\+DD@{V\+A\+DD}!pffft.\+c@{pffft.\+c}}
+\subsubsection[{\texorpdfstring{V\+A\+DD}{VADD}}]{\setlength{\rightskip}{0pt plus 5cm}\#define V\+A\+DD(
+\begin{DoxyParamCaption}
+\item[{}]{{\bf a}, }
+\item[{}]{{\bf b}}
+\end{DoxyParamCaption}
+)~(({\bf a})+({\bf b}))}\hypertarget{pffft_8c_a5ba194f0c52d11f771f155b1a7740d56}{}\label{pffft_8c_a5ba194f0c52d11f771f155b1a7740d56}
+
+
+Definition at line 193 of file pffft.\+c.
+
+\index{pffft.\+c@{pffft.\+c}!V\+A\+L\+I\+G\+N\+ED@{V\+A\+L\+I\+G\+N\+ED}}
+\index{V\+A\+L\+I\+G\+N\+ED@{V\+A\+L\+I\+G\+N\+ED}!pffft.\+c@{pffft.\+c}}
+\subsubsection[{\texorpdfstring{V\+A\+L\+I\+G\+N\+ED}{VALIGNED}}]{\setlength{\rightskip}{0pt plus 5cm}\#define V\+A\+L\+I\+G\+N\+ED(
+\begin{DoxyParamCaption}
+\item[{}]{ptr}
+\end{DoxyParamCaption}
+)~((((long)(ptr)) \& 0x3) == 0)}\hypertarget{pffft_8c_a717b8f27ff2bfe8df7934c7df9f62af7}{}\label{pffft_8c_a717b8f27ff2bfe8df7934c7df9f62af7}
+
+
+Definition at line 197 of file pffft.\+c.
+
+\index{pffft.\+c@{pffft.\+c}!V\+C\+P\+L\+X\+M\+UL@{V\+C\+P\+L\+X\+M\+UL}}
+\index{V\+C\+P\+L\+X\+M\+UL@{V\+C\+P\+L\+X\+M\+UL}!pffft.\+c@{pffft.\+c}}
+\subsubsection[{\texorpdfstring{V\+C\+P\+L\+X\+M\+UL}{VCPLXMUL}}]{\setlength{\rightskip}{0pt plus 5cm}\#define V\+C\+P\+L\+X\+M\+UL(
+\begin{DoxyParamCaption}
+\item[{}]{ar, }
+\item[{}]{ai, }
+\item[{}]{br, }
+\item[{}]{bi}
+\end{DoxyParamCaption}
+)~\{ {\bf v4sf} tmp; tmp={\bf V\+M\+UL}(ar,bi); ar={\bf V\+M\+UL}(ar,br); ar={\bf V\+S\+UB}(ar,{\bf V\+M\+UL}(ai,bi)); ai={\bf V\+M\+UL}(ai,br); ai={\bf V\+A\+DD}(ai,tmp); \}}\hypertarget{pffft_8c_a693b3e5107191c7ad5bc6b42693631dd}{}\label{pffft_8c_a693b3e5107191c7ad5bc6b42693631dd}
+
+
+Definition at line 201 of file pffft.\+c.
+
+\index{pffft.\+c@{pffft.\+c}!V\+C\+P\+L\+X\+M\+U\+L\+C\+O\+NJ@{V\+C\+P\+L\+X\+M\+U\+L\+C\+O\+NJ}}
+\index{V\+C\+P\+L\+X\+M\+U\+L\+C\+O\+NJ@{V\+C\+P\+L\+X\+M\+U\+L\+C\+O\+NJ}!pffft.\+c@{pffft.\+c}}
+\subsubsection[{\texorpdfstring{V\+C\+P\+L\+X\+M\+U\+L\+C\+O\+NJ}{VCPLXMULCONJ}}]{\setlength{\rightskip}{0pt plus 5cm}\#define V\+C\+P\+L\+X\+M\+U\+L\+C\+O\+NJ(
+\begin{DoxyParamCaption}
+\item[{}]{ar, }
+\item[{}]{ai, }
+\item[{}]{br, }
+\item[{}]{bi}
+\end{DoxyParamCaption}
+)~\{ {\bf v4sf} tmp; tmp={\bf V\+M\+UL}(ar,bi); ar={\bf V\+M\+UL}(ar,br); ar={\bf V\+A\+DD}(ar,{\bf V\+M\+UL}(ai,bi)); ai={\bf V\+M\+UL}(ai,br); ai={\bf V\+S\+UB}(ai,tmp); \}}\hypertarget{pffft_8c_ad63f2a81495a70ecb612fb189dd527a3}{}\label{pffft_8c_ad63f2a81495a70ecb612fb189dd527a3}
+
+
+Definition at line 202 of file pffft.\+c.
+
+\index{pffft.\+c@{pffft.\+c}!V\+M\+A\+DD@{V\+M\+A\+DD}}
+\index{V\+M\+A\+DD@{V\+M\+A\+DD}!pffft.\+c@{pffft.\+c}}
+\subsubsection[{\texorpdfstring{V\+M\+A\+DD}{VMADD}}]{\setlength{\rightskip}{0pt plus 5cm}\#define V\+M\+A\+DD(
+\begin{DoxyParamCaption}
+\item[{}]{{\bf a}, }
+\item[{}]{{\bf b}, }
+\item[{}]{{\bf c}}
+\end{DoxyParamCaption}
+)~(({\bf a})$\ast$({\bf b})+({\bf c}))}\hypertarget{pffft_8c_a36c509112d032c08aab512c603ef82be}{}\label{pffft_8c_a36c509112d032c08aab512c603ef82be}
+
+
+Definition at line 194 of file pffft.\+c.
+
+\index{pffft.\+c@{pffft.\+c}!V\+M\+UL@{V\+M\+UL}}
+\index{V\+M\+UL@{V\+M\+UL}!pffft.\+c@{pffft.\+c}}
+\subsubsection[{\texorpdfstring{V\+M\+UL}{VMUL}}]{\setlength{\rightskip}{0pt plus 5cm}\#define V\+M\+UL(
+\begin{DoxyParamCaption}
+\item[{}]{{\bf a}, }
+\item[{}]{{\bf b}}
+\end{DoxyParamCaption}
+)~(({\bf a})$\ast$({\bf b}))}\hypertarget{pffft_8c_a1b059bdd5e00c04f357920a2caa4ab17}{}\label{pffft_8c_a1b059bdd5e00c04f357920a2caa4ab17}
+
+
+Definition at line 192 of file pffft.\+c.
+
+\index{pffft.\+c@{pffft.\+c}!V\+S\+UB@{V\+S\+UB}}
+\index{V\+S\+UB@{V\+S\+UB}!pffft.\+c@{pffft.\+c}}
+\subsubsection[{\texorpdfstring{V\+S\+UB}{VSUB}}]{\setlength{\rightskip}{0pt plus 5cm}\#define V\+S\+UB(
+\begin{DoxyParamCaption}
+\item[{}]{{\bf a}, }
+\item[{}]{{\bf b}}
+\end{DoxyParamCaption}
+)~(({\bf a})-\/({\bf b}))}\hypertarget{pffft_8c_aa718c9ed99018c9ef37ddaa8cfb1f697}{}\label{pffft_8c_aa718c9ed99018c9ef37ddaa8cfb1f697}
+
+
+Definition at line 195 of file pffft.\+c.
+
+\index{pffft.\+c@{pffft.\+c}!V\+Z\+E\+RO@{V\+Z\+E\+RO}}
+\index{V\+Z\+E\+RO@{V\+Z\+E\+RO}!pffft.\+c@{pffft.\+c}}
+\subsubsection[{\texorpdfstring{V\+Z\+E\+RO}{VZERO}}]{\setlength{\rightskip}{0pt plus 5cm}\#define V\+Z\+E\+RO(
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)~0.{\bf f}}\hypertarget{pffft_8c_ae65c737e16e4d79390822edf1d118656}{}\label{pffft_8c_ae65c737e16e4d79390822edf1d118656}
+
+
+Definition at line 191 of file pffft.\+c.
+
+
+
+\subsection{Typedef Documentation}
+\index{pffft.\+c@{pffft.\+c}!v4sf@{v4sf}}
+\index{v4sf@{v4sf}!pffft.\+c@{pffft.\+c}}
+\subsubsection[{\texorpdfstring{v4sf}{v4sf}}]{\setlength{\rightskip}{0pt plus 5cm}typedef float {\bf v4sf}}\hypertarget{pffft_8c_a86dc70e405aed6b6ea7e66b134e00088}{}\label{pffft_8c_a86dc70e405aed6b6ea7e66b134e00088}
+
+
+Definition at line 189 of file pffft.\+c.
+
+
+
+\subsection{Function Documentation}
+\index{pffft.\+c@{pffft.\+c}!pffft\+\_\+new\+\_\+setup@{pffft\+\_\+new\+\_\+setup}}
+\index{pffft\+\_\+new\+\_\+setup@{pffft\+\_\+new\+\_\+setup}!pffft.\+c@{pffft.\+c}}
+\subsubsection[{\texorpdfstring{pffft\+\_\+new\+\_\+setup(int N, pffft\+\_\+transform\+\_\+t transform)}{pffft_new_setup(int N, pffft_transform_t transform)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf P\+F\+F\+F\+T\+\_\+\+Setup}$\ast$ pffft\+\_\+new\+\_\+setup (
+\begin{DoxyParamCaption}
+\item[{{\bf int}}]{N, }
+\item[{{\bf pffft\+\_\+transform\+\_\+t}}]{transform}
+\end{DoxyParamCaption}
+)}\hypertarget{pffft_8c_a7a523ab656e85367f1d256f89ee39974}{}\label{pffft_8c_a7a523ab656e85367f1d256f89ee39974}
+
+
+Definition at line 948 of file pffft.\+c.
+

@@ -1,0 +1,914 @@
+.TH "serd" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+serd \- Serd
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "struct \fBSerdNode\fP"
+.br
+.ti -1c
+.RI "struct \fBSerdChunk\fP"
+.br
+.ti -1c
+.RI "struct \fBSerdError\fP"
+.br
+.ti -1c
+.RI "struct \fBSerdURI\fP"
+.br
+.in -1c
+.SS "Typedefs"
+
+.in +1c
+.ti -1c
+.RI "typedef struct \fBSerdEnvImpl\fP \fBSerdEnv\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBSerdReaderImpl\fP \fBSerdReader\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBSerdWriterImpl\fP \fBSerdWriter\fP"
+.br
+.ti -1c
+.RI "typedef \fBuint32_t\fP \fBSerdStatementFlags\fP"
+.br
+.ti -1c
+.RI "typedef \fBuint32_t\fP \fBSerdNodeFlags\fP"
+.br
+.in -1c
+.SS "Enumerations"
+
+.in +1c
+.ti -1c
+.RI "enum \fBSerdStatus\fP { \fBSERD_SUCCESS\fP, \fBSERD_FAILURE\fP, \fBSERD_ERR_UNKNOWN\fP, \fBSERD_ERR_BAD_SYNTAX\fP, \fBSERD_ERR_BAD_ARG\fP, \fBSERD_ERR_NOT_FOUND\fP, \fBSERD_ERR_ID_CLASH\fP, \fBSERD_ERR_BAD_CURIE\fP, \fBSERD_ERR_INTERNAL\fP }"
+.br
+.ti -1c
+.RI "enum \fBSerdSyntax\fP { \fBSERD_TURTLE\fP = 1, \fBSERD_NTRIPLES\fP = 2 }"
+.br
+.ti -1c
+.RI "enum \fBSerdStatementFlag\fP { \fBSERD_EMPTY_S\fP = 1 << 1, \fBSERD_EMPTY_O\fP = 1 << 2, \fBSERD_ANON_S_BEGIN\fP = 1 << 3, \fBSERD_ANON_O_BEGIN\fP = 1 << 4, \fBSERD_ANON_CONT\fP = 1 << 5, \fBSERD_LIST_S_BEGIN\fP = 1 << 6, \fBSERD_LIST_O_BEGIN\fP = 1 << 7, \fBSERD_LIST_CONT\fP = 1 << 8 }"
+.br
+.ti -1c
+.RI "enum \fBSerdType\fP { \fBSERD_NOTHING\fP = 0, \fBSERD_LITERAL\fP = 1, \fBSERD_URI\fP = 2, \fBSERD_CURIE\fP = 3, \fBSERD_BLANK\fP = 4 }"
+.br
+.ti -1c
+.RI "enum \fBSerdNodeFlag\fP { \fBSERD_HAS_NEWLINE\fP = 1, \fBSERD_HAS_QUOTE\fP = 1 << 1 }"
+.br
+.ti -1c
+.RI "enum \fBSerdStyle\fP { \fBSERD_STYLE_ABBREVIATED\fP = 1, \fBSERD_STYLE_ASCII\fP = 1 << 1, \fBSERD_STYLE_RESOLVED\fP = 1 << 2, \fBSERD_STYLE_CURIED\fP = 1 << 3, \fBSERD_STYLE_BULK\fP = 1 << 4 }"
+.br
+.in -1c
+.SS "String Utilities"
+
+.in +1c
+.ti -1c
+.RI "\fBSERD_API\fP \fBconst\fP \fBuint8_t\fP * \fBserd_strerror\fP (\fBSerdStatus\fP \fBstatus\fP)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP size_t \fBserd_strlen\fP (\fBconst\fP \fBuint8_t\fP *\fBstr\fP, size_t *n_bytes, \fBSerdNodeFlags\fP *flags)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP double \fBserd_strtod\fP (\fBconst\fP char *\fBstr\fP, char **endptr)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBvoid\fP * \fBserd_base64_decode\fP (\fBconst\fP \fBuint8_t\fP *\fBstr\fP, size_t \fBlen\fP, size_t *\fBsize\fP)"
+.br
+.in -1c
+.SS "URI"
+
+.in +1c
+.ti -1c
+.RI "typedef size_t(* \fBSerdSink\fP) (\fBconst\fP \fBvoid\fP *\fBbuf\fP, size_t \fBlen\fP, \fBvoid\fP *stream)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBconst\fP \fBuint8_t\fP * \fBserd_uri_to_path\fP (\fBconst\fP \fBuint8_t\fP *\fBuri\fP)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBuint8_t\fP * \fBserd_file_uri_parse\fP (\fBconst\fP \fBuint8_t\fP *\fBuri\fP, \fBuint8_t\fP **hostname)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBbool\fP \fBserd_uri_string_has_scheme\fP (\fBconst\fP \fBuint8_t\fP *utf8)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBSerdStatus\fP \fBserd_uri_parse\fP (\fBconst\fP \fBuint8_t\fP *utf8, \fBSerdURI\fP *\fBout\fP)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBvoid\fP \fBserd_uri_resolve\fP (\fBconst\fP \fBSerdURI\fP *\fBuri\fP, \fBconst\fP \fBSerdURI\fP *\fBbase\fP, \fBSerdURI\fP *\fBout\fP)"
+.br
+.RI "\fISee http://tools.ietf.org/html/rfc3986#section-5.2.2\&. \fP"
+.ti -1c
+.RI "\fBSERD_API\fP size_t \fBserd_uri_serialise\fP (\fBconst\fP \fBSerdURI\fP *\fBuri\fP, \fBSerdSink\fP sink, \fBvoid\fP *stream)"
+.br
+.RI "\fISee http://tools.ietf.org/html/rfc3986#section-5.3\&. \fP"
+.ti -1c
+.RI "\fBSERD_API\fP size_t \fBserd_uri_serialise_relative\fP (\fBconst\fP \fBSerdURI\fP *\fBuri\fP, \fBconst\fP \fBSerdURI\fP *\fBbase\fP, \fBconst\fP \fBSerdURI\fP *root, \fBSerdSink\fP sink, \fBvoid\fP *stream)"
+.br
+.RI "\fISee http://tools.ietf.org/html/rfc3986#section-5.3\&. \fP"
+.in -1c
+.SS "Node"
+
+.in +1c
+.ti -1c
+.RI "\fBSERD_API\fP \fBSerdNode\fP \fBserd_node_from_string\fP (\fBSerdType\fP type, \fBconst\fP \fBuint8_t\fP *\fBstr\fP)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBSerdNode\fP \fBserd_node_copy\fP (\fBconst\fP \fBSerdNode\fP *\fBnode\fP)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBbool\fP \fBserd_node_equals\fP (\fBconst\fP \fBSerdNode\fP *\fBa\fP, \fBconst\fP \fBSerdNode\fP *\fBb\fP)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBSerdNode\fP \fBserd_node_new_uri_from_node\fP (\fBconst\fP \fBSerdNode\fP *uri_node, \fBconst\fP \fBSerdURI\fP *\fBbase\fP, \fBSerdURI\fP *\fBout\fP)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBSerdNode\fP \fBserd_node_new_uri_from_string\fP (\fBconst\fP \fBuint8_t\fP *\fBstr\fP, \fBconst\fP \fBSerdURI\fP *\fBbase\fP, \fBSerdURI\fP *\fBout\fP)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBSerdNode\fP \fBserd_node_new_file_uri\fP (\fBconst\fP \fBuint8_t\fP *path, \fBconst\fP \fBuint8_t\fP *hostname, \fBSerdURI\fP *\fBout\fP, \fBbool\fP escape)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBSerdNode\fP \fBserd_node_new_uri\fP (\fBconst\fP \fBSerdURI\fP *\fBuri\fP, \fBconst\fP \fBSerdURI\fP *\fBbase\fP, \fBSerdURI\fP *\fBout\fP)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBSerdNode\fP \fBserd_node_new_decimal\fP (double \fBd\fP, unsigned frac_digits)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBSerdNode\fP \fBserd_node_new_integer\fP (\fBint64_t\fP \fBi\fP)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBSerdNode\fP \fBserd_node_new_blob\fP (\fBconst\fP \fBvoid\fP *\fBbuf\fP, size_t \fBsize\fP, \fBbool\fP wrap_lines)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBvoid\fP \fBserd_node_free\fP (\fBSerdNode\fP *\fBnode\fP)"
+.br
+.in -1c
+.SS "Event Handlers"
+
+.in +1c
+.ti -1c
+.RI "typedef \fBSerdStatus\fP(* \fBSerdErrorSink\fP) (\fBvoid\fP *handle, \fBconst\fP \fBSerdError\fP *\fBerror\fP)"
+.br
+.ti -1c
+.RI "typedef \fBSerdStatus\fP(* \fBSerdBaseSink\fP) (\fBvoid\fP *handle, \fBconst\fP \fBSerdNode\fP *\fBuri\fP)"
+.br
+.ti -1c
+.RI "typedef \fBSerdStatus\fP(* \fBSerdPrefixSink\fP) (\fBvoid\fP *handle, \fBconst\fP \fBSerdNode\fP *\fBname\fP, \fBconst\fP \fBSerdNode\fP *\fBuri\fP)"
+.br
+.ti -1c
+.RI "typedef \fBSerdStatus\fP(* \fBSerdStatementSink\fP) (\fBvoid\fP *handle, \fBSerdStatementFlags\fP flags, \fBconst\fP \fBSerdNode\fP *graph, \fBconst\fP \fBSerdNode\fP *subject, \fBconst\fP \fBSerdNode\fP *\fBpredicate\fP, \fBconst\fP \fBSerdNode\fP *object, \fBconst\fP \fBSerdNode\fP *object_datatype, \fBconst\fP \fBSerdNode\fP *object_lang)"
+.br
+.ti -1c
+.RI "typedef \fBSerdStatus\fP(* \fBSerdEndSink\fP) (\fBvoid\fP *handle, \fBconst\fP \fBSerdNode\fP *\fBnode\fP)"
+.br
+.in -1c
+.SS "Environment"
+
+.in +1c
+.ti -1c
+.RI "\fBSERD_API\fP \fBSerdEnv\fP * \fBserd_env_new\fP (\fBconst\fP \fBSerdNode\fP *base_uri)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBvoid\fP \fBserd_env_free\fP (\fBSerdEnv\fP *env)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBconst\fP \fBSerdNode\fP * \fBserd_env_get_base_uri\fP (\fBconst\fP \fBSerdEnv\fP *env, \fBSerdURI\fP *\fBout\fP)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBSerdStatus\fP \fBserd_env_set_base_uri\fP (\fBSerdEnv\fP *env, \fBconst\fP \fBSerdNode\fP *\fBuri\fP)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBSerdStatus\fP \fBserd_env_set_prefix\fP (\fBSerdEnv\fP *env, \fBconst\fP \fBSerdNode\fP *\fBname\fP, \fBconst\fP \fBSerdNode\fP *\fBuri\fP)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBSerdStatus\fP \fBserd_env_set_prefix_from_strings\fP (\fBSerdEnv\fP *env, \fBconst\fP \fBuint8_t\fP *\fBname\fP, \fBconst\fP \fBuint8_t\fP *\fBuri\fP)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBbool\fP \fBserd_env_qualify\fP (\fBconst\fP \fBSerdEnv\fP *env, \fBconst\fP \fBSerdNode\fP *\fBuri\fP, \fBSerdNode\fP *\fBprefix\fP, \fBSerdChunk\fP *suffix)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBSerdStatus\fP \fBserd_env_expand\fP (\fBconst\fP \fBSerdEnv\fP *env, \fBconst\fP \fBSerdNode\fP *curie, \fBSerdChunk\fP *uri_prefix, \fBSerdChunk\fP *uri_suffix)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBSerdNode\fP \fBserd_env_expand_node\fP (\fBconst\fP \fBSerdEnv\fP *env, \fBconst\fP \fBSerdNode\fP *\fBnode\fP)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBvoid\fP \fBserd_env_foreach\fP (\fBconst\fP \fBSerdEnv\fP *env, \fBSerdPrefixSink\fP func, \fBvoid\fP *handle)"
+.br
+.in -1c
+.SS "Reader"
+
+.in +1c
+.ti -1c
+.RI "\fBSERD_API\fP \fBSerdReader\fP * \fBserd_reader_new\fP (\fBSerdSyntax\fP \fBsyntax\fP, \fBvoid\fP *handle, \fBvoid\fP(*free_handle)(\fBvoid\fP *), \fBSerdBaseSink\fP base_sink, \fBSerdPrefixSink\fP prefix_sink, \fBSerdStatementSink\fP statement_sink, \fBSerdEndSink\fP end_sink)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBvoid\fP \fBserd_reader_set_error_sink\fP (\fBSerdReader\fP *reader, \fBSerdErrorSink\fP error_sink, \fBvoid\fP *handle)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBvoid\fP * \fBserd_reader_get_handle\fP (\fBconst\fP \fBSerdReader\fP *reader)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBvoid\fP \fBserd_reader_add_blank_prefix\fP (\fBSerdReader\fP *reader, \fBconst\fP \fBuint8_t\fP *\fBprefix\fP)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBvoid\fP \fBserd_reader_set_default_graph\fP (\fBSerdReader\fP *reader, \fBconst\fP \fBSerdNode\fP *graph)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBSerdStatus\fP \fBserd_reader_read_file\fP (\fBSerdReader\fP *reader, \fBconst\fP \fBuint8_t\fP *\fBuri\fP)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBSerdStatus\fP \fBserd_reader_start_stream\fP (\fBSerdReader\fP *me, FILE *file, \fBconst\fP \fBuint8_t\fP *\fBname\fP, \fBbool\fP bulk)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBSerdStatus\fP \fBserd_reader_read_chunk\fP (\fBSerdReader\fP *me)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBSerdStatus\fP \fBserd_reader_end_stream\fP (\fBSerdReader\fP *me)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBSerdStatus\fP \fBserd_reader_read_file_handle\fP (\fBSerdReader\fP *reader, FILE *file, \fBconst\fP \fBuint8_t\fP *\fBname\fP)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBSerdStatus\fP \fBserd_reader_read_string\fP (\fBSerdReader\fP *me, \fBconst\fP \fBuint8_t\fP *utf8)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBvoid\fP \fBserd_reader_free\fP (\fBSerdReader\fP *reader)"
+.br
+.in -1c
+.SS "Writer"
+
+.in +1c
+.ti -1c
+.RI "\fBSERD_API\fP \fBSerdWriter\fP * \fBserd_writer_new\fP (\fBSerdSyntax\fP \fBsyntax\fP, \fBSerdStyle\fP style, \fBSerdEnv\fP *env, \fBconst\fP \fBSerdURI\fP *base_uri, \fBSerdSink\fP sink, \fBvoid\fP *stream)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBvoid\fP \fBserd_writer_free\fP (\fBSerdWriter\fP *writer)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBSerdEnv\fP * \fBserd_writer_get_env\fP (\fBSerdWriter\fP *writer)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP size_t \fBserd_file_sink\fP (\fBconst\fP \fBvoid\fP *\fBbuf\fP, size_t \fBlen\fP, \fBvoid\fP *stream)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP size_t \fBserd_chunk_sink\fP (\fBconst\fP \fBvoid\fP *\fBbuf\fP, size_t \fBlen\fP, \fBvoid\fP *stream)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBuint8_t\fP * \fBserd_chunk_sink_finish\fP (\fBSerdChunk\fP *stream)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBvoid\fP \fBserd_writer_set_error_sink\fP (\fBSerdWriter\fP *writer, \fBSerdErrorSink\fP error_sink, \fBvoid\fP *handle)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBvoid\fP \fBserd_writer_chop_blank_prefix\fP (\fBSerdWriter\fP *writer, \fBconst\fP \fBuint8_t\fP *\fBprefix\fP)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBSerdStatus\fP \fBserd_writer_set_base_uri\fP (\fBSerdWriter\fP *writer, \fBconst\fP \fBSerdNode\fP *\fBuri\fP)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBSerdStatus\fP \fBserd_writer_set_root_uri\fP (\fBSerdWriter\fP *writer, \fBconst\fP \fBSerdNode\fP *\fBuri\fP)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBSerdStatus\fP \fBserd_writer_set_prefix\fP (\fBSerdWriter\fP *writer, \fBconst\fP \fBSerdNode\fP *\fBname\fP, \fBconst\fP \fBSerdNode\fP *\fBuri\fP)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBSerdStatus\fP \fBserd_writer_write_statement\fP (\fBSerdWriter\fP *writer, \fBSerdStatementFlags\fP flags, \fBconst\fP \fBSerdNode\fP *graph, \fBconst\fP \fBSerdNode\fP *subject, \fBconst\fP \fBSerdNode\fP *\fBpredicate\fP, \fBconst\fP \fBSerdNode\fP *object, \fBconst\fP \fBSerdNode\fP *object_datatype, \fBconst\fP \fBSerdNode\fP *object_lang)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBSerdStatus\fP \fBserd_writer_end_anon\fP (\fBSerdWriter\fP *writer, \fBconst\fP \fBSerdNode\fP *\fBnode\fP)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBSerdStatus\fP \fBserd_writer_finish\fP (\fBSerdWriter\fP *writer)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+A lightweight RDF syntax library\&. 
+.SH "Typedef Documentation"
+.PP 
+.SS "typedef \fBSerdStatus\fP(* SerdBaseSink) (\fBvoid\fP *handle, \fBconst\fP \fBSerdNode\fP *\fBuri\fP)"
+Sink (callback) for base URI changes\&.
+.PP
+Called whenever the base URI of the serialisation changes\&. 
+.PP
+Definition at line 545 of file serd\&.h\&.
+.SS "typedef \fBSerdStatus\fP(* SerdEndSink) (\fBvoid\fP *handle, \fBconst\fP \fBSerdNode\fP *\fBnode\fP)"
+Sink (callback) for anonymous node end markers\&.
+.PP
+This is called to indicate that the anonymous node with the given \fCvalue\fP will no longer be referred to by any future statements (i\&.e\&. the anonymous serialisation of the node is finished)\&. 
+.PP
+Definition at line 578 of file serd\&.h\&.
+.SS "typedef struct \fBSerdEnvImpl\fP \fBSerdEnv\fP"
+Environment\&.
+.PP
+Represents the state required to resolve a CURIE or relative URI, e\&.g\&. the base URI and set of namespace prefixes at a particular point\&. 
+.PP
+Definition at line 64 of file serd\&.h\&.
+.SS "typedef \fBSerdStatus\fP(* SerdErrorSink) (\fBvoid\fP *handle, \fBconst\fP \fBSerdError\fP *\fBerror\fP)"
+Sink (callback) for errors\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIhandle\fP Handle for user data\&. 
+.br
+\fIerror\fP Error description\&. 
+.RE
+.PP
+
+.PP
+Definition at line 537 of file serd\&.h\&.
+.SS "typedef \fBuint32_t\fP \fBSerdNodeFlags\fP"
+Bitwise OR of SerdNodeFlag values\&. 
+.PP
+Definition at line 201 of file serd\&.h\&.
+.SS "typedef \fBSerdStatus\fP(* SerdPrefixSink) (\fBvoid\fP *handle, \fBconst\fP \fBSerdNode\fP *\fBname\fP, \fBconst\fP \fBSerdNode\fP *\fBuri\fP)"
+Sink (callback) for namespace definitions\&.
+.PP
+Called whenever a prefix is defined in the serialisation\&. 
+.PP
+Definition at line 553 of file serd\&.h\&.
+.SS "typedef struct \fBSerdReaderImpl\fP \fBSerdReader\fP"
+RDF reader\&.
+.PP
+Parses RDF by calling user-provided sink functions as input is consumed (much like an XML SAX parser)\&. 
+.PP
+Definition at line 72 of file serd\&.h\&.
+.SS "typedef size_t(* SerdSink) (\fBconst\fP \fBvoid\fP *\fBbuf\fP, size_t \fBlen\fP, \fBvoid\fP *stream)"
+Sink function for raw string output\&. 
+.PP
+Definition at line 370 of file serd\&.h\&.
+.SS "typedef \fBuint32_t\fP \fBSerdStatementFlags\fP"
+Bitwise OR of SerdNodeFlag values\&. 
+.PP
+Definition at line 133 of file serd\&.h\&.
+.SS "typedef \fBSerdStatus\fP(* SerdStatementSink) (\fBvoid\fP *handle, \fBSerdStatementFlags\fP flags, \fBconst\fP \fBSerdNode\fP *graph, \fBconst\fP \fBSerdNode\fP *subject, \fBconst\fP \fBSerdNode\fP *\fBpredicate\fP, \fBconst\fP \fBSerdNode\fP *object, \fBconst\fP \fBSerdNode\fP *object_datatype, \fBconst\fP \fBSerdNode\fP *object_lang)"
+Sink (callback) for statements\&.
+.PP
+Called for every RDF statement in the serialisation\&. 
+.PP
+Definition at line 562 of file serd\&.h\&.
+.SS "typedef struct \fBSerdWriterImpl\fP \fBSerdWriter\fP"
+RDF writer\&.
+.PP
+Provides a number of functions to allow writing RDF syntax out to some stream\&. These functions are deliberately compatible with the sink functions used by SerdReader, so a reader can be directly connected to a writer to re-serialise a document with minimal overhead\&. 
+.PP
+Definition at line 82 of file serd\&.h\&.
+.SH "Enumeration Type Documentation"
+.PP 
+.SS "enum \fBSerdNodeFlag\fP"
+Flags indicating certain string properties relevant to serialisation\&. 
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fISERD_HAS_NEWLINE \fP\fP
+Contains line breaks ('\\n' or '\\r') 
+.TP
+\fB\fISERD_HAS_QUOTE \fP\fP
+Contains quotes (''') 
+.PP
+Definition at line 193 of file serd\&.h\&.
+.SS "enum \fBSerdStatementFlag\fP"
+Flags indication inline abbreviation information for a statement\&. 
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fISERD_EMPTY_S \fP\fP
+Empty blank node subject 
+.TP
+\fB\fISERD_EMPTY_O \fP\fP
+Empty blank node object 
+.TP
+\fB\fISERD_ANON_S_BEGIN \fP\fP
+Start of anonymous subject 
+.TP
+\fB\fISERD_ANON_O_BEGIN \fP\fP
+Start of anonymous object 
+.TP
+\fB\fISERD_ANON_CONT \fP\fP
+Continuation of anonymous node 
+.TP
+\fB\fISERD_LIST_S_BEGIN \fP\fP
+Start of list subject 
+.TP
+\fB\fISERD_LIST_O_BEGIN \fP\fP
+Start of list object 
+.TP
+\fB\fISERD_LIST_CONT \fP\fP
+Continuation of list 
+.PP
+Definition at line 119 of file serd\&.h\&.
+.SS "enum \fBSerdStatus\fP"
+Return status code\&. 
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fISERD_SUCCESS \fP\fP
+No error 
+.TP
+\fB\fISERD_FAILURE \fP\fP
+Non-fatal failure 
+.TP
+\fB\fISERD_ERR_UNKNOWN \fP\fP
+Unknown error 
+.TP
+\fB\fISERD_ERR_BAD_SYNTAX \fP\fP
+Invalid syntax 
+.TP
+\fB\fISERD_ERR_BAD_ARG \fP\fP
+Invalid argument 
+.TP
+\fB\fISERD_ERR_NOT_FOUND \fP\fP
+Not found 
+.TP
+\fB\fISERD_ERR_ID_CLASH \fP\fP
+Encountered clashing blank node IDs 
+.TP
+\fB\fISERD_ERR_BAD_CURIE \fP\fP
+Invalid CURIE (e\&.g\&. prefix does not exist) 
+.TP
+\fB\fISERD_ERR_INTERNAL \fP\fP
+Unexpected internal error (should not happen) 
+.PP
+Definition at line 87 of file serd\&.h\&.
+.SS "enum \fBSerdStyle\fP"
+Syntax style options\&.
+.PP
+The style of the writer output can be controlled by ORing together values from this enumeration\&. Note that some options are only supported for some syntaxes (e\&.g\&. NTriples does not support abbreviation and is always ASCII)\&. 
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fISERD_STYLE_ABBREVIATED \fP\fP
+Abbreviate triples when possible\&. 
+.TP
+\fB\fISERD_STYLE_ASCII \fP\fP
+Escape all non-ASCII characters\&. 
+.TP
+\fB\fISERD_STYLE_RESOLVED \fP\fP
+Resolve \fBURIs\fP against base URI\&. 
+.TP
+\fB\fISERD_STYLE_CURIED \fP\fP
+Shorten \fBURIs\fP into CURIEs\&. 
+.TP
+\fB\fISERD_STYLE_BULK \fP\fP
+Write output in pages\&. 
+.PP
+Definition at line 258 of file serd\&.h\&.
+.SS "enum \fBSerdSyntax\fP"
+RDF syntax type\&. 
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fISERD_TURTLE \fP\fP
+Turtle - Terse RDF Triple Language (UTF-8)\&. 
+.PP
+\fBSee also:\fP
+.RS 4
+\fCTurtle\fP 
+.RE
+.PP
+
+.TP
+\fB\fISERD_NTRIPLES \fP\fP
+NTriples - Line-based RDF triples (ASCII)\&. 
+.PP
+\fBSee also:\fP
+.RS 4
+\fCNTriples\fP 
+.RE
+.PP
+
+.PP
+Definition at line 102 of file serd\&.h\&.
+.SS "enum \fBSerdType\fP"
+Type of a syntactic RDF node\&.
+.PP
+This is more precise than the type of an abstract RDF node\&. An abstract node is either a resource, literal, or blank\&. In syntax there are two ways to refer to a resource (by URI or CURIE) and two ways to refer to a blank (by ID or anonymously)\&. Anonymous (inline) blank nodes are expressed using SerdStatementFlags rather than this type\&. 
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fISERD_NOTHING \fP\fP
+The type of a nonexistent node\&.
+.PP
+This type is useful as a sentinel, but is never emitted by the reader\&. 
+.TP
+\fB\fISERD_LITERAL \fP\fP
+Literal value\&.
+.PP
+A literal optionally has either a language, or a datatype (not both)\&. 
+.TP
+\fB\fISERD_URI \fP\fP
+URI (absolute or relative)\&.
+.PP
+Value is an unquoted URI string, which is either a relative reference with respect to the current base URI (e\&.g\&. 'foo/bar'), or an absolute URI (e\&.g\&. 'http://example\&.org/foo')\&. 
+.PP
+\fBSee also:\fP
+.RS 4
+\fCRFC3986\fP\&. 
+.RE
+.PP
+
+.TP
+\fB\fISERD_CURIE \fP\fP
+CURIE, a shortened URI\&.
+.PP
+Value is an unquoted CURIE string relative to the current environment, e\&.g\&. 'rdf:type'\&. 
+.PP
+\fBSee also:\fP
+.RS 4
+\fCCURIE Syntax 1\&.0\fP 
+.RE
+.PP
+
+.TP
+\fB\fISERD_BLANK \fP\fP
+A blank node\&.
+.PP
+Value is a blank node ID, e\&.g\&. 'id3', which is meaningful only within this serialisation\&. 
+.PP
+\fBSee also:\fP
+.RS 4
+\fCTurtle \fCnodeID\fP\fP 
+.RE
+.PP
+
+.PP
+Definition at line 144 of file serd\&.h\&.
+.SH "Function Documentation"
+.PP 
+.SS "\fBSERD_API\fP \fBvoid\fP* serd_base64_decode (\fBconst\fP \fBuint8_t\fP * str, size_t len, size_t * size)"
+Decode a base64 string\&. This function can be used to deserialise a blob node created with \fBserd_node_new_blob()\fP\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIstr\fP Base64 string to decode\&. 
+.br
+\fIlen\fP The length of \fCstr\fP\&. 
+.br
+\fIsize\fP Set to the size of the returned blob in bytes\&. 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+A newly allocated blob which must be freed with free()\&. 
+.RE
+.PP
+
+.PP
+Definition at line 149 of file string\&.c\&.
+.SS "\fBSERD_API\fP size_t serd_chunk_sink (\fBconst\fP \fBvoid\fP * buf, size_t len, \fBvoid\fP * stream)"
+A convenience sink function for writing to a string\&.
+.PP
+This function can be used as a SerdSink to write to a \fBSerdChunk\fP which is resized as necessary with realloc()\&. The \fCstream\fP parameter must point to an initialized \fBSerdChunk\fP\&. When the write is finished, the string should be retrieved with \fBserd_chunk_sink_finish()\fP\&. 
+.PP
+Definition at line 923 of file writer\&.c\&.
+.SS "\fBSERD_API\fP \fBuint8_t\fP* serd_chunk_sink_finish (\fBSerdChunk\fP * stream)"
+Finish a serialisation to a chunk with \fBserd_chunk_sink()\fP\&.
+.PP
+The returned string is the result of the serialisation, which is NULL terminated (by this function) and owned by the caller\&. 
+.PP
+Definition at line 934 of file writer\&.c\&.
+.SS "\fBSERD_API\fP \fBSerdStatus\fP serd_env_expand (\fBconst\fP \fBSerdEnv\fP * env, \fBconst\fP \fBSerdNode\fP * curie, \fBSerdChunk\fP * uri_prefix, \fBSerdChunk\fP * uri_suffix)"
+Expand \fCcurie\fP\&. 
+.PP
+Definition at line 211 of file env\&.c\&.
+.SS "\fBSERD_API\fP \fBSerdNode\fP serd_env_expand_node (\fBconst\fP \fBSerdEnv\fP * env, \fBconst\fP \fBSerdNode\fP * node)"
+Expand \fCnode\fP, which must be a CURIE or URI, to a full URI\&. 
+.PP
+Definition at line 236 of file env\&.c\&.
+.SS "\fBSERD_API\fP \fBvoid\fP serd_env_foreach (\fBconst\fP \fBSerdEnv\fP * env, \fBSerdPrefixSink\fP func, \fBvoid\fP * handle)"
+Call \fCfunc\fP for each prefix defined in \fCenv\fP\&. 
+.PP
+Definition at line 263 of file env\&.c\&.
+.SS "\fBSERD_API\fP \fBvoid\fP serd_env_free (\fBSerdEnv\fP * env)"
+Free \fCns\fP\&. 
+.PP
+Definition at line 47 of file env\&.c\&.
+.SS "\fBSERD_API\fP \fBconst\fP \fBSerdNode\fP* serd_env_get_base_uri (\fBconst\fP \fBSerdEnv\fP * env, \fBSerdURI\fP * out)"
+Get the current base URI\&. 
+.PP
+Definition at line 60 of file env\&.c\&.
+.SS "\fBSERD_API\fP \fBSerdEnv\fP* serd_env_new (\fBconst\fP \fBSerdNode\fP * base_uri)"
+Create a new environment\&. 
+.PP
+Definition at line 36 of file env\&.c\&.
+.SS "\fBSERD_API\fP \fBbool\fP serd_env_qualify (\fBconst\fP \fBSerdEnv\fP * env, \fBconst\fP \fBSerdNode\fP * uri, \fBSerdNode\fP * prefix, \fBSerdChunk\fP * suffix)"
+Qualify \fCuri\fP into a CURIE if possible\&. 
+.PP
+Definition at line 186 of file env\&.c\&.
+.SS "\fBSERD_API\fP \fBSerdStatus\fP serd_env_set_base_uri (\fBSerdEnv\fP * env, \fBconst\fP \fBSerdNode\fP * uri)"
+Set the current base URI\&. 
+.PP
+Definition at line 71 of file env\&.c\&.
+.SS "\fBSERD_API\fP \fBSerdStatus\fP serd_env_set_prefix (\fBSerdEnv\fP * env, \fBconst\fP \fBSerdNode\fP * name, \fBconst\fP \fBSerdNode\fP * uri)"
+Set a namespace prefix\&. 
+.PP
+Definition at line 129 of file env\&.c\&.
+.SS "\fBSERD_API\fP \fBSerdStatus\fP serd_env_set_prefix_from_strings (\fBSerdEnv\fP * env, \fBconst\fP \fBuint8_t\fP * name, \fBconst\fP \fBuint8_t\fP * uri)"
+Set a namespace prefix\&. 
+.PP
+Definition at line 153 of file env\&.c\&.
+.SS "\fBSERD_API\fP size_t serd_file_sink (\fBconst\fP \fBvoid\fP * buf, size_t len, \fBvoid\fP * stream)"
+A convenience sink function for writing to a FILE*\&.
+.PP
+This function can be used as a SerdSink when writing to a FILE*\&. The \fCstream\fP parameter must be a FILE* opened for writing\&. 
+.PP
+Definition at line 916 of file writer\&.c\&.
+.SS "\fBSERD_API\fP \fBuint8_t\fP* serd_file_uri_parse (\fBconst\fP \fBuint8_t\fP * uri, \fBuint8_t\fP ** hostname)"
+Get the unescaped path and hostname from a file URI\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIuri\fP A file URI\&. 
+.br
+\fIhostname\fP If non-NULL, set to the hostname, if present\&. 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+The path component of the URI\&.
+.RE
+.PP
+Both the returned path and \fChostname\fP (if applicable) are owned by the caller and must be freed with free()\&. 
+.PP
+Definition at line 50 of file uri\&.c\&.
+.SS "\fBSERD_API\fP \fBSerdNode\fP serd_node_copy (\fBconst\fP \fBSerdNode\fP * node)"
+Make a deep copy of \fCnode\fP\&.
+.PP
+\fBReturns:\fP
+.RS 4
+a node that the caller must free with \fBserd_node_free()\fP\&. 
+.RE
+.PP
+
+.PP
+Definition at line 47 of file serdnode\&.c\&.
+.SS "\fBSERD_API\fP \fBbool\fP serd_node_equals (\fBconst\fP \fBSerdNode\fP * a, \fBconst\fP \fBSerdNode\fP * b)"
+Return true iff \fCa\fP is equal to \fCb\fP\&. 
+.PP
+Definition at line 62 of file serdnode\&.c\&.
+.SS "\fBSERD_API\fP \fBvoid\fP serd_node_free (\fBSerdNode\fP * node)"
+Free any data owned by \fCnode\fP\&.
+.PP
+Note that if \fCnode\fP is itself dynamically allocated (which is not the case for nodes created internally by serd), it will not be freed\&. 
+.PP
+Definition at line 345 of file serdnode\&.c\&.
+.SS "\fBSERD_API\fP \fBSerdNode\fP serd_node_from_string (\fBSerdType\fP type, \fBconst\fP \fBuint8_t\fP * str)"
+Make a (shallow) node from \fCstr\fP\&.
+.PP
+This measures, but does not copy, \fCstr\fP\&. No memory is allocated\&. 
+.PP
+Definition at line 32 of file serdnode\&.c\&.
+.SS "\fBSERD_API\fP \fBSerdNode\fP serd_node_new_blob (\fBconst\fP \fBvoid\fP * buf, size_t size, \fBbool\fP wrap_lines)"
+Create a node by serialising \fCbuf\fP into an xsd:base64Binary string\&. This function can be used to make a serialisable node out of arbitrary binary data, which can be decoded using \fBserd_base64_decode()\fP\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIbuf\fP Raw binary input data\&. 
+.br
+\fIsize\fP Size of \fCbuf\fP\&. 
+.br
+\fIwrap_lines\fP Wrap lines at 76 characters to conform to RFC 2045\&. 
+.RE
+.PP
+
+.PP
+Definition at line 323 of file serdnode\&.c\&.
+.SS "\fBSERD_API\fP \fBSerdNode\fP serd_node_new_decimal (double d, unsigned frac_digits)"
+Create a new node by serialising \fCd\fP into an xsd:decimal string\&.
+.PP
+The resulting node will always contain a `\&.', start with a digit, and end with a digit (i\&.e\&. will have a leading and/or trailing `0' if necessary)\&. It will never be in scientific notation\&. A maximum of \fCfrac_digits\fP digits will be written after the decimal point, but trailing zeros will automatically be omitted (except one if \fCd\fP is a round integer)\&.
+.PP
+Note that about 16 and 8 fractional digits are required to precisely represent a double and float, respectively\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fId\fP The value for the new node\&. 
+.br
+\fIfrac_digits\fP The maximum number of digits after the decimal place\&. 
+.RE
+.PP
+
+.PP
+Definition at line 221 of file serdnode\&.c\&.
+.SS "\fBSERD_API\fP \fBSerdNode\fP serd_node_new_file_uri (\fBconst\fP \fBuint8_t\fP * path, \fBconst\fP \fBuint8_t\fP * hostname, \fBSerdURI\fP * out, \fBbool\fP escape)"
+Create a new file URI node from a file system path and optional hostname\&.
+.PP
+Backslashes in Windows paths will be converted and '' will always be percent encoded\&. If \fCescape\fP is true, all other invalid characters will be percent encoded as well\&.
+.PP
+If \fCpath\fP is relative, \fChostname\fP is ignored\&. If \fCout\fP is not NULL, it will be set to the parsed URI\&. 
+.PP
+Definition at line 149 of file serdnode\&.c\&.
+.SS "\fBSERD_API\fP \fBSerdNode\fP serd_node_new_integer (\fBint64_t\fP i)"
+Create a new node by serialising \fCi\fP into an xsd:integer string\&. 
+.PP
+Definition at line 276 of file serdnode\&.c\&.
+.SS "\fBSERD_API\fP \fBSerdNode\fP serd_node_new_uri (\fBconst\fP \fBSerdURI\fP * uri, \fBconst\fP \fBSerdURI\fP * base, \fBSerdURI\fP * out)"
+Create a new node by serialising \fCuri\fP into a new string\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIuri\fP The URI to parse and serialise\&.
+.br
+\fIbase\fP Base URI to resolve \fCuri\fP against (or NULL for no resolution)\&.
+.br
+\fIout\fP Set to the parsing of the new URI (i\&.e\&. points only to memory owned by the new returned node)\&. 
+.RE
+.PP
+
+.PP
+Definition at line 193 of file serdnode\&.c\&.
+.SS "\fBSERD_API\fP \fBSerdNode\fP serd_node_new_uri_from_node (\fBconst\fP \fBSerdNode\fP * uri_node, \fBconst\fP \fBSerdURI\fP * base, \fBSerdURI\fP * out)"
+Simple wrapper for serd_node_new_uri to resolve a URI node\&. 
+.PP
+Definition at line 101 of file serdnode\&.c\&.
+.SS "\fBSERD_API\fP \fBSerdNode\fP serd_node_new_uri_from_string (\fBconst\fP \fBuint8_t\fP * str, \fBconst\fP \fBSerdURI\fP * base, \fBSerdURI\fP * out)"
+Simple wrapper for serd_node_new_uri to resolve a URI string\&. 
+.PP
+Definition at line 112 of file serdnode\&.c\&.
+.SS "\fBSERD_API\fP \fBvoid\fP serd_reader_add_blank_prefix (\fBSerdReader\fP * reader, \fBconst\fP \fBuint8_t\fP * prefix)"
+Set a prefix to be added to all blank node identifiers\&.
+.PP
+This is useful when multiple files are to be parsed into the same output (e\&.g\&. a store, or other files)\&. Since Serd preserves blank node IDs, this could cause conflicts where two non-equivalent blank nodes are merged, resulting in corrupt data\&. By setting a unique blank node prefix for each parsed file, this can be avoided, while preserving blank node names\&. 
+.PP
+Definition at line 1522 of file reader\&.c\&.
+.SS "\fBSERD_API\fP \fBSerdStatus\fP serd_reader_end_stream (\fBSerdReader\fP * me)"
+Finish an incremental read from a file handle\&. 
+.PP
+Definition at line 1624 of file reader\&.c\&.
+.SS "\fBSERD_API\fP \fBvoid\fP serd_reader_free (\fBSerdReader\fP * reader)"
+Free \fCreader\fP\&. 
+.PP
+Definition at line 1495 of file reader\&.c\&.
+.SS "\fBSERD_API\fP \fBvoid\fP* serd_reader_get_handle (\fBconst\fP \fBSerdReader\fP * reader)"
+Return the \fChandle\fP passed to \fBserd_reader_new()\fP\&. 
+.PP
+Definition at line 1515 of file reader\&.c\&.
+.SS "\fBSERD_API\fP \fBSerdReader\fP* serd_reader_new (\fBSerdSyntax\fP syntax, \fBvoid\fP * handle, \fBvoid\fP(*)(\fBvoid\fP *) free_handle, \fBSerdBaseSink\fP base_sink, \fBSerdPrefixSink\fP prefix_sink, \fBSerdStatementSink\fP statement_sink, \fBSerdEndSink\fP end_sink)"
+Create a new RDF reader\&. 
+.PP
+Definition at line 1440 of file reader\&.c\&.
+.SS "\fBSERD_API\fP \fBSerdStatus\fP serd_reader_read_chunk (\fBSerdReader\fP * me)"
+Read a single 'chunk' of data during an incremental read\&.
+.PP
+This function will read a single top level description, and return\&. This may be a directive, statement, or several statements; essentially it reads until a '\&.' is encountered\&. This is particularly useful for reading directly from a pipe or socket\&. 
+.PP
+Definition at line 1608 of file reader\&.c\&.
+.SS "\fBSERD_API\fP \fBSerdStatus\fP serd_reader_read_file (\fBSerdReader\fP * reader, \fBconst\fP \fBuint8_t\fP * uri)"
+Read a file at a given \fCuri\fP\&. 
+.PP
+Definition at line 1546 of file reader\&.c\&.
+.SS "\fBSERD_API\fP \fBSerdStatus\fP serd_reader_read_file_handle (\fBSerdReader\fP * reader, FILE * file, \fBconst\fP \fBuint8_t\fP * name)"
+Read \fCfile\fP\&. 
+.PP
+Definition at line 1636 of file reader\&.c\&.
+.SS "\fBSERD_API\fP \fBSerdStatus\fP serd_reader_read_string (\fBSerdReader\fP * me, \fBconst\fP \fBuint8_t\fP * utf8)"
+Read \fCutf8\fP\&. 
+.PP
+Definition at line 1648 of file reader\&.c\&.
+.SS "\fBSERD_API\fP \fBvoid\fP serd_reader_set_default_graph (\fBSerdReader\fP * reader, \fBconst\fP \fBSerdNode\fP * graph)"
+Set the URI of the default graph\&.
+.PP
+If this is set, the reader will emit quads with the graph set to the given node for any statements that are not in a named graph (which is currently all of them since Serd currently does not support any graph syntaxes)\&. 
+.PP
+Definition at line 1537 of file reader\&.c\&.
+.SS "\fBSERD_API\fP \fBvoid\fP serd_reader_set_error_sink (\fBSerdReader\fP * reader, \fBSerdErrorSink\fP error_sink, \fBvoid\fP * handle)"
+Set a function to be called when errors occur during reading\&.
+.PP
+The \fCerror_sink\fP will be called with \fChandle\fP as its first argument\&. If no error function is set, errors are printed to stderr in GCC style\&. 
+.PP
+Definition at line 1485 of file reader\&.c\&.
+.SS "\fBSERD_API\fP \fBSerdStatus\fP serd_reader_start_stream (\fBSerdReader\fP * me, FILE * file, \fBconst\fP \fBuint8_t\fP * name, \fBbool\fP bulk)"
+Start an incremental read from a file handle\&.
+.PP
+Iff \fCbulk\fP is true, \fCfile\fP will be read a page at a time\&. This is more efficient, but uses a page of memory and means that an entire page of input must be ready before any callbacks will fire\&. To react as soon as input arrives, set \fCbulk\fP to false\&. 
+.PP
+Definition at line 1575 of file reader\&.c\&.
+.SS "\fBSERD_API\fP \fBconst\fP \fBuint8_t\fP* serd_strerror (\fBSerdStatus\fP status)"
+Return a string describing a status code\&. 
+.PP
+Definition at line 23 of file string\&.c\&.
+.SS "\fBSERD_API\fP size_t serd_strlen (\fBconst\fP \fBuint8_t\fP * str, size_t * n_bytes, \fBSerdNodeFlags\fP * flags)"
+Measure a UTF-8 string\&. 
+.PP
+\fBReturns:\fP
+.RS 4
+Length of \fCstr\fP in characters (except NULL)\&. 
+.RE
+.PP
+\fBParameters:\fP
+.RS 4
+\fIstr\fP A null-terminated UTF-8 string\&. 
+.br
+\fIn_bytes\fP (Output) Set to the size of \fCstr\fP in bytes (except NULL)\&. 
+.br
+\fIflags\fP (Output) Set to the applicable flags\&. 
+.RE
+.PP
+
+.PP
+Definition at line 41 of file string\&.c\&.
+.SS "\fBSERD_API\fP double serd_strtod (\fBconst\fP char * str, char ** endptr)"
+Parse a string to a double\&.
+.PP
+The API of this function is identical to the standard C strtod function, except this function is locale-independent and always matches the lexical format used in the Turtle grammar (the decimal point is always '\&.')\&. 
+.PP
+Definition at line 78 of file string\&.c\&.
+.SS "\fBSERD_API\fP \fBSerdStatus\fP serd_uri_parse (\fBconst\fP \fBuint8_t\fP * utf8, \fBSerdURI\fP * out)"
+Parse \fCutf8\fP, writing result to \fCout\fP\&. 
+.PP
+Definition at line 144 of file uri\&.c\&.
+.SS "\fBSERD_API\fP \fBvoid\fP serd_uri_resolve (\fBconst\fP \fBSerdURI\fP * uri, \fBconst\fP \fBSerdURI\fP * base, \fBSerdURI\fP * out)"
+
+.PP
+See http://tools.ietf.org/html/rfc3986#section-5.2.2\&. Set \fCout\fP to \fCuri\fP resolved against \fCbase\fP\&. 
+.PP
+Definition at line 350 of file uri\&.c\&.
+.SS "\fBSERD_API\fP size_t serd_uri_serialise (\fBconst\fP \fBSerdURI\fP * uri, \fBSerdSink\fP sink, \fBvoid\fP * stream)"
+
+.PP
+See http://tools.ietf.org/html/rfc3986#section-5.3\&. Serialise \fCuri\fP with a series of calls to \fCsink\fP\&. 
+.PP
+Definition at line 501 of file uri\&.c\&.
+.SS "\fBSERD_API\fP size_t serd_uri_serialise_relative (\fBconst\fP \fBSerdURI\fP * uri, \fBconst\fP \fBSerdURI\fP * base, \fBconst\fP \fBSerdURI\fP * root, \fBSerdSink\fP sink, \fBvoid\fP * stream)"
+
+.PP
+See http://tools.ietf.org/html/rfc3986#section-5.3\&. Serialise \fCuri\fP relative to \fCbase\fP with a series of calls to \fCsink\fP\&.
+.PP
+The \fCuri\fP is written as a relative URI iff if it a child of \fCbase\fP and \fCroot\fP\&. The optional \fCroot\fP parameter must be a prefix of \fCbase\fP and can be used keep up-references ('\&.\&./') within a certain namespace\&. 
+.PP
+Definition at line 465 of file uri\&.c\&.
+.SS "\fBSERD_API\fP \fBbool\fP serd_uri_string_has_scheme (\fBconst\fP \fBuint8_t\fP * utf8)"
+Return true iff \fCutf8\fP starts with a valid URI scheme\&. 
+.PP
+Definition at line 100 of file uri\&.c\&.
+.SS "\fBSERD_API\fP \fBconst\fP \fBuint8_t\fP* serd_uri_to_path (\fBconst\fP \fBuint8_t\fP * uri)"
+Return the local path for \fCuri\fP, or NULL if \fCuri\fP is not a file URI\&. Note this (inappropriately named) function only removes the file scheme if necessary, and returns \fCuri\fP unmodified if it is an absolute path\&. Percent encoding and other issues are not handled, to properly convert a file URI to a path, use \fBserd_file_uri_parse()\fP\&. 
+.PP
+Definition at line 26 of file uri\&.c\&.
+.SS "\fBSERD_API\fP \fBvoid\fP serd_writer_chop_blank_prefix (\fBSerdWriter\fP * writer, \fBconst\fP \fBuint8_t\fP * prefix)"
+Set a prefix to be removed from matching blank node identifiers\&. 
+.PP
+Definition at line 817 of file writer\&.c\&.
+.SS "\fBSERD_API\fP \fBSerdStatus\fP serd_writer_end_anon (\fBSerdWriter\fP * writer, \fBconst\fP \fBSerdNode\fP * node)"
+Mark the end of an anonymous node's description\&.
+.PP
+Note this function can be safely casted to SerdEndSink\&. 
+.PP
+Definition at line 731 of file writer\&.c\&.
+.SS "\fBSERD_API\fP \fBSerdStatus\fP serd_writer_finish (\fBSerdWriter\fP * writer)"
+Finish a write\&. 
+.PP
+Definition at line 757 of file writer\&.c\&.
+.SS "\fBSERD_API\fP \fBvoid\fP serd_writer_free (\fBSerdWriter\fP * writer)"
+Free \fCwriter\fP\&. 
+.PP
+Definition at line 895 of file writer\&.c\&.
+.SS "\fBSERD_API\fP \fBSerdEnv\fP* serd_writer_get_env (\fBSerdWriter\fP * writer)"
+Return the env used by \fCwriter\fP\&. 
+.PP
+Definition at line 909 of file writer\&.c\&.
+.SS "\fBSERD_API\fP \fBSerdWriter\fP* serd_writer_new (\fBSerdSyntax\fP syntax, \fBSerdStyle\fP style, \fBSerdEnv\fP * env, \fBconst\fP \fBSerdURI\fP * base_uri, \fBSerdSink\fP sink, \fBvoid\fP * stream)"
+Create a new RDF writer\&. 
+.PP
+Definition at line 771 of file writer\&.c\&.
+.SS "\fBSERD_API\fP \fBSerdStatus\fP serd_writer_set_base_uri (\fBSerdWriter\fP * writer, \fBconst\fP \fBSerdNode\fP * uri)"
+Set the current output base URI (and emit directive if applicable)\&.
+.PP
+Note this function can be safely casted to SerdBaseSink\&. 
+.PP
+Definition at line 832 of file writer\&.c\&.
+.SS "\fBSERD_API\fP \fBvoid\fP serd_writer_set_error_sink (\fBSerdWriter\fP * writer, \fBSerdErrorSink\fP error_sink, \fBvoid\fP * handle)"
+Set a function to be called when errors occur during writing\&.
+.PP
+The \fCerror_sink\fP will be called with \fChandle\fP as its first argument\&. If no error function is set, errors are printed to stderr\&. 
+.PP
+Definition at line 807 of file writer\&.c\&.
+.SS "\fBSERD_API\fP \fBSerdStatus\fP serd_writer_set_prefix (\fBSerdWriter\fP * writer, \fBconst\fP \fBSerdNode\fP * name, \fBconst\fP \fBSerdNode\fP * uri)"
+Set a namespace prefix (and emit directive if applicable)\&.
+.PP
+Note this function can be safely casted to SerdPrefixSink\&. 
+.PP
+Definition at line 871 of file writer\&.c\&.
+.SS "\fBSERD_API\fP \fBSerdStatus\fP serd_writer_set_root_uri (\fBSerdWriter\fP * writer, \fBconst\fP \fBSerdNode\fP * uri)"
+Set the current root URI\&.
+.PP
+The root URI should be a prefix of the base URI\&. The path of the root URI is the highest path any relative up-reference can refer to\&. For example, with root file:///foo/root and base file:///foo/root/base, file:///foo/root will be written as <\&.\&./>, but file:///foo will be written non-relatively as file:///foo\&. If the root is not explicitly set, it defaults to the base URI, so no up-references will be created at all\&. 
+.PP
+Definition at line 855 of file writer\&.c\&.
+.SS "\fBSERD_API\fP \fBSerdStatus\fP serd_writer_write_statement (\fBSerdWriter\fP * writer, \fBSerdStatementFlags\fP flags, \fBconst\fP \fBSerdNode\fP * graph, \fBconst\fP \fBSerdNode\fP * subject, \fBconst\fP \fBSerdNode\fP * predicate, \fBconst\fP \fBSerdNode\fP * object, \fBconst\fP \fBSerdNode\fP * object_datatype, \fBconst\fP \fBSerdNode\fP * object_lang)"
+Write a statement\&.
+.PP
+Note this function can be safely casted to SerdStatementSink\&. 
+.PP
+Definition at line 619 of file writer\&.c\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

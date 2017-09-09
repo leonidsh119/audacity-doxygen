@@ -1,0 +1,206 @@
+.TH "Group_funcmacro_appinitterm" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Group_funcmacro_appinitterm \- Group_funcmacro_appinitterm
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "wxAppDerivedClass & \fBwxGetApp\fP ()"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBwxHandleFatalExceptions\fP (\fBbool\fP doIt=\fBtrue\fP)"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBwxInitialize\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBwxUninitialize\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBwxWakeUpIdle\fP ()"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBwxYield\fP ()"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBwxSafeYield\fP (wxWindow *win=\fBNULL\fP, \fBbool\fP onlyIfNeeded=\fBfalse\fP)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBwxEntry\fP (\fBint\fP &\fBargc\fP, wxChar **\fBargv\fP)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBwxEntry\fP (HINSTANCE hInstance, HINSTANCE hPrevInstance=\fBNULL\fP, char *pCmdLine=\fBNULL\fP, \fBint\fP nCmdShow=\fBSW_SHOWNORMAL\fP)"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBwxEntryStart\fP (\fBint\fP &\fBargc\fP, wxChar **\fBargv\fP)"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBwxEntryStart\fP (HINSTANCE hInstance, HINSTANCE hPrevInstance=\fBNULL\fP, char *pCmdLine=\fBNULL\fP, \fBint\fP nCmdShow=\fBSW_SHOWNORMAL\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBwxEntryCleanup\fP ()"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBwxInitialize\fP (\fBint\fP \fBargc\fP=0, wxChar **\fBargv\fP=\fBNULL\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBwxMSWDisableSettingHighDPIAware\fP ()"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+
+.SH "Function Documentation"
+.PP 
+.SS "\fBint\fP wxEntry (\fBint\fP & argc, wxChar ** argv)"
+This function initializes wxWidgets in a platform-dependent way\&. Use this if you are not using the default wxWidgets entry code (e\&.g\&. main or WinMain)\&.
+.PP
+For example, you can initialize wxWidgets from an Microsoft Foundation Classes (MFC) application using this function\&.
+.PP
+\fBNote:\fP
+.RS 4
+This overload of wxEntry is available under all platforms\&.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBwxEntryStart()\fP
+.RE
+.PP
+{\fBwx/app\&.h\fP} 
+.SS "\fBint\fP wxEntry (HINSTANCE hInstance, HINSTANCE hPrevInstance = \fC\fBNULL\fP\fP, char * pCmdLine = \fC\fBNULL\fP\fP, \fBint\fP nCmdShow = \fC\fBSW_SHOWNORMAL\fP\fP)"
+See \fBwxEntry(int&,wxChar**)\fP for more info about this function\&.
+.PP
+Notice that under Windows CE platform, and only there, the type of \fIpCmdLine\fP is \fCwchar_t\fP *, otherwise it is \fCchar\fP *, even in Unicode build\&.
+.PP
+\fBRemarks:\fP
+.RS 4
+To clean up wxWidgets, call \fBwxApp::OnExit\fP followed by the static function wxApp::CleanUp\&. For example, if exiting from an MFC application that also uses wxWidgets: 
+.PP
+.nf
+1 int CTheApp::ExitInstance()
+2 {
+3    // OnExit isn't called by CleanUp so must be called explicitly\&.
+4    wxTheApp->OnExit();
+5    wxApp::CleanUp();
+6 
+7    return CWinApp::ExitInstance();
+8 }
+
+.fi
+.PP
+.RE
+.PP
+{wxmsw}
+.PP
+{\fBwx/app\&.h\fP}
+.PP
+\fBSee also:\fP
+.RS 4
+\fBwxMSWDisableSettingHighDPIAware()\fP 
+.RE
+.PP
+
+.SS "\fBvoid\fP wxEntryCleanup ()"
+Free resources allocated by a successful call to \fBwxEntryStart()\fP\&.
+.PP
+{\fBwx/init\&.h\fP} 
+.SS "\fBbool\fP wxEntryStart (\fBint\fP & argc, wxChar ** argv)"
+This function can be used to perform the initialization of wxWidgets if you can't use the default initialization code for any reason\&.
+.PP
+If the function returns true, the initialization was successful and the global \fBwxApp\fP object \fBwxTheApp\fP has been created\&. Moreover, \fBwxEntryCleanup()\fP must be called afterwards\&. If the function returns false, a catastrophic initialization error occurred and (at least the GUI part of) the library can't be used at all\&.
+.PP
+Notice that parameters \fCargc\fP and \fCargv\fP may be modified by this function\&.
+.PP
+{\fBwx/init\&.h\fP} 
+.SS "\fBbool\fP wxEntryStart (HINSTANCE hInstance, HINSTANCE hPrevInstance = \fC\fBNULL\fP\fP, char * pCmdLine = \fC\fBNULL\fP\fP, \fBint\fP nCmdShow = \fC\fBSW_SHOWNORMAL\fP\fP)"
+See \fBwxEntryStart(int&,wxChar**)\fP for more info about this function\&.
+.PP
+This is an additional overload of \fBwxEntryStart()\fP provided under MSW only\&. It is meant to be called with the parameters passed to \fBWinMain()\fP\&.
+.PP
+\fBNote:\fP
+.RS 4
+Under Windows CE platform, and only there, the type of \fIpCmdLine\fP is \fCwchar_t\fP *, otherwise it is \fCchar\fP *, even in Unicode build\&.
+.RE
+.PP
+{wxmsw}
+.PP
+{\fBwx/init\&.h\fP} 
+.SS "wxAppDerivedClass& wxGetApp ()"
+This function doesn't exist in wxWidgets but it is created by using the \fBwxIMPLEMENT_APP()\fP macro\&.
+.PP
+Thus, before using it anywhere but in the same module where this macro is used, you must make it available using \fBwxDECLARE_APP()\fP\&.
+.PP
+The advantage of using this function compared to directly using the global \fBwxTheApp\fP pointer is that the latter is of type wxApp* and so wouldn't allow you to access the functions specific to your application class but not present in \fBwxApp\fP while \fBwxGetApp()\fP returns the object of the right type\&.
+.PP
+{\fBwx/app\&.h\fP} 
+.SS "\fBbool\fP wxHandleFatalExceptions (\fBbool\fP doIt = \fC\fBtrue\fP\fP)"
+If \fIdoIt\fP is , the fatal exceptions (also known as general protection faults under Windows or segmentation violations in the Unix world) will be caught and passed to \fBwxApp::OnFatalException\fP\&.
+.PP
+By default, i\&.e\&. before this function is called, they will be handled in the normal way which usually just means that the application will be terminated\&. Calling \fBwxHandleFatalExceptions()\fP with \fIdoIt\fP equal to  will restore this default behaviour\&.
+.PP
+Notice that this function is only available if \fCwxUSE_ON_FATAL_EXCEPTION\fP is 1 and under Windows platform this requires a compiler with support for SEH (structured exception handling) which currently means only Microsoft Visual C++ or a recent Borland C++ version\&.
+.PP
+{\fBwx/app\&.h\fP} 
+.SS "\fBbool\fP wxInitialize (\fBint\fP argc = \fC0\fP, wxChar ** argv = \fC\fBNULL\fP\fP)"
+Initialize the library (may be called as many times as needed, but each call to \fBwxInitialize()\fP must be matched by \fBwxUninitialize()\fP)\&.
+.PP
+With this function you may avoid \fBwxDECLARE_APP()\fP and \fBwxIMPLEMENT_APP()\fP macros and use \fBwxInitialize()\fP and \fBwxUninitialize()\fP dynamically in the program startup and termination\&.
+.PP
+{\fBwx/init\&.h\fP} 
+.SS "\fBbool\fP wxInitialize ()"
+This function is used in wxBase only and only if you don't create \fBwxApp\fP object at all\&. In this case you must call it from your \fC\fBmain()\fP\fP function before calling any other wxWidgets functions\&.
+.PP
+If the function returns  the initialization could not be performed, in this case the library cannot be used and \fBwxUninitialize()\fP shouldn't be called neither\&.
+.PP
+This function may be called several times but \fBwxUninitialize()\fP must be called for each successful call to this function\&.
+.PP
+{\fBwx/app\&.h\fP} 
+.SS "\fBvoid\fP wxMSWDisableSettingHighDPIAware ()"
+Prevents wxWidgets from setting HighDPI awareness mode\&.
+.PP
+wxEntry calls SetDPIProcessAware() early during initialization on Windows\&. To prevent this (e\&.g\&. because wx is embedded in native code and disabling DPI awareness in the manifest is not an option), call this function before* \fBwxEntry()\fP is called\&.
+.PP
+{wxmsw}
+.PP
+{\fBwx/init\&.h\fP}
+.PP
+\fBSince:\fP
+.RS 4
+3\&.0\&.3, but only available in 3\&.0\&.x, not 3\&.1+ which doesn't make the SetDPIProcessAware() call anymore\&. 
+.RE
+.PP
+
+.SS "\fBbool\fP wxSafeYield (wxWindow * win = \fC\fBNULL\fP\fP, \fBbool\fP onlyIfNeeded = \fC\fBfalse\fP\fP)"
+Calls \fBwxApp::SafeYield\fP\&.
+.PP
+{\fBwx/app\&.h\fP} 
+.SS "\fBvoid\fP wxUninitialize ()"
+This function is for use in console (wxBase) programs only\&. It must be called once for each previous successful call to \fBwxInitialize()\fP\&.
+.PP
+{\fBwx/app\&.h\fP}
+.PP
+Clean up; the library can't be used any more after the last call to \fBwxUninitialize()\fP\&.
+.PP
+See \fBwxInitialize()\fP for more info\&.
+.PP
+{\fBwx/init\&.h\fP} 
+.SS "\fBvoid\fP wxWakeUpIdle ()"
+This function wakes up the (internal and platform dependent) idle system, i\&.e\&. it will force the system to send an idle event even if the system currently \fIis\fP idle and thus would not send any idle event until after some other event would get sent\&. This is also useful for sending events between two threads and is used by the corresponding functions wxPostEvent() and wxEvtHandler::AddPendingEvent()\&.
+.PP
+{\fBwx/app\&.h\fP} 
+.SS "\fBbool\fP wxYield ()"
+Calls \fBwxAppConsole::Yield\fP\&.
+.PP
+\fBDeprecated\fP
+.RS 4
+This function is kept only for backwards compatibility\&. Please use the \fBwxAppConsole::Yield\fP method instead in any new code\&.
+.RE
+.PP
+.PP
+{\fBwx/app\&.h\fP} 
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

@@ -1,0 +1,632 @@
+\hypertarget{wav_8c}{}\section{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/libsndfile/src/wav.c File Reference}
+\label{wav_8c}\index{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/libsndfile/src/wav.\+c@{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/libsndfile/src/wav.\+c}}
+{\ttfamily \#include \char`\"{}sfconfig.\+h\char`\"{}}\\*
+{\ttfamily \#include $<$stdio.\+h$>$}\\*
+{\ttfamily \#include $<$stdlib.\+h$>$}\\*
+{\ttfamily \#include $<$string.\+h$>$}\\*
+{\ttfamily \#include $<$ctype.\+h$>$}\\*
+{\ttfamily \#include $<$time.\+h$>$}\\*
+{\ttfamily \#include $<$inttypes.\+h$>$}\\*
+{\ttfamily \#include \char`\"{}sndfile.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}sfendian.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}common.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}wav\+\_\+w64.\+h\char`\"{}}\\*
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{wav_8c_a229ae828e7fddc0e1f6f8fd98ccc4bdd}{R\+I\+F\+F\+\_\+\+M\+A\+R\+K\+ER}~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}R\textquotesingle{}, \textquotesingle{}I\textquotesingle{}, \textquotesingle{}\hyperlink{xlftab_8c_a42257a545daf5b7933d6e8f96adc74f2}{F}\textquotesingle{}, \textquotesingle{}\hyperlink{xlftab_8c_a42257a545daf5b7933d6e8f96adc74f2}{F}\textquotesingle{}))
+\item 
+\#define \hyperlink{wav_8c_a68c389434e88c86815cac6478950aba4}{R\+I\+F\+X\+\_\+\+M\+A\+R\+K\+ER}~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}R\textquotesingle{}, \textquotesingle{}I\textquotesingle{}, \textquotesingle{}\hyperlink{xlftab_8c_a42257a545daf5b7933d6e8f96adc74f2}{F}\textquotesingle{}, \textquotesingle{}X\textquotesingle{}))
+\item 
+\#define \hyperlink{wav_8c_a59ce8748ba0cf096e4e7a05525ab9f7d}{W\+A\+V\+E\+\_\+\+M\+A\+R\+K\+ER}~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}W\textquotesingle{}, \textquotesingle{}\hyperlink{libnyquist_2nyquist_2nyqsrc_2add_8c_a955f504eccf76b4eb2489c0adab03121}{A}\textquotesingle{}, \textquotesingle{}\hyperlink{hillclimb_8cpp_af40a326b23c68a27cebe60f16634a2cb}{V}\textquotesingle{}, \textquotesingle{}\hyperlink{twolame_2libtwolame_2common_8h_a07484107e6d9fdf38b53edf631d6511d}{E}\textquotesingle{}))
+\item 
+\#define \hyperlink{wav_8c_ab9b132b578e91e206240cfb2536799a3}{fmt\+\_\+\+M\+A\+R\+K\+ER}~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}\hyperlink{checksum_8c_ae747d72a1a803f5ff4a4b2602857d93b}{f}\textquotesingle{}, \textquotesingle{}\hyperlink{layer3_8c_a4b8bfe70f28d6faddcb10d6ecf8c1989}{m}\textquotesingle{}, \textquotesingle{}\hyperlink{octave__test_8m_aaccc9105df5383111407fd5b41255e23}{t}\textquotesingle{}, \textquotesingle{} \textquotesingle{}))
+\item 
+\#define \hyperlink{wav_8c_a30afad1e5714feb02e0720b0d285a749}{data\+\_\+\+M\+A\+R\+K\+ER}~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}\hyperlink{poly-fir_8h_a2530554172d8629149ec56816eeaa947}{d}\textquotesingle{}, \textquotesingle{}\hyperlink{rfft2d_test_m_l_8m_a4124bc0a9335c27f086f24ba207a4912}{a}\textquotesingle{}, \textquotesingle{}\hyperlink{octave__test_8m_aaccc9105df5383111407fd5b41255e23}{t}\textquotesingle{}, \textquotesingle{}\hyperlink{rfft2d_test_m_l_8m_a4124bc0a9335c27f086f24ba207a4912}{a}\textquotesingle{}))
+\item 
+\#define \hyperlink{wav_8c_a67d5ce7d648d598f89e253cb8c1f148d}{fact\+\_\+\+M\+A\+R\+K\+ER}~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}\hyperlink{checksum_8c_ae747d72a1a803f5ff4a4b2602857d93b}{f}\textquotesingle{}, \textquotesingle{}\hyperlink{rfft2d_test_m_l_8m_a4124bc0a9335c27f086f24ba207a4912}{a}\textquotesingle{}, \textquotesingle{}\hyperlink{rfft2d_test_m_l_8m_ae0323a9039add2978bf5b49550572c7c}{c}\textquotesingle{}, \textquotesingle{}\hyperlink{octave__test_8m_aaccc9105df5383111407fd5b41255e23}{t}\textquotesingle{}))
+\item 
+\#define \hyperlink{wav_8c_a51e17bd890e7ffd54c4924499b79a582}{P\+E\+A\+K\+\_\+\+M\+A\+R\+K\+ER}~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}P\textquotesingle{}, \textquotesingle{}\hyperlink{twolame_2libtwolame_2common_8h_a07484107e6d9fdf38b53edf631d6511d}{E}\textquotesingle{}, \textquotesingle{}\hyperlink{libnyquist_2nyquist_2nyqsrc_2add_8c_a955f504eccf76b4eb2489c0adab03121}{A}\textquotesingle{}, \textquotesingle{}K\textquotesingle{}))
+\item 
+\#define \hyperlink{wav_8c_a1cb9fa8b99c763240c24ec3803778e2e}{cue\+\_\+\+M\+A\+R\+K\+ER}~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}\hyperlink{rfft2d_test_m_l_8m_ae0323a9039add2978bf5b49550572c7c}{c}\textquotesingle{}, \textquotesingle{}u\textquotesingle{}, \textquotesingle{}e\textquotesingle{}, \textquotesingle{} \textquotesingle{}))
+\item 
+\#define \hyperlink{wav_8c_af2afae1bbd4f64514c255b9167c71015}{L\+I\+S\+T\+\_\+\+M\+A\+R\+K\+ER}~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}L\textquotesingle{}, \textquotesingle{}I\textquotesingle{}, \textquotesingle{}\hyperlink{xlftab_8c_af933676109efed7ab34cea71d748a517}{S}\textquotesingle{}, \textquotesingle{}\hyperlink{xmltchar_8h_a16a0f7e7053a679c9bf4289b441a2be7}{T}\textquotesingle{}))
+\item 
+\#define \hyperlink{wav_8c_a91b5c28db9676fab46947c5cd84267a2}{slnt\+\_\+\+M\+A\+R\+K\+ER}~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}\hyperlink{lib_2expat_8h_a755339d27872b13735c2cab829e47157}{s}\textquotesingle{}, \textquotesingle{}\hyperlink{layer3_8c_a741dbb4d8e78c3cb69915db7282fcec0}{l}\textquotesingle{}, \textquotesingle{}n\textquotesingle{}, \textquotesingle{}\hyperlink{octave__test_8m_aaccc9105df5383111407fd5b41255e23}{t}\textquotesingle{}))
+\item 
+\#define \hyperlink{wav_8c_a9562703f653d69cfb960420859929be6}{wavl\+\_\+\+M\+A\+R\+K\+ER}~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}w\textquotesingle{}, \textquotesingle{}\hyperlink{rfft2d_test_m_l_8m_a4124bc0a9335c27f086f24ba207a4912}{a}\textquotesingle{}, \textquotesingle{}v\textquotesingle{}, \textquotesingle{}\hyperlink{layer3_8c_a741dbb4d8e78c3cb69915db7282fcec0}{l}\textquotesingle{}))
+\item 
+\#define \hyperlink{wav_8c_a5b99766dfa6615afa7ddfddb35b9b2cf}{I\+N\+F\+O\+\_\+\+M\+A\+R\+K\+ER}~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}I\textquotesingle{}, \textquotesingle{}\hyperlink{rfft2d_test_m_l_8m_af6d1246b147a7c5763d9fc83082020ff}{N}\textquotesingle{}, \textquotesingle{}\hyperlink{xlftab_8c_a42257a545daf5b7933d6e8f96adc74f2}{F}\textquotesingle{}, \textquotesingle{}O\textquotesingle{}))
+\item 
+\#define \hyperlink{wav_8c_ae4e04a9a5fb4e2de597ce57537e4a82d}{plst\+\_\+\+M\+A\+R\+K\+ER}~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}\hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p}\textquotesingle{}, \textquotesingle{}\hyperlink{layer3_8c_a741dbb4d8e78c3cb69915db7282fcec0}{l}\textquotesingle{}, \textquotesingle{}\hyperlink{lib_2expat_8h_a755339d27872b13735c2cab829e47157}{s}\textquotesingle{}, \textquotesingle{}\hyperlink{octave__test_8m_aaccc9105df5383111407fd5b41255e23}{t}\textquotesingle{}))
+\item 
+\#define \hyperlink{wav_8c_aeae28c0b9413e63273e229b96bc6a109}{adtl\+\_\+\+M\+A\+R\+K\+ER}~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}\hyperlink{rfft2d_test_m_l_8m_a4124bc0a9335c27f086f24ba207a4912}{a}\textquotesingle{}, \textquotesingle{}\hyperlink{poly-fir_8h_a2530554172d8629149ec56816eeaa947}{d}\textquotesingle{}, \textquotesingle{}\hyperlink{octave__test_8m_aaccc9105df5383111407fd5b41255e23}{t}\textquotesingle{}, \textquotesingle{}\hyperlink{layer3_8c_a741dbb4d8e78c3cb69915db7282fcec0}{l}\textquotesingle{}))
+\item 
+\#define \hyperlink{wav_8c_ad60dcb38407f09b0a788e63050527561}{labl\+\_\+\+M\+A\+R\+K\+ER}~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}\hyperlink{layer3_8c_a741dbb4d8e78c3cb69915db7282fcec0}{l}\textquotesingle{}, \textquotesingle{}\hyperlink{rfft2d_test_m_l_8m_a4124bc0a9335c27f086f24ba207a4912}{a}\textquotesingle{}, \textquotesingle{}\hyperlink{convtest_8m_a21ad0bd836b90d08f4cf640b4c298e7c}{b}\textquotesingle{}, \textquotesingle{}\hyperlink{layer3_8c_a741dbb4d8e78c3cb69915db7282fcec0}{l}\textquotesingle{}))
+\item 
+\#define \hyperlink{wav_8c_a71469304fbfd36297b7d76681637b53e}{ltxt\+\_\+\+M\+A\+R\+K\+ER}~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}\hyperlink{layer3_8c_a741dbb4d8e78c3cb69915db7282fcec0}{l}\textquotesingle{}, \textquotesingle{}\hyperlink{octave__test_8m_aaccc9105df5383111407fd5b41255e23}{t}\textquotesingle{}, \textquotesingle{}x\textquotesingle{}, \textquotesingle{}\hyperlink{octave__test_8m_aaccc9105df5383111407fd5b41255e23}{t}\textquotesingle{}))
+\item 
+\#define \hyperlink{wav_8c_a5d7427e84fea433fba322c43a388c2ec}{note\+\_\+\+M\+A\+R\+K\+ER}~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}n\textquotesingle{}, \textquotesingle{}o\textquotesingle{}, \textquotesingle{}\hyperlink{octave__test_8m_aaccc9105df5383111407fd5b41255e23}{t}\textquotesingle{}, \textquotesingle{}e\textquotesingle{}))
+\item 
+\#define \hyperlink{wav_8c_a7b803ef8a20cd65b9c226d380ea45a4c}{smpl\+\_\+\+M\+A\+R\+K\+ER}~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}\hyperlink{lib_2expat_8h_a755339d27872b13735c2cab829e47157}{s}\textquotesingle{}, \textquotesingle{}\hyperlink{layer3_8c_a4b8bfe70f28d6faddcb10d6ecf8c1989}{m}\textquotesingle{}, \textquotesingle{}\hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p}\textquotesingle{}, \textquotesingle{}\hyperlink{layer3_8c_a741dbb4d8e78c3cb69915db7282fcec0}{l}\textquotesingle{}))
+\item 
+\#define \hyperlink{wav_8c_a11ae05f2653d156ad3c821695507f238}{bext\+\_\+\+M\+A\+R\+K\+ER}~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}\hyperlink{convtest_8m_a21ad0bd836b90d08f4cf640b4c298e7c}{b}\textquotesingle{}, \textquotesingle{}e\textquotesingle{}, \textquotesingle{}x\textquotesingle{}, \textquotesingle{}\hyperlink{octave__test_8m_aaccc9105df5383111407fd5b41255e23}{t}\textquotesingle{}))
+\item 
+\#define \hyperlink{wav_8c_a4e663e8a88e6e1539e0dcb4512eab3db}{i\+X\+M\+L\+\_\+\+M\+A\+R\+K\+ER}~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}\hyperlink{checksum_8c_ab80e330a3bc9e38c1297fe17381e92b4}{i}\textquotesingle{}, \textquotesingle{}X\textquotesingle{}, \textquotesingle{}\hyperlink{rfft2d_test_m_l_8m_aad05f78187c942f9dd521605fa81f1ba}{M}\textquotesingle{}, \textquotesingle{}L\textquotesingle{}))
+\item 
+\#define \hyperlink{wav_8c_ad3b9212d4fa701555bb891c73b31f665}{levl\+\_\+\+M\+A\+R\+K\+ER}~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}\hyperlink{layer3_8c_a741dbb4d8e78c3cb69915db7282fcec0}{l}\textquotesingle{}, \textquotesingle{}e\textquotesingle{}, \textquotesingle{}v\textquotesingle{}, \textquotesingle{}\hyperlink{layer3_8c_a741dbb4d8e78c3cb69915db7282fcec0}{l}\textquotesingle{}))
+\item 
+\#define \hyperlink{wav_8c_a95d24b8f0dcdf902e8074445b95b3d0c}{M\+E\+X\+T\+\_\+\+M\+A\+R\+K\+ER}~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}\hyperlink{rfft2d_test_m_l_8m_aad05f78187c942f9dd521605fa81f1ba}{M}\textquotesingle{}, \textquotesingle{}\hyperlink{twolame_2libtwolame_2common_8h_a07484107e6d9fdf38b53edf631d6511d}{E}\textquotesingle{}, \textquotesingle{}X\textquotesingle{}, \textquotesingle{}\hyperlink{xmltchar_8h_a16a0f7e7053a679c9bf4289b441a2be7}{T}\textquotesingle{}))
+\item 
+\#define \hyperlink{wav_8c_ac8ae944bf5d1f431136bb94fb32289b7}{D\+I\+S\+P\+\_\+\+M\+A\+R\+K\+ER}~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}\hyperlink{trigger_8c_af316c33cc298530f245e8b55330e86b5}{D}\textquotesingle{}, \textquotesingle{}I\textquotesingle{}, \textquotesingle{}\hyperlink{xlftab_8c_af933676109efed7ab34cea71d748a517}{S}\textquotesingle{}, \textquotesingle{}P\textquotesingle{}))
+\item 
+\#define \hyperlink{wav_8c_ab9ad379439f88d9405067489579fb92c}{acid\+\_\+\+M\+A\+R\+K\+ER}~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}\hyperlink{rfft2d_test_m_l_8m_a4124bc0a9335c27f086f24ba207a4912}{a}\textquotesingle{}, \textquotesingle{}\hyperlink{rfft2d_test_m_l_8m_ae0323a9039add2978bf5b49550572c7c}{c}\textquotesingle{}, \textquotesingle{}\hyperlink{checksum_8c_ab80e330a3bc9e38c1297fe17381e92b4}{i}\textquotesingle{}, \textquotesingle{}\hyperlink{poly-fir_8h_a2530554172d8629149ec56816eeaa947}{d}\textquotesingle{}))
+\item 
+\#define \hyperlink{wav_8c_ae7bef024d42b190245ceff7d5e9a7481}{strc\+\_\+\+M\+A\+R\+K\+ER}~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}\hyperlink{lib_2expat_8h_a755339d27872b13735c2cab829e47157}{s}\textquotesingle{}, \textquotesingle{}\hyperlink{octave__test_8m_aaccc9105df5383111407fd5b41255e23}{t}\textquotesingle{}, \textquotesingle{}r\textquotesingle{}, \textquotesingle{}\hyperlink{rfft2d_test_m_l_8m_ae0323a9039add2978bf5b49550572c7c}{c}\textquotesingle{}))
+\item 
+\#define \hyperlink{wav_8c_ad008f2ef2fb647f7e3350f6f11919c7b}{P\+A\+D\+\_\+\+M\+A\+R\+K\+ER}~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}P\textquotesingle{}, \textquotesingle{}\hyperlink{libnyquist_2nyquist_2nyqsrc_2add_8c_a955f504eccf76b4eb2489c0adab03121}{A}\textquotesingle{}, \textquotesingle{}\hyperlink{trigger_8c_af316c33cc298530f245e8b55330e86b5}{D}\textquotesingle{}, \textquotesingle{} \textquotesingle{}))
+\item 
+\#define \hyperlink{wav_8c_a4c59834f0cd9c4d3ccdd59e29b24d919}{afsp\+\_\+\+M\+A\+R\+K\+ER}~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}\hyperlink{rfft2d_test_m_l_8m_a4124bc0a9335c27f086f24ba207a4912}{a}\textquotesingle{}, \textquotesingle{}\hyperlink{checksum_8c_ae747d72a1a803f5ff4a4b2602857d93b}{f}\textquotesingle{}, \textquotesingle{}\hyperlink{lib_2expat_8h_a755339d27872b13735c2cab829e47157}{s}\textquotesingle{}, \textquotesingle{}\hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p}\textquotesingle{}))
+\item 
+\#define \hyperlink{wav_8c_a23af20b9918c257c4cf7675a39b950e2}{clm\+\_\+\+M\+A\+R\+K\+ER}~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}\hyperlink{rfft2d_test_m_l_8m_ae0323a9039add2978bf5b49550572c7c}{c}\textquotesingle{}, \textquotesingle{}\hyperlink{layer3_8c_a741dbb4d8e78c3cb69915db7282fcec0}{l}\textquotesingle{}, \textquotesingle{}\hyperlink{layer3_8c_a4b8bfe70f28d6faddcb10d6ecf8c1989}{m}\textquotesingle{}, \textquotesingle{} \textquotesingle{}))
+\item 
+\#define \hyperlink{wav_8c_aa3cfdd31237f41945ff148fbcbc5400d}{elmo\+\_\+\+M\+A\+R\+K\+ER}~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}e\textquotesingle{}, \textquotesingle{}\hyperlink{layer3_8c_a741dbb4d8e78c3cb69915db7282fcec0}{l}\textquotesingle{}, \textquotesingle{}\hyperlink{layer3_8c_a4b8bfe70f28d6faddcb10d6ecf8c1989}{m}\textquotesingle{}, \textquotesingle{}o\textquotesingle{}))
+\item 
+\#define \hyperlink{wav_8c_a725b63c945c3e7b2414a0cf9f5e3eb88}{cart\+\_\+\+M\+A\+R\+K\+ER}~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}\hyperlink{rfft2d_test_m_l_8m_ae0323a9039add2978bf5b49550572c7c}{c}\textquotesingle{}, \textquotesingle{}\hyperlink{rfft2d_test_m_l_8m_a4124bc0a9335c27f086f24ba207a4912}{a}\textquotesingle{}, \textquotesingle{}r\textquotesingle{}, \textquotesingle{}\hyperlink{octave__test_8m_aaccc9105df5383111407fd5b41255e23}{t}\textquotesingle{}))
+\item 
+\#define \hyperlink{wav_8c_a52dd024ca5f41a7dcecd05ba7be1e24e}{exif\+\_\+\+M\+A\+R\+K\+ER}~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}e\textquotesingle{}, \textquotesingle{}x\textquotesingle{}, \textquotesingle{}\hyperlink{checksum_8c_ab80e330a3bc9e38c1297fe17381e92b4}{i}\textquotesingle{}, \textquotesingle{}\hyperlink{checksum_8c_ae747d72a1a803f5ff4a4b2602857d93b}{f}\textquotesingle{}))
+\item 
+\#define \hyperlink{wav_8c_aa30c4e7ad40321e157610f4698b1592f}{ever\+\_\+\+M\+A\+R\+K\+ER}~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}e\textquotesingle{}, \textquotesingle{}v\textquotesingle{}, \textquotesingle{}e\textquotesingle{}, \textquotesingle{}r\textquotesingle{}))
+\item 
+\#define \hyperlink{wav_8c_aba2aeb32b34c53242496085ea18151e4}{etim\+\_\+\+M\+A\+R\+K\+ER}~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}e\textquotesingle{}, \textquotesingle{}\hyperlink{octave__test_8m_aaccc9105df5383111407fd5b41255e23}{t}\textquotesingle{}, \textquotesingle{}\hyperlink{checksum_8c_ab80e330a3bc9e38c1297fe17381e92b4}{i}\textquotesingle{}, \textquotesingle{}\hyperlink{layer3_8c_a4b8bfe70f28d6faddcb10d6ecf8c1989}{m}\textquotesingle{}))
+\item 
+\#define \hyperlink{wav_8c_a31701607b71eeb19255282dc3ad1d2a3}{ecor\+\_\+\+M\+A\+R\+K\+ER}~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}e\textquotesingle{}, \textquotesingle{}\hyperlink{rfft2d_test_m_l_8m_ae0323a9039add2978bf5b49550572c7c}{c}\textquotesingle{}, \textquotesingle{}o\textquotesingle{}, \textquotesingle{}r\textquotesingle{}))
+\item 
+\#define \hyperlink{wav_8c_a2ad875268209803455a88f50b3b84030}{emdl\+\_\+\+M\+A\+R\+K\+ER}~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}e\textquotesingle{}, \textquotesingle{}\hyperlink{layer3_8c_a4b8bfe70f28d6faddcb10d6ecf8c1989}{m}\textquotesingle{}, \textquotesingle{}\hyperlink{poly-fir_8h_a2530554172d8629149ec56816eeaa947}{d}\textquotesingle{}, \textquotesingle{}\hyperlink{layer3_8c_a741dbb4d8e78c3cb69915db7282fcec0}{l}\textquotesingle{}))
+\item 
+\#define \hyperlink{wav_8c_a3dba89198ffc70eccb10ec397871176b}{emnt\+\_\+\+M\+A\+R\+K\+ER}~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}e\textquotesingle{}, \textquotesingle{}\hyperlink{layer3_8c_a4b8bfe70f28d6faddcb10d6ecf8c1989}{m}\textquotesingle{}, \textquotesingle{}n\textquotesingle{}, \textquotesingle{}\hyperlink{octave__test_8m_aaccc9105df5383111407fd5b41255e23}{t}\textquotesingle{}))
+\item 
+\#define \hyperlink{wav_8c_a31c978c10432311e379eb80fd44e75a2}{erel\+\_\+\+M\+A\+R\+K\+ER}~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}e\textquotesingle{}, \textquotesingle{}r\textquotesingle{}, \textquotesingle{}e\textquotesingle{}, \textquotesingle{}\hyperlink{layer3_8c_a741dbb4d8e78c3cb69915db7282fcec0}{l}\textquotesingle{}))
+\item 
+\#define \hyperlink{wav_8c_ae8ef707a2d8535fe6080c2d08070a5f7}{eucm\+\_\+\+M\+A\+R\+K\+ER}~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}e\textquotesingle{}, \textquotesingle{}u\textquotesingle{}, \textquotesingle{}\hyperlink{rfft2d_test_m_l_8m_ae0323a9039add2978bf5b49550572c7c}{c}\textquotesingle{}, \textquotesingle{}\hyperlink{layer3_8c_a4b8bfe70f28d6faddcb10d6ecf8c1989}{m}\textquotesingle{}))
+\item 
+\#define \hyperlink{wav_8c_a96e8b9acbf6ff2c87f6d95216811926e}{I\+S\+F\+T\+\_\+\+M\+A\+R\+K\+ER}~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}I\textquotesingle{}, \textquotesingle{}\hyperlink{xlftab_8c_af933676109efed7ab34cea71d748a517}{S}\textquotesingle{}, \textquotesingle{}\hyperlink{xlftab_8c_a42257a545daf5b7933d6e8f96adc74f2}{F}\textquotesingle{}, \textquotesingle{}\hyperlink{xmltchar_8h_a16a0f7e7053a679c9bf4289b441a2be7}{T}\textquotesingle{}))
+\item 
+\#define \hyperlink{wav_8c_a054493533f70c4c73a0471f90076f582}{I\+C\+R\+D\+\_\+\+M\+A\+R\+K\+ER}~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}I\textquotesingle{}, \textquotesingle{}C\textquotesingle{}, \textquotesingle{}R\textquotesingle{}, \textquotesingle{}\hyperlink{trigger_8c_af316c33cc298530f245e8b55330e86b5}{D}\textquotesingle{}))
+\item 
+\#define \hyperlink{wav_8c_a79d229c3aed505fbc2135e0f5a03d983}{I\+C\+O\+P\+\_\+\+M\+A\+R\+K\+ER}~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}I\textquotesingle{}, \textquotesingle{}C\textquotesingle{}, \textquotesingle{}O\textquotesingle{}, \textquotesingle{}P\textquotesingle{}))
+\item 
+\#define \hyperlink{wav_8c_a15f051fa9bbedfdcdc134311fbeafe7a}{I\+A\+R\+L\+\_\+\+M\+A\+R\+K\+ER}~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}I\textquotesingle{}, \textquotesingle{}\hyperlink{libnyquist_2nyquist_2nyqsrc_2add_8c_a955f504eccf76b4eb2489c0adab03121}{A}\textquotesingle{}, \textquotesingle{}R\textquotesingle{}, \textquotesingle{}L\textquotesingle{}))
+\item 
+\#define \hyperlink{wav_8c_a73bab821b0f849e04133b5379243cfba}{I\+A\+R\+T\+\_\+\+M\+A\+R\+K\+ER}~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}I\textquotesingle{}, \textquotesingle{}\hyperlink{libnyquist_2nyquist_2nyqsrc_2add_8c_a955f504eccf76b4eb2489c0adab03121}{A}\textquotesingle{}, \textquotesingle{}R\textquotesingle{}, \textquotesingle{}\hyperlink{xmltchar_8h_a16a0f7e7053a679c9bf4289b441a2be7}{T}\textquotesingle{}))
+\item 
+\#define \hyperlink{wav_8c_aaa3a9631de9206e52c7f16dfad7d75da}{I\+N\+A\+M\+\_\+\+M\+A\+R\+K\+ER}~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}I\textquotesingle{}, \textquotesingle{}\hyperlink{rfft2d_test_m_l_8m_af6d1246b147a7c5763d9fc83082020ff}{N}\textquotesingle{}, \textquotesingle{}\hyperlink{libnyquist_2nyquist_2nyqsrc_2add_8c_a955f504eccf76b4eb2489c0adab03121}{A}\textquotesingle{}, \textquotesingle{}\hyperlink{rfft2d_test_m_l_8m_aad05f78187c942f9dd521605fa81f1ba}{M}\textquotesingle{}))
+\item 
+\#define \hyperlink{wav_8c_a861d8268f2a2f0a0cb0c695f651ad793}{I\+E\+N\+G\+\_\+\+M\+A\+R\+K\+ER}~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}I\textquotesingle{}, \textquotesingle{}\hyperlink{twolame_2libtwolame_2common_8h_a07484107e6d9fdf38b53edf631d6511d}{E}\textquotesingle{}, \textquotesingle{}\hyperlink{rfft2d_test_m_l_8m_af6d1246b147a7c5763d9fc83082020ff}{N}\textquotesingle{}, \textquotesingle{}G\textquotesingle{}))
+\item 
+\#define \hyperlink{wav_8c_a0a8db54225450689454b0b8c2f617b2c}{I\+G\+N\+R\+\_\+\+M\+A\+R\+K\+ER}~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}I\textquotesingle{}, \textquotesingle{}G\textquotesingle{}, \textquotesingle{}\hyperlink{rfft2d_test_m_l_8m_af6d1246b147a7c5763d9fc83082020ff}{N}\textquotesingle{}, \textquotesingle{}R\textquotesingle{}))
+\item 
+\#define \hyperlink{wav_8c_a79d229c3aed505fbc2135e0f5a03d983}{I\+C\+O\+P\+\_\+\+M\+A\+R\+K\+ER}~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}I\textquotesingle{}, \textquotesingle{}C\textquotesingle{}, \textquotesingle{}O\textquotesingle{}, \textquotesingle{}P\textquotesingle{}))
+\item 
+\#define \hyperlink{wav_8c_aa78339d9483430443437fd48cd8b3bc0}{I\+P\+R\+D\+\_\+\+M\+A\+R\+K\+ER}~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}I\textquotesingle{}, \textquotesingle{}P\textquotesingle{}, \textquotesingle{}R\textquotesingle{}, \textquotesingle{}\hyperlink{trigger_8c_af316c33cc298530f245e8b55330e86b5}{D}\textquotesingle{}))
+\item 
+\#define \hyperlink{wav_8c_ac68aecb965e0351fe673b9fca8f0473b}{I\+S\+R\+C\+\_\+\+M\+A\+R\+K\+ER}~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}I\textquotesingle{}, \textquotesingle{}\hyperlink{xlftab_8c_af933676109efed7ab34cea71d748a517}{S}\textquotesingle{}, \textquotesingle{}R\textquotesingle{}, \textquotesingle{}C\textquotesingle{}))
+\item 
+\#define \hyperlink{wav_8c_a6c96a5c429d6e5ccc6d5bf45704c7dd4}{I\+S\+B\+J\+\_\+\+M\+A\+R\+K\+ER}~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}I\textquotesingle{}, \textquotesingle{}\hyperlink{xlftab_8c_af933676109efed7ab34cea71d748a517}{S}\textquotesingle{}, \textquotesingle{}\hyperlink{libnyquist_2nyquist_2nyqsrc_2add_8c_a111da81ae5883147168bbb8366377b10}{B}\textquotesingle{}, \textquotesingle{}J\textquotesingle{}))
+\item 
+\#define \hyperlink{wav_8c_a0e0fea396111fd06d4b8ab828e25ea1f}{I\+C\+M\+T\+\_\+\+M\+A\+R\+K\+ER}~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}I\textquotesingle{}, \textquotesingle{}C\textquotesingle{}, \textquotesingle{}\hyperlink{rfft2d_test_m_l_8m_aad05f78187c942f9dd521605fa81f1ba}{M}\textquotesingle{}, \textquotesingle{}\hyperlink{xmltchar_8h_a16a0f7e7053a679c9bf4289b441a2be7}{T}\textquotesingle{}))
+\item 
+\#define \hyperlink{wav_8c_ac1b05291fcd7a4a1c1e184edbf073668}{I\+A\+U\+T\+\_\+\+M\+A\+R\+K\+ER}~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}I\textquotesingle{}, \textquotesingle{}\hyperlink{libnyquist_2nyquist_2nyqsrc_2add_8c_a955f504eccf76b4eb2489c0adab03121}{A}\textquotesingle{}, \textquotesingle{}U\textquotesingle{}, \textquotesingle{}\hyperlink{xmltchar_8h_a16a0f7e7053a679c9bf4289b441a2be7}{T}\textquotesingle{}))
+\item 
+\#define \hyperlink{wav_8c_a681a17dd49d5195213b910196100bc31}{I\+T\+R\+K\+\_\+\+M\+A\+R\+K\+ER}~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}I\textquotesingle{}, \textquotesingle{}\hyperlink{xmltchar_8h_a16a0f7e7053a679c9bf4289b441a2be7}{T}\textquotesingle{}, \textquotesingle{}R\textquotesingle{}, \textquotesingle{}K\textquotesingle{}))
+\item 
+\#define \hyperlink{wav_8c_a6e5e1d2b7720e27abcb5fccb19d93c55}{wvpk\+\_\+\+M\+A\+R\+K\+ER}~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}w\textquotesingle{}, \textquotesingle{}v\textquotesingle{}, \textquotesingle{}\hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p}\textquotesingle{}, \textquotesingle{}\hyperlink{rfft2d_test_m_l_8m_adc468c70fb574ebd07287b38d0d0676d}{k}\textquotesingle{}))
+\item 
+\#define \hyperlink{wav_8c_a48cb1608c4f2007ad1d20f8a2246c831}{Ogg\+S\+\_\+\+M\+A\+R\+K\+ER}~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}O\textquotesingle{}, \textquotesingle{}g\textquotesingle{}, \textquotesingle{}g\textquotesingle{}, \textquotesingle{}\hyperlink{xlftab_8c_af933676109efed7ab34cea71d748a517}{S}\textquotesingle{}))
+\item 
+\#define \hyperlink{wav_8c_a5a47016c071ad7caeafe8bcc60eb5910}{W\+A\+V\+\_\+\+P\+E\+A\+K\+\_\+\+C\+H\+U\+N\+K\+\_\+\+S\+I\+ZE}(ch)~(2 $\ast$ sizeof (\hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int}) + ch $\ast$ (sizeof (float) + sizeof (\hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int})))
+\item 
+\#define \hyperlink{wav_8c_a2381e67e876c32c419304b63989c554d}{W\+A\+V\+\_\+\+B\+E\+X\+T\+\_\+\+M\+I\+N\+\_\+\+C\+H\+U\+N\+K\+\_\+\+S\+I\+ZE}~602
+\item 
+\#define \hyperlink{wav_8c_a8297a4117ec43d2d6bc90e0e6f5fa923}{W\+A\+V\+\_\+\+B\+E\+X\+T\+\_\+\+M\+A\+X\+\_\+\+C\+H\+U\+N\+K\+\_\+\+S\+I\+ZE}~(10 $\ast$ 1024)
+\end{DoxyCompactItemize}
+\subsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \{ \\*
+\hyperlink{wav_8c_aaa91b962ffd8aca2f3c24e886a222419aa570d99ac596bda603ac72a1fe2fdb01}{H\+A\+V\+E\+\_\+\+R\+I\+FF} = 0x01, 
+\hyperlink{wav_8c_aaa91b962ffd8aca2f3c24e886a222419ac713a6f5e1592e7a2415a4d8a45f2f77}{H\+A\+V\+E\+\_\+\+W\+A\+VE} = 0x02, 
+\hyperlink{wav_8c_aaa91b962ffd8aca2f3c24e886a222419af8f50a062df9de51fbc9aef6d372baf5}{H\+A\+V\+E\+\_\+fmt} = 0x04, 
+\hyperlink{wav_8c_aaa91b962ffd8aca2f3c24e886a222419a8ee3665405db0e2169834db7e8d81b0a}{H\+A\+V\+E\+\_\+fact} = 0x08, 
+\\*
+\hyperlink{wav_8c_aaa91b962ffd8aca2f3c24e886a222419a27ef9f60a274cea3b86bbf27bbc25016}{H\+A\+V\+E\+\_\+\+P\+E\+AK} = 0x10, 
+\hyperlink{wav_8c_aaa91b962ffd8aca2f3c24e886a222419ad27da9915456c71bc5491a20f76f0115}{H\+A\+V\+E\+\_\+data} = 0x20, 
+\hyperlink{wav_8c_aaa91b962ffd8aca2f3c24e886a222419aa8854eab2272b78e2ac1414eb2b6d646}{H\+A\+V\+E\+\_\+other} = 0x80000000
+ \}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{wav_8c_a28e32b0f7abf6b78bdadd809c6f0e18e}{wav\+\_\+open} (\hyperlink{libsndfile_2src_2common_8h_ab5debd339ecaf40f50a223e218900c24}{S\+F\+\_\+\+P\+R\+I\+V\+A\+TE} $\ast$psf)
+\item 
+\hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{wav_8c_a6ff75276af08822141ba17f5757b237a}{wav\+\_\+read\+\_\+bext\+\_\+chunk} (\hyperlink{libsndfile_2src_2common_8h_ab5debd339ecaf40f50a223e218900c24}{S\+F\+\_\+\+P\+R\+I\+V\+A\+TE} $\ast$psf, unsigned \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} chunksize)
+\item 
+\hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{wav_8c_af8281100b2a1a323666dd49ea5772068}{wav\+\_\+write\+\_\+bext\+\_\+chunk} (\hyperlink{libsndfile_2src_2common_8h_ab5debd339ecaf40f50a223e218900c24}{S\+F\+\_\+\+P\+R\+I\+V\+A\+TE} $\ast$psf)
+\end{DoxyCompactItemize}
+
+
+\subsection{Macro Definition Documentation}
+\index{wav.\+c@{wav.\+c}!acid\+\_\+\+M\+A\+R\+K\+ER@{acid\+\_\+\+M\+A\+R\+K\+ER}}
+\index{acid\+\_\+\+M\+A\+R\+K\+ER@{acid\+\_\+\+M\+A\+R\+K\+ER}!wav.\+c@{wav.\+c}}
+\subsubsection[{\texorpdfstring{acid\+\_\+\+M\+A\+R\+K\+ER}{acid_MARKER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define acid\+\_\+\+M\+A\+R\+K\+ER~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}{\bf a}\textquotesingle{}, \textquotesingle{}{\bf c}\textquotesingle{}, \textquotesingle{}{\bf i}\textquotesingle{}, \textquotesingle{}{\bf d}\textquotesingle{}))}\hypertarget{wav_8c_ab9ad379439f88d9405067489579fb92c}{}\label{wav_8c_ab9ad379439f88d9405067489579fb92c}
+
+
+Definition at line 62 of file wav.\+c.
+
+\index{wav.\+c@{wav.\+c}!adtl\+\_\+\+M\+A\+R\+K\+ER@{adtl\+\_\+\+M\+A\+R\+K\+ER}}
+\index{adtl\+\_\+\+M\+A\+R\+K\+ER@{adtl\+\_\+\+M\+A\+R\+K\+ER}!wav.\+c@{wav.\+c}}
+\subsubsection[{\texorpdfstring{adtl\+\_\+\+M\+A\+R\+K\+ER}{adtl_MARKER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define adtl\+\_\+\+M\+A\+R\+K\+ER~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}{\bf a}\textquotesingle{}, \textquotesingle{}{\bf d}\textquotesingle{}, \textquotesingle{}{\bf t}\textquotesingle{}, \textquotesingle{}{\bf l}\textquotesingle{}))}\hypertarget{wav_8c_aeae28c0b9413e63273e229b96bc6a109}{}\label{wav_8c_aeae28c0b9413e63273e229b96bc6a109}
+
+
+Definition at line 52 of file wav.\+c.
+
+\index{wav.\+c@{wav.\+c}!afsp\+\_\+\+M\+A\+R\+K\+ER@{afsp\+\_\+\+M\+A\+R\+K\+ER}}
+\index{afsp\+\_\+\+M\+A\+R\+K\+ER@{afsp\+\_\+\+M\+A\+R\+K\+ER}!wav.\+c@{wav.\+c}}
+\subsubsection[{\texorpdfstring{afsp\+\_\+\+M\+A\+R\+K\+ER}{afsp_MARKER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define afsp\+\_\+\+M\+A\+R\+K\+ER~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}{\bf a}\textquotesingle{}, \textquotesingle{}{\bf f}\textquotesingle{}, \textquotesingle{}{\bf s}\textquotesingle{}, \textquotesingle{}{\bf p}\textquotesingle{}))}\hypertarget{wav_8c_a4c59834f0cd9c4d3ccdd59e29b24d919}{}\label{wav_8c_a4c59834f0cd9c4d3ccdd59e29b24d919}
+
+
+Definition at line 65 of file wav.\+c.
+
+\index{wav.\+c@{wav.\+c}!bext\+\_\+\+M\+A\+R\+K\+ER@{bext\+\_\+\+M\+A\+R\+K\+ER}}
+\index{bext\+\_\+\+M\+A\+R\+K\+ER@{bext\+\_\+\+M\+A\+R\+K\+ER}!wav.\+c@{wav.\+c}}
+\subsubsection[{\texorpdfstring{bext\+\_\+\+M\+A\+R\+K\+ER}{bext_MARKER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define bext\+\_\+\+M\+A\+R\+K\+ER~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}{\bf b}\textquotesingle{}, \textquotesingle{}e\textquotesingle{}, \textquotesingle{}x\textquotesingle{}, \textquotesingle{}{\bf t}\textquotesingle{}))}\hypertarget{wav_8c_a11ae05f2653d156ad3c821695507f238}{}\label{wav_8c_a11ae05f2653d156ad3c821695507f238}
+
+
+Definition at line 57 of file wav.\+c.
+
+\index{wav.\+c@{wav.\+c}!cart\+\_\+\+M\+A\+R\+K\+ER@{cart\+\_\+\+M\+A\+R\+K\+ER}}
+\index{cart\+\_\+\+M\+A\+R\+K\+ER@{cart\+\_\+\+M\+A\+R\+K\+ER}!wav.\+c@{wav.\+c}}
+\subsubsection[{\texorpdfstring{cart\+\_\+\+M\+A\+R\+K\+ER}{cart_MARKER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define cart\+\_\+\+M\+A\+R\+K\+ER~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}{\bf c}\textquotesingle{}, \textquotesingle{}{\bf a}\textquotesingle{}, \textquotesingle{}r\textquotesingle{}, \textquotesingle{}{\bf t}\textquotesingle{}))}\hypertarget{wav_8c_a725b63c945c3e7b2414a0cf9f5e3eb88}{}\label{wav_8c_a725b63c945c3e7b2414a0cf9f5e3eb88}
+
+
+Definition at line 68 of file wav.\+c.
+
+\index{wav.\+c@{wav.\+c}!clm\+\_\+\+M\+A\+R\+K\+ER@{clm\+\_\+\+M\+A\+R\+K\+ER}}
+\index{clm\+\_\+\+M\+A\+R\+K\+ER@{clm\+\_\+\+M\+A\+R\+K\+ER}!wav.\+c@{wav.\+c}}
+\subsubsection[{\texorpdfstring{clm\+\_\+\+M\+A\+R\+K\+ER}{clm_MARKER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define clm\+\_\+\+M\+A\+R\+K\+ER~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}{\bf c}\textquotesingle{}, \textquotesingle{}{\bf l}\textquotesingle{}, \textquotesingle{}{\bf m}\textquotesingle{}, \textquotesingle{} \textquotesingle{}))}\hypertarget{wav_8c_a23af20b9918c257c4cf7675a39b950e2}{}\label{wav_8c_a23af20b9918c257c4cf7675a39b950e2}
+
+
+Definition at line 66 of file wav.\+c.
+
+\index{wav.\+c@{wav.\+c}!cue\+\_\+\+M\+A\+R\+K\+ER@{cue\+\_\+\+M\+A\+R\+K\+ER}}
+\index{cue\+\_\+\+M\+A\+R\+K\+ER@{cue\+\_\+\+M\+A\+R\+K\+ER}!wav.\+c@{wav.\+c}}
+\subsubsection[{\texorpdfstring{cue\+\_\+\+M\+A\+R\+K\+ER}{cue_MARKER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define cue\+\_\+\+M\+A\+R\+K\+ER~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}{\bf c}\textquotesingle{}, \textquotesingle{}u\textquotesingle{}, \textquotesingle{}e\textquotesingle{}, \textquotesingle{} \textquotesingle{}))}\hypertarget{wav_8c_a1cb9fa8b99c763240c24ec3803778e2e}{}\label{wav_8c_a1cb9fa8b99c763240c24ec3803778e2e}
+
+
+Definition at line 46 of file wav.\+c.
+
+\index{wav.\+c@{wav.\+c}!data\+\_\+\+M\+A\+R\+K\+ER@{data\+\_\+\+M\+A\+R\+K\+ER}}
+\index{data\+\_\+\+M\+A\+R\+K\+ER@{data\+\_\+\+M\+A\+R\+K\+ER}!wav.\+c@{wav.\+c}}
+\subsubsection[{\texorpdfstring{data\+\_\+\+M\+A\+R\+K\+ER}{data_MARKER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define data\+\_\+\+M\+A\+R\+K\+ER~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}{\bf d}\textquotesingle{}, \textquotesingle{}{\bf a}\textquotesingle{}, \textquotesingle{}{\bf t}\textquotesingle{}, \textquotesingle{}{\bf a}\textquotesingle{}))}\hypertarget{wav_8c_a30afad1e5714feb02e0720b0d285a749}{}\label{wav_8c_a30afad1e5714feb02e0720b0d285a749}
+
+
+Definition at line 42 of file wav.\+c.
+
+\index{wav.\+c@{wav.\+c}!D\+I\+S\+P\+\_\+\+M\+A\+R\+K\+ER@{D\+I\+S\+P\+\_\+\+M\+A\+R\+K\+ER}}
+\index{D\+I\+S\+P\+\_\+\+M\+A\+R\+K\+ER@{D\+I\+S\+P\+\_\+\+M\+A\+R\+K\+ER}!wav.\+c@{wav.\+c}}
+\subsubsection[{\texorpdfstring{D\+I\+S\+P\+\_\+\+M\+A\+R\+K\+ER}{DISP_MARKER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define D\+I\+S\+P\+\_\+\+M\+A\+R\+K\+ER~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}{\bf D}\textquotesingle{}, \textquotesingle{}I\textquotesingle{}, \textquotesingle{}{\bf S}\textquotesingle{}, \textquotesingle{}P\textquotesingle{}))}\hypertarget{wav_8c_ac8ae944bf5d1f431136bb94fb32289b7}{}\label{wav_8c_ac8ae944bf5d1f431136bb94fb32289b7}
+
+
+Definition at line 61 of file wav.\+c.
+
+\index{wav.\+c@{wav.\+c}!ecor\+\_\+\+M\+A\+R\+K\+ER@{ecor\+\_\+\+M\+A\+R\+K\+ER}}
+\index{ecor\+\_\+\+M\+A\+R\+K\+ER@{ecor\+\_\+\+M\+A\+R\+K\+ER}!wav.\+c@{wav.\+c}}
+\subsubsection[{\texorpdfstring{ecor\+\_\+\+M\+A\+R\+K\+ER}{ecor_MARKER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define ecor\+\_\+\+M\+A\+R\+K\+ER~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}e\textquotesingle{}, \textquotesingle{}{\bf c}\textquotesingle{}, \textquotesingle{}o\textquotesingle{}, \textquotesingle{}r\textquotesingle{}))}\hypertarget{wav_8c_a31701607b71eeb19255282dc3ad1d2a3}{}\label{wav_8c_a31701607b71eeb19255282dc3ad1d2a3}
+
+
+Definition at line 73 of file wav.\+c.
+
+\index{wav.\+c@{wav.\+c}!elmo\+\_\+\+M\+A\+R\+K\+ER@{elmo\+\_\+\+M\+A\+R\+K\+ER}}
+\index{elmo\+\_\+\+M\+A\+R\+K\+ER@{elmo\+\_\+\+M\+A\+R\+K\+ER}!wav.\+c@{wav.\+c}}
+\subsubsection[{\texorpdfstring{elmo\+\_\+\+M\+A\+R\+K\+ER}{elmo_MARKER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define elmo\+\_\+\+M\+A\+R\+K\+ER~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}e\textquotesingle{}, \textquotesingle{}{\bf l}\textquotesingle{}, \textquotesingle{}{\bf m}\textquotesingle{}, \textquotesingle{}o\textquotesingle{}))}\hypertarget{wav_8c_aa3cfdd31237f41945ff148fbcbc5400d}{}\label{wav_8c_aa3cfdd31237f41945ff148fbcbc5400d}
+
+
+Definition at line 67 of file wav.\+c.
+
+\index{wav.\+c@{wav.\+c}!emdl\+\_\+\+M\+A\+R\+K\+ER@{emdl\+\_\+\+M\+A\+R\+K\+ER}}
+\index{emdl\+\_\+\+M\+A\+R\+K\+ER@{emdl\+\_\+\+M\+A\+R\+K\+ER}!wav.\+c@{wav.\+c}}
+\subsubsection[{\texorpdfstring{emdl\+\_\+\+M\+A\+R\+K\+ER}{emdl_MARKER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define emdl\+\_\+\+M\+A\+R\+K\+ER~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}e\textquotesingle{}, \textquotesingle{}{\bf m}\textquotesingle{}, \textquotesingle{}{\bf d}\textquotesingle{}, \textquotesingle{}{\bf l}\textquotesingle{}))}\hypertarget{wav_8c_a2ad875268209803455a88f50b3b84030}{}\label{wav_8c_a2ad875268209803455a88f50b3b84030}
+
+
+Definition at line 74 of file wav.\+c.
+
+\index{wav.\+c@{wav.\+c}!emnt\+\_\+\+M\+A\+R\+K\+ER@{emnt\+\_\+\+M\+A\+R\+K\+ER}}
+\index{emnt\+\_\+\+M\+A\+R\+K\+ER@{emnt\+\_\+\+M\+A\+R\+K\+ER}!wav.\+c@{wav.\+c}}
+\subsubsection[{\texorpdfstring{emnt\+\_\+\+M\+A\+R\+K\+ER}{emnt_MARKER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define emnt\+\_\+\+M\+A\+R\+K\+ER~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}e\textquotesingle{}, \textquotesingle{}{\bf m}\textquotesingle{}, \textquotesingle{}n\textquotesingle{}, \textquotesingle{}{\bf t}\textquotesingle{}))}\hypertarget{wav_8c_a3dba89198ffc70eccb10ec397871176b}{}\label{wav_8c_a3dba89198ffc70eccb10ec397871176b}
+
+
+Definition at line 75 of file wav.\+c.
+
+\index{wav.\+c@{wav.\+c}!erel\+\_\+\+M\+A\+R\+K\+ER@{erel\+\_\+\+M\+A\+R\+K\+ER}}
+\index{erel\+\_\+\+M\+A\+R\+K\+ER@{erel\+\_\+\+M\+A\+R\+K\+ER}!wav.\+c@{wav.\+c}}
+\subsubsection[{\texorpdfstring{erel\+\_\+\+M\+A\+R\+K\+ER}{erel_MARKER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define erel\+\_\+\+M\+A\+R\+K\+ER~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}e\textquotesingle{}, \textquotesingle{}r\textquotesingle{}, \textquotesingle{}e\textquotesingle{}, \textquotesingle{}{\bf l}\textquotesingle{}))}\hypertarget{wav_8c_a31c978c10432311e379eb80fd44e75a2}{}\label{wav_8c_a31c978c10432311e379eb80fd44e75a2}
+
+
+Definition at line 76 of file wav.\+c.
+
+\index{wav.\+c@{wav.\+c}!etim\+\_\+\+M\+A\+R\+K\+ER@{etim\+\_\+\+M\+A\+R\+K\+ER}}
+\index{etim\+\_\+\+M\+A\+R\+K\+ER@{etim\+\_\+\+M\+A\+R\+K\+ER}!wav.\+c@{wav.\+c}}
+\subsubsection[{\texorpdfstring{etim\+\_\+\+M\+A\+R\+K\+ER}{etim_MARKER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define etim\+\_\+\+M\+A\+R\+K\+ER~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}e\textquotesingle{}, \textquotesingle{}{\bf t}\textquotesingle{}, \textquotesingle{}{\bf i}\textquotesingle{}, \textquotesingle{}{\bf m}\textquotesingle{}))}\hypertarget{wav_8c_aba2aeb32b34c53242496085ea18151e4}{}\label{wav_8c_aba2aeb32b34c53242496085ea18151e4}
+
+
+Definition at line 72 of file wav.\+c.
+
+\index{wav.\+c@{wav.\+c}!eucm\+\_\+\+M\+A\+R\+K\+ER@{eucm\+\_\+\+M\+A\+R\+K\+ER}}
+\index{eucm\+\_\+\+M\+A\+R\+K\+ER@{eucm\+\_\+\+M\+A\+R\+K\+ER}!wav.\+c@{wav.\+c}}
+\subsubsection[{\texorpdfstring{eucm\+\_\+\+M\+A\+R\+K\+ER}{eucm_MARKER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define eucm\+\_\+\+M\+A\+R\+K\+ER~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}e\textquotesingle{}, \textquotesingle{}u\textquotesingle{}, \textquotesingle{}{\bf c}\textquotesingle{}, \textquotesingle{}{\bf m}\textquotesingle{}))}\hypertarget{wav_8c_ae8ef707a2d8535fe6080c2d08070a5f7}{}\label{wav_8c_ae8ef707a2d8535fe6080c2d08070a5f7}
+
+
+Definition at line 77 of file wav.\+c.
+
+\index{wav.\+c@{wav.\+c}!ever\+\_\+\+M\+A\+R\+K\+ER@{ever\+\_\+\+M\+A\+R\+K\+ER}}
+\index{ever\+\_\+\+M\+A\+R\+K\+ER@{ever\+\_\+\+M\+A\+R\+K\+ER}!wav.\+c@{wav.\+c}}
+\subsubsection[{\texorpdfstring{ever\+\_\+\+M\+A\+R\+K\+ER}{ever_MARKER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define ever\+\_\+\+M\+A\+R\+K\+ER~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}e\textquotesingle{}, \textquotesingle{}v\textquotesingle{}, \textquotesingle{}e\textquotesingle{}, \textquotesingle{}r\textquotesingle{}))}\hypertarget{wav_8c_aa30c4e7ad40321e157610f4698b1592f}{}\label{wav_8c_aa30c4e7ad40321e157610f4698b1592f}
+
+
+Definition at line 71 of file wav.\+c.
+
+\index{wav.\+c@{wav.\+c}!exif\+\_\+\+M\+A\+R\+K\+ER@{exif\+\_\+\+M\+A\+R\+K\+ER}}
+\index{exif\+\_\+\+M\+A\+R\+K\+ER@{exif\+\_\+\+M\+A\+R\+K\+ER}!wav.\+c@{wav.\+c}}
+\subsubsection[{\texorpdfstring{exif\+\_\+\+M\+A\+R\+K\+ER}{exif_MARKER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define exif\+\_\+\+M\+A\+R\+K\+ER~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}e\textquotesingle{}, \textquotesingle{}x\textquotesingle{}, \textquotesingle{}{\bf i}\textquotesingle{}, \textquotesingle{}{\bf f}\textquotesingle{}))}\hypertarget{wav_8c_a52dd024ca5f41a7dcecd05ba7be1e24e}{}\label{wav_8c_a52dd024ca5f41a7dcecd05ba7be1e24e}
+
+
+Definition at line 70 of file wav.\+c.
+
+\index{wav.\+c@{wav.\+c}!fact\+\_\+\+M\+A\+R\+K\+ER@{fact\+\_\+\+M\+A\+R\+K\+ER}}
+\index{fact\+\_\+\+M\+A\+R\+K\+ER@{fact\+\_\+\+M\+A\+R\+K\+ER}!wav.\+c@{wav.\+c}}
+\subsubsection[{\texorpdfstring{fact\+\_\+\+M\+A\+R\+K\+ER}{fact_MARKER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define fact\+\_\+\+M\+A\+R\+K\+ER~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}{\bf f}\textquotesingle{}, \textquotesingle{}{\bf a}\textquotesingle{}, \textquotesingle{}{\bf c}\textquotesingle{}, \textquotesingle{}{\bf t}\textquotesingle{}))}\hypertarget{wav_8c_a67d5ce7d648d598f89e253cb8c1f148d}{}\label{wav_8c_a67d5ce7d648d598f89e253cb8c1f148d}
+
+
+Definition at line 43 of file wav.\+c.
+
+\index{wav.\+c@{wav.\+c}!fmt\+\_\+\+M\+A\+R\+K\+ER@{fmt\+\_\+\+M\+A\+R\+K\+ER}}
+\index{fmt\+\_\+\+M\+A\+R\+K\+ER@{fmt\+\_\+\+M\+A\+R\+K\+ER}!wav.\+c@{wav.\+c}}
+\subsubsection[{\texorpdfstring{fmt\+\_\+\+M\+A\+R\+K\+ER}{fmt_MARKER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define fmt\+\_\+\+M\+A\+R\+K\+ER~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}{\bf f}\textquotesingle{}, \textquotesingle{}{\bf m}\textquotesingle{}, \textquotesingle{}{\bf t}\textquotesingle{}, \textquotesingle{} \textquotesingle{}))}\hypertarget{wav_8c_ab9b132b578e91e206240cfb2536799a3}{}\label{wav_8c_ab9b132b578e91e206240cfb2536799a3}
+
+
+Definition at line 41 of file wav.\+c.
+
+\index{wav.\+c@{wav.\+c}!I\+A\+R\+L\+\_\+\+M\+A\+R\+K\+ER@{I\+A\+R\+L\+\_\+\+M\+A\+R\+K\+ER}}
+\index{I\+A\+R\+L\+\_\+\+M\+A\+R\+K\+ER@{I\+A\+R\+L\+\_\+\+M\+A\+R\+K\+ER}!wav.\+c@{wav.\+c}}
+\subsubsection[{\texorpdfstring{I\+A\+R\+L\+\_\+\+M\+A\+R\+K\+ER}{IARL_MARKER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define I\+A\+R\+L\+\_\+\+M\+A\+R\+K\+ER~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}I\textquotesingle{}, \textquotesingle{}{\bf A}\textquotesingle{}, \textquotesingle{}R\textquotesingle{}, \textquotesingle{}L\textquotesingle{}))}\hypertarget{wav_8c_a15f051fa9bbedfdcdc134311fbeafe7a}{}\label{wav_8c_a15f051fa9bbedfdcdc134311fbeafe7a}
+
+
+Definition at line 82 of file wav.\+c.
+
+\index{wav.\+c@{wav.\+c}!I\+A\+R\+T\+\_\+\+M\+A\+R\+K\+ER@{I\+A\+R\+T\+\_\+\+M\+A\+R\+K\+ER}}
+\index{I\+A\+R\+T\+\_\+\+M\+A\+R\+K\+ER@{I\+A\+R\+T\+\_\+\+M\+A\+R\+K\+ER}!wav.\+c@{wav.\+c}}
+\subsubsection[{\texorpdfstring{I\+A\+R\+T\+\_\+\+M\+A\+R\+K\+ER}{IART_MARKER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define I\+A\+R\+T\+\_\+\+M\+A\+R\+K\+ER~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}I\textquotesingle{}, \textquotesingle{}{\bf A}\textquotesingle{}, \textquotesingle{}R\textquotesingle{}, \textquotesingle{}{\bf T}\textquotesingle{}))}\hypertarget{wav_8c_a73bab821b0f849e04133b5379243cfba}{}\label{wav_8c_a73bab821b0f849e04133b5379243cfba}
+
+
+Definition at line 83 of file wav.\+c.
+
+\index{wav.\+c@{wav.\+c}!I\+A\+U\+T\+\_\+\+M\+A\+R\+K\+ER@{I\+A\+U\+T\+\_\+\+M\+A\+R\+K\+ER}}
+\index{I\+A\+U\+T\+\_\+\+M\+A\+R\+K\+ER@{I\+A\+U\+T\+\_\+\+M\+A\+R\+K\+ER}!wav.\+c@{wav.\+c}}
+\subsubsection[{\texorpdfstring{I\+A\+U\+T\+\_\+\+M\+A\+R\+K\+ER}{IAUT_MARKER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define I\+A\+U\+T\+\_\+\+M\+A\+R\+K\+ER~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}I\textquotesingle{}, \textquotesingle{}{\bf A}\textquotesingle{}, \textquotesingle{}U\textquotesingle{}, \textquotesingle{}{\bf T}\textquotesingle{}))}\hypertarget{wav_8c_ac1b05291fcd7a4a1c1e184edbf073668}{}\label{wav_8c_ac1b05291fcd7a4a1c1e184edbf073668}
+
+
+Definition at line 92 of file wav.\+c.
+
+\index{wav.\+c@{wav.\+c}!I\+C\+M\+T\+\_\+\+M\+A\+R\+K\+ER@{I\+C\+M\+T\+\_\+\+M\+A\+R\+K\+ER}}
+\index{I\+C\+M\+T\+\_\+\+M\+A\+R\+K\+ER@{I\+C\+M\+T\+\_\+\+M\+A\+R\+K\+ER}!wav.\+c@{wav.\+c}}
+\subsubsection[{\texorpdfstring{I\+C\+M\+T\+\_\+\+M\+A\+R\+K\+ER}{ICMT_MARKER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define I\+C\+M\+T\+\_\+\+M\+A\+R\+K\+ER~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}I\textquotesingle{}, \textquotesingle{}C\textquotesingle{}, \textquotesingle{}{\bf M}\textquotesingle{}, \textquotesingle{}{\bf T}\textquotesingle{}))}\hypertarget{wav_8c_a0e0fea396111fd06d4b8ab828e25ea1f}{}\label{wav_8c_a0e0fea396111fd06d4b8ab828e25ea1f}
+
+
+Definition at line 91 of file wav.\+c.
+
+\index{wav.\+c@{wav.\+c}!I\+C\+O\+P\+\_\+\+M\+A\+R\+K\+ER@{I\+C\+O\+P\+\_\+\+M\+A\+R\+K\+ER}}
+\index{I\+C\+O\+P\+\_\+\+M\+A\+R\+K\+ER@{I\+C\+O\+P\+\_\+\+M\+A\+R\+K\+ER}!wav.\+c@{wav.\+c}}
+\subsubsection[{\texorpdfstring{I\+C\+O\+P\+\_\+\+M\+A\+R\+K\+ER}{ICOP_MARKER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define I\+C\+O\+P\+\_\+\+M\+A\+R\+K\+ER~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}I\textquotesingle{}, \textquotesingle{}C\textquotesingle{}, \textquotesingle{}O\textquotesingle{}, \textquotesingle{}P\textquotesingle{}))}\hypertarget{wav_8c_a79d229c3aed505fbc2135e0f5a03d983}{}\label{wav_8c_a79d229c3aed505fbc2135e0f5a03d983}
+
+
+Definition at line 87 of file wav.\+c.
+
+\index{wav.\+c@{wav.\+c}!I\+C\+O\+P\+\_\+\+M\+A\+R\+K\+ER@{I\+C\+O\+P\+\_\+\+M\+A\+R\+K\+ER}}
+\index{I\+C\+O\+P\+\_\+\+M\+A\+R\+K\+ER@{I\+C\+O\+P\+\_\+\+M\+A\+R\+K\+ER}!wav.\+c@{wav.\+c}}
+\subsubsection[{\texorpdfstring{I\+C\+O\+P\+\_\+\+M\+A\+R\+K\+ER}{ICOP_MARKER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define I\+C\+O\+P\+\_\+\+M\+A\+R\+K\+ER~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}I\textquotesingle{}, \textquotesingle{}C\textquotesingle{}, \textquotesingle{}O\textquotesingle{}, \textquotesingle{}P\textquotesingle{}))}\hypertarget{wav_8c_a79d229c3aed505fbc2135e0f5a03d983}{}\label{wav_8c_a79d229c3aed505fbc2135e0f5a03d983}
+
+
+Definition at line 87 of file wav.\+c.
+
+\index{wav.\+c@{wav.\+c}!I\+C\+R\+D\+\_\+\+M\+A\+R\+K\+ER@{I\+C\+R\+D\+\_\+\+M\+A\+R\+K\+ER}}
+\index{I\+C\+R\+D\+\_\+\+M\+A\+R\+K\+ER@{I\+C\+R\+D\+\_\+\+M\+A\+R\+K\+ER}!wav.\+c@{wav.\+c}}
+\subsubsection[{\texorpdfstring{I\+C\+R\+D\+\_\+\+M\+A\+R\+K\+ER}{ICRD_MARKER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define I\+C\+R\+D\+\_\+\+M\+A\+R\+K\+ER~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}I\textquotesingle{}, \textquotesingle{}C\textquotesingle{}, \textquotesingle{}R\textquotesingle{}, \textquotesingle{}{\bf D}\textquotesingle{}))}\hypertarget{wav_8c_a054493533f70c4c73a0471f90076f582}{}\label{wav_8c_a054493533f70c4c73a0471f90076f582}
+
+
+Definition at line 80 of file wav.\+c.
+
+\index{wav.\+c@{wav.\+c}!I\+E\+N\+G\+\_\+\+M\+A\+R\+K\+ER@{I\+E\+N\+G\+\_\+\+M\+A\+R\+K\+ER}}
+\index{I\+E\+N\+G\+\_\+\+M\+A\+R\+K\+ER@{I\+E\+N\+G\+\_\+\+M\+A\+R\+K\+ER}!wav.\+c@{wav.\+c}}
+\subsubsection[{\texorpdfstring{I\+E\+N\+G\+\_\+\+M\+A\+R\+K\+ER}{IENG_MARKER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define I\+E\+N\+G\+\_\+\+M\+A\+R\+K\+ER~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}I\textquotesingle{}, \textquotesingle{}{\bf E}\textquotesingle{}, \textquotesingle{}{\bf N}\textquotesingle{}, \textquotesingle{}G\textquotesingle{}))}\hypertarget{wav_8c_a861d8268f2a2f0a0cb0c695f651ad793}{}\label{wav_8c_a861d8268f2a2f0a0cb0c695f651ad793}
+
+
+Definition at line 85 of file wav.\+c.
+
+\index{wav.\+c@{wav.\+c}!I\+G\+N\+R\+\_\+\+M\+A\+R\+K\+ER@{I\+G\+N\+R\+\_\+\+M\+A\+R\+K\+ER}}
+\index{I\+G\+N\+R\+\_\+\+M\+A\+R\+K\+ER@{I\+G\+N\+R\+\_\+\+M\+A\+R\+K\+ER}!wav.\+c@{wav.\+c}}
+\subsubsection[{\texorpdfstring{I\+G\+N\+R\+\_\+\+M\+A\+R\+K\+ER}{IGNR_MARKER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define I\+G\+N\+R\+\_\+\+M\+A\+R\+K\+ER~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}I\textquotesingle{}, \textquotesingle{}G\textquotesingle{}, \textquotesingle{}{\bf N}\textquotesingle{}, \textquotesingle{}R\textquotesingle{}))}\hypertarget{wav_8c_a0a8db54225450689454b0b8c2f617b2c}{}\label{wav_8c_a0a8db54225450689454b0b8c2f617b2c}
+
+
+Definition at line 86 of file wav.\+c.
+
+\index{wav.\+c@{wav.\+c}!I\+N\+A\+M\+\_\+\+M\+A\+R\+K\+ER@{I\+N\+A\+M\+\_\+\+M\+A\+R\+K\+ER}}
+\index{I\+N\+A\+M\+\_\+\+M\+A\+R\+K\+ER@{I\+N\+A\+M\+\_\+\+M\+A\+R\+K\+ER}!wav.\+c@{wav.\+c}}
+\subsubsection[{\texorpdfstring{I\+N\+A\+M\+\_\+\+M\+A\+R\+K\+ER}{INAM_MARKER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define I\+N\+A\+M\+\_\+\+M\+A\+R\+K\+ER~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}I\textquotesingle{}, \textquotesingle{}{\bf N}\textquotesingle{}, \textquotesingle{}{\bf A}\textquotesingle{}, \textquotesingle{}{\bf M}\textquotesingle{}))}\hypertarget{wav_8c_aaa3a9631de9206e52c7f16dfad7d75da}{}\label{wav_8c_aaa3a9631de9206e52c7f16dfad7d75da}
+
+
+Definition at line 84 of file wav.\+c.
+
+\index{wav.\+c@{wav.\+c}!I\+N\+F\+O\+\_\+\+M\+A\+R\+K\+ER@{I\+N\+F\+O\+\_\+\+M\+A\+R\+K\+ER}}
+\index{I\+N\+F\+O\+\_\+\+M\+A\+R\+K\+ER@{I\+N\+F\+O\+\_\+\+M\+A\+R\+K\+ER}!wav.\+c@{wav.\+c}}
+\subsubsection[{\texorpdfstring{I\+N\+F\+O\+\_\+\+M\+A\+R\+K\+ER}{INFO_MARKER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define I\+N\+F\+O\+\_\+\+M\+A\+R\+K\+ER~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}I\textquotesingle{}, \textquotesingle{}{\bf N}\textquotesingle{}, \textquotesingle{}{\bf F}\textquotesingle{}, \textquotesingle{}O\textquotesingle{}))}\hypertarget{wav_8c_a5b99766dfa6615afa7ddfddb35b9b2cf}{}\label{wav_8c_a5b99766dfa6615afa7ddfddb35b9b2cf}
+
+
+Definition at line 50 of file wav.\+c.
+
+\index{wav.\+c@{wav.\+c}!I\+P\+R\+D\+\_\+\+M\+A\+R\+K\+ER@{I\+P\+R\+D\+\_\+\+M\+A\+R\+K\+ER}}
+\index{I\+P\+R\+D\+\_\+\+M\+A\+R\+K\+ER@{I\+P\+R\+D\+\_\+\+M\+A\+R\+K\+ER}!wav.\+c@{wav.\+c}}
+\subsubsection[{\texorpdfstring{I\+P\+R\+D\+\_\+\+M\+A\+R\+K\+ER}{IPRD_MARKER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define I\+P\+R\+D\+\_\+\+M\+A\+R\+K\+ER~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}I\textquotesingle{}, \textquotesingle{}P\textquotesingle{}, \textquotesingle{}R\textquotesingle{}, \textquotesingle{}{\bf D}\textquotesingle{}))}\hypertarget{wav_8c_aa78339d9483430443437fd48cd8b3bc0}{}\label{wav_8c_aa78339d9483430443437fd48cd8b3bc0}
+
+
+Definition at line 88 of file wav.\+c.
+
+\index{wav.\+c@{wav.\+c}!I\+S\+B\+J\+\_\+\+M\+A\+R\+K\+ER@{I\+S\+B\+J\+\_\+\+M\+A\+R\+K\+ER}}
+\index{I\+S\+B\+J\+\_\+\+M\+A\+R\+K\+ER@{I\+S\+B\+J\+\_\+\+M\+A\+R\+K\+ER}!wav.\+c@{wav.\+c}}
+\subsubsection[{\texorpdfstring{I\+S\+B\+J\+\_\+\+M\+A\+R\+K\+ER}{ISBJ_MARKER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define I\+S\+B\+J\+\_\+\+M\+A\+R\+K\+ER~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}I\textquotesingle{}, \textquotesingle{}{\bf S}\textquotesingle{}, \textquotesingle{}{\bf B}\textquotesingle{}, \textquotesingle{}J\textquotesingle{}))}\hypertarget{wav_8c_a6c96a5c429d6e5ccc6d5bf45704c7dd4}{}\label{wav_8c_a6c96a5c429d6e5ccc6d5bf45704c7dd4}
+
+
+Definition at line 90 of file wav.\+c.
+
+\index{wav.\+c@{wav.\+c}!I\+S\+F\+T\+\_\+\+M\+A\+R\+K\+ER@{I\+S\+F\+T\+\_\+\+M\+A\+R\+K\+ER}}
+\index{I\+S\+F\+T\+\_\+\+M\+A\+R\+K\+ER@{I\+S\+F\+T\+\_\+\+M\+A\+R\+K\+ER}!wav.\+c@{wav.\+c}}
+\subsubsection[{\texorpdfstring{I\+S\+F\+T\+\_\+\+M\+A\+R\+K\+ER}{ISFT_MARKER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define I\+S\+F\+T\+\_\+\+M\+A\+R\+K\+ER~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}I\textquotesingle{}, \textquotesingle{}{\bf S}\textquotesingle{}, \textquotesingle{}{\bf F}\textquotesingle{}, \textquotesingle{}{\bf T}\textquotesingle{}))}\hypertarget{wav_8c_a96e8b9acbf6ff2c87f6d95216811926e}{}\label{wav_8c_a96e8b9acbf6ff2c87f6d95216811926e}
+
+
+Definition at line 79 of file wav.\+c.
+
+\index{wav.\+c@{wav.\+c}!I\+S\+R\+C\+\_\+\+M\+A\+R\+K\+ER@{I\+S\+R\+C\+\_\+\+M\+A\+R\+K\+ER}}
+\index{I\+S\+R\+C\+\_\+\+M\+A\+R\+K\+ER@{I\+S\+R\+C\+\_\+\+M\+A\+R\+K\+ER}!wav.\+c@{wav.\+c}}
+\subsubsection[{\texorpdfstring{I\+S\+R\+C\+\_\+\+M\+A\+R\+K\+ER}{ISRC_MARKER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define I\+S\+R\+C\+\_\+\+M\+A\+R\+K\+ER~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}I\textquotesingle{}, \textquotesingle{}{\bf S}\textquotesingle{}, \textquotesingle{}R\textquotesingle{}, \textquotesingle{}C\textquotesingle{}))}\hypertarget{wav_8c_ac68aecb965e0351fe673b9fca8f0473b}{}\label{wav_8c_ac68aecb965e0351fe673b9fca8f0473b}
+
+
+Definition at line 89 of file wav.\+c.
+
+\index{wav.\+c@{wav.\+c}!I\+T\+R\+K\+\_\+\+M\+A\+R\+K\+ER@{I\+T\+R\+K\+\_\+\+M\+A\+R\+K\+ER}}
+\index{I\+T\+R\+K\+\_\+\+M\+A\+R\+K\+ER@{I\+T\+R\+K\+\_\+\+M\+A\+R\+K\+ER}!wav.\+c@{wav.\+c}}
+\subsubsection[{\texorpdfstring{I\+T\+R\+K\+\_\+\+M\+A\+R\+K\+ER}{ITRK_MARKER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define I\+T\+R\+K\+\_\+\+M\+A\+R\+K\+ER~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}I\textquotesingle{}, \textquotesingle{}{\bf T}\textquotesingle{}, \textquotesingle{}R\textquotesingle{}, \textquotesingle{}K\textquotesingle{}))}\hypertarget{wav_8c_a681a17dd49d5195213b910196100bc31}{}\label{wav_8c_a681a17dd49d5195213b910196100bc31}
+
+
+Definition at line 93 of file wav.\+c.
+
+\index{wav.\+c@{wav.\+c}!i\+X\+M\+L\+\_\+\+M\+A\+R\+K\+ER@{i\+X\+M\+L\+\_\+\+M\+A\+R\+K\+ER}}
+\index{i\+X\+M\+L\+\_\+\+M\+A\+R\+K\+ER@{i\+X\+M\+L\+\_\+\+M\+A\+R\+K\+ER}!wav.\+c@{wav.\+c}}
+\subsubsection[{\texorpdfstring{i\+X\+M\+L\+\_\+\+M\+A\+R\+K\+ER}{iXML_MARKER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define i\+X\+M\+L\+\_\+\+M\+A\+R\+K\+ER~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}{\bf i}\textquotesingle{}, \textquotesingle{}X\textquotesingle{}, \textquotesingle{}{\bf M}\textquotesingle{}, \textquotesingle{}L\textquotesingle{}))}\hypertarget{wav_8c_a4e663e8a88e6e1539e0dcb4512eab3db}{}\label{wav_8c_a4e663e8a88e6e1539e0dcb4512eab3db}
+
+
+Definition at line 58 of file wav.\+c.
+
+\index{wav.\+c@{wav.\+c}!labl\+\_\+\+M\+A\+R\+K\+ER@{labl\+\_\+\+M\+A\+R\+K\+ER}}
+\index{labl\+\_\+\+M\+A\+R\+K\+ER@{labl\+\_\+\+M\+A\+R\+K\+ER}!wav.\+c@{wav.\+c}}
+\subsubsection[{\texorpdfstring{labl\+\_\+\+M\+A\+R\+K\+ER}{labl_MARKER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define labl\+\_\+\+M\+A\+R\+K\+ER~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}{\bf l}\textquotesingle{}, \textquotesingle{}{\bf a}\textquotesingle{}, \textquotesingle{}{\bf b}\textquotesingle{}, \textquotesingle{}{\bf l}\textquotesingle{}))}\hypertarget{wav_8c_ad60dcb38407f09b0a788e63050527561}{}\label{wav_8c_ad60dcb38407f09b0a788e63050527561}
+
+
+Definition at line 53 of file wav.\+c.
+
+\index{wav.\+c@{wav.\+c}!levl\+\_\+\+M\+A\+R\+K\+ER@{levl\+\_\+\+M\+A\+R\+K\+ER}}
+\index{levl\+\_\+\+M\+A\+R\+K\+ER@{levl\+\_\+\+M\+A\+R\+K\+ER}!wav.\+c@{wav.\+c}}
+\subsubsection[{\texorpdfstring{levl\+\_\+\+M\+A\+R\+K\+ER}{levl_MARKER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define levl\+\_\+\+M\+A\+R\+K\+ER~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}{\bf l}\textquotesingle{}, \textquotesingle{}e\textquotesingle{}, \textquotesingle{}v\textquotesingle{}, \textquotesingle{}{\bf l}\textquotesingle{}))}\hypertarget{wav_8c_ad3b9212d4fa701555bb891c73b31f665}{}\label{wav_8c_ad3b9212d4fa701555bb891c73b31f665}
+
+
+Definition at line 59 of file wav.\+c.
+
+\index{wav.\+c@{wav.\+c}!L\+I\+S\+T\+\_\+\+M\+A\+R\+K\+ER@{L\+I\+S\+T\+\_\+\+M\+A\+R\+K\+ER}}
+\index{L\+I\+S\+T\+\_\+\+M\+A\+R\+K\+ER@{L\+I\+S\+T\+\_\+\+M\+A\+R\+K\+ER}!wav.\+c@{wav.\+c}}
+\subsubsection[{\texorpdfstring{L\+I\+S\+T\+\_\+\+M\+A\+R\+K\+ER}{LIST_MARKER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define L\+I\+S\+T\+\_\+\+M\+A\+R\+K\+ER~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}L\textquotesingle{}, \textquotesingle{}I\textquotesingle{}, \textquotesingle{}{\bf S}\textquotesingle{}, \textquotesingle{}{\bf T}\textquotesingle{}))}\hypertarget{wav_8c_af2afae1bbd4f64514c255b9167c71015}{}\label{wav_8c_af2afae1bbd4f64514c255b9167c71015}
+
+
+Definition at line 47 of file wav.\+c.
+
+\index{wav.\+c@{wav.\+c}!ltxt\+\_\+\+M\+A\+R\+K\+ER@{ltxt\+\_\+\+M\+A\+R\+K\+ER}}
+\index{ltxt\+\_\+\+M\+A\+R\+K\+ER@{ltxt\+\_\+\+M\+A\+R\+K\+ER}!wav.\+c@{wav.\+c}}
+\subsubsection[{\texorpdfstring{ltxt\+\_\+\+M\+A\+R\+K\+ER}{ltxt_MARKER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define ltxt\+\_\+\+M\+A\+R\+K\+ER~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}{\bf l}\textquotesingle{}, \textquotesingle{}{\bf t}\textquotesingle{}, \textquotesingle{}x\textquotesingle{}, \textquotesingle{}{\bf t}\textquotesingle{}))}\hypertarget{wav_8c_a71469304fbfd36297b7d76681637b53e}{}\label{wav_8c_a71469304fbfd36297b7d76681637b53e}
+
+
+Definition at line 54 of file wav.\+c.
+
+\index{wav.\+c@{wav.\+c}!M\+E\+X\+T\+\_\+\+M\+A\+R\+K\+ER@{M\+E\+X\+T\+\_\+\+M\+A\+R\+K\+ER}}
+\index{M\+E\+X\+T\+\_\+\+M\+A\+R\+K\+ER@{M\+E\+X\+T\+\_\+\+M\+A\+R\+K\+ER}!wav.\+c@{wav.\+c}}
+\subsubsection[{\texorpdfstring{M\+E\+X\+T\+\_\+\+M\+A\+R\+K\+ER}{MEXT_MARKER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+E\+X\+T\+\_\+\+M\+A\+R\+K\+ER~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}{\bf M}\textquotesingle{}, \textquotesingle{}{\bf E}\textquotesingle{}, \textquotesingle{}X\textquotesingle{}, \textquotesingle{}{\bf T}\textquotesingle{}))}\hypertarget{wav_8c_a95d24b8f0dcdf902e8074445b95b3d0c}{}\label{wav_8c_a95d24b8f0dcdf902e8074445b95b3d0c}
+
+
+Definition at line 60 of file wav.\+c.
+
+\index{wav.\+c@{wav.\+c}!note\+\_\+\+M\+A\+R\+K\+ER@{note\+\_\+\+M\+A\+R\+K\+ER}}
+\index{note\+\_\+\+M\+A\+R\+K\+ER@{note\+\_\+\+M\+A\+R\+K\+ER}!wav.\+c@{wav.\+c}}
+\subsubsection[{\texorpdfstring{note\+\_\+\+M\+A\+R\+K\+ER}{note_MARKER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define note\+\_\+\+M\+A\+R\+K\+ER~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}n\textquotesingle{}, \textquotesingle{}o\textquotesingle{}, \textquotesingle{}{\bf t}\textquotesingle{}, \textquotesingle{}e\textquotesingle{}))}\hypertarget{wav_8c_a5d7427e84fea433fba322c43a388c2ec}{}\label{wav_8c_a5d7427e84fea433fba322c43a388c2ec}
+
+
+Definition at line 55 of file wav.\+c.
+
+\index{wav.\+c@{wav.\+c}!Ogg\+S\+\_\+\+M\+A\+R\+K\+ER@{Ogg\+S\+\_\+\+M\+A\+R\+K\+ER}}
+\index{Ogg\+S\+\_\+\+M\+A\+R\+K\+ER@{Ogg\+S\+\_\+\+M\+A\+R\+K\+ER}!wav.\+c@{wav.\+c}}
+\subsubsection[{\texorpdfstring{Ogg\+S\+\_\+\+M\+A\+R\+K\+ER}{OggS_MARKER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define Ogg\+S\+\_\+\+M\+A\+R\+K\+ER~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}O\textquotesingle{}, \textquotesingle{}g\textquotesingle{}, \textquotesingle{}g\textquotesingle{}, \textquotesingle{}{\bf S}\textquotesingle{}))}\hypertarget{wav_8c_a48cb1608c4f2007ad1d20f8a2246c831}{}\label{wav_8c_a48cb1608c4f2007ad1d20f8a2246c831}
+
+
+Definition at line 97 of file wav.\+c.
+
+\index{wav.\+c@{wav.\+c}!P\+A\+D\+\_\+\+M\+A\+R\+K\+ER@{P\+A\+D\+\_\+\+M\+A\+R\+K\+ER}}
+\index{P\+A\+D\+\_\+\+M\+A\+R\+K\+ER@{P\+A\+D\+\_\+\+M\+A\+R\+K\+ER}!wav.\+c@{wav.\+c}}
+\subsubsection[{\texorpdfstring{P\+A\+D\+\_\+\+M\+A\+R\+K\+ER}{PAD_MARKER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define P\+A\+D\+\_\+\+M\+A\+R\+K\+ER~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}P\textquotesingle{}, \textquotesingle{}{\bf A}\textquotesingle{}, \textquotesingle{}{\bf D}\textquotesingle{}, \textquotesingle{} \textquotesingle{}))}\hypertarget{wav_8c_ad008f2ef2fb647f7e3350f6f11919c7b}{}\label{wav_8c_ad008f2ef2fb647f7e3350f6f11919c7b}
+
+
+Definition at line 64 of file wav.\+c.
+
+\index{wav.\+c@{wav.\+c}!P\+E\+A\+K\+\_\+\+M\+A\+R\+K\+ER@{P\+E\+A\+K\+\_\+\+M\+A\+R\+K\+ER}}
+\index{P\+E\+A\+K\+\_\+\+M\+A\+R\+K\+ER@{P\+E\+A\+K\+\_\+\+M\+A\+R\+K\+ER}!wav.\+c@{wav.\+c}}
+\subsubsection[{\texorpdfstring{P\+E\+A\+K\+\_\+\+M\+A\+R\+K\+ER}{PEAK_MARKER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define P\+E\+A\+K\+\_\+\+M\+A\+R\+K\+ER~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}P\textquotesingle{}, \textquotesingle{}{\bf E}\textquotesingle{}, \textquotesingle{}{\bf A}\textquotesingle{}, \textquotesingle{}K\textquotesingle{}))}\hypertarget{wav_8c_a51e17bd890e7ffd54c4924499b79a582}{}\label{wav_8c_a51e17bd890e7ffd54c4924499b79a582}
+
+
+Definition at line 44 of file wav.\+c.
+
+\index{wav.\+c@{wav.\+c}!plst\+\_\+\+M\+A\+R\+K\+ER@{plst\+\_\+\+M\+A\+R\+K\+ER}}
+\index{plst\+\_\+\+M\+A\+R\+K\+ER@{plst\+\_\+\+M\+A\+R\+K\+ER}!wav.\+c@{wav.\+c}}
+\subsubsection[{\texorpdfstring{plst\+\_\+\+M\+A\+R\+K\+ER}{plst_MARKER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define plst\+\_\+\+M\+A\+R\+K\+ER~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}{\bf p}\textquotesingle{}, \textquotesingle{}{\bf l}\textquotesingle{}, \textquotesingle{}{\bf s}\textquotesingle{}, \textquotesingle{}{\bf t}\textquotesingle{}))}\hypertarget{wav_8c_ae4e04a9a5fb4e2de597ce57537e4a82d}{}\label{wav_8c_ae4e04a9a5fb4e2de597ce57537e4a82d}
+
+
+Definition at line 51 of file wav.\+c.
+
+\index{wav.\+c@{wav.\+c}!R\+I\+F\+F\+\_\+\+M\+A\+R\+K\+ER@{R\+I\+F\+F\+\_\+\+M\+A\+R\+K\+ER}}
+\index{R\+I\+F\+F\+\_\+\+M\+A\+R\+K\+ER@{R\+I\+F\+F\+\_\+\+M\+A\+R\+K\+ER}!wav.\+c@{wav.\+c}}
+\subsubsection[{\texorpdfstring{R\+I\+F\+F\+\_\+\+M\+A\+R\+K\+ER}{RIFF_MARKER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define R\+I\+F\+F\+\_\+\+M\+A\+R\+K\+ER~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}R\textquotesingle{}, \textquotesingle{}I\textquotesingle{}, \textquotesingle{}{\bf F}\textquotesingle{}, \textquotesingle{}{\bf F}\textquotesingle{}))}\hypertarget{wav_8c_a229ae828e7fddc0e1f6f8fd98ccc4bdd}{}\label{wav_8c_a229ae828e7fddc0e1f6f8fd98ccc4bdd}
+
+
+Definition at line 38 of file wav.\+c.
+
+\index{wav.\+c@{wav.\+c}!R\+I\+F\+X\+\_\+\+M\+A\+R\+K\+ER@{R\+I\+F\+X\+\_\+\+M\+A\+R\+K\+ER}}
+\index{R\+I\+F\+X\+\_\+\+M\+A\+R\+K\+ER@{R\+I\+F\+X\+\_\+\+M\+A\+R\+K\+ER}!wav.\+c@{wav.\+c}}
+\subsubsection[{\texorpdfstring{R\+I\+F\+X\+\_\+\+M\+A\+R\+K\+ER}{RIFX_MARKER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define R\+I\+F\+X\+\_\+\+M\+A\+R\+K\+ER~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}R\textquotesingle{}, \textquotesingle{}I\textquotesingle{}, \textquotesingle{}{\bf F}\textquotesingle{}, \textquotesingle{}X\textquotesingle{}))}\hypertarget{wav_8c_a68c389434e88c86815cac6478950aba4}{}\label{wav_8c_a68c389434e88c86815cac6478950aba4}
+
+
+Definition at line 39 of file wav.\+c.
+
+\index{wav.\+c@{wav.\+c}!slnt\+\_\+\+M\+A\+R\+K\+ER@{slnt\+\_\+\+M\+A\+R\+K\+ER}}
+\index{slnt\+\_\+\+M\+A\+R\+K\+ER@{slnt\+\_\+\+M\+A\+R\+K\+ER}!wav.\+c@{wav.\+c}}
+\subsubsection[{\texorpdfstring{slnt\+\_\+\+M\+A\+R\+K\+ER}{slnt_MARKER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define slnt\+\_\+\+M\+A\+R\+K\+ER~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}{\bf s}\textquotesingle{}, \textquotesingle{}{\bf l}\textquotesingle{}, \textquotesingle{}n\textquotesingle{}, \textquotesingle{}{\bf t}\textquotesingle{}))}\hypertarget{wav_8c_a91b5c28db9676fab46947c5cd84267a2}{}\label{wav_8c_a91b5c28db9676fab46947c5cd84267a2}
+
+
+Definition at line 48 of file wav.\+c.
+
+\index{wav.\+c@{wav.\+c}!smpl\+\_\+\+M\+A\+R\+K\+ER@{smpl\+\_\+\+M\+A\+R\+K\+ER}}
+\index{smpl\+\_\+\+M\+A\+R\+K\+ER@{smpl\+\_\+\+M\+A\+R\+K\+ER}!wav.\+c@{wav.\+c}}
+\subsubsection[{\texorpdfstring{smpl\+\_\+\+M\+A\+R\+K\+ER}{smpl_MARKER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define smpl\+\_\+\+M\+A\+R\+K\+ER~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}{\bf s}\textquotesingle{}, \textquotesingle{}{\bf m}\textquotesingle{}, \textquotesingle{}{\bf p}\textquotesingle{}, \textquotesingle{}{\bf l}\textquotesingle{}))}\hypertarget{wav_8c_a7b803ef8a20cd65b9c226d380ea45a4c}{}\label{wav_8c_a7b803ef8a20cd65b9c226d380ea45a4c}
+
+
+Definition at line 56 of file wav.\+c.
+
+\index{wav.\+c@{wav.\+c}!strc\+\_\+\+M\+A\+R\+K\+ER@{strc\+\_\+\+M\+A\+R\+K\+ER}}
+\index{strc\+\_\+\+M\+A\+R\+K\+ER@{strc\+\_\+\+M\+A\+R\+K\+ER}!wav.\+c@{wav.\+c}}
+\subsubsection[{\texorpdfstring{strc\+\_\+\+M\+A\+R\+K\+ER}{strc_MARKER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define strc\+\_\+\+M\+A\+R\+K\+ER~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}{\bf s}\textquotesingle{}, \textquotesingle{}{\bf t}\textquotesingle{}, \textquotesingle{}r\textquotesingle{}, \textquotesingle{}{\bf c}\textquotesingle{}))}\hypertarget{wav_8c_ae7bef024d42b190245ceff7d5e9a7481}{}\label{wav_8c_ae7bef024d42b190245ceff7d5e9a7481}
+
+
+Definition at line 63 of file wav.\+c.
+
+\index{wav.\+c@{wav.\+c}!W\+A\+V\+\_\+\+B\+E\+X\+T\+\_\+\+M\+A\+X\+\_\+\+C\+H\+U\+N\+K\+\_\+\+S\+I\+ZE@{W\+A\+V\+\_\+\+B\+E\+X\+T\+\_\+\+M\+A\+X\+\_\+\+C\+H\+U\+N\+K\+\_\+\+S\+I\+ZE}}
+\index{W\+A\+V\+\_\+\+B\+E\+X\+T\+\_\+\+M\+A\+X\+\_\+\+C\+H\+U\+N\+K\+\_\+\+S\+I\+ZE@{W\+A\+V\+\_\+\+B\+E\+X\+T\+\_\+\+M\+A\+X\+\_\+\+C\+H\+U\+N\+K\+\_\+\+S\+I\+ZE}!wav.\+c@{wav.\+c}}
+\subsubsection[{\texorpdfstring{W\+A\+V\+\_\+\+B\+E\+X\+T\+\_\+\+M\+A\+X\+\_\+\+C\+H\+U\+N\+K\+\_\+\+S\+I\+ZE}{WAV_BEXT_MAX_CHUNK_SIZE}}]{\setlength{\rightskip}{0pt plus 5cm}\#define W\+A\+V\+\_\+\+B\+E\+X\+T\+\_\+\+M\+A\+X\+\_\+\+C\+H\+U\+N\+K\+\_\+\+S\+I\+ZE~(10 $\ast$ 1024)}\hypertarget{wav_8c_a8297a4117ec43d2d6bc90e0e6f5fa923}{}\label{wav_8c_a8297a4117ec43d2d6bc90e0e6f5fa923}
+
+
+Definition at line 101 of file wav.\+c.
+
+\index{wav.\+c@{wav.\+c}!W\+A\+V\+\_\+\+B\+E\+X\+T\+\_\+\+M\+I\+N\+\_\+\+C\+H\+U\+N\+K\+\_\+\+S\+I\+ZE@{W\+A\+V\+\_\+\+B\+E\+X\+T\+\_\+\+M\+I\+N\+\_\+\+C\+H\+U\+N\+K\+\_\+\+S\+I\+ZE}}
+\index{W\+A\+V\+\_\+\+B\+E\+X\+T\+\_\+\+M\+I\+N\+\_\+\+C\+H\+U\+N\+K\+\_\+\+S\+I\+ZE@{W\+A\+V\+\_\+\+B\+E\+X\+T\+\_\+\+M\+I\+N\+\_\+\+C\+H\+U\+N\+K\+\_\+\+S\+I\+ZE}!wav.\+c@{wav.\+c}}
+\subsubsection[{\texorpdfstring{W\+A\+V\+\_\+\+B\+E\+X\+T\+\_\+\+M\+I\+N\+\_\+\+C\+H\+U\+N\+K\+\_\+\+S\+I\+ZE}{WAV_BEXT_MIN_CHUNK_SIZE}}]{\setlength{\rightskip}{0pt plus 5cm}\#define W\+A\+V\+\_\+\+B\+E\+X\+T\+\_\+\+M\+I\+N\+\_\+\+C\+H\+U\+N\+K\+\_\+\+S\+I\+ZE~602}\hypertarget{wav_8c_a2381e67e876c32c419304b63989c554d}{}\label{wav_8c_a2381e67e876c32c419304b63989c554d}
+
+
+Definition at line 100 of file wav.\+c.
+
+\index{wav.\+c@{wav.\+c}!W\+A\+V\+\_\+\+P\+E\+A\+K\+\_\+\+C\+H\+U\+N\+K\+\_\+\+S\+I\+ZE@{W\+A\+V\+\_\+\+P\+E\+A\+K\+\_\+\+C\+H\+U\+N\+K\+\_\+\+S\+I\+ZE}}
+\index{W\+A\+V\+\_\+\+P\+E\+A\+K\+\_\+\+C\+H\+U\+N\+K\+\_\+\+S\+I\+ZE@{W\+A\+V\+\_\+\+P\+E\+A\+K\+\_\+\+C\+H\+U\+N\+K\+\_\+\+S\+I\+ZE}!wav.\+c@{wav.\+c}}
+\subsubsection[{\texorpdfstring{W\+A\+V\+\_\+\+P\+E\+A\+K\+\_\+\+C\+H\+U\+N\+K\+\_\+\+S\+I\+ZE}{WAV_PEAK_CHUNK_SIZE}}]{\setlength{\rightskip}{0pt plus 5cm}\#define W\+A\+V\+\_\+\+P\+E\+A\+K\+\_\+\+C\+H\+U\+N\+K\+\_\+\+S\+I\+ZE(
+\begin{DoxyParamCaption}
+\item[{}]{ch}
+\end{DoxyParamCaption}
+)~(2 $\ast$ sizeof ({\bf int}) + ch $\ast$ (sizeof (float) + sizeof ({\bf int})))}\hypertarget{wav_8c_a5a47016c071ad7caeafe8bcc60eb5910}{}\label{wav_8c_a5a47016c071ad7caeafe8bcc60eb5910}
+
+
+Definition at line 99 of file wav.\+c.
+
+\index{wav.\+c@{wav.\+c}!W\+A\+V\+E\+\_\+\+M\+A\+R\+K\+ER@{W\+A\+V\+E\+\_\+\+M\+A\+R\+K\+ER}}
+\index{W\+A\+V\+E\+\_\+\+M\+A\+R\+K\+ER@{W\+A\+V\+E\+\_\+\+M\+A\+R\+K\+ER}!wav.\+c@{wav.\+c}}
+\subsubsection[{\texorpdfstring{W\+A\+V\+E\+\_\+\+M\+A\+R\+K\+ER}{WAVE_MARKER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define W\+A\+V\+E\+\_\+\+M\+A\+R\+K\+ER~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}W\textquotesingle{}, \textquotesingle{}{\bf A}\textquotesingle{}, \textquotesingle{}{\bf V}\textquotesingle{}, \textquotesingle{}{\bf E}\textquotesingle{}))}\hypertarget{wav_8c_a59ce8748ba0cf096e4e7a05525ab9f7d}{}\label{wav_8c_a59ce8748ba0cf096e4e7a05525ab9f7d}
+
+
+Definition at line 40 of file wav.\+c.
+
+\index{wav.\+c@{wav.\+c}!wavl\+\_\+\+M\+A\+R\+K\+ER@{wavl\+\_\+\+M\+A\+R\+K\+ER}}
+\index{wavl\+\_\+\+M\+A\+R\+K\+ER@{wavl\+\_\+\+M\+A\+R\+K\+ER}!wav.\+c@{wav.\+c}}
+\subsubsection[{\texorpdfstring{wavl\+\_\+\+M\+A\+R\+K\+ER}{wavl_MARKER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define wavl\+\_\+\+M\+A\+R\+K\+ER~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}w\textquotesingle{}, \textquotesingle{}{\bf a}\textquotesingle{}, \textquotesingle{}v\textquotesingle{}, \textquotesingle{}{\bf l}\textquotesingle{}))}\hypertarget{wav_8c_a9562703f653d69cfb960420859929be6}{}\label{wav_8c_a9562703f653d69cfb960420859929be6}
+
+
+Definition at line 49 of file wav.\+c.
+
+\index{wav.\+c@{wav.\+c}!wvpk\+\_\+\+M\+A\+R\+K\+ER@{wvpk\+\_\+\+M\+A\+R\+K\+ER}}
+\index{wvpk\+\_\+\+M\+A\+R\+K\+ER@{wvpk\+\_\+\+M\+A\+R\+K\+ER}!wav.\+c@{wav.\+c}}
+\subsubsection[{\texorpdfstring{wvpk\+\_\+\+M\+A\+R\+K\+ER}{wvpk_MARKER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define wvpk\+\_\+\+M\+A\+R\+K\+ER~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}w\textquotesingle{}, \textquotesingle{}v\textquotesingle{}, \textquotesingle{}{\bf p}\textquotesingle{}, \textquotesingle{}{\bf k}\textquotesingle{}))}\hypertarget{wav_8c_a6e5e1d2b7720e27abcb5fccb19d93c55}{}\label{wav_8c_a6e5e1d2b7720e27abcb5fccb19d93c55}
+
+
+Definition at line 96 of file wav.\+c.
+
+
+
+\subsection{Enumeration Type Documentation}
+\subsubsection[{\texorpdfstring{anonymous enum}{anonymous enum}}]{\setlength{\rightskip}{0pt plus 5cm}anonymous enum}\hypertarget{wav_8c_aaa91b962ffd8aca2f3c24e886a222419}{}\label{wav_8c_aaa91b962ffd8aca2f3c24e886a222419}
+\begin{Desc}
+\item[Enumerator]\par
+\begin{description}
+\index{H\+A\+V\+E\+\_\+\+R\+I\+FF@{H\+A\+V\+E\+\_\+\+R\+I\+FF}!wav.\+c@{wav.\+c}}\index{wav.\+c@{wav.\+c}!H\+A\+V\+E\+\_\+\+R\+I\+FF@{H\+A\+V\+E\+\_\+\+R\+I\+FF}}\item[{\em 
+H\+A\+V\+E\+\_\+\+R\+I\+FF\hypertarget{wav_8c_aaa91b962ffd8aca2f3c24e886a222419aa570d99ac596bda603ac72a1fe2fdb01}{}\label{wav_8c_aaa91b962ffd8aca2f3c24e886a222419aa570d99ac596bda603ac72a1fe2fdb01}
+}]\index{H\+A\+V\+E\+\_\+\+W\+A\+VE@{H\+A\+V\+E\+\_\+\+W\+A\+VE}!wav.\+c@{wav.\+c}}\index{wav.\+c@{wav.\+c}!H\+A\+V\+E\+\_\+\+W\+A\+VE@{H\+A\+V\+E\+\_\+\+W\+A\+VE}}\item[{\em 
+H\+A\+V\+E\+\_\+\+W\+A\+VE\hypertarget{wav_8c_aaa91b962ffd8aca2f3c24e886a222419ac713a6f5e1592e7a2415a4d8a45f2f77}{}\label{wav_8c_aaa91b962ffd8aca2f3c24e886a222419ac713a6f5e1592e7a2415a4d8a45f2f77}
+}]\index{H\+A\+V\+E\+\_\+fmt@{H\+A\+V\+E\+\_\+fmt}!wav.\+c@{wav.\+c}}\index{wav.\+c@{wav.\+c}!H\+A\+V\+E\+\_\+fmt@{H\+A\+V\+E\+\_\+fmt}}\item[{\em 
+H\+A\+V\+E\+\_\+fmt\hypertarget{wav_8c_aaa91b962ffd8aca2f3c24e886a222419af8f50a062df9de51fbc9aef6d372baf5}{}\label{wav_8c_aaa91b962ffd8aca2f3c24e886a222419af8f50a062df9de51fbc9aef6d372baf5}
+}]\index{H\+A\+V\+E\+\_\+fact@{H\+A\+V\+E\+\_\+fact}!wav.\+c@{wav.\+c}}\index{wav.\+c@{wav.\+c}!H\+A\+V\+E\+\_\+fact@{H\+A\+V\+E\+\_\+fact}}\item[{\em 
+H\+A\+V\+E\+\_\+fact\hypertarget{wav_8c_aaa91b962ffd8aca2f3c24e886a222419a8ee3665405db0e2169834db7e8d81b0a}{}\label{wav_8c_aaa91b962ffd8aca2f3c24e886a222419a8ee3665405db0e2169834db7e8d81b0a}
+}]\index{H\+A\+V\+E\+\_\+\+P\+E\+AK@{H\+A\+V\+E\+\_\+\+P\+E\+AK}!wav.\+c@{wav.\+c}}\index{wav.\+c@{wav.\+c}!H\+A\+V\+E\+\_\+\+P\+E\+AK@{H\+A\+V\+E\+\_\+\+P\+E\+AK}}\item[{\em 
+H\+A\+V\+E\+\_\+\+P\+E\+AK\hypertarget{wav_8c_aaa91b962ffd8aca2f3c24e886a222419a27ef9f60a274cea3b86bbf27bbc25016}{}\label{wav_8c_aaa91b962ffd8aca2f3c24e886a222419a27ef9f60a274cea3b86bbf27bbc25016}
+}]\index{H\+A\+V\+E\+\_\+data@{H\+A\+V\+E\+\_\+data}!wav.\+c@{wav.\+c}}\index{wav.\+c@{wav.\+c}!H\+A\+V\+E\+\_\+data@{H\+A\+V\+E\+\_\+data}}\item[{\em 
+H\+A\+V\+E\+\_\+data\hypertarget{wav_8c_aaa91b962ffd8aca2f3c24e886a222419ad27da9915456c71bc5491a20f76f0115}{}\label{wav_8c_aaa91b962ffd8aca2f3c24e886a222419ad27da9915456c71bc5491a20f76f0115}
+}]\index{H\+A\+V\+E\+\_\+other@{H\+A\+V\+E\+\_\+other}!wav.\+c@{wav.\+c}}\index{wav.\+c@{wav.\+c}!H\+A\+V\+E\+\_\+other@{H\+A\+V\+E\+\_\+other}}\item[{\em 
+H\+A\+V\+E\+\_\+other\hypertarget{wav_8c_aaa91b962ffd8aca2f3c24e886a222419aa8854eab2272b78e2ac1414eb2b6d646}{}\label{wav_8c_aaa91b962ffd8aca2f3c24e886a222419aa8854eab2272b78e2ac1414eb2b6d646}
+}]\end{description}
+\end{Desc}
+
+
+Definition at line 103 of file wav.\+c.
+
+
+
+\subsection{Function Documentation}
+\index{wav.\+c@{wav.\+c}!wav\+\_\+open@{wav\+\_\+open}}
+\index{wav\+\_\+open@{wav\+\_\+open}!wav.\+c@{wav.\+c}}
+\subsubsection[{\texorpdfstring{wav\+\_\+open(\+S\+F\+\_\+\+P\+R\+I\+V\+A\+T\+E $\ast$psf)}{wav_open(SF_PRIVATE *psf)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf int} wav\+\_\+open (
+\begin{DoxyParamCaption}
+\item[{{\bf S\+F\+\_\+\+P\+R\+I\+V\+A\+TE} $\ast$}]{psf}
+\end{DoxyParamCaption}
+)}\hypertarget{wav_8c_a28e32b0f7abf6b78bdadd809c6f0e18e}{}\label{wav_8c_a28e32b0f7abf6b78bdadd809c6f0e18e}
+
+
+Definition at line 179 of file wav.\+c.
+
+\index{wav.\+c@{wav.\+c}!wav\+\_\+read\+\_\+bext\+\_\+chunk@{wav\+\_\+read\+\_\+bext\+\_\+chunk}}
+\index{wav\+\_\+read\+\_\+bext\+\_\+chunk@{wav\+\_\+read\+\_\+bext\+\_\+chunk}!wav.\+c@{wav.\+c}}
+\subsubsection[{\texorpdfstring{wav\+\_\+read\+\_\+bext\+\_\+chunk(\+S\+F\+\_\+\+P\+R\+I\+V\+A\+T\+E $\ast$psf, unsigned int chunksize)}{wav_read_bext_chunk(SF_PRIVATE *psf, unsigned int chunksize)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf int} wav\+\_\+read\+\_\+bext\+\_\+chunk (
+\begin{DoxyParamCaption}
+\item[{{\bf S\+F\+\_\+\+P\+R\+I\+V\+A\+TE} $\ast$}]{psf, }
+\item[{unsigned {\bf int}}]{chunksize}
+\end{DoxyParamCaption}
+)}\hypertarget{wav_8c_a6ff75276af08822141ba17f5757b237a}{}\label{wav_8c_a6ff75276af08822141ba17f5757b237a}
+
+
+Definition at line 1670 of file wav.\+c.
+
+\index{wav.\+c@{wav.\+c}!wav\+\_\+write\+\_\+bext\+\_\+chunk@{wav\+\_\+write\+\_\+bext\+\_\+chunk}}
+\index{wav\+\_\+write\+\_\+bext\+\_\+chunk@{wav\+\_\+write\+\_\+bext\+\_\+chunk}!wav.\+c@{wav.\+c}}
+\subsubsection[{\texorpdfstring{wav\+\_\+write\+\_\+bext\+\_\+chunk(\+S\+F\+\_\+\+P\+R\+I\+V\+A\+T\+E $\ast$psf)}{wav_write_bext_chunk(SF_PRIVATE *psf)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf int} wav\+\_\+write\+\_\+bext\+\_\+chunk (
+\begin{DoxyParamCaption}
+\item[{{\bf S\+F\+\_\+\+P\+R\+I\+V\+A\+TE} $\ast$}]{psf}
+\end{DoxyParamCaption}
+)}\hypertarget{wav_8c_af8281100b2a1a323666dd49ea5772068}{}\label{wav_8c_af8281100b2a1a323666dd49ea5772068}
+
+
+Definition at line 1726 of file wav.\+c.
+

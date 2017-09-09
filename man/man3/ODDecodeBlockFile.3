@@ -1,0 +1,566 @@
+.TH "ODDecodeBlockFile" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+ODDecodeBlockFile \- An \fBAliasBlockFile\fP that references uncompressed data in an existing file\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <ODDecodeBlockFile\&.h>\fP
+.PP
+Inherits \fBSimpleBlockFile\fP\&.
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBODDecodeBlockFile\fP (wxFileName baseFileName, wxFileName audioFileName, \fBsampleCount\fP aliasStart, \fBsampleCount\fP aliasLen, \fBint\fP aliasChannel, unsigned \fBint\fP decodeType)"
+.br
+.RI "\fICreate a disk file and write summary and sample data to it\&. \fP"
+.ti -1c
+.RI "\fBODDecodeBlockFile\fP (wxFileName existingFile, wxFileName audioFileName, \fBsampleCount\fP aliasStart, \fBsampleCount\fP aliasLen, \fBint\fP aliasChannel, unsigned \fBint\fP decodeType, float \fBmin\fP, float \fBmax\fP, float rms, \fBbool\fP dataAvailable)"
+.br
+.RI "\fICreate the memory structure to refer to the given block file\&. \fP"
+.ti -1c
+.RI "virtual \fB~ODDecodeBlockFile\fP ()"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBIsSummaryAvailable\fP () override"
+.br
+.RI "\fIReturns TRUE if this block's complete summary has been computed and is ready (for OD) \fP"
+.ti -1c
+.RI "\fBbool\fP \fBIsDataAvailable\fP () override"
+.br
+.RI "\fIReturns TRUE if this block's complete data is ready to be accessed by Read() \fP"
+.ti -1c
+.RI "\fBbool\fP \fBIsSummaryBeingComputed\fP () override"
+.br
+.RI "\fIReturns TRUE if the summary has not yet been written, but is actively being computed and written to disk\&. \fP"
+.ti -1c
+.RI "wxLongLong \fBGetSpaceUsage\fP () override"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBGetMinMax\fP (\fBsampleCount\fP \fBstart\fP, \fBsampleCount\fP \fBlen\fP, float *outMin, float *outMax, float *outRMS) override"
+.br
+.RI "\fIGets extreme values for the specified region\&. \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBGetMinMax\fP (float *outMin, float *outMax, float *outRMS) override"
+.br
+.RI "\fIGets extreme values for the entire block\&. \fP"
+.ti -1c
+.RI "\fBbool\fP \fBRead256\fP (float *\fBbuffer\fP, \fBsampleCount\fP \fBstart\fP, \fBsampleCount\fP \fBlen\fP) override"
+.br
+.RI "\fIReturns the 256 byte summary data block\&. \fP"
+.ti -1c
+.RI "\fBbool\fP \fBRead64K\fP (float *\fBbuffer\fP, \fBsampleCount\fP \fBstart\fP, \fBsampleCount\fP \fBlen\fP) override"
+.br
+.RI "\fIReturns the 64K summary data block\&. \fP"
+.ti -1c
+.RI "\fBBlockFile\fP * \fBCopy\fP (wxFileName fileName) override"
+.br
+.RI "\fIMakes NEW \fBODPCMAliasBlockFile\fP or \fBPCMAliasBlockFile\fP depending on summary availability\&. \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBSaveXML\fP (\fBXMLWriter\fP &xmlFile) override"
+.br
+.RI "\fISaves as xml \fBODPCMAliasBlockFile\fP or \fBPCMAliasBlockFile\fP depending on summary availability\&. \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBRecover\fP (\fBvoid\fP) override"
+.br
+.RI "\fIWrites the summary file if summary data is available\&. \fP"
+.ti -1c
+.RI "\fBint\fP \fBDoWriteBlockFile\fP ()"
+.br
+.RI "\fIA public interface to WriteSummary\&. \fP"
+.ti -1c
+.RI "\fBint\fP \fBWriteODDecodeBlockFile\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBSetStart\fP (\fBsampleCount\fP startSample)"
+.br
+.RI "\fISets the value that indicates where the first sample in this block corresponds to the global sequence/clip\&. Only for display use\&. \fP"
+.ti -1c
+.RI "\fBsampleCount\fP \fBGetStart\fP ()"
+.br
+.RI "\fIGets the value that indicates where the first sample in this block corresponds to the global sequence/clip\&. Only for display use\&. \fP"
+.ti -1c
+.RI "\fBsampleCount\fP \fBGetGlobalStart\fP ()"
+.br
+.ti -1c
+.RI "\fBsampleCount\fP \fBGetGlobalEnd\fP ()"
+.br
+.ti -1c
+.RI "\fBint\fP \fBReadData\fP (\fBsamplePtr\fP \fBdata\fP, \fBsampleFormat\fP \fBformat\fP, \fBsampleCount\fP \fBstart\fP, \fBsampleCount\fP \fBlen\fP) override"
+.br
+.RI "\fIReads the specified data from the aliased file using libsndfile\&. \fP"
+.ti -1c
+.RI "\fBbool\fP \fBReadSummary\fP (\fBvoid\fP *\fBdata\fP) override"
+.br
+.RI "\fIRead the summary into a buffer\&. \fP"
+.ti -1c
+.RI "unsigned \fBint\fP \fBGetDecodeType\fP ()"
+.br
+.RI "\fIReturns the type of audiofile this blockfile is loaded from\&. \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBSetClipOffset\fP (\fBsampleCount\fP numSamples)"
+.br
+.RI "\fIsets the amount of samples the clip associated with this blockfile is offset in the wavetrack (non effecting) \fP"
+.ti -1c
+.RI "\fBsampleCount\fP \fBGetClipOffset\fP ()"
+.br
+.RI "\fIGets the number of samples the clip associated with this blockfile is offset by\&. \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBSetODFileDecoder\fP (\fBODFileDecoder\fP *decoder)"
+.br
+.RI "\fIset the decoder, \fP"
+.ti -1c
+.RI "wxFileName \fBGetAudioFileName\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBSetFileName\fP (wxFileName &\fBname\fP) override"
+.br
+.RI "\fIsets the file name the summary info will be saved in\&. threadsafe\&. \fP"
+.ti -1c
+.RI "wxFileName \fBGetFileName\fP () override"
+.br
+.RI "\fIsets the file name the summary info will be saved in\&. threadsafe\&. \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBLockRead\fP () override"
+.br
+.RI "\fIPrevents a read on other threads of the encoded audio file\&. \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBUnlockRead\fP () override"
+.br
+.RI "\fIAllows reading of encoded file on other threads\&. \fP"
+.ti -1c
+.RI "wxFileName \fBGetEncodedAudioFilename\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBChangeAudioFile\fP (wxFileName newAudioFile)"
+.br
+.in -1c
+.SS "Static Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "static \fBBlockFile\fP * \fBBuildFromXML\fP (\fBDirManager\fP &dm, \fBconst\fP wxChar **attrs)"
+.br
+.RI "\fIReconstructs from XML a \fBODPCMAliasBlockFile\fP and reschedules it for OD loading\&. \fP"
+.in -1c
+.SS "Protected Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBvoid\fP * \fBCalcSummary\fP (\fBsamplePtr\fP \fBbuffer\fP, \fBsampleCount\fP \fBlen\fP, \fBsampleFormat\fP \fBformat\fP) override"
+.br
+.in -1c
+.SS "Protected Attributes"
+
+.in +1c
+.ti -1c
+.RI "unsigned \fBint\fP \fBmType\fP"
+.br
+.ti -1c
+.RI "\fBODLock\fP \fBmFileNameMutex\fP"
+.br
+.ti -1c
+.RI "wxFileName \fBmAudioFileName\fP"
+.br
+.RI "\fIThe original file the audio came from\&. \fP"
+.ti -1c
+.RI "\fBODLock\fP \fBmDataAvailableMutex\fP"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBmDataAvailable\fP"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBmDataBeingComputed\fP"
+.br
+.ti -1c
+.RI "\fBODFileDecoder\fP * \fBmDecoder\fP"
+.br
+.ti -1c
+.RI "\fBODLock\fP \fBmDecoderMutex\fP"
+.br
+.ti -1c
+.RI "\fBODLock\fP \fBmReadDataMutex\fP"
+.br
+.RI "\fIFor accessing the audio file that will be decoded\&. Used by dir manager;\&. \fP"
+.ti -1c
+.RI "\fBsampleCount\fP \fBmStart\fP"
+.br
+.RI "\fIfor reporting after task is complete\&. Only for display use\&. \fP"
+.ti -1c
+.RI "\fBsampleCount\fP \fBmClipOffset\fP"
+.br
+.RI "\fIthe \fBODTask\fP needs to know where this blockfile lies in the track, so for convenience, we have this here\&. \fP"
+.ti -1c
+.RI "\fBsampleFormat\fP \fBmFormat\fP"
+.br
+.ti -1c
+.RI "\fBsampleCount\fP \fBmAliasStart\fP"
+.br
+.ti -1c
+.RI "\fBint\fP \fBmAliasChannel\fP"
+.br
+.in -1c
+.SS "Additional Inherited Members"
+.SH "Detailed Description"
+.PP 
+An \fBAliasBlockFile\fP that references uncompressed data in an existing file\&. 
+
+\fBODDecodeBlockFile\fP is a special type of \fBSimpleBlockFile\fP that does not necessarily have summary OR audio data available The summary and audio is eventually computed and written to a file in a background thread\&.
+.PP
+\fBODDecodeBlockFile\fP is a special type of \fBSimpleBlockFile\fP that does not necessarily have summary OR audio data available The summary is eventually computed and written to a file in a background thread\&. See \fBODPCMAliasBlockFile\fP for a similar class\&.
+.PP
+Load On-Demand implementation of the SimpleBlockFIle for audio files that need to be decoded (mp3,flac,etc\&.\&.)\&.
+.PP
+Also, see \fBODPCMAliasBlockFile\fP for a similar file\&. 
+.PP
+Definition at line 38 of file ODDecodeBlockFile\&.h\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "ODDecodeBlockFile::ODDecodeBlockFile (wxFileName baseFileName, wxFileName audioFileName, \fBsampleCount\fP aliasStart, \fBsampleCount\fP aliasLen, \fBint\fP aliasChannel, unsigned \fBint\fP decodeType)"
+
+.PP
+Create a disk file and write summary and sample data to it\&. 
+.PP
+Definition at line 37 of file ODDecodeBlockFile\&.cpp\&.
+.SS "ODDecodeBlockFile::ODDecodeBlockFile (wxFileName existingFile, wxFileName audioFileName, \fBsampleCount\fP aliasStart, \fBsampleCount\fP aliasLen, \fBint\fP aliasChannel, unsigned \fBint\fP decodeType, float min, float max, float rms, \fBbool\fP dataAvailable)"
+
+.PP
+Create the memory structure to refer to the given block file\&. 
+.PP
+Definition at line 52 of file ODDecodeBlockFile\&.cpp\&.
+.SS "ODDecodeBlockFile::~ODDecodeBlockFile ()\fC [virtual]\fP"
+
+.PP
+Definition at line 69 of file ODDecodeBlockFile\&.cpp\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "\fBBlockFile\fP * ODDecodeBlockFile::BuildFromXML (\fBDirManager\fP & dm, \fBconst\fP wxChar ** attrs)\fC [static]\fP"
+
+.PP
+Reconstructs from XML a \fBODPCMAliasBlockFile\fP and reschedules it for OD loading\&. Constructs a \fBODPCMAliasBlockFile\fP from the xml output of WriteXML\&. Also schedules the \fBODPCMAliasBlockFile\fP for OD loading\&. 
+.PP
+Definition at line 222 of file ODDecodeBlockFile\&.cpp\&.
+.SS "\fBvoid\fP * ODDecodeBlockFile::CalcSummary (\fBsamplePtr\fP buffer, \fBsampleCount\fP len, \fBsampleFormat\fP format)\fC [override]\fP, \fC [protected]\fP, \fC [virtual]\fP"
+A thread-safe version of CalcSummary\&. \fBBlockFile::CalcSummary\fP uses a static summary array across the class, which we can't use\&. Get a buffer containing a summary block describing this sample data\&. This must be called by derived classes when they are constructed, to allow them to construct their summary data, after which they should write that data to their disk file\&.
+.PP
+This method also has the side effect of setting the mMin, mMax, and mRMS members of this class\&.
+.PP
+Unlike \fBBlockFile\fP's implementation You SHOULD DELETE the returned buffer\&. this is protected so it shouldn't be hard to deal with - just override all \fBBlockFile\fP methods that use this method\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIbuffer\fP A buffer containing the sample data to be analyzed 
+.br
+\fIlen\fP The length of the sample data 
+.br
+\fIformat\fP The format of the sample data\&. 
+.RE
+.PP
+
+.PP
+Reimplemented from \fBBlockFile\fP\&.
+.PP
+Definition at line 396 of file ODDecodeBlockFile\&.cpp\&.
+.SS "\fBvoid\fP ODDecodeBlockFile::ChangeAudioFile (wxFileName newAudioFile)"
+Modify this block to point at a different file\&. This is generally looked down on, but it is necessary in one case: see \fBDirManager::EnsureSafeFilename()\fP\&. 
+.PP
+Definition at line 586 of file ODDecodeBlockFile\&.cpp\&.
+.SS "\fBBlockFile\fP * ODDecodeBlockFile::Copy (wxFileName newFileName)\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Makes NEW \fBODPCMAliasBlockFile\fP or \fBPCMAliasBlockFile\fP depending on summary availability\&. returns true before decoding is complete, because it is linked to the encoded file until then\&. returns false afterwards\&.
+.PP
+If the summary has been computed, Construct a NEW \fBPCMAliasBlockFile\fP based on this one\&. otherwise construct an \fBODPCMAliasBlockFile\fP that still needs to be computed\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fInewFileName\fP The filename to copy the summary data to\&. 
+.RE
+.PP
+
+.PP
+Implements \fBBlockFile\fP\&.
+.PP
+Definition at line 158 of file ODDecodeBlockFile\&.cpp\&.
+.SS "\fBint\fP ODDecodeBlockFile::DoWriteBlockFile ()\fC [inline]\fP"
+
+.PP
+A public interface to WriteSummary\&. 
+.PP
+Definition at line 92 of file ODDecodeBlockFile\&.h\&.
+.SS "wxFileName ODDecodeBlockFile::GetAudioFileName ()\fC [inline]\fP"
+
+.PP
+Definition at line 132 of file ODDecodeBlockFile\&.h\&.
+.SS "\fBsampleCount\fP ODDecodeBlockFile::GetClipOffset ()\fC [inline]\fP"
+
+.PP
+Gets the number of samples the clip associated with this blockfile is offset by\&. 
+.PP
+Definition at line 125 of file ODDecodeBlockFile\&.h\&.
+.SS "unsigned \fBint\fP ODDecodeBlockFile::GetDecodeType ()\fC [inline]\fP"
+
+.PP
+Returns the type of audiofile this blockfile is loaded from\&. 
+.PP
+Definition at line 118 of file ODDecodeBlockFile\&.h\&.
+.SS "wxFileName ODDecodeBlockFile::GetEncodedAudioFilename ()\fC [inline]\fP"
+Get the name of the file where the audio data for this block is stored\&. 
+.PP
+Definition at line 145 of file ODDecodeBlockFile\&.h\&.
+.SS "wxFileName ODDecodeBlockFile::GetFileName ()\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+sets the file name the summary info will be saved in\&. threadsafe\&. 
+.PP
+Reimplemented from \fBBlockFile\fP\&.
+.PP
+Definition at line 370 of file ODDecodeBlockFile\&.cpp\&.
+.SS "\fBsampleCount\fP ODDecodeBlockFile::GetGlobalEnd ()\fC [inline]\fP"
+
+.PP
+Definition at line 106 of file ODDecodeBlockFile\&.h\&.
+.SS "\fBsampleCount\fP ODDecodeBlockFile::GetGlobalStart ()\fC [inline]\fP"
+
+.PP
+Definition at line 103 of file ODDecodeBlockFile\&.h\&.
+.SS "\fBvoid\fP ODDecodeBlockFile::GetMinMax (\fBsampleCount\fP start, \fBsampleCount\fP len, float * outMin, float * outMax, float * outRMS)\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Gets extreme values for the specified region\&. 
+.PP
+Reimplemented from \fBBlockFile\fP\&.
+.PP
+Definition at line 91 of file ODDecodeBlockFile\&.cpp\&.
+.SS "\fBvoid\fP ODDecodeBlockFile::GetMinMax (float * outMin, float * outMax, float * outRMS)\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Gets extreme values for the entire block\&. 
+.PP
+Reimplemented from \fBBlockFile\fP\&.
+.PP
+Definition at line 109 of file ODDecodeBlockFile\&.cpp\&.
+.SS "wxLongLong ODDecodeBlockFile::GetSpaceUsage ()\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Implements \fBBlockFile\fP\&.
+.PP
+Definition at line 76 of file ODDecodeBlockFile\&.cpp\&.
+.SS "\fBsampleCount\fP ODDecodeBlockFile::GetStart ()\fC [inline]\fP"
+
+.PP
+Gets the value that indicates where the first sample in this block corresponds to the global sequence/clip\&. Only for display use\&. 
+.PP
+Definition at line 100 of file ODDecodeBlockFile\&.h\&.
+.SS "\fBbool\fP ODDecodeBlockFile::IsDataAvailable ()\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Returns TRUE if this block's complete data is ready to be accessed by Read() 
+.PP
+Reimplemented from \fBBlockFile\fP\&.
+.PP
+Definition at line 295 of file ODDecodeBlockFile\&.cpp\&.
+.SS "\fBbool\fP ODDecodeBlockFile::IsSummaryAvailable ()\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Returns TRUE if this block's complete summary has been computed and is ready (for OD) 
+.PP
+Reimplemented from \fBBlockFile\fP\&.
+.PP
+Definition at line 290 of file ODDecodeBlockFile\&.cpp\&.
+.SS "\fBbool\fP ODDecodeBlockFile::IsSummaryBeingComputed ()\fC [inline]\fP, \fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Returns TRUE if the summary has not yet been written, but is actively being computed and written to disk\&. 
+.PP
+Reimplemented from \fBBlockFile\fP\&.
+.PP
+Definition at line 60 of file ODDecodeBlockFile\&.h\&.
+.SS "\fBvoid\fP ODDecodeBlockFile::LockRead ()\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Prevents a read on other threads of the encoded audio file\&. Prevents a read on other threads\&. 
+.PP
+Reimplemented from \fBBlockFile\fP\&.
+.PP
+Definition at line 573 of file ODDecodeBlockFile\&.cpp\&.
+.SS "\fBbool\fP ODDecodeBlockFile::Read256 (float * buffer, \fBsampleCount\fP start, \fBsampleCount\fP len)\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Returns the 256 byte summary data block\&. 
+.PP
+Reimplemented from \fBBlockFile\fP\&.
+.PP
+Definition at line 126 of file ODDecodeBlockFile\&.cpp\&.
+.SS "\fBbool\fP ODDecodeBlockFile::Read64K (float * buffer, \fBsampleCount\fP start, \fBsampleCount\fP len)\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Returns the 64K summary data block\&. 
+.PP
+Reimplemented from \fBBlockFile\fP\&.
+.PP
+Definition at line 141 of file ODDecodeBlockFile\&.cpp\&.
+.SS "\fBint\fP ODDecodeBlockFile::ReadData (\fBsamplePtr\fP data, \fBsampleFormat\fP format, \fBsampleCount\fP start, \fBsampleCount\fP len)\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Reads the specified data from the aliased file using libsndfile\&. Reads the specified data from the aliased file, using libsndfile, and converts it to the given sample format\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdata\fP The buffer to read the sample data into\&. 
+.br
+\fIformat\fP The format to convert the data into 
+.br
+\fIstart\fP The offset within the block to begin reading 
+.br
+\fIlen\fP The number of samples to read 
+.RE
+.PP
+
+.PP
+Implements \fBBlockFile\fP\&.
+.PP
+Definition at line 527 of file ODDecodeBlockFile\&.cpp\&.
+.SS "\fBbool\fP ODDecodeBlockFile::ReadSummary (\fBvoid\fP * data)\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Read the summary into a buffer\&. Read the summary of this alias block from disk\&. Since the audio data is elsewhere, this consists of reading the entire summary file\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fI*data\fP The buffer where the summary data will be stored\&. It must be at least mSummaryInfo\&.totalSummaryBytes long\&. 
+.RE
+.PP
+
+.PP
+Implements \fBBlockFile\fP\&.
+.PP
+Definition at line 550 of file ODDecodeBlockFile\&.cpp\&.
+.SS "\fBvoid\fP ODDecodeBlockFile::Recover (\fBvoid\fP)\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Writes the summary file if summary data is available\&. 
+.PP
+Implements \fBBlockFile\fP\&.
+.PP
+Definition at line 282 of file ODDecodeBlockFile\&.cpp\&.
+.SS "\fBvoid\fP ODDecodeBlockFile::SaveXML (\fBXMLWriter\fP & xmlFile)\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Saves as xml \fBODPCMAliasBlockFile\fP or \fBPCMAliasBlockFile\fP depending on summary availability\&. Writes the xml as a \fBSimpleBlockFile\fP if we can (if we have a summary file) Otherwise writes XML as a subset of attributes with 'odpcmaliasblockfile as the start tag\&. Most notably, the summaryfile attribute refers to a file that does not yet, so when the project file is read back in and this object reconstructed, it needs to avoid trying to open it as well as schedule itself for OD loading 
+.PP
+Implements \fBBlockFile\fP\&.
+.PP
+Definition at line 190 of file ODDecodeBlockFile\&.cpp\&.
+.SS "\fBvoid\fP ODDecodeBlockFile::SetClipOffset (\fBsampleCount\fP numSamples)\fC [inline]\fP"
+
+.PP
+sets the amount of samples the clip associated with this blockfile is offset in the wavetrack (non effecting) 
+.PP
+Definition at line 122 of file ODDecodeBlockFile\&.h\&.
+.SS "\fBvoid\fP ODDecodeBlockFile::SetFileName (wxFileName & name)\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+sets the file name the summary info will be saved in\&. threadsafe\&. 
+.PP
+Reimplemented from \fBBlockFile\fP\&.
+.PP
+Definition at line 357 of file ODDecodeBlockFile\&.cpp\&.
+.SS "\fBvoid\fP ODDecodeBlockFile::SetODFileDecoder (\fBODFileDecoder\fP * decoder)"
+
+.PP
+set the decoder, 
+.PP
+Definition at line 561 of file ODDecodeBlockFile\&.cpp\&.
+.SS "\fBvoid\fP ODDecodeBlockFile::SetStart (\fBsampleCount\fP startSample)\fC [inline]\fP"
+
+.PP
+Sets the value that indicates where the first sample in this block corresponds to the global sequence/clip\&. Only for display use\&. 
+.PP
+Definition at line 97 of file ODDecodeBlockFile\&.h\&.
+.SS "\fBvoid\fP ODDecodeBlockFile::UnlockRead ()\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Allows reading of encoded file on other threads\&. 
+.PP
+Reimplemented from \fBBlockFile\fP\&.
+.PP
+Definition at line 578 of file ODDecodeBlockFile\&.cpp\&.
+.SS "\fBint\fP ODDecodeBlockFile::WriteODDecodeBlockFile ()"
+Write the summary to disk, using the derived \fBReadData()\fP to get the data Here, the decoder \fBODTask\fP associated with this file must fetch the samples with the ODDecodeTask::Decode() method\&. 
+.PP
+Definition at line 306 of file ODDecodeBlockFile\&.cpp\&.
+.SH "Member Data Documentation"
+.PP 
+.SS "\fBint\fP ODDecodeBlockFile::mAliasChannel\fC [protected]\fP"
+
+.PP
+Definition at line 189 of file ODDecodeBlockFile\&.h\&.
+.SS "\fBsampleCount\fP ODDecodeBlockFile::mAliasStart\fC [protected]\fP"
+
+.PP
+Definition at line 188 of file ODDecodeBlockFile\&.h\&.
+.SS "wxFileName ODDecodeBlockFile::mAudioFileName\fC [protected]\fP"
+
+.PP
+The original file the audio came from\&. 
+.PP
+Definition at line 168 of file ODDecodeBlockFile\&.h\&.
+.SS "\fBsampleCount\fP ODDecodeBlockFile::mClipOffset\fC [protected]\fP"
+
+.PP
+the \fBODTask\fP needs to know where this blockfile lies in the track, so for convenience, we have this here\&. 
+.PP
+Definition at line 184 of file ODDecodeBlockFile\&.h\&.
+.SS "\fBbool\fP ODDecodeBlockFile::mDataAvailable\fC [protected]\fP"
+
+.PP
+Definition at line 171 of file ODDecodeBlockFile\&.h\&.
+.SS "\fBODLock\fP ODDecodeBlockFile::mDataAvailableMutex\fC [protected]\fP"
+
+.PP
+Definition at line 170 of file ODDecodeBlockFile\&.h\&.
+.SS "\fBbool\fP ODDecodeBlockFile::mDataBeingComputed\fC [protected]\fP"
+
+.PP
+Definition at line 172 of file ODDecodeBlockFile\&.h\&.
+.SS "\fBODFileDecoder\fP* ODDecodeBlockFile::mDecoder\fC [protected]\fP"
+
+.PP
+Definition at line 174 of file ODDecodeBlockFile\&.h\&.
+.SS "\fBODLock\fP ODDecodeBlockFile::mDecoderMutex\fC [protected]\fP"
+
+.PP
+Definition at line 175 of file ODDecodeBlockFile\&.h\&.
+.SS "\fBODLock\fP ODDecodeBlockFile::mFileNameMutex\fC [protected]\fP"
+This lock is for the filename (string) of the blockfile that contains summary/audio data after decoding 
+.PP
+Definition at line 165 of file ODDecodeBlockFile\&.h\&.
+.SS "\fBsampleFormat\fP ODDecodeBlockFile::mFormat\fC [protected]\fP"
+
+.PP
+Definition at line 186 of file ODDecodeBlockFile\&.h\&.
+.SS "\fBODLock\fP ODDecodeBlockFile::mReadDataMutex\fC [protected]\fP"
+
+.PP
+For accessing the audio file that will be decoded\&. Used by dir manager;\&. 
+.PP
+Definition at line 178 of file ODDecodeBlockFile\&.h\&.
+.SS "\fBsampleCount\fP ODDecodeBlockFile::mStart\fC [protected]\fP"
+
+.PP
+for reporting after task is complete\&. Only for display use\&. 
+.PP
+Definition at line 181 of file ODDecodeBlockFile\&.h\&.
+.SS "unsigned \fBint\fP ODDecodeBlockFile::mType\fC [protected]\fP"
+
+.PP
+Definition at line 161 of file ODDecodeBlockFile\&.h\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

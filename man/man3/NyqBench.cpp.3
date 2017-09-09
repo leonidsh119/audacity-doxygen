@@ -1,0 +1,231 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/lib-src/mod-nyq-bench/NyqBench.cpp" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/lib-src/mod-nyq-bench/NyqBench.cpp \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include 'Audacity\&.h'\fP
+.br
+\fC#include <wx/defs\&.h>\fP
+.br
+\fC#include <wx/aboutdlg\&.h>\fP
+.br
+\fC#include <wx/filedlg\&.h>\fP
+.br
+\fC#include <wx/font\&.h>\fP
+.br
+\fC#include <wx/fontdlg\&.h>\fP
+.br
+\fC#include <wx/msgdlg\&.h>\fP
+.br
+\fC#include <wx/settings\&.h>\fP
+.br
+\fC#include <wx/sizer\&.h>\fP
+.br
+\fC#include <wx/splitter\&.h>\fP
+.br
+\fC#include <wx/statbox\&.h>\fP
+.br
+\fC#include <wx/textctrl\&.h>\fP
+.br
+\fC#include <wx/toolbar\&.h>\fP
+.br
+\fC#include 'AudacityApp\&.h'\fP
+.br
+\fC#include 'AudioIO\&.h'\fP
+.br
+\fC#include 'LabelTrack\&.h'\fP
+.br
+\fC#include 'ModuleManager\&.h'\fP
+.br
+\fC#include 'Prefs\&.h'\fP
+.br
+\fC#include 'Project\&.h'\fP
+.br
+\fC#include 'ShuttleGui\&.h'\fP
+.br
+\fC#include 'effects/EffectManager\&.h'\fP
+.br
+\fC#include 'effects/nyquist/Nyquist\&.h'\fP
+.br
+\fC#include '\&.\&./images/AudacityLogo\&.xpm'\fP
+.br
+\fC#include 'NyqBench\&.h'\fP
+.br
+\fC#include <iostream>\fP
+.br
+\fC#include <ostream>\fP
+.br
+\fC#include <sstream>\fP
+.br
+\fC#include 'images/document\-new\-small\&.xpm'\fP
+.br
+\fC#include 'images/document\-open\-small\&.xpm'\fP
+.br
+\fC#include 'images/document\-save\-as\-small\&.xpm'\fP
+.br
+\fC#include 'images/document\-save\-small\&.xpm'\fP
+.br
+\fC#include 'images/edit\-clear\-small\&.xpm'\fP
+.br
+\fC#include 'images/edit\-copy\-small\&.xpm'\fP
+.br
+\fC#include 'images/edit\-cut\-small\&.xpm'\fP
+.br
+\fC#include 'images/edit\-delete\-small\&.xpm'\fP
+.br
+\fC#include 'images/edit\-find\-small\&.xpm'\fP
+.br
+\fC#include 'images/edit\-paste\-small\&.xpm'\fP
+.br
+\fC#include 'images/edit\-redo\-small\&.xpm'\fP
+.br
+\fC#include 'images/edit\-select\-all\-small\&.xpm'\fP
+.br
+\fC#include 'images/edit\-undo\-small\&.xpm'\fP
+.br
+\fC#include 'images/go\-top\-small\&.xpm'\fP
+.br
+\fC#include 'images/go\-up\-small\&.xpm'\fP
+.br
+\fC#include 'images/go\-previous\-small\&.xpm'\fP
+.br
+\fC#include 'images/go\-next\-small\&.xpm'\fP
+.br
+\fC#include 'images/system\-search\-small\&.xpm'\fP
+.br
+\fC#include 'images/media\-playback\-start\-small\&.xpm'\fP
+.br
+\fC#include 'images/media\-playback\-stop\-small\&.xpm'\fP
+.br
+\fC#include 'images/document\-new\-large\&.xpm'\fP
+.br
+\fC#include 'images/document\-open\-large\&.xpm'\fP
+.br
+\fC#include 'images/document\-save\-as\-large\&.xpm'\fP
+.br
+\fC#include 'images/document\-save\-large\&.xpm'\fP
+.br
+\fC#include 'images/edit\-clear\-large\&.xpm'\fP
+.br
+\fC#include 'images/edit\-copy\-large\&.xpm'\fP
+.br
+\fC#include 'images/edit\-cut\-large\&.xpm'\fP
+.br
+\fC#include 'images/edit\-delete\-large\&.xpm'\fP
+.br
+\fC#include 'images/edit\-find\-large\&.xpm'\fP
+.br
+\fC#include 'images/edit\-paste\-large\&.xpm'\fP
+.br
+\fC#include 'images/edit\-redo\-large\&.xpm'\fP
+.br
+\fC#include 'images/edit\-select\-all\-large\&.xpm'\fP
+.br
+\fC#include 'images/edit\-undo\-large\&.xpm'\fP
+.br
+\fC#include 'images/go\-top\-large\&.xpm'\fP
+.br
+\fC#include 'images/go\-up\-large\&.xpm'\fP
+.br
+\fC#include 'images/go\-previous\-large\&.xpm'\fP
+.br
+\fC#include 'images/go\-next\-large\&.xpm'\fP
+.br
+\fC#include 'images/system\-search\-large\&.xpm'\fP
+.br
+\fC#include 'images/media\-playback\-start\-large\&.xpm'\fP
+.br
+\fC#include 'images/media\-playback\-stop\-large\&.xpm'\fP
+.br
+
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBDLL_API\fP   \fB__attribute__\fP ((visibility('default')))"
+.br
+.in -1c
+.SS "Enumerations"
+
+.in +1c
+.ti -1c
+.RI "enum { \fBID_AUTOLOAD\fP = 20000, \fBID_AUTOWRAP\fP, \fBID_FONT\fP, \fBID_SPLITV\fP, \fBID_SPLITH\fP, \fBID_TOGGLECODE\fP, \fBID_TOGGLEOUTPUT\fP, \fBID_SMALLICONS\fP, \fBID_LARGEICONS\fP, \fBID_MATCH\fP, \fBID_TOP\fP, \fBID_UP\fP, \fBID_PREVIOUS\fP, \fBID_NEXT\fP, \fBID_GO\fP, \fBID_STOP\fP, \fBID_SCRIPT\fP, \fBID_OUTPUT\fP }"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBDLL_API\fP \fBconst\fP wxChar * \fBGetVersionString\fP ()"
+.br
+.ti -1c
+.RI "\fBint\fP \fBDLL_API\fP \fBModuleDispatch\fP (\fBModuleDispatchTypes\fP type)"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define DLL_API   \fB__attribute__\fP ((visibility('default')))"
+
+.PP
+Definition at line 145 of file NyqBench\&.cpp\&.
+.SH "Enumeration Type Documentation"
+.PP 
+.SS "anonymous enum"
+
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fIID_AUTOLOAD \fP\fP
+.TP
+\fB\fIID_AUTOWRAP \fP\fP
+.TP
+\fB\fIID_FONT \fP\fP
+.TP
+\fB\fIID_SPLITV \fP\fP
+.TP
+\fB\fIID_SPLITH \fP\fP
+.TP
+\fB\fIID_TOGGLECODE \fP\fP
+.TP
+\fB\fIID_TOGGLEOUTPUT \fP\fP
+.TP
+\fB\fIID_SMALLICONS \fP\fP
+.TP
+\fB\fIID_LARGEICONS \fP\fP
+.TP
+\fB\fIID_MATCH \fP\fP
+.TP
+\fB\fIID_TOP \fP\fP
+.TP
+\fB\fIID_UP \fP\fP
+.TP
+\fB\fIID_PREVIOUS \fP\fP
+.TP
+\fB\fIID_NEXT \fP\fP
+.TP
+\fB\fIID_GO \fP\fP
+.TP
+\fB\fIID_STOP \fP\fP
+.TP
+\fB\fIID_SCRIPT \fP\fP
+.TP
+\fB\fIID_OUTPUT \fP\fP
+.PP
+Definition at line 609 of file NyqBench\&.cpp\&.
+.SH "Function Documentation"
+.PP 
+.SS "\fBDLL_API\fP \fBconst\fP wxChar* GetVersionString ()"
+
+.PP
+Definition at line 152 of file NyqBench\&.cpp\&.
+.SS "\fBint\fP \fBDLL_API\fP ModuleDispatch (\fBModuleDispatchTypes\fP type)"
+
+.PP
+Definition at line 163 of file NyqBench\&.cpp\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

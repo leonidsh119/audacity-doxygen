@@ -1,0 +1,268 @@
+\hypertarget{_scien_filter_8cpp}{}\section{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/src/effects/\+Scien\+Filter.cpp File Reference}
+\label{_scien_filter_8cpp}\index{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/src/effects/\+Scien\+Filter.\+cpp@{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/src/effects/\+Scien\+Filter.\+cpp}}
+
+
+Implements \hyperlink{class_effect_scien_filter}{Effect\+Scien\+Filter}, \hyperlink{class_effect_scien_filter_panel}{Effect\+Scien\+Filter\+Panel}.  
+
+
+{\ttfamily \#include \char`\"{}../\+Audacity.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Scien\+Filter.\+h\char`\"{}}\\*
+{\ttfamily \#include $<$math.\+h$>$}\\*
+{\ttfamily \#include $<$float.\+h$>$}\\*
+{\ttfamily \#include $<$wx/brush.\+h$>$}\\*
+{\ttfamily \#include $<$wx/dcmemory.\+h$>$}\\*
+{\ttfamily \#include $<$wx/intl.\+h$>$}\\*
+{\ttfamily \#include $<$wx/msgdlg.\+h$>$}\\*
+{\ttfamily \#include $<$wx/settings.\+h$>$}\\*
+{\ttfamily \#include $<$wx/utils.\+h$>$}\\*
+{\ttfamily \#include $<$wx/valgen.\+h$>$}\\*
+{\ttfamily \#include \char`\"{}../\+A\+Color.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../\+All\+Theme\+Resources.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../\+Platform\+Compatibility.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../\+Prefs.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../\+Project.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../\+Shuttle\+Gui.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../\+Theme.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../\+Wave\+Track.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../widgets/valnum.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Equalization.\+h\char`\"{}}\\*
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{_scien_filter_8cpp_a598a3330b3c21701223ee0ca14316eca}{PI}~= 3.\+1415926535897932384626433832795
+\item 
+\#define \hyperlink{_scien_filter_8cpp_a591ac6b7ab545783fd22e1955713ed45}{square}(\hyperlink{rfft2d_test_m_l_8m_a4124bc0a9335c27f086f24ba207a4912}{a})~((\hyperlink{rfft2d_test_m_l_8m_a4124bc0a9335c27f086f24ba207a4912}{a})$\ast$(\hyperlink{rfft2d_test_m_l_8m_a4124bc0a9335c27f086f24ba207a4912}{a}))
+\end{DoxyCompactItemize}
+\subsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \{ \\*
+\hyperlink{_scien_filter_8cpp_aca66878d7430c9c83a4dd358effa7087aea299ae9602906b4c2cfd03447953c1f}{I\+D\+\_\+\+Filter\+Panel} = 10000, 
+\hyperlink{_scien_filter_8cpp_aca66878d7430c9c83a4dd358effa7087a44294da3b88eb67ae53b40b0fdf731e3}{I\+D\+\_\+d\+B\+Max}, 
+\hyperlink{_scien_filter_8cpp_aca66878d7430c9c83a4dd358effa7087afd50f9a85f9c0fb88de067a32ced5770}{I\+D\+\_\+d\+B\+Min}, 
+\hyperlink{_scien_filter_8cpp_aca66878d7430c9c83a4dd358effa7087af7b3906e60297667f30fad60a69f0b52}{I\+D\+\_\+\+Type}, 
+\\*
+\hyperlink{_scien_filter_8cpp_aca66878d7430c9c83a4dd358effa7087a4327c44d3e000f9d85f4a6e5dacc6748}{I\+D\+\_\+\+Sub\+Type}, 
+\hyperlink{_scien_filter_8cpp_aca66878d7430c9c83a4dd358effa7087a8751b1f3eff7b6cec8df35a2d1850a6d}{I\+D\+\_\+\+Order}, 
+\hyperlink{_scien_filter_8cpp_aca66878d7430c9c83a4dd358effa7087a6446e6ab6600207f8945419ad4c0ad2f}{I\+D\+\_\+\+Ripple}, 
+\hyperlink{_scien_filter_8cpp_aca66878d7430c9c83a4dd358effa7087a3de5040ae66d846e044575ff26c8cb32}{I\+D\+\_\+\+Cutoff}, 
+\\*
+\hyperlink{_scien_filter_8cpp_aca66878d7430c9c83a4dd358effa7087a872337ba9af7230084ce494bc946711c}{I\+D\+\_\+\+Stopband\+Ripple}
+ \}
+\item 
+enum \hyperlink{_scien_filter_8cpp_aa401af58290c86a681182c041c2d9c1d}{k\+Types} \{ \\*
+\hyperlink{src_2effects_2_noise_8cpp_aa401af58290c86a681182c041c2d9c1da9e1b2d3dcb56c17a372440853228ad01}{k\+White}, 
+\hyperlink{src_2effects_2_noise_8cpp_aa401af58290c86a681182c041c2d9c1da4fcf3d1dc40a96078261804182afb171}{k\+Pink}, 
+\hyperlink{src_2effects_2_noise_8cpp_aa401af58290c86a681182c041c2d9c1da8b47fbbcc6316e1b1ff026f52f3f1db5}{k\+Brownian}, 
+\hyperlink{src_2effects_2_noise_8cpp_aa401af58290c86a681182c041c2d9c1da2e41f479d98dd1d3172118dbfe454688}{k\+Num\+Types}, 
+\\*
+\hyperlink{_scien_filter_8cpp_aa401af58290c86a681182c041c2d9c1dadbf66152961f168dc57bf97e3419db9d}{k\+Butterworth}, 
+\hyperlink{_scien_filter_8cpp_aa401af58290c86a681182c041c2d9c1da6ec9b061c5360f25b4392d05b807f6aa}{k\+Chebyshev\+TypeI}, 
+\hyperlink{_scien_filter_8cpp_aa401af58290c86a681182c041c2d9c1da3cdbd3d1cb37c8f34cbedcb12a3181e1}{k\+Chebyshev\+Type\+II}, 
+\hyperlink{_scien_filter_8cpp_aa401af58290c86a681182c041c2d9c1da2e41f479d98dd1d3172118dbfe454688}{k\+Num\+Types}
+ \}
+\item 
+enum \hyperlink{_scien_filter_8cpp_ad46190ca1d726d7de3a27952509949ed}{k\+Sub\+Types} \{ \hyperlink{_scien_filter_8cpp_ad46190ca1d726d7de3a27952509949eda8eab9f1f13e29d4f8af73f0341e9a704}{k\+Low\+Pass}, 
+\hyperlink{_scien_filter_8cpp_ad46190ca1d726d7de3a27952509949eda093bfb0f82759a80dc8733a056f97b3a}{k\+High\+Pass}, 
+\hyperlink{_scien_filter_8cpp_ad46190ca1d726d7de3a27952509949edac630f55c050594a3f85edcd47a669f95}{k\+Num\+Sub\+Types}
+ \}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{_scien_filter_8cpp_acee2bc1ea49d8b88bf441c3a93ce1ba6}{Param} (Type, \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int}, \hyperlink{_theme_8cpp_ad4baed404c66b57e257af684bdc5ecf2}{XO}(\char`\"{}Filter\+Type\char`\"{}), k\+Butterworth, 0, \hyperlink{_scien_filter_8cpp_aa401af58290c86a681182c041c2d9c1da2e41f479d98dd1d3172118dbfe454688}{k\+Num\+Types}-\/1, 1)
+\item 
+\hyperlink{_scien_filter_8cpp_a050f95938223d1bda58e7606e2df6622}{Param} (Subtype, \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int}, \hyperlink{_theme_8cpp_ad4baed404c66b57e257af684bdc5ecf2}{XO}(\char`\"{}Filter\+Subtype\char`\"{}), k\+Low\+Pass, 0, \hyperlink{_scien_filter_8cpp_ad46190ca1d726d7de3a27952509949edac630f55c050594a3f85edcd47a669f95}{k\+Num\+Sub\+Types}-\/1, 1)
+\item 
+\hyperlink{_scien_filter_8cpp_a447b9e06403f38974a4179085dd3fd59}{Param} (Order, \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int}, \hyperlink{_theme_8cpp_ad4baed404c66b57e257af684bdc5ecf2}{XO}(\char`\"{}Order\char`\"{}), 1, 1, 10, 1)
+\item 
+\hyperlink{_scien_filter_8cpp_a40e7ad64516789935cc5d0ee9570b1df}{Param} (Cutoff, float, \hyperlink{_theme_8cpp_ad4baed404c66b57e257af684bdc5ecf2}{XO}(\char`\"{}Cutoff\char`\"{}), 1000.\+0, 1.\+0, F\+L\+T\+\_\+\+M\+AX, 1)
+\item 
+\hyperlink{_scien_filter_8cpp_afed4143af98f32de639c13a0be43b1a2}{Param} (Passband, float, \hyperlink{_theme_8cpp_ad4baed404c66b57e257af684bdc5ecf2}{XO}(\char`\"{}Passband\+Ripple\char`\"{}), 1.\+0, 0.\+0, 100.\+0, 1)
+\item 
+\hyperlink{_scien_filter_8cpp_aecd861ab7cf582765b19178239f5269f}{Param} (Stopband, float, \hyperlink{_theme_8cpp_ad4baed404c66b57e257af684bdc5ecf2}{XO}(\char`\"{}Stopband\+Ripple\char`\"{}), 30.\+0, 0.\+0, 100.\+0, 1)
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Implements \hyperlink{class_effect_scien_filter}{Effect\+Scien\+Filter}, \hyperlink{class_effect_scien_filter_panel}{Effect\+Scien\+Filter\+Panel}. 
+
+
+
+\subsection{Macro Definition Documentation}
+\index{Scien\+Filter.\+cpp@{Scien\+Filter.\+cpp}!PI@{PI}}
+\index{PI@{PI}!Scien\+Filter.\+cpp@{Scien\+Filter.\+cpp}}
+\subsubsection[{\texorpdfstring{PI}{PI}}]{\setlength{\rightskip}{0pt plus 5cm}\#define PI~= 3.\+1415926535897932384626433832795}\hypertarget{_scien_filter_8cpp_a598a3330b3c21701223ee0ca14316eca}{}\label{_scien_filter_8cpp_a598a3330b3c21701223ee0ca14316eca}
+
+
+Definition at line 62 of file Scien\+Filter.\+cpp.
+
+\index{Scien\+Filter.\+cpp@{Scien\+Filter.\+cpp}!square@{square}}
+\index{square@{square}!Scien\+Filter.\+cpp@{Scien\+Filter.\+cpp}}
+\subsubsection[{\texorpdfstring{square}{square}}]{\setlength{\rightskip}{0pt plus 5cm}\#define square(
+\begin{DoxyParamCaption}
+\item[{}]{{\bf a}}
+\end{DoxyParamCaption}
+)~(({\bf a})$\ast$({\bf a}))}\hypertarget{_scien_filter_8cpp_a591ac6b7ab545783fd22e1955713ed45}{}\label{_scien_filter_8cpp_a591ac6b7ab545783fd22e1955713ed45}
+
+
+Definition at line 66 of file Scien\+Filter.\+cpp.
+
+
+
+\subsection{Enumeration Type Documentation}
+\subsubsection[{\texorpdfstring{anonymous enum}{anonymous enum}}]{\setlength{\rightskip}{0pt plus 5cm}anonymous enum}\hypertarget{_scien_filter_8cpp_aca66878d7430c9c83a4dd358effa7087}{}\label{_scien_filter_8cpp_aca66878d7430c9c83a4dd358effa7087}
+\begin{Desc}
+\item[Enumerator]\par
+\begin{description}
+\index{I\+D\+\_\+\+Filter\+Panel@{I\+D\+\_\+\+Filter\+Panel}!Scien\+Filter.\+cpp@{Scien\+Filter.\+cpp}}\index{Scien\+Filter.\+cpp@{Scien\+Filter.\+cpp}!I\+D\+\_\+\+Filter\+Panel@{I\+D\+\_\+\+Filter\+Panel}}\item[{\em 
+I\+D\+\_\+\+Filter\+Panel\hypertarget{_scien_filter_8cpp_aca66878d7430c9c83a4dd358effa7087aea299ae9602906b4c2cfd03447953c1f}{}\label{_scien_filter_8cpp_aca66878d7430c9c83a4dd358effa7087aea299ae9602906b4c2cfd03447953c1f}
+}]\index{I\+D\+\_\+d\+B\+Max@{I\+D\+\_\+d\+B\+Max}!Scien\+Filter.\+cpp@{Scien\+Filter.\+cpp}}\index{Scien\+Filter.\+cpp@{Scien\+Filter.\+cpp}!I\+D\+\_\+d\+B\+Max@{I\+D\+\_\+d\+B\+Max}}\item[{\em 
+I\+D\+\_\+d\+B\+Max\hypertarget{_scien_filter_8cpp_aca66878d7430c9c83a4dd358effa7087a44294da3b88eb67ae53b40b0fdf731e3}{}\label{_scien_filter_8cpp_aca66878d7430c9c83a4dd358effa7087a44294da3b88eb67ae53b40b0fdf731e3}
+}]\index{I\+D\+\_\+d\+B\+Min@{I\+D\+\_\+d\+B\+Min}!Scien\+Filter.\+cpp@{Scien\+Filter.\+cpp}}\index{Scien\+Filter.\+cpp@{Scien\+Filter.\+cpp}!I\+D\+\_\+d\+B\+Min@{I\+D\+\_\+d\+B\+Min}}\item[{\em 
+I\+D\+\_\+d\+B\+Min\hypertarget{_scien_filter_8cpp_aca66878d7430c9c83a4dd358effa7087afd50f9a85f9c0fb88de067a32ced5770}{}\label{_scien_filter_8cpp_aca66878d7430c9c83a4dd358effa7087afd50f9a85f9c0fb88de067a32ced5770}
+}]\index{I\+D\+\_\+\+Type@{I\+D\+\_\+\+Type}!Scien\+Filter.\+cpp@{Scien\+Filter.\+cpp}}\index{Scien\+Filter.\+cpp@{Scien\+Filter.\+cpp}!I\+D\+\_\+\+Type@{I\+D\+\_\+\+Type}}\item[{\em 
+I\+D\+\_\+\+Type\hypertarget{_scien_filter_8cpp_aca66878d7430c9c83a4dd358effa7087af7b3906e60297667f30fad60a69f0b52}{}\label{_scien_filter_8cpp_aca66878d7430c9c83a4dd358effa7087af7b3906e60297667f30fad60a69f0b52}
+}]\index{I\+D\+\_\+\+Sub\+Type@{I\+D\+\_\+\+Sub\+Type}!Scien\+Filter.\+cpp@{Scien\+Filter.\+cpp}}\index{Scien\+Filter.\+cpp@{Scien\+Filter.\+cpp}!I\+D\+\_\+\+Sub\+Type@{I\+D\+\_\+\+Sub\+Type}}\item[{\em 
+I\+D\+\_\+\+Sub\+Type\hypertarget{_scien_filter_8cpp_aca66878d7430c9c83a4dd358effa7087a4327c44d3e000f9d85f4a6e5dacc6748}{}\label{_scien_filter_8cpp_aca66878d7430c9c83a4dd358effa7087a4327c44d3e000f9d85f4a6e5dacc6748}
+}]\index{I\+D\+\_\+\+Order@{I\+D\+\_\+\+Order}!Scien\+Filter.\+cpp@{Scien\+Filter.\+cpp}}\index{Scien\+Filter.\+cpp@{Scien\+Filter.\+cpp}!I\+D\+\_\+\+Order@{I\+D\+\_\+\+Order}}\item[{\em 
+I\+D\+\_\+\+Order\hypertarget{_scien_filter_8cpp_aca66878d7430c9c83a4dd358effa7087a8751b1f3eff7b6cec8df35a2d1850a6d}{}\label{_scien_filter_8cpp_aca66878d7430c9c83a4dd358effa7087a8751b1f3eff7b6cec8df35a2d1850a6d}
+}]\index{I\+D\+\_\+\+Ripple@{I\+D\+\_\+\+Ripple}!Scien\+Filter.\+cpp@{Scien\+Filter.\+cpp}}\index{Scien\+Filter.\+cpp@{Scien\+Filter.\+cpp}!I\+D\+\_\+\+Ripple@{I\+D\+\_\+\+Ripple}}\item[{\em 
+I\+D\+\_\+\+Ripple\hypertarget{_scien_filter_8cpp_aca66878d7430c9c83a4dd358effa7087a6446e6ab6600207f8945419ad4c0ad2f}{}\label{_scien_filter_8cpp_aca66878d7430c9c83a4dd358effa7087a6446e6ab6600207f8945419ad4c0ad2f}
+}]\index{I\+D\+\_\+\+Cutoff@{I\+D\+\_\+\+Cutoff}!Scien\+Filter.\+cpp@{Scien\+Filter.\+cpp}}\index{Scien\+Filter.\+cpp@{Scien\+Filter.\+cpp}!I\+D\+\_\+\+Cutoff@{I\+D\+\_\+\+Cutoff}}\item[{\em 
+I\+D\+\_\+\+Cutoff\hypertarget{_scien_filter_8cpp_aca66878d7430c9c83a4dd358effa7087a3de5040ae66d846e044575ff26c8cb32}{}\label{_scien_filter_8cpp_aca66878d7430c9c83a4dd358effa7087a3de5040ae66d846e044575ff26c8cb32}
+}]\index{I\+D\+\_\+\+Stopband\+Ripple@{I\+D\+\_\+\+Stopband\+Ripple}!Scien\+Filter.\+cpp@{Scien\+Filter.\+cpp}}\index{Scien\+Filter.\+cpp@{Scien\+Filter.\+cpp}!I\+D\+\_\+\+Stopband\+Ripple@{I\+D\+\_\+\+Stopband\+Ripple}}\item[{\em 
+I\+D\+\_\+\+Stopband\+Ripple\hypertarget{_scien_filter_8cpp_aca66878d7430c9c83a4dd358effa7087a872337ba9af7230084ce494bc946711c}{}\label{_scien_filter_8cpp_aca66878d7430c9c83a4dd358effa7087a872337ba9af7230084ce494bc946711c}
+}]\end{description}
+\end{Desc}
+
+
+Definition at line 68 of file Scien\+Filter.\+cpp.
+
+\index{Scien\+Filter.\+cpp@{Scien\+Filter.\+cpp}!k\+Sub\+Types@{k\+Sub\+Types}}
+\index{k\+Sub\+Types@{k\+Sub\+Types}!Scien\+Filter.\+cpp@{Scien\+Filter.\+cpp}}
+\subsubsection[{\texorpdfstring{k\+Sub\+Types}{kSubTypes}}]{\setlength{\rightskip}{0pt plus 5cm}enum {\bf k\+Sub\+Types}}\hypertarget{_scien_filter_8cpp_ad46190ca1d726d7de3a27952509949ed}{}\label{_scien_filter_8cpp_ad46190ca1d726d7de3a27952509949ed}
+\begin{Desc}
+\item[Enumerator]\par
+\begin{description}
+\index{k\+Low\+Pass@{k\+Low\+Pass}!Scien\+Filter.\+cpp@{Scien\+Filter.\+cpp}}\index{Scien\+Filter.\+cpp@{Scien\+Filter.\+cpp}!k\+Low\+Pass@{k\+Low\+Pass}}\item[{\em 
+k\+Low\+Pass\hypertarget{_scien_filter_8cpp_ad46190ca1d726d7de3a27952509949eda8eab9f1f13e29d4f8af73f0341e9a704}{}\label{_scien_filter_8cpp_ad46190ca1d726d7de3a27952509949eda8eab9f1f13e29d4f8af73f0341e9a704}
+}]\index{k\+High\+Pass@{k\+High\+Pass}!Scien\+Filter.\+cpp@{Scien\+Filter.\+cpp}}\index{Scien\+Filter.\+cpp@{Scien\+Filter.\+cpp}!k\+High\+Pass@{k\+High\+Pass}}\item[{\em 
+k\+High\+Pass\hypertarget{_scien_filter_8cpp_ad46190ca1d726d7de3a27952509949eda093bfb0f82759a80dc8733a056f97b3a}{}\label{_scien_filter_8cpp_ad46190ca1d726d7de3a27952509949eda093bfb0f82759a80dc8733a056f97b3a}
+}]\index{k\+Num\+Sub\+Types@{k\+Num\+Sub\+Types}!Scien\+Filter.\+cpp@{Scien\+Filter.\+cpp}}\index{Scien\+Filter.\+cpp@{Scien\+Filter.\+cpp}!k\+Num\+Sub\+Types@{k\+Num\+Sub\+Types}}\item[{\em 
+k\+Num\+Sub\+Types\hypertarget{_scien_filter_8cpp_ad46190ca1d726d7de3a27952509949edac630f55c050594a3f85edcd47a669f95}{}\label{_scien_filter_8cpp_ad46190ca1d726d7de3a27952509949edac630f55c050594a3f85edcd47a669f95}
+}]\end{description}
+\end{Desc}
+
+
+Definition at line 99 of file Scien\+Filter.\+cpp.
+
+\index{Scien\+Filter.\+cpp@{Scien\+Filter.\+cpp}!k\+Types@{k\+Types}}
+\index{k\+Types@{k\+Types}!Scien\+Filter.\+cpp@{Scien\+Filter.\+cpp}}
+\subsubsection[{\texorpdfstring{k\+Types}{kTypes}}]{\setlength{\rightskip}{0pt plus 5cm}enum {\bf k\+Types}}\hypertarget{_scien_filter_8cpp_aa401af58290c86a681182c041c2d9c1d}{}\label{_scien_filter_8cpp_aa401af58290c86a681182c041c2d9c1d}
+\begin{Desc}
+\item[Enumerator]\par
+\begin{description}
+\index{k\+White@{k\+White}!Scien\+Filter.\+cpp@{Scien\+Filter.\+cpp}}\index{Scien\+Filter.\+cpp@{Scien\+Filter.\+cpp}!k\+White@{k\+White}}\item[{\em 
+k\+White\hypertarget{_scien_filter_8cpp_aa401af58290c86a681182c041c2d9c1da9e1b2d3dcb56c17a372440853228ad01}{}\label{_scien_filter_8cpp_aa401af58290c86a681182c041c2d9c1da9e1b2d3dcb56c17a372440853228ad01}
+}]\index{k\+Pink@{k\+Pink}!Scien\+Filter.\+cpp@{Scien\+Filter.\+cpp}}\index{Scien\+Filter.\+cpp@{Scien\+Filter.\+cpp}!k\+Pink@{k\+Pink}}\item[{\em 
+k\+Pink\hypertarget{_scien_filter_8cpp_aa401af58290c86a681182c041c2d9c1da4fcf3d1dc40a96078261804182afb171}{}\label{_scien_filter_8cpp_aa401af58290c86a681182c041c2d9c1da4fcf3d1dc40a96078261804182afb171}
+}]\index{k\+Brownian@{k\+Brownian}!Scien\+Filter.\+cpp@{Scien\+Filter.\+cpp}}\index{Scien\+Filter.\+cpp@{Scien\+Filter.\+cpp}!k\+Brownian@{k\+Brownian}}\item[{\em 
+k\+Brownian\hypertarget{_scien_filter_8cpp_aa401af58290c86a681182c041c2d9c1da8b47fbbcc6316e1b1ff026f52f3f1db5}{}\label{_scien_filter_8cpp_aa401af58290c86a681182c041c2d9c1da8b47fbbcc6316e1b1ff026f52f3f1db5}
+}]\index{k\+Num\+Types@{k\+Num\+Types}!Scien\+Filter.\+cpp@{Scien\+Filter.\+cpp}}\index{Scien\+Filter.\+cpp@{Scien\+Filter.\+cpp}!k\+Num\+Types@{k\+Num\+Types}}\item[{\em 
+k\+Num\+Types\hypertarget{_scien_filter_8cpp_aa401af58290c86a681182c041c2d9c1da2e41f479d98dd1d3172118dbfe454688}{}\label{_scien_filter_8cpp_aa401af58290c86a681182c041c2d9c1da2e41f479d98dd1d3172118dbfe454688}
+}]\index{k\+Butterworth@{k\+Butterworth}!Scien\+Filter.\+cpp@{Scien\+Filter.\+cpp}}\index{Scien\+Filter.\+cpp@{Scien\+Filter.\+cpp}!k\+Butterworth@{k\+Butterworth}}\item[{\em 
+k\+Butterworth\hypertarget{_scien_filter_8cpp_aa401af58290c86a681182c041c2d9c1dadbf66152961f168dc57bf97e3419db9d}{}\label{_scien_filter_8cpp_aa401af58290c86a681182c041c2d9c1dadbf66152961f168dc57bf97e3419db9d}
+}]\index{k\+Chebyshev\+TypeI@{k\+Chebyshev\+TypeI}!Scien\+Filter.\+cpp@{Scien\+Filter.\+cpp}}\index{Scien\+Filter.\+cpp@{Scien\+Filter.\+cpp}!k\+Chebyshev\+TypeI@{k\+Chebyshev\+TypeI}}\item[{\em 
+k\+Chebyshev\+TypeI\hypertarget{_scien_filter_8cpp_aa401af58290c86a681182c041c2d9c1da6ec9b061c5360f25b4392d05b807f6aa}{}\label{_scien_filter_8cpp_aa401af58290c86a681182c041c2d9c1da6ec9b061c5360f25b4392d05b807f6aa}
+}]\index{k\+Chebyshev\+Type\+II@{k\+Chebyshev\+Type\+II}!Scien\+Filter.\+cpp@{Scien\+Filter.\+cpp}}\index{Scien\+Filter.\+cpp@{Scien\+Filter.\+cpp}!k\+Chebyshev\+Type\+II@{k\+Chebyshev\+Type\+II}}\item[{\em 
+k\+Chebyshev\+Type\+II\hypertarget{_scien_filter_8cpp_aa401af58290c86a681182c041c2d9c1da3cdbd3d1cb37c8f34cbedcb12a3181e1}{}\label{_scien_filter_8cpp_aa401af58290c86a681182c041c2d9c1da3cdbd3d1cb37c8f34cbedcb12a3181e1}
+}]\index{k\+Num\+Types@{k\+Num\+Types}!Scien\+Filter.\+cpp@{Scien\+Filter.\+cpp}}\index{Scien\+Filter.\+cpp@{Scien\+Filter.\+cpp}!k\+Num\+Types@{k\+Num\+Types}}\item[{\em 
+k\+Num\+Types\hypertarget{_scien_filter_8cpp_aa401af58290c86a681182c041c2d9c1da2e41f479d98dd1d3172118dbfe454688}{}\label{_scien_filter_8cpp_aa401af58290c86a681182c041c2d9c1da2e41f479d98dd1d3172118dbfe454688}
+}]\end{description}
+\end{Desc}
+
+
+Definition at line 81 of file Scien\+Filter.\+cpp.
+
+
+
+\subsection{Function Documentation}
+\index{Scien\+Filter.\+cpp@{Scien\+Filter.\+cpp}!Param@{Param}}
+\index{Param@{Param}!Scien\+Filter.\+cpp@{Scien\+Filter.\+cpp}}
+\subsubsection[{\texorpdfstring{Param(\+Type, int, X\+O(""Filter\+Type""), k\+Butterworth, 0, k\+Num\+Types-\/1, 1)}{Param(Type, int, XO("FilterType"), kButterworth, 0, kNumTypes-1, 1)}}]{\setlength{\rightskip}{0pt plus 5cm}Param (
+\begin{DoxyParamCaption}
+\item[{Type}]{, }
+\item[{{\bf int}}]{, }
+\item[{{\bf XO}(\char`\"{}Filter\+Type\char`\"{})}]{, }
+\item[{{\bf k\+Butterworth}}]{, }
+\item[{0}]{, }
+\item[{{\bf k\+Num\+Types}-\/}]{1, }
+\item[{1}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{_scien_filter_8cpp_acee2bc1ea49d8b88bf441c3a93ce1ba6}{}\label{_scien_filter_8cpp_acee2bc1ea49d8b88bf441c3a93ce1ba6}
+\index{Scien\+Filter.\+cpp@{Scien\+Filter.\+cpp}!Param@{Param}}
+\index{Param@{Param}!Scien\+Filter.\+cpp@{Scien\+Filter.\+cpp}}
+\subsubsection[{\texorpdfstring{Param(\+Subtype, int, X\+O(""Filter\+Subtype""), k\+Low\+Pass, 0, k\+Num\+Sub\+Types-\/1, 1)}{Param(Subtype, int, XO("FilterSubtype"), kLowPass, 0, kNumSubTypes-1, 1)}}]{\setlength{\rightskip}{0pt plus 5cm}Param (
+\begin{DoxyParamCaption}
+\item[{Subtype}]{, }
+\item[{{\bf int}}]{, }
+\item[{{\bf XO}(\char`\"{}Filter\+Subtype\char`\"{})}]{, }
+\item[{{\bf k\+Low\+Pass}}]{, }
+\item[{0}]{, }
+\item[{{\bf k\+Num\+Sub\+Types}-\/}]{1, }
+\item[{1}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{_scien_filter_8cpp_a050f95938223d1bda58e7606e2df6622}{}\label{_scien_filter_8cpp_a050f95938223d1bda58e7606e2df6622}
+\index{Scien\+Filter.\+cpp@{Scien\+Filter.\+cpp}!Param@{Param}}
+\index{Param@{Param}!Scien\+Filter.\+cpp@{Scien\+Filter.\+cpp}}
+\subsubsection[{\texorpdfstring{Param(\+Order, int, X\+O(""Order""), 1, 1, 10, 1)}{Param(Order, int, XO("Order"), 1, 1, 10, 1)}}]{\setlength{\rightskip}{0pt plus 5cm}Param (
+\begin{DoxyParamCaption}
+\item[{Order}]{, }
+\item[{{\bf int}}]{, }
+\item[{{\bf XO}(\char`\"{}Order\char`\"{})}]{, }
+\item[{1}]{, }
+\item[{1}]{, }
+\item[{10}]{, }
+\item[{1}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{_scien_filter_8cpp_a447b9e06403f38974a4179085dd3fd59}{}\label{_scien_filter_8cpp_a447b9e06403f38974a4179085dd3fd59}
+\index{Scien\+Filter.\+cpp@{Scien\+Filter.\+cpp}!Param@{Param}}
+\index{Param@{Param}!Scien\+Filter.\+cpp@{Scien\+Filter.\+cpp}}
+\subsubsection[{\texorpdfstring{Param(\+Cutoff, float, X\+O(""Cutoff""), 1000.\+0, 1.\+0, F\+L\+T\+\_\+\+M\+A\+X, 1)}{Param(Cutoff, float, XO("Cutoff"), 1000.0, 1.0, FLT_MAX, 1)}}]{\setlength{\rightskip}{0pt plus 5cm}Param (
+\begin{DoxyParamCaption}
+\item[{Cutoff}]{, }
+\item[{float}]{, }
+\item[{{\bf XO}(\char`\"{}Cutoff\char`\"{})}]{, }
+\item[{1000.}]{0, }
+\item[{1.}]{0, }
+\item[{F\+L\+T\+\_\+\+M\+AX}]{, }
+\item[{1}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{_scien_filter_8cpp_a40e7ad64516789935cc5d0ee9570b1df}{}\label{_scien_filter_8cpp_a40e7ad64516789935cc5d0ee9570b1df}
+\index{Scien\+Filter.\+cpp@{Scien\+Filter.\+cpp}!Param@{Param}}
+\index{Param@{Param}!Scien\+Filter.\+cpp@{Scien\+Filter.\+cpp}}
+\subsubsection[{\texorpdfstring{Param(\+Passband, float, X\+O(""Passband\+Ripple""), 1.\+0, 0.\+0, 100.\+0, 1)}{Param(Passband, float, XO("PassbandRipple"), 1.0, 0.0, 100.0, 1)}}]{\setlength{\rightskip}{0pt plus 5cm}Param (
+\begin{DoxyParamCaption}
+\item[{Passband}]{, }
+\item[{float}]{, }
+\item[{{\bf XO}(\char`\"{}Passband\+Ripple\char`\"{})}]{, }
+\item[{1.}]{0, }
+\item[{0.}]{0, }
+\item[{100.}]{0, }
+\item[{1}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{_scien_filter_8cpp_afed4143af98f32de639c13a0be43b1a2}{}\label{_scien_filter_8cpp_afed4143af98f32de639c13a0be43b1a2}
+\index{Scien\+Filter.\+cpp@{Scien\+Filter.\+cpp}!Param@{Param}}
+\index{Param@{Param}!Scien\+Filter.\+cpp@{Scien\+Filter.\+cpp}}
+\subsubsection[{\texorpdfstring{Param(\+Stopband, float, X\+O(""Stopband\+Ripple""), 30.\+0, 0.\+0, 100.\+0, 1)}{Param(Stopband, float, XO("StopbandRipple"), 30.0, 0.0, 100.0, 1)}}]{\setlength{\rightskip}{0pt plus 5cm}Param (
+\begin{DoxyParamCaption}
+\item[{Stopband}]{, }
+\item[{float}]{, }
+\item[{{\bf XO}(\char`\"{}Stopband\+Ripple\char`\"{})}]{, }
+\item[{30.}]{0, }
+\item[{0.}]{0, }
+\item[{100.}]{0, }
+\item[{1}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{_scien_filter_8cpp_aecd861ab7cf582765b19178239f5269f}{}\label{_scien_filter_8cpp_aecd861ab7cf582765b19178239f5269f}

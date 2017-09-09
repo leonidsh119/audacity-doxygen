@@ -1,0 +1,216 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/lib-src/libnyquist/nyquist/nyqsrc/sndwritepa.c" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/lib-src/libnyquist/nyquist/nyqsrc/sndwritepa.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include 'stdlib\&.h'\fP
+.br
+\fC#include 'switches\&.h'\fP
+.br
+\fC#include 'string\&.h'\fP
+.br
+\fC#include <stdio\&.h>\fP
+.br
+\fC#include 'xlisp\&.h'\fP
+.br
+\fC#include 'sound\&.h'\fP
+.br
+\fC#include 'cext\&.h'\fP
+.br
+\fC#include 'userio\&.h'\fP
+.br
+\fC#include 'falloc\&.h'\fP
+.br
+\fC#include 'sndfmt\&.h'\fP
+.br
+\fC#include 'sndwrite\&.h'\fP
+.br
+\fC#include 'extern\&.h'\fP
+.br
+\fC#include 'sndfile\&.h'\fP
+.br
+\fC#include 'portaudio\&.h'\fP
+.br
+
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "struct \fBsound_state_node\fP"
+.br
+.in -1c
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBCOMPUTE_MAXIMUM_AND_WRAP\fP(x)"
+.br
+.ti -1c
+.RI "#define \fBCOMPUTE_MAXIMUM\fP()"
+.br
+.ti -1c
+.RI "#define \fBD\fP   \fBif\fP (0)"
+.br
+.in -1c
+.SS "Typedefs"
+
+.in +1c
+.ti -1c
+.RI "typedef struct \fBsound_state_node\fP * \fBsound_state_type\fP"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBvoid\fP \fBportaudio_exit\fP ()"
+.br
+.ti -1c
+.RI "\fBsample_type\fP \fBsound_save_sound\fP (\fBLVAL\fP s_as_lval, long n, \fBSF_INFO\fP *sf_info, \fBSNDFILE\fP *snd_file, float *\fBbuf\fP, long *ntotal, \fBPaStream\fP *audio_stream)"
+.br
+.ti -1c
+.RI "\fBsample_type\fP \fBsound_save_array\fP (\fBLVAL\fP \fBsa\fP, long n, \fBSF_INFO\fP *sf_info, \fBSNDFILE\fP *snd_file, float *\fBbuf\fP, long *ntotal, \fBPaStream\fP *audio_stream)"
+.br
+.ti -1c
+.RI "unsigned char \fBst_linear_to_ulaw\fP (\fBint\fP sample)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBprepare_audio\fP (\fBLVAL\fP play, \fBSF_INFO\fP *sf_info, \fBPaStream\fP **audio_stream)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBfinish_audio\fP (\fBPaStream\fP *audio_stream)"
+.br
+.ti -1c
+.RI "long \fBlookup_format\fP (long \fBformat\fP, long mode, long \fBbits\fP, long swap)"
+.br
+.ti -1c
+.RI "double \fBsound_save\fP (\fBLVAL\fP snd_expr, long n, unsigned char *\fBfilename\fP, long \fBformat\fP, long mode, long \fBbits\fP, long swap, double *sr, long *nchans, double *duration, \fBLVAL\fP play)"
+.br
+.ti -1c
+.RI "\fBSNDFILE\fP * \fBopen_for_write\fP (unsigned char *\fBfilename\fP, long direction, long \fBformat\fP, \fBSF_INFO\fP *sf_info, \fBint\fP channels, long srate, double \fBoffset\fP, float **\fBbuf\fP)"
+.br
+.ti -1c
+.RI "double \fBsound_overwrite\fP (\fBLVAL\fP snd_expr, long n, unsigned char *\fBfilename\fP, double offset_secs, long \fBformat\fP, long mode, long \fBbits\fP, long swap, double *duration)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBis_pcm\fP (\fBSF_INFO\fP *sf_info)"
+.br
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "long \fBflush_count\fP = 0"
+.br
+.ti -1c
+.RI "\fBint\fP \fBsndwrite_trace\fP = 0"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define COMPUTE_MAXIMUM()"
+\fBValue:\fP
+.PP
+.nf
+if (s > max_sample) { \
+            max_sample = s; \
+        } else if (s < -max_sample) { \
+            max_sample = -s; \
+        }
+.fi
+.PP
+Definition at line 89 of file sndwritepa\&.c\&.
+.SS "#define COMPUTE_MAXIMUM_AND_WRAP(x)"
+\fBValue:\fP
+.PP
+.nf
+if (s > threshold) { \
+        if (s > max_sample) { \
+            max_sample = s; \
+            threshold = min(1\&.0, s); \
+        } \
+        if (s > 1\&.0) { \
+            s = fmod(s + 1\&.0, 2\&.0) - 1\&.0; \
+            (x) = s; \
+        } \
+    } else if (s < -threshold) { \
+        if (s < -max_sample) { \
+            max_sample = -s; \
+            threshold = min(1\&.0, -s); \
+        } \
+        if (s < -1\&.0) { \
+            s = -(fmod(-s + 1\&.0, 2\&.0) - 1\&.0); \
+            (x) = s; \
+        } \
+    }
+.fi
+.PP
+Definition at line 60 of file sndwritepa\&.c\&.
+.SS "#define D   \fBif\fP (0)"
+
+.PP
+Definition at line 101 of file sndwritepa\&.c\&.
+.SH "Typedef Documentation"
+.PP 
+.SS "typedef  struct \fBsound_state_node\fP * \fBsound_state_type\fP"
+
+.SH "Function Documentation"
+.PP 
+.SS "\fBvoid\fP finish_audio (\fBPaStream\fP * audio_stream)"
+
+.PP
+Definition at line 202 of file sndwritepa\&.c\&.
+.SS "\fBint\fP is_pcm (\fBSF_INFO\fP * sf_info)"
+
+.PP
+Definition at line 567 of file sndwritepa\&.c\&.
+.SS "long lookup_format (long format, long mode, long bits, long swap)"
+
+.PP
+Definition at line 216 of file sndwritepa\&.c\&.
+.SS "\fBSNDFILE\fP* open_for_write (unsigned char * filename, long direction, long format, \fBSF_INFO\fP * sf_info, \fBint\fP channels, long srate, double offset, float ** buf)"
+
+.PP
+Definition at line 430 of file sndwritepa\&.c\&.
+.SS "\fBvoid\fP portaudio_exit ()"
+
+.PP
+Definition at line 107 of file sndwritepa\&.c\&.
+.SS "\fBLVAL\fP prepare_audio (\fBLVAL\fP play, \fBSF_INFO\fP * sf_info, \fBPaStream\fP ** audio_stream)"
+
+.PP
+Definition at line 147 of file sndwritepa\&.c\&.
+.SS "double sound_overwrite (\fBLVAL\fP snd_expr, long n, unsigned char * filename, double offset_secs, long format, long mode, long bits, long swap, double * duration)"
+
+.PP
+Definition at line 493 of file sndwritepa\&.c\&.
+.SS "double sound_save (\fBLVAL\fP snd_expr, long n, unsigned char * filename, long format, long mode, long bits, long swap, double * sr, long * nchans, double * duration, \fBLVAL\fP play)"
+
+.PP
+Definition at line 312 of file sndwritepa\&.c\&.
+.SS "\fBsample_type\fP sound_save_array (\fBLVAL\fP sa, long n, \fBSF_INFO\fP * sf_info, \fBSNDFILE\fP * snd_file, float * buf, long * ntotal, \fBPaStream\fP * audio_stream)"
+
+.PP
+Definition at line 672 of file sndwritepa\&.c\&.
+.SS "\fBsample_type\fP sound_save_sound (\fBLVAL\fP s_as_lval, long n, \fBSF_INFO\fP * sf_info, \fBSNDFILE\fP * snd_file, float * buf, long * ntotal, \fBPaStream\fP * audio_stream)"
+
+.PP
+Definition at line 575 of file sndwritepa\&.c\&.
+.SS "unsigned char st_linear_to_ulaw (\fBint\fP sample)"
+
+.SH "Variable Documentation"
+.PP 
+.SS "long flush_count = 0"
+
+.PP
+Definition at line 99 of file sndwritepa\&.c\&.
+.SS "\fBint\fP sndwrite_trace = 0"
+
+.PP
+Definition at line 103 of file sndwritepa\&.c\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

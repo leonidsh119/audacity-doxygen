@@ -1,0 +1,135 @@
+.TH "LOFImportFileHandle" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+LOFImportFileHandle \- An \fBImportFileHandle\fP for LOF data\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+Inherits \fBImportFileHandle\fP\&.
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBLOFImportFileHandle\fP (\fBconst\fP wxString &\fBname\fP, wxTextFile *file)"
+.br
+.ti -1c
+.RI "\fB~LOFImportFileHandle\fP ()"
+.br
+.ti -1c
+.RI "wxString \fBGetFileDescription\fP ()"
+.br
+.ti -1c
+.RI "\fBint\fP \fBGetFileUncompressedBytes\fP ()"
+.br
+.ti -1c
+.RI "\fBint\fP \fBImport\fP (\fBTrackFactory\fP *trackFactory, \fBTrack\fP ***outTracks, \fBint\fP *outNumTracks, \fBTags\fP *tags)"
+.br
+.ti -1c
+.RI "wxInt32 \fBGetStreamCount\fP ()"
+.br
+.ti -1c
+.RI "wxArrayString * \fBGetStreamInfo\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBSetStreamUsage\fP (wxInt32 WXUNUSED(StreamID), \fBbool\fP WXUNUSED(Use))"
+.br
+.in -1c
+.SS "Additional Inherited Members"
+.SH "Detailed Description"
+.PP 
+An \fBImportFileHandle\fP for LOF data\&. 
+
+Supports the opening of '\&.lof' files which are text files that contain a list of individual files to open in audacity in specific formats\&. Files may be file names (in the same directory as the LOF file), absolute paths or relative paths relative to the directory of the LOF file\&.
+.PP
+(In BNF) The syntax for an LOF file, denoted by <lof>:
+.PP
+.PP
+.nf
+  <lof> ::= [<window> | <file> | <#>]*
+  <window> ::= window [<window-parameter>]* <newline>
+  <window-parameter> ::= offset <time> | duration <time>
+  <time> ::= [<digit>]+ [ . [<digit>]* ]
+  <file> ::= file [<file-parameter>]* <newline>
+  <file-parameter> ::= offset <time>
+  <#> ::= <comment> <newline>
+.fi
+.PP
+.PP
+EXAMPLE LOF file:
+.PP
+.PP
+.nf
+  # everything following the hash character is ignored
+  window # an initial window command is implicit and optional
+  file "C:\folder1\sample1.wav"    # sample1.wav is displayed
+  file "C:\sample2.wav" offset 5   # sample2 is displayed with a 5s offset
+  File "C:\sample3.wav"            # sample3 is displayed with no offset
+  File "foo.aiff" # foo is loaded from the same directory as the LOF file
+  window offset 5 duration 10      # open a NEW window, zoom to display
+  # 10 seconds total starting at 5 (ending at 15) seconds
+  file "C:\sample3.wav" offset 2.5
+.fi
+.PP
+.PP
+SEMANTICS:
+.PP
+There are two commands: 'window' creates a NEW window, and 'file' appends a track to the current window and displays the file there\&. The first file is always placed in a NEW window, whether or not an initial 'window' command is given\&.
+.PP
+Commands have optional keyword parameters that may be listed in any order\&. A parameter should only occur once per command\&. The 'offset' parameter specifies a time offset\&. For windows, this is the leftmost time displayed in the window\&. For files, the offset is an amount by which the file is shifted in time before display (only enabled for audio; not midi)\&. The offset is specified as an integer or decimal number of seconds, and the default value is zero\&.
+.PP
+Windows may also have a 'duration' parameter, which specifies how much time should be displayed in the window\&. The default duration is equal to the duration of the longest track currently displayed\&. 
+.PP
+Definition at line 120 of file ImportLOF\&.cpp\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "LOFImportFileHandle::LOFImportFileHandle (\fBconst\fP wxString & name, wxTextFile * file)"
+
+.PP
+Definition at line 160 of file ImportLOF\&.cpp\&.
+.SS "LOFImportFileHandle::~LOFImportFileHandle ()"
+
+.PP
+Definition at line 496 of file ImportLOF\&.cpp\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "wxString LOFImportFileHandle::GetFileDescription ()\fC [virtual]\fP"
+
+.PP
+Implements \fBImportFileHandle\fP\&.
+.PP
+Definition at line 222 of file ImportLOF\&.cpp\&.
+.SS "\fBint\fP LOFImportFileHandle::GetFileUncompressedBytes ()\fC [virtual]\fP"
+
+.PP
+Implements \fBImportFileHandle\fP\&.
+.PP
+Definition at line 227 of file ImportLOF\&.cpp\&.
+.SS "wxInt32 LOFImportFileHandle::GetStreamCount ()\fC [inline]\fP, \fC [virtual]\fP"
+
+.PP
+Implements \fBImportFileHandle\fP\&.
+.PP
+Definition at line 131 of file ImportLOF\&.cpp\&.
+.SS "wxArrayString* LOFImportFileHandle::GetStreamInfo ()\fC [inline]\fP, \fC [virtual]\fP"
+
+.PP
+Implements \fBImportFileHandle\fP\&.
+.PP
+Definition at line 133 of file ImportLOF\&.cpp\&.
+.SS "\fBint\fP LOFImportFileHandle::Import (\fBTrackFactory\fP * trackFactory, \fBTrack\fP *** outTracks, \fBint\fP * outNumTracks, \fBTags\fP * tags)\fC [virtual]\fP"
+
+.PP
+Implements \fBImportFileHandle\fP\&.
+.PP
+Definition at line 232 of file ImportLOF\&.cpp\&.
+.SS "\fBvoid\fP LOFImportFileHandle::SetStreamUsage (wxInt32  WXUNUSEDStreamID, \fBbool\fP  WXUNUSEDUse)\fC [inline]\fP"
+
+.PP
+Definition at line 135 of file ImportLOF\&.cpp\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

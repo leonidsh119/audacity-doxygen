@@ -1,0 +1,118 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/lib-src/lv2/suil/suil/suil.h" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/lib-src/lv2/suil/suil/suil.h \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <stdint\&.h>\fP
+.br
+\fC#include 'lv2/lv2plug\&.in/ns/lv2core/lv2\&.h'\fP
+.br
+\fC#include <stdbool\&.h>\fP
+.br
+
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBSUIL_LIB_IMPORT\fP   \fB__attribute__\fP((visibility('default')))"
+.br
+.ti -1c
+.RI "#define \fBSUIL_LIB_EXPORT\fP   \fB__attribute__\fP((visibility('default')))"
+.br
+.ti -1c
+.RI "#define \fBSUIL_API\fP"
+.br
+.in -1c
+.SS "Typedefs"
+
+.in +1c
+.ti -1c
+.RI "typedef struct \fBSuilHostImpl\fP \fBSuilHost\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBSuilInstanceImpl\fP \fBSuilInstance\fP"
+.br
+.ti -1c
+.RI "typedef \fBvoid\fP * \fBSuilHandle\fP"
+.br
+.ti -1c
+.RI "typedef \fBvoid\fP * \fBSuilWidget\fP"
+.br
+.ti -1c
+.RI "typedef \fBvoid\fP * \fBSuilController\fP"
+.br
+.ti -1c
+.RI "typedef \fBvoid\fP(* \fBSuilPortWriteFunc\fP) (\fBSuilController\fP controller, \fBuint32_t\fP port_index, \fBuint32_t\fP buffer_size, \fBuint32_t\fP protocol, \fBvoid\fP \fBconst\fP *\fBbuffer\fP)"
+.br
+.ti -1c
+.RI "typedef \fBuint32_t\fP(* \fBSuilPortIndexFunc\fP) (\fBSuilController\fP controller, \fBconst\fP char *port_symbol)"
+.br
+.ti -1c
+.RI "typedef \fBuint32_t\fP(* \fBSuilPortSubscribeFunc\fP) (\fBSuilController\fP controller, \fBuint32_t\fP port_index, \fBuint32_t\fP protocol, \fBconst\fP \fBLV2_Feature\fP *\fBconst\fP *features)"
+.br
+.ti -1c
+.RI "typedef \fBuint32_t\fP(* \fBSuilPortUnsubscribeFunc\fP) (\fBSuilController\fP controller, \fBuint32_t\fP port_index, \fBuint32_t\fP protocol, \fBconst\fP \fBLV2_Feature\fP *\fBconst\fP *features)"
+.br
+.ti -1c
+.RI "typedef \fBvoid\fP(* \fBSuilTouchFunc\fP) (\fBSuilController\fP controller, \fBuint32_t\fP port_index, \fBbool\fP grabbed)"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBSUIL_API\fP \fBSuilHost\fP * \fBsuil_host_new\fP (\fBSuilPortWriteFunc\fP write_func, \fBSuilPortIndexFunc\fP index_func, \fBSuilPortSubscribeFunc\fP subscribe_func, \fBSuilPortUnsubscribeFunc\fP unsubscribe_func)"
+.br
+.ti -1c
+.RI "\fBSUIL_API\fP \fBvoid\fP \fBsuil_host_set_touch_func\fP (\fBSuilHost\fP *host, \fBSuilTouchFunc\fP touch_func)"
+.br
+.ti -1c
+.RI "\fBSUIL_API\fP \fBvoid\fP \fBsuil_host_free\fP (\fBSuilHost\fP *host)"
+.br
+.ti -1c
+.RI "\fBSUIL_API\fP unsigned \fBsuil_ui_supported\fP (\fBconst\fP char *host_type_uri, \fBconst\fP char *ui_type_uri)"
+.br
+.ti -1c
+.RI "\fBSUIL_API\fP \fBSuilInstance\fP * \fBsuil_instance_new\fP (\fBSuilHost\fP *host, \fBSuilController\fP controller, \fBconst\fP char *container_type_uri, \fBconst\fP char *plugin_uri, \fBconst\fP char *ui_uri, \fBconst\fP char *ui_type_uri, \fBconst\fP char *ui_bundle_path, \fBconst\fP char *ui_binary_path, \fBconst\fP \fBLV2_Feature\fP *\fBconst\fP *features)"
+.br
+.ti -1c
+.RI "\fBSUIL_API\fP \fBvoid\fP \fBsuil_instance_free\fP (\fBSuilInstance\fP *instance)"
+.br
+.ti -1c
+.RI "\fBSUIL_API\fP \fBSuilHandle\fP \fBsuil_instance_get_handle\fP (\fBSuilInstance\fP *instance)"
+.br
+.ti -1c
+.RI "\fBSUIL_API\fP \fBSuilWidget\fP \fBsuil_instance_get_widget\fP (\fBSuilInstance\fP *instance)"
+.br
+.ti -1c
+.RI "\fBSUIL_API\fP \fBvoid\fP \fBsuil_instance_port_event\fP (\fBSuilInstance\fP *instance, \fBuint32_t\fP port_index, \fBuint32_t\fP buffer_size, \fBuint32_t\fP \fBformat\fP, \fBconst\fP \fBvoid\fP *\fBbuffer\fP)"
+.br
+.ti -1c
+.RI "\fBSUIL_API\fP \fBconst\fP \fBvoid\fP * \fBsuil_instance_extension_data\fP (\fBSuilInstance\fP *instance, \fBconst\fP char *\fBuri\fP)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+API for Suil, an LV2 UI wrapper library\&. 
+.PP
+Definition in file \fBsuil\&.h\fP\&.
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define SUIL_API"
+
+.PP
+Definition at line 43 of file suil\&.h\&.
+.SS "#define SUIL_LIB_EXPORT   \fB__attribute__\fP((visibility('default')))"
+
+.PP
+Definition at line 33 of file suil\&.h\&.
+.SS "#define SUIL_LIB_IMPORT   \fB__attribute__\fP((visibility('default')))"
+
+.PP
+Definition at line 32 of file suil\&.h\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

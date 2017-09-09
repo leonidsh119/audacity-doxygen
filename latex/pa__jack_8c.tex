@@ -1,0 +1,260 @@
+\hypertarget{pa__jack_8c}{}\section{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/portaudio-\/v19/src/hostapi/jack/pa\+\_\+jack.c File Reference}
+\label{pa__jack_8c}\index{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/portaudio-\/v19/src/hostapi/jack/pa\+\_\+jack.\+c@{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/portaudio-\/v19/src/hostapi/jack/pa\+\_\+jack.\+c}}
+{\ttfamily \#include $<$string.\+h$>$}\\*
+{\ttfamily \#include $<$stdlib.\+h$>$}\\*
+{\ttfamily \#include $<$stdio.\+h$>$}\\*
+{\ttfamily \#include $<$assert.\+h$>$}\\*
+{\ttfamily \#include $<$sys/types.\+h$>$}\\*
+{\ttfamily \#include $<$unistd.\+h$>$}\\*
+{\ttfamily \#include $<$errno.\+h$>$}\\*
+{\ttfamily \#include $<$signal.\+h$>$}\\*
+{\ttfamily \#include $<$math.\+h$>$}\\*
+{\ttfamily \#include $<$semaphore.\+h$>$}\\*
+{\ttfamily \#include $<$pthread.\+h$>$}\\*
+{\ttfamily \#include $<$jack/types.\+h$>$}\\*
+{\ttfamily \#include $<$jack/jack.\+h$>$}\\*
+{\ttfamily \#include \char`\"{}pa\+\_\+util.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}pa\+\_\+hostapi.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}pa\+\_\+stream.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}pa\+\_\+process.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}pa\+\_\+allocation.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}pa\+\_\+cpuload.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}pa\+\_\+ringbuffer.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}pa\+\_\+debugprint.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}pa\+\_\+jack\+\_\+dynload.\+h\char`\"{}}\\*
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{struct_pa_jack_host_api_representation}{Pa\+Jack\+Host\+Api\+Representation}
+\item 
+struct \hyperlink{struct_pa_jack_stream}{Pa\+Jack\+Stream}
+\end{DoxyCompactItemize}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{pa__jack_8c_a5e9dbdaa9b7f8c085c47d5956bde3691}{S\+T\+R\+I\+N\+G\+I\+Z\+E\+\_\+\+H\+E\+L\+P\+ER}(expr)~\#expr
+\item 
+\#define \hyperlink{pa__jack_8c_a8fdb5acc9bc207e117671b79ddf1df0f}{S\+T\+R\+I\+N\+G\+I\+ZE}(expr)~\hyperlink{pa__unix__util_8h_a5e9dbdaa9b7f8c085c47d5956bde3691}{S\+T\+R\+I\+N\+G\+I\+Z\+E\+\_\+\+H\+E\+L\+P\+ER}(expr)
+\item 
+\#define \hyperlink{pa__jack_8c_ad4f9d2ed7b0d43c43678391304fdbb25}{E\+N\+S\+U\+R\+E\+\_\+\+PA}(expr)
+\item 
+\#define \hyperlink{pa__jack_8c_ace94a288377fe859605efd397c668b18}{U\+N\+L\+E\+SS}(expr,  code)
+\item 
+\#define \hyperlink{pa__jack_8c_ab99c0ffda28178c17cdc85a7befd30ad}{A\+S\+S\+E\+R\+T\+\_\+\+C\+A\+LL}(expr,  success)
+\item 
+\#define \hyperlink{pa__jack_8c_a17600b597271fdf057a3b10eec2c9ff1}{J\+A\+C\+K\+\_\+\+P\+O\+R\+T\+\_\+\+T\+Y\+P\+E\+\_\+\+F\+I\+L\+T\+ER}~\char`\"{}audio\char`\"{}
+\item 
+\#define \hyperlink{pa__jack_8c_aa8cecfc5c5c054d2875c03e77b7be15d}{T\+R\+UE}~1
+\item 
+\#define \hyperlink{pa__jack_8c_aa93f0eb578d23995850d61f7d61c55c1}{F\+A\+L\+SE}~0
+\item 
+\#define \hyperlink{pa__jack_8c_a996f7be338ccb40d1a2a5abc1ad61759}{A\+BS}(x)~( (x) $>$ 0 ? (x) \+: -\/(x) )
+\item 
+\#define \hyperlink{pa__jack_8c_a996f7be338ccb40d1a2a5abc1ad61759}{A\+BS}(x)~( (x) $>$ 0 ? (x) \+: -\/(x) )
+\end{DoxyCompactItemize}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef struct \hyperlink{struct_pa_jack_stream}{Pa\+Jack\+Stream} \hyperlink{pa__jack_8c_ae20627d1e72ee7babd2e3cea0e9e7ccb}{Pa\+Jack\+Stream}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{portaudio_8h_a4949e4a8ef9f9dbe8cbee414ce69841d}{Pa\+Error} \hyperlink{pa__jack_8c_a7a34b17a487f6c92cfa60a01d978d8b3}{Pa\+Jack\+\_\+\+Initialize} (\hyperlink{struct_pa_util_host_api_representation}{Pa\+Util\+Host\+Api\+Representation} $\ast$$\ast$host\+Api, \hyperlink{portaudio_8h_aeef6da084c57c70aa94be97411e19930}{Pa\+Host\+Api\+Index} host\+Api\+Index)
+\item 
+\hyperlink{portaudio_8h_a4949e4a8ef9f9dbe8cbee414ce69841d}{Pa\+Error} \hyperlink{pa__jack_8c_a20862b4b1a9dacea0deac5bedd225fc6}{Pa\+Jack\+\_\+\+Set\+Client\+Name} (\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} char $\ast$\hyperlink{lib_2expat_8h_a1b49b495b59f9e73205b69ad1a2965b0}{name})
+\item 
+\hyperlink{portaudio_8h_a4949e4a8ef9f9dbe8cbee414ce69841d}{Pa\+Error} \hyperlink{pa__jack_8c_a0582bde20a75bf2a8e70c46c71ac9a5e}{Pa\+Jack\+\_\+\+Get\+Client\+Name} (\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} char $\ast$$\ast$client\+Name)
+\end{DoxyCompactItemize}
+
+
+\subsection{Macro Definition Documentation}
+\index{pa\+\_\+jack.\+c@{pa\+\_\+jack.\+c}!A\+BS@{A\+BS}}
+\index{A\+BS@{A\+BS}!pa\+\_\+jack.\+c@{pa\+\_\+jack.\+c}}
+\subsubsection[{\texorpdfstring{A\+BS}{ABS}}]{\setlength{\rightskip}{0pt plus 5cm}\#define A\+BS(
+\begin{DoxyParamCaption}
+\item[{}]{x}
+\end{DoxyParamCaption}
+)~( (x) $>$ 0 ? (x) \+: -\/(x) )}\hypertarget{pa__jack_8c_a996f7be338ccb40d1a2a5abc1ad61759}{}\label{pa__jack_8c_a996f7be338ccb40d1a2a5abc1ad61759}
+\index{pa\+\_\+jack.\+c@{pa\+\_\+jack.\+c}!A\+BS@{A\+BS}}
+\index{A\+BS@{A\+BS}!pa\+\_\+jack.\+c@{pa\+\_\+jack.\+c}}
+\subsubsection[{\texorpdfstring{A\+BS}{ABS}}]{\setlength{\rightskip}{0pt plus 5cm}\#define A\+BS(
+\begin{DoxyParamCaption}
+\item[{}]{x}
+\end{DoxyParamCaption}
+)~( (x) $>$ 0 ? (x) \+: -\/(x) )}\hypertarget{pa__jack_8c_a996f7be338ccb40d1a2a5abc1ad61759}{}\label{pa__jack_8c_a996f7be338ccb40d1a2a5abc1ad61759}
+\index{pa\+\_\+jack.\+c@{pa\+\_\+jack.\+c}!A\+S\+S\+E\+R\+T\+\_\+\+C\+A\+LL@{A\+S\+S\+E\+R\+T\+\_\+\+C\+A\+LL}}
+\index{A\+S\+S\+E\+R\+T\+\_\+\+C\+A\+LL@{A\+S\+S\+E\+R\+T\+\_\+\+C\+A\+LL}!pa\+\_\+jack.\+c@{pa\+\_\+jack.\+c}}
+\subsubsection[{\texorpdfstring{A\+S\+S\+E\+R\+T\+\_\+\+C\+A\+LL}{ASSERT_CALL}}]{\setlength{\rightskip}{0pt plus 5cm}\#define A\+S\+S\+E\+R\+T\+\_\+\+C\+A\+LL(
+\begin{DoxyParamCaption}
+\item[{}]{expr, }
+\item[{}]{success}
+\end{DoxyParamCaption}
+)}\hypertarget{pa__jack_8c_ab99c0ffda28178c17cdc85a7befd30ad}{}\label{pa__jack_8c_ab99c0ffda28178c17cdc85a7befd30ad}
+{\bfseries Value\+:}
+\begin{DoxyCode}
+\textcolor{keywordflow}{do} \{ \(\backslash\)
+        int err = (expr); \(\backslash\)
+        assert( err == success ); \(\backslash\)
+    \} \textcolor{keywordflow}{while}( 0 )
+\end{DoxyCode}
+
+
+Definition at line 127 of file pa\+\_\+jack.\+c.
+
+\index{pa\+\_\+jack.\+c@{pa\+\_\+jack.\+c}!E\+N\+S\+U\+R\+E\+\_\+\+PA@{E\+N\+S\+U\+R\+E\+\_\+\+PA}}
+\index{E\+N\+S\+U\+R\+E\+\_\+\+PA@{E\+N\+S\+U\+R\+E\+\_\+\+PA}!pa\+\_\+jack.\+c@{pa\+\_\+jack.\+c}}
+\subsubsection[{\texorpdfstring{E\+N\+S\+U\+R\+E\+\_\+\+PA}{ENSURE_PA}}]{\setlength{\rightskip}{0pt plus 5cm}\#define E\+N\+S\+U\+R\+E\+\_\+\+PA(
+\begin{DoxyParamCaption}
+\item[{}]{expr}
+\end{DoxyParamCaption}
+)}\hypertarget{pa__jack_8c_ad4f9d2ed7b0d43c43678391304fdbb25}{}\label{pa__jack_8c_ad4f9d2ed7b0d43c43678391304fdbb25}
+{\bfseries Value\+:}
+\begin{DoxyCode}
+\textcolor{keywordflow}{do} \{ \(\backslash\)
+        PaError paErr; \(\backslash\)
+        if( (paErr = (expr)) < \hyperlink{portaudio_8h_a2e45bf8b5145f131a91c128af2bdaec7aeb09d15a48b6c1034728a9c518cfe4ba}{paNoError} ) \(\backslash\)
+        \{ \(\backslash\)
+            if( (paErr) == \hyperlink{portaudio_8h_a2e45bf8b5145f131a91c128af2bdaec7a47726071f5dccc656d5e3ff20bbfc5a0}{paUnanticipatedHostError} && PaJack\_IsOnMainThread() ) \(\backslash\)
+            \{ \(\backslash\)
+                const \textcolor{keywordtype}{char} *err = jackErr\_; \(\backslash\)
+                if (! err ) err = "unknown error"; \(\backslash\)
+                \hyperlink{pa__front_8c_a9c3ad627c13c1d695fef054c216667f7}{PaUtil\_SetLastHostErrorInfo}( \hyperlink{portaudio_8h_a8eaebe3d39c5ea45598da8f86dc2e5aeaf51e19fba6cd8946f06af332e61ad190}{paJACK}, -1, err ); \(\backslash\)
+            \} \(\backslash\)
+            \hyperlink{pa__debugprint_8c_a775ad90aa83e8a15e724f1b0fc55a0d3}{PaUtil\_DebugPrint}(( "Expression '" \textcolor{preprocessor}{#expr "' failed in '" \_\_FILE\_\_ "', line: "
+       STRINGIZE( \_\_LINE\_\_ ) "\(\backslash\)n" )); \(\backslash\)}
+\textcolor{preprocessor}{            result = paErr; \(\backslash\)}
+\textcolor{preprocessor}{            goto error; \(\backslash\)}
+\textcolor{preprocessor}{        \} \(\backslash\)}
+\textcolor{preprocessor}{    \} while( 0 )}
+\end{DoxyCode}
+
+
+Definition at line 94 of file pa\+\_\+jack.\+c.
+
+\index{pa\+\_\+jack.\+c@{pa\+\_\+jack.\+c}!F\+A\+L\+SE@{F\+A\+L\+SE}}
+\index{F\+A\+L\+SE@{F\+A\+L\+SE}!pa\+\_\+jack.\+c@{pa\+\_\+jack.\+c}}
+\subsubsection[{\texorpdfstring{F\+A\+L\+SE}{FALSE}}]{\setlength{\rightskip}{0pt plus 5cm}\#define F\+A\+L\+SE~0}\hypertarget{pa__jack_8c_aa93f0eb578d23995850d61f7d61c55c1}{}\label{pa__jack_8c_aa93f0eb578d23995850d61f7d61c55c1}
+
+
+Definition at line 261 of file pa\+\_\+jack.\+c.
+
+\index{pa\+\_\+jack.\+c@{pa\+\_\+jack.\+c}!J\+A\+C\+K\+\_\+\+P\+O\+R\+T\+\_\+\+T\+Y\+P\+E\+\_\+\+F\+I\+L\+T\+ER@{J\+A\+C\+K\+\_\+\+P\+O\+R\+T\+\_\+\+T\+Y\+P\+E\+\_\+\+F\+I\+L\+T\+ER}}
+\index{J\+A\+C\+K\+\_\+\+P\+O\+R\+T\+\_\+\+T\+Y\+P\+E\+\_\+\+F\+I\+L\+T\+ER@{J\+A\+C\+K\+\_\+\+P\+O\+R\+T\+\_\+\+T\+Y\+P\+E\+\_\+\+F\+I\+L\+T\+ER}!pa\+\_\+jack.\+c@{pa\+\_\+jack.\+c}}
+\subsubsection[{\texorpdfstring{J\+A\+C\+K\+\_\+\+P\+O\+R\+T\+\_\+\+T\+Y\+P\+E\+\_\+\+F\+I\+L\+T\+ER}{JACK_PORT_TYPE_FILTER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define J\+A\+C\+K\+\_\+\+P\+O\+R\+T\+\_\+\+T\+Y\+P\+E\+\_\+\+F\+I\+L\+T\+ER~\char`\"{}audio\char`\"{}}\hypertarget{pa__jack_8c_a17600b597271fdf057a3b10eec2c9ff1}{}\label{pa__jack_8c_a17600b597271fdf057a3b10eec2c9ff1}
+
+
+Definition at line 258 of file pa\+\_\+jack.\+c.
+
+\index{pa\+\_\+jack.\+c@{pa\+\_\+jack.\+c}!S\+T\+R\+I\+N\+G\+I\+ZE@{S\+T\+R\+I\+N\+G\+I\+ZE}}
+\index{S\+T\+R\+I\+N\+G\+I\+ZE@{S\+T\+R\+I\+N\+G\+I\+ZE}!pa\+\_\+jack.\+c@{pa\+\_\+jack.\+c}}
+\subsubsection[{\texorpdfstring{S\+T\+R\+I\+N\+G\+I\+ZE}{STRINGIZE}}]{\setlength{\rightskip}{0pt plus 5cm}\#define S\+T\+R\+I\+N\+G\+I\+ZE(
+\begin{DoxyParamCaption}
+\item[{}]{expr}
+\end{DoxyParamCaption}
+)~{\bf S\+T\+R\+I\+N\+G\+I\+Z\+E\+\_\+\+H\+E\+L\+P\+ER}(expr)}\hypertarget{pa__jack_8c_a8fdb5acc9bc207e117671b79ddf1df0f}{}\label{pa__jack_8c_a8fdb5acc9bc207e117671b79ddf1df0f}
+
+
+Definition at line 91 of file pa\+\_\+jack.\+c.
+
+\index{pa\+\_\+jack.\+c@{pa\+\_\+jack.\+c}!S\+T\+R\+I\+N\+G\+I\+Z\+E\+\_\+\+H\+E\+L\+P\+ER@{S\+T\+R\+I\+N\+G\+I\+Z\+E\+\_\+\+H\+E\+L\+P\+ER}}
+\index{S\+T\+R\+I\+N\+G\+I\+Z\+E\+\_\+\+H\+E\+L\+P\+ER@{S\+T\+R\+I\+N\+G\+I\+Z\+E\+\_\+\+H\+E\+L\+P\+ER}!pa\+\_\+jack.\+c@{pa\+\_\+jack.\+c}}
+\subsubsection[{\texorpdfstring{S\+T\+R\+I\+N\+G\+I\+Z\+E\+\_\+\+H\+E\+L\+P\+ER}{STRINGIZE_HELPER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define S\+T\+R\+I\+N\+G\+I\+Z\+E\+\_\+\+H\+E\+L\+P\+ER(
+\begin{DoxyParamCaption}
+\item[{}]{expr}
+\end{DoxyParamCaption}
+)~\#expr}\hypertarget{pa__jack_8c_a5e9dbdaa9b7f8c085c47d5956bde3691}{}\label{pa__jack_8c_a5e9dbdaa9b7f8c085c47d5956bde3691}
+
+
+Definition at line 90 of file pa\+\_\+jack.\+c.
+
+\index{pa\+\_\+jack.\+c@{pa\+\_\+jack.\+c}!T\+R\+UE@{T\+R\+UE}}
+\index{T\+R\+UE@{T\+R\+UE}!pa\+\_\+jack.\+c@{pa\+\_\+jack.\+c}}
+\subsubsection[{\texorpdfstring{T\+R\+UE}{TRUE}}]{\setlength{\rightskip}{0pt plus 5cm}\#define T\+R\+UE~1}\hypertarget{pa__jack_8c_aa8cecfc5c5c054d2875c03e77b7be15d}{}\label{pa__jack_8c_aa8cecfc5c5c054d2875c03e77b7be15d}
+
+
+Definition at line 260 of file pa\+\_\+jack.\+c.
+
+\index{pa\+\_\+jack.\+c@{pa\+\_\+jack.\+c}!U\+N\+L\+E\+SS@{U\+N\+L\+E\+SS}}
+\index{U\+N\+L\+E\+SS@{U\+N\+L\+E\+SS}!pa\+\_\+jack.\+c@{pa\+\_\+jack.\+c}}
+\subsubsection[{\texorpdfstring{U\+N\+L\+E\+SS}{UNLESS}}]{\setlength{\rightskip}{0pt plus 5cm}\#define U\+N\+L\+E\+SS(
+\begin{DoxyParamCaption}
+\item[{}]{expr, }
+\item[{}]{code}
+\end{DoxyParamCaption}
+)}\hypertarget{pa__jack_8c_ace94a288377fe859605efd397c668b18}{}\label{pa__jack_8c_ace94a288377fe859605efd397c668b18}
+{\bfseries Value\+:}
+\begin{DoxyCode}
+\textcolor{keywordflow}{do} \{ \(\backslash\)
+        if( (expr) == 0 ) \(\backslash\)
+        \{ \(\backslash\)
+            if( (code) == \hyperlink{portaudio_8h_a2e45bf8b5145f131a91c128af2bdaec7a47726071f5dccc656d5e3ff20bbfc5a0}{paUnanticipatedHostError} && PaJack\_IsOnMainThread() ) \(\backslash\)
+            \{ \(\backslash\)
+                const \textcolor{keywordtype}{char} *err = jackErr\_; \(\backslash\)
+                if (!err) err = "unknown error"; \(\backslash\)
+                \hyperlink{pa__front_8c_a9c3ad627c13c1d695fef054c216667f7}{PaUtil\_SetLastHostErrorInfo}( \hyperlink{portaudio_8h_a8eaebe3d39c5ea45598da8f86dc2e5aeaf51e19fba6cd8946f06af332e61ad190}{paJACK}, -1, err ); \(\backslash\)
+            \} \(\backslash\)
+            \hyperlink{pa__debugprint_8c_a775ad90aa83e8a15e724f1b0fc55a0d3}{PaUtil\_DebugPrint}(( "Expression '" \textcolor{preprocessor}{#expr "' failed in '" \_\_FILE\_\_ "', line: "
+       STRINGIZE( \_\_LINE\_\_ ) "\(\backslash\)n" )); \(\backslash\)}
+\textcolor{preprocessor}{            result = (code); \(\backslash\)}
+\textcolor{preprocessor}{            goto error; \(\backslash\)}
+\textcolor{preprocessor}{        \} \(\backslash\)}
+\textcolor{preprocessor}{    \} while( 0 )}
+\end{DoxyCode}
+
+
+Definition at line 111 of file pa\+\_\+jack.\+c.
+
+
+
+\subsection{Typedef Documentation}
+\index{pa\+\_\+jack.\+c@{pa\+\_\+jack.\+c}!Pa\+Jack\+Stream@{Pa\+Jack\+Stream}}
+\index{Pa\+Jack\+Stream@{Pa\+Jack\+Stream}!pa\+\_\+jack.\+c@{pa\+\_\+jack.\+c}}
+\subsubsection[{\texorpdfstring{Pa\+Jack\+Stream}{PaJackStream}}]{\setlength{\rightskip}{0pt plus 5cm}typedef struct {\bf Pa\+Jack\+Stream}
+ {\bf Pa\+Jack\+Stream}}\hypertarget{pa__jack_8c_ae20627d1e72ee7babd2e3cea0e9e7ccb}{}\label{pa__jack_8c_ae20627d1e72ee7babd2e3cea0e9e7ccb}
+
+
+\subsection{Function Documentation}
+\index{pa\+\_\+jack.\+c@{pa\+\_\+jack.\+c}!Pa\+Jack\+\_\+\+Get\+Client\+Name@{Pa\+Jack\+\_\+\+Get\+Client\+Name}}
+\index{Pa\+Jack\+\_\+\+Get\+Client\+Name@{Pa\+Jack\+\_\+\+Get\+Client\+Name}!pa\+\_\+jack.\+c@{pa\+\_\+jack.\+c}}
+\subsubsection[{\texorpdfstring{Pa\+Jack\+\_\+\+Get\+Client\+Name(const char $\ast$$\ast$client\+Name)}{PaJack_GetClientName(const char **clientName)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Pa\+Error} Pa\+Jack\+\_\+\+Get\+Client\+Name (
+\begin{DoxyParamCaption}
+\item[{{\bf const} char $\ast$$\ast$}]{client\+Name}
+\end{DoxyParamCaption}
+)}\hypertarget{pa__jack_8c_a0582bde20a75bf2a8e70c46c71ac9a5e}{}\label{pa__jack_8c_a0582bde20a75bf2a8e70c46c71ac9a5e}
+Get the J\+A\+CK client name used by PA J\+A\+CK.
+
+The caller is responsible for freeing the returned pointer. 
+
+Definition at line 1932 of file pa\+\_\+jack.\+c.
+
+\index{pa\+\_\+jack.\+c@{pa\+\_\+jack.\+c}!Pa\+Jack\+\_\+\+Initialize@{Pa\+Jack\+\_\+\+Initialize}}
+\index{Pa\+Jack\+\_\+\+Initialize@{Pa\+Jack\+\_\+\+Initialize}!pa\+\_\+jack.\+c@{pa\+\_\+jack.\+c}}
+\subsubsection[{\texorpdfstring{Pa\+Jack\+\_\+\+Initialize(\+Pa\+Util\+Host\+Api\+Representation $\ast$$\ast$host\+Api, Pa\+Host\+Api\+Index host\+Api\+Index)}{PaJack_Initialize(PaUtilHostApiRepresentation **hostApi, PaHostApiIndex hostApiIndex)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Pa\+Error} Pa\+Jack\+\_\+\+Initialize (
+\begin{DoxyParamCaption}
+\item[{{\bf Pa\+Util\+Host\+Api\+Representation} $\ast$$\ast$}]{host\+Api, }
+\item[{{\bf Pa\+Host\+Api\+Index}}]{host\+Api\+Index}
+\end{DoxyParamCaption}
+)}\hypertarget{pa__jack_8c_a7a34b17a487f6c92cfa60a01d978d8b3}{}\label{pa__jack_8c_a7a34b17a487f6c92cfa60a01d978d8b3}
+
+
+Definition at line 895 of file pa\+\_\+jack.\+c.
+
+\index{pa\+\_\+jack.\+c@{pa\+\_\+jack.\+c}!Pa\+Jack\+\_\+\+Set\+Client\+Name@{Pa\+Jack\+\_\+\+Set\+Client\+Name}}
+\index{Pa\+Jack\+\_\+\+Set\+Client\+Name@{Pa\+Jack\+\_\+\+Set\+Client\+Name}!pa\+\_\+jack.\+c@{pa\+\_\+jack.\+c}}
+\subsubsection[{\texorpdfstring{Pa\+Jack\+\_\+\+Set\+Client\+Name(const char $\ast$name)}{PaJack_SetClientName(const char *name)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Pa\+Error} Pa\+Jack\+\_\+\+Set\+Client\+Name (
+\begin{DoxyParamCaption}
+\item[{{\bf const} char $\ast$}]{name}
+\end{DoxyParamCaption}
+)}\hypertarget{pa__jack_8c_a20862b4b1a9dacea0deac5bedd225fc6}{}\label{pa__jack_8c_a20862b4b1a9dacea0deac5bedd225fc6}
+Set the J\+A\+CK client name.
+
+During Pa\+\_\+\+Initialize, When PA J\+A\+CK connects as a client of the J\+A\+CK server, it requests a certain name, which is for instance prepended to port names. By default this name is \char`\"{}\+Port\+Audio\char`\"{}. The J\+A\+CK server may append a suffix to the client name, in order to avoid clashes among clients that try to connect with the same name (e.\+g., different PA J\+A\+CK clients).
+
+This function must be called before Pa\+\_\+\+Initialize, otherwise it won\textquotesingle{}t have any effect. Note that the string is not copied, but instead referenced directly, so it must not be freed for as long as PA might need it. \begin{DoxySeeAlso}{See also}
+\hyperlink{pa__jack_8h_a0582bde20a75bf2a8e70c46c71ac9a5e}{Pa\+Jack\+\_\+\+Get\+Client\+Name} 
+\end{DoxySeeAlso}
+
+
+Definition at line 1921 of file pa\+\_\+jack.\+c.
+

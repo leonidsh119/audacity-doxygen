@@ -1,0 +1,74 @@
+.TH "utility_functions" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+utility_functions \- Utility Functions 
+In addition to the functions described elsewhere in this tutorial, PortAudio provides a number of Utility functions that are useful in a variety of circumstances\&. You'll want to read the \fBportaudio\&.h\fP reference, which documents the entire V19 API for details, but we'll try to cover the basics here\&.
+.SH "Version Information"
+.PP
+PortAudio offers two functions to determine the PortAudio Version\&. This is most useful when you are using PortAudio as a dynamic library, but it may also be useful at other times\&.
+.PP
+.PP
+.nf
+int             Pa_GetVersion (void)
+const char *    Pa_GetVersionText (void)
+.fi
+.PP
+.SH "Error Text"
+.PP
+PortAudio allows you to get error text from an error number\&.
+.PP
+.PP
+.nf
+const char *    Pa_GetErrorText (PaError errorCode)
+.fi
+.PP
+.SH "Stream State"
+.PP
+PortAudio Streams exist in 3 states: Active, Stopped, and \fBCallback\fP Stopped\&. If a stream is in callback stopped state, you'll need to stop it before you can start it again\&. If you need to query the state of a PortAudio stream, there are two functions for doing so:
+.PP
+.PP
+.nf
+PaError     Pa_IsStreamStopped (PaStream *stream)
+PaError     Pa_IsStreamActive (PaStream *stream)
+.fi
+.PP
+.SH "Stream Info"
+.PP
+If you need to retrieve info about a given stream, such as latency, and sample rate info, there's a function for that too:
+.PP
+.PP
+.nf
+const PaStreamInfo *    Pa_GetStreamInfo (PaStream *stream)
+.fi
+.PP
+.SH "Stream Time"
+.PP
+If you need to synchronise other activities such as display updates or MIDI output with the PortAudio callback you need to know the current time according to the same timebase used by the stream callback timestamps\&.
+.PP
+.PP
+.nf
+PaTime  Pa_GetStreamTime (PaStream *stream)
+.fi
+.PP
+.SH "Usage"
+.PP
+To determine how much CPU is being used by the callback, use these:
+.PP
+.PP
+.nf
+double  Pa_GetStreamCpuLoad (PaStream *stream)
+.fi
+.PP
+.SH "Other utilities"
+.PP
+These functions allow you to determine the size of a sample from its format and sleep for a given amount of time\&. The sleep function should not be used for precise timing or synchronization because it makes few guarantees about the exact length of time it waits\&. It is most useful for testing\&.
+.PP
+.PP
+.nf
+PaError Pa_GetSampleSize (PaSampleFormat format)
+void    Pa_Sleep (long msec)
+.fi
+.PP
+.PP
+Previous: \fBClosing a Stream and Terminating PortAudio\fP | Next: \fBEnumerating and Querying PortAudio Devices\fP 

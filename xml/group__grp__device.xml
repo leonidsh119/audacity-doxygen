@@ -1,0 +1,108 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="group__grp__device" kind="group">
+    <compoundname>grp_device</compoundname>
+    <title>Input/Output Devices Handling</title>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="group__grp__device_1ga2ff3676bcff6077e64ef6f3eb57fb37e" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="porttime_8h_1ad478fb637833fb6b1a4bdb25a03f4662" kindref="member">PMEXPORT</ref> <ref refid="getopt1_8c_1a2c212835823e3c54a8ab6d95c652660e" kindref="member">const</ref> <ref refid="struct_pm_device_info" kindref="compound">PmDeviceInfo</ref> *</type>
+        <definition>PMEXPORT const PmDeviceInfo* Pm_GetDeviceInfo</definition>
+        <argsstring>(PmDeviceID id)</argsstring>
+        <name>Pm_GetDeviceInfo</name>
+        <param>
+          <type><ref refid="portmidi_8h_1a696cc4d4360bb8513f13df4bb134098a" kindref="member">PmDeviceID</ref></type>
+          <declname>id</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para><ref refid="group__grp__device_1ga2ff3676bcff6077e64ef6f3eb57fb37e" kindref="member">Pm_GetDeviceInfo()</ref> returns a pointer to a <ref refid="struct_pm_device_info" kindref="compound">PmDeviceInfo</ref> structure referring to the device specified by id. If id is out of range the function returns NULL.</para><para>The returned structure is owned by the PortMidi implementation and must not be manipulated or freed. The pointer is guaranteed to be valid between calls to <ref refid="portmidi_8h_1a5e9d0c116061f0cc25fb789fc393b417" kindref="member">Pm_Initialize()</ref> and <ref refid="portmidi_8h_1a6c5dd5cd3657ac1cdab6bc5f3063193e" kindref="member">Pm_Terminate()</ref>. </para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/_dev/OpenU/Audacity/audacity/lib-src/portmidi/pm_common/portmidi.h" line="287" column="1" bodyfile="C:/_dev/OpenU/Audacity/audacity/lib-src/portmidi/pm_common/portmidi.c" bodystart="183" bodyend="189"/>
+      </memberdef>
+      <memberdef kind="function" id="group__grp__device_1gabd50a31baaa494ad8b405f9ad54c966e" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="porttime_8h_1ad478fb637833fb6b1a4bdb25a03f4662" kindref="member">PMEXPORT</ref> <ref refid="portmidi_8h_1a5fd46ccd2e320e17a840886731e8c6b9" kindref="member">PmError</ref></type>
+        <definition>PMEXPORT PmError Pm_OpenInput</definition>
+        <argsstring>(PortMidiStream **stream, PmDeviceID inputDevice, void *inputDriverInfo, int32_t bufferSize, PmTimeProcPtr time_proc, void *time_info)</argsstring>
+        <name>Pm_OpenInput</name>
+        <param>
+          <type><ref refid="portmidi_8h_1af4949219ee1bb0afc857cb242d123914" kindref="member">PortMidiStream</ref> **</type>
+          <declname>stream</declname>
+        </param>
+        <param>
+          <type><ref refid="portmidi_8h_1a696cc4d4360bb8513f13df4bb134098a" kindref="member">PmDeviceID</ref></type>
+          <declname>inputDevice</declname>
+        </param>
+        <param>
+          <type><ref refid="sound_8c_1ae35f5844602719cf66324f4de2a658b3" kindref="member">void</ref> *</type>
+          <declname>inputDriverInfo</declname>
+        </param>
+        <param>
+          <type><ref refid="lib-src_2ffmpeg_2win32_2stdint_8h_1a37994e3b11c72957c6f454c6ec96d43d" kindref="member">int32_t</ref></type>
+          <declname>bufferSize</declname>
+        </param>
+        <param>
+          <type><ref refid="portmidi_8h_1a86cdcb85cfa72e067bc2fd1b96fca05d" kindref="member">PmTimeProcPtr</ref></type>
+          <declname>time_proc</declname>
+        </param>
+        <param>
+          <type><ref refid="sound_8c_1ae35f5844602719cf66324f4de2a658b3" kindref="member">void</ref> *</type>
+          <declname>time_info</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para><ref refid="group__grp__device_1gabd50a31baaa494ad8b405f9ad54c966e" kindref="member">Pm_OpenInput()</ref> and <ref refid="group__grp__device_1ga134924cfa8badeecff3c5e1f22aee178" kindref="member">Pm_OpenOutput()</ref> open devices.</para><para>stream is the address of a PortMidiStream pointer which will receive a pointer to the newly opened stream.</para><para>inputDevice is the id of the device used for input (see PmDeviceID above).</para><para>inputDriverInfo is a pointer to an optional driver specific data structure containing additional information for device setup or handle processing. inputDriverInfo is never required for correct operation. If not used inputDriverInfo should be NULL.</para><para>outputDevice is the id of the device used for output (see PmDeviceID above.)</para><para>outputDriverInfo is a pointer to an optional driver specific data structure containing additional information for device setup or handle processing. outputDriverInfo is never required for correct operation. If not used outputDriverInfo should be NULL.</para><para>For input, the buffersize specifies the number of input events to be buffered waiting to be read using <ref refid="group__grp__io_1ga3d59225bc890ede974f245ada3de6456" kindref="member">Pm_Read()</ref>. For output, buffersize specifies the number of output events to be buffered waiting for output. (In some cases <ndash/> see below <ndash/> PortMidi does not buffer output at all and merely passes data to a lower-level API, in which case buffersize is ignored.)</para><para>latency is the delay in milliseconds applied to timestamps to determine when the output should actually occur. (If latency is &lt; 0, 0 is assumed.) If latency is zero, timestamps are ignored and all output is delivered immediately. If latency is greater than zero, output is delayed until the message timestamp plus the latency. (NOTE: the time is measured relative to the time source indicated by time_proc. Timestamps are absolute, not relative delays or offsets.) In some cases, PortMidi can obtain better timing than your application by passing timestamps along to the device driver or hardware. Latency may also help you to synchronize midi data to audio data by matching midi latency to the audio buffer latency.</para><para>time_proc is a pointer to a procedure that returns time in milliseconds. It may be NULL, in which case a default millisecond timebase (PortTime) is used. If the application wants to use PortTime, it should start the timer (call Pt_Start) before calling Pm_OpenInput or Pm_OpenOutput. If the application tries to start the timer <emphasis>after</emphasis> Pm_OpenInput or Pm_OpenOutput, it may get a ptAlreadyStarted error from Pt_Start, and the application&apos;s preferred time resolution and callback function will be ignored. time_proc result values are appended to incoming MIDI data, and time_proc times are used to schedule outgoing MIDI data (when latency is non-zero).</para><para>time_info is a pointer passed to time_proc.</para><para>Example: If I provide a timestamp of 5000, latency is 1, and time_proc returns 4990, then the desired output time will be when time_proc returns timestamp+latency = 5001. This will be 5001-4990 = 11ms from now.</para><para>return value: Upon success Pm_Open() returns PmNoError and places a pointer to a valid PortMidiStream in the stream argument. If a call to Pm_Open() fails a nonzero error code is returned (see PMError above) and the value of port is invalid.</para><para>Any stream that is successfully opened should eventually be closed by calling <ref refid="group__grp__events__filters_1ga6b26be2fbcf092c9625ade5303edd0ac" kindref="member">Pm_Close()</ref>. </para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/_dev/OpenU/Audacity/audacity/lib-src/portmidi/pm_common/portmidi.h" line="353" column="1" bodyfile="C:/_dev/OpenU/Audacity/audacity/lib-src/portmidi/pm_common/portmidi.c" bodystart="669" bodyend="749"/>
+      </memberdef>
+      <memberdef kind="function" id="group__grp__device_1ga134924cfa8badeecff3c5e1f22aee178" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="porttime_8h_1ad478fb637833fb6b1a4bdb25a03f4662" kindref="member">PMEXPORT</ref> <ref refid="portmidi_8h_1a5fd46ccd2e320e17a840886731e8c6b9" kindref="member">PmError</ref></type>
+        <definition>PMEXPORT PmError Pm_OpenOutput</definition>
+        <argsstring>(PortMidiStream **stream, PmDeviceID outputDevice, void *outputDriverInfo, int32_t bufferSize, PmTimeProcPtr time_proc, void *time_info, int32_t latency)</argsstring>
+        <name>Pm_OpenOutput</name>
+        <param>
+          <type><ref refid="portmidi_8h_1af4949219ee1bb0afc857cb242d123914" kindref="member">PortMidiStream</ref> **</type>
+          <declname>stream</declname>
+        </param>
+        <param>
+          <type><ref refid="portmidi_8h_1a696cc4d4360bb8513f13df4bb134098a" kindref="member">PmDeviceID</ref></type>
+          <declname>outputDevice</declname>
+        </param>
+        <param>
+          <type><ref refid="sound_8c_1ae35f5844602719cf66324f4de2a658b3" kindref="member">void</ref> *</type>
+          <declname>outputDriverInfo</declname>
+        </param>
+        <param>
+          <type><ref refid="lib-src_2ffmpeg_2win32_2stdint_8h_1a37994e3b11c72957c6f454c6ec96d43d" kindref="member">int32_t</ref></type>
+          <declname>bufferSize</declname>
+        </param>
+        <param>
+          <type><ref refid="portmidi_8h_1a86cdcb85cfa72e067bc2fd1b96fca05d" kindref="member">PmTimeProcPtr</ref></type>
+          <declname>time_proc</declname>
+        </param>
+        <param>
+          <type><ref refid="sound_8c_1ae35f5844602719cf66324f4de2a658b3" kindref="member">void</ref> *</type>
+          <declname>time_info</declname>
+        </param>
+        <param>
+          <type><ref refid="lib-src_2ffmpeg_2win32_2stdint_8h_1a37994e3b11c72957c6f454c6ec96d43d" kindref="member">int32_t</ref></type>
+          <declname>latency</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/_dev/OpenU/Audacity/audacity/lib-src/portmidi/pm_common/portmidi.h" line="360" column="1" bodyfile="C:/_dev/OpenU/Audacity/audacity/lib-src/portmidi/pm_common/portmidi.c" bodystart="752" bodyend="828"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,338 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/lib-src/portaudio-v19/src/os/unix/pa_unix_util.h" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/lib-src/portaudio-v19/src/os/unix/pa_unix_util.h \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include 'pa_cpuload\&.h'\fP
+.br
+\fC#include <assert\&.h>\fP
+.br
+\fC#include <pthread\&.h>\fP
+.br
+\fC#include <signal\&.h>\fP
+.br
+
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "struct \fBPaUtilThreading\fP"
+.br
+.ti -1c
+.RI "struct \fBPaUnixMutex\fP"
+.br
+.ti -1c
+.RI "struct \fBPaUnixThread\fP"
+.br
+.in -1c
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBPA_MIN\fP(x,  y)   ( (x) < (y) ? (x) : (y) )"
+.br
+.ti -1c
+.RI "#define \fBPA_MAX\fP(x,  y)   ( (x) > (y) ? (x) : (y) )"
+.br
+.ti -1c
+.RI "#define \fBUNLIKELY\fP(expr)   (expr)"
+.br
+.ti -1c
+.RI "#define \fBSTRINGIZE_HELPER\fP(expr)   #expr"
+.br
+.ti -1c
+.RI "#define \fBSTRINGIZE\fP(expr)   \fBSTRINGIZE_HELPER\fP(expr)"
+.br
+.ti -1c
+.RI "#define \fBPA_UNLESS\fP(expr,  code)"
+.br
+.ti -1c
+.RI "#define \fBPA_ENSURE\fP(expr)"
+.br
+.ti -1c
+.RI "#define \fBPA_ASSERT_CALL\fP(expr,  success)"
+.br
+.ti -1c
+.RI "#define \fBPA_ENSURE_SYSTEM\fP(expr,  success)"
+.br
+.ti -1c
+.RI "#define \fBPaUnixThreading_EXIT\fP(result)"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBPaError\fP \fBPaUtil_InitializeThreading\fP (\fBPaUtilThreading\fP *threading)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBPaUtil_TerminateThreading\fP (\fBPaUtilThreading\fP *threading)"
+.br
+.ti -1c
+.RI "\fBPaError\fP \fBPaUtil_StartThreading\fP (\fBPaUtilThreading\fP *threading, \fBvoid\fP *(*threadRoutine)(\fBvoid\fP *), \fBvoid\fP *\fBdata\fP)"
+.br
+.ti -1c
+.RI "\fBPaError\fP \fBPaUtil_CancelThreading\fP (\fBPaUtilThreading\fP *threading, \fBint\fP wait, \fBPaError\fP *exitResult)"
+.br
+.ti -1c
+.RI "\fBPaError\fP \fBPaUnixMutex_Initialize\fP (\fBPaUnixMutex\fP *self)"
+.br
+.ti -1c
+.RI "\fBPaError\fP \fBPaUnixMutex_Terminate\fP (\fBPaUnixMutex\fP *self)"
+.br
+.ti -1c
+.RI "\fBPaError\fP \fBPaUnixMutex_Lock\fP (\fBPaUnixMutex\fP *self)"
+.br
+.ti -1c
+.RI "\fBPaError\fP \fBPaUnixMutex_Unlock\fP (\fBPaUnixMutex\fP *self)"
+.br
+.ti -1c
+.RI "\fBPaError\fP \fBPaUnixThreading_Initialize\fP ()"
+.br
+.ti -1c
+.RI "\fBPaError\fP \fBPaUnixThread_New\fP (\fBPaUnixThread\fP *self, \fBvoid\fP *(*threadFunc)(\fBvoid\fP *), \fBvoid\fP *threadArg, \fBPaTime\fP waitForChild, \fBint\fP rtSched)"
+.br
+.ti -1c
+.RI "\fBPaError\fP \fBPaUnixThread_Terminate\fP (\fBPaUnixThread\fP *self, \fBint\fP wait, \fBPaError\fP *exitResult)"
+.br
+.ti -1c
+.RI "\fBPaError\fP \fBPaUnixThread_PrepareNotify\fP (\fBPaUnixThread\fP *self)"
+.br
+.ti -1c
+.RI "\fBPaError\fP \fBPaUnixThread_NotifyParent\fP (\fBPaUnixThread\fP *self)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBPaUnixThread_StopRequested\fP (\fBPaUnixThread\fP *self)"
+.br
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "pthread_t \fBpaUnixMainThread\fP"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define PA_ASSERT_CALL(expr, success)"
+\fBValue:\fP
+.PP
+.nf
+paUtilErr_ = (expr); \
+    assert( success == paUtilErr_ );
+.fi
+.PP
+Definition at line 93 of file pa_unix_util\&.h\&.
+.SS "#define PA_ENSURE(expr)"
+\fBValue:\fP
+.PP
+.nf
+do { \
+        if( UNLIKELY( (paUtilErr_ = (expr)) < paNoError ) ) \
+        { \
+            PaUtil_DebugPrint(( "Expression '" #expr "' failed in '" __FILE__ "', line: " STRINGIZE( __LINE__ ) "\n" )); \
+            result = paUtilErr_; \
+            goto error; \
+        } \
+    } while (0);
+.fi
+.PP
+Definition at line 83 of file pa_unix_util\&.h\&.
+.SS "#define PA_ENSURE_SYSTEM(expr, success)"
+\fBValue:\fP
+.PP
+.nf
+do { \
+        if( UNLIKELY( (paUtilErr_ = (expr)) != success ) ) \
+        { \
+            /* PaUtil_SetLastHostErrorInfo should only be used in the main thread */ \
+            if( pthread_equal(pthread_self(), paUnixMainThread) ) \
+            { \
+                PaUtil_SetLastHostErrorInfo( paALSA, paUtilErr_, strerror( paUtilErr_ ) ); \
+            } \
+            PaUtil_DebugPrint( "Expression '" #expr "' failed in '" __FILE__ "', line: " STRINGIZE( __LINE__ ) "\n" ); \
+            result = paUnanticipatedHostError; \
+            goto error; \
+        } \
+    } while( 0 );
+.fi
+.PP
+Definition at line 97 of file pa_unix_util\&.h\&.
+.SS "#define PA_MAX(x, y)   ( (x) > (y) ? (x) : (y) )"
+
+.PP
+Definition at line 58 of file pa_unix_util\&.h\&.
+.SS "#define PA_MIN(x, y)   ( (x) < (y) ? (x) : (y) )"
+
+.PP
+Definition at line 57 of file pa_unix_util\&.h\&.
+.SS "#define PA_UNLESS(expr, code)"
+\fBValue:\fP
+.PP
+.nf
+do { \
+        if( UNLIKELY( (expr) == 0 ) ) \
+        { \
+            PaUtil_DebugPrint(( "Expression '" #expr "' failed in '" __FILE__ "', line: " STRINGIZE( __LINE__ ) "\n" )); \
+            result = (code); \
+            goto error; \
+        } \
+    } while (0);
+.fi
+.PP
+Definition at line 70 of file pa_unix_util\&.h\&.
+.SS "#define PaUnixThreading_EXIT(result)"
+\fBValue:\fP
+.PP
+.nf
+do { \
+        PaError* pres = NULL; \
+        if( paNoError != (result) ) \
+        { \
+            pres = malloc( sizeof (PaError) ); \
+            *pres = (result); \
+        } \
+        pthread_exit( pres ); \
+    } while (0);
+.fi
+Perish, passing on eventual error code\&.
+.PP
+A thin wrapper around pthread_exit, will automatically pass on any error code to the joining thread\&. If the result indicates an error, i\&.e\&. it is not equal to paNoError, this function will automatically allocate a pointer so the error is passed on with pthread_exit\&. If the result indicates that all is well however, only a NULL pointer will be handed to pthread_exit\&. Thus, the joining thread should check whether a non-NULL result pointer is obtained from pthread_join and make sure to free it\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIresult\fP The error code to pass on to the joining thread\&. 
+.RE
+.PP
+
+.PP
+Definition at line 171 of file pa_unix_util\&.h\&.
+.SS "#define STRINGIZE(expr)   \fBSTRINGIZE_HELPER\fP(expr)"
+
+.PP
+Definition at line 68 of file pa_unix_util\&.h\&.
+.SS "#define STRINGIZE_HELPER(expr)   #expr"
+
+.PP
+Definition at line 67 of file pa_unix_util\&.h\&.
+.SS "#define UNLIKELY(expr)   (expr)"
+
+.PP
+Definition at line 64 of file pa_unix_util\&.h\&.
+.SH "Function Documentation"
+.PP 
+.SS "\fBPaError\fP PaUnixMutex_Initialize (\fBPaUnixMutex\fP * self)"
+
+.PP
+Definition at line 500 of file pa_unix_util\&.c\&.
+.SS "\fBPaError\fP PaUnixMutex_Lock (\fBPaUnixMutex\fP * self)"
+Lock mutex\&.
+.PP
+We're disabling thread cancellation while the thread is holding a lock, so mutexes are properly unlocked at termination time\&. 
+.PP
+Definition at line 519 of file pa_unix_util\&.c\&.
+.SS "\fBPaError\fP PaUnixMutex_Terminate (\fBPaUnixMutex\fP * self)"
+
+.PP
+Definition at line 507 of file pa_unix_util\&.c\&.
+.SS "\fBPaError\fP PaUnixMutex_Unlock (\fBPaUnixMutex\fP * self)"
+Unlock mutex\&.
+.PP
+Thread cancellation is enabled again after the mutex is properly unlocked\&. 
+.PP
+Definition at line 537 of file pa_unix_util\&.c\&.
+.SS "\fBPaError\fP PaUnixThread_New (\fBPaUnixThread\fP * self, \fBvoid\fP *(*)(\fBvoid\fP *) threadFunc, \fBvoid\fP * threadArg, \fBPaTime\fP waitForChild, \fBint\fP rtSched)"
+Spawn a thread\&.
+.PP
+Intended for spawning the callback thread from the main thread\&. This function can even block (for a certain time or indefinitely) untill notified by the callback thread (using PaUnixThread_NotifyParent), which can be useful in order to make sure that callback has commenced before returning from Pa_StartStream\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIthreadFunc\fP The function to be executed in the child thread\&. 
+.br
+\fIwaitForChild\fP If not 0, wait for child thread to call PaUnixThread_NotifyParent\&. Less than 0 means wait for ever, greater than 0 wait for the specified time\&. 
+.br
+\fIrtSched\fP Enable realtime scheduling? 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+: If timed out waiting on child, paTimedOut\&. 
+.RE
+.PP
+
+.PP
+Definition at line 268 of file pa_unix_util\&.c\&.
+.SS "\fBPaError\fP PaUnixThread_NotifyParent (\fBPaUnixThread\fP * self)"
+Notify waiting parent thread\&.
+.PP
+\fBReturns:\fP
+.RS 4
+: If parent timed out waiting, paTimedOut\&. If parent was never waiting, paInternalError\&. 
+.RE
+.PP
+
+.PP
+Definition at line 476 of file pa_unix_util\&.c\&.
+.SS "\fBPaError\fP PaUnixThread_PrepareNotify (\fBPaUnixThread\fP * self)"
+Prepare to notify waiting parent thread\&.
+.PP
+An internal lock must be held before the parent is notified in PaUnixThread_NotifyParent, call this to acquire it beforehand\&. 
+.PP
+\fBReturns:\fP
+.RS 4
+: If parent is not waiting, paInternalError\&. 
+.RE
+.PP
+
+.PP
+Definition at line 464 of file pa_unix_util\&.c\&.
+.SS "\fBint\fP PaUnixThread_StopRequested (\fBPaUnixThread\fP * self)"
+Has the parent thread requested this thread to stop? 
+.PP
+Definition at line 495 of file pa_unix_util\&.c\&.
+.SS "\fBPaError\fP PaUnixThread_Terminate (\fBPaUnixThread\fP * self, \fBint\fP wait, \fBPaError\fP * exitResult)"
+Terminate thread\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIwait\fP If true, request that background thread stop and wait untill it does, else cancel it\&. 
+.br
+\fIexitResult\fP If non-null this will upon return contain the exit status of the thread\&. 
+.RE
+.PP
+
+.PP
+Definition at line 402 of file pa_unix_util\&.c\&.
+.SS "\fBPaError\fP PaUnixThreading_Initialize ()"
+Initialize global threading state\&. 
+.PP
+Definition at line 239 of file pa_unix_util\&.c\&.
+.SS "\fBPaError\fP PaUtil_CancelThreading (\fBPaUtilThreading\fP * threading, \fBint\fP wait, \fBPaError\fP * exitResult)"
+
+.PP
+Definition at line 188 of file pa_unix_util\&.c\&.
+.SS "\fBPaError\fP PaUtil_InitializeThreading (\fBPaUtilThreading\fP * threading)"
+
+.PP
+Definition at line 172 of file pa_unix_util\&.c\&.
+.SS "\fBPaError\fP PaUtil_StartThreading (\fBPaUtilThreading\fP * threading, \fBvoid\fP *(*)(\fBvoid\fP *) threadRoutine, \fBvoid\fP * data)"
+
+.PP
+Definition at line 182 of file pa_unix_util\&.c\&.
+.SS "\fBvoid\fP PaUtil_TerminateThreading (\fBPaUtilThreading\fP * threading)"
+
+.PP
+Definition at line 178 of file pa_unix_util\&.c\&.
+.SH "Variable Documentation"
+.PP 
+.SS "pthread_t paUnixMainThread"
+
+.PP
+Definition at line 236 of file pa_unix_util\&.c\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

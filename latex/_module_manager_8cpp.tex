@@ -1,0 +1,149 @@
+\hypertarget{_module_manager_8cpp}{}\section{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/src/\+Module\+Manager.cpp File Reference}
+\label{_module_manager_8cpp}\index{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/src/\+Module\+Manager.\+cpp@{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/src/\+Module\+Manager.\+cpp}}
+
+
+Based on Load\+Ladspa, this code loads pluggable Audacity extension modules. It also has the code to (a) invoke a script server and (b) invoke a function returning a replacement window, i.\+e. an alternative to the usual interface, for Audacity.  
+
+
+{\ttfamily \#include $<$wx/dynarray.\+h$>$}\\*
+{\ttfamily \#include $<$wx/dynlib.\+h$>$}\\*
+{\ttfamily \#include $<$wx/list.\+h$>$}\\*
+{\ttfamily \#include $<$wx/log.\+h$>$}\\*
+{\ttfamily \#include $<$wx/msgdlg.\+h$>$}\\*
+{\ttfamily \#include $<$wx/string.\+h$>$}\\*
+{\ttfamily \#include $<$wx/filename.\+h$>$}\\*
+{\ttfamily \#include \char`\"{}Audacity.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Audacity\+App.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}File\+Names.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Internat.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Plugin\+Manager.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}commands/\+Script\+Command\+Relay.\+h\char`\"{}}\\*
+{\ttfamily \#include $<$Non\+Gui\+Thread.\+h$>$}\\*
+{\ttfamily \#include \char`\"{}audacity/\+Plugin\+Interface.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Prefs.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}./prefs/\+Module\+Prefs.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Module\+Manager.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}widgets/\+Multi\+Dialog.\+h\char`\"{}}\\*
+{\ttfamily \#include $<$wx/arrimpl.\+cpp$>$}\\*
+{\ttfamily \#include \char`\"{}Experimental.\+h\char`\"{}}\\*
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{_module_manager_8cpp_a3cbb170a97bf73db60c140a201ce602a}{init\+Fn\+Name}~\char`\"{}Extension\+Module\+Init\char`\"{}
+\item 
+\#define \hyperlink{_module_manager_8cpp_a9eafc46e275373441dd7b1efedefd35f}{version\+Fn\+Name}~\char`\"{}Get\+Version\+String\char`\"{}
+\item 
+\#define \hyperlink{_module_manager_8cpp_aa368890b4ec12db4b6e69b11b0a244d7}{script\+Fn\+Name}~\char`\"{}Reg\+Script\+Server\+Func\char`\"{}
+\item 
+\#define \hyperlink{_module_manager_8cpp_a99541d973a1f886d437b12e4d62c7889}{main\+Panel\+Fn\+Name}~\char`\"{}Main\+Panel\+Func\char`\"{}
+\end{DoxyCompactItemize}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef wx\+Window $\ast$ \hyperlink{_module_manager_8cpp_a9014c08a57dd154c84a454bcfe331068}{pwx\+Window}
+\item 
+typedef \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int}($\ast$ \hyperlink{_module_manager_8cpp_a8be4cbcb5d9cc33c453b8a44fbff0c39}{t\+Module\+Init}) (\hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int})
+\item 
+typedef wx\+Char $\ast$($\ast$ \hyperlink{_module_manager_8cpp_af2660e1db80720fceb206cb7ee43af43}{t\+Version\+Fn}) ()
+\item 
+typedef \hyperlink{_module_manager_8cpp_a9014c08a57dd154c84a454bcfe331068}{pwx\+Window}($\ast$ \hyperlink{_module_manager_8cpp_aaaf7cf5c813b0f5e689ae5aada537006}{t\+Panel\+Fn}) (\hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int})
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+wx\+Window $\ast$ \hyperlink{_module_manager_8cpp_a3c00e7ff11f33ab6c65d46183a51aae2}{Make\+Hijack\+Panel} ()
+\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{_module_manager_8cpp_a8cc679e8f74a18c47f06eea162a36596}{Register\+Builtin\+Module} (\hyperlink{_module_interface_8h_a203a5e6d59345b566f77fc306253ce62}{Module\+Main} module\+Main)
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Based on Load\+Ladspa, this code loads pluggable Audacity extension modules. It also has the code to (a) invoke a script server and (b) invoke a function returning a replacement window, i.\+e. an alternative to the usual interface, for Audacity. 
+
+
+
+\subsection{Macro Definition Documentation}
+\index{Module\+Manager.\+cpp@{Module\+Manager.\+cpp}!init\+Fn\+Name@{init\+Fn\+Name}}
+\index{init\+Fn\+Name@{init\+Fn\+Name}!Module\+Manager.\+cpp@{Module\+Manager.\+cpp}}
+\subsubsection[{\texorpdfstring{init\+Fn\+Name}{initFnName}}]{\setlength{\rightskip}{0pt plus 5cm}\#define init\+Fn\+Name~\char`\"{}Extension\+Module\+Init\char`\"{}}\hypertarget{_module_manager_8cpp_a3cbb170a97bf73db60c140a201ce602a}{}\label{_module_manager_8cpp_a3cbb170a97bf73db60c140a201ce602a}
+
+
+Definition at line 52 of file Module\+Manager.\+cpp.
+
+\index{Module\+Manager.\+cpp@{Module\+Manager.\+cpp}!main\+Panel\+Fn\+Name@{main\+Panel\+Fn\+Name}}
+\index{main\+Panel\+Fn\+Name@{main\+Panel\+Fn\+Name}!Module\+Manager.\+cpp@{Module\+Manager.\+cpp}}
+\subsubsection[{\texorpdfstring{main\+Panel\+Fn\+Name}{mainPanelFnName}}]{\setlength{\rightskip}{0pt plus 5cm}\#define main\+Panel\+Fn\+Name~\char`\"{}Main\+Panel\+Func\char`\"{}}\hypertarget{_module_manager_8cpp_a99541d973a1f886d437b12e4d62c7889}{}\label{_module_manager_8cpp_a99541d973a1f886d437b12e4d62c7889}
+
+
+Definition at line 55 of file Module\+Manager.\+cpp.
+
+\index{Module\+Manager.\+cpp@{Module\+Manager.\+cpp}!script\+Fn\+Name@{script\+Fn\+Name}}
+\index{script\+Fn\+Name@{script\+Fn\+Name}!Module\+Manager.\+cpp@{Module\+Manager.\+cpp}}
+\subsubsection[{\texorpdfstring{script\+Fn\+Name}{scriptFnName}}]{\setlength{\rightskip}{0pt plus 5cm}\#define script\+Fn\+Name~\char`\"{}Reg\+Script\+Server\+Func\char`\"{}}\hypertarget{_module_manager_8cpp_aa368890b4ec12db4b6e69b11b0a244d7}{}\label{_module_manager_8cpp_aa368890b4ec12db4b6e69b11b0a244d7}
+
+
+Definition at line 54 of file Module\+Manager.\+cpp.
+
+\index{Module\+Manager.\+cpp@{Module\+Manager.\+cpp}!version\+Fn\+Name@{version\+Fn\+Name}}
+\index{version\+Fn\+Name@{version\+Fn\+Name}!Module\+Manager.\+cpp@{Module\+Manager.\+cpp}}
+\subsubsection[{\texorpdfstring{version\+Fn\+Name}{versionFnName}}]{\setlength{\rightskip}{0pt plus 5cm}\#define version\+Fn\+Name~\char`\"{}Get\+Version\+String\char`\"{}}\hypertarget{_module_manager_8cpp_a9eafc46e275373441dd7b1efedefd35f}{}\label{_module_manager_8cpp_a9eafc46e275373441dd7b1efedefd35f}
+
+
+Definition at line 53 of file Module\+Manager.\+cpp.
+
+
+
+\subsection{Typedef Documentation}
+\index{Module\+Manager.\+cpp@{Module\+Manager.\+cpp}!pwx\+Window@{pwx\+Window}}
+\index{pwx\+Window@{pwx\+Window}!Module\+Manager.\+cpp@{Module\+Manager.\+cpp}}
+\subsubsection[{\texorpdfstring{pwx\+Window}{pwxWindow}}]{\setlength{\rightskip}{0pt plus 5cm}typedef wx\+Window$\ast$ {\bf pwx\+Window}}\hypertarget{_module_manager_8cpp_a9014c08a57dd154c84a454bcfe331068}{}\label{_module_manager_8cpp_a9014c08a57dd154c84a454bcfe331068}
+
+
+Definition at line 57 of file Module\+Manager.\+cpp.
+
+\index{Module\+Manager.\+cpp@{Module\+Manager.\+cpp}!t\+Module\+Init@{t\+Module\+Init}}
+\index{t\+Module\+Init@{t\+Module\+Init}!Module\+Manager.\+cpp@{Module\+Manager.\+cpp}}
+\subsubsection[{\texorpdfstring{t\+Module\+Init}{tModuleInit}}]{\setlength{\rightskip}{0pt plus 5cm}typedef {\bf int}($\ast$ t\+Module\+Init) ({\bf int})}\hypertarget{_module_manager_8cpp_a8be4cbcb5d9cc33c453b8a44fbff0c39}{}\label{_module_manager_8cpp_a8be4cbcb5d9cc33c453b8a44fbff0c39}
+
+
+Definition at line 58 of file Module\+Manager.\+cpp.
+
+\index{Module\+Manager.\+cpp@{Module\+Manager.\+cpp}!t\+Panel\+Fn@{t\+Panel\+Fn}}
+\index{t\+Panel\+Fn@{t\+Panel\+Fn}!Module\+Manager.\+cpp@{Module\+Manager.\+cpp}}
+\subsubsection[{\texorpdfstring{t\+Panel\+Fn}{tPanelFn}}]{\setlength{\rightskip}{0pt plus 5cm}typedef {\bf pwx\+Window}($\ast$ t\+Panel\+Fn) ({\bf int})}\hypertarget{_module_manager_8cpp_aaaf7cf5c813b0f5e689ae5aada537006}{}\label{_module_manager_8cpp_aaaf7cf5c813b0f5e689ae5aada537006}
+
+
+Definition at line 61 of file Module\+Manager.\+cpp.
+
+\index{Module\+Manager.\+cpp@{Module\+Manager.\+cpp}!t\+Version\+Fn@{t\+Version\+Fn}}
+\index{t\+Version\+Fn@{t\+Version\+Fn}!Module\+Manager.\+cpp@{Module\+Manager.\+cpp}}
+\subsubsection[{\texorpdfstring{t\+Version\+Fn}{tVersionFn}}]{\setlength{\rightskip}{0pt plus 5cm}typedef wx\+Char$\ast$($\ast$ t\+Version\+Fn) ()}\hypertarget{_module_manager_8cpp_af2660e1db80720fceb206cb7ee43af43}{}\label{_module_manager_8cpp_af2660e1db80720fceb206cb7ee43af43}
+
+
+Definition at line 60 of file Module\+Manager.\+cpp.
+
+
+
+\subsection{Function Documentation}
+\index{Module\+Manager.\+cpp@{Module\+Manager.\+cpp}!Make\+Hijack\+Panel@{Make\+Hijack\+Panel}}
+\index{Make\+Hijack\+Panel@{Make\+Hijack\+Panel}!Module\+Manager.\+cpp@{Module\+Manager.\+cpp}}
+\subsubsection[{\texorpdfstring{Make\+Hijack\+Panel()}{MakeHijackPanel()}}]{\setlength{\rightskip}{0pt plus 5cm}wx\+Window$\ast$ Make\+Hijack\+Panel (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{_module_manager_8cpp_a3c00e7ff11f33ab6c65d46183a51aae2}{}\label{_module_manager_8cpp_a3c00e7ff11f33ab6c65d46183a51aae2}
+IF p\+Panel\+Hijack has been found in a module D\+LL T\+H\+EN when this function is called we\textquotesingle{}ll go and create that window instead of the normal one. 
+
+Definition at line 80 of file Module\+Manager.\+cpp.
+
+\index{Module\+Manager.\+cpp@{Module\+Manager.\+cpp}!Register\+Builtin\+Module@{Register\+Builtin\+Module}}
+\index{Register\+Builtin\+Module@{Register\+Builtin\+Module}!Module\+Manager.\+cpp@{Module\+Manager.\+cpp}}
+\subsubsection[{\texorpdfstring{Register\+Builtin\+Module(\+Module\+Main module\+Main)}{RegisterBuiltinModule(ModuleMain moduleMain)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} Register\+Builtin\+Module (
+\begin{DoxyParamCaption}
+\item[{{\bf Module\+Main}}]{module\+Main}
+\end{DoxyParamCaption}
+)}\hypertarget{_module_manager_8cpp_a8cc679e8f74a18c47f06eea162a36596}{}\label{_module_manager_8cpp_a8cc679e8f74a18c47f06eea162a36596}
+
+
+Definition at line 187 of file Module\+Manager.\+cpp.
+

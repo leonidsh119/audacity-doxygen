@@ -1,0 +1,243 @@
+.TH "lavf_encoding" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+lavf_encoding \- Muxing
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "struct \fBAVOutputFormat\fP"
+.br
+.in -1c
+.SS "Typedefs"
+
+.in +1c
+.ti -1c
+.RI "typedef struct \fBAVOutputFormat\fP \fBAVOutputFormat\fP"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBint\fP \fBavformat_write_header\fP (\fBAVFormatContext\fP *\fBs\fP, \fBAVDictionary\fP **options)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_write_frame\fP (\fBAVFormatContext\fP *\fBs\fP, \fBAVPacket\fP *pkt)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_interleaved_write_frame\fP (\fBAVFormatContext\fP *\fBs\fP, \fBAVPacket\fP *pkt)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_write_uncoded_frame\fP (\fBAVFormatContext\fP *\fBs\fP, \fBint\fP stream_index, \fBAVFrame\fP *frame)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_interleaved_write_uncoded_frame\fP (\fBAVFormatContext\fP *\fBs\fP, \fBint\fP stream_index, \fBAVFrame\fP *frame)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_write_uncoded_frame_query\fP (\fBAVFormatContext\fP *\fBs\fP, \fBint\fP stream_index)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_write_trailer\fP (\fBAVFormatContext\fP *\fBs\fP)"
+.br
+.ti -1c
+.RI "\fBAVOutputFormat\fP * \fBav_guess_format\fP (\fBconst\fP char *short_name, \fBconst\fP char *\fBfilename\fP, \fBconst\fP char *mime_type)"
+.br
+.ti -1c
+.RI "enum \fBAVCodecID\fP \fBav_guess_codec\fP (\fBAVOutputFormat\fP *fmt, \fBconst\fP char *short_name, \fBconst\fP char *\fBfilename\fP, \fBconst\fP char *mime_type, enum \fBAVMediaType\fP type)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_get_output_timestamp\fP (struct \fBAVFormatContext\fP *\fBs\fP, \fBint\fP stream, \fBint64_t\fP *dts, \fBint64_t\fP *wall)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Muxers take encoded data in the form of \fBAVPackets\fP and write it into files or other output bytestreams in the specified container format\&.
+.PP
+The main API functions for muxing are \fBavformat_write_header()\fP for writing the file header, \fBav_write_frame()\fP / \fBav_interleaved_write_frame()\fP for writing the packets and \fBav_write_trailer()\fP for finalizing the file\&.
+.PP
+At the beginning of the muxing process, the caller must first call \fBavformat_alloc_context()\fP to create a muxing context\&. The caller then sets up the muxer by filling the various fields in this context:
+.PP
+.IP "\(bu" 2
+The \fBoformat\fP field must be set to select the muxer that will be used\&.
+.IP "\(bu" 2
+Unless the format is of the AVFMT_NOFILE type, the \fBpb\fP field must be set to an opened IO context, either returned from \fBavio_open2()\fP or a custom one\&.
+.IP "\(bu" 2
+Unless the format is of the AVFMT_NOSTREAMS type, at least one stream must be created with the \fBavformat_new_stream()\fP function\&. The caller should fill the \fBstream codec context\fP information, such as the codec \fBtype\fP, \fBid\fP and other parameters (e\&.g\&. width / height, the pixel or sample format, etc\&.) as known\&. The \fBcodec timebase\fP should be set to the timebase that the caller desires to use for this stream (note that the timebase actually used by the muxer can be different, as will be described later)\&.
+.IP "\(bu" 2
+The caller may fill in additional information, such as \fBglobal\fP or \fBper-stream\fP metadata, \fBchapters\fP, \fBprograms\fP, etc\&. as described in the \fBAVFormatContext\fP documentation\&. Whether such information will actually be stored in the output depends on what the container format and the muxer support\&.
+.PP
+.PP
+When the muxing context is fully set up, the caller must call \fBavformat_write_header()\fP to initialize the muxer internals and write the file header\&. Whether anything actually is written to the IO context at this step depends on the muxer, but this function must always be called\&. Any muxer private options must be passed in the options parameter to this function\&.
+.PP
+The data is then sent to the muxer by repeatedly calling \fBav_write_frame()\fP or \fBav_interleaved_write_frame()\fP (consult those functions' documentation for discussion on the difference between them; only one of them may be used with a single muxing context, they should not be mixed)\&. Do note that the timing information on the packets sent to the muxer must be in the corresponding \fBAVStream\fP's timebase\&. That timebase is set by the muxer (in the \fBavformat_write_header()\fP step) and may be different from the timebase the caller set on the codec context\&.
+.PP
+Once all the data has been written, the caller must call \fBav_write_trailer()\fP to flush any buffered packets and finalize the output file, then close the IO context (if any) and finally free the muxing context with \fBavformat_free_context()\fP\&. 
+.SH "Typedef Documentation"
+.PP 
+.SS "typedef struct \fBAVOutputFormat\fP  \fBAVOutputFormat\fP"
+
+.SH "Function Documentation"
+.PP 
+.SS "\fBint\fP av_get_output_timestamp (struct \fBAVFormatContext\fP * s, \fBint\fP stream, \fBint64_t\fP * dts, \fBint64_t\fP * wall)"
+Get timing information for the data currently output\&. The exact meaning of 'currently output' depends on the format\&. It is mostly relevant for devices that have an internal buffer and/or work in real time\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIs\fP media file handle 
+.br
+\fIstream\fP stream in the media file 
+.br
+\fIdts\fP DTS of the last packet output for the stream, in stream time_base units 
+.br
+\fIwall\fP absolute time when that packet whas output, in microsecond 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+0 if OK, \fBAVERROR(ENOSYS)\fP if the format does not support it Note: some formats or devices may not allow to measure dts and wall atomically\&. 
+.RE
+.PP
+
+.SS "enum \fBAVCodecID\fP av_guess_codec (\fBAVOutputFormat\fP * fmt, \fBconst\fP char * short_name, \fBconst\fP char * filename, \fBconst\fP char * mime_type, enum \fBAVMediaType\fP type)"
+Guess the codec ID based upon muxer and filename\&. 
+.SS "\fBAVOutputFormat\fP* av_guess_format (\fBconst\fP char * short_name, \fBconst\fP char * filename, \fBconst\fP char * mime_type)"
+Return the output format in the list of registered output formats which best matches the provided parameters, or return NULL if there is no match\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIshort_name\fP if non-NULL checks if short_name matches with the names of the registered formats 
+.br
+\fIfilename\fP if non-NULL checks if filename terminates with the extensions of the registered formats 
+.br
+\fImime_type\fP if non-NULL checks if mime_type matches with the MIME type of the registered formats 
+.RE
+.PP
+
+.SS "\fBint\fP av_interleaved_write_frame (\fBAVFormatContext\fP * s, \fBAVPacket\fP * pkt)"
+Write a packet to an output media file ensuring correct interleaving\&.
+.PP
+This function will buffer the packets internally as needed to make sure the packets in the output file are properly interleaved in the order of increasing dts\&. Callers doing their own interleaving should call \fBav_write_frame()\fP instead of this function\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIs\fP media file handle 
+.br
+\fIpkt\fP The packet containing the data to be written\&. 
+.br
+ If the packet is reference-counted, this function will take ownership of this reference and unreference it later when it sees fit\&. The caller must not access the data through this reference after this function returns\&. If the packet is not reference-counted, libavformat will make a copy\&. 
+.br
+ This parameter can be NULL (at any time, not just at the end), to flush the interleaving queues\&. 
+.br
+ Packet's \fBstream_index\fP field must be set to the index of the corresponding stream in \fBs->streams\fP\&. It is very strongly recommended that timing information (\fBpts\fP, \fBdts\fP, \fBduration\fP) is set to correct values\&.
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+0 on success, a negative AVERROR on error\&. Libavformat will always take care of freeing the packet, even if this function fails\&.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBav_write_frame()\fP, \fBAVFormatContext\&.max_interleave_delta\fP 
+.RE
+.PP
+
+.SS "\fBint\fP av_interleaved_write_uncoded_frame (\fBAVFormatContext\fP * s, \fBint\fP stream_index, \fBAVFrame\fP * frame)"
+Write a uncoded frame to an output media file\&.
+.PP
+If the muxer supports it, this function allows to write an \fBAVFrame\fP structure directly, without encoding it into a packet\&. It is mostly useful for devices and similar special muxers that use raw video or PCM data and will not serialize it into a byte stream\&.
+.PP
+To test whether it is possible to use it with a given muxer and stream, use \fBav_write_uncoded_frame_query()\fP\&.
+.PP
+The caller gives up ownership of the frame and must not access it afterwards\&.
+.PP
+\fBReturns:\fP
+.RS 4
+>=0 for success, a negative code on error 
+.RE
+.PP
+
+.SS "\fBint\fP av_write_frame (\fBAVFormatContext\fP * s, \fBAVPacket\fP * pkt)"
+Write a packet to an output media file\&.
+.PP
+This function passes the packet directly to the muxer, without any buffering or reordering\&. The caller is responsible for correctly interleaving the packets if the format requires it\&. Callers that want libavformat to handle the interleaving should call \fBav_interleaved_write_frame()\fP instead of this function\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIs\fP media file handle 
+.br
+\fIpkt\fP The packet containing the data to be written\&. Note that unlike \fBav_interleaved_write_frame()\fP, this function does not take ownership of the packet passed to it (though some muxers may make an internal reference to the input packet)\&. 
+.br
+ This parameter can be NULL (at any time, not just at the end), in order to immediately flush data buffered within the muxer, for muxers that buffer up data internally before writing it to the output\&. 
+.br
+ Packet's \fBstream_index\fP field must be set to the index of the corresponding stream in \fBs->streams\fP\&. It is very strongly recommended that timing information (\fBpts\fP, \fBdts\fP, \fBduration\fP) is set to correct values\&. 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+< 0 on error, = 0 if OK, 1 if flushed and there is no more data to flush
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBav_interleaved_write_frame()\fP 
+.RE
+.PP
+
+.SS "\fBint\fP av_write_trailer (\fBAVFormatContext\fP * s)"
+Write the stream trailer to an output media file and free the file private data\&.
+.PP
+May only be called after a successful call to avformat_write_header\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIs\fP media file handle 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+0 if OK, AVERROR_xxx on error 
+.RE
+.PP
+
+.SS "\fBint\fP av_write_uncoded_frame (\fBAVFormatContext\fP * s, \fBint\fP stream_index, \fBAVFrame\fP * frame)"
+Write a uncoded frame to an output media file\&.
+.PP
+The frame must be correctly interleaved according to the container specification; if not, then \fBav_interleaved_write_frame()\fP must be used\&.
+.PP
+See \fBav_interleaved_write_frame()\fP for details\&. 
+.SS "\fBint\fP av_write_uncoded_frame_query (\fBAVFormatContext\fP * s, \fBint\fP stream_index)"
+\fBTest\fP whether a muxer supports uncoded frame\&.
+.PP
+\fBReturns:\fP
+.RS 4
+>=0 if an uncoded frame can be written to that muxer and stream, <0 if not 
+.RE
+.PP
+
+.SS "\fBint\fP avformat_write_header (\fBAVFormatContext\fP * s, \fBAVDictionary\fP ** options)"
+Allocate the stream private data and write the stream header to an output media file\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIs\fP Media file handle, must be allocated with \fBavformat_alloc_context()\fP\&. Its oformat field must be set to the desired output format; Its pb field must be set to an already opened \fBAVIOContext\fP\&. 
+.br
+\fIoptions\fP An AVDictionary filled with \fBAVFormatContext\fP and muxer-private options\&. On return this parameter will be destroyed and replaced with a dict containing options that were not found\&. May be NULL\&.
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+0 on success, negative AVERROR on failure\&.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBav_opt_find\fP, \fBav_dict_set\fP, \fBavio_open\fP, \fBav_oformat_next\fP\&. 
+.RE
+.PP
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

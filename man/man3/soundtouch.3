@@ -1,0 +1,144 @@
+.TH "soundtouch" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+soundtouch \- 
+.SH SYNOPSIS
+.br
+.PP
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "class \fBAAFilter\fP"
+.br
+.ti -1c
+.RI "class \fBBPMDetect\fP"
+.br
+.RI "\fIClass for calculating BPM rate for audio data\&. \fP"
+.ti -1c
+.RI "class \fBFIFOProcessor\fP"
+.br
+.ti -1c
+.RI "class \fBFIFOSampleBuffer\fP"
+.br
+.ti -1c
+.RI "class \fBFIFOSamplePipe\fP"
+.br
+.RI "\fIAbstract base class for FIFO (first-in-first-out) sample processing classes\&. \fP"
+.ti -1c
+.RI "class \fBFIRFilter\fP"
+.br
+.ti -1c
+.RI "class \fBPeakFinder\fP"
+.br
+.ti -1c
+.RI "class \fBRateTransposer\fP"
+.br
+.ti -1c
+.RI "class \fBSoundTouch\fP"
+.br
+.ti -1c
+.RI "class \fBTDStretch\fP"
+.br
+.in -1c
+.SS "Typedefs"
+
+.in +1c
+.ti -1c
+.RI "typedef float \fBSAMPLETYPE\fP"
+.br
+.ti -1c
+.RI "typedef double \fBLONG_SAMPLETYPE\fP"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Beats-per-minute (BPM) detection routine\&.
+.PP
+The beat detection algorithm works as follows:
+.IP "\(bu" 2
+Use function 'inputSamples' to input a chunks of samples to the class for analysis\&. It's a good idea to enter a large sound file or stream in smallish chunks of around few kilosamples in order not to extinguish too much RAM memory\&.
+.IP "\(bu" 2
+Input sound data is decimated to approx 500 Hz to reduce calculation burden, which is basically ok as low (bass) frequencies mostly determine the beat rate\&. Simple averaging is used for anti-alias filtering because the resulting signal quality isn't of that high importance\&.
+.IP "\(bu" 2
+Decimated sound data is enveloped, i\&.e\&. the amplitude shape is detected by taking absolute value that's smoothed by sliding average\&. Signal levels that are below a couple of times the general RMS amplitude level are cut away to leave only notable peaks there\&.
+.IP "\(bu" 2
+Repeating sound patterns (e\&.g\&. beats) are detected by calculating short-term autocorrelation function of the enveloped signal\&.
+.IP "\(bu" 2
+After whole sound data file has been analyzed as above, the bpm level is detected by function 'getBpm' that finds the highest peak of the autocorrelation function, calculates it's precise location and converts this reading to bpm's\&.
+.PP
+.PP
+Author : Copyright (c) Olli Parviainen Author e-mail : oparviai 'at' iki\&.fi \fBSoundTouch\fP WWW: http://www.surina.net/soundtouch
+.PP
+A buffer class for temporarily storaging sound samples, operates as a first-in-first-out pipe\&.
+.PP
+Samples are added to the end of the sample buffer with the 'putSamples' function, and are received from the beginning of the buffer by calling the 'receiveSamples' function\&. The class automatically removes the output samples from the buffer as well as grows the storage size whenever necessary\&.
+.PP
+Author : Copyright (c) Olli Parviainen Author e-mail : oparviai 'at' iki\&.fi \fBSoundTouch\fP WWW: http://www.surina.net/soundtouch
+.PP
+'\fBFIFOSamplePipe\fP' : An abstract base class for classes that manipulate sound samples by operating like a first-in-first-out pipe: New samples are fed into one end of the pipe with the 'putSamples' function, and the processed samples are received from the other end with the 'receiveSamples' function\&.
+.PP
+'\fBFIFOProcessor\fP' : A base class for classes the do signal processing with the samples while operating like a first-in-first-out pipe\&. When samples are input with the 'putSamples' function, the class processes them and moves the processed samples to the given 'output' pipe object, which may be either another processing stage, or a fifo sample buffer object\&.
+.PP
+Author : Copyright (c) Olli Parviainen Author e-mail : oparviai 'at' iki\&.fi \fBSoundTouch\fP WWW: http://www.surina.net/soundtouch
+.PP
+\fBSoundTouch\fP - main class for tempo/pitch/rate adjusting routines\&.
+.PP
+Notes:
+.IP "\(bu" 2
+Initialize the \fBSoundTouch\fP object instance by setting up the sound stream parameters with functions 'setSampleRate' and 'setChannels', then set desired tempo/pitch/rate settings with the corresponding functions\&.
+.IP "\(bu" 2
+The \fBSoundTouch\fP class behaves like a first-in-first-out pipeline: The samples that are to be processed are fed into one of the pipe by calling function 'putSamples', while the ready processed samples can be read from the other end of the pipeline with function 'receiveSamples'\&.
+.IP "\(bu" 2
+The \fBSoundTouch\fP processing classes require certain sized 'batches' of samples in order to process the sound\&. For this reason the classes buffer incoming samples until there are enough of samples available for processing, then they carry out the processing step and consequently make the processed samples available for outputting\&.
+.IP "\(bu" 2
+For the above reason, the processing routines introduce a certain 'latency' between the input and output, so that the samples input to \fBSoundTouch\fP may not be immediately available in the output, and neither the amount of outputtable samples may not immediately be in direct relationship with the amount of previously input samples\&.
+.IP "\(bu" 2
+The tempo/pitch/rate control parameters can be altered during processing\&. Please notice though that they aren't currently protected by semaphores, so in multi-thread application external semaphore protection may be required\&.
+.IP "\(bu" 2
+This class utilizes classes '\fBTDStretch\fP' for tempo change (without modifying pitch) and '\fBRateTransposer\fP' for changing the playback rate (that is, both tempo and pitch in the same ratio) of the sound\&. The third available control 'pitch' (change pitch but maintain tempo) is produced by a combination of combining the two other controls\&.
+.PP
+.PP
+Author : Copyright (c) Olli Parviainen Author e-mail : oparviai 'at' iki\&.fi \fBSoundTouch\fP WWW: http://www.surina.net/soundtouch
+.PP
+Sampled sound tempo changer/time stretch algorithm\&. Changes the sound tempo while maintaining the original pitch by using a time domain WSOLA-like method with several performance-increasing tweaks\&.
+.PP
+Anti-alias filter is used to prevent folding of high frequencies when transposing the sample rate with interpolation\&.
+.PP
+Author : Copyright (c) Olli Parviainen Author e-mail : oparviai 'at' iki\&.fi \fBSoundTouch\fP WWW: http://www.surina.net/soundtouch
+.PP
+General FIR digital filter routines with MMX optimization\&.
+.PP
+Note : MMX optimized functions reside in a separate, platform-specific file, e\&.g\&. 'mmx_win\&.cpp' or 'mmx_gcc\&.cpp'
+.PP
+Author : Copyright (c) Olli Parviainen Author e-mail : oparviai 'at' iki\&.fi \fBSoundTouch\fP WWW: http://www.surina.net/soundtouch
+.PP
+The routine detects highest value on an array of values and calculates the precise peak location as a mass-center of the 'hump' around the peak value\&.
+.PP
+Author : Copyright (c) Olli Parviainen Author e-mail : oparviai 'at' iki\&.fi \fBSoundTouch\fP WWW: http://www.surina.net/soundtouch
+.PP
+\fBSample\fP rate transposer\&. Changes sample rate by using linear interpolation together with anti-alias filtering (first order interpolation with anti- alias filtering should be quite adequate for this application)\&.
+.PP
+Use either of the derived classes of '\fBRateTransposerInteger\fP' or '\fBRateTransposerFloat\fP' for corresponding integer/floating point tranposing algorithm implementation\&.
+.PP
+Author : Copyright (c) Olli Parviainen Author e-mail : oparviai 'at' iki\&.fi \fBSoundTouch\fP WWW: http://www.surina.net/soundtouch
+.PP
+Sampled sound tempo changer/time stretch algorithm\&. Changes the sound tempo while maintaining the original pitch by using a time domain WSOLA-like method with several performance-increasing tweaks\&.
+.PP
+Note : MMX/SSE optimized functions reside in separate, platform-specific files '\fBmmx_optimized\&.cpp\fP' and '\fBsse_optimized\&.cpp\fP'
+.PP
+Author : Copyright (c) Olli Parviainen Author e-mail : oparviai 'at' iki\&.fi \fBSoundTouch\fP WWW: http://www.surina.net/soundtouch 
+.SH "Typedef Documentation"
+.PP 
+.SS "typedef double \fBsoundtouch::LONG_SAMPLETYPE\fP"
+
+.PP
+Definition at line 158 of file STTypes\&.h\&.
+.SS "typedef float \fBsoundtouch::SAMPLETYPE\fP"
+
+.PP
+Definition at line 156 of file STTypes\&.h\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

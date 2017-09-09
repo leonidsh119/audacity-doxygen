@@ -1,0 +1,164 @@
+.TH "PaUtilHostApiRepresentation" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+PaUtilHostApiRepresentation \- 
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <pa_hostapi\&.h>\fP
+.SS "Public Attributes"
+
+.in +1c
+.ti -1c
+.RI "\fBPaUtilPrivatePaFrontHostApiInfo\fP \fBprivatePaFrontInfo\fP"
+.br
+.ti -1c
+.RI "\fBPaHostApiInfo\fP \fBinfo\fP"
+.br
+.ti -1c
+.RI "\fBPaDeviceInfo\fP ** \fBdeviceInfos\fP"
+.br
+.ti -1c
+.RI "\fBvoid\fP(* \fBTerminate\fP )(struct \fBPaUtilHostApiRepresentation\fP *hostApi)"
+.br
+.ti -1c
+.RI "\fBPaError\fP(* \fBOpenStream\fP )(struct \fBPaUtilHostApiRepresentation\fP *hostApi, \fBPaStream\fP **stream, \fBconst\fP \fBPaStreamParameters\fP *inputParameters, \fBconst\fP \fBPaStreamParameters\fP *outputParameters, double sampleRate, unsigned long framesPerCallback, \fBPaStreamFlags\fP streamFlags, \fBPaStreamCallback\fP *streamCallback, \fBvoid\fP *\fBuserData\fP)"
+.br
+.ti -1c
+.RI "\fBPaError\fP(* \fBIsFormatSupported\fP )(struct \fBPaUtilHostApiRepresentation\fP *hostApi, \fBconst\fP \fBPaStreamParameters\fP *inputParameters, \fBconst\fP \fBPaStreamParameters\fP *outputParameters, double sampleRate)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+A structure representing the interface to a host API\&. Contains both concrete data and pointers to functions which implement the interface\&. 
+.PP
+Definition at line 194 of file pa_hostapi\&.h\&.
+.SH "Member Data Documentation"
+.PP 
+.SS "\fBPaDeviceInfo\fP** PaUtilHostApiRepresentation::deviceInfos"
+
+.PP
+Definition at line 206 of file pa_hostapi\&.h\&.
+.SS "\fBPaHostApiInfo\fP PaUtilHostApiRepresentation::info"
+The host api implementation should populate the info field\&. In the case of info\&.defaultInputDevice and info\&.defaultOutputDevice the values stored should be 0 based indices within the host api's own device index range (0 to deviceCount)\&. These values will be converted to global device indices by pa_front after \fBPaUtilHostApiInitializer()\fP returns\&. 
+.PP
+Definition at line 204 of file pa_hostapi\&.h\&.
+.SS "\fBPaError\fP(* PaUtilHostApiRepresentation::IsFormatSupported) (struct \fBPaUtilHostApiRepresentation\fP *hostApi, \fBconst\fP \fBPaStreamParameters\fP *inputParameters, \fBconst\fP \fBPaStreamParameters\fP *outputParameters, double sampleRate)"
+
+.PP
+Definition at line 321 of file pa_hostapi\&.h\&.
+.SS "\fBPaError\fP(* PaUtilHostApiRepresentation::OpenStream) (struct \fBPaUtilHostApiRepresentation\fP *hostApi, \fBPaStream\fP **stream, \fBconst\fP \fBPaStreamParameters\fP *inputParameters, \fBconst\fP \fBPaStreamParameters\fP *outputParameters, double sampleRate, unsigned long framesPerCallback, \fBPaStreamFlags\fP streamFlags, \fBPaStreamCallback\fP *streamCallback, \fBvoid\fP *\fBuserData\fP)"
+The inputParameters and outputParameters pointers should not be saved as they will not remain valid after OpenStream is called\&.
+.PP
+The following guarantees are made about parameters to (*OpenStream)(): 
+.PP
+.nf
+[NOTE: the following list up to *END PA FRONT VALIDATIONS* should be
+    kept in sync with the one for ValidateOpenStreamParameters and
+    Pa_OpenStream in pa_front.c]
+
+PaHostApiRepresentation *hostApi
+    - is valid for this implementation
+
+PaStream** stream
+    - is non-null
+
+- at least one of inputParameters & outputParmeters is valid (not NULL)
+
+- if inputParameters & outputParmeters are both valid, that
+    inputParameters->device & outputParmeters->device  both use the same host api
+
+PaDeviceIndex inputParameters->device
+    - is within range (0 to Pa_CountDevices-1) Or:
+    - is paUseHostApiSpecificDeviceSpecification and
+        inputParameters->hostApiSpecificStreamInfo is non-NULL and refers
+        to a valid host api
+
+int inputParameters->numChannels
+    - if inputParameters->device is not paUseHostApiSpecificDeviceSpecification, numInputChannels is > 0
+    - upper bound is NOT validated against device capabilities
+
+PaSampleFormat inputParameters->sampleFormat
+    - is one of the sample formats defined in portaudio.h
+
+void *inputParameters->hostApiSpecificStreamInfo
+    - if supplied its hostApi field matches the input device's host Api
+
+PaDeviceIndex outputParmeters->device
+    - is within range (0 to Pa_CountDevices-1)
+
+int outputParmeters->numChannels
+    - if inputDevice is valid, numInputChannels is > 0
+    - upper bound is NOT validated against device capabilities
+
+PaSampleFormat outputParmeters->sampleFormat
+    - is one of the sample formats defined in portaudio.h
+
+void *outputParmeters->hostApiSpecificStreamInfo
+    - if supplied its hostApi field matches the output device's host Api
+
+double sampleRate
+    - is not an 'absurd' rate (less than 1000. or greater than 384000.)
+    - sampleRate is NOT validated against device capabilities
+
+PaStreamFlags streamFlags
+    - unused platform neutral flags are zero
+    - paNeverDropInput is only used for full-duplex callback streams
+        with variable buffer size (paFramesPerBufferUnspecified)
+
+[*END PA FRONT VALIDATIONS*]
+
+.fi
+.PP
+.PP
+The following validations MUST be performed by (*OpenStream)(): 
+.PP
+.nf
+- check that input device can support numInputChannels
+
+- check that input device can support inputSampleFormat, or that
+    we have the capability to convert from outputSampleFormat to
+    a native format
+
+- if inputStreamInfo is supplied, validate its contents,
+    or return an error if no inputStreamInfo is expected
+
+- check that output device can support numOutputChannels
+
+- check that output device can support outputSampleFormat, or that
+    we have the capability to convert from outputSampleFormat to
+    a native format
+
+- if outputStreamInfo is supplied, validate its contents,
+    or return an error if no outputStreamInfo is expected
+
+- if a full duplex stream is requested, check that the combination
+    of input and output parameters is supported
+
+- check that the device supports sampleRate
+
+- alter sampleRate to a close allowable rate if necessary
+
+- validate inputLatency and outputLatency
+
+- validate any platform specific flags, if flags are supplied they
+    must be valid.
+.fi
+.PP
+ 
+.PP
+Definition at line 310 of file pa_hostapi\&.h\&.
+.SS "\fBPaUtilPrivatePaFrontHostApiInfo\fP PaUtilHostApiRepresentation::privatePaFrontInfo"
+
+.PP
+Definition at line 195 of file pa_hostapi\&.h\&.
+.SS "\fBvoid\fP(* PaUtilHostApiRepresentation::Terminate) (struct \fBPaUtilHostApiRepresentation\fP *hostApi)"
+(*Terminate)() is guaranteed to be called with a valid <hostApi> parameter, which was previously returned from the same implementation's initializer\&. 
+.PP
+Definition at line 213 of file pa_hostapi\&.h\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

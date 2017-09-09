@@ -1,0 +1,255 @@
+.TH "lavc_encoding" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+lavc_encoding \- Encoding
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "struct \fBRcOverride\fP"
+.br
+.in -1c
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBFF_MIN_BUFFER_SIZE\fP   16384"
+.br
+.in -1c
+.SS "Typedefs"
+
+.in +1c
+.ti -1c
+.RI "typedef struct \fBRcOverride\fP \fBRcOverride\fP"
+.br
+.in -1c
+.SS "Enumerations"
+
+.in +1c
+.ti -1c
+.RI "enum \fBMotion_Est_ID\fP { \fBME_ZERO\fP = 1, \fBME_FULL\fP, \fBME_LOG\fP, \fBME_PHODS\fP, \fBME_EPZS\fP, \fBME_X1\fP, \fBME_HEX\fP, \fBME_UMH\fP, \fBME_TESA\fP, \fBME_ITER\fP =50 }"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBAVCodec\fP * \fBavcodec_find_encoder\fP (enum \fBAVCodecID\fP id)"
+.br
+.ti -1c
+.RI "\fBAVCodec\fP * \fBavcodec_find_encoder_by_name\fP (\fBconst\fP char *\fBname\fP)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBattribute_deprecated\fP \fBavcodec_encode_audio\fP (\fBAVCodecContext\fP *avctx, \fBuint8_t\fP *\fBbuf\fP, \fBint\fP buf_size, \fBconst\fP short *\fBsamples\fP)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBavcodec_encode_audio2\fP (\fBAVCodecContext\fP *avctx, \fBAVPacket\fP *avpkt, \fBconst\fP \fBAVFrame\fP *frame, \fBint\fP *got_packet_ptr)"
+.br
+.ti -1c
+.RI "\fBattribute_deprecated\fP \fBint\fP \fBavcodec_encode_video\fP (\fBAVCodecContext\fP *avctx, \fBuint8_t\fP *\fBbuf\fP, \fBint\fP buf_size, \fBconst\fP \fBAVFrame\fP *pict)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBavcodec_encode_video2\fP (\fBAVCodecContext\fP *avctx, \fBAVPacket\fP *avpkt, \fBconst\fP \fBAVFrame\fP *frame, \fBint\fP *got_packet_ptr)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBavcodec_encode_subtitle\fP (\fBAVCodecContext\fP *avctx, \fBuint8_t\fP *\fBbuf\fP, \fBint\fP buf_size, \fBconst\fP \fBAVSubtitle\fP *sub)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define FF_MIN_BUFFER_SIZE   16384"
+minimum encoding buffer size Used to avoid some checks during header writing\&. 
+.PP
+Definition at line 598 of file avcodec\&.h\&.
+.SH "Typedef Documentation"
+.PP 
+.SS "typedef struct \fBRcOverride\fP  \fBRcOverride\fP"
+
+.SH "Enumeration Type Documentation"
+.PP 
+.SS "enum \fBMotion_Est_ID\fP"
+motion estimation type\&. 
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fIME_ZERO \fP\fP
+no search, that is use 0,0 vector whenever one is needed 
+.TP
+\fB\fIME_FULL \fP\fP
+.TP
+\fB\fIME_LOG \fP\fP
+.TP
+\fB\fIME_PHODS \fP\fP
+.TP
+\fB\fIME_EPZS \fP\fP
+enhanced predictive zonal search 
+.TP
+\fB\fIME_X1 \fP\fP
+reserved for experiments 
+.TP
+\fB\fIME_HEX \fP\fP
+hexagon based search 
+.TP
+\fB\fIME_UMH \fP\fP
+uneven multi-hexagon search 
+.TP
+\fB\fIME_TESA \fP\fP
+transformed exhaustive search algorithm 
+.TP
+\fB\fIME_ITER \fP\fP
+iterative search 
+.PP
+Definition at line 605 of file avcodec\&.h\&.
+.SH "Function Documentation"
+.PP 
+.SS "\fBint\fP \fBattribute_deprecated\fP avcodec_encode_audio (\fBAVCodecContext\fP * avctx, \fBuint8_t\fP * buf, \fBint\fP buf_size, \fBconst\fP short * samples)"
+Encode an audio frame from samples into buf\&.
+.PP
+\fBDeprecated\fP
+.RS 4
+Use avcodec_encode_audio2 instead\&.
+.RE
+.PP
+.PP
+\fBNote:\fP
+.RS 4
+The output buffer should be at least FF_MIN_BUFFER_SIZE bytes large\&. However, for codecs with avctx->frame_size equal to 0 (e\&.g\&. PCM) the user will know how much space is needed because it depends on the value passed in buf_size as described below\&. In that case a lower value can be used\&.
+.RE
+.PP
+\fBParameters:\fP
+.RS 4
+\fIavctx\fP the codec context 
+.br
+\fIbuf\fP the output buffer 
+.br
+\fIbuf_size\fP the output buffer size 
+.br
+\fIsamples\fP the input buffer containing the samples The number of samples read from this buffer is frame_size*channels, both of which are defined in avctx\&. For codecs which have avctx->frame_size equal to 0 (e\&.g\&. PCM) the number of samples read from samples is equal to: buf_size * 8 / (avctx->channels * av_get_bits_per_sample(avctx->codec_id)) This also implies that \fBav_get_bits_per_sample()\fP must not return 0 for these codecs\&. 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+On error a negative value is returned, on success zero or the number of bytes used to encode the data read from the input buffer\&. 
+.RE
+.PP
+
+.SS "\fBint\fP avcodec_encode_audio2 (\fBAVCodecContext\fP * avctx, \fBAVPacket\fP * avpkt, \fBconst\fP \fBAVFrame\fP * frame, \fBint\fP * got_packet_ptr)"
+Encode a frame of audio\&.
+.PP
+Takes input samples from frame and writes the next output packet, if available, to avpkt\&. The output packet does not necessarily contain data for the most recent frame, as encoders can delay, split, and combine input frames internally as needed\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIavctx\fP codec context 
+.br
+\fIavpkt\fP output \fBAVPacket\fP\&. The user can supply an output buffer by setting avpkt->data and avpkt->size prior to calling the function, but if the size of the user-provided data is not large enough, encoding will fail\&. If avpkt->data and avpkt->size are set, avpkt->destruct must also be set\&. All other \fBAVPacket\fP fields will be reset by the encoder using \fBav_init_packet()\fP\&. If avpkt->data is NULL, the encoder will allocate it\&. The encoder will set avpkt->size to the size of the output packet\&.
+.RE
+.PP
+If this function fails or produces no output, avpkt will be freed using \fBav_free_packet()\fP (i\&.e\&. avpkt->destruct will be called to free the user supplied buffer)\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIframe\fP \fBAVFrame\fP containing the raw audio data to be encoded\&. May be NULL when flushing an encoder that has the CODEC_CAP_DELAY capability set\&. If CODEC_CAP_VARIABLE_FRAME_SIZE is set, then each frame can have any number of samples\&. If it is not set, frame->nb_samples must be equal to avctx->frame_size for all frames except the last\&. The final frame may be smaller than avctx->frame_size\&. 
+.br
+\fIgot_packet_ptr\fP This field is set to 1 by libavcodec if the output packet is non-empty, and to 0 if it is empty\&. If the function returns an error, the packet can be assumed to be invalid, and the value of got_packet_ptr is undefined and should not be used\&. 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+0 on success, negative error code on failure 
+.RE
+.PP
+
+.SS "\fBint\fP avcodec_encode_subtitle (\fBAVCodecContext\fP * avctx, \fBuint8_t\fP * buf, \fBint\fP buf_size, \fBconst\fP \fBAVSubtitle\fP * sub)"
+
+.SS "\fBattribute_deprecated\fP \fBint\fP avcodec_encode_video (\fBAVCodecContext\fP * avctx, \fBuint8_t\fP * buf, \fBint\fP buf_size, \fBconst\fP \fBAVFrame\fP * pict)"
+
+.PP
+\fBDeprecated\fP
+.RS 4
+use \fBavcodec_encode_video2()\fP instead\&.
+.RE
+.PP
+.PP
+Encode a video frame from pict into buf\&. The input picture should be stored using a specific format, namely avctx\&.pix_fmt\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIavctx\fP the codec context 
+.br
+\fIbuf\fP the output buffer for the bitstream of encoded frame 
+.br
+\fIbuf_size\fP the size of the output buffer in bytes 
+.br
+\fIpict\fP the input picture to encode 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+On error a negative value is returned, on success zero or the number of bytes used from the output buffer\&. 
+.RE
+.PP
+
+.SS "\fBint\fP avcodec_encode_video2 (\fBAVCodecContext\fP * avctx, \fBAVPacket\fP * avpkt, \fBconst\fP \fBAVFrame\fP * frame, \fBint\fP * got_packet_ptr)"
+Encode a frame of video\&.
+.PP
+Takes input raw video data from frame and writes the next output packet, if available, to avpkt\&. The output packet does not necessarily contain data for the most recent frame, as encoders can delay and reorder input frames internally as needed\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIavctx\fP codec context 
+.br
+\fIavpkt\fP output \fBAVPacket\fP\&. The user can supply an output buffer by setting avpkt->data and avpkt->size prior to calling the function, but if the size of the user-provided data is not large enough, encoding will fail\&. All other \fBAVPacket\fP fields will be reset by the encoder using \fBav_init_packet()\fP\&. If avpkt->data is NULL, the encoder will allocate it\&. The encoder will set avpkt->size to the size of the output packet\&. The returned data (if any) belongs to the caller, he is responsible for freeing it\&.
+.RE
+.PP
+If this function fails or produces no output, avpkt will be freed using \fBav_free_packet()\fP (i\&.e\&. avpkt->destruct will be called to free the user supplied buffer)\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIframe\fP \fBAVFrame\fP containing the raw video data to be encoded\&. May be NULL when flushing an encoder that has the CODEC_CAP_DELAY capability set\&. 
+.br
+\fIgot_packet_ptr\fP This field is set to 1 by libavcodec if the output packet is non-empty, and to 0 if it is empty\&. If the function returns an error, the packet can be assumed to be invalid, and the value of got_packet_ptr is undefined and should not be used\&. 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+0 on success, negative error code on failure 
+.RE
+.PP
+
+.SS "\fBAVCodec\fP* avcodec_find_encoder (enum \fBAVCodecID\fP id)"
+Find a registered encoder with a matching codec ID\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIid\fP AVCodecID of the requested encoder 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+An encoder if one was found, NULL otherwise\&. 
+.RE
+.PP
+
+.SS "\fBAVCodec\fP* avcodec_find_encoder_by_name (\fBconst\fP char * name)"
+Find a registered encoder with the specified name\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIname\fP name of the requested encoder 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+An encoder if one was found, NULL otherwise\&. 
+.RE
+.PP
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

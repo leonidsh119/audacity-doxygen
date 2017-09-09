@@ -1,0 +1,89 @@
+.TH "_LV2_State_Interface" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+_LV2_State_Interface \- 
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <state\&.h>\fP
+.SS "Public Attributes"
+
+.in +1c
+.ti -1c
+.RI "\fBLV2_State_Status\fP(* \fBsave\fP )(\fBLV2_Handle\fP instance, \fBLV2_State_Store_Function\fP store, \fBLV2_State_Handle\fP handle, \fBuint32_t\fP flags, \fBconst\fP \fBLV2_Feature\fP *\fBconst\fP *features)"
+.br
+.ti -1c
+.RI "\fBLV2_State_Status\fP(* \fBrestore\fP )(\fBLV2_Handle\fP instance, \fBLV2_State_Retrieve_Function\fP retrieve, \fBLV2_State_Handle\fP handle, \fBuint32_t\fP flags, \fBconst\fP \fBLV2_Feature\fP *\fBconst\fP *features)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+LV2 Plugin \fBState\fP Interface\&.
+.PP
+When the plugin's extension_data is called with argument LV2_STATE__interface, the plugin MUST return an LV2_State_Interface structure, which remains valid for the lifetime of the plugin\&.
+.PP
+The host can use the contained function pointers to save and restore the state of a plugin instance at any time, provided the threading restrictions of the functions are met\&.
+.PP
+Stored data is only guaranteed to be compatible between instances of plugins with the same URI (i\&.e\&. if a change to a plugin would cause a fatal error when restoring state saved by a previous version of that plugin, the plugin URI MUST change just as it must when ports change incompatibly)\&. Plugin authors should consider this possibility, and always store sensible data with meaningful types to avoid such problems in the future\&. 
+.PP
+Definition at line 189 of file state\&.h\&.
+.SH "Member Data Documentation"
+.PP 
+.SS "\fBLV2_State_Status\fP(* _LV2_State_Interface::restore) (\fBLV2_Handle\fP instance, \fBLV2_State_Retrieve_Function\fP retrieve, \fBLV2_State_Handle\fP handle, \fBuint32_t\fP flags, \fBconst\fP \fBLV2_Feature\fP *\fBconst\fP *features)"
+Restore plugin state using a host-provided \fCretrieve\fP callback\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIinstance\fP The instance handle of the plugin\&. 
+.br
+\fIretrieve\fP The host-provided retrieve callback\&. 
+.br
+\fIhandle\fP An opaque pointer to host data which MUST be passed as the handle parameter to \fCretrieve\fP if it is called\&. 
+.br
+\fIflags\fP Currently unused\&. 
+.br
+\fIfeatures\fP Extensible parameter for passing any additional features to be used for this restore\&.
+.RE
+.PP
+The plugin MAY assume a restored value was set by a previous call to \fBLV2_State_Interface\&.save()\fP by a plugin with the same URI\&.
+.PP
+The plugin MUST gracefully fall back to a default value when a value can not be retrieved\&. This allows the host to reset the plugin state with an empty map\&.
+.PP
+The \fChandle\fP pointer and \fCstore\fP function MUST NOT be used beyond the scope of \fBrestore()\fP\&.
+.PP
+This function is in the 'Instantiation' threading class as defined by LV2\&. This means it MUST NOT be called concurrently with any other function on the same plugin instance\&. 
+.PP
+Definition at line 257 of file state\&.h\&.
+.SS "\fBLV2_State_Status\fP(* _LV2_State_Interface::save) (\fBLV2_Handle\fP instance, \fBLV2_State_Store_Function\fP store, \fBLV2_State_Handle\fP handle, \fBuint32_t\fP flags, \fBconst\fP \fBLV2_Feature\fP *\fBconst\fP *features)"
+Save plugin state using a host-provided \fCstore\fP callback\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIinstance\fP The instance handle of the plugin\&. 
+.br
+\fIstore\fP The host-provided store callback\&. 
+.br
+\fIhandle\fP An opaque pointer to host data which MUST be passed as the handle parameter to \fCstore\fP if it is called\&. 
+.br
+\fIflags\fP Flags describing desired properties of this save\&. These flags may be used to determine the most appropriate values to store\&. 
+.br
+\fIfeatures\fP Extensible parameter for passing any additional features to be used for this save\&.
+.RE
+.PP
+The plugin is expected to store everything necessary to completely restore its state later\&. Plugins SHOULD store simple POD data whenever possible, and consider the possibility of state being restored much later on a different machine\&.
+.PP
+The \fChandle\fP pointer and \fCstore\fP function MUST NOT be used beyond the scope of \fBsave()\fP\&.
+.PP
+This function has its own special threading class: it may not be called concurrently with any 'Instantiation' function, but it may be called concurrently with functions in any other class, unless the definition of that class prohibits it (e\&.g\&. it may not be called concurrently with a 'Discovery' function, but it may be called concurrently with an 'Audio' function\&. The plugin is responsible for any locking or lock-free techniques necessary to make this possible\&.
+.PP
+Note that in the simple case where state is only modified by \fBrestore()\fP, there are no synchronization issues since \fBsave()\fP is never called concurrently with \fBrestore()\fP (though \fBrun()\fP may read it during a save)\&.
+.PP
+Plugins that dynamically modify state while running, however, must take care to do so in such a way that a concurrent call to \fBsave()\fP will save a consistent representation of plugin state for a single instant in time\&. 
+.PP
+Definition at line 226 of file state\&.h\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

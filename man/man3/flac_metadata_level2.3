@@ -1,0 +1,868 @@
+.TH "flac_metadata_level2" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+flac_metadata_level2 \- FLAC/metadata\&.h: metadata level 2 interface
+.PP
+The level 2 interface provides read-write access to \fBFLAC\fP file metadata; all metadata is read into memory, operated on in memory, and then written to file, which is more efficient than level 1 when editing multiple blocks\&.  
+
+.SS "Typedefs"
+
+.in +1c
+.ti -1c
+.RI "typedef struct \fBFLAC__Metadata_Chain\fP \fBFLAC__Metadata_Chain\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBFLAC__Metadata_Iterator\fP \fBFLAC__Metadata_Iterator\fP"
+.br
+.in -1c
+.SS "Enumerations"
+
+.in +1c
+.ti -1c
+.RI "enum \fBFLAC__Metadata_ChainStatus\fP { \fBFLAC__METADATA_CHAIN_STATUS_OK\fP = 0, \fBFLAC__METADATA_CHAIN_STATUS_ILLEGAL_INPUT\fP, \fBFLAC__METADATA_CHAIN_STATUS_ERROR_OPENING_FILE\fP, \fBFLAC__METADATA_CHAIN_STATUS_NOT_A_FLAC_FILE\fP, \fBFLAC__METADATA_CHAIN_STATUS_NOT_WRITABLE\fP, \fBFLAC__METADATA_CHAIN_STATUS_BAD_METADATA\fP, \fBFLAC__METADATA_CHAIN_STATUS_READ_ERROR\fP, \fBFLAC__METADATA_CHAIN_STATUS_SEEK_ERROR\fP, \fBFLAC__METADATA_CHAIN_STATUS_WRITE_ERROR\fP, \fBFLAC__METADATA_CHAIN_STATUS_RENAME_ERROR\fP, \fBFLAC__METADATA_CHAIN_STATUS_UNLINK_ERROR\fP, \fBFLAC__METADATA_CHAIN_STATUS_MEMORY_ALLOCATION_ERROR\fP, \fBFLAC__METADATA_CHAIN_STATUS_INTERNAL_ERROR\fP, \fBFLAC__METADATA_CHAIN_STATUS_INVALID_CALLBACKS\fP, \fBFLAC__METADATA_CHAIN_STATUS_READ_WRITE_MISMATCH\fP, \fBFLAC__METADATA_CHAIN_STATUS_WRONG_WRITE_CALL\fP }"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__Metadata_Chain\fP * \fBFLAC__metadata_chain_new\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBvoid\fP \fBFLAC__metadata_chain_delete\fP (\fBFLAC__Metadata_Chain\fP *chain)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__Metadata_ChainStatus\fP \fBFLAC__metadata_chain_status\fP (\fBFLAC__Metadata_Chain\fP *chain)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__metadata_chain_read\fP (\fBFLAC__Metadata_Chain\fP *chain, \fBconst\fP char *\fBfilename\fP)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__metadata_chain_read_ogg\fP (\fBFLAC__Metadata_Chain\fP *chain, \fBconst\fP char *\fBfilename\fP)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__metadata_chain_read_with_callbacks\fP (\fBFLAC__Metadata_Chain\fP *chain, \fBFLAC__IOHandle\fP handle, \fBFLAC__IOCallbacks\fP callbacks)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__metadata_chain_read_ogg_with_callbacks\fP (\fBFLAC__Metadata_Chain\fP *chain, \fBFLAC__IOHandle\fP handle, \fBFLAC__IOCallbacks\fP callbacks)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__metadata_chain_check_if_tempfile_needed\fP (\fBFLAC__Metadata_Chain\fP *chain, \fBFLAC__bool\fP use_padding)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__metadata_chain_write\fP (\fBFLAC__Metadata_Chain\fP *chain, \fBFLAC__bool\fP use_padding, \fBFLAC__bool\fP preserve_file_stats)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__metadata_chain_write_with_callbacks\fP (\fBFLAC__Metadata_Chain\fP *chain, \fBFLAC__bool\fP use_padding, \fBFLAC__IOHandle\fP handle, \fBFLAC__IOCallbacks\fP callbacks)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__metadata_chain_write_with_callbacks_and_tempfile\fP (\fBFLAC__Metadata_Chain\fP *chain, \fBFLAC__bool\fP use_padding, \fBFLAC__IOHandle\fP handle, \fBFLAC__IOCallbacks\fP callbacks, \fBFLAC__IOHandle\fP temp_handle, \fBFLAC__IOCallbacks\fP temp_callbacks)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBvoid\fP \fBFLAC__metadata_chain_merge_padding\fP (\fBFLAC__Metadata_Chain\fP *chain)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBvoid\fP \fBFLAC__metadata_chain_sort_padding\fP (\fBFLAC__Metadata_Chain\fP *chain)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__Metadata_Iterator\fP * \fBFLAC__metadata_iterator_new\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBvoid\fP \fBFLAC__metadata_iterator_delete\fP (\fBFLAC__Metadata_Iterator\fP *iterator)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBvoid\fP \fBFLAC__metadata_iterator_init\fP (\fBFLAC__Metadata_Iterator\fP *iterator, \fBFLAC__Metadata_Chain\fP *chain)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__metadata_iterator_next\fP (\fBFLAC__Metadata_Iterator\fP *iterator)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__metadata_iterator_prev\fP (\fBFLAC__Metadata_Iterator\fP *iterator)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__MetadataType\fP \fBFLAC__metadata_iterator_get_block_type\fP (\fBconst\fP \fBFLAC__Metadata_Iterator\fP *iterator)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__StreamMetadata\fP * \fBFLAC__metadata_iterator_get_block\fP (\fBFLAC__Metadata_Iterator\fP *iterator)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__metadata_iterator_set_block\fP (\fBFLAC__Metadata_Iterator\fP *iterator, \fBFLAC__StreamMetadata\fP *\fBblock\fP)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__metadata_iterator_delete_block\fP (\fBFLAC__Metadata_Iterator\fP *iterator, \fBFLAC__bool\fP replace_with_padding)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__metadata_iterator_insert_block_before\fP (\fBFLAC__Metadata_Iterator\fP *iterator, \fBFLAC__StreamMetadata\fP *\fBblock\fP)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__metadata_iterator_insert_block_after\fP (\fBFLAC__Metadata_Iterator\fP *iterator, \fBFLAC__StreamMetadata\fP *\fBblock\fP)"
+.br
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "\fBFLAC_API\fP \fBconst\fP char *\fBconst\fP \fBFLAC__Metadata_ChainStatusString\fP []"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+The level 2 interface provides read-write access to \fBFLAC\fP file metadata; all metadata is read into memory, operated on in memory, and then written to file, which is more efficient than level 1 when editing multiple blocks\&. 
+
+Currently Ogg \fBFLAC\fP is supported for read only, via \fBFLAC__metadata_chain_read_ogg()\fP but a subsequent \fBFLAC__metadata_chain_write()\fP will fail\&.
+.PP
+The general usage of this interface is:
+.PP
+.IP "\(bu" 2
+Create a new chain using \fBFLAC__metadata_chain_new()\fP\&. A chain is a linked list of \fBFLAC\fP metadata blocks\&.
+.IP "\(bu" 2
+Read all metadata into the the chain from a \fBFLAC\fP file using \fBFLAC__metadata_chain_read()\fP or \fBFLAC__metadata_chain_read_ogg()\fP and check the status\&.
+.IP "\(bu" 2
+Optionally, consolidate the padding using \fBFLAC__metadata_chain_merge_padding()\fP or \fBFLAC__metadata_chain_sort_padding()\fP\&.
+.IP "\(bu" 2
+Create a new iterator using \fBFLAC__metadata_iterator_new()\fP
+.IP "\(bu" 2
+Initialize the iterator to point to the first element in the chain using \fBFLAC__metadata_iterator_init()\fP
+.IP "\(bu" 2
+Traverse the chain using FLAC__metadata_iterator_next and \fBFLAC__metadata_iterator_prev()\fP\&.
+.IP "\(bu" 2
+Get a block for reading or modification using \fBFLAC__metadata_iterator_get_block()\fP\&. The pointer to the object inside the chain is returned, so the block is yours to modify\&. Changes will be reflected in the \fBFLAC\fP file when you write the chain\&. You can also add and delete blocks (see functions below)\&.
+.IP "\(bu" 2
+When done, write out the chain using \fBFLAC__metadata_chain_write()\fP\&. Make sure to read the whole comment to the function below\&.
+.IP "\(bu" 2
+Delete the chain using \fBFLAC__metadata_chain_delete()\fP\&.
+.PP
+.PP
+\fBNote:\fP
+.RS 4
+Even though the \fBFLAC\fP file is not open while the chain is being manipulated, you must not alter the file externally during this time\&. The chain assumes the \fBFLAC\fP file will not change between the time of \fBFLAC__metadata_chain_read()\fP/FLAC__metadata_chain_read_ogg() and \fBFLAC__metadata_chain_write()\fP\&.
+.PP
+Do not modify the is_last, length, or type fields of returned \fBFLAC__StreamMetadata\fP objects\&. These are managed automatically\&.
+.PP
+The metadata objects returned by \fBFLAC__metadata_iterator_get_block()\fP are owned by the chain; do not \fBFLAC__metadata_object_delete()\fP them\&. In the same way, blocks passed to \fBFLAC__metadata_iterator_set_block()\fP become owned by the chain and they will be deleted when the chain is deleted\&. 
+.RE
+.PP
+
+.SH "Typedef Documentation"
+.PP 
+.SS "typedef struct \fBFLAC__Metadata_Chain\fP \fBFLAC__Metadata_Chain\fP"
+The opaque structure definition for the level 2 chain type\&. 
+.PP
+Definition at line 714 of file metadata\&.h\&.
+.SS "typedef struct \fBFLAC__Metadata_Iterator\fP \fBFLAC__Metadata_Iterator\fP"
+The opaque structure definition for the level 2 iterator type\&. 
+.PP
+Definition at line 719 of file metadata\&.h\&.
+.SH "Enumeration Type Documentation"
+.PP 
+.SS "enum \fBFLAC__Metadata_ChainStatus\fP"
+
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fIFLAC__METADATA_CHAIN_STATUS_OK \fP\fP
+The chain is in the normal OK state 
+.TP
+\fB\fIFLAC__METADATA_CHAIN_STATUS_ILLEGAL_INPUT \fP\fP
+The data passed into a function violated the function's usage criteria 
+.TP
+\fB\fIFLAC__METADATA_CHAIN_STATUS_ERROR_OPENING_FILE \fP\fP
+The chain could not open the target file 
+.TP
+\fB\fIFLAC__METADATA_CHAIN_STATUS_NOT_A_FLAC_FILE \fP\fP
+The chain could not find the \fBFLAC\fP signature at the start of the file 
+.TP
+\fB\fIFLAC__METADATA_CHAIN_STATUS_NOT_WRITABLE \fP\fP
+The chain tried to write to a file that was not writable 
+.TP
+\fB\fIFLAC__METADATA_CHAIN_STATUS_BAD_METADATA \fP\fP
+The chain encountered input that does not conform to the \fBFLAC\fP metadata specification 
+.TP
+\fB\fIFLAC__METADATA_CHAIN_STATUS_READ_ERROR \fP\fP
+The chain encountered an error while reading the \fBFLAC\fP file 
+.TP
+\fB\fIFLAC__METADATA_CHAIN_STATUS_SEEK_ERROR \fP\fP
+The chain encountered an error while seeking in the \fBFLAC\fP file 
+.TP
+\fB\fIFLAC__METADATA_CHAIN_STATUS_WRITE_ERROR \fP\fP
+The chain encountered an error while writing the \fBFLAC\fP file 
+.TP
+\fB\fIFLAC__METADATA_CHAIN_STATUS_RENAME_ERROR \fP\fP
+The chain encountered an error renaming the \fBFLAC\fP file 
+.TP
+\fB\fIFLAC__METADATA_CHAIN_STATUS_UNLINK_ERROR \fP\fP
+The chain encountered an error removing the temporary file 
+.TP
+\fB\fIFLAC__METADATA_CHAIN_STATUS_MEMORY_ALLOCATION_ERROR \fP\fP
+Memory allocation failed 
+.TP
+\fB\fIFLAC__METADATA_CHAIN_STATUS_INTERNAL_ERROR \fP\fP
+The caller violated an assertion or an unexpected error occurred 
+.TP
+\fB\fIFLAC__METADATA_CHAIN_STATUS_INVALID_CALLBACKS \fP\fP
+One or more of the required callbacks was NULL 
+.TP
+\fB\fIFLAC__METADATA_CHAIN_STATUS_READ_WRITE_MISMATCH \fP\fP
+\fBFLAC__metadata_chain_write()\fP was called on a chain read by \fBFLAC__metadata_chain_read_with_callbacks()\fP/FLAC__metadata_chain_read_ogg_with_callbacks(), or \fBFLAC__metadata_chain_write_with_callbacks()\fP/FLAC__metadata_chain_write_with_callbacks_and_tempfile() was called on a chain read by \fBFLAC__metadata_chain_read()\fP/FLAC__metadata_chain_read_ogg()\&. Matching read/write methods must always be used\&. 
+.TP
+\fB\fIFLAC__METADATA_CHAIN_STATUS_WRONG_WRITE_CALL \fP\fP
+\fBFLAC__metadata_chain_write_with_callbacks()\fP was called when the chain write requires a tempfile; use \fBFLAC__metadata_chain_write_with_callbacks_and_tempfile()\fP instead\&. Or, \fBFLAC__metadata_chain_write_with_callbacks_and_tempfile()\fP was called when the chain write does not require a tempfile; use \fBFLAC__metadata_chain_write_with_callbacks()\fP instead\&. Always check \fBFLAC__metadata_chain_check_if_tempfile_needed()\fP before writing via callbacks\&. 
+.PP
+Definition at line 721 of file metadata\&.h\&.
+.SH "Function Documentation"
+.PP 
+.SS "\fBFLAC_API\fP \fBFLAC__bool\fP FLAC__metadata_chain_check_if_tempfile_needed (\fBFLAC__Metadata_Chain\fP * chain, \fBFLAC__bool\fP use_padding)"
+Checks if writing the given chain would require the use of a temporary file, or if it could be written in place\&.
+.PP
+Under certain conditions, padding can be utilized so that writing edited metadata back to the \fBFLAC\fP file does not require rewriting the entire file\&. If rewriting is required, then a temporary workfile is required\&. When writing metadata using callbacks, you must check this function to know whether to call \fBFLAC__metadata_chain_write_with_callbacks()\fP or \fBFLAC__metadata_chain_write_with_callbacks_and_tempfile()\fP\&. When writing with \fBFLAC__metadata_chain_write()\fP, the temporary file is handled internally\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIchain\fP A pointer to an existing chain\&. 
+.br
+\fIuse_padding\fP Whether or not padding will be allowed to be used during the write\&. The value of \fIuse_padding\fP given here must match the value later passed to \fBFLAC__metadata_chain_write_with_callbacks()\fP or FLAC__metadata_chain_write_with_callbacks_with_tempfile()\&.  
+.PP
+.nf
+1 chain != NULL 
+
+.fi
+.PP
+ 
+.RE
+.PP
+\fBReturn values:\fP
+.RS 4
+\fIFLAC__bool\fP \fCtrue\fP if writing the current chain would require a tempfile, or \fCfalse\fP if metadata can be written in place\&. 
+.RE
+.PP
+
+.PP
+Definition at line 1600 of file metadata_iterators\&.c\&.
+.SS "\fBFLAC_API\fP \fBvoid\fP FLAC__metadata_chain_delete (\fBFLAC__Metadata_Chain\fP * chain)"
+Free a chain instance\&. Deletes the object pointed to by \fIchain\fP\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIchain\fP A pointer to an existing chain\&.  
+.PP
+.nf
+1 chain != NULL 
+
+.fi
+.PP
+ 
+.RE
+.PP
+
+.PP
+Definition at line 1495 of file metadata_iterators\&.c\&.
+.SS "\fBFLAC_API\fP \fBvoid\fP FLAC__metadata_chain_merge_padding (\fBFLAC__Metadata_Chain\fP * chain)"
+Merge adjacent PADDING blocks into a single block\&.
+.PP
+\fBNote:\fP
+.RS 4
+This function does not write to the \fBFLAC\fP file, it only modifies the chain\&.
+.RE
+.PP
+\fBWarning:\fP
+.RS 4
+Any iterator on the current chain will become invalid after this call\&. You should delete the iterator and get a new one\&.
+.RE
+.PP
+\fBParameters:\fP
+.RS 4
+\fIchain\fP A pointer to an existing chain\&.  
+.PP
+.nf
+1 chain != NULL 
+
+.fi
+.PP
+ 
+.RE
+.PP
+
+.PP
+Definition at line 1781 of file metadata_iterators\&.c\&.
+.SS "\fBFLAC_API\fP \fBFLAC__Metadata_Chain\fP* FLAC__metadata_chain_new (\fBvoid\fP)"
+Create a new chain instance\&.
+.PP
+\fBReturn values:\fP
+.RS 4
+\fIFLAC__Metadata_Chain*\fP \fCNULL\fP if there was an error allocating memory, else the new instance\&. 
+.RE
+.PP
+
+.PP
+Definition at line 1485 of file metadata_iterators\&.c\&.
+.SS "\fBFLAC_API\fP \fBFLAC__bool\fP FLAC__metadata_chain_read (\fBFLAC__Metadata_Chain\fP * chain, \fBconst\fP char * filename)"
+Read all metadata from a \fBFLAC\fP file into the chain\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIchain\fP A pointer to an existing chain\&. 
+.br
+\fIfilename\fP The path to the \fBFLAC\fP file to read\&.  
+.PP
+.nf
+1 chain != NULL 
+
+.fi
+.PP
+ 
+.PP
+.nf
+1 filename != NULL 
+
+.fi
+.PP
+ 
+.RE
+.PP
+\fBReturn values:\fP
+.RS 4
+\fIFLAC__bool\fP \fCtrue\fP if a valid list of metadata blocks was read from \fIfilename\fP, else \fCfalse\fP\&. On failure, check the status with \fBFLAC__metadata_chain_status()\fP\&. 
+.RE
+.PP
+
+.PP
+Definition at line 1548 of file metadata_iterators\&.c\&.
+.SS "\fBFLAC_API\fP \fBFLAC__bool\fP FLAC__metadata_chain_read_ogg (\fBFLAC__Metadata_Chain\fP * chain, \fBconst\fP char * filename)"
+Read all metadata from an Ogg \fBFLAC\fP file into the chain\&.
+.PP
+\fBNote:\fP
+.RS 4
+Ogg \fBFLAC\fP metadata data writing is not supported yet and \fBFLAC__metadata_chain_write()\fP will fail\&.
+.RE
+.PP
+\fBParameters:\fP
+.RS 4
+\fIchain\fP A pointer to an existing chain\&. 
+.br
+\fIfilename\fP The path to the Ogg \fBFLAC\fP file to read\&.  
+.PP
+.nf
+1 chain != NULL 
+
+.fi
+.PP
+ 
+.PP
+.nf
+1 filename != NULL 
+
+.fi
+.PP
+ 
+.RE
+.PP
+\fBReturn values:\fP
+.RS 4
+\fIFLAC__bool\fP \fCtrue\fP if a valid list of metadata blocks was read from \fIfilename\fP, else \fCfalse\fP\&. On failure, check the status with \fBFLAC__metadata_chain_status()\fP\&. 
+.RE
+.PP
+
+.PP
+Definition at line 1554 of file metadata_iterators\&.c\&.
+.SS "\fBFLAC_API\fP \fBFLAC__bool\fP FLAC__metadata_chain_read_ogg_with_callbacks (\fBFLAC__Metadata_Chain\fP * chain, \fBFLAC__IOHandle\fP handle, \fBFLAC__IOCallbacks\fP callbacks)"
+Read all metadata from an Ogg \fBFLAC\fP stream into the chain via I/O callbacks\&.
+.PP
+The \fIhandle\fP need only be open for reading, but must be seekable\&. The equivalent minimum stdio fopen() file mode is \fC'r'\fP (or \fC'rb'\fP for Windows)\&.
+.PP
+\fBNote:\fP
+.RS 4
+Ogg \fBFLAC\fP metadata data writing is not supported yet and \fBFLAC__metadata_chain_write()\fP will fail\&.
+.RE
+.PP
+\fBParameters:\fP
+.RS 4
+\fIchain\fP A pointer to an existing chain\&. 
+.br
+\fIhandle\fP The I/O handle of the Ogg \fBFLAC\fP stream to read\&. The handle will NOT be closed after the metadata is read; that is the duty of the caller\&. 
+.br
+\fIcallbacks\fP A set of callbacks to use for I/O\&. The mandatory callbacks are \fIread\fP, \fIseek\fP, and \fItell\fP\&.  
+.PP
+.nf
+1 chain != NULL 
+
+.fi
+.PP
+ 
+.RE
+.PP
+\fBReturn values:\fP
+.RS 4
+\fIFLAC__bool\fP \fCtrue\fP if a valid list of metadata blocks was read from \fIhandle\fP, else \fCfalse\fP\&. On failure, check the status with \fBFLAC__metadata_chain_status()\fP\&. 
+.RE
+.PP
+
+.PP
+Definition at line 1595 of file metadata_iterators\&.c\&.
+.SS "\fBFLAC_API\fP \fBFLAC__bool\fP FLAC__metadata_chain_read_with_callbacks (\fBFLAC__Metadata_Chain\fP * chain, \fBFLAC__IOHandle\fP handle, \fBFLAC__IOCallbacks\fP callbacks)"
+Read all metadata from a \fBFLAC\fP stream into the chain via I/O callbacks\&.
+.PP
+The \fIhandle\fP need only be open for reading, but must be seekable\&. The equivalent minimum stdio fopen() file mode is \fC'r'\fP (or \fC'rb'\fP for Windows)\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIchain\fP A pointer to an existing chain\&. 
+.br
+\fIhandle\fP The I/O handle of the \fBFLAC\fP stream to read\&. The handle will NOT be closed after the metadata is read; that is the duty of the caller\&. 
+.br
+\fIcallbacks\fP A set of callbacks to use for I/O\&. The mandatory callbacks are \fIread\fP, \fIseek\fP, and \fItell\fP\&.  
+.PP
+.nf
+1 chain != NULL 
+
+.fi
+.PP
+ 
+.RE
+.PP
+\fBReturn values:\fP
+.RS 4
+\fIFLAC__bool\fP \fCtrue\fP if a valid list of metadata blocks was read from \fIhandle\fP, else \fCfalse\fP\&. On failure, check the status with \fBFLAC__metadata_chain_status()\fP\&. 
+.RE
+.PP
+
+.PP
+Definition at line 1589 of file metadata_iterators\&.c\&.
+.SS "\fBFLAC_API\fP \fBvoid\fP FLAC__metadata_chain_sort_padding (\fBFLAC__Metadata_Chain\fP * chain)"
+This function will move all PADDING blocks to the end on the metadata, then merge them into a single block\&.
+.PP
+\fBNote:\fP
+.RS 4
+This function does not write to the \fBFLAC\fP file, it only modifies the chain\&.
+.RE
+.PP
+\fBWarning:\fP
+.RS 4
+Any iterator on the current chain will become invalid after this call\&. You should delete the iterator and get a new one\&.
+.RE
+.PP
+\fBParameters:\fP
+.RS 4
+\fIchain\fP A pointer to an existing chain\&.  
+.PP
+.nf
+1 chain != NULL 
+
+.fi
+.PP
+ 
+.RE
+.PP
+
+.PP
+Definition at line 1793 of file metadata_iterators\&.c\&.
+.SS "\fBFLAC_API\fP \fBFLAC__Metadata_ChainStatus\fP FLAC__metadata_chain_status (\fBFLAC__Metadata_Chain\fP * chain)"
+Get the current status of the chain\&. Call this after a function returns \fCfalse\fP to get the reason for the error\&. Also resets the status to FLAC__METADATA_CHAIN_STATUS_OK\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIchain\fP A pointer to an existing chain\&.  
+.PP
+.nf
+1 chain != NULL 
+
+.fi
+.PP
+ 
+.RE
+.PP
+\fBReturn values:\fP
+.RS 4
+\fIFLAC__Metadata_ChainStatus\fP The current status of the chain\&. 
+.RE
+.PP
+
+.PP
+Definition at line 1504 of file metadata_iterators\&.c\&.
+.SS "\fBFLAC_API\fP \fBFLAC__bool\fP FLAC__metadata_chain_write (\fBFLAC__Metadata_Chain\fP * chain, \fBFLAC__bool\fP use_padding, \fBFLAC__bool\fP preserve_file_stats)"
+Write all metadata out to the \fBFLAC\fP file\&. This function tries to be as efficient as possible; how the metadata is actually written is shown by the following:
+.PP
+If the current chain is the same size as the existing metadata, the new data is written in place\&.
+.PP
+If the current chain is longer than the existing metadata, and \fIuse_padding\fP is \fCtrue\fP, and the last block is a PADDING block of sufficient length, the function will truncate the final padding block so that the overall size of the metadata is the same as the existing metadata, and then just rewrite the metadata\&. Otherwise, if not all of the above conditions are met, the entire \fBFLAC\fP file must be rewritten\&. If you want to use padding this way it is a good idea to call \fBFLAC__metadata_chain_sort_padding()\fP first so that you have the maximum amount of padding to work with, unless you need to preserve ordering of the PADDING blocks for some reason\&.
+.PP
+If the current chain is shorter than the existing metadata, and \fIuse_padding\fP is \fCtrue\fP, and the final block is a PADDING block, the padding is extended to make the overall size the same as the existing data\&. If \fIuse_padding\fP is \fCtrue\fP and the last block is not a PADDING block, a new PADDING block is added to the end of the new data to make it the same size as the existing data (if possible, see the note to \fBFLAC__metadata_simple_iterator_set_block()\fP about the four byte limit) and the new data is written in place\&. If none of the above apply or \fIuse_padding\fP is \fCfalse\fP, the entire \fBFLAC\fP file is rewritten\&.
+.PP
+If \fIpreserve_file_stats\fP is \fCtrue\fP, the owner and modification time will be preserved even if the \fBFLAC\fP file is written\&.
+.PP
+For this write function to be used, the chain must have been read with \fBFLAC__metadata_chain_read()\fP/FLAC__metadata_chain_read_ogg(), not \fBFLAC__metadata_chain_read_with_callbacks()\fP/FLAC__metadata_chain_read_ogg_with_callbacks()\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIchain\fP A pointer to an existing chain\&. 
+.br
+\fIuse_padding\fP See above\&. 
+.br
+\fIpreserve_file_stats\fP See above\&.  
+.PP
+.nf
+1 chain != NULL 
+
+.fi
+.PP
+ 
+.RE
+.PP
+\fBReturn values:\fP
+.RS 4
+\fIFLAC__bool\fP \fCtrue\fP if the write succeeded, else \fCfalse\fP\&. On failure, check the status with \fBFLAC__metadata_chain_status()\fP\&. 
+.RE
+.PP
+
+.PP
+Definition at line 1634 of file metadata_iterators\&.c\&.
+.SS "\fBFLAC_API\fP \fBFLAC__bool\fP FLAC__metadata_chain_write_with_callbacks (\fBFLAC__Metadata_Chain\fP * chain, \fBFLAC__bool\fP use_padding, \fBFLAC__IOHandle\fP handle, \fBFLAC__IOCallbacks\fP callbacks)"
+Write all metadata out to a \fBFLAC\fP stream via callbacks\&.
+.PP
+(See \fBFLAC__metadata_chain_write()\fP for the details on how padding is used to write metadata in place if possible\&.)
+.PP
+The \fIhandle\fP must be open for updating and be seekable\&. The equivalent minimum stdio fopen() file mode is \fC'r+'\fP (or \fC'r+b'\fP for Windows)\&.
+.PP
+For this write function to be used, the chain must have been read with \fBFLAC__metadata_chain_read_with_callbacks()\fP/FLAC__metadata_chain_read_ogg_with_callbacks(), not \fBFLAC__metadata_chain_read()\fP/FLAC__metadata_chain_read_ogg()\&. Also, \fBFLAC__metadata_chain_check_if_tempfile_needed()\fP must have returned \fCfalse\fP\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIchain\fP A pointer to an existing chain\&. 
+.br
+\fIuse_padding\fP See \fBFLAC__metadata_chain_write()\fP 
+.br
+\fIhandle\fP The I/O handle of the \fBFLAC\fP stream to write\&. The handle will NOT be closed after the metadata is written; that is the duty of the caller\&. 
+.br
+\fIcallbacks\fP A set of callbacks to use for I/O\&. The mandatory callbacks are \fIwrite\fP and \fIseek\fP\&.  
+.PP
+.nf
+1 chain != NULL 
+
+.fi
+.PP
+ 
+.RE
+.PP
+\fBReturn values:\fP
+.RS 4
+\fIFLAC__bool\fP \fCtrue\fP if the write succeeded, else \fCfalse\fP\&. On failure, check the status with \fBFLAC__metadata_chain_status()\fP\&. 
+.RE
+.PP
+
+.PP
+Definition at line 1685 of file metadata_iterators\&.c\&.
+.SS "\fBFLAC_API\fP \fBFLAC__bool\fP FLAC__metadata_chain_write_with_callbacks_and_tempfile (\fBFLAC__Metadata_Chain\fP * chain, \fBFLAC__bool\fP use_padding, \fBFLAC__IOHandle\fP handle, \fBFLAC__IOCallbacks\fP callbacks, \fBFLAC__IOHandle\fP temp_handle, \fBFLAC__IOCallbacks\fP temp_callbacks)"
+Write all metadata out to a \fBFLAC\fP stream via callbacks\&.
+.PP
+(See \fBFLAC__metadata_chain_write()\fP for the details on how padding is used to write metadata in place if possible\&.)
+.PP
+This version of the write-with-callbacks function must be used when \fBFLAC__metadata_chain_check_if_tempfile_needed()\fP returns true\&. In this function, you must supply an I/O handle corresponding to the \fBFLAC\fP file to edit, and a temporary handle to which the new \fBFLAC\fP file will be written\&. It is the caller's job to move this temporary \fBFLAC\fP file on top of the original \fBFLAC\fP file to complete the metadata edit\&.
+.PP
+The \fIhandle\fP must be open for reading and be seekable\&. The equivalent minimum stdio fopen() file mode is \fC'r'\fP (or \fC'rb'\fP for Windows)\&.
+.PP
+The \fItemp_handle\fP must be open for writing\&. The equivalent minimum stdio fopen() file mode is \fC'w'\fP (or \fC'wb'\fP for Windows)\&. It should be an empty stream, or at least positioned at the start-of-file (in which case it is the caller's duty to truncate it on return)\&.
+.PP
+For this write function to be used, the chain must have been read with \fBFLAC__metadata_chain_read_with_callbacks()\fP/FLAC__metadata_chain_read_ogg_with_callbacks(), not \fBFLAC__metadata_chain_read()\fP/FLAC__metadata_chain_read_ogg()\&. Also, \fBFLAC__metadata_chain_check_if_tempfile_needed()\fP must have returned \fCtrue\fP\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIchain\fP A pointer to an existing chain\&. 
+.br
+\fIuse_padding\fP See \fBFLAC__metadata_chain_write()\fP 
+.br
+\fIhandle\fP The I/O handle of the original \fBFLAC\fP stream to read\&. The handle will NOT be closed after the metadata is written; that is the duty of the caller\&. 
+.br
+\fIcallbacks\fP A set of callbacks to use for I/O on \fIhandle\fP\&. The mandatory callbacks are \fIread\fP, \fIseek\fP, and \fIeof\fP\&. 
+.br
+\fItemp_handle\fP The I/O handle of the \fBFLAC\fP stream to write\&. The handle will NOT be closed after the metadata is written; that is the duty of the caller\&. 
+.br
+\fItemp_callbacks\fP A set of callbacks to use for I/O on temp_handle\&. The only mandatory callback is \fIwrite\fP\&.  
+.PP
+.nf
+1 chain != NULL 
+
+.fi
+.PP
+ 
+.RE
+.PP
+\fBReturn values:\fP
+.RS 4
+\fIFLAC__bool\fP \fCtrue\fP if the write succeeded, else \fCfalse\fP\&. On failure, check the status with \fBFLAC__metadata_chain_status()\fP\&. 
+.RE
+.PP
+
+.PP
+Definition at line 1722 of file metadata_iterators\&.c\&.
+.SS "\fBFLAC_API\fP \fBvoid\fP FLAC__metadata_iterator_delete (\fBFLAC__Metadata_Iterator\fP * iterator)"
+Free an iterator instance\&. Deletes the object pointed to by \fIiterator\fP\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIiterator\fP A pointer to an existing iterator\&.  
+.PP
+.nf
+1 iterator != NULL 
+
+.fi
+.PP
+ 
+.RE
+.PP
+
+.PP
+Definition at line 1832 of file metadata_iterators\&.c\&.
+.SS "\fBFLAC_API\fP \fBFLAC__bool\fP FLAC__metadata_iterator_delete_block (\fBFLAC__Metadata_Iterator\fP * iterator, \fBFLAC__bool\fP replace_with_padding)"
+Removes the current block from the chain\&. If \fIreplace_with_padding\fP is \fCtrue\fP, the block will instead be replaced with a padding block of equal size\&. You can not delete the STREAMINFO block\&. The iterator will be left pointing to the block before the one just 'deleted', even if \fIreplace_with_padding\fP is \fCtrue\fP\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIiterator\fP A pointer to an existing initialized iterator\&. 
+.br
+\fIreplace_with_padding\fP See above\&.  
+.PP
+.nf
+1 iterator != NULL 
+
+.fi
+.PP
+ \fIiterator\fP has been successfully initialized with \fBFLAC__metadata_iterator_init()\fP 
+.RE
+.PP
+\fBReturn values:\fP
+.RS 4
+\fIFLAC__bool\fP \fCfalse\fP if the conditions in the above description are not met, otherwise \fCtrue\fP\&. 
+.RE
+.PP
+
+.PP
+Definition at line 1895 of file metadata_iterators\&.c\&.
+.SS "\fBFLAC_API\fP \fBFLAC__StreamMetadata\fP* FLAC__metadata_iterator_get_block (\fBFLAC__Metadata_Iterator\fP * iterator)"
+Get the metadata block at the current position\&. You can modify the block in place but must write the chain before the changes are reflected to the \fBFLAC\fP file\&. You do not need to call \fBFLAC__metadata_iterator_set_block()\fP to reflect the changes; the pointer returned by \fBFLAC__metadata_iterator_get_block()\fP points directly into the chain\&.
+.PP
+\fBWarning:\fP
+.RS 4
+Do not call \fBFLAC__metadata_object_delete()\fP on the returned object; to delete a block use \fBFLAC__metadata_iterator_delete_block()\fP\&.
+.RE
+.PP
+\fBParameters:\fP
+.RS 4
+\fIiterator\fP A pointer to an existing initialized iterator\&.  
+.PP
+.nf
+1 iterator != NULL 
+
+.fi
+.PP
+ \fIiterator\fP has been successfully initialized with \fBFLAC__metadata_iterator_init()\fP 
+.RE
+.PP
+\fBReturn values:\fP
+.RS 4
+\fIFLAC__StreamMetadata*\fP The current metadata block\&. 
+.RE
+.PP
+
+.PP
+Definition at line 1880 of file metadata_iterators\&.c\&.
+.SS "\fBFLAC_API\fP \fBFLAC__MetadataType\fP FLAC__metadata_iterator_get_block_type (\fBconst\fP \fBFLAC__Metadata_Iterator\fP * iterator)"
+Get the type of the metadata block at the current position\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIiterator\fP A pointer to an existing initialized iterator\&.  
+.PP
+.nf
+1 iterator != NULL 
+
+.fi
+.PP
+ \fIiterator\fP has been successfully initialized with \fBFLAC__metadata_iterator_init()\fP 
+.RE
+.PP
+\fBReturn values:\fP
+.RS 4
+\fIFLAC__MetadataType\fP The type of the metadata block at the current iterator position\&. 
+.RE
+.PP
+
+.PP
+Definition at line 1871 of file metadata_iterators\&.c\&.
+.SS "\fBFLAC_API\fP \fBvoid\fP FLAC__metadata_iterator_init (\fBFLAC__Metadata_Iterator\fP * iterator, \fBFLAC__Metadata_Chain\fP * chain)"
+Initialize the iterator to point to the first metadata block in the given chain\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIiterator\fP A pointer to an existing iterator\&. 
+.br
+\fIchain\fP A pointer to an existing and initialized (read) chain\&.  
+.PP
+.nf
+1 iterator != NULL 
+
+.fi
+.PP
+ 
+.PP
+.nf
+1 chain != NULL 
+
+.fi
+.PP
+ 
+.RE
+.PP
+
+.PP
+Definition at line 1839 of file metadata_iterators\&.c\&.
+.SS "\fBFLAC_API\fP \fBFLAC__bool\fP FLAC__metadata_iterator_insert_block_after (\fBFLAC__Metadata_Iterator\fP * iterator, \fBFLAC__StreamMetadata\fP * block)"
+Insert a new block after the current block\&. You cannot insert a STREAMINFO block as there can be only one, the one that already exists at the head when you read in a chain\&. The chain takes ownership of the new block and it will be deleted when the chain is deleted\&. The iterator will be left pointing to the new block\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIiterator\fP A pointer to an existing initialized iterator\&. 
+.br
+\fIblock\fP A pointer to a metadata block to insert\&.  
+.PP
+.nf
+1 iterator != NULL 
+
+.fi
+.PP
+ \fIiterator\fP has been successfully initialized with \fBFLAC__metadata_iterator_init()\fP 
+.RE
+.PP
+\fBReturn values:\fP
+.RS 4
+\fIFLAC__bool\fP \fCfalse\fP if the conditions in the above description are not met, or a memory allocation error occurs, otherwise \fCtrue\fP\&. 
+.RE
+.PP
+
+.PP
+Definition at line 1946 of file metadata_iterators\&.c\&.
+.SS "\fBFLAC_API\fP \fBFLAC__bool\fP FLAC__metadata_iterator_insert_block_before (\fBFLAC__Metadata_Iterator\fP * iterator, \fBFLAC__StreamMetadata\fP * block)"
+Insert a new block before the current block\&. You cannot insert a block before the first STREAMINFO block\&. You cannot insert a STREAMINFO block as there can be only one, the one that already exists at the head when you read in a chain\&. The chain takes ownership of the new block and it will be deleted when the chain is deleted\&. The iterator will be left pointing to the new block\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIiterator\fP A pointer to an existing initialized iterator\&. 
+.br
+\fIblock\fP A pointer to a metadata block to insert\&.  
+.PP
+.nf
+1 iterator != NULL 
+
+.fi
+.PP
+ \fIiterator\fP has been successfully initialized with \fBFLAC__metadata_iterator_init()\fP 
+.RE
+.PP
+\fBReturn values:\fP
+.RS 4
+\fIFLAC__bool\fP \fCfalse\fP if the conditions in the above description are not met, or a memory allocation error occurs, otherwise \fCtrue\fP\&. 
+.RE
+.PP
+
+.PP
+Definition at line 1921 of file metadata_iterators\&.c\&.
+.SS "\fBFLAC_API\fP \fBFLAC__Metadata_Iterator\fP* FLAC__metadata_iterator_new (\fBvoid\fP)"
+Create a new iterator instance\&.
+.PP
+\fBReturn values:\fP
+.RS 4
+\fIFLAC__Metadata_Iterator*\fP \fCNULL\fP if there was an error allocating memory, else the new instance\&. 
+.RE
+.PP
+
+.PP
+Definition at line 1820 of file metadata_iterators\&.c\&.
+.SS "\fBFLAC_API\fP \fBFLAC__bool\fP FLAC__metadata_iterator_next (\fBFLAC__Metadata_Iterator\fP * iterator)"
+Moves the iterator forward one metadata block, returning \fCfalse\fP if already at the end\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIiterator\fP A pointer to an existing initialized iterator\&.  
+.PP
+.nf
+1 iterator != NULL 
+
+.fi
+.PP
+ \fIiterator\fP has been successfully initialized with \fBFLAC__metadata_iterator_init()\fP 
+.RE
+.PP
+\fBReturn values:\fP
+.RS 4
+\fIFLAC__bool\fP \fCfalse\fP if already at the last metadata block of the chain, else \fCtrue\fP\&. 
+.RE
+.PP
+
+.PP
+Definition at line 1849 of file metadata_iterators\&.c\&.
+.SS "\fBFLAC_API\fP \fBFLAC__bool\fP FLAC__metadata_iterator_prev (\fBFLAC__Metadata_Iterator\fP * iterator)"
+Moves the iterator backward one metadata block, returning \fCfalse\fP if already at the beginning\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIiterator\fP A pointer to an existing initialized iterator\&.  
+.PP
+.nf
+1 iterator != NULL 
+
+.fi
+.PP
+ \fIiterator\fP has been successfully initialized with \fBFLAC__metadata_iterator_init()\fP 
+.RE
+.PP
+\fBReturn values:\fP
+.RS 4
+\fIFLAC__bool\fP \fCfalse\fP if already at the first metadata block of the chain, else \fCtrue\fP\&. 
+.RE
+.PP
+
+.PP
+Definition at line 1860 of file metadata_iterators\&.c\&.
+.SS "\fBFLAC_API\fP \fBFLAC__bool\fP FLAC__metadata_iterator_set_block (\fBFLAC__Metadata_Iterator\fP * iterator, \fBFLAC__StreamMetadata\fP * block)"
+Set the metadata block at the current position, replacing the existing block\&. The new block passed in becomes owned by the chain and it will be deleted when the chain is deleted\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIiterator\fP A pointer to an existing initialized iterator\&. 
+.br
+\fIblock\fP A pointer to a metadata block\&.  
+.PP
+.nf
+1 iterator != NULL 
+
+.fi
+.PP
+ \fIiterator\fP has been successfully initialized with \fBFLAC__metadata_iterator_init()\fP 
+.PP
+.nf
+1 block != NULL 
+
+.fi
+.PP
+ 
+.RE
+.PP
+\fBReturn values:\fP
+.RS 4
+\fIFLAC__bool\fP \fCfalse\fP if the conditions in the above description are not met, or a memory allocation error occurs, otherwise \fCtrue\fP\&. 
+.RE
+.PP
+
+.PP
+Definition at line 1888 of file metadata_iterators\&.c\&.
+.SH "Variable Documentation"
+.PP 
+.SS "\fBFLAC_API\fP \fBconst\fP char* \fBconst\fP FLAC__Metadata_ChainStatusString[]"
+Maps a FLAC__Metadata_ChainStatus to a C string\&.
+.PP
+Using a FLAC__Metadata_ChainStatus as the index to this array will give the string equivalent\&. The contents should not be modified\&. 
+.PP
+Definition at line 909 of file metadata_iterators\&.c\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

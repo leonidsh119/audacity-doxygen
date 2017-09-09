@@ -1,0 +1,44 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="lv2_2plugins_2eg-fifths_8lv2_2waflib_2_tools_2cxx_8py" kind="file" language="Python">
+    <compoundname>cxx.py</compoundname>
+    <innerclass refid="classwaflib_1_1_tools_1_1cxx_1_1cxx" prot="public">waflib::Tools::cxx::cxx</innerclass>
+    <innerclass refid="classwaflib_1_1_tools_1_1cxx_1_1cxxprogram" prot="public">waflib::Tools::cxx::cxxprogram</innerclass>
+    <innerclass refid="classwaflib_1_1_tools_1_1cxx_1_1cxxshlib" prot="public">waflib::Tools::cxx::cxxshlib</innerclass>
+    <innerclass refid="classwaflib_1_1_tools_1_1cxx_1_1cxxstlib" prot="public">waflib::Tools::cxx::cxxstlib</innerclass>
+    <innernamespace refid="namespacewaflib_1_1_tools_1_1cxx">waflib::Tools::cxx</innernamespace>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="comment">#!<sp/>/usr/bin/env<sp/>python</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="comment">#<sp/>encoding:<sp/>utf-8</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="comment">#<sp/>WARNING!<sp/>Do<sp/>not<sp/>edit!<sp/>http://waf.googlecode.com/git/docs/wafbook/single.html#_obtaining_the_waf_file</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="keyword">from</highlight><highlight class="normal"><sp/>waflib<sp/></highlight><highlight class="keyword">import</highlight><highlight class="normal"><sp/>TaskGen,Task,Utils</highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="keyword">from</highlight><highlight class="normal"><sp/><ref refid="namespacewaflib_1_1_tools" kindref="compound">waflib.Tools</ref><sp/></highlight><highlight class="keyword">import</highlight><highlight class="normal"><sp/>c_preproc</highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="keyword">from</highlight><highlight class="normal"><sp/><ref refid="namespacewaflib_1_1_tools_1_1ccroot" kindref="compound">waflib.Tools.ccroot</ref><sp/></highlight><highlight class="keyword">import</highlight><highlight class="normal"><sp/>link_task,stlink_task</highlight></codeline>
+<codeline lineno="8"><highlight class="normal">@TaskGen.extension(</highlight><highlight class="stringliteral">&apos;.cpp&apos;</highlight><highlight class="normal">,</highlight><highlight class="stringliteral">&apos;.cc&apos;</highlight><highlight class="normal">,</highlight><highlight class="stringliteral">&apos;.cxx&apos;</highlight><highlight class="normal">,</highlight><highlight class="stringliteral">&apos;.C&apos;</highlight><highlight class="normal">,</highlight><highlight class="stringliteral">&apos;.c++&apos;</highlight><highlight class="normal">)</highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal"><ref refid="namespacewaflib_1_1_tools_1_1cxx_1a31f0414cdfdb6dd749e0f65f788bfbda" kindref="member">cxx_hook</ref>(self,node):</highlight></codeline>
+<codeline lineno="10"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>self.create_compiled_task(</highlight><highlight class="stringliteral">&apos;cxx&apos;</highlight><highlight class="normal">,node)</highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordflow">not</highlight><highlight class="stringliteral">&apos;.c&apos;</highlight><highlight class="keywordflow">in</highlight><highlight class="normal"><sp/>TaskGen.task_gen.mappings:</highlight></codeline>
+<codeline lineno="12"><highlight class="normal"><sp/><sp/><sp/><sp/>TaskGen.task_gen.mappings[</highlight><highlight class="stringliteral">&apos;.c&apos;</highlight><highlight class="normal">]=TaskGen.task_gen.mappings[</highlight><highlight class="stringliteral">&apos;.cpp&apos;</highlight><highlight class="normal">]</highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal">cxx(Task.Task):</highlight></codeline>
+<codeline lineno="14"><highlight class="normal"><sp/><sp/><sp/><sp/>run_str=</highlight><highlight class="stringliteral">&apos;${CXX}<sp/>${ARCH_ST:ARCH}<sp/>${CXXFLAGS}<sp/>${CPPFLAGS}<sp/>${FRAMEWORKPATH_ST:FRAMEWORKPATH}<sp/>${CPPPATH_ST:INCPATHS}<sp/>${DEFINES_ST:DEFINES}<sp/>${CXX_SRC_F}${SRC}<sp/>${CXX_TGT_F}${TGT}&apos;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="15"><highlight class="normal"><sp/><sp/><sp/><sp/>vars=[</highlight><highlight class="stringliteral">&apos;CXXDEPS&apos;</highlight><highlight class="normal">]</highlight></codeline>
+<codeline lineno="16"><highlight class="normal"><sp/><sp/><sp/><sp/>ext_in=[</highlight><highlight class="stringliteral">&apos;.h&apos;</highlight><highlight class="normal">]</highlight></codeline>
+<codeline lineno="17"><highlight class="normal"><sp/><sp/><sp/><sp/>scan=c_preproc.scan</highlight></codeline>
+<codeline lineno="18"><highlight class="normal"></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal">cxxprogram(<ref refid="namespacewaflib_1_1_tools_1_1ccroot_1ae241b759e3c8c26160691a6716025a0c" kindref="member">link_task</ref>):</highlight></codeline>
+<codeline lineno="19"><highlight class="normal"><sp/><sp/><sp/><sp/>run_str=</highlight><highlight class="stringliteral">&apos;${LINK_CXX}<sp/>${LINKFLAGS}<sp/>${CXXLNK_SRC_F}${SRC}<sp/>${CXXLNK_TGT_F}${TGT[0].abspath()}<sp/>${RPATH_ST:RPATH}<sp/>${FRAMEWORKPATH_ST:FRAMEWORKPATH}<sp/>${FRAMEWORK_ST:FRAMEWORK}<sp/>${ARCH_ST:ARCH}<sp/>${STLIB_MARKER}<sp/>${STLIBPATH_ST:STLIBPATH}<sp/>${STLIB_ST:STLIB}<sp/>${SHLIB_MARKER}<sp/>${LIBPATH_ST:LIBPATH}<sp/>${LIB_ST:LIB}&apos;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="20"><highlight class="normal"><sp/><sp/><sp/><sp/>vars=[</highlight><highlight class="stringliteral">&apos;LINKDEPS&apos;</highlight><highlight class="normal">]</highlight></codeline>
+<codeline lineno="21"><highlight class="normal"><sp/><sp/><sp/><sp/>ext_out=[</highlight><highlight class="stringliteral">&apos;.bin&apos;</highlight><highlight class="normal">]</highlight></codeline>
+<codeline lineno="22"><highlight class="normal"><sp/><sp/><sp/><sp/>inst_to=</highlight><highlight class="stringliteral">&apos;${BINDIR}&apos;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="23"><highlight class="normal"></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal">cxxshlib(cxxprogram):</highlight></codeline>
+<codeline lineno="24"><highlight class="normal"><sp/><sp/><sp/><sp/>inst_to=</highlight><highlight class="stringliteral">&apos;${LIBDIR}&apos;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="25"><highlight class="normal"></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal">cxxstlib(stlink_task):</highlight></codeline>
+<codeline lineno="26"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">pass</highlight><highlight class="normal"></highlight></codeline>
+    </programlisting>
+    <location file="C:/_dev/OpenU/Audacity/audacity/lib-src/lv2/lv2/plugins/eg-fifths.lv2/waflib/Tools/cxx.py"/>
+  </compounddef>
+</doxygen>

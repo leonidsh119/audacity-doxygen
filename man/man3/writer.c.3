@@ -1,0 +1,202 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/lib-src/lv2/serd/src/writer.c" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/lib-src/lv2/serd/src/writer.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include 'serd_internal\&.h'\fP
+.br
+\fC#include <assert\&.h>\fP
+.br
+\fC#include <stdio\&.h>\fP
+.br
+\fC#include <stdlib\&.h>\fP
+.br
+\fC#include <string\&.h>\fP
+.br
+
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "struct \fBWriteContext\fP"
+.br
+.ti -1c
+.RI "struct \fBSepRule\fP"
+.br
+.ti -1c
+.RI "struct \fBSerdWriterImpl\fP"
+.br
+.in -1c
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBNS_RDF\fP   'http://www\&.w3\&.org/1999/02/22\-rdf\-\fBsyntax\fP\-\fBns\fP#'"
+.br
+.ti -1c
+.RI "#define \fBNS_XSD\fP   'http://www\&.w3\&.org/2001/XMLSchema#'"
+.br
+.ti -1c
+.RI "#define \fBREAD_BYTE\fP()"
+.br
+.ti -1c
+.RI "#define \fBTRY\fP(write_result)"
+.br
+.in -1c
+.SS "Enumerations"
+
+.in +1c
+.ti -1c
+.RI "enum \fBSep\fP { \fBSEP_NONE\fP, \fBSEP_END_S\fP, \fBSEP_END_P\fP, \fBSEP_END_O\fP, \fBSEP_S_P\fP, \fBSEP_P_O\fP, \fBSEP_ANON_BEGIN\fP, \fBSEP_ANON_END\fP, \fBSEP_LIST_BEGIN\fP, \fBSEP_LIST_SEP\fP, \fBSEP_LIST_END\fP }"
+.br
+.ti -1c
+.RI "enum \fBTextContext\fP { \fBWRITE_STRING\fP, \fBWRITE_LONG_STRING\fP }"
+.br
+.ti -1c
+.RI "enum \fBField\fP { \fBFIELD_NONE\fP, \fBFIELD_SUBJECT\fP, \fBFIELD_PREDICATE\fP, \fBFIELD_OBJECT\fP }"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBSERD_API\fP \fBSerdStatus\fP \fBserd_writer_write_statement\fP (\fBSerdWriter\fP *writer, \fBSerdStatementFlags\fP flags, \fBconst\fP \fBSerdNode\fP *graph, \fBconst\fP \fBSerdNode\fP *subject, \fBconst\fP \fBSerdNode\fP *\fBpredicate\fP, \fBconst\fP \fBSerdNode\fP *object, \fBconst\fP \fBSerdNode\fP *datatype, \fBconst\fP \fBSerdNode\fP *lang)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBSerdStatus\fP \fBserd_writer_end_anon\fP (\fBSerdWriter\fP *writer, \fBconst\fP \fBSerdNode\fP *\fBnode\fP)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBSerdStatus\fP \fBserd_writer_finish\fP (\fBSerdWriter\fP *writer)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBSerdWriter\fP * \fBserd_writer_new\fP (\fBSerdSyntax\fP \fBsyntax\fP, \fBSerdStyle\fP style, \fBSerdEnv\fP *env, \fBconst\fP \fBSerdURI\fP *base_uri, \fBSerdSink\fP ssink, \fBvoid\fP *stream)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBvoid\fP \fBserd_writer_set_error_sink\fP (\fBSerdWriter\fP *writer, \fBSerdErrorSink\fP error_sink, \fBvoid\fP *error_handle)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBvoid\fP \fBserd_writer_chop_blank_prefix\fP (\fBSerdWriter\fP *writer, \fBconst\fP \fBuint8_t\fP *\fBprefix\fP)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBSerdStatus\fP \fBserd_writer_set_base_uri\fP (\fBSerdWriter\fP *writer, \fBconst\fP \fBSerdNode\fP *\fBuri\fP)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBSerdStatus\fP \fBserd_writer_set_root_uri\fP (\fBSerdWriter\fP *writer, \fBconst\fP \fBSerdNode\fP *\fBuri\fP)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBSerdStatus\fP \fBserd_writer_set_prefix\fP (\fBSerdWriter\fP *writer, \fBconst\fP \fBSerdNode\fP *\fBname\fP, \fBconst\fP \fBSerdNode\fP *\fBuri\fP)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBvoid\fP \fBserd_writer_free\fP (\fBSerdWriter\fP *writer)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBSerdEnv\fP * \fBserd_writer_get_env\fP (\fBSerdWriter\fP *writer)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP size_t \fBserd_file_sink\fP (\fBconst\fP \fBvoid\fP *\fBbuf\fP, size_t \fBlen\fP, \fBvoid\fP *stream)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP size_t \fBserd_chunk_sink\fP (\fBconst\fP \fBvoid\fP *\fBbuf\fP, size_t \fBlen\fP, \fBvoid\fP *stream)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBuint8_t\fP * \fBserd_chunk_sink_finish\fP (\fBSerdChunk\fP *stream)"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define NS_RDF   'http://www\&.w3\&.org/1999/02/22\-rdf\-\fBsyntax\fP\-\fBns\fP#'"
+
+.PP
+Definition at line 24 of file writer\&.c\&.
+.SS "#define NS_XSD   'http://www\&.w3\&.org/2001/XMLSchema#'"
+
+.PP
+Definition at line 25 of file writer\&.c\&.
+.SS "#define READ_BYTE()"
+\fBValue:\fP
+.PP
+.nf
+in = utf8[i++] & 0x3F; \\
+	c  = (c << 6) | in;
+.fi
+.SS "#define TRY(write_result)"
+\fBValue:\fP
+.PP
+.nf
+if (!write_result) { \\
+		return SERD_ERR_UNKNOWN; \
+    }
+.fi
+.SH "Enumeration Type Documentation"
+.PP 
+.SS "enum \fBField\fP"
+
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fIFIELD_NONE \fP\fP
+.TP
+\fB\fIFIELD_SUBJECT \fP\fP
+.TP
+\fB\fIFIELD_PREDICATE \fP\fP
+.TP
+\fB\fIFIELD_OBJECT \fP\fP
+.PP
+Definition at line 430 of file writer\&.c\&.
+.SS "enum \fBSep\fP"
+
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fISEP_NONE \fP\fP
+.TP
+\fB\fISEP_END_S \fP\fP
+End of a subject ('\&.') 
+.TP
+\fB\fISEP_END_P \fP\fP
+End of a predicate (';') 
+.TP
+\fB\fISEP_END_O \fP\fP
+End of an object (',') 
+.TP
+\fB\fISEP_S_P \fP\fP
+Between a subject and predicate (whitespace) 
+.TP
+\fB\fISEP_P_O \fP\fP
+Between a predicate and object (whitespace) 
+.TP
+\fB\fISEP_ANON_BEGIN \fP\fP
+Start of anonymous node ('[') 
+.TP
+\fB\fISEP_ANON_END \fP\fP
+End of anonymous node (']') 
+.TP
+\fB\fISEP_LIST_BEGIN \fP\fP
+Start of list ('(') 
+.TP
+\fB\fISEP_LIST_SEP \fP\fP
+List separator (whitespace) 
+.TP
+\fB\fISEP_LIST_END \fP\fP
+End of list (')') 
+.PP
+Definition at line 39 of file writer\&.c\&.
+.SS "enum \fBTextContext\fP"
+
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fIWRITE_STRING \fP\fP
+.TP
+\fB\fIWRITE_LONG_STRING \fP\fP
+.PP
+Definition at line 99 of file writer\&.c\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

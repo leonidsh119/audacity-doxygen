@@ -1,0 +1,241 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/lib-src/portmidi/pm_mac/pmmacosxcm.c" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/lib-src/portmidi/pm_mac/pmmacosxcm.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <stdlib\&.h>\fP
+.br
+\fC#include 'portmidi\&.h'\fP
+.br
+\fC#include 'pmutil\&.h'\fP
+.br
+\fC#include 'pminternal\&.h'\fP
+.br
+\fC#include 'porttime\&.h'\fP
+.br
+\fC#include 'pmmac\&.h'\fP
+.br
+\fC#include 'pmmacosxcm\&.h'\fP
+.br
+\fC#include <stdio\&.h>\fP
+.br
+\fC#include <string\&.h>\fP
+.br
+\fC#include <CoreServices/CoreServices\&.h>\fP
+.br
+\fC#include <CoreMIDI/MIDIServices\&.h>\fP
+.br
+\fC#include <CoreAudio/HostTime\&.h>\fP
+.br
+\fC#include <unistd\&.h>\fP
+.br
+
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "struct \fBmidi_macosxcm_struct\fP"
+.br
+.in -1c
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBPACKET_BUFFER_SIZE\fP   1024"
+.br
+.ti -1c
+.RI "#define \fBMAX_BYTES_PER_S\fP   14000"
+.br
+.ti -1c
+.RI "#define \fBLIMIT_RATE\fP   1"
+.br
+.ti -1c
+.RI "#define \fBSYSEX_BUFFER_SIZE\fP   128"
+.br
+.ti -1c
+.RI "#define \fBVERBOSE_ON\fP   1"
+.br
+.ti -1c
+.RI "#define \fBVERBOSE\fP   \fBif\fP (\fBVERBOSE_ON\fP)"
+.br
+.ti -1c
+.RI "#define \fBMIDI_SYSEX\fP   0xf0"
+.br
+.ti -1c
+.RI "#define \fBMIDI_EOX\fP   0xf7"
+.br
+.ti -1c
+.RI "#define \fBMIDI_STATUS_MASK\fP   0x80"
+.br
+.ti -1c
+.RI "#define \fBNULL_REF\fP   \fBNULL\fP"
+.br
+.in -1c
+.SS "Typedefs"
+
+.in +1c
+.ti -1c
+.RI "typedef struct \fBmidi_macosxcm_struct\fP \fBmidi_macosxcm_node\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBmidi_macosxcm_struct\fP * \fBmidi_macosxcm_type\fP"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "MIDITimeStamp \fBtimestamp_pm_to_cm\fP (\fBPmTimestamp\fP timestamp)"
+.br
+.ti -1c
+.RI "\fBPmTimestamp\fP \fBtimestamp_cm_to_pm\fP (MIDITimeStamp timestamp)"
+.br
+.ti -1c
+.RI "char * \fBcm_get_full_endpoint_name\fP (MIDIEndpointRef endpoint)"
+.br
+.ti -1c
+.RI "CFStringRef \fBEndpointName\fP (MIDIEndpointRef endpoint, \fBbool\fP isExternal)"
+.br
+.ti -1c
+.RI "\fBPmError\fP \fBpm_macosxcm_init\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBpm_macosxcm_term\fP (\fBvoid\fP)"
+.br
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "\fBpm_fns_node\fP \fBpm_macosx_in_dictionary\fP"
+.br
+.ti -1c
+.RI "\fBpm_fns_node\fP \fBpm_macosx_out_dictionary\fP"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define LIMIT_RATE   1"
+
+.PP
+Definition at line 66 of file pmmacosxcm\&.c\&.
+.SS "#define MAX_BYTES_PER_S   14000"
+
+.PP
+Definition at line 45 of file pmmacosxcm\&.c\&.
+.SS "#define MIDI_EOX   0xf7"
+
+.PP
+Definition at line 74 of file pmmacosxcm\&.c\&.
+.SS "#define MIDI_STATUS_MASK   0x80"
+
+.PP
+Definition at line 75 of file pmmacosxcm\&.c\&.
+.SS "#define MIDI_SYSEX   0xf0"
+
+.PP
+Definition at line 73 of file pmmacosxcm\&.c\&.
+.SS "#define NULL_REF   \fBNULL\fP"
+
+.PP
+Definition at line 82 of file pmmacosxcm\&.c\&.
+.SS "#define PACKET_BUFFER_SIZE   1024"
+
+.PP
+Definition at line 43 of file pmmacosxcm\&.c\&.
+.SS "#define SYSEX_BUFFER_SIZE   128"
+
+.PP
+Definition at line 68 of file pmmacosxcm\&.c\&.
+.SS "#define VERBOSE   \fBif\fP (\fBVERBOSE_ON\fP)"
+
+.PP
+Definition at line 71 of file pmmacosxcm\&.c\&.
+.SS "#define VERBOSE_ON   1"
+
+.PP
+Definition at line 70 of file pmmacosxcm\&.c\&.
+.SH "Typedef Documentation"
+.PP 
+.SS "typedef struct \fBmidi_macosxcm_struct\fP  \fBmidi_macosxcm_node\fP"
+
+.SS "typedef struct \fBmidi_macosxcm_struct\fP * \fBmidi_macosxcm_type\fP"
+
+.SH "Function Documentation"
+.PP 
+.SS "char * cm_get_full_endpoint_name (MIDIEndpointRef endpoint)"
+
+.PP
+Definition at line 837 of file pmmacosxcm\&.c\&.
+.SS "CFStringRef EndpointName (MIDIEndpointRef endpoint, \fBbool\fP isExternal)"
+
+.PP
+Definition at line 711 of file pmmacosxcm\&.c\&.
+.SS "\fBPmError\fP pm_macosxcm_init (\fBvoid\fP)"
+
+.PP
+Definition at line 920 of file pmmacosxcm\&.c\&.
+.SS "\fBvoid\fP pm_macosxcm_term (\fBvoid\fP)"
+
+.PP
+Definition at line 1007 of file pmmacosxcm\&.c\&.
+.SS "\fBPmTimestamp\fP timestamp_cm_to_pm (MIDITimeStamp timestamp)"
+
+.PP
+Definition at line 698 of file pmmacosxcm\&.c\&.
+.SS "MIDITimeStamp timestamp_pm_to_cm (\fBPmTimestamp\fP timestamp)"
+
+.PP
+Definition at line 687 of file pmmacosxcm\&.c\&.
+.SH "Variable Documentation"
+.PP 
+.SS "\fBpm_fns_node\fP pm_macosx_in_dictionary"
+\fBInitial value:\fP
+.PP
+.nf
+= {
+    none_write_short,
+    none_sysex,
+    none_sysex,
+    none_write_byte,
+    none_write_short,
+    none_write_flush,
+    none_synchronize,
+    midi_in_open,
+    midi_abort,
+    midi_in_close,
+    success_poll,
+    midi_has_host_error,
+    midi_get_host_error,
+}
+.fi
+.PP
+Definition at line 887 of file pmmacosxcm\&.c\&.
+.SS "\fBpm_fns_node\fP pm_macosx_out_dictionary"
+\fBInitial value:\fP
+.PP
+.nf
+= {
+    midi_write_short,
+    midi_begin_sysex,
+    midi_end_sysex,
+    midi_write_byte,
+    midi_write_realtime,
+    midi_write_flush,
+    midi_synchronize,
+    midi_out_open,
+    midi_abort,
+    midi_out_close,
+    success_poll,
+    midi_has_host_error,
+    midi_get_host_error,
+}
+.fi
+.PP
+Definition at line 903 of file pmmacosxcm\&.c\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

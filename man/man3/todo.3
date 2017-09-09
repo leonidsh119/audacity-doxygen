@@ -1,0 +1,86 @@
+.TH "todo" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+todo \- Todo List 
+
+.IP "\fBClass \fBAudioIO\fP \fP" 1c
+run through all functions called from audio and portaudio threads to verify they are thread-safe\&. Note that synchronization of the style: 'A sets flag to signal B, B clears flag to acknowledge completion' is not thread safe in a general multiple-CPU context\&. For example, B can write to a buffer and set a completion flag\&. The flag write can occur before the buffer write due to out-of-order execution\&. Then A can see the flag and read the buffer before buffer writes complete\&. 
+.IP "\fBMember \fBAudioIO::GetOptimalSupportedSampleRate\fP ()\fP" 1c
+: should this take into account PortAudio's value for \fBPaDeviceInfo::defaultSampleRate\fP? In principal this should let us work out which rates are 'real' and which resampled in the drivers, and so prefer the real rates\&.  
+.IP "\fBMember \fBAudioIO::HandleDeviceChange\fP ()\fP" 1c
+: Make this do a sample rate query and store the result in the \fBAudioIO\fP object to avoid doing it later? Would simplify the GetSupported*Rate functions considerably  
+.IP "\fBMember \fBav_samples_alloc\fP (uint8_t **audio_data, int *linesize, int nb_channels, int nb_samples, enum AVSampleFormat sample_fmt, int align)\fP" 1c
+return the size of the allocated buffer in case of success at the next bump  
+.IP "\fBMember \fBav_samples_fill_arrays\fP (uint8_t **audio_data, int *linesize, const uint8_t *buf, int nb_channels, int nb_samples, enum AVSampleFormat sample_fmt, int align)\fP" 1c
+return minimum size in bytes required for the buffer in case of success at the next bump  
+.IP "\fBMember \fBavcodec_fill_audio_frame\fP (\fBAVFrame\fP *frame, int nb_channels, enum AVSampleFormat sample_fmt, const uint8_t *buf, int buf_size, int align)\fP" 1c
+return the size in bytes required to store the samples in case of success, at the next libavutil bump  
+.IP "\fBMember \fBavformat_find_stream_info\fP (\fBAVFormatContext\fP *ic, AVDictionary **options)\fP" 1c
+Let the user decide somehow what information is needed so that we do not waste time getting stuff the user does not need\&.  
+.IP "\fBMember \fBAVOption::help\fP \fP" 1c
+What about other languages?  
+.IP "\fBMember \fBExpandingToolBar::ExpandingToolBar\fP (wxWindow *parent, wxWindowID id, const wxPoint &pos=wxDefaultPosition, const wxSize &size=wxDefaultSize)\fP" 1c
+check whether this is a memory leak (and check similar code)  
+.IP "\fBMember \fBFileNames::TempDir\fP ()\fP" 1c
+put a counter in here to see if it gets used a lot\&. if it does, then maybe we should cache the path name each time\&.  
+.IP "\fBMember \fBGetWaveYPos\fP (float value, float min, float max, int height, bool dB, bool outer, float dBr, bool clip)\fP" 1c
+Should this function move int GuiWaveTrack where it can then use the zoomMin, zoomMax and height values without having to have them passed in to it??  
+.IP "\fBMember \fBPa_CloseStream\fP (PaStream *stream)\fP" 1c
+REVIEW: shouldn't we close anyway? see: http://www.portaudio.com/trac/ticket/115  
+.IP "\fBFile \fBpa_converters\&.c\fP \fP" 1c
+Consider whether functions which dither but don't clip should exist, V18 automatically enabled clipping whenever dithering was selected\&. Perhaps we should do the same\&. see: 'require clipping for dithering sample conversion functions?' http://www.portaudio.com/trac/ticket/112
+.PP
+implement the converters marked IMPLEMENT ME: Int32_To_Int24_Dither, Int32_To_UInt8_Dither, Int24_To_Int16_Dither, Int24_To_Int8_Dither, Int24_To_UInt8_Dither, Int16_To_Int8_Dither, Int16_To_UInt8_Dither see: 'some conversion functions are not implemented in pa_converters\&.c' http://www.portaudio.com/trac/ticket/35
+.PP
+review the converters marked REVIEW: Float32_To_Int32, Float32_To_Int32_Dither, Float32_To_Int32_Clip, Float32_To_Int32_DitherClip, Int32_To_Int16_Dither, Int32_To_Int8_Dither, Int16_To_Int32  
+.IP "\fBFile \fBpa_cpuload\&.c\fP \fP" 1c
+Dynamically calculate the coefficients used to smooth the CPU Load Measurements over time to provide a uniform characterisation of CPU Load independent of rate at which PaUtil_BeginCpuLoadMeasurement / PaUtil_EndCpuLoadMeasurement are called\&. see http://www.portaudio.com/trac/ticket/113  
+.IP "\fBMember \fBPa_GetErrorText\fP (PaError errorCode)\fP" 1c
+could catenate the last host error text to result in the case of paUnanticipatedHostError\&. see: http://www.portaudio.com/trac/ticket/114  
+.IP "\fBFile \fBpatest_toomanysines\&.c\fP \fP" 1c
+This may not be needed now that we have 'patest_out_overflow\&.c'\&.  
+.IP "\fBMember \fBPaUtil_EndCpuLoadMeasurement\fP (\fBPaUtilCpuLoadMeasurer\fP *measurer, unsigned long framesProcessed)\fP" 1c
+these coefficients shouldn't be hardwired see: http://www.portaudio.com/trac/ticket/113  
+.IP "\fBMember \fBProcessingThreadProc\fP (void *pArg)\fP" 1c
+support paInputUnderflow, paOutputOverflow and paNeverDropInput 
+.PP
+FIXME/REVIEW: can't return host error info from an asyncronous thread\&. see http://www.portaudio.com/trac/ticket/143 
+.PP
+if all of the other buffers are also ready then we discard all but the most recent\&. This is an input buffer overflow\&. FIXME: these buffers should be passed to the callback in a paNeverDropInput stream\&. http://www.portaudio.com/trac/ticket/142
+.PP
+implement inputBufferAdcTime 
+.PP
+FIXME: should probably reset the output device immediately once the callback returns paAbort see: http://www.portaudio.com/trac/ticket/141 
+.PP
+need to handle PaNeverDropInput here where necessary  
+.IP "\fBMember \fBReadStream\fP (PaStream *stream, void *buffer, unsigned long frames)\fP" 1c
+REVIEW: consider what to do if the input overflows\&. do we requeue all of the buffers? should we be running a thread to make sure they are always queued? see: http://www.portaudio.com/trac/ticket/117  
+.IP "\fBMember \fBShuttle::TransferLongLong\fP (const wxString &Name, wxLongLong_t &iValue, const wxLongLong_t &iDefault)\fP" 1c
+Fix for long long values\&.  
+.IP "\fBMember \fBShuttleGuiBase::AddRadioButton\fP (const wxString &Prompt)\fP" 1c
+This function and the next one, suitably adapted, could be used by TieRadioButton\&.  
+.IP "\fBMember \fBThemeBase::ReadImageCache\fP (bool bBinaryRead=true, bool bOkIfNotFound=false)\fP" 1c
+revisit this hack which makes adding NEW colours easier but which prevents a colour of (1,1,1) from being added\&. find an alternative way to make adding NEW colours easier\&. e\&.g\&. initialise the background to translucent, perhaps\&.  
+.IP "\fBFile \fBTrackPanel\&.cpp\fP \fP" 1c
+Refactoring of the \fBTrackPanel\fP, possibly as described in \fBTrack Panel Refactor\fP 
+.IP "\fBMember \fBTrackPanel::DoZoomInOut\fP (wxMouseEvent &event, int x)\fP" 1c
+MAGIC NUMBER: We've got several in this method\&.  
+.IP "\fBMember \fBTrackPanel::HandleGlyphDragRelease\fP (\fBLabelTrack\fP *lTrack, wxMouseEvent &event)\fP" 1c
+This method is one of a large number of methods in \fBTrackPanel\fP which suitably modified belong in other classes\&.  
+.IP "\fBMember \fBTrackPanel::HandleLabelTrackClick\fP (\fBLabelTrack\fP *lTrack, wxRect &rect, wxMouseEvent &event)\fP" 1c
+This method is one of a large number of methods in \fBTrackPanel\fP which suitably modified belong in other classes\&.  
+.IP "\fBMember \fBTrackPanel::HandleSampleEditingClick\fP (wxMouseEvent &event)\fP" 1c
+Should mCapturedTrack take the place of mDrawingTrack??  
+.IP "\fBMember \fBTrackPanel::HandleTextDragRelease\fP (\fBLabelTrack\fP *lTrack, wxMouseEvent &event)\fP" 1c
+This method is one of a large number of methods in \fBTrackPanel\fP which suitably modified belong in other classes\&.  
+.IP "\fBMember \fBTrackPanel::OnPrevTrack\fP (bool shift=false)\fP" 1c
+Merge related methods, \fBTrackPanel::OnPrevTrack\fP and \fBTrackPanel::OnNextTrack\fP\&.  
+.IP "\fBMember \fBTrackPanel::OnRateOther\fP (wxCommandEvent &event)\fP" 1c
+Remove artificial constants!! 
+.PP
+Make a real dialog box out of this!!  
+.IP "\fBMember \fBWriteStream\fP (PaStream *stream, const void *buffer, unsigned long frames)\fP" 1c
+REVIEW: consider what to do if the output underflows\&. do we requeue all the existing buffers with zeros? should we run a separate thread to keep the buffers enqueued at all times? see: http://www.portaudio.com/trac/ticket/117 
+.PP
+

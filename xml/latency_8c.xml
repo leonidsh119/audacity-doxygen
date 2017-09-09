@@ -1,0 +1,643 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="latency_8c" kind="file" language="C++">
+    <compoundname>latency.c</compoundname>
+    <includes refid="porttime_8h" local="yes">porttime.h</includes>
+    <includes refid="portmidi_8h" local="yes">portmidi.h</includes>
+    <includes local="yes">stdlib.h</includes>
+    <includes local="yes">stdio.h</includes>
+    <includes local="yes">string.h</includes>
+    <includes refid="assert_8h" local="yes">assert.h</includes>
+    <incdepgraph>
+      <node id="31025">
+        <label>C:/_dev/OpenU/Audacity/audacity/lib-src/portmidi/pm_test/latency.c</label>
+        <link refid="latency.c"/>
+        <childnode refid="31026" relation="include">
+        </childnode>
+        <childnode refid="31028" relation="include">
+        </childnode>
+        <childnode refid="31029" relation="include">
+        </childnode>
+        <childnode refid="31030" relation="include">
+        </childnode>
+        <childnode refid="31031" relation="include">
+        </childnode>
+        <childnode refid="31032" relation="include">
+        </childnode>
+      </node>
+      <node id="31027">
+        <label>stdint.h</label>
+      </node>
+      <node id="31029">
+        <label>stdlib.h</label>
+      </node>
+      <node id="31026">
+        <label>porttime.h</label>
+        <link refid="porttime_8h"/>
+        <childnode refid="31027" relation="include">
+        </childnode>
+      </node>
+      <node id="31032">
+        <label>assert.h</label>
+        <link refid="assert_8h"/>
+      </node>
+      <node id="31031">
+        <label>string.h</label>
+      </node>
+      <node id="31028">
+        <label>portmidi.h</label>
+        <link refid="portmidi_8h"/>
+        <childnode refid="31027" relation="include">
+        </childnode>
+      </node>
+      <node id="31030">
+        <label>stdio.h</label>
+      </node>
+    </incdepgraph>
+      <sectiondef kind="define">
+      <memberdef kind="define" id="latency_8c_1aded5babbee1b6f90b7cb4500bfb1f227" prot="public" static="no">
+        <name>HIST_LEN</name>
+        <initializer>21 /* how many 1ms bins in the histogram */</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/_dev/OpenU/Audacity/audacity/lib-src/portmidi/pm_test/latency.c" line="76" column="9" bodyfile="C:/_dev/OpenU/Audacity/audacity/lib-src/portmidi/pm_test/latency.c" bodystart="76" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="latency_8c_1a41f16f17393bc7dfd8c3a44a6ba595ba" prot="public" static="no">
+        <name>STRING_MAX</name>
+        <initializer>80 /* used <ref refid="hashrout_8h_1a63bdfbdfaa50cfc85afcbff4ce2c16a6" kindref="member">for</ref> console input */</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/_dev/OpenU/Audacity/audacity/lib-src/portmidi/pm_test/latency.c" line="78" column="9" bodyfile="C:/_dev/OpenU/Audacity/audacity/lib-src/portmidi/pm_test/latency.c" bodystart="78" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="latency_8c_1aa9b8dcc02cea15aab8e3d0b7860327a7" prot="public" static="no">
+        <name>INPUT_BUFFER_SIZE</name>
+        <initializer>100</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/_dev/OpenU/Audacity/audacity/lib-src/portmidi/pm_test/latency.c" line="80" column="9" bodyfile="C:/_dev/OpenU/Audacity/audacity/lib-src/portmidi/pm_test/latency.c" bodystart="80" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="latency_8c_1a29a61474854edfeed19457644161249f" prot="public" static="no">
+        <name>OUTPUT_BUFFER_SIZE</name>
+        <initializer>0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/_dev/OpenU/Audacity/audacity/lib-src/portmidi/pm_test/latency.c" line="81" column="9" bodyfile="C:/_dev/OpenU/Audacity/audacity/lib-src/portmidi/pm_test/latency.c" bodystart="81" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="latency_8c_1affe776513b24d84b39af8ab0930fef7f" prot="public" static="no">
+        <name>max</name>
+        <param><defname>a</defname></param>
+        <param><defname>b</defname></param>
+        <initializer>((<ref refid="rfft2d_test_m_l_8m_1a4124bc0a9335c27f086f24ba207a4912" kindref="member">a</ref>) &gt; (<ref refid="convtest_8m_1a21ad0bd836b90d08f4cf640b4c298e7c" kindref="member">b</ref>) ? (<ref refid="rfft2d_test_m_l_8m_1a4124bc0a9335c27f086f24ba207a4912" kindref="member">a</ref>) : (<ref refid="convtest_8m_1a21ad0bd836b90d08f4cf640b4c298e7c" kindref="member">b</ref>))</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/_dev/OpenU/Audacity/audacity/lib-src/portmidi/pm_test/latency.c" line="84" column="9" bodyfile="C:/_dev/OpenU/Audacity/audacity/lib-src/portmidi/pm_test/latency.c" bodystart="84" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="latency_8c_1ac6afabdc09a49a433ee19d8a9486056d" prot="public" static="no">
+        <name>min</name>
+        <param><defname>a</defname></param>
+        <param><defname>b</defname></param>
+        <initializer>((<ref refid="rfft2d_test_m_l_8m_1a4124bc0a9335c27f086f24ba207a4912" kindref="member">a</ref>) &lt;= (<ref refid="convtest_8m_1a21ad0bd836b90d08f4cf640b4c298e7c" kindref="member">b</ref>) ? (<ref refid="rfft2d_test_m_l_8m_1a4124bc0a9335c27f086f24ba207a4912" kindref="member">a</ref>) : (<ref refid="convtest_8m_1a21ad0bd836b90d08f4cf640b4c298e7c" kindref="member">b</ref>))</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/_dev/OpenU/Audacity/audacity/lib-src/portmidi/pm_test/latency.c" line="87" column="9" bodyfile="C:/_dev/OpenU/Audacity/audacity/lib-src/portmidi/pm_test/latency.c" bodystart="87" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="var">
+      <memberdef kind="variable" id="latency_8c_1a67bbf90b621c843839fbc736a19661e7" prot="public" static="no" mutable="no">
+        <type><ref refid="porttime_8h_1afae5a66584458fb7e0e9ace7f200a7a3" kindref="member">PtTimestamp</ref></type>
+        <definition>PtTimestamp previous_callback_time</definition>
+        <argsstring></argsstring>
+        <name>previous_callback_time</name>
+        <initializer>= 0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/_dev/OpenU/Audacity/audacity/lib-src/portmidi/pm_test/latency.c" line="92" column="1" bodyfile="C:/_dev/OpenU/Audacity/audacity/lib-src/portmidi/pm_test/latency.c" bodystart="92" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="latency_8c_1a486233493fc0e05fe1bdbe7b7e5d0f1e" prot="public" static="no" mutable="no">
+        <type><ref refid="xmltok_8h_1a5a0d4a5641ce434f1d23533f2b2e6653" kindref="member">int</ref></type>
+        <definition>int period</definition>
+        <argsstring></argsstring>
+        <name>period</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/_dev/OpenU/Audacity/audacity/lib-src/portmidi/pm_test/latency.c" line="94" column="1" bodyfile="C:/_dev/OpenU/Audacity/audacity/lib-src/portmidi/pm_test/latency.c" bodystart="94" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="latency_8c_1a0a84425b280516cd345251db13450178" prot="public" static="no" mutable="no">
+        <type><ref refid="xmltok_8h_1a5a0d4a5641ce434f1d23533f2b2e6653" kindref="member">int</ref></type>
+        <definition>int histogram[HIST_LEN]</definition>
+        <argsstring>[HIST_LEN]</argsstring>
+        <name>histogram</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/_dev/OpenU/Audacity/audacity/lib-src/portmidi/pm_test/latency.c" line="96" column="1" bodyfile="C:/_dev/OpenU/Audacity/audacity/lib-src/portmidi/pm_test/latency.c" bodystart="96" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="latency_8c_1a8954fdbc640b669b9d9108f995ee8721" prot="public" static="no" mutable="no">
+        <type><ref refid="xmltok_8h_1a5a0d4a5641ce434f1d23533f2b2e6653" kindref="member">int</ref></type>
+        <definition>int max_latency</definition>
+        <argsstring></argsstring>
+        <name>max_latency</name>
+        <initializer>= 0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/_dev/OpenU/Audacity/audacity/lib-src/portmidi/pm_test/latency.c" line="97" column="1" bodyfile="C:/_dev/OpenU/Audacity/audacity/lib-src/portmidi/pm_test/latency.c" bodystart="97" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="latency_8c_1a8daa2a776cae6116e9f14e2b009430a5" prot="public" static="no" mutable="no">
+        <type><ref refid="xmltok_8h_1a5a0d4a5641ce434f1d23533f2b2e6653" kindref="member">int</ref></type>
+        <definition>int out_of_range</definition>
+        <argsstring></argsstring>
+        <name>out_of_range</name>
+        <initializer>= 0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/_dev/OpenU/Audacity/audacity/lib-src/portmidi/pm_test/latency.c" line="98" column="1" bodyfile="C:/_dev/OpenU/Audacity/audacity/lib-src/portmidi/pm_test/latency.c" bodystart="98" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="latency_8c_1a749262916b446732337b86df7b42ad66" prot="public" static="no" mutable="no">
+        <type><ref refid="xmltok_8h_1a5a0d4a5641ce434f1d23533f2b2e6653" kindref="member">int</ref></type>
+        <definition>int test_in</definition>
+        <argsstring></argsstring>
+        <name>test_in</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/_dev/OpenU/Audacity/audacity/lib-src/portmidi/pm_test/latency.c" line="100" column="1" bodyfile="C:/_dev/OpenU/Audacity/audacity/lib-src/portmidi/pm_test/latency.c" bodystart="100" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="latency_8c_1a9a188b1240d569e4e888c1e6862b2164" prot="public" static="no" mutable="no">
+        <type><ref refid="xmltok_8h_1a5a0d4a5641ce434f1d23533f2b2e6653" kindref="member">int</ref></type>
+        <definition>int test_out</definition>
+        <argsstring></argsstring>
+        <name>test_out</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/_dev/OpenU/Audacity/audacity/lib-src/portmidi/pm_test/latency.c" line="100" column="1" bodyfile="C:/_dev/OpenU/Audacity/audacity/lib-src/portmidi/pm_test/latency.c" bodystart="100" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="latency_8c_1a4d1c266ad0499e83ce49a5f9c14dc2c9" prot="public" static="no" mutable="no">
+        <type><ref refid="xmltok_8h_1a5a0d4a5641ce434f1d23533f2b2e6653" kindref="member">int</ref></type>
+        <definition>int output_period</definition>
+        <argsstring></argsstring>
+        <name>output_period</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/_dev/OpenU/Audacity/audacity/lib-src/portmidi/pm_test/latency.c" line="101" column="1" bodyfile="C:/_dev/OpenU/Audacity/audacity/lib-src/portmidi/pm_test/latency.c" bodystart="101" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="latency_8c_1aa6371382c6b4224e577e14ea610ab9a9" prot="public" static="no" mutable="no">
+        <type><ref refid="xmltok_8h_1a5a0d4a5641ce434f1d23533f2b2e6653" kindref="member">int</ref></type>
+        <definition>int iteration</definition>
+        <argsstring></argsstring>
+        <name>iteration</name>
+        <initializer>= 0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/_dev/OpenU/Audacity/audacity/lib-src/portmidi/pm_test/latency.c" line="102" column="1" bodyfile="C:/_dev/OpenU/Audacity/audacity/lib-src/portmidi/pm_test/latency.c" bodystart="102" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="latency_8c_1a7d946209d777cb95fe30364b8d321207" prot="public" static="no" mutable="no">
+        <type><ref refid="portmidi_8h_1a00ffab472a8cb21bd3511721c9474658" kindref="member">PmStream</ref> *</type>
+        <definition>PmStream* in</definition>
+        <argsstring></argsstring>
+        <name>in</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/_dev/OpenU/Audacity/audacity/lib-src/portmidi/pm_test/latency.c" line="103" column="1" bodyfile="C:/_dev/OpenU/Audacity/audacity/lib-src/portmidi/pm_test/latency.c" bodystart="103" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="latency_8c_1a71fd1c281affec034757279e4f91c50b" prot="public" static="no" mutable="no">
+        <type><ref refid="portmidi_8h_1a00ffab472a8cb21bd3511721c9474658" kindref="member">PmStream</ref> *</type>
+        <definition>PmStream * out</definition>
+        <argsstring></argsstring>
+        <name>out</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/_dev/OpenU/Audacity/audacity/lib-src/portmidi/pm_test/latency.c" line="103" column="1" bodyfile="C:/_dev/OpenU/Audacity/audacity/lib-src/portmidi/pm_test/latency.c" bodystart="103" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="latency_8c_1a3960aab9a5bdee464614429f8ccb6a80" prot="public" static="no" mutable="no">
+        <type><ref refid="xmltok_8h_1a5a0d4a5641ce434f1d23533f2b2e6653" kindref="member">int</ref></type>
+        <definition>int note_on</definition>
+        <argsstring></argsstring>
+        <name>note_on</name>
+        <initializer>= 0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/_dev/OpenU/Audacity/audacity/lib-src/portmidi/pm_test/latency.c" line="104" column="1" bodyfile="C:/_dev/OpenU/Audacity/audacity/lib-src/portmidi/pm_test/latency.c" bodystart="104" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="latency_8c_1a5fc4de7623f6fda5f72bb5db25805286" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="xmltok_8h_1a5a0d4a5641ce434f1d23533f2b2e6653" kindref="member">int</ref></type>
+        <definition>int get_number</definition>
+        <argsstring>(char *prompt)</argsstring>
+        <name>get_number</name>
+        <param>
+          <type>char *</type>
+          <declname>prompt</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/_dev/OpenU/Audacity/audacity/lib-src/portmidi/pm_test/latency.c" line="90" column="1" bodyfile="C:/_dev/OpenU/Audacity/audacity/lib-src/portmidi/pm_test/latency.c" bodystart="279" bodyend="290"/>
+      </memberdef>
+      <memberdef kind="function" id="latency_8c_1aaad1b40fc9141c315e7098239e8489eb" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="sound_8c_1ae35f5844602719cf66324f4de2a658b3" kindref="member">void</ref></type>
+        <definition>void pt_callback</definition>
+        <argsstring>(PtTimestamp timestamp, void *userData)</argsstring>
+        <name>pt_callback</name>
+        <param>
+          <type><ref refid="porttime_8h_1afae5a66584458fb7e0e9ace7f200a7a3" kindref="member">PtTimestamp</ref></type>
+          <declname>timestamp</declname>
+        </param>
+        <param>
+          <type><ref refid="sound_8c_1ae35f5844602719cf66324f4de2a658b3" kindref="member">void</ref> *</type>
+          <declname>userData</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/_dev/OpenU/Audacity/audacity/lib-src/portmidi/pm_test/latency.c" line="107" column="1" bodyfile="C:/_dev/OpenU/Audacity/audacity/lib-src/portmidi/pm_test/latency.c" bodystart="107" bodyend="155"/>
+      </memberdef>
+      <memberdef kind="function" id="latency_8c_1ae66f6b31b5ad750f1fe042a706a4e3d4" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="xmltok_8h_1a5a0d4a5641ce434f1d23533f2b2e6653" kindref="member">int</ref></type>
+        <definition>int main</definition>
+        <argsstring>()</argsstring>
+        <name>main</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/_dev/OpenU/Audacity/audacity/lib-src/portmidi/pm_test/latency.c" line="158" column="1" bodyfile="C:/_dev/OpenU/Audacity/audacity/lib-src/portmidi/pm_test/latency.c" bodystart="158" bodyend="275"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="comment">/*<sp/>latency.c<sp/>--<sp/>measure<sp/>latency<sp/>of<sp/>OS<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="porttime_8h" kindref="compound">porttime.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="portmidi_8h" kindref="compound">portmidi.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;stdlib.h&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;stdio.h&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;string.h&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="assert_8h" kindref="compound">assert.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight><highlight class="comment">/*<sp/>Latency<sp/>is<sp/>defined<sp/>here<sp/>to<sp/>mean<sp/>the<sp/>time<sp/>starting<sp/>when<sp/>a</highlight></codeline>
+<codeline lineno="11"><highlight class="comment"><sp/><sp/><sp/>process<sp/>becomes<sp/>ready<sp/>to<sp/>run,<sp/>and<sp/>ending<sp/>when<sp/>the<sp/>process</highlight></codeline>
+<codeline lineno="12"><highlight class="comment"><sp/><sp/><sp/>actually<sp/>runs.<sp/>Latency<sp/>is<sp/>due<sp/>to<sp/>contention<sp/>for<sp/>the</highlight></codeline>
+<codeline lineno="13"><highlight class="comment"><sp/><sp/><sp/>processor,<sp/>usually<sp/>due<sp/>to<sp/>other<sp/>processes,<sp/>OS<sp/>activity</highlight></codeline>
+<codeline lineno="14"><highlight class="comment"><sp/><sp/><sp/>including<sp/>device<sp/>drivers<sp/>handling<sp/>interrupts,<sp/>and</highlight></codeline>
+<codeline lineno="15"><highlight class="comment"><sp/><sp/><sp/>waiting<sp/>for<sp/>the<sp/>scheduler<sp/>to<sp/>suspend<sp/>the<sp/>currently<sp/>running</highlight></codeline>
+<codeline lineno="16"><highlight class="comment"><sp/><sp/><sp/>process<sp/>and<sp/>activate<sp/>the<sp/>one<sp/>that<sp/>is<sp/>waiting.</highlight></codeline>
+<codeline lineno="17"><highlight class="comment"></highlight></codeline>
+<codeline lineno="18"><highlight class="comment"><sp/><sp/><sp/>Latency<sp/>can<sp/>affect<sp/>PortMidi<sp/>applications:<sp/>if<sp/>a<sp/>process<sp/>fails</highlight></codeline>
+<codeline lineno="19"><highlight class="comment"><sp/><sp/><sp/>to<sp/>wake<sp/>up<sp/>promptly,<sp/>MIDI<sp/>input<sp/>may<sp/>sit<sp/>in<sp/>the<sp/>input<sp/>buffer</highlight></codeline>
+<codeline lineno="20"><highlight class="comment"><sp/><sp/><sp/>waiting<sp/>to<sp/>be<sp/>handled,<sp/>and<sp/>MIDI<sp/>output<sp/>may<sp/>not<sp/>be<sp/>generated</highlight></codeline>
+<codeline lineno="21"><highlight class="comment"><sp/><sp/><sp/>with<sp/>accurate<sp/>timing.<sp/>Using<sp/>the<sp/>latency<sp/>parameter<sp/>when<sp/></highlight></codeline>
+<codeline lineno="22"><highlight class="comment"><sp/><sp/><sp/>opening<sp/>a<sp/>MIDI<sp/>output<sp/>port<sp/>allows<sp/>the<sp/>caller<sp/>to<sp/>defer<sp/>timing</highlight></codeline>
+<codeline lineno="23"><highlight class="comment"><sp/><sp/><sp/>to<sp/>PortMidi,<sp/>which<sp/>in<sp/>most<sp/>implementations<sp/>will<sp/>pass<sp/>the</highlight></codeline>
+<codeline lineno="24"><highlight class="comment"><sp/><sp/><sp/>data<sp/>on<sp/>to<sp/>the<sp/>OS.<sp/>By<sp/>passing<sp/>timestamps<sp/>and<sp/>data<sp/>to<sp/>the</highlight></codeline>
+<codeline lineno="25"><highlight class="comment"><sp/><sp/><sp/>OS<sp/>kernel,<sp/>device<sp/>driver,<sp/>or<sp/>even<sp/>hardware,<sp/>there<sp/>are<sp/>fewer</highlight></codeline>
+<codeline lineno="26"><highlight class="comment"><sp/><sp/><sp/>sources<sp/>of<sp/>latency<sp/>that<sp/>can<sp/>affect<sp/>the<sp/>ultimate<sp/>timing<sp/>of</highlight></codeline>
+<codeline lineno="27"><highlight class="comment"><sp/><sp/><sp/>the<sp/>data.<sp/>On<sp/>the<sp/>other<sp/>hand,<sp/>the<sp/>application<sp/>must<sp/>generate</highlight></codeline>
+<codeline lineno="28"><highlight class="comment"><sp/><sp/><sp/>and<sp/>deliver<sp/>the<sp/>data<sp/>ahead<sp/>of<sp/>the<sp/>timestamp.<sp/>The<sp/>amount<sp/>by<sp/></highlight></codeline>
+<codeline lineno="29"><highlight class="comment"><sp/><sp/><sp/>which<sp/>data<sp/>is<sp/>computed<sp/>early<sp/>must<sp/>be<sp/>at<sp/>least<sp/>as<sp/>large<sp/>as</highlight></codeline>
+<codeline lineno="30"><highlight class="comment"><sp/><sp/><sp/>the<sp/>worst-case<sp/>latency<sp/>to<sp/>avoid<sp/>timing<sp/>problems.</highlight></codeline>
+<codeline lineno="31"><highlight class="comment"></highlight></codeline>
+<codeline lineno="32"><highlight class="comment"><sp/><sp/><sp/>Latency<sp/>is<sp/>even<sp/>more<sp/>important<sp/>in<sp/>audio<sp/>applications.<sp/>If<sp/>an</highlight></codeline>
+<codeline lineno="33"><highlight class="comment"><sp/><sp/><sp/>application<sp/>lets<sp/>an<sp/>audio<sp/>output<sp/>buffer<sp/>underflow,<sp/>an<sp/>audible</highlight></codeline>
+<codeline lineno="34"><highlight class="comment"><sp/><sp/><sp/>pop<sp/>or<sp/>click<sp/>is<sp/>produced.<sp/>Audio<sp/>input<sp/>buffers<sp/>can<sp/>overflow,</highlight></codeline>
+<codeline lineno="35"><highlight class="comment"><sp/><sp/><sp/>causing<sp/>data<sp/>to<sp/>be<sp/>lost.<sp/>In<sp/>general<sp/>the<sp/>audio<sp/>buffers<sp/>must</highlight></codeline>
+<codeline lineno="36"><highlight class="comment"><sp/><sp/><sp/>be<sp/>large<sp/>enough<sp/>to<sp/>buffer<sp/>the<sp/>worst-case<sp/>latency<sp/>that<sp/>the</highlight></codeline>
+<codeline lineno="37"><highlight class="comment"><sp/><sp/><sp/>application<sp/>will<sp/>encounter.</highlight></codeline>
+<codeline lineno="38"><highlight class="comment"></highlight></codeline>
+<codeline lineno="39"><highlight class="comment"><sp/><sp/><sp/>This<sp/>program<sp/>measures<sp/>latency<sp/>by<sp/>recording<sp/>the<sp/>difference</highlight></codeline>
+<codeline lineno="40"><highlight class="comment"><sp/><sp/><sp/>between<sp/>the<sp/>scheduled<sp/>callback<sp/>time<sp/>and<sp/>the<sp/>current<sp/>real<sp/>time.</highlight></codeline>
+<codeline lineno="41"><highlight class="comment"><sp/><sp/><sp/>We<sp/>do<sp/>not<sp/>really<sp/>know<sp/>the<sp/>scheduled<sp/>callback<sp/>time,<sp/>so<sp/>we<sp/>will</highlight></codeline>
+<codeline lineno="42"><highlight class="comment"><sp/><sp/><sp/>record<sp/>the<sp/>differences<sp/>between<sp/>the<sp/>real<sp/>time<sp/>of<sp/>each<sp/>callback</highlight></codeline>
+<codeline lineno="43"><highlight class="comment"><sp/><sp/><sp/>and<sp/>the<sp/>real<sp/>time<sp/>of<sp/>the<sp/>previous<sp/>callback.<sp/>Differences<sp/>that</highlight></codeline>
+<codeline lineno="44"><highlight class="comment"><sp/><sp/><sp/>are<sp/>larger<sp/>than<sp/>the<sp/>scheduled<sp/>difference<sp/>are<sp/>recorded.<sp/>Smaller</highlight></codeline>
+<codeline lineno="45"><highlight class="comment"><sp/><sp/><sp/>differences<sp/>indicate<sp/>the<sp/>system<sp/>is<sp/>recovering<sp/>from<sp/>an<sp/>earlier</highlight></codeline>
+<codeline lineno="46"><highlight class="comment"><sp/><sp/><sp/>latency,<sp/>so<sp/>these<sp/>are<sp/>ignored.</highlight></codeline>
+<codeline lineno="47"><highlight class="comment"><sp/><sp/><sp/>Since<sp/>printing<sp/>by<sp/>the<sp/>callback<sp/>process<sp/>can<sp/>cause<sp/>all<sp/>sorts<sp/>of</highlight></codeline>
+<codeline lineno="48"><highlight class="comment"><sp/><sp/><sp/>delays,<sp/>this<sp/>program<sp/>records<sp/>latency<sp/>observations<sp/>in<sp/>a</highlight></codeline>
+<codeline lineno="49"><highlight class="comment"><sp/><sp/><sp/>histogram.<sp/>When<sp/>the<sp/>program<sp/>is<sp/>stopped,<sp/>the<sp/>histogram<sp/>is</highlight></codeline>
+<codeline lineno="50"><highlight class="comment"><sp/><sp/><sp/>printed<sp/>to<sp/>the<sp/>console.</highlight></codeline>
+<codeline lineno="51"><highlight class="comment"></highlight></codeline>
+<codeline lineno="52"><highlight class="comment"><sp/><sp/><sp/>Optionally<sp/>the<sp/>system<sp/>can<sp/>be<sp/>tested<sp/>under<sp/>a<sp/>load<sp/>of<sp/>MIDI<sp/>input,</highlight></codeline>
+<codeline lineno="53"><highlight class="comment"><sp/><sp/><sp/>MIDI<sp/>output,<sp/>or<sp/>both.<sp/><sp/>If<sp/>MIDI<sp/>input<sp/>is<sp/>selected,<sp/>the<sp/>callback</highlight></codeline>
+<codeline lineno="54"><highlight class="comment"><sp/><sp/><sp/>thread<sp/>will<sp/>read<sp/>any<sp/>waiting<sp/>MIDI<sp/>events<sp/>each<sp/>iteration.<sp/><sp/>You</highlight></codeline>
+<codeline lineno="55"><highlight class="comment"><sp/><sp/><sp/>must<sp/>generate<sp/>events<sp/>on<sp/>this<sp/>interface<sp/>for<sp/>the<sp/>test<sp/>to<sp/>actually</highlight></codeline>
+<codeline lineno="56"><highlight class="comment"><sp/><sp/><sp/>put<sp/>any<sp/>appreciable<sp/>load<sp/>on<sp/>PortMidi.<sp/><sp/>If<sp/>MIDI<sp/>output<sp/>is</highlight></codeline>
+<codeline lineno="57"><highlight class="comment"><sp/><sp/><sp/>selected,<sp/>alternating<sp/>note<sp/>on<sp/>and<sp/>note<sp/>off<sp/>events<sp/>are<sp/>sent<sp/>each</highlight></codeline>
+<codeline lineno="58"><highlight class="comment"><sp/><sp/><sp/>X<sp/>iterations,<sp/>where<sp/>you<sp/>specify<sp/>X.<sp/><sp/>For<sp/>example,<sp/>with<sp/>a<sp/>timer</highlight></codeline>
+<codeline lineno="59"><highlight class="comment"><sp/><sp/><sp/>callback<sp/>period<sp/>of<sp/>2ms<sp/>and<sp/>X=1,<sp/>a<sp/>MIDI<sp/>event<sp/>is<sp/>sent<sp/>every<sp/>2ms.</highlight></codeline>
+<codeline lineno="60"><highlight class="comment"></highlight></codeline>
+<codeline lineno="61"><highlight class="comment"></highlight></codeline>
+<codeline lineno="62"><highlight class="comment"><sp/><sp/><sp/>INTERPRETING<sp/>RESULTS:<sp/>Time<sp/>is<sp/>quantized<sp/>to<sp/>1ms,<sp/>so<sp/>there<sp/>is</highlight></codeline>
+<codeline lineno="63"><highlight class="comment"><sp/><sp/><sp/>some<sp/>uncertainty<sp/>due<sp/>to<sp/>rounding.<sp/>A<sp/>microsecond<sp/>latency<sp/>that</highlight></codeline>
+<codeline lineno="64"><highlight class="comment"><sp/><sp/><sp/>spans<sp/>the<sp/>time<sp/>when<sp/>the<sp/>clock<sp/>is<sp/>incremented<sp/>will<sp/>be<sp/>reported</highlight></codeline>
+<codeline lineno="65"><highlight class="comment"><sp/><sp/><sp/>as<sp/>a<sp/>latency<sp/>of<sp/>1.<sp/>On<sp/>the<sp/>other<sp/>hand,<sp/>a<sp/>latency<sp/>of<sp/>almost</highlight></codeline>
+<codeline lineno="66"><highlight class="comment"><sp/><sp/><sp/>1ms<sp/>that<sp/>falls<sp/>between<sp/>two<sp/>clock<sp/>ticks<sp/>will<sp/>be<sp/>reported<sp/>as<sp/></highlight></codeline>
+<codeline lineno="67"><highlight class="comment"><sp/><sp/><sp/>zero.<sp/>In<sp/>general,<sp/>if<sp/>the<sp/>highest<sp/>nonzero<sp/>bin<sp/>is<sp/>numbered<sp/>N,</highlight></codeline>
+<codeline lineno="68"><highlight class="comment"><sp/><sp/><sp/>then<sp/>the<sp/>maximum<sp/>latency<sp/>is<sp/>N+1.</highlight></codeline>
+<codeline lineno="69"><highlight class="comment"></highlight></codeline>
+<codeline lineno="70"><highlight class="comment">CHANGE<sp/>LOG</highlight></codeline>
+<codeline lineno="71"><highlight class="comment"></highlight></codeline>
+<codeline lineno="72"><highlight class="comment">18-Jul-03<sp/>Mark<sp/>Nelson<sp/>--<sp/>Added<sp/>code<sp/>to<sp/>generate<sp/>MIDI<sp/>or<sp/>receive</highlight></codeline>
+<codeline lineno="73"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>MIDI<sp/>during<sp/>test,<sp/>and<sp/>made<sp/>period<sp/>user-settable.</highlight></codeline>
+<codeline lineno="74"><highlight class="comment"><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="75"><highlight class="normal"></highlight></codeline>
+<codeline lineno="76" refid="latency_8c_1aded5babbee1b6f90b7cb4500bfb1f227" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>HIST_LEN<sp/>21<sp/></highlight><highlight class="comment">/*<sp/>how<sp/>many<sp/>1ms<sp/>bins<sp/>in<sp/>the<sp/>histogram<sp/>*/</highlight><highlight class="preprocessor"></highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="77"><highlight class="normal"></highlight></codeline>
+<codeline lineno="78" refid="latency_8c_1a41f16f17393bc7dfd8c3a44a6ba595ba" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>STRING_MAX<sp/>80<sp/></highlight><highlight class="comment">/*<sp/>used<sp/>for<sp/>console<sp/>input<sp/>*/</highlight><highlight class="preprocessor"></highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="79"><highlight class="normal"></highlight></codeline>
+<codeline lineno="80" refid="latency_8c_1aa9b8dcc02cea15aab8e3d0b7860327a7" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>INPUT_BUFFER_SIZE<sp/>100</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="81" refid="latency_8c_1a29a61474854edfeed19457644161249f" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>OUTPUT_BUFFER_SIZE<sp/>0</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="82"><highlight class="normal"></highlight></codeline>
+<codeline lineno="83"><highlight class="normal"></highlight><highlight class="preprocessor">#ifndef<sp/>max</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="84" refid="latency_8c_1affe776513b24d84b39af8ab0930fef7f" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>max(a,<sp/>b)<sp/>((a)<sp/>&gt;<sp/>(b)<sp/>?<sp/>(a)<sp/>:<sp/>(b))</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="85"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="86"><highlight class="normal"></highlight><highlight class="preprocessor">#ifndef<sp/>min</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="87" refid="latency_8c_1ac6afabdc09a49a433ee19d8a9486056d" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>min(a,<sp/>b)<sp/>((a)<sp/>&lt;=<sp/>(b)<sp/>?<sp/>(a)<sp/>:<sp/>(b))</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="88"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="89"><highlight class="normal"></highlight></codeline>
+<codeline lineno="90"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="latency_8c_1a5fc4de7623f6fda5f72bb5db25805286" kindref="member">get_number</ref>(</highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>*prompt);</highlight></codeline>
+<codeline lineno="91"><highlight class="normal"></highlight></codeline>
+<codeline lineno="92" refid="latency_8c_1a67bbf90b621c843839fbc736a19661e7" refkind="member"><highlight class="normal"><ref refid="porttime_8h_1afae5a66584458fb7e0e9ace7f200a7a3" kindref="member">PtTimestamp</ref><sp/><ref refid="latency_8c_1a67bbf90b621c843839fbc736a19661e7" kindref="member">previous_callback_time</ref><sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="93"><highlight class="normal"></highlight></codeline>
+<codeline lineno="94" refid="latency_8c_1a486233493fc0e05fe1bdbe7b7e5d0f1e" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="latency_8c_1a486233493fc0e05fe1bdbe7b7e5d0f1e" kindref="member">period</ref>;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">/*<sp/>milliseconds<sp/>per<sp/>callback<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="95"><highlight class="normal"></highlight></codeline>
+<codeline lineno="96" refid="latency_8c_1a0a84425b280516cd345251db13450178" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="latency_8c_1a0a84425b280516cd345251db13450178" kindref="member">histogram</ref>[<ref refid="latency_8c_1aded5babbee1b6f90b7cb4500bfb1f227" kindref="member">HIST_LEN</ref>];</highlight></codeline>
+<codeline lineno="97" refid="latency_8c_1a8954fdbc640b669b9d9108f995ee8721" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="latency_8c_1a8954fdbc640b669b9d9108f995ee8721" kindref="member">max_latency</ref><sp/>=<sp/>0;<sp/><sp/></highlight><highlight class="comment">/*<sp/>worst<sp/>latency<sp/>observed<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="98" refid="latency_8c_1a8daa2a776cae6116e9f14e2b009430a5" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="latency_8c_1a8daa2a776cae6116e9f14e2b009430a5" kindref="member">out_of_range</ref><sp/>=<sp/>0;<sp/></highlight><highlight class="comment">/*<sp/>how<sp/>many<sp/>points<sp/>outside<sp/>of<sp/>HIST_LEN?<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="99"><highlight class="normal"></highlight></codeline>
+<codeline lineno="100" refid="latency_8c_1a9a188b1240d569e4e888c1e6862b2164" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="latency_8c_1a749262916b446732337b86df7b42ad66" kindref="member">test_in</ref>,<sp/><ref refid="latency_8c_1a9a188b1240d569e4e888c1e6862b2164" kindref="member">test_out</ref>;<sp/></highlight><highlight class="comment">/*<sp/>test<sp/>MIDI<sp/>in<sp/>and/or<sp/>out?<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="101" refid="latency_8c_1a4d1c266ad0499e83ce49a5f9c14dc2c9" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="latency_8c_1a4d1c266ad0499e83ce49a5f9c14dc2c9" kindref="member">output_period</ref>;<sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">/*<sp/>output<sp/>MIDI<sp/>every<sp/>__<sp/>iterations<sp/>if<sp/>test_out<sp/>true<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="102" refid="latency_8c_1aa6371382c6b4224e577e14ea610ab9a9" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="latency_8c_1aa6371382c6b4224e577e14ea610ab9a9" kindref="member">iteration</ref><sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="103" refid="latency_8c_1a71fd1c281affec034757279e4f91c50b" refkind="member"><highlight class="normal"><ref refid="portmidi_8h_1a00ffab472a8cb21bd3511721c9474658" kindref="member">PmStream</ref><sp/>*<ref refid="latency_8c_1a7d946209d777cb95fe30364b8d321207" kindref="member">in</ref>,<sp/>*<ref refid="latency_8c_1a71fd1c281affec034757279e4f91c50b" kindref="member">out</ref>;</highlight></codeline>
+<codeline lineno="104" refid="latency_8c_1a3960aab9a5bdee464614429f8ccb6a80" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="latency_8c_1a3960aab9a5bdee464614429f8ccb6a80" kindref="member">note_on</ref><sp/>=<sp/>0;<sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">/*<sp/>is<sp/>the<sp/>note<sp/>currently<sp/>on?<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="105"><highlight class="normal"></highlight></codeline>
+<codeline lineno="106"><highlight class="normal"></highlight><highlight class="comment">/*<sp/>callback<sp/>function<sp/>for<sp/>PortTime<sp/>--<sp/>computes<sp/>histogram<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="107" refid="latency_8c_1aaad1b40fc9141c315e7098239e8489eb" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="latency_8c_1aaad1b40fc9141c315e7098239e8489eb" kindref="member">pt_callback</ref>(<ref refid="porttime_8h_1afae5a66584458fb7e0e9ace7f200a7a3" kindref="member">PtTimestamp</ref><sp/>timestamp,<sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>*<ref refid="xmlparse_8c_1a4b666535c828e23ccd16510a0a1a1943" kindref="member">userData</ref>)</highlight></codeline>
+<codeline lineno="108"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="109"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="porttime_8h_1afae5a66584458fb7e0e9ace7f200a7a3" kindref="member">PtTimestamp</ref><sp/>difference<sp/>=<sp/>timestamp<sp/>-<sp/><ref refid="latency_8c_1a67bbf90b621c843839fbc736a19661e7" kindref="member">previous_callback_time</ref><sp/>-<sp/><ref refid="latency_8c_1a486233493fc0e05fe1bdbe7b7e5d0f1e" kindref="member">period</ref>;</highlight></codeline>
+<codeline lineno="110"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="latency_8c_1a67bbf90b621c843839fbc736a19661e7" kindref="member">previous_callback_time</ref><sp/>=<sp/>timestamp;</highlight></codeline>
+<codeline lineno="111"><highlight class="normal"></highlight></codeline>
+<codeline lineno="112"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">/*<sp/>allow<sp/>5<sp/>seconds<sp/>for<sp/>the<sp/>system<sp/>to<sp/>settle<sp/>down<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="113"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(timestamp<sp/>&lt;<sp/>5000)<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="114"><highlight class="normal"></highlight></codeline>
+<codeline lineno="115"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="latency_8c_1aa6371382c6b4224e577e14ea610ab9a9" kindref="member">iteration</ref>++;</highlight></codeline>
+<codeline lineno="116"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">/*<sp/>send<sp/>a<sp/>note<sp/>on/off<sp/>if<sp/>user<sp/>requested<sp/>it<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="117"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<ref refid="latency_8c_1a9a188b1240d569e4e888c1e6862b2164" kindref="member">test_out</ref><sp/>&amp;&amp;<sp/>(<ref refid="latency_8c_1aa6371382c6b4224e577e14ea610ab9a9" kindref="member">iteration</ref><sp/>%<sp/><ref refid="latency_8c_1a4d1c266ad0499e83ce49a5f9c14dc2c9" kindref="member">output_period</ref><sp/>==<sp/>0))<sp/>{</highlight></codeline>
+<codeline lineno="118"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="struct_pm_event" kindref="compound">PmEvent</ref><sp/><ref refid="structbuffer" kindref="compound">buffer</ref>[1];</highlight></codeline>
+<codeline lineno="119"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>buffer[0].<ref refid="struct_pm_event_1a3854d39e3b89e1e2a4e1fda8d85c2f16" kindref="member">timestamp</ref><sp/>=<sp/><ref refid="porttime_8h_1a9a335bb8c04c85bf85d807dd448d72d0" kindref="member">Pt_Time</ref>(<ref refid="getopt1_8c_1a070d2ce7b6bb7e5c05602aa8c308d0c4" kindref="member">NULL</ref>);</highlight></codeline>
+<codeline lineno="120"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<ref refid="latency_8c_1a3960aab9a5bdee464614429f8ccb6a80" kindref="member">note_on</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="121"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">/*<sp/>note<sp/>off<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="122"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>buffer[0].<ref refid="struct_pm_event_1a2c8c12542447fdd566401fbf1a83d4e2" kindref="member">message</ref><sp/>=<sp/><ref refid="group__grp__events__filters_1gaf1c22515214f7a2cbb1e1e8fb02602bd" kindref="member">Pm_Message</ref>(0x90,<sp/>60,<sp/>0);</highlight></codeline>
+<codeline lineno="123"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="latency_8c_1a3960aab9a5bdee464614429f8ccb6a80" kindref="member">note_on</ref><sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="124"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="125"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">/*<sp/>note<sp/>on<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="126"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>buffer[0].<ref refid="struct_pm_event_1a2c8c12542447fdd566401fbf1a83d4e2" kindref="member">message</ref><sp/>=<sp/><ref refid="group__grp__events__filters_1gaf1c22515214f7a2cbb1e1e8fb02602bd" kindref="member">Pm_Message</ref>(0x90,<sp/>60,<sp/>100);</highlight></codeline>
+<codeline lineno="127"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="latency_8c_1a3960aab9a5bdee464614429f8ccb6a80" kindref="member">note_on</ref><sp/>=<sp/>1;</highlight></codeline>
+<codeline lineno="128"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="129"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="group__grp__io_1ga82950117f003d28f9ca6536c00af985a" kindref="member">Pm_Write</ref>(<ref refid="latency_8c_1a71fd1c281affec034757279e4f91c50b" kindref="member">out</ref>,<sp/>buffer,<sp/>1);</highlight></codeline>
+<codeline lineno="130"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="latency_8c_1aa6371382c6b4224e577e14ea610ab9a9" kindref="member">iteration</ref><sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="131"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="132"><highlight class="normal"></highlight></codeline>
+<codeline lineno="133"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">/*<sp/>read<sp/>all<sp/>waiting<sp/>events<sp/>(if<sp/>user<sp/>requested)<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="134"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<ref refid="latency_8c_1a749262916b446732337b86df7b42ad66" kindref="member">test_in</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="135"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="portmidi_8h_1a5fd46ccd2e320e17a840886731e8c6b9" kindref="member">PmError</ref><sp/><ref refid="conv2dtest_8m_1a1b5437a866e6f95107b07ba845bc1800" kindref="member">status</ref>;</highlight></codeline>
+<codeline lineno="136"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="struct_pm_event" kindref="compound">PmEvent</ref><sp/><ref refid="structbuffer" kindref="compound">buffer</ref>[1];</highlight></codeline>
+<codeline lineno="137"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">do</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="138"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>status<sp/>=<sp/><ref refid="group__grp__io_1ga54198ca9dc1af9d82ec5f44f661faeea" kindref="member">Pm_Poll</ref>(<ref refid="latency_8c_1a7d946209d777cb95fe30364b8d321207" kindref="member">in</ref>);</highlight></codeline>
+<codeline lineno="139"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(status<sp/>==<sp/><ref refid="cext_8h_1aa8cecfc5c5c054d2875c03e77b7be15d" kindref="member">TRUE</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="140"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="group__grp__io_1ga3d59225bc890ede974f245ada3de6456" kindref="member">Pm_Read</ref>(<ref refid="latency_8c_1a7d946209d777cb95fe30364b8d321207" kindref="member">in</ref>,buffer,1);</highlight></codeline>
+<codeline lineno="141"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="142"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">while</highlight><highlight class="normal"><sp/>(status<sp/>==<sp/><ref refid="cext_8h_1aa8cecfc5c5c054d2875c03e77b7be15d" kindref="member">TRUE</ref>);</highlight></codeline>
+<codeline lineno="143"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="144"><highlight class="normal"></highlight></codeline>
+<codeline lineno="145"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(difference<sp/>&lt;<sp/>0)<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal">;<sp/></highlight><highlight class="comment">/*<sp/>ignore<sp/>when<sp/>system<sp/>is<sp/>&quot;catching<sp/>up&quot;<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="146"><highlight class="normal"></highlight></codeline>
+<codeline lineno="147"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">/*<sp/>update<sp/>the<sp/>histogram<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="148"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(difference<sp/>&lt;<sp/><ref refid="latency_8c_1aded5babbee1b6f90b7cb4500bfb1f227" kindref="member">HIST_LEN</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="149"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="latency_8c_1a0a84425b280516cd345251db13450178" kindref="member">histogram</ref>[difference]++;</highlight></codeline>
+<codeline lineno="150"><highlight class="normal"><sp/><sp/><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="151"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="latency_8c_1a8daa2a776cae6116e9f14e2b009430a5" kindref="member">out_of_range</ref>++;</highlight></codeline>
+<codeline lineno="152"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="153"><highlight class="normal"></highlight></codeline>
+<codeline lineno="154"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<ref refid="latency_8c_1a8954fdbc640b669b9d9108f995ee8721" kindref="member">max_latency</ref><sp/>&lt;<sp/>difference)<sp/><ref refid="latency_8c_1a8954fdbc640b669b9d9108f995ee8721" kindref="member">max_latency</ref><sp/>=<sp/>difference;</highlight></codeline>
+<codeline lineno="155"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="156"><highlight class="normal"></highlight></codeline>
+<codeline lineno="157"><highlight class="normal"></highlight></codeline>
+<codeline lineno="158" refid="latency_8c_1ae66f6b31b5ad750f1fe042a706a4e3d4" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="latency_8c_1ae66f6b31b5ad750f1fe042a706a4e3d4" kindref="member">main</ref>()</highlight></codeline>
+<codeline lineno="159"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="160"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/><ref refid="seqread_8c_1aad9ebcdde542d8b2075615388ff15a9c" kindref="member">line</ref>[<ref refid="latency_8c_1a41f16f17393bc7dfd8c3a44a6ba595ba" kindref="member">STRING_MAX</ref>];</highlight></codeline>
+<codeline lineno="161"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="checksum_8c_1ab80e330a3bc9e38c1297fe17381e92b4" kindref="member">i</ref>;</highlight></codeline>
+<codeline lineno="162"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="lib_2expat_8h_1af86d325fecfc8f47b61fbf5a5146f582" kindref="member">len</ref>;</highlight></codeline>
+<codeline lineno="163"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>choice;</highlight></codeline>
+<codeline lineno="164"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="porttime_8h_1afae5a66584458fb7e0e9ace7f200a7a3" kindref="member">PtTimestamp</ref><sp/>stop;</highlight></codeline>
+<codeline lineno="165"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="octave__test_8m_1ac6d0e62c65e5715b13a5fcb381118888" kindref="member">printf</ref>(</highlight><highlight class="stringliteral">&quot;Latency<sp/>histogram.\n&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="166"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="latency_8c_1a486233493fc0e05fe1bdbe7b7e5d0f1e" kindref="member">period</ref><sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="167"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">while</highlight><highlight class="normal"><sp/>(<ref refid="latency_8c_1a486233493fc0e05fe1bdbe7b7e5d0f1e" kindref="member">period</ref><sp/>&lt;<sp/>1)<sp/>{</highlight></codeline>
+<codeline lineno="168"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="latency_8c_1a486233493fc0e05fe1bdbe7b7e5d0f1e" kindref="member">period</ref><sp/>=<sp/><ref refid="latency_8c_1a5fc4de7623f6fda5f72bb5db25805286" kindref="member">get_number</ref>(</highlight><highlight class="stringliteral">&quot;Choose<sp/>timer<sp/>period<sp/>(in<sp/>ms,<sp/>&gt;=<sp/>1):<sp/>&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="169"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="170"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="octave__test_8m_1ac6d0e62c65e5715b13a5fcb381118888" kindref="member">printf</ref>(</highlight><highlight class="stringliteral">&quot;Benchmark<sp/>with:\n\t%s\n\t%s\n\t%s\n\t%s\n&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="171"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;1.<sp/>No<sp/>MIDI<sp/>traffic&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="172"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;2.<sp/>MIDI<sp/>input&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="173"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;3.<sp/>MIDI<sp/>output&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="174"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;4.<sp/>MIDI<sp/>input<sp/>and<sp/>output&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="175"><highlight class="normal"><sp/><sp/><sp/><sp/>choice<sp/>=<sp/><ref refid="latency_8c_1a5fc4de7623f6fda5f72bb5db25805286" kindref="member">get_number</ref>(</highlight><highlight class="stringliteral">&quot;?<sp/>&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="176"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">switch</highlight><highlight class="normal"><sp/>(choice)<sp/>{</highlight></codeline>
+<codeline lineno="177"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">case</highlight><highlight class="normal"><sp/>1:<sp/><ref refid="latency_8c_1a749262916b446732337b86df7b42ad66" kindref="member">test_in</ref><sp/>=<sp/>0;<sp/><ref refid="latency_8c_1a9a188b1240d569e4e888c1e6862b2164" kindref="member">test_out</ref><sp/>=<sp/>0;<sp/></highlight><highlight class="keywordflow">break</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="178"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">case</highlight><highlight class="normal"><sp/>2:<sp/><ref refid="latency_8c_1a749262916b446732337b86df7b42ad66" kindref="member">test_in</ref><sp/>=<sp/>1;<sp/><ref refid="latency_8c_1a9a188b1240d569e4e888c1e6862b2164" kindref="member">test_out</ref><sp/>=<sp/>0;<sp/></highlight><highlight class="keywordflow">break</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="179"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">case</highlight><highlight class="normal"><sp/>3:<sp/><ref refid="latency_8c_1a749262916b446732337b86df7b42ad66" kindref="member">test_in</ref><sp/>=<sp/>0;<sp/><ref refid="latency_8c_1a9a188b1240d569e4e888c1e6862b2164" kindref="member">test_out</ref><sp/>=<sp/>1;<sp/></highlight><highlight class="keywordflow">break</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="180"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">case</highlight><highlight class="normal"><sp/>4:<sp/><ref refid="latency_8c_1a749262916b446732337b86df7b42ad66" kindref="member">test_in</ref><sp/>=<sp/>1;<sp/><ref refid="latency_8c_1a9a188b1240d569e4e888c1e6862b2164" kindref="member">test_out</ref><sp/>=<sp/>1;<sp/></highlight><highlight class="keywordflow">break</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="181"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">default</highlight><highlight class="normal">:<sp/><ref refid="libid3tag_2global_8h_1af576bf8ffa22a44e53018c67095ffbf0" kindref="member">assert</ref>(0);</highlight></codeline>
+<codeline lineno="182"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="183"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<ref refid="latency_8c_1a749262916b446732337b86df7b42ad66" kindref="member">test_in</ref><sp/>||<sp/><ref refid="latency_8c_1a9a188b1240d569e4e888c1e6862b2164" kindref="member">test_out</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="184"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">/*<sp/>list<sp/>device<sp/>information<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="185"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(i<sp/>=<sp/>0;<sp/>i<sp/>&lt;<sp/><ref refid="portmidi_8c_1aa09d809f5c5bdc5d2fc9b3d2290ec282" kindref="member">Pm_CountDevices</ref>();<sp/>i++)<sp/>{</highlight></codeline>
+<codeline lineno="186"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="struct_pm_device_info" kindref="compound">PmDeviceInfo</ref><sp/>*<ref refid="lib_2expat_8h_1a20806b446e455c50dc5653b7d43e3de2" kindref="member">info</ref><sp/>=<sp/><ref refid="group__grp__device_1ga2ff3676bcff6077e64ef6f3eb57fb37e" kindref="member">Pm_GetDeviceInfo</ref>(i);</highlight></codeline>
+<codeline lineno="187"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>((<ref refid="latency_8c_1a749262916b446732337b86df7b42ad66" kindref="member">test_in</ref><sp/>&amp;&amp;<sp/>info-&gt;<ref refid="struct_pm_device_info_1a9447230099afd8efc3f57906a02f6eba" kindref="member">input</ref>)<sp/>||</highlight></codeline>
+<codeline lineno="188"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>(<ref refid="latency_8c_1a9a188b1240d569e4e888c1e6862b2164" kindref="member">test_out</ref><sp/>&amp;&amp;<sp/>info-&gt;<ref refid="struct_pm_device_info_1a0e395068e4eee637cc576541884d7e69" kindref="member">output</ref>))<sp/>{</highlight></codeline>
+<codeline lineno="189"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="octave__test_8m_1ac6d0e62c65e5715b13a5fcb381118888" kindref="member">printf</ref>(</highlight><highlight class="stringliteral">&quot;%d:<sp/>%s,<sp/>%s&quot;</highlight><highlight class="normal">,<sp/>i,<sp/>info-&gt;<ref refid="struct_pm_device_info_1a8c83e0e882db5a980a007437a806363b" kindref="member">interf</ref>,<sp/>info-&gt;<ref refid="struct_pm_device_info_1a5f708c92e58b1c77454bffeee1d7c61c" kindref="member">name</ref>);</highlight></codeline>
+<codeline lineno="190"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(info-&gt;<ref refid="struct_pm_device_info_1a9447230099afd8efc3f57906a02f6eba" kindref="member">input</ref>)<sp/><ref refid="octave__test_8m_1ac6d0e62c65e5715b13a5fcb381118888" kindref="member">printf</ref>(</highlight><highlight class="stringliteral">&quot;<sp/>(input)&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="191"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(info-&gt;<ref refid="struct_pm_device_info_1a0e395068e4eee637cc576541884d7e69" kindref="member">output</ref>)<sp/><ref refid="octave__test_8m_1ac6d0e62c65e5715b13a5fcb381118888" kindref="member">printf</ref>(</highlight><highlight class="stringliteral">&quot;<sp/>(output)&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="192"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="octave__test_8m_1ac6d0e62c65e5715b13a5fcb381118888" kindref="member">printf</ref>(</highlight><highlight class="stringliteral">&quot;\n&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="193"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="194"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="195"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">/*<sp/>open<sp/>stream(s)<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="196"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<ref refid="latency_8c_1a749262916b446732337b86df7b42ad66" kindref="member">test_in</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="197"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>i<sp/>=<sp/><ref refid="latency_8c_1a5fc4de7623f6fda5f72bb5db25805286" kindref="member">get_number</ref>(</highlight><highlight class="stringliteral">&quot;MIDI<sp/>input<sp/>device<sp/>number:<sp/>&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="198"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="group__grp__device_1gabd50a31baaa494ad8b405f9ad54c966e" kindref="member">Pm_OpenInput</ref>(&amp;<ref refid="latency_8c_1a7d946209d777cb95fe30364b8d321207" kindref="member">in</ref>,<sp/></highlight></codeline>
+<codeline lineno="199"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>i,</highlight></codeline>
+<codeline lineno="200"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="getopt1_8c_1a070d2ce7b6bb7e5c05602aa8c308d0c4" kindref="member">NULL</ref>,<sp/></highlight></codeline>
+<codeline lineno="201"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="latency_8c_1aa9b8dcc02cea15aab8e3d0b7860327a7" kindref="member">INPUT_BUFFER_SIZE</ref>,<sp/></highlight></codeline>
+<codeline lineno="202"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>(<ref refid="portmidi_8h_1acf4245beeef251c4a46d66e99d77ffdf" kindref="member">PmTimestamp</ref><sp/>(*)(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>*))<sp/><ref refid="porttime_8h_1a9a335bb8c04c85bf85d807dd448d72d0" kindref="member">Pt_Time</ref>,<sp/></highlight></codeline>
+<codeline lineno="203"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="getopt1_8c_1a070d2ce7b6bb7e5c05602aa8c308d0c4" kindref="member">NULL</ref>);</highlight></codeline>
+<codeline lineno="204"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">/*<sp/>turn<sp/>on<sp/>filtering;<sp/>otherwise,<sp/>input<sp/>might<sp/>overflow<sp/>in<sp/>the<sp/></highlight></codeline>
+<codeline lineno="205"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>5-second<sp/>period<sp/>before<sp/>timer<sp/>callback<sp/>starts<sp/>reading<sp/>midi<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="206"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="group__grp__events__filters_1ga1a2b69b85efe9743345e18fc96607994" kindref="member">Pm_SetFilter</ref>(<ref refid="latency_8c_1a7d946209d777cb95fe30364b8d321207" kindref="member">in</ref>,<sp/><ref refid="group__grp__events__filters_1ga14df46b4e5e3aa265dc8dee06df8ce19" kindref="member">PM_FILT_ACTIVE</ref><sp/>|<sp/><ref refid="group__grp__events__filters_1gaf6d54a9ff867bab06ee18bc637887834" kindref="member">PM_FILT_CLOCK</ref>);</highlight></codeline>
+<codeline lineno="207"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="208"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<ref refid="latency_8c_1a9a188b1240d569e4e888c1e6862b2164" kindref="member">test_out</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="209"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>i<sp/>=<sp/><ref refid="latency_8c_1a5fc4de7623f6fda5f72bb5db25805286" kindref="member">get_number</ref>(</highlight><highlight class="stringliteral">&quot;MIDI<sp/>output<sp/>device<sp/>number:<sp/>&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="210"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="struct_pm_event" kindref="compound">PmEvent</ref><sp/><ref refid="structbuffer" kindref="compound">buffer</ref>[1];</highlight></codeline>
+<codeline lineno="211"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="group__grp__device_1ga134924cfa8badeecff3c5e1f22aee178" kindref="member">Pm_OpenOutput</ref>(&amp;<ref refid="latency_8c_1a71fd1c281affec034757279e4f91c50b" kindref="member">out</ref>,<sp/></highlight></codeline>
+<codeline lineno="212"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>i,</highlight></codeline>
+<codeline lineno="213"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="getopt1_8c_1a070d2ce7b6bb7e5c05602aa8c308d0c4" kindref="member">NULL</ref>,</highlight></codeline>
+<codeline lineno="214"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="latency_8c_1a29a61474854edfeed19457644161249f" kindref="member">OUTPUT_BUFFER_SIZE</ref>,</highlight></codeline>
+<codeline lineno="215"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>(<ref refid="portmidi_8h_1acf4245beeef251c4a46d66e99d77ffdf" kindref="member">PmTimestamp</ref><sp/>(*)(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>*))<sp/><ref refid="porttime_8h_1a9a335bb8c04c85bf85d807dd448d72d0" kindref="member">Pt_Time</ref>,</highlight></codeline>
+<codeline lineno="216"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="getopt1_8c_1a070d2ce7b6bb7e5c05602aa8c308d0c4" kindref="member">NULL</ref>,<sp/></highlight></codeline>
+<codeline lineno="217"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0);<sp/></highlight><highlight class="comment">/*<sp/>no<sp/>latency<sp/>scheduling<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="218"><highlight class="normal"></highlight></codeline>
+<codeline lineno="219"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">/*<sp/>send<sp/>a<sp/>program<sp/>change<sp/>to<sp/>force<sp/>a<sp/>status<sp/>byte<sp/>--<sp/>this<sp/>fixes</highlight></codeline>
+<codeline lineno="220"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>a<sp/>problem<sp/>with<sp/>a<sp/>buggy<sp/>linux<sp/>MidiSport<sp/>driver,<sp/>and<sp/>shouldn&apos;t</highlight></codeline>
+<codeline lineno="221"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>hurt<sp/>anything<sp/>else</highlight></codeline>
+<codeline lineno="222"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="223"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>buffer[0].<ref refid="struct_pm_event_1a3854d39e3b89e1e2a4e1fda8d85c2f16" kindref="member">timestamp</ref><sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="224"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>buffer[0].<ref refid="struct_pm_event_1a2c8c12542447fdd566401fbf1a83d4e2" kindref="member">message</ref><sp/>=<sp/><ref refid="group__grp__events__filters_1gaf1c22515214f7a2cbb1e1e8fb02602bd" kindref="member">Pm_Message</ref>(0xC0,<sp/>0,<sp/>0);<sp/></highlight><highlight class="comment">/*<sp/>program<sp/>change<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="225"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="group__grp__io_1ga82950117f003d28f9ca6536c00af985a" kindref="member">Pm_Write</ref>(<ref refid="latency_8c_1a71fd1c281affec034757279e4f91c50b" kindref="member">out</ref>,<sp/>buffer,<sp/>1);</highlight></codeline>
+<codeline lineno="226"><highlight class="normal"></highlight></codeline>
+<codeline lineno="227"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="latency_8c_1a4d1c266ad0499e83ce49a5f9c14dc2c9" kindref="member">output_period</ref><sp/>=<sp/><ref refid="latency_8c_1a5fc4de7623f6fda5f72bb5db25805286" kindref="member">get_number</ref>(</highlight></codeline>
+<codeline lineno="228"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;MIDI<sp/>out<sp/>should<sp/>be<sp/>sent<sp/>every<sp/>__<sp/>callback<sp/>iterations:<sp/>&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="229"><highlight class="normal"></highlight></codeline>
+<codeline lineno="230"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="libid3tag_2global_8h_1af576bf8ffa22a44e53018c67095ffbf0" kindref="member">assert</ref>(<ref refid="latency_8c_1a4d1c266ad0499e83ce49a5f9c14dc2c9" kindref="member">output_period</ref><sp/>&gt;=<sp/>1);</highlight></codeline>
+<codeline lineno="231"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="232"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="233"><highlight class="normal"></highlight></codeline>
+<codeline lineno="234"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="octave__test_8m_1ac6d0e62c65e5715b13a5fcb381118888" kindref="member">printf</ref>(</highlight><highlight class="stringliteral">&quot;%s%s&quot;</highlight><highlight class="normal">,<sp/></highlight><highlight class="stringliteral">&quot;Latency<sp/>measurements<sp/>will<sp/>start<sp/>in<sp/>5<sp/>seconds.<sp/>&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="235"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;Type<sp/>return<sp/>to<sp/>stop:<sp/>&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="236"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="porttime_8h_1aa0fd8500047387bbe26b5f1c4d91831c" kindref="member">Pt_Start</ref>(<ref refid="latency_8c_1a486233493fc0e05fe1bdbe7b7e5d0f1e" kindref="member">period</ref>,<sp/>&amp;<ref refid="latency_8c_1aaad1b40fc9141c315e7098239e8489eb" kindref="member">pt_callback</ref>,<sp/>0);</highlight></codeline>
+<codeline lineno="237"><highlight class="normal"><sp/><sp/><sp/><sp/>fgets(line,<sp/><ref refid="latency_8c_1a41f16f17393bc7dfd8c3a44a6ba595ba" kindref="member">STRING_MAX</ref>,<sp/>stdin);</highlight></codeline>
+<codeline lineno="238"><highlight class="normal"><sp/><sp/><sp/><sp/>stop<sp/>=<sp/><ref refid="porttime_8h_1a9a335bb8c04c85bf85d807dd448d72d0" kindref="member">Pt_Time</ref>();</highlight></codeline>
+<codeline lineno="239"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="porttime_8h_1a3d3a47e9af8a9cfea97f0237a81da85d" kindref="member">Pt_Stop</ref>();</highlight></codeline>
+<codeline lineno="240"><highlight class="normal"></highlight></codeline>
+<codeline lineno="241"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">/*<sp/>courteously<sp/>turn<sp/>off<sp/>the<sp/>last<sp/>note,<sp/>if<sp/>necessary<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="242"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<ref refid="latency_8c_1a3960aab9a5bdee464614429f8ccb6a80" kindref="member">note_on</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="243"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="struct_pm_event" kindref="compound">PmEvent</ref><sp/><ref refid="structbuffer" kindref="compound">buffer</ref>[1];</highlight></codeline>
+<codeline lineno="244"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/>buffer[0].<ref refid="struct_pm_event_1a3854d39e3b89e1e2a4e1fda8d85c2f16" kindref="member">timestamp</ref><sp/>=<sp/><ref refid="porttime_8h_1a9a335bb8c04c85bf85d807dd448d72d0" kindref="member">Pt_Time</ref>(<ref refid="getopt1_8c_1a070d2ce7b6bb7e5c05602aa8c308d0c4" kindref="member">NULL</ref>);</highlight></codeline>
+<codeline lineno="245"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/>buffer[0].<ref refid="struct_pm_event_1a2c8c12542447fdd566401fbf1a83d4e2" kindref="member">message</ref><sp/>=<sp/><ref refid="group__grp__events__filters_1gaf1c22515214f7a2cbb1e1e8fb02602bd" kindref="member">Pm_Message</ref>(0x90,<sp/>60,<sp/>0);</highlight></codeline>
+<codeline lineno="246"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="group__grp__io_1ga82950117f003d28f9ca6536c00af985a" kindref="member">Pm_Write</ref>(<ref refid="latency_8c_1a71fd1c281affec034757279e4f91c50b" kindref="member">out</ref>,<sp/>buffer,<sp/>1);</highlight></codeline>
+<codeline lineno="247"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="248"><highlight class="normal"></highlight></codeline>
+<codeline lineno="249"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">/*<sp/>print<sp/>the<sp/>histogram<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="250"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="octave__test_8m_1ac6d0e62c65e5715b13a5fcb381118888" kindref="member">printf</ref>(</highlight><highlight class="stringliteral">&quot;Duration<sp/>of<sp/>test:<sp/>%g<sp/>seconds\n\n&quot;</highlight><highlight class="normal">,<sp/><ref refid="latency_8c_1affe776513b24d84b39af8ab0930fef7f" kindref="member">max</ref>(0,<sp/>stop<sp/>-<sp/>5000)<sp/>*<sp/>0.001);</highlight></codeline>
+<codeline lineno="251"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="octave__test_8m_1ac6d0e62c65e5715b13a5fcb381118888" kindref="member">printf</ref>(</highlight><highlight class="stringliteral">&quot;Latency(ms)<sp/><sp/>Number<sp/>of<sp/>occurrences\n&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="252"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">/*<sp/>avoid<sp/>printing<sp/>beyond<sp/>last<sp/>non-zero<sp/>histogram<sp/>entry<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="253"><highlight class="normal"><sp/><sp/><sp/><sp/>len<sp/>=<sp/><ref refid="latency_8c_1ac6afabdc09a49a433ee19d8a9486056d" kindref="member">min</ref>(<ref refid="latency_8c_1aded5babbee1b6f90b7cb4500bfb1f227" kindref="member">HIST_LEN</ref>,<sp/><ref refid="latency_8c_1a8954fdbc640b669b9d9108f995ee8721" kindref="member">max_latency</ref><sp/>+<sp/>1);</highlight></codeline>
+<codeline lineno="254"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(i<sp/>=<sp/>0;<sp/>i<sp/>&lt;<sp/><ref refid="lib_2expat_8h_1af86d325fecfc8f47b61fbf5a5146f582" kindref="member">len</ref>;<sp/>i++)<sp/>{</highlight></codeline>
+<codeline lineno="255"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="octave__test_8m_1ac6d0e62c65e5715b13a5fcb381118888" kindref="member">printf</ref>(</highlight><highlight class="stringliteral">&quot;%2d<sp/><sp/><sp/><sp/><sp/><sp/>%10d\n&quot;</highlight><highlight class="normal">,<sp/>i,<sp/><ref refid="latency_8c_1a0a84425b280516cd345251db13450178" kindref="member">histogram</ref>[i]);</highlight></codeline>
+<codeline lineno="256"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="257"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="octave__test_8m_1ac6d0e62c65e5715b13a5fcb381118888" kindref="member">printf</ref>(</highlight><highlight class="stringliteral">&quot;Number<sp/>of<sp/>points<sp/>greater<sp/>than<sp/>%dms:<sp/>%d\n&quot;</highlight><highlight class="normal">,<sp/></highlight></codeline>
+<codeline lineno="258"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="latency_8c_1aded5babbee1b6f90b7cb4500bfb1f227" kindref="member">HIST_LEN</ref><sp/>-<sp/>1,<sp/><ref refid="latency_8c_1a8daa2a776cae6116e9f14e2b009430a5" kindref="member">out_of_range</ref>);</highlight></codeline>
+<codeline lineno="259"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="octave__test_8m_1ac6d0e62c65e5715b13a5fcb381118888" kindref="member">printf</ref>(</highlight><highlight class="stringliteral">&quot;Maximum<sp/>latency:<sp/>%d<sp/>milliseconds\n&quot;</highlight><highlight class="normal">,<sp/><ref refid="latency_8c_1a8954fdbc640b669b9d9108f995ee8721" kindref="member">max_latency</ref>);</highlight></codeline>
+<codeline lineno="260"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="octave__test_8m_1ac6d0e62c65e5715b13a5fcb381118888" kindref="member">printf</ref>(</highlight><highlight class="stringliteral">&quot;\nNote<sp/>that<sp/>due<sp/>to<sp/>rounding,<sp/>actual<sp/>latency<sp/>can<sp/>be<sp/>1ms<sp/>higher\n&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="261"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="octave__test_8m_1ac6d0e62c65e5715b13a5fcb381118888" kindref="member">printf</ref>(</highlight><highlight class="stringliteral">&quot;than<sp/>the<sp/>numbers<sp/>reported<sp/>here.\n&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="262"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="octave__test_8m_1ac6d0e62c65e5715b13a5fcb381118888" kindref="member">printf</ref>(</highlight><highlight class="stringliteral">&quot;Type<sp/>return<sp/>to<sp/>exit...&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="263"><highlight class="normal"><sp/><sp/><sp/><sp/>fgets(line,<sp/><ref refid="latency_8c_1a41f16f17393bc7dfd8c3a44a6ba595ba" kindref="member">STRING_MAX</ref>,<sp/>stdin);</highlight></codeline>
+<codeline lineno="264"><highlight class="normal"></highlight></codeline>
+<codeline lineno="265"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(choice<sp/>==<sp/>2)</highlight></codeline>
+<codeline lineno="266"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="group__grp__events__filters_1ga6b26be2fbcf092c9625ade5303edd0ac" kindref="member">Pm_Close</ref>(<ref refid="latency_8c_1a7d946209d777cb95fe30364b8d321207" kindref="member">in</ref>);</highlight></codeline>
+<codeline lineno="267"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(choice<sp/>==<sp/>3)</highlight></codeline>
+<codeline lineno="268"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="group__grp__events__filters_1ga6b26be2fbcf092c9625ade5303edd0ac" kindref="member">Pm_Close</ref>(<ref refid="latency_8c_1a71fd1c281affec034757279e4f91c50b" kindref="member">out</ref>);</highlight></codeline>
+<codeline lineno="269"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(choice<sp/>==<sp/>4)</highlight></codeline>
+<codeline lineno="270"><highlight class="normal"><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="271"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="group__grp__events__filters_1ga6b26be2fbcf092c9625ade5303edd0ac" kindref="member">Pm_Close</ref>(<ref refid="latency_8c_1a7d946209d777cb95fe30364b8d321207" kindref="member">in</ref>);</highlight></codeline>
+<codeline lineno="272"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="group__grp__events__filters_1ga6b26be2fbcf092c9625ade5303edd0ac" kindref="member">Pm_Close</ref>(<ref refid="latency_8c_1a71fd1c281affec034757279e4f91c50b" kindref="member">out</ref>);</highlight></codeline>
+<codeline lineno="273"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="274"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="275"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="276"><highlight class="normal"></highlight></codeline>
+<codeline lineno="277"><highlight class="normal"></highlight></codeline>
+<codeline lineno="278"><highlight class="normal"></highlight><highlight class="comment">/*<sp/>read<sp/>a<sp/>number<sp/>from<sp/>console<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="279" refid="latency_8c_1a5fc4de7623f6fda5f72bb5db25805286" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="latency_8c_1a5fc4de7623f6fda5f72bb5db25805286" kindref="member">get_number</ref>(</highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>*prompt)</highlight></codeline>
+<codeline lineno="280"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="281"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/><ref refid="seqread_8c_1aad9ebcdde542d8b2075615388ff15a9c" kindref="member">line</ref>[<ref refid="latency_8c_1a41f16f17393bc7dfd8c3a44a6ba595ba" kindref="member">STRING_MAX</ref>];</highlight></codeline>
+<codeline lineno="282"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>n<sp/>=<sp/>0,<sp/><ref refid="checksum_8c_1ab80e330a3bc9e38c1297fe17381e92b4" kindref="member">i</ref>;</highlight></codeline>
+<codeline lineno="283"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="octave__test_8m_1ac6d0e62c65e5715b13a5fcb381118888" kindref="member">printf</ref>(prompt);</highlight></codeline>
+<codeline lineno="284"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">while</highlight><highlight class="normal"><sp/>(n<sp/>!=<sp/>1)<sp/>{</highlight></codeline>
+<codeline lineno="285"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>n<sp/>=<sp/>scanf(</highlight><highlight class="stringliteral">&quot;%d&quot;</highlight><highlight class="normal">,<sp/>&amp;<ref refid="checksum_8c_1ab80e330a3bc9e38c1297fe17381e92b4" kindref="member">i</ref>);</highlight></codeline>
+<codeline lineno="286"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>fgets(line,<sp/><ref refid="latency_8c_1a41f16f17393bc7dfd8c3a44a6ba595ba" kindref="member">STRING_MAX</ref>,<sp/>stdin);</highlight></codeline>
+<codeline lineno="287"><highlight class="normal"></highlight></codeline>
+<codeline lineno="288"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="289"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="checksum_8c_1ab80e330a3bc9e38c1297fe17381e92b4" kindref="member">i</ref>;</highlight></codeline>
+<codeline lineno="290"><highlight class="normal">}</highlight></codeline>
+    </programlisting>
+    <location file="C:/_dev/OpenU/Audacity/audacity/lib-src/portmidi/pm_test/latency.c"/>
+  </compounddef>
+</doxygen>

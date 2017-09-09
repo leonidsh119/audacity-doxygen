@@ -1,0 +1,462 @@
+.TH "ODPCMAliasBlockFile" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+ODPCMAliasBlockFile \- An \fBAliasBlockFile\fP that references uncompressed data in an existing file\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <ODPCMAliasBlockFile\&.h>\fP
+.PP
+Inherits \fBPCMAliasBlockFile\fP\&.
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBODPCMAliasBlockFile\fP (wxFileName baseFileName, wxFileName aliasedFileName, \fBsampleCount\fP aliasStart, \fBsampleCount\fP aliasLen, \fBint\fP aliasChannel)"
+.br
+.RI "\fIConstructs a \fBPCMAliasBlockFile\fP, writing the summary to disk\&. \fP"
+.ti -1c
+.RI "\fBODPCMAliasBlockFile\fP (wxFileName existingSummaryFileName, wxFileName aliasedFileName, \fBsampleCount\fP aliasStart, \fBsampleCount\fP aliasLen, \fBint\fP aliasChannel, float \fBmin\fP, float \fBmax\fP, float rms, \fBbool\fP summaryAvailable)"
+.br
+.RI "\fIsummaryAvailable should be true if the file has been written already\&. \fP"
+.ti -1c
+.RI "virtual \fB~ODPCMAliasBlockFile\fP ()"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBIsSummaryAvailable\fP () override"
+.br
+.RI "\fIReturns TRUE if this block's complete summary has been computed and is ready (for OD) \fP"
+.ti -1c
+.RI "\fBbool\fP \fBIsSummaryBeingComputed\fP () override"
+.br
+.RI "\fIReturns TRUE if the summary has not yet been written, but is actively being computed and written to disk\&. \fP"
+.ti -1c
+.RI "wxLongLong \fBGetSpaceUsage\fP () override"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBGetMinMax\fP (\fBsampleCount\fP \fBstart\fP, \fBsampleCount\fP \fBlen\fP, float *outMin, float *outMax, float *outRMS) override"
+.br
+.RI "\fIGets extreme values for the specified region\&. \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBGetMinMax\fP (float *outMin, float *outMax, float *outRMS) override"
+.br
+.RI "\fIGets extreme values for the entire block\&. \fP"
+.ti -1c
+.RI "\fBbool\fP \fBRead256\fP (float *\fBbuffer\fP, \fBsampleCount\fP \fBstart\fP, \fBsampleCount\fP \fBlen\fP) override"
+.br
+.RI "\fIReturns the 256 byte summary data block\&. \fP"
+.ti -1c
+.RI "\fBbool\fP \fBRead64K\fP (float *\fBbuffer\fP, \fBsampleCount\fP \fBstart\fP, \fBsampleCount\fP \fBlen\fP) override"
+.br
+.RI "\fIReturns the 64K summary data block\&. \fP"
+.ti -1c
+.RI "\fBBlockFile\fP * \fBCopy\fP (wxFileName fileName) override"
+.br
+.RI "\fIMakes NEW \fBODPCMAliasBlockFile\fP or \fBPCMAliasBlockFile\fP depending on summary availability\&. \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBSaveXML\fP (\fBXMLWriter\fP &xmlFile) override"
+.br
+.RI "\fISaves as xml \fBODPCMAliasBlockFile\fP or \fBPCMAliasBlockFile\fP depending on summary availability\&. \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBRecover\fP (\fBvoid\fP) override"
+.br
+.RI "\fIWrites the summary file if summary data is available\&. \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBDoWriteSummary\fP ()"
+.br
+.RI "\fIA public interface to WriteSummary\&. \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBSetStart\fP (\fBsampleCount\fP startSample)"
+.br
+.RI "\fISets the value that indicates where the first sample in this block corresponds to the global sequence/clip\&. Only for display use\&. \fP"
+.ti -1c
+.RI "\fBsampleCount\fP \fBGetStart\fP ()"
+.br
+.RI "\fIGets the value that indicates where the first sample in this block corresponds to the global sequence/clip\&. Only for display use\&. \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBLock\fP ()"
+.br
+.RI "\fILocks the blockfile only if it has a file that exists\&. \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBUnlock\fP ()"
+.br
+.RI "\fIUnlocks the blockfile only if it has a file that exists\&. \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBSetClipOffset\fP (\fBsampleCount\fP numSamples)"
+.br
+.RI "\fIsets the amount of samples the clip associated with this blockfile is offset in the wavetrack (non effecting) \fP"
+.ti -1c
+.RI "\fBsampleCount\fP \fBGetClipOffset\fP ()"
+.br
+.RI "\fIGets the number of samples the clip associated with this blockfile is offset by\&. \fP"
+.ti -1c
+.RI "\fBsampleCount\fP \fBGetGlobalStart\fP ()"
+.br
+.ti -1c
+.RI "\fBsampleCount\fP \fBGetGlobalEnd\fP ()"
+.br
+.ti -1c
+.RI "\fBint\fP \fBReadData\fP (\fBsamplePtr\fP \fBdata\fP, \fBsampleFormat\fP \fBformat\fP, \fBsampleCount\fP \fBstart\fP, \fBsampleCount\fP \fBlen\fP) override"
+.br
+.RI "\fIReads the specified data from the aliased file using libsndfile\&. \fP"
+.ti -1c
+.RI "\fBbool\fP \fBReadSummary\fP (\fBvoid\fP *\fBdata\fP) override"
+.br
+.RI "\fIRead the summary into a buffer\&. \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBSetFileName\fP (wxFileName &\fBname\fP) override"
+.br
+.RI "\fIsets the file name the summary info will be saved in\&. threadsafe\&. \fP"
+.ti -1c
+.RI "wxFileName \fBGetFileName\fP () override"
+.br
+.RI "\fIsets the file name the summary info will be saved in\&. threadsafe\&. \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBCloseLock\fP () override"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBLockRead\fP () override"
+.br
+.RI "\fIPrevents a read on other threads\&. \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBUnlockRead\fP () override"
+.br
+.RI "\fIAllows reading on other threads\&. \fP"
+.in -1c
+.SS "Static Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "static \fBBlockFile\fP * \fBBuildFromXML\fP (\fBDirManager\fP &dm, \fBconst\fP wxChar **attrs)"
+.br
+.RI "\fIReconstructs from XML a \fBODPCMAliasBlockFile\fP and reschedules it for OD loading\&. \fP"
+.in -1c
+.SS "Protected Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBvoid\fP \fBWriteSummary\fP () override"
+.br
+.RI "\fIWrite the summary to disk, using the derived \fBReadData()\fP to get the data\&. \fP"
+.ti -1c
+.RI "\fBvoid\fP * \fBCalcSummary\fP (\fBsamplePtr\fP \fBbuffer\fP, \fBsampleCount\fP \fBlen\fP, \fBsampleFormat\fP \fBformat\fP) override"
+.br
+.in -1c
+.SS "Friends"
+
+.in +1c
+.ti -1c
+.RI "class \fBDirManager\fP"
+.br
+.ti -1c
+.RI "class \fBODComputeSummaryTask\fP"
+.br
+.ti -1c
+.RI "class \fBODDecodeTask\fP"
+.br
+.in -1c
+.SS "Additional Inherited Members"
+.SH "Detailed Description"
+.PP 
+An \fBAliasBlockFile\fP that references uncompressed data in an existing file\&. 
+
+\fBODPCMAliasBlockFile\fP is a special type of \fBPCMAliasBlockFile\fP that does not necessarily have summary data available The summary is eventually computed and written to a file in a background thread\&.
+.PP
+Load On-Demand implementation of the \fBAliasBlockFile\fP for PCM files\&.
+.PP
+to load large files more quickly, we take skip computing the summary data and put ODPCMAliasBlockFiles in the sequence as place holders\&. A background thread loads and computes the summary data into these classes\&. ODPCMAliasBlockFiles are unlike all other BlockFiles are not immutable (for the most part,) because when NEW summary data is computed for an existing \fBODPCMAliasBlockFile\fP we save the buffer then and write the Summary File\&.
+.PP
+All \fBBlockFile\fP methods that treat the summary data as a buffer that exists in its \fBBlockFile\fP are implemented here to behave when the data is not available yet\&.
+.PP
+Some of these methods have been overridden only because they used the unsafe wxLog calls in the base class\&. 
+.PP
+Definition at line 46 of file ODPCMAliasBlockFile\&.h\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "ODPCMAliasBlockFile::ODPCMAliasBlockFile (wxFileName baseFileName, wxFileName aliasedFileName, \fBsampleCount\fP aliasStart, \fBsampleCount\fP aliasLen, \fBint\fP aliasChannel)"
+
+.PP
+Constructs a \fBPCMAliasBlockFile\fP, writing the summary to disk\&. 
+.PP
+Definition at line 45 of file ODPCMAliasBlockFile\&.cpp\&.
+.SS "ODPCMAliasBlockFile::ODPCMAliasBlockFile (wxFileName existingSummaryFileName, wxFileName aliasedFileName, \fBsampleCount\fP aliasStart, \fBsampleCount\fP aliasLen, \fBint\fP aliasChannel, float min, float max, float rms, \fBbool\fP summaryAvailable)"
+
+.PP
+summaryAvailable should be true if the file has been written already\&. 
+.PP
+Definition at line 57 of file ODPCMAliasBlockFile\&.cpp\&.
+.SS "ODPCMAliasBlockFile::~ODPCMAliasBlockFile ()\fC [virtual]\fP"
+
+.PP
+Definition at line 71 of file ODPCMAliasBlockFile\&.cpp\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "\fBBlockFile\fP * ODPCMAliasBlockFile::BuildFromXML (\fBDirManager\fP & dm, \fBconst\fP wxChar ** attrs)\fC [static]\fP"
+
+.PP
+Reconstructs from XML a \fBODPCMAliasBlockFile\fP and reschedules it for OD loading\&. Constructs a \fBODPCMAliasBlockFile\fP from the xml output of WriteXML\&. Does not schedule the \fBODPCMAliasBlockFile\fP for OD loading\&. Client code must do this\&. 
+.PP
+Definition at line 290 of file ODPCMAliasBlockFile\&.cpp\&.
+.SS "\fBvoid\fP * ODPCMAliasBlockFile::CalcSummary (\fBsamplePtr\fP buffer, \fBsampleCount\fP len, \fBsampleFormat\fP format)\fC [override]\fP, \fC [protected]\fP, \fC [virtual]\fP"
+A thread-safe version of CalcSummary\&. \fBBlockFile::CalcSummary\fP uses a static summary array across the class, which we can't use\&. Get a buffer containing a summary block describing this sample data\&. This must be called by derived classes when they are constructed, to allow them to construct their summary data, after which they should write that data to their disk file\&.
+.PP
+This method also has the side effect of setting the mMin, mMax, and mRMS members of this class\&.
+.PP
+Unlike \fBBlockFile\fP's implementation You SHOULD DELETE the returned buffer\&. this is protected so it shouldn't be hard to deal with - just override all \fBBlockFile\fP methods that use this method\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIbuffer\fP A buffer containing the sample data to be analyzed 
+.br
+\fIlen\fP The length of the sample data 
+.br
+\fIformat\fP The format of the sample data\&. 
+.RE
+.PP
+
+.PP
+Reimplemented from \fBBlockFile\fP\&.
+.PP
+Definition at line 462 of file ODPCMAliasBlockFile\&.cpp\&.
+.SS "\fBvoid\fP ODPCMAliasBlockFile::CloseLock ()\fC [override]\fP, \fC [virtual]\fP"
+when the project closes, it locks the blockfiles\&. Override this in case it needs special treatment 
+.PP
+Reimplemented from \fBBlockFile\fP\&.
+.PP
+Definition at line 131 of file ODPCMAliasBlockFile\&.cpp\&.
+.SS "\fBBlockFile\fP * ODPCMAliasBlockFile::Copy (wxFileName newFileName)\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Makes NEW \fBODPCMAliasBlockFile\fP or \fBPCMAliasBlockFile\fP depending on summary availability\&. If the summary has been computed, Construct a NEW \fBPCMAliasBlockFile\fP based on this one\&. otherwise construct an \fBODPCMAliasBlockFile\fP that still needs to be computed\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fInewFileName\fP The filename to copy the summary data to\&. 
+.RE
+.PP
+
+.PP
+Implements \fBBlockFile\fP\&.
+.PP
+Definition at line 216 of file ODPCMAliasBlockFile\&.cpp\&.
+.SS "\fBvoid\fP ODPCMAliasBlockFile::DoWriteSummary ()"
+
+.PP
+A public interface to WriteSummary\&. Calls write summary, and makes sure it is only done once in a thread-safe fashion\&. 
+.PP
+Definition at line 364 of file ODPCMAliasBlockFile\&.cpp\&.
+.SS "\fBsampleCount\fP ODPCMAliasBlockFile::GetClipOffset ()\fC [inline]\fP"
+
+.PP
+Gets the number of samples the clip associated with this blockfile is offset by\&. 
+.PP
+Definition at line 108 of file ODPCMAliasBlockFile\&.h\&.
+.SS "wxFileName ODPCMAliasBlockFile::GetFileName ()\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+sets the file name the summary info will be saved in\&. threadsafe\&. 
+.PP
+Reimplemented from \fBBlockFile\fP\&.
+.PP
+Definition at line 381 of file ODPCMAliasBlockFile\&.cpp\&.
+.SS "\fBsampleCount\fP ODPCMAliasBlockFile::GetGlobalEnd ()\fC [inline]\fP"
+
+.PP
+Definition at line 114 of file ODPCMAliasBlockFile\&.h\&.
+.SS "\fBsampleCount\fP ODPCMAliasBlockFile::GetGlobalStart ()\fC [inline]\fP"
+
+.PP
+Definition at line 111 of file ODPCMAliasBlockFile\&.h\&.
+.SS "\fBvoid\fP ODPCMAliasBlockFile::GetMinMax (\fBsampleCount\fP start, \fBsampleCount\fP len, float * outMin, float * outMax, float * outRMS)\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Gets extreme values for the specified region\&. 
+.PP
+Reimplemented from \fBBlockFile\fP\&.
+.PP
+Definition at line 148 of file ODPCMAliasBlockFile\&.cpp\&.
+.SS "\fBvoid\fP ODPCMAliasBlockFile::GetMinMax (float * outMin, float * outMax, float * outRMS)\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Gets extreme values for the entire block\&. 
+.PP
+Reimplemented from \fBBlockFile\fP\&.
+.PP
+Definition at line 166 of file ODPCMAliasBlockFile\&.cpp\&.
+.SS "wxLongLong ODPCMAliasBlockFile::GetSpaceUsage ()\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Implements \fBBlockFile\fP\&.
+.PP
+Definition at line 105 of file ODPCMAliasBlockFile\&.cpp\&.
+.SS "\fBsampleCount\fP ODPCMAliasBlockFile::GetStart ()\fC [inline]\fP"
+
+.PP
+Gets the value that indicates where the first sample in this block corresponds to the global sequence/clip\&. Only for display use\&. 
+.PP
+Definition at line 96 of file ODPCMAliasBlockFile\&.h\&.
+.SS "\fBbool\fP ODPCMAliasBlockFile::IsSummaryAvailable ()\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Returns TRUE if this block's complete summary has been computed and is ready (for OD) 
+.PP
+Reimplemented from \fBBlockFile\fP\&.
+.PP
+Definition at line 354 of file ODPCMAliasBlockFile\&.cpp\&.
+.SS "\fBbool\fP ODPCMAliasBlockFile::IsSummaryBeingComputed ()\fC [inline]\fP, \fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Returns TRUE if the summary has not yet been written, but is actively being computed and written to disk\&. 
+.PP
+Reimplemented from \fBBlockFile\fP\&.
+.PP
+Definition at line 63 of file ODPCMAliasBlockFile\&.h\&.
+.SS "\fBvoid\fP ODPCMAliasBlockFile::Lock ()\fC [virtual]\fP"
+
+.PP
+Locks the blockfile only if it has a file that exists\&. Locks the blockfile only if it has a file that exists\&. This needs to be done so that the unsaved ODPCMAliasBlockfiles are deleted upon exit 
+.PP
+Reimplemented from \fBBlockFile\fP\&.
+.PP
+Definition at line 124 of file ODPCMAliasBlockFile\&.cpp\&.
+.SS "\fBvoid\fP ODPCMAliasBlockFile::LockRead ()\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Prevents a read on other threads\&. 
+.PP
+Reimplemented from \fBBlockFile\fP\&.
+.PP
+Definition at line 723 of file ODPCMAliasBlockFile\&.cpp\&.
+.SS "\fBbool\fP ODPCMAliasBlockFile::Read256 (float * buffer, \fBsampleCount\fP start, \fBsampleCount\fP len)\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Returns the 256 byte summary data block\&. Returns the 256 byte summary data block\&. Clients should check to see if the summary is available before trying to read it with this call\&. 
+.PP
+Reimplemented from \fBBlockFile\fP\&.
+.PP
+Definition at line 183 of file ODPCMAliasBlockFile\&.cpp\&.
+.SS "\fBbool\fP ODPCMAliasBlockFile::Read64K (float * buffer, \fBsampleCount\fP start, \fBsampleCount\fP len)\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Returns the 64K summary data block\&. Returns the 64K summary data block\&. Clients should check to see if the summary is available before trying to read it with this call\&. 
+.PP
+Reimplemented from \fBBlockFile\fP\&.
+.PP
+Definition at line 198 of file ODPCMAliasBlockFile\&.cpp\&.
+.SS "\fBint\fP ODPCMAliasBlockFile::ReadData (\fBsamplePtr\fP data, \fBsampleFormat\fP format, \fBsampleCount\fP start, \fBsampleCount\fP len)\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Reads the specified data from the aliased file using libsndfile\&. Reads the specified data from the aliased file, using libsndfile, and converts it to the given sample format\&. Copied from PCMAliasBlockFIle but wxLog calls taken out for thread safety
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdata\fP The buffer to read the sample data into\&. 
+.br
+\fIformat\fP The format to convert the data into 
+.br
+\fIstart\fP The offset within the block to begin reading 
+.br
+\fIlen\fP The number of samples to read 
+.RE
+.PP
+
+.PP
+Implements \fBBlockFile\fP\&.
+.PP
+Definition at line 594 of file ODPCMAliasBlockFile\&.cpp\&.
+.SS "\fBbool\fP ODPCMAliasBlockFile::ReadSummary (\fBvoid\fP * data)\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Read the summary into a buffer\&. Read the summary of this alias block from disk\&. Since the audio data is elsewhere, this consists of reading the entire summary file\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fI*data\fP The buffer where the summary data will be stored\&. It must be at least mSummaryInfo\&.totalSummaryBytes long\&. 
+.RE
+.PP
+
+.PP
+Implements \fBBlockFile\fP\&.
+.PP
+Definition at line 691 of file ODPCMAliasBlockFile\&.cpp\&.
+.SS "\fBvoid\fP ODPCMAliasBlockFile::Recover (\fBvoid\fP)\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Writes the summary file if summary data is available\&. 
+.PP
+Implements \fBBlockFile\fP\&.
+.PP
+Definition at line 346 of file ODPCMAliasBlockFile\&.cpp\&.
+.SS "\fBvoid\fP ODPCMAliasBlockFile::SaveXML (\fBXMLWriter\fP & xmlFile)\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Saves as xml \fBODPCMAliasBlockFile\fP or \fBPCMAliasBlockFile\fP depending on summary availability\&. Writes the xml as a \fBPCMAliasBlockFile\fP if we can (if we have a summary file) Otherwise writes XML as a subset of attributes with 'odpcmaliasblockfile as the start tag\&. Most notably, the summaryfile attribute refers to a file that does not yet, so when the project file is read back in and this object reconstructed, it needs to avoid trying to open it as well as schedule itself for OD loading 
+.PP
+Implements \fBBlockFile\fP\&.
+.PP
+Definition at line 254 of file ODPCMAliasBlockFile\&.cpp\&.
+.SS "\fBvoid\fP ODPCMAliasBlockFile::SetClipOffset (\fBsampleCount\fP numSamples)\fC [inline]\fP"
+
+.PP
+sets the amount of samples the clip associated with this blockfile is offset in the wavetrack (non effecting) 
+.PP
+Definition at line 105 of file ODPCMAliasBlockFile\&.h\&.
+.SS "\fBvoid\fP ODPCMAliasBlockFile::SetFileName (wxFileName & name)\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+sets the file name the summary info will be saved in\&. threadsafe\&. 
+.PP
+Reimplemented from \fBBlockFile\fP\&.
+.PP
+Definition at line 373 of file ODPCMAliasBlockFile\&.cpp\&.
+.SS "\fBvoid\fP ODPCMAliasBlockFile::SetStart (\fBsampleCount\fP startSample)\fC [inline]\fP"
+
+.PP
+Sets the value that indicates where the first sample in this block corresponds to the global sequence/clip\&. Only for display use\&. 
+.PP
+Definition at line 93 of file ODPCMAliasBlockFile\&.h\&.
+.SS "\fBvoid\fP ODPCMAliasBlockFile::Unlock ()\fC [virtual]\fP"
+
+.PP
+Unlocks the blockfile only if it has a file that exists\&. unlocks the blockfile only if it has a file that exists\&. This needs to be done so that the unsaved ODPCMAliasBlockfiles are deleted upon exit 
+.PP
+Reimplemented from \fBBlockFile\fP\&.
+.PP
+Definition at line 140 of file ODPCMAliasBlockFile\&.cpp\&.
+.SS "\fBvoid\fP ODPCMAliasBlockFile::UnlockRead ()\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Allows reading on other threads\&. 
+.PP
+Reimplemented from \fBBlockFile\fP\&.
+.PP
+Definition at line 728 of file ODPCMAliasBlockFile\&.cpp\&.
+.SS "\fBvoid\fP ODPCMAliasBlockFile::WriteSummary ()\fC [override]\fP, \fC [protected]\fP, \fC [virtual]\fP"
+
+.PP
+Write the summary to disk, using the derived \fBReadData()\fP to get the data\&. 
+.PP
+Reimplemented from \fBAliasBlockFile\fP\&.
+.PP
+Definition at line 391 of file ODPCMAliasBlockFile\&.cpp\&.
+.SH "Friends And Related Function Documentation"
+.PP 
+.SS "friend class \fBDirManager\fP\fC [friend]\fP"
+
+.PP
+Definition at line 148 of file ODPCMAliasBlockFile\&.h\&.
+.SS "friend class \fBODComputeSummaryTask\fP\fC [friend]\fP"
+
+.PP
+Definition at line 149 of file ODPCMAliasBlockFile\&.h\&.
+.SS "friend class \fBODDecodeTask\fP\fC [friend]\fP"
+
+.PP
+Definition at line 150 of file ODPCMAliasBlockFile\&.h\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

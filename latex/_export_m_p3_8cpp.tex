@@ -1,0 +1,557 @@
+\hypertarget{_export_m_p3_8cpp}{}\section{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/src/export/\+Export\+M\+P3.cpp File Reference}
+\label{_export_m_p3_8cpp}\index{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/src/export/\+Export\+M\+P3.\+cpp@{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/src/export/\+Export\+M\+P3.\+cpp}}
+{\ttfamily \#include \char`\"{}../\+Audacity.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Export\+M\+P3.\+h\char`\"{}}\\*
+{\ttfamily \#include $<$wx/defs.\+h$>$}\\*
+{\ttfamily \#include $<$wx/choice.\+h$>$}\\*
+{\ttfamily \#include $<$wx/dynlib.\+h$>$}\\*
+{\ttfamily \#include $<$wx/ffile.\+h$>$}\\*
+{\ttfamily \#include $<$wx/intl.\+h$>$}\\*
+{\ttfamily \#include $<$wx/log.\+h$>$}\\*
+{\ttfamily \#include $<$wx/mimetype.\+h$>$}\\*
+{\ttfamily \#include $<$wx/msgdlg.\+h$>$}\\*
+{\ttfamily \#include $<$wx/radiobut.\+h$>$}\\*
+{\ttfamily \#include $<$wx/stattext.\+h$>$}\\*
+{\ttfamily \#include $<$wx/textctrl.\+h$>$}\\*
+{\ttfamily \#include $<$wx/timer.\+h$>$}\\*
+{\ttfamily \#include $<$wx/utils.\+h$>$}\\*
+{\ttfamily \#include $<$wx/window.\+h$>$}\\*
+{\ttfamily \#include \char`\"{}../\+File\+Names.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../float\+\_\+cast.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../\+Internat.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../\+Mix.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../\+Prefs.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../\+Project.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../\+Shuttle\+Gui.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../\+Tags.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../\+Track.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../widgets/\+Linking\+Html\+Window.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}File\+Dialog.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Export.\+h\char`\"{}}\\*
+{\ttfamily \#include $<$lame/lame.\+h$>$}\\*
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{struct_c_h_o_i_c_e_s}{C\+H\+O\+I\+C\+ES}
+\item 
+class \hyperlink{class_export_m_p3_options}{Export\+M\+P3\+Options}
+\item 
+class \hyperlink{class_find_dialog}{Find\+Dialog}
+\item 
+class \hyperlink{class_m_p3_exporter}{M\+P3\+Exporter}
+\begin{DoxyCompactList}\small\item\em Class used to export M\+P3 files. \end{DoxyCompactList}\item 
+class \hyperlink{class_export_m_p3}{Export\+M\+P3}
+\end{DoxyCompactItemize}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{_export_m_p3_8cpp_a572336cced4108d5b64083dd53b9b1b7}{M\+O\+D\+E\+\_\+\+S\+ET}~0
+\item 
+\#define \hyperlink{_export_m_p3_8cpp_aee276ebe1da950cf700c15d7a4c7470a}{M\+O\+D\+E\+\_\+\+V\+BR}~1
+\item 
+\#define \hyperlink{_export_m_p3_8cpp_a9c1418189db9e11e63b1e8ce594abc77}{M\+O\+D\+E\+\_\+\+A\+BR}~2
+\item 
+\#define \hyperlink{_export_m_p3_8cpp_a78d81dc25b4e1f18bb20d188027341fc}{M\+O\+D\+E\+\_\+\+C\+BR}~3
+\item 
+\#define \hyperlink{_export_m_p3_8cpp_a24a424d316adc32d1aa8270caf8c71d4}{C\+H\+A\+N\+N\+E\+L\+\_\+\+J\+O\+I\+NT}~0
+\item 
+\#define \hyperlink{_export_m_p3_8cpp_a07769bb361e21297a69d7310f296a49e}{C\+H\+A\+N\+N\+E\+L\+\_\+\+S\+T\+E\+R\+EO}~1
+\item 
+\#define \hyperlink{_export_m_p3_8cpp_aaa6e335424434c46569cda97c878450c}{Q\+U\+A\+L\+I\+T\+Y\+\_\+0}~0
+\item 
+\#define \hyperlink{_export_m_p3_8cpp_a651f3b47a4bc5b58dc13c5ebaf09e063}{Q\+U\+A\+L\+I\+T\+Y\+\_\+1}~1
+\item 
+\#define \hyperlink{_export_m_p3_8cpp_a15dd4d0540c2c3bf34f7507a7f9cb2ad}{Q\+U\+A\+L\+I\+T\+Y\+\_\+2}~2
+\item 
+\#define \hyperlink{_export_m_p3_8cpp_a48341d2757ede0f63c0cba90cb7c48d7}{Q\+U\+A\+L\+I\+T\+Y\+\_\+3}~3
+\item 
+\#define \hyperlink{_export_m_p3_8cpp_a31afd920a22b970a6fd7ccef7f16a9ac}{Q\+U\+A\+L\+I\+T\+Y\+\_\+4}~4
+\item 
+\#define \hyperlink{_export_m_p3_8cpp_ab2b6bb3fafd56d88aee5b4d268699deb}{Q\+U\+A\+L\+I\+T\+Y\+\_\+5}~5
+\item 
+\#define \hyperlink{_export_m_p3_8cpp_a260d1139a656298556ead6cd1e5138e1}{Q\+U\+A\+L\+I\+T\+Y\+\_\+6}~6
+\item 
+\#define \hyperlink{_export_m_p3_8cpp_aa92c413cdf1664e3d545d0d61794a9cf}{Q\+U\+A\+L\+I\+T\+Y\+\_\+7}~7
+\item 
+\#define \hyperlink{_export_m_p3_8cpp_ad5d5326a961ae0444465e343f32f5a24}{Q\+U\+A\+L\+I\+T\+Y\+\_\+8}~8
+\item 
+\#define \hyperlink{_export_m_p3_8cpp_adfb9c7f2e5374be83aec56e28ac7b680}{Q\+U\+A\+L\+I\+T\+Y\+\_\+9}~9
+\item 
+\#define \hyperlink{_export_m_p3_8cpp_ace2edb9fb3c56f87a3afbf961b96cd32}{R\+O\+U\+T\+I\+N\+E\+\_\+\+F\+A\+ST}~0
+\item 
+\#define \hyperlink{_export_m_p3_8cpp_ada0979b2572bc6938c1b99893a0eb144}{R\+O\+U\+T\+I\+N\+E\+\_\+\+S\+T\+A\+N\+D\+A\+RD}~1
+\item 
+\#define \hyperlink{_export_m_p3_8cpp_a3aff1a29752e00a116c318c8438c3bd2}{P\+R\+E\+S\+E\+T\+\_\+\+I\+N\+S\+A\+NE}~0
+\item 
+\#define \hyperlink{_export_m_p3_8cpp_a44f8f8e7b7f3bad2007e370f096b733d}{P\+R\+E\+S\+E\+T\+\_\+\+E\+X\+T\+R\+E\+ME}~1
+\item 
+\#define \hyperlink{_export_m_p3_8cpp_a20511087a9390de0e0af0ef67c35c937}{P\+R\+E\+S\+E\+T\+\_\+\+S\+T\+A\+N\+D\+A\+RD}~2
+\item 
+\#define \hyperlink{_export_m_p3_8cpp_ac97d390a894bc90fa97d720ce8cddd87}{P\+R\+E\+S\+E\+T\+\_\+\+M\+E\+D\+I\+UM}~3
+\item 
+\#define \hyperlink{_export_m_p3_8cpp_abbdfd975f2f607df850461c4c20e865d}{I\+D\+\_\+\+S\+ET}~7000
+\item 
+\#define \hyperlink{_export_m_p3_8cpp_a22fb4c12e0834e2d66840e7e66fc00b8}{I\+D\+\_\+\+V\+BR}~7001
+\item 
+\#define \hyperlink{_export_m_p3_8cpp_a6173aa70322db8548059eb969639469b}{I\+D\+\_\+\+A\+BR}~7002
+\item 
+\#define \hyperlink{_export_m_p3_8cpp_ada876339466080625f643f608093d2cd}{I\+D\+\_\+\+C\+BR}~7003
+\item 
+\#define \hyperlink{_export_m_p3_8cpp_ad930e3d8e4d204d8832d0b038c88a32b}{I\+D\+\_\+\+Q\+U\+A\+L\+I\+TY}~7004
+\item 
+\#define \hyperlink{_export_m_p3_8cpp_acf98dfaa9b5b8cd76e925726ed0b20cb}{I\+D\+\_\+\+B\+R\+O\+W\+SE}~5000
+\item 
+\#define \hyperlink{_export_m_p3_8cpp_a3434d3d6f95d29f641d3e2b16578e1a4}{I\+D\+\_\+\+D\+L\+O\+AD}~5001
+\end{DoxyCompactItemize}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef \hyperlink{lame_8h_ac0bc8da96e63a127db3e64204f8d4020}{lame\+\_\+global\+\_\+flags} $\ast$ \hyperlink{_export_m_p3_8cpp_a53d0f75e4623b239ef5aed0b2ff1fda7}{lame\+\_\+init\+\_\+t}(\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void})
+\item 
+typedef \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{_export_m_p3_8cpp_afb8da582ef56a6af36103feec189b15b}{lame\+\_\+init\+\_\+params\+\_\+t}(\hyperlink{lame_8h_ac0bc8da96e63a127db3e64204f8d4020}{lame\+\_\+global\+\_\+flags} $\ast$)
+\item 
+typedef \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} char $\ast$ \hyperlink{_export_m_p3_8cpp_a24c7c7b870f4e0cc477981e73ffb8511}{get\+\_\+lame\+\_\+version\+\_\+t}(\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void})
+\item 
+typedef \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{_export_m_p3_8cpp_abfb6b9878a895a54efa64dd28147e7f2}{lame\+\_\+encode\+\_\+buffer\+\_\+t}(\hyperlink{lame_8h_ac0bc8da96e63a127db3e64204f8d4020}{lame\+\_\+global\+\_\+flags} $\ast$gf, \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} short \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} buffer\+\_\+l\mbox{[}$\,$\mbox{]}, \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} short \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} buffer\+\_\+r\mbox{[}$\,$\mbox{]}, \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} nsamples, unsigned char $\ast$mp3buf, \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} mp3buf\+\_\+size)
+\item 
+typedef \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{_export_m_p3_8cpp_a8f251019f24f0dbfd29b79ae63f898b5}{lame\+\_\+encode\+\_\+buffer\+\_\+interleaved\+\_\+t}(\hyperlink{lame_8h_ac0bc8da96e63a127db3e64204f8d4020}{lame\+\_\+global\+\_\+flags} $\ast$gf, short \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} pcm\mbox{[}$\,$\mbox{]}, \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} num\+\_\+samples, unsigned char $\ast$mp3buf, \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} mp3buf\+\_\+size)
+\item 
+typedef \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{_export_m_p3_8cpp_ae382b7551b81e57c95fbef8cae3f6479}{lame\+\_\+encode\+\_\+flush\+\_\+t}(\hyperlink{lame_8h_ac0bc8da96e63a127db3e64204f8d4020}{lame\+\_\+global\+\_\+flags} $\ast$gf, unsigned char $\ast$mp3buf, \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{group__lavu__mem_ga854352f53b148adc24983a58a1866d66}{size})
+\item 
+typedef \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{_export_m_p3_8cpp_a5fe68de00b77222ea99c7be86d89b6df}{lame\+\_\+close\+\_\+t}(\hyperlink{lame_8h_ac0bc8da96e63a127db3e64204f8d4020}{lame\+\_\+global\+\_\+flags} $\ast$)
+\item 
+typedef \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{_export_m_p3_8cpp_a5be0a39f517f4bbfe5aecb0b3596b198}{lame\+\_\+set\+\_\+in\+\_\+samplerate\+\_\+t}(\hyperlink{lame_8h_ac0bc8da96e63a127db3e64204f8d4020}{lame\+\_\+global\+\_\+flags} $\ast$, \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int})
+\item 
+typedef \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{_export_m_p3_8cpp_aa9cd653d3aa14285be27e4674f9dddde}{lame\+\_\+set\+\_\+out\+\_\+samplerate\+\_\+t}(\hyperlink{lame_8h_ac0bc8da96e63a127db3e64204f8d4020}{lame\+\_\+global\+\_\+flags} $\ast$, \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int})
+\item 
+typedef \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{_export_m_p3_8cpp_ae7034792e347296cb1023ce9b7c11ae8}{lame\+\_\+set\+\_\+num\+\_\+channels\+\_\+t}(\hyperlink{lame_8h_ac0bc8da96e63a127db3e64204f8d4020}{lame\+\_\+global\+\_\+flags} $\ast$, \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int})
+\item 
+typedef \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{_export_m_p3_8cpp_aaa72d05f7c19421f30637f225dd67aaf}{lame\+\_\+set\+\_\+quality\+\_\+t}(\hyperlink{lame_8h_ac0bc8da96e63a127db3e64204f8d4020}{lame\+\_\+global\+\_\+flags} $\ast$, \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int})
+\item 
+typedef \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{_export_m_p3_8cpp_af67b5cd69abd7c9503ee1e9fe486c249}{lame\+\_\+set\+\_\+brate\+\_\+t}(\hyperlink{lame_8h_ac0bc8da96e63a127db3e64204f8d4020}{lame\+\_\+global\+\_\+flags} $\ast$, \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int})
+\item 
+typedef \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{_export_m_p3_8cpp_a0225785f7f264ceb9c1fbc4ba7bb0fe6}{lame\+\_\+set\+\_\+\+V\+B\+R\+\_\+t}(\hyperlink{lame_8h_ac0bc8da96e63a127db3e64204f8d4020}{lame\+\_\+global\+\_\+flags} $\ast$, \hyperlink{lame_8h_acad79cfb857aecb613444303f90de49b}{vbr\+\_\+mode})
+\item 
+typedef \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{_export_m_p3_8cpp_a4f7048e7674621b2889ba181f80633b3}{lame\+\_\+set\+\_\+\+V\+B\+R\+\_\+q\+\_\+t}(\hyperlink{lame_8h_ac0bc8da96e63a127db3e64204f8d4020}{lame\+\_\+global\+\_\+flags} $\ast$, \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int})
+\item 
+typedef \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{_export_m_p3_8cpp_a92d244a758ba835ac51939ed38cf1fee}{lame\+\_\+set\+\_\+\+V\+B\+R\+\_\+min\+\_\+bitrate\+\_\+kbps\+\_\+t}(\hyperlink{lame_8h_ac0bc8da96e63a127db3e64204f8d4020}{lame\+\_\+global\+\_\+flags} $\ast$, \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int})
+\item 
+typedef \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{_export_m_p3_8cpp_af45b51c1d1edeeb607bfb461141a13ad}{lame\+\_\+set\+\_\+mode\+\_\+t}(\hyperlink{lame_8h_ac0bc8da96e63a127db3e64204f8d4020}{lame\+\_\+global\+\_\+flags} $\ast$, \hyperlink{lame_8h_a7db10baf6147070b38da04c78fae1f91}{M\+P\+E\+G\+\_\+mode})
+\item 
+typedef \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{_export_m_p3_8cpp_acdc31ea20ab079dc91f0d7fda614cc68}{lame\+\_\+set\+\_\+preset\+\_\+t}(\hyperlink{lame_8h_ac0bc8da96e63a127db3e64204f8d4020}{lame\+\_\+global\+\_\+flags} $\ast$, \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int})
+\item 
+typedef \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{_export_m_p3_8cpp_a9b828612bc815b4d6334f14f1fd3c557}{lame\+\_\+set\+\_\+error\+\_\+protection\+\_\+t}(\hyperlink{lame_8h_ac0bc8da96e63a127db3e64204f8d4020}{lame\+\_\+global\+\_\+flags} $\ast$, \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int})
+\item 
+typedef \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{_export_m_p3_8cpp_ade4ffa1b83cb8e27f84db3962c25dbec}{lame\+\_\+set\+\_\+disable\+\_\+reservoir\+\_\+t}(\hyperlink{lame_8h_ac0bc8da96e63a127db3e64204f8d4020}{lame\+\_\+global\+\_\+flags} $\ast$, \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int})
+\item 
+typedef \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{_export_m_p3_8cpp_ac011e6f39fcd8742edc198b6c8cf028c}{lame\+\_\+set\+\_\+padding\+\_\+type\+\_\+t}(\hyperlink{lame_8h_ac0bc8da96e63a127db3e64204f8d4020}{lame\+\_\+global\+\_\+flags} $\ast$, \hyperlink{lame_8h_ae7de92e0a89577d2ac688d978125ca9f}{Padding\+\_\+type})
+\item 
+typedef \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{_export_m_p3_8cpp_a2416131ef26370b5bef99ff8b03eb1d7}{lame\+\_\+set\+\_\+b\+Write\+Vbr\+Tag\+\_\+t}(\hyperlink{lame_8h_ac0bc8da96e63a127db3e64204f8d4020}{lame\+\_\+global\+\_\+flags} $\ast$, \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int})
+\item 
+typedef size\+\_\+t \hyperlink{_export_m_p3_8cpp_ad324f6046ade8fc4f7505ae55426ad0f}{lame\+\_\+get\+\_\+lametag\+\_\+frame\+\_\+t}(\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{lame_8h_ac0bc8da96e63a127db3e64204f8d4020}{lame\+\_\+global\+\_\+flags} $\ast$, unsigned char $\ast$\hyperlink{structbuffer}{buffer}, size\+\_\+t \hyperlink{group__lavu__mem_ga854352f53b148adc24983a58a1866d66}{size})
+\item 
+typedef \hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{_export_m_p3_8cpp_a8d427fa24c82f4eb65382d6187e16bab}{lame\+\_\+mp3\+\_\+tags\+\_\+fid\+\_\+t}(\hyperlink{lame_8h_ac0bc8da96e63a127db3e64204f8d4020}{lame\+\_\+global\+\_\+flags} $\ast$, F\+I\+LE $\ast$)
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{class_export_plugin}{Export\+Plugin} $\ast$ \hyperlink{_export_m_p3_8cpp_aee2ffb0c28c61337c9f6295617e571da}{New\+\_\+\+Export\+M\+P3} ()
+\item 
+wx\+String \hyperlink{_export_m_p3_8cpp_a0519aa61d0baf03744c46a9a42f1e178}{Get\+M\+P3\+Version} (wx\+Window $\ast$parent, \hyperlink{mac_2config_2i386_2lib-src_2libsoxr_2soxr-config_8h_abb452686968e48b67397da5f97445f5b}{bool} prompt)
+\end{DoxyCompactItemize}
+
+
+\subsection{Macro Definition Documentation}
+\index{Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}!C\+H\+A\+N\+N\+E\+L\+\_\+\+J\+O\+I\+NT@{C\+H\+A\+N\+N\+E\+L\+\_\+\+J\+O\+I\+NT}}
+\index{C\+H\+A\+N\+N\+E\+L\+\_\+\+J\+O\+I\+NT@{C\+H\+A\+N\+N\+E\+L\+\_\+\+J\+O\+I\+NT}!Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}}
+\subsubsection[{\texorpdfstring{C\+H\+A\+N\+N\+E\+L\+\_\+\+J\+O\+I\+NT}{CHANNEL_JOINT}}]{\setlength{\rightskip}{0pt plus 5cm}\#define C\+H\+A\+N\+N\+E\+L\+\_\+\+J\+O\+I\+NT~0}\hypertarget{_export_m_p3_8cpp_a24a424d316adc32d1aa8270caf8c71d4}{}\label{_export_m_p3_8cpp_a24a424d316adc32d1aa8270caf8c71d4}
+
+
+Definition at line 111 of file Export\+M\+P3.\+cpp.
+
+\index{Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}!C\+H\+A\+N\+N\+E\+L\+\_\+\+S\+T\+E\+R\+EO@{C\+H\+A\+N\+N\+E\+L\+\_\+\+S\+T\+E\+R\+EO}}
+\index{C\+H\+A\+N\+N\+E\+L\+\_\+\+S\+T\+E\+R\+EO@{C\+H\+A\+N\+N\+E\+L\+\_\+\+S\+T\+E\+R\+EO}!Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}}
+\subsubsection[{\texorpdfstring{C\+H\+A\+N\+N\+E\+L\+\_\+\+S\+T\+E\+R\+EO}{CHANNEL_STEREO}}]{\setlength{\rightskip}{0pt plus 5cm}\#define C\+H\+A\+N\+N\+E\+L\+\_\+\+S\+T\+E\+R\+EO~1}\hypertarget{_export_m_p3_8cpp_a07769bb361e21297a69d7310f296a49e}{}\label{_export_m_p3_8cpp_a07769bb361e21297a69d7310f296a49e}
+
+
+Definition at line 112 of file Export\+M\+P3.\+cpp.
+
+\index{Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}!I\+D\+\_\+\+A\+BR@{I\+D\+\_\+\+A\+BR}}
+\index{I\+D\+\_\+\+A\+BR@{I\+D\+\_\+\+A\+BR}!Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}}
+\subsubsection[{\texorpdfstring{I\+D\+\_\+\+A\+BR}{ID_ABR}}]{\setlength{\rightskip}{0pt plus 5cm}\#define I\+D\+\_\+\+A\+BR~7002}\hypertarget{_export_m_p3_8cpp_a6173aa70322db8548059eb969639469b}{}\label{_export_m_p3_8cpp_a6173aa70322db8548059eb969639469b}
+
+
+Definition at line 211 of file Export\+M\+P3.\+cpp.
+
+\index{Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}!I\+D\+\_\+\+B\+R\+O\+W\+SE@{I\+D\+\_\+\+B\+R\+O\+W\+SE}}
+\index{I\+D\+\_\+\+B\+R\+O\+W\+SE@{I\+D\+\_\+\+B\+R\+O\+W\+SE}!Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}}
+\subsubsection[{\texorpdfstring{I\+D\+\_\+\+B\+R\+O\+W\+SE}{ID_BROWSE}}]{\setlength{\rightskip}{0pt plus 5cm}\#define I\+D\+\_\+\+B\+R\+O\+W\+SE~5000}\hypertarget{_export_m_p3_8cpp_acf98dfaa9b5b8cd76e925726ed0b20cb}{}\label{_export_m_p3_8cpp_acf98dfaa9b5b8cd76e925726ed0b20cb}
+
+
+Definition at line 556 of file Export\+M\+P3.\+cpp.
+
+\index{Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}!I\+D\+\_\+\+C\+BR@{I\+D\+\_\+\+C\+BR}}
+\index{I\+D\+\_\+\+C\+BR@{I\+D\+\_\+\+C\+BR}!Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}}
+\subsubsection[{\texorpdfstring{I\+D\+\_\+\+C\+BR}{ID_CBR}}]{\setlength{\rightskip}{0pt plus 5cm}\#define I\+D\+\_\+\+C\+BR~7003}\hypertarget{_export_m_p3_8cpp_ada876339466080625f643f608093d2cd}{}\label{_export_m_p3_8cpp_ada876339466080625f643f608093d2cd}
+
+
+Definition at line 212 of file Export\+M\+P3.\+cpp.
+
+\index{Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}!I\+D\+\_\+\+D\+L\+O\+AD@{I\+D\+\_\+\+D\+L\+O\+AD}}
+\index{I\+D\+\_\+\+D\+L\+O\+AD@{I\+D\+\_\+\+D\+L\+O\+AD}!Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}}
+\subsubsection[{\texorpdfstring{I\+D\+\_\+\+D\+L\+O\+AD}{ID_DLOAD}}]{\setlength{\rightskip}{0pt plus 5cm}\#define I\+D\+\_\+\+D\+L\+O\+AD~5001}\hypertarget{_export_m_p3_8cpp_a3434d3d6f95d29f641d3e2b16578e1a4}{}\label{_export_m_p3_8cpp_a3434d3d6f95d29f641d3e2b16578e1a4}
+
+
+Definition at line 557 of file Export\+M\+P3.\+cpp.
+
+\index{Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}!I\+D\+\_\+\+Q\+U\+A\+L\+I\+TY@{I\+D\+\_\+\+Q\+U\+A\+L\+I\+TY}}
+\index{I\+D\+\_\+\+Q\+U\+A\+L\+I\+TY@{I\+D\+\_\+\+Q\+U\+A\+L\+I\+TY}!Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}}
+\subsubsection[{\texorpdfstring{I\+D\+\_\+\+Q\+U\+A\+L\+I\+TY}{ID_QUALITY}}]{\setlength{\rightskip}{0pt plus 5cm}\#define I\+D\+\_\+\+Q\+U\+A\+L\+I\+TY~7004}\hypertarget{_export_m_p3_8cpp_ad930e3d8e4d204d8832d0b038c88a32b}{}\label{_export_m_p3_8cpp_ad930e3d8e4d204d8832d0b038c88a32b}
+
+
+Definition at line 213 of file Export\+M\+P3.\+cpp.
+
+\index{Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}!I\+D\+\_\+\+S\+ET@{I\+D\+\_\+\+S\+ET}}
+\index{I\+D\+\_\+\+S\+ET@{I\+D\+\_\+\+S\+ET}!Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}}
+\subsubsection[{\texorpdfstring{I\+D\+\_\+\+S\+ET}{ID_SET}}]{\setlength{\rightskip}{0pt plus 5cm}\#define I\+D\+\_\+\+S\+ET~7000}\hypertarget{_export_m_p3_8cpp_abbdfd975f2f607df850461c4c20e865d}{}\label{_export_m_p3_8cpp_abbdfd975f2f607df850461c4c20e865d}
+
+
+Definition at line 209 of file Export\+M\+P3.\+cpp.
+
+\index{Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}!I\+D\+\_\+\+V\+BR@{I\+D\+\_\+\+V\+BR}}
+\index{I\+D\+\_\+\+V\+BR@{I\+D\+\_\+\+V\+BR}!Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}}
+\subsubsection[{\texorpdfstring{I\+D\+\_\+\+V\+BR}{ID_VBR}}]{\setlength{\rightskip}{0pt plus 5cm}\#define I\+D\+\_\+\+V\+BR~7001}\hypertarget{_export_m_p3_8cpp_a22fb4c12e0834e2d66840e7e66fc00b8}{}\label{_export_m_p3_8cpp_a22fb4c12e0834e2d66840e7e66fc00b8}
+
+
+Definition at line 210 of file Export\+M\+P3.\+cpp.
+
+\index{Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}!M\+O\+D\+E\+\_\+\+A\+BR@{M\+O\+D\+E\+\_\+\+A\+BR}}
+\index{M\+O\+D\+E\+\_\+\+A\+BR@{M\+O\+D\+E\+\_\+\+A\+BR}!Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}}
+\subsubsection[{\texorpdfstring{M\+O\+D\+E\+\_\+\+A\+BR}{MODE_ABR}}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+O\+D\+E\+\_\+\+A\+BR~2}\hypertarget{_export_m_p3_8cpp_a9c1418189db9e11e63b1e8ce594abc77}{}\label{_export_m_p3_8cpp_a9c1418189db9e11e63b1e8ce594abc77}
+
+
+Definition at line 108 of file Export\+M\+P3.\+cpp.
+
+\index{Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}!M\+O\+D\+E\+\_\+\+C\+BR@{M\+O\+D\+E\+\_\+\+C\+BR}}
+\index{M\+O\+D\+E\+\_\+\+C\+BR@{M\+O\+D\+E\+\_\+\+C\+BR}!Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}}
+\subsubsection[{\texorpdfstring{M\+O\+D\+E\+\_\+\+C\+BR}{MODE_CBR}}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+O\+D\+E\+\_\+\+C\+BR~3}\hypertarget{_export_m_p3_8cpp_a78d81dc25b4e1f18bb20d188027341fc}{}\label{_export_m_p3_8cpp_a78d81dc25b4e1f18bb20d188027341fc}
+
+
+Definition at line 109 of file Export\+M\+P3.\+cpp.
+
+\index{Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}!M\+O\+D\+E\+\_\+\+S\+ET@{M\+O\+D\+E\+\_\+\+S\+ET}}
+\index{M\+O\+D\+E\+\_\+\+S\+ET@{M\+O\+D\+E\+\_\+\+S\+ET}!Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}}
+\subsubsection[{\texorpdfstring{M\+O\+D\+E\+\_\+\+S\+ET}{MODE_SET}}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+O\+D\+E\+\_\+\+S\+ET~0}\hypertarget{_export_m_p3_8cpp_a572336cced4108d5b64083dd53b9b1b7}{}\label{_export_m_p3_8cpp_a572336cced4108d5b64083dd53b9b1b7}
+
+
+Definition at line 106 of file Export\+M\+P3.\+cpp.
+
+\index{Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}!M\+O\+D\+E\+\_\+\+V\+BR@{M\+O\+D\+E\+\_\+\+V\+BR}}
+\index{M\+O\+D\+E\+\_\+\+V\+BR@{M\+O\+D\+E\+\_\+\+V\+BR}!Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}}
+\subsubsection[{\texorpdfstring{M\+O\+D\+E\+\_\+\+V\+BR}{MODE_VBR}}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+O\+D\+E\+\_\+\+V\+BR~1}\hypertarget{_export_m_p3_8cpp_aee276ebe1da950cf700c15d7a4c7470a}{}\label{_export_m_p3_8cpp_aee276ebe1da950cf700c15d7a4c7470a}
+
+
+Definition at line 107 of file Export\+M\+P3.\+cpp.
+
+\index{Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}!P\+R\+E\+S\+E\+T\+\_\+\+E\+X\+T\+R\+E\+ME@{P\+R\+E\+S\+E\+T\+\_\+\+E\+X\+T\+R\+E\+ME}}
+\index{P\+R\+E\+S\+E\+T\+\_\+\+E\+X\+T\+R\+E\+ME@{P\+R\+E\+S\+E\+T\+\_\+\+E\+X\+T\+R\+E\+ME}!Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}}
+\subsubsection[{\texorpdfstring{P\+R\+E\+S\+E\+T\+\_\+\+E\+X\+T\+R\+E\+ME}{PRESET_EXTREME}}]{\setlength{\rightskip}{0pt plus 5cm}\#define P\+R\+E\+S\+E\+T\+\_\+\+E\+X\+T\+R\+E\+ME~1}\hypertarget{_export_m_p3_8cpp_a44f8f8e7b7f3bad2007e370f096b733d}{}\label{_export_m_p3_8cpp_a44f8f8e7b7f3bad2007e370f096b733d}
+
+
+Definition at line 129 of file Export\+M\+P3.\+cpp.
+
+\index{Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}!P\+R\+E\+S\+E\+T\+\_\+\+I\+N\+S\+A\+NE@{P\+R\+E\+S\+E\+T\+\_\+\+I\+N\+S\+A\+NE}}
+\index{P\+R\+E\+S\+E\+T\+\_\+\+I\+N\+S\+A\+NE@{P\+R\+E\+S\+E\+T\+\_\+\+I\+N\+S\+A\+NE}!Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}}
+\subsubsection[{\texorpdfstring{P\+R\+E\+S\+E\+T\+\_\+\+I\+N\+S\+A\+NE}{PRESET_INSANE}}]{\setlength{\rightskip}{0pt plus 5cm}\#define P\+R\+E\+S\+E\+T\+\_\+\+I\+N\+S\+A\+NE~0}\hypertarget{_export_m_p3_8cpp_a3aff1a29752e00a116c318c8438c3bd2}{}\label{_export_m_p3_8cpp_a3aff1a29752e00a116c318c8438c3bd2}
+
+
+Definition at line 128 of file Export\+M\+P3.\+cpp.
+
+\index{Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}!P\+R\+E\+S\+E\+T\+\_\+\+M\+E\+D\+I\+UM@{P\+R\+E\+S\+E\+T\+\_\+\+M\+E\+D\+I\+UM}}
+\index{P\+R\+E\+S\+E\+T\+\_\+\+M\+E\+D\+I\+UM@{P\+R\+E\+S\+E\+T\+\_\+\+M\+E\+D\+I\+UM}!Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}}
+\subsubsection[{\texorpdfstring{P\+R\+E\+S\+E\+T\+\_\+\+M\+E\+D\+I\+UM}{PRESET_MEDIUM}}]{\setlength{\rightskip}{0pt plus 5cm}\#define P\+R\+E\+S\+E\+T\+\_\+\+M\+E\+D\+I\+UM~3}\hypertarget{_export_m_p3_8cpp_ac97d390a894bc90fa97d720ce8cddd87}{}\label{_export_m_p3_8cpp_ac97d390a894bc90fa97d720ce8cddd87}
+
+
+Definition at line 131 of file Export\+M\+P3.\+cpp.
+
+\index{Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}!P\+R\+E\+S\+E\+T\+\_\+\+S\+T\+A\+N\+D\+A\+RD@{P\+R\+E\+S\+E\+T\+\_\+\+S\+T\+A\+N\+D\+A\+RD}}
+\index{P\+R\+E\+S\+E\+T\+\_\+\+S\+T\+A\+N\+D\+A\+RD@{P\+R\+E\+S\+E\+T\+\_\+\+S\+T\+A\+N\+D\+A\+RD}!Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}}
+\subsubsection[{\texorpdfstring{P\+R\+E\+S\+E\+T\+\_\+\+S\+T\+A\+N\+D\+A\+RD}{PRESET_STANDARD}}]{\setlength{\rightskip}{0pt plus 5cm}\#define P\+R\+E\+S\+E\+T\+\_\+\+S\+T\+A\+N\+D\+A\+RD~2}\hypertarget{_export_m_p3_8cpp_a20511087a9390de0e0af0ef67c35c937}{}\label{_export_m_p3_8cpp_a20511087a9390de0e0af0ef67c35c937}
+
+
+Definition at line 130 of file Export\+M\+P3.\+cpp.
+
+\index{Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}!Q\+U\+A\+L\+I\+T\+Y\+\_\+0@{Q\+U\+A\+L\+I\+T\+Y\+\_\+0}}
+\index{Q\+U\+A\+L\+I\+T\+Y\+\_\+0@{Q\+U\+A\+L\+I\+T\+Y\+\_\+0}!Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}}
+\subsubsection[{\texorpdfstring{Q\+U\+A\+L\+I\+T\+Y\+\_\+0}{QUALITY_0}}]{\setlength{\rightskip}{0pt plus 5cm}\#define Q\+U\+A\+L\+I\+T\+Y\+\_\+0~0}\hypertarget{_export_m_p3_8cpp_aaa6e335424434c46569cda97c878450c}{}\label{_export_m_p3_8cpp_aaa6e335424434c46569cda97c878450c}
+
+
+Definition at line 114 of file Export\+M\+P3.\+cpp.
+
+\index{Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}!Q\+U\+A\+L\+I\+T\+Y\+\_\+1@{Q\+U\+A\+L\+I\+T\+Y\+\_\+1}}
+\index{Q\+U\+A\+L\+I\+T\+Y\+\_\+1@{Q\+U\+A\+L\+I\+T\+Y\+\_\+1}!Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}}
+\subsubsection[{\texorpdfstring{Q\+U\+A\+L\+I\+T\+Y\+\_\+1}{QUALITY_1}}]{\setlength{\rightskip}{0pt plus 5cm}\#define Q\+U\+A\+L\+I\+T\+Y\+\_\+1~1}\hypertarget{_export_m_p3_8cpp_a651f3b47a4bc5b58dc13c5ebaf09e063}{}\label{_export_m_p3_8cpp_a651f3b47a4bc5b58dc13c5ebaf09e063}
+
+
+Definition at line 115 of file Export\+M\+P3.\+cpp.
+
+\index{Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}!Q\+U\+A\+L\+I\+T\+Y\+\_\+2@{Q\+U\+A\+L\+I\+T\+Y\+\_\+2}}
+\index{Q\+U\+A\+L\+I\+T\+Y\+\_\+2@{Q\+U\+A\+L\+I\+T\+Y\+\_\+2}!Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}}
+\subsubsection[{\texorpdfstring{Q\+U\+A\+L\+I\+T\+Y\+\_\+2}{QUALITY_2}}]{\setlength{\rightskip}{0pt plus 5cm}\#define Q\+U\+A\+L\+I\+T\+Y\+\_\+2~2}\hypertarget{_export_m_p3_8cpp_a15dd4d0540c2c3bf34f7507a7f9cb2ad}{}\label{_export_m_p3_8cpp_a15dd4d0540c2c3bf34f7507a7f9cb2ad}
+
+
+Definition at line 116 of file Export\+M\+P3.\+cpp.
+
+\index{Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}!Q\+U\+A\+L\+I\+T\+Y\+\_\+3@{Q\+U\+A\+L\+I\+T\+Y\+\_\+3}}
+\index{Q\+U\+A\+L\+I\+T\+Y\+\_\+3@{Q\+U\+A\+L\+I\+T\+Y\+\_\+3}!Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}}
+\subsubsection[{\texorpdfstring{Q\+U\+A\+L\+I\+T\+Y\+\_\+3}{QUALITY_3}}]{\setlength{\rightskip}{0pt plus 5cm}\#define Q\+U\+A\+L\+I\+T\+Y\+\_\+3~3}\hypertarget{_export_m_p3_8cpp_a48341d2757ede0f63c0cba90cb7c48d7}{}\label{_export_m_p3_8cpp_a48341d2757ede0f63c0cba90cb7c48d7}
+
+
+Definition at line 117 of file Export\+M\+P3.\+cpp.
+
+\index{Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}!Q\+U\+A\+L\+I\+T\+Y\+\_\+4@{Q\+U\+A\+L\+I\+T\+Y\+\_\+4}}
+\index{Q\+U\+A\+L\+I\+T\+Y\+\_\+4@{Q\+U\+A\+L\+I\+T\+Y\+\_\+4}!Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}}
+\subsubsection[{\texorpdfstring{Q\+U\+A\+L\+I\+T\+Y\+\_\+4}{QUALITY_4}}]{\setlength{\rightskip}{0pt plus 5cm}\#define Q\+U\+A\+L\+I\+T\+Y\+\_\+4~4}\hypertarget{_export_m_p3_8cpp_a31afd920a22b970a6fd7ccef7f16a9ac}{}\label{_export_m_p3_8cpp_a31afd920a22b970a6fd7ccef7f16a9ac}
+
+
+Definition at line 118 of file Export\+M\+P3.\+cpp.
+
+\index{Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}!Q\+U\+A\+L\+I\+T\+Y\+\_\+5@{Q\+U\+A\+L\+I\+T\+Y\+\_\+5}}
+\index{Q\+U\+A\+L\+I\+T\+Y\+\_\+5@{Q\+U\+A\+L\+I\+T\+Y\+\_\+5}!Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}}
+\subsubsection[{\texorpdfstring{Q\+U\+A\+L\+I\+T\+Y\+\_\+5}{QUALITY_5}}]{\setlength{\rightskip}{0pt plus 5cm}\#define Q\+U\+A\+L\+I\+T\+Y\+\_\+5~5}\hypertarget{_export_m_p3_8cpp_ab2b6bb3fafd56d88aee5b4d268699deb}{}\label{_export_m_p3_8cpp_ab2b6bb3fafd56d88aee5b4d268699deb}
+
+
+Definition at line 119 of file Export\+M\+P3.\+cpp.
+
+\index{Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}!Q\+U\+A\+L\+I\+T\+Y\+\_\+6@{Q\+U\+A\+L\+I\+T\+Y\+\_\+6}}
+\index{Q\+U\+A\+L\+I\+T\+Y\+\_\+6@{Q\+U\+A\+L\+I\+T\+Y\+\_\+6}!Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}}
+\subsubsection[{\texorpdfstring{Q\+U\+A\+L\+I\+T\+Y\+\_\+6}{QUALITY_6}}]{\setlength{\rightskip}{0pt plus 5cm}\#define Q\+U\+A\+L\+I\+T\+Y\+\_\+6~6}\hypertarget{_export_m_p3_8cpp_a260d1139a656298556ead6cd1e5138e1}{}\label{_export_m_p3_8cpp_a260d1139a656298556ead6cd1e5138e1}
+
+
+Definition at line 120 of file Export\+M\+P3.\+cpp.
+
+\index{Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}!Q\+U\+A\+L\+I\+T\+Y\+\_\+7@{Q\+U\+A\+L\+I\+T\+Y\+\_\+7}}
+\index{Q\+U\+A\+L\+I\+T\+Y\+\_\+7@{Q\+U\+A\+L\+I\+T\+Y\+\_\+7}!Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}}
+\subsubsection[{\texorpdfstring{Q\+U\+A\+L\+I\+T\+Y\+\_\+7}{QUALITY_7}}]{\setlength{\rightskip}{0pt plus 5cm}\#define Q\+U\+A\+L\+I\+T\+Y\+\_\+7~7}\hypertarget{_export_m_p3_8cpp_aa92c413cdf1664e3d545d0d61794a9cf}{}\label{_export_m_p3_8cpp_aa92c413cdf1664e3d545d0d61794a9cf}
+
+
+Definition at line 121 of file Export\+M\+P3.\+cpp.
+
+\index{Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}!Q\+U\+A\+L\+I\+T\+Y\+\_\+8@{Q\+U\+A\+L\+I\+T\+Y\+\_\+8}}
+\index{Q\+U\+A\+L\+I\+T\+Y\+\_\+8@{Q\+U\+A\+L\+I\+T\+Y\+\_\+8}!Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}}
+\subsubsection[{\texorpdfstring{Q\+U\+A\+L\+I\+T\+Y\+\_\+8}{QUALITY_8}}]{\setlength{\rightskip}{0pt plus 5cm}\#define Q\+U\+A\+L\+I\+T\+Y\+\_\+8~8}\hypertarget{_export_m_p3_8cpp_ad5d5326a961ae0444465e343f32f5a24}{}\label{_export_m_p3_8cpp_ad5d5326a961ae0444465e343f32f5a24}
+
+
+Definition at line 122 of file Export\+M\+P3.\+cpp.
+
+\index{Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}!Q\+U\+A\+L\+I\+T\+Y\+\_\+9@{Q\+U\+A\+L\+I\+T\+Y\+\_\+9}}
+\index{Q\+U\+A\+L\+I\+T\+Y\+\_\+9@{Q\+U\+A\+L\+I\+T\+Y\+\_\+9}!Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}}
+\subsubsection[{\texorpdfstring{Q\+U\+A\+L\+I\+T\+Y\+\_\+9}{QUALITY_9}}]{\setlength{\rightskip}{0pt plus 5cm}\#define Q\+U\+A\+L\+I\+T\+Y\+\_\+9~9}\hypertarget{_export_m_p3_8cpp_adfb9c7f2e5374be83aec56e28ac7b680}{}\label{_export_m_p3_8cpp_adfb9c7f2e5374be83aec56e28ac7b680}
+
+
+Definition at line 123 of file Export\+M\+P3.\+cpp.
+
+\index{Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}!R\+O\+U\+T\+I\+N\+E\+\_\+\+F\+A\+ST@{R\+O\+U\+T\+I\+N\+E\+\_\+\+F\+A\+ST}}
+\index{R\+O\+U\+T\+I\+N\+E\+\_\+\+F\+A\+ST@{R\+O\+U\+T\+I\+N\+E\+\_\+\+F\+A\+ST}!Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}}
+\subsubsection[{\texorpdfstring{R\+O\+U\+T\+I\+N\+E\+\_\+\+F\+A\+ST}{ROUTINE_FAST}}]{\setlength{\rightskip}{0pt plus 5cm}\#define R\+O\+U\+T\+I\+N\+E\+\_\+\+F\+A\+ST~0}\hypertarget{_export_m_p3_8cpp_ace2edb9fb3c56f87a3afbf961b96cd32}{}\label{_export_m_p3_8cpp_ace2edb9fb3c56f87a3afbf961b96cd32}
+
+
+Definition at line 125 of file Export\+M\+P3.\+cpp.
+
+\index{Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}!R\+O\+U\+T\+I\+N\+E\+\_\+\+S\+T\+A\+N\+D\+A\+RD@{R\+O\+U\+T\+I\+N\+E\+\_\+\+S\+T\+A\+N\+D\+A\+RD}}
+\index{R\+O\+U\+T\+I\+N\+E\+\_\+\+S\+T\+A\+N\+D\+A\+RD@{R\+O\+U\+T\+I\+N\+E\+\_\+\+S\+T\+A\+N\+D\+A\+RD}!Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}}
+\subsubsection[{\texorpdfstring{R\+O\+U\+T\+I\+N\+E\+\_\+\+S\+T\+A\+N\+D\+A\+RD}{ROUTINE_STANDARD}}]{\setlength{\rightskip}{0pt plus 5cm}\#define R\+O\+U\+T\+I\+N\+E\+\_\+\+S\+T\+A\+N\+D\+A\+RD~1}\hypertarget{_export_m_p3_8cpp_ada0979b2572bc6938c1b99893a0eb144}{}\label{_export_m_p3_8cpp_ada0979b2572bc6938c1b99893a0eb144}
+
+
+Definition at line 126 of file Export\+M\+P3.\+cpp.
+
+
+
+\subsection{Typedef Documentation}
+\index{Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}!get\+\_\+lame\+\_\+version\+\_\+t@{get\+\_\+lame\+\_\+version\+\_\+t}}
+\index{get\+\_\+lame\+\_\+version\+\_\+t@{get\+\_\+lame\+\_\+version\+\_\+t}!Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}}
+\subsubsection[{\texorpdfstring{get\+\_\+lame\+\_\+version\+\_\+t}{get_lame_version_t}}]{\setlength{\rightskip}{0pt plus 5cm}typedef {\bf const} char$\ast$ get\+\_\+lame\+\_\+version\+\_\+t({\bf void})}\hypertarget{_export_m_p3_8cpp_a24c7c7b870f4e0cc477981e73ffb8511}{}\label{_export_m_p3_8cpp_a24c7c7b870f4e0cc477981e73ffb8511}
+
+
+Definition at line 695 of file Export\+M\+P3.\+cpp.
+
+\index{Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}!lame\+\_\+close\+\_\+t@{lame\+\_\+close\+\_\+t}}
+\index{lame\+\_\+close\+\_\+t@{lame\+\_\+close\+\_\+t}!Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}}
+\subsubsection[{\texorpdfstring{lame\+\_\+close\+\_\+t}{lame_close_t}}]{\setlength{\rightskip}{0pt plus 5cm}typedef {\bf int} lame\+\_\+close\+\_\+t({\bf lame\+\_\+global\+\_\+flags} $\ast$)}\hypertarget{_export_m_p3_8cpp_a5fe68de00b77222ea99c7be86d89b6df}{}\label{_export_m_p3_8cpp_a5fe68de00b77222ea99c7be86d89b6df}
+
+
+Definition at line 717 of file Export\+M\+P3.\+cpp.
+
+\index{Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}!lame\+\_\+encode\+\_\+buffer\+\_\+interleaved\+\_\+t@{lame\+\_\+encode\+\_\+buffer\+\_\+interleaved\+\_\+t}}
+\index{lame\+\_\+encode\+\_\+buffer\+\_\+interleaved\+\_\+t@{lame\+\_\+encode\+\_\+buffer\+\_\+interleaved\+\_\+t}!Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}}
+\subsubsection[{\texorpdfstring{lame\+\_\+encode\+\_\+buffer\+\_\+interleaved\+\_\+t}{lame_encode_buffer_interleaved_t}}]{\setlength{\rightskip}{0pt plus 5cm}typedef {\bf int} lame\+\_\+encode\+\_\+buffer\+\_\+interleaved\+\_\+t({\bf lame\+\_\+global\+\_\+flags} $\ast$gf, short {\bf int} pcm\mbox{[}$\,$\mbox{]}, {\bf int} num\+\_\+samples, unsigned char $\ast$mp3buf, {\bf int} mp3buf\+\_\+size)}\hypertarget{_export_m_p3_8cpp_a8f251019f24f0dbfd29b79ae63f898b5}{}\label{_export_m_p3_8cpp_a8f251019f24f0dbfd29b79ae63f898b5}
+
+
+Definition at line 705 of file Export\+M\+P3.\+cpp.
+
+\index{Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}!lame\+\_\+encode\+\_\+buffer\+\_\+t@{lame\+\_\+encode\+\_\+buffer\+\_\+t}}
+\index{lame\+\_\+encode\+\_\+buffer\+\_\+t@{lame\+\_\+encode\+\_\+buffer\+\_\+t}!Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}}
+\subsubsection[{\texorpdfstring{lame\+\_\+encode\+\_\+buffer\+\_\+t}{lame_encode_buffer_t}}]{\setlength{\rightskip}{0pt plus 5cm}typedef {\bf int} lame\+\_\+encode\+\_\+buffer\+\_\+t({\bf lame\+\_\+global\+\_\+flags} $\ast$gf, {\bf const} short {\bf int} buffer\+\_\+l\mbox{[}$\,$\mbox{]}, {\bf const} short {\bf int} buffer\+\_\+r\mbox{[}$\,$\mbox{]}, {\bf const} {\bf int} nsamples, unsigned char $\ast$mp3buf, {\bf const} {\bf int} mp3buf\+\_\+size)}\hypertarget{_export_m_p3_8cpp_abfb6b9878a895a54efa64dd28147e7f2}{}\label{_export_m_p3_8cpp_abfb6b9878a895a54efa64dd28147e7f2}
+
+
+Definition at line 697 of file Export\+M\+P3.\+cpp.
+
+\index{Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}!lame\+\_\+encode\+\_\+flush\+\_\+t@{lame\+\_\+encode\+\_\+flush\+\_\+t}}
+\index{lame\+\_\+encode\+\_\+flush\+\_\+t@{lame\+\_\+encode\+\_\+flush\+\_\+t}!Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}}
+\subsubsection[{\texorpdfstring{lame\+\_\+encode\+\_\+flush\+\_\+t}{lame_encode_flush_t}}]{\setlength{\rightskip}{0pt plus 5cm}typedef {\bf int} lame\+\_\+encode\+\_\+flush\+\_\+t({\bf lame\+\_\+global\+\_\+flags} $\ast$gf, unsigned char $\ast$mp3buf, {\bf int} {\bf size})}\hypertarget{_export_m_p3_8cpp_ae382b7551b81e57c95fbef8cae3f6479}{}\label{_export_m_p3_8cpp_ae382b7551b81e57c95fbef8cae3f6479}
+
+
+Definition at line 712 of file Export\+M\+P3.\+cpp.
+
+\index{Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}!lame\+\_\+get\+\_\+lametag\+\_\+frame\+\_\+t@{lame\+\_\+get\+\_\+lametag\+\_\+frame\+\_\+t}}
+\index{lame\+\_\+get\+\_\+lametag\+\_\+frame\+\_\+t@{lame\+\_\+get\+\_\+lametag\+\_\+frame\+\_\+t}!Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}}
+\subsubsection[{\texorpdfstring{lame\+\_\+get\+\_\+lametag\+\_\+frame\+\_\+t}{lame_get_lametag_frame_t}}]{\setlength{\rightskip}{0pt plus 5cm}typedef size\+\_\+t lame\+\_\+get\+\_\+lametag\+\_\+frame\+\_\+t({\bf const} {\bf lame\+\_\+global\+\_\+flags} $\ast$, unsigned char $\ast${\bf buffer}, size\+\_\+t {\bf size})}\hypertarget{_export_m_p3_8cpp_ad324f6046ade8fc4f7505ae55426ad0f}{}\label{_export_m_p3_8cpp_ad324f6046ade8fc4f7505ae55426ad0f}
+
+
+Definition at line 733 of file Export\+M\+P3.\+cpp.
+
+\index{Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}!lame\+\_\+init\+\_\+params\+\_\+t@{lame\+\_\+init\+\_\+params\+\_\+t}}
+\index{lame\+\_\+init\+\_\+params\+\_\+t@{lame\+\_\+init\+\_\+params\+\_\+t}!Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}}
+\subsubsection[{\texorpdfstring{lame\+\_\+init\+\_\+params\+\_\+t}{lame_init_params_t}}]{\setlength{\rightskip}{0pt plus 5cm}typedef {\bf int} lame\+\_\+init\+\_\+params\+\_\+t({\bf lame\+\_\+global\+\_\+flags} $\ast$)}\hypertarget{_export_m_p3_8cpp_afb8da582ef56a6af36103feec189b15b}{}\label{_export_m_p3_8cpp_afb8da582ef56a6af36103feec189b15b}
+
+
+Definition at line 694 of file Export\+M\+P3.\+cpp.
+
+\index{Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}!lame\+\_\+init\+\_\+t@{lame\+\_\+init\+\_\+t}}
+\index{lame\+\_\+init\+\_\+t@{lame\+\_\+init\+\_\+t}!Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}}
+\subsubsection[{\texorpdfstring{lame\+\_\+init\+\_\+t}{lame_init_t}}]{\setlength{\rightskip}{0pt plus 5cm}typedef {\bf lame\+\_\+global\+\_\+flags}$\ast$ lame\+\_\+init\+\_\+t({\bf void})}\hypertarget{_export_m_p3_8cpp_a53d0f75e4623b239ef5aed0b2ff1fda7}{}\label{_export_m_p3_8cpp_a53d0f75e4623b239ef5aed0b2ff1fda7}
+
+
+Definition at line 693 of file Export\+M\+P3.\+cpp.
+
+\index{Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}!lame\+\_\+mp3\+\_\+tags\+\_\+fid\+\_\+t@{lame\+\_\+mp3\+\_\+tags\+\_\+fid\+\_\+t}}
+\index{lame\+\_\+mp3\+\_\+tags\+\_\+fid\+\_\+t@{lame\+\_\+mp3\+\_\+tags\+\_\+fid\+\_\+t}!Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}}
+\subsubsection[{\texorpdfstring{lame\+\_\+mp3\+\_\+tags\+\_\+fid\+\_\+t}{lame_mp3_tags_fid_t}}]{\setlength{\rightskip}{0pt plus 5cm}typedef {\bf void} lame\+\_\+mp3\+\_\+tags\+\_\+fid\+\_\+t({\bf lame\+\_\+global\+\_\+flags} $\ast$, F\+I\+LE $\ast$)}\hypertarget{_export_m_p3_8cpp_a8d427fa24c82f4eb65382d6187e16bab}{}\label{_export_m_p3_8cpp_a8d427fa24c82f4eb65382d6187e16bab}
+
+
+Definition at line 734 of file Export\+M\+P3.\+cpp.
+
+\index{Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}!lame\+\_\+set\+\_\+brate\+\_\+t@{lame\+\_\+set\+\_\+brate\+\_\+t}}
+\index{lame\+\_\+set\+\_\+brate\+\_\+t@{lame\+\_\+set\+\_\+brate\+\_\+t}!Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}}
+\subsubsection[{\texorpdfstring{lame\+\_\+set\+\_\+brate\+\_\+t}{lame_set_brate_t}}]{\setlength{\rightskip}{0pt plus 5cm}typedef {\bf int} lame\+\_\+set\+\_\+brate\+\_\+t({\bf lame\+\_\+global\+\_\+flags} $\ast$, {\bf int})}\hypertarget{_export_m_p3_8cpp_af67b5cd69abd7c9503ee1e9fe486c249}{}\label{_export_m_p3_8cpp_af67b5cd69abd7c9503ee1e9fe486c249}
+
+
+Definition at line 723 of file Export\+M\+P3.\+cpp.
+
+\index{Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}!lame\+\_\+set\+\_\+b\+Write\+Vbr\+Tag\+\_\+t@{lame\+\_\+set\+\_\+b\+Write\+Vbr\+Tag\+\_\+t}}
+\index{lame\+\_\+set\+\_\+b\+Write\+Vbr\+Tag\+\_\+t@{lame\+\_\+set\+\_\+b\+Write\+Vbr\+Tag\+\_\+t}!Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}}
+\subsubsection[{\texorpdfstring{lame\+\_\+set\+\_\+b\+Write\+Vbr\+Tag\+\_\+t}{lame_set_bWriteVbrTag_t}}]{\setlength{\rightskip}{0pt plus 5cm}typedef {\bf int} lame\+\_\+set\+\_\+b\+Write\+Vbr\+Tag\+\_\+t({\bf lame\+\_\+global\+\_\+flags} $\ast$, {\bf int})}\hypertarget{_export_m_p3_8cpp_a2416131ef26370b5bef99ff8b03eb1d7}{}\label{_export_m_p3_8cpp_a2416131ef26370b5bef99ff8b03eb1d7}
+
+
+Definition at line 732 of file Export\+M\+P3.\+cpp.
+
+\index{Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}!lame\+\_\+set\+\_\+disable\+\_\+reservoir\+\_\+t@{lame\+\_\+set\+\_\+disable\+\_\+reservoir\+\_\+t}}
+\index{lame\+\_\+set\+\_\+disable\+\_\+reservoir\+\_\+t@{lame\+\_\+set\+\_\+disable\+\_\+reservoir\+\_\+t}!Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}}
+\subsubsection[{\texorpdfstring{lame\+\_\+set\+\_\+disable\+\_\+reservoir\+\_\+t}{lame_set_disable_reservoir_t}}]{\setlength{\rightskip}{0pt plus 5cm}typedef {\bf int} lame\+\_\+set\+\_\+disable\+\_\+reservoir\+\_\+t({\bf lame\+\_\+global\+\_\+flags} $\ast$, {\bf int})}\hypertarget{_export_m_p3_8cpp_ade4ffa1b83cb8e27f84db3962c25dbec}{}\label{_export_m_p3_8cpp_ade4ffa1b83cb8e27f84db3962c25dbec}
+
+
+Definition at line 730 of file Export\+M\+P3.\+cpp.
+
+\index{Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}!lame\+\_\+set\+\_\+error\+\_\+protection\+\_\+t@{lame\+\_\+set\+\_\+error\+\_\+protection\+\_\+t}}
+\index{lame\+\_\+set\+\_\+error\+\_\+protection\+\_\+t@{lame\+\_\+set\+\_\+error\+\_\+protection\+\_\+t}!Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}}
+\subsubsection[{\texorpdfstring{lame\+\_\+set\+\_\+error\+\_\+protection\+\_\+t}{lame_set_error_protection_t}}]{\setlength{\rightskip}{0pt plus 5cm}typedef {\bf int} lame\+\_\+set\+\_\+error\+\_\+protection\+\_\+t({\bf lame\+\_\+global\+\_\+flags} $\ast$, {\bf int})}\hypertarget{_export_m_p3_8cpp_a9b828612bc815b4d6334f14f1fd3c557}{}\label{_export_m_p3_8cpp_a9b828612bc815b4d6334f14f1fd3c557}
+
+
+Definition at line 729 of file Export\+M\+P3.\+cpp.
+
+\index{Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}!lame\+\_\+set\+\_\+in\+\_\+samplerate\+\_\+t@{lame\+\_\+set\+\_\+in\+\_\+samplerate\+\_\+t}}
+\index{lame\+\_\+set\+\_\+in\+\_\+samplerate\+\_\+t@{lame\+\_\+set\+\_\+in\+\_\+samplerate\+\_\+t}!Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}}
+\subsubsection[{\texorpdfstring{lame\+\_\+set\+\_\+in\+\_\+samplerate\+\_\+t}{lame_set_in_samplerate_t}}]{\setlength{\rightskip}{0pt plus 5cm}typedef {\bf int} lame\+\_\+set\+\_\+in\+\_\+samplerate\+\_\+t({\bf lame\+\_\+global\+\_\+flags} $\ast$, {\bf int})}\hypertarget{_export_m_p3_8cpp_a5be0a39f517f4bbfe5aecb0b3596b198}{}\label{_export_m_p3_8cpp_a5be0a39f517f4bbfe5aecb0b3596b198}
+
+
+Definition at line 719 of file Export\+M\+P3.\+cpp.
+
+\index{Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}!lame\+\_\+set\+\_\+mode\+\_\+t@{lame\+\_\+set\+\_\+mode\+\_\+t}}
+\index{lame\+\_\+set\+\_\+mode\+\_\+t@{lame\+\_\+set\+\_\+mode\+\_\+t}!Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}}
+\subsubsection[{\texorpdfstring{lame\+\_\+set\+\_\+mode\+\_\+t}{lame_set_mode_t}}]{\setlength{\rightskip}{0pt plus 5cm}typedef {\bf int} lame\+\_\+set\+\_\+mode\+\_\+t({\bf lame\+\_\+global\+\_\+flags} $\ast$, {\bf M\+P\+E\+G\+\_\+mode})}\hypertarget{_export_m_p3_8cpp_af45b51c1d1edeeb607bfb461141a13ad}{}\label{_export_m_p3_8cpp_af45b51c1d1edeeb607bfb461141a13ad}
+
+
+Definition at line 727 of file Export\+M\+P3.\+cpp.
+
+\index{Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}!lame\+\_\+set\+\_\+num\+\_\+channels\+\_\+t@{lame\+\_\+set\+\_\+num\+\_\+channels\+\_\+t}}
+\index{lame\+\_\+set\+\_\+num\+\_\+channels\+\_\+t@{lame\+\_\+set\+\_\+num\+\_\+channels\+\_\+t}!Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}}
+\subsubsection[{\texorpdfstring{lame\+\_\+set\+\_\+num\+\_\+channels\+\_\+t}{lame_set_num_channels_t}}]{\setlength{\rightskip}{0pt plus 5cm}typedef {\bf int} lame\+\_\+set\+\_\+num\+\_\+channels\+\_\+t({\bf lame\+\_\+global\+\_\+flags} $\ast$, {\bf int})}\hypertarget{_export_m_p3_8cpp_ae7034792e347296cb1023ce9b7c11ae8}{}\label{_export_m_p3_8cpp_ae7034792e347296cb1023ce9b7c11ae8}
+
+
+Definition at line 721 of file Export\+M\+P3.\+cpp.
+
+\index{Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}!lame\+\_\+set\+\_\+out\+\_\+samplerate\+\_\+t@{lame\+\_\+set\+\_\+out\+\_\+samplerate\+\_\+t}}
+\index{lame\+\_\+set\+\_\+out\+\_\+samplerate\+\_\+t@{lame\+\_\+set\+\_\+out\+\_\+samplerate\+\_\+t}!Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}}
+\subsubsection[{\texorpdfstring{lame\+\_\+set\+\_\+out\+\_\+samplerate\+\_\+t}{lame_set_out_samplerate_t}}]{\setlength{\rightskip}{0pt plus 5cm}typedef {\bf int} lame\+\_\+set\+\_\+out\+\_\+samplerate\+\_\+t({\bf lame\+\_\+global\+\_\+flags} $\ast$, {\bf int})}\hypertarget{_export_m_p3_8cpp_aa9cd653d3aa14285be27e4674f9dddde}{}\label{_export_m_p3_8cpp_aa9cd653d3aa14285be27e4674f9dddde}
+
+
+Definition at line 720 of file Export\+M\+P3.\+cpp.
+
+\index{Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}!lame\+\_\+set\+\_\+padding\+\_\+type\+\_\+t@{lame\+\_\+set\+\_\+padding\+\_\+type\+\_\+t}}
+\index{lame\+\_\+set\+\_\+padding\+\_\+type\+\_\+t@{lame\+\_\+set\+\_\+padding\+\_\+type\+\_\+t}!Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}}
+\subsubsection[{\texorpdfstring{lame\+\_\+set\+\_\+padding\+\_\+type\+\_\+t}{lame_set_padding_type_t}}]{\setlength{\rightskip}{0pt plus 5cm}typedef {\bf int} lame\+\_\+set\+\_\+padding\+\_\+type\+\_\+t({\bf lame\+\_\+global\+\_\+flags} $\ast$, {\bf Padding\+\_\+type})}\hypertarget{_export_m_p3_8cpp_ac011e6f39fcd8742edc198b6c8cf028c}{}\label{_export_m_p3_8cpp_ac011e6f39fcd8742edc198b6c8cf028c}
+
+
+Definition at line 731 of file Export\+M\+P3.\+cpp.
+
+\index{Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}!lame\+\_\+set\+\_\+preset\+\_\+t@{lame\+\_\+set\+\_\+preset\+\_\+t}}
+\index{lame\+\_\+set\+\_\+preset\+\_\+t@{lame\+\_\+set\+\_\+preset\+\_\+t}!Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}}
+\subsubsection[{\texorpdfstring{lame\+\_\+set\+\_\+preset\+\_\+t}{lame_set_preset_t}}]{\setlength{\rightskip}{0pt plus 5cm}typedef {\bf int} lame\+\_\+set\+\_\+preset\+\_\+t({\bf lame\+\_\+global\+\_\+flags} $\ast$, {\bf int})}\hypertarget{_export_m_p3_8cpp_acdc31ea20ab079dc91f0d7fda614cc68}{}\label{_export_m_p3_8cpp_acdc31ea20ab079dc91f0d7fda614cc68}
+
+
+Definition at line 728 of file Export\+M\+P3.\+cpp.
+
+\index{Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}!lame\+\_\+set\+\_\+quality\+\_\+t@{lame\+\_\+set\+\_\+quality\+\_\+t}}
+\index{lame\+\_\+set\+\_\+quality\+\_\+t@{lame\+\_\+set\+\_\+quality\+\_\+t}!Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}}
+\subsubsection[{\texorpdfstring{lame\+\_\+set\+\_\+quality\+\_\+t}{lame_set_quality_t}}]{\setlength{\rightskip}{0pt plus 5cm}typedef {\bf int} lame\+\_\+set\+\_\+quality\+\_\+t({\bf lame\+\_\+global\+\_\+flags} $\ast$, {\bf int})}\hypertarget{_export_m_p3_8cpp_aaa72d05f7c19421f30637f225dd67aaf}{}\label{_export_m_p3_8cpp_aaa72d05f7c19421f30637f225dd67aaf}
+
+
+Definition at line 722 of file Export\+M\+P3.\+cpp.
+
+\index{Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}!lame\+\_\+set\+\_\+\+V\+B\+R\+\_\+min\+\_\+bitrate\+\_\+kbps\+\_\+t@{lame\+\_\+set\+\_\+\+V\+B\+R\+\_\+min\+\_\+bitrate\+\_\+kbps\+\_\+t}}
+\index{lame\+\_\+set\+\_\+\+V\+B\+R\+\_\+min\+\_\+bitrate\+\_\+kbps\+\_\+t@{lame\+\_\+set\+\_\+\+V\+B\+R\+\_\+min\+\_\+bitrate\+\_\+kbps\+\_\+t}!Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}}
+\subsubsection[{\texorpdfstring{lame\+\_\+set\+\_\+\+V\+B\+R\+\_\+min\+\_\+bitrate\+\_\+kbps\+\_\+t}{lame_set_VBR_min_bitrate_kbps_t}}]{\setlength{\rightskip}{0pt plus 5cm}typedef {\bf int} lame\+\_\+set\+\_\+\+V\+B\+R\+\_\+min\+\_\+bitrate\+\_\+kbps\+\_\+t({\bf lame\+\_\+global\+\_\+flags} $\ast$, {\bf int})}\hypertarget{_export_m_p3_8cpp_a92d244a758ba835ac51939ed38cf1fee}{}\label{_export_m_p3_8cpp_a92d244a758ba835ac51939ed38cf1fee}
+
+
+Definition at line 726 of file Export\+M\+P3.\+cpp.
+
+\index{Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}!lame\+\_\+set\+\_\+\+V\+B\+R\+\_\+q\+\_\+t@{lame\+\_\+set\+\_\+\+V\+B\+R\+\_\+q\+\_\+t}}
+\index{lame\+\_\+set\+\_\+\+V\+B\+R\+\_\+q\+\_\+t@{lame\+\_\+set\+\_\+\+V\+B\+R\+\_\+q\+\_\+t}!Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}}
+\subsubsection[{\texorpdfstring{lame\+\_\+set\+\_\+\+V\+B\+R\+\_\+q\+\_\+t}{lame_set_VBR_q_t}}]{\setlength{\rightskip}{0pt plus 5cm}typedef {\bf int} lame\+\_\+set\+\_\+\+V\+B\+R\+\_\+q\+\_\+t({\bf lame\+\_\+global\+\_\+flags} $\ast$, {\bf int})}\hypertarget{_export_m_p3_8cpp_a4f7048e7674621b2889ba181f80633b3}{}\label{_export_m_p3_8cpp_a4f7048e7674621b2889ba181f80633b3}
+
+
+Definition at line 725 of file Export\+M\+P3.\+cpp.
+
+\index{Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}!lame\+\_\+set\+\_\+\+V\+B\+R\+\_\+t@{lame\+\_\+set\+\_\+\+V\+B\+R\+\_\+t}}
+\index{lame\+\_\+set\+\_\+\+V\+B\+R\+\_\+t@{lame\+\_\+set\+\_\+\+V\+B\+R\+\_\+t}!Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}}
+\subsubsection[{\texorpdfstring{lame\+\_\+set\+\_\+\+V\+B\+R\+\_\+t}{lame_set_VBR_t}}]{\setlength{\rightskip}{0pt plus 5cm}typedef {\bf int} lame\+\_\+set\+\_\+\+V\+B\+R\+\_\+t({\bf lame\+\_\+global\+\_\+flags} $\ast$, {\bf vbr\+\_\+mode})}\hypertarget{_export_m_p3_8cpp_a0225785f7f264ceb9c1fbc4ba7bb0fe6}{}\label{_export_m_p3_8cpp_a0225785f7f264ceb9c1fbc4ba7bb0fe6}
+
+
+Definition at line 724 of file Export\+M\+P3.\+cpp.
+
+
+
+\subsection{Function Documentation}
+\index{Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}!Get\+M\+P3\+Version@{Get\+M\+P3\+Version}}
+\index{Get\+M\+P3\+Version@{Get\+M\+P3\+Version}!Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}}
+\subsubsection[{\texorpdfstring{Get\+M\+P3\+Version(wx\+Window $\ast$parent, bool prompt)}{GetMP3Version(wxWindow *parent, bool prompt)}}]{\setlength{\rightskip}{0pt plus 5cm}wx\+String Get\+M\+P3\+Version (
+\begin{DoxyParamCaption}
+\item[{wx\+Window $\ast$}]{parent, }
+\item[{{\bf bool}}]{prompt}
+\end{DoxyParamCaption}
+)}\hypertarget{_export_m_p3_8cpp_a0519aa61d0baf03744c46a9a42f1e178}{}\label{_export_m_p3_8cpp_a0519aa61d0baf03744c46a9a42f1e178}
+
+
+Definition at line 2085 of file Export\+M\+P3.\+cpp.
+
+\index{Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}!New\+\_\+\+Export\+M\+P3@{New\+\_\+\+Export\+M\+P3}}
+\index{New\+\_\+\+Export\+M\+P3@{New\+\_\+\+Export\+M\+P3}!Export\+M\+P3.\+cpp@{Export\+M\+P3.\+cpp}}
+\subsubsection[{\texorpdfstring{New\+\_\+\+Export\+M\+P3()}{New_ExportMP3()}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Export\+Plugin}$\ast$ New\+\_\+\+Export\+M\+P3 (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{_export_m_p3_8cpp_aee2ffb0c28c61337c9f6295617e571da}{}\label{_export_m_p3_8cpp_aee2ffb0c28c61337c9f6295617e571da}
+Factory method \hyperlink{_export_m_p3_8h_aee2ffb0c28c61337c9f6295617e571da}{New\+\_\+\+Export\+M\+P3()} which creates a N\+EW \hyperlink{class_export_m_p3}{Export\+M\+P3} object and returns a pointer to it. The rest of the class declaration is in \hyperlink{_export_m_p3_8cpp}{Export\+M\+P3.\+cpp} 
+
+Definition at line 2076 of file Export\+M\+P3.\+cpp.
+

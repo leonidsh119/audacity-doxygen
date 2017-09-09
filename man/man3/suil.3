@@ -1,0 +1,255 @@
+.TH "suil" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+suil \- Suil
+.SS "Typedefs"
+
+.in +1c
+.ti -1c
+.RI "typedef struct \fBSuilHostImpl\fP \fBSuilHost\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBSuilInstanceImpl\fP \fBSuilInstance\fP"
+.br
+.ti -1c
+.RI "typedef \fBvoid\fP * \fBSuilHandle\fP"
+.br
+.ti -1c
+.RI "typedef \fBvoid\fP * \fBSuilWidget\fP"
+.br
+.ti -1c
+.RI "typedef \fBvoid\fP * \fBSuilController\fP"
+.br
+.ti -1c
+.RI "typedef \fBvoid\fP(* \fBSuilPortWriteFunc\fP) (\fBSuilController\fP controller, \fBuint32_t\fP port_index, \fBuint32_t\fP buffer_size, \fBuint32_t\fP protocol, \fBvoid\fP \fBconst\fP *\fBbuffer\fP)"
+.br
+.ti -1c
+.RI "typedef \fBuint32_t\fP(* \fBSuilPortIndexFunc\fP) (\fBSuilController\fP controller, \fBconst\fP char *port_symbol)"
+.br
+.ti -1c
+.RI "typedef \fBuint32_t\fP(* \fBSuilPortSubscribeFunc\fP) (\fBSuilController\fP controller, \fBuint32_t\fP port_index, \fBuint32_t\fP protocol, \fBconst\fP \fBLV2_Feature\fP *\fBconst\fP *features)"
+.br
+.ti -1c
+.RI "typedef \fBuint32_t\fP(* \fBSuilPortUnsubscribeFunc\fP) (\fBSuilController\fP controller, \fBuint32_t\fP port_index, \fBuint32_t\fP protocol, \fBconst\fP \fBLV2_Feature\fP *\fBconst\fP *features)"
+.br
+.ti -1c
+.RI "typedef \fBvoid\fP(* \fBSuilTouchFunc\fP) (\fBSuilController\fP controller, \fBuint32_t\fP port_index, \fBbool\fP grabbed)"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBSUIL_API\fP \fBSuilHost\fP * \fBsuil_host_new\fP (\fBSuilPortWriteFunc\fP write_func, \fBSuilPortIndexFunc\fP index_func, \fBSuilPortSubscribeFunc\fP subscribe_func, \fBSuilPortUnsubscribeFunc\fP unsubscribe_func)"
+.br
+.ti -1c
+.RI "\fBSUIL_API\fP \fBvoid\fP \fBsuil_host_set_touch_func\fP (\fBSuilHost\fP *host, \fBSuilTouchFunc\fP touch_func)"
+.br
+.ti -1c
+.RI "\fBSUIL_API\fP \fBvoid\fP \fBsuil_host_free\fP (\fBSuilHost\fP *host)"
+.br
+.ti -1c
+.RI "\fBSUIL_API\fP unsigned \fBsuil_ui_supported\fP (\fBconst\fP char *host_type_uri, \fBconst\fP char *ui_type_uri)"
+.br
+.ti -1c
+.RI "\fBSUIL_API\fP \fBSuilInstance\fP * \fBsuil_instance_new\fP (\fBSuilHost\fP *host, \fBSuilController\fP controller, \fBconst\fP char *container_type_uri, \fBconst\fP char *plugin_uri, \fBconst\fP char *ui_uri, \fBconst\fP char *ui_type_uri, \fBconst\fP char *ui_bundle_path, \fBconst\fP char *ui_binary_path, \fBconst\fP \fBLV2_Feature\fP *\fBconst\fP *features)"
+.br
+.ti -1c
+.RI "\fBSUIL_API\fP \fBvoid\fP \fBsuil_instance_free\fP (\fBSuilInstance\fP *instance)"
+.br
+.ti -1c
+.RI "\fBSUIL_API\fP \fBSuilHandle\fP \fBsuil_instance_get_handle\fP (\fBSuilInstance\fP *instance)"
+.br
+.ti -1c
+.RI "\fBSUIL_API\fP \fBSuilWidget\fP \fBsuil_instance_get_widget\fP (\fBSuilInstance\fP *instance)"
+.br
+.ti -1c
+.RI "\fBSUIL_API\fP \fBvoid\fP \fBsuil_instance_port_event\fP (\fBSuilInstance\fP *instance, \fBuint32_t\fP port_index, \fBuint32_t\fP buffer_size, \fBuint32_t\fP \fBformat\fP, \fBconst\fP \fBvoid\fP *\fBbuffer\fP)"
+.br
+.ti -1c
+.RI "\fBSUIL_API\fP \fBconst\fP \fBvoid\fP * \fBsuil_instance_extension_data\fP (\fBSuilInstance\fP *instance, \fBconst\fP char *\fBuri\fP)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Suil is a library for loading and wrapping LV2 plugin UIs\&. With Suil, a host written in one supported toolkit can embed a plugin UI written in a different supported toolkit\&. Suil insulates hosts from toolkit libraries used by plugin UIs\&. For example, a Gtk host can embed a Qt UI without linking against Qt at compile time\&.
+.PP
+Visit http://drobilla.net/software/suil for more information\&. 
+.SH "Typedef Documentation"
+.PP 
+.SS "typedef \fBvoid\fP* \fBSuilController\fP"
+UI controller\&.
+.PP
+This is an opaque pointer passed by the user which is passed to the various UI control functions (e\&.g\&. SuilPortWriteFunc)\&. It is typically used to pass a pointer to some controller object the host uses to communicate with plugins\&. 
+.PP
+Definition at line 92 of file suil\&.h\&.
+.SS "typedef \fBvoid\fP* \fBSuilHandle\fP"
+Opaque pointer to a UI handle\&. 
+.PP
+Definition at line 79 of file suil\&.h\&.
+.SS "typedef struct \fBSuilHostImpl\fP \fBSuilHost\fP"
+UI host descriptor\&.
+.PP
+This contains the various functions that a plugin UI may use to communicate with the plugin\&. It is passed to \fBsuil_instance_new()\fP to provide these functions to the UI\&. 
+.PP
+Definition at line 73 of file suil\&.h\&.
+.SS "typedef struct \fBSuilInstanceImpl\fP \fBSuilInstance\fP"
+An instance of an LV2 plugin UI\&. 
+.PP
+Definition at line 76 of file suil\&.h\&.
+.SS "typedef \fBuint32_t\fP(* SuilPortIndexFunc) (\fBSuilController\fP controller, \fBconst\fP char *port_symbol)"
+\fBFunction\fP to return the index for a port by symbol\&. 
+.PP
+Definition at line 103 of file suil\&.h\&.
+.SS "typedef \fBuint32_t\fP(* SuilPortSubscribeFunc) (\fBSuilController\fP controller, \fBuint32_t\fP port_index, \fBuint32_t\fP protocol, \fBconst\fP \fBLV2_Feature\fP *\fBconst\fP *features)"
+\fBFunction\fP to subscribe to notifications for a port\&. 
+.PP
+Definition at line 108 of file suil\&.h\&.
+.SS "typedef \fBuint32_t\fP(* SuilPortUnsubscribeFunc) (\fBSuilController\fP controller, \fBuint32_t\fP port_index, \fBuint32_t\fP protocol, \fBconst\fP \fBLV2_Feature\fP *\fBconst\fP *features)"
+\fBFunction\fP to unsubscribe from notifications for a port\&. 
+.PP
+Definition at line 115 of file suil\&.h\&.
+.SS "typedef \fBvoid\fP(* SuilPortWriteFunc) (\fBSuilController\fP controller, \fBuint32_t\fP port_index, \fBuint32_t\fP buffer_size, \fBuint32_t\fP protocol, \fBvoid\fP \fBconst\fP *\fBbuffer\fP)"
+\fBFunction\fP to write/send a value to a port\&. 
+.PP
+Definition at line 95 of file suil\&.h\&.
+.SS "typedef \fBvoid\fP(* SuilTouchFunc) (\fBSuilController\fP controller, \fBuint32_t\fP port_index, \fBbool\fP grabbed)"
+\fBFunction\fP called when a control is grabbed or released\&. 
+.PP
+Definition at line 122 of file suil\&.h\&.
+.SS "typedef \fBvoid\fP* \fBSuilWidget\fP"
+Opaque pointer to a UI widget\&. 
+.PP
+Definition at line 82 of file suil\&.h\&.
+.SH "Function Documentation"
+.PP 
+.SS "\fBSUIL_API\fP \fBvoid\fP suil_host_free (\fBSuilHost\fP * host)"
+Free \fChost\fP\&. 
+.PP
+Definition at line 46 of file host\&.c\&.
+.SS "\fBSUIL_API\fP \fBSuilHost\fP* suil_host_new (\fBSuilPortWriteFunc\fP write_func, \fBSuilPortIndexFunc\fP index_func, \fBSuilPortSubscribeFunc\fP subscribe_func, \fBSuilPortUnsubscribeFunc\fP unsubscribe_func)"
+Create a new UI host descriptor\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIwrite_func\fP \fBFunction\fP to send a value to a plugin port\&. 
+.br
+\fIindex_func\fP \fBFunction\fP to get the index for a port by symbol\&. 
+.br
+\fIsubscribe_func\fP \fBFunction\fP to subscribe to port updates\&. 
+.br
+\fIunsubscribe_func\fP \fBFunction\fP to unsubscribe from port updates\&. 
+.RE
+.PP
+
+.PP
+Definition at line 21 of file host\&.c\&.
+.SS "\fBSUIL_API\fP \fBvoid\fP suil_host_set_touch_func (\fBSuilHost\fP * host, \fBSuilTouchFunc\fP touch_func)"
+Set a touch function for a host descriptor\&.
+.PP
+Note this function will only be called if the UI supports it\&. 
+.PP
+Definition at line 38 of file host\&.c\&.
+.SS "\fBSUIL_API\fP \fBconst\fP \fBvoid\fP* suil_instance_extension_data (\fBSuilInstance\fP * instance, \fBconst\fP char * uri)"
+Return a data structure defined by some LV2 extension URI\&. 
+.PP
+Definition at line 331 of file suil_instance\&.c\&.
+.SS "\fBSUIL_API\fP \fBvoid\fP suil_instance_free (\fBSuilInstance\fP * instance)"
+Free a plugin UI instance\&.
+.PP
+The caller must ensure all references to the UI have been dropped before calling this function (e\&.g\&. it has been removed from its parent)\&. 
+.PP
+Definition at line 270 of file suil_instance\&.c\&.
+.SS "\fBSUIL_API\fP \fBSuilHandle\fP suil_instance_get_handle (\fBSuilInstance\fP * instance)"
+Get the handle for a UI instance\&.
+.PP
+Returns the handle to the UI instance\&. The returned handle has opaque type to insulate the Suil API from LV2 extensions, but in pactice it is currently of type \fCLV2UI_Handle\fP\&. This should not normally be needed\&.
+.PP
+The returned handle is shared and must not be deleted\&. 
+.PP
+Definition at line 300 of file suil_instance\&.c\&.
+.SS "\fBSUIL_API\fP \fBSuilWidget\fP suil_instance_get_widget (\fBSuilInstance\fP * instance)"
+Get the widget for a UI instance\&.
+.PP
+Returns an opaque pointer to a widget, the type of which matches the \fCcontainer_type_uri\fP parameter of \fBsuil_instance_new()\fP\&. Note this may be a wrapper widget created by Suil, and not necessarily the widget directly implemented by the UI\&. 
+.PP
+Definition at line 307 of file suil_instance\&.c\&.
+.SS "\fBSUIL_API\fP \fBSuilInstance\fP* suil_instance_new (\fBSuilHost\fP * host, \fBSuilController\fP controller, \fBconst\fP char * container_type_uri, \fBconst\fP char * plugin_uri, \fBconst\fP char * ui_uri, \fBconst\fP char * ui_type_uri, \fBconst\fP char * ui_bundle_path, \fBconst\fP char * ui_binary_path, \fBconst\fP \fBLV2_Feature\fP *\fBconst\fP * features)"
+Instantiate a UI for an LV2 plugin\&.
+.PP
+This funcion may load a suil module to adapt the UI to the desired toolkit\&. Suil is configured at compile time to load modules from the appropriate place, but this can be changed at run-time via the environment variable SUIL_MODULE_DIR\&. This makes it possible to bundle suil with an application\&.
+.PP
+Note that some situations (Gtk in Qt, Windows in Gtk) require a parent container to be passed as a feature with URI LV2_UI__parent (http://lv2plug.in/ns/extensions/ui#ui) in order to work correctly\&. The data must point to a single child container of the host widget set\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIhost\fP Host descriptor\&. 
+.br
+\fIcontroller\fP Opaque host controller pointer\&. 
+.br
+\fIcontainer_type_uri\fP URI of the desired host container widget type\&. 
+.br
+\fIplugin_uri\fP URI of the plugin to instantiate this UI for\&. 
+.br
+\fIui_uri\fP URI of the specifically desired UI\&. 
+.br
+\fIui_type_uri\fP URI of the actual UI widget type\&. 
+.br
+\fIui_bundle_path\fP Path of the UI bundle\&. 
+.br
+\fIui_binary_path\fP Path of the UI binary\&. 
+.br
+\fIfeatures\fP NULL-terminated array of supported features, or NULL\&. 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+A new UI instance, or NULL if instantiation failed\&. 
+.RE
+.PP
+
+.PP
+Definition at line 141 of file suil_instance\&.c\&.
+.SS "\fBSUIL_API\fP \fBvoid\fP suil_instance_port_event (\fBSuilInstance\fP * instance, \fBuint32_t\fP port_index, \fBuint32_t\fP buffer_size, \fBuint32_t\fP format, \fBconst\fP \fBvoid\fP * buffer)"
+Notify the UI about a change in a plugin port\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIinstance\fP UI instance\&. 
+.br
+\fIport_index\fP Index of the port which has changed\&. 
+.br
+\fIbuffer_size\fP Size of \fCbuffer\fP in bytes\&. 
+.br
+\fIformat\fP \fBFormat\fP of \fCbuffer\fP (mapped URI, or 0 for float)\&. 
+.br
+\fIbuffer\fP Change data, e\&.g\&. the new port value\&.
+.RE
+.PP
+This function can be used to notify the UI about any port change, but in the simplest case is used to set the value of lv2:ControlPort ports\&. For simplicity, this is a special case where \fCformat\fP is 0, \fCbuffer_size\fP is 4, and \fCbuffer\fP should point to a single float\&.
+.PP
+The \fCbuffer\fP must be valid only for the duration of this call, the UI must not keep a reference to it\&. 
+.PP
+Definition at line 314 of file suil_instance\&.c\&.
+.SS "\fBSUIL_API\fP unsigned suil_ui_supported (\fBconst\fP char * host_type_uri, \fBconst\fP char * ui_type_uri)"
+Check if suil can wrap a UI type\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIhost_type_uri\fP The URI of the desired widget type of the host, corresponding to the \fCtype_uri\fP parameter of \fBsuil_instance_new()\fP\&. 
+.br
+\fIui_type_uri\fP The URI of the UI widget type\&. 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+0 if wrapping is unsupported, otherwise the quality of the wrapping where 1 is the highest quality (direct native embedding with no wrapping) and increasing values are of a progressively lower quality and/or stability\&. 
+.RE
+.PP
+
+.PP
+Definition at line 32 of file suil_instance\&.c\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

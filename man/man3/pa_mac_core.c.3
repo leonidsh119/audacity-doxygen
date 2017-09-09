@@ -1,0 +1,211 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/lib-src/portaudio-v19/src/hostapi/coreaudio/pa_mac_core.c" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/lib-src/portaudio-v19/src/hostapi/coreaudio/pa_mac_core.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include 'pa_mac_core_internal\&.h'\fP
+.br
+\fC#include <string\&.h>\fP
+.br
+\fC#include <libkern/OSAtomic\&.h>\fP
+.br
+\fC#include 'pa_mac_core\&.h'\fP
+.br
+\fC#include 'pa_mac_core_utilities\&.h'\fP
+.br
+\fC#include 'pa_mac_core_blocking\&.h'\fP
+.br
+
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBPA_MAC_SMALL_BUFFER_SIZE\fP   (64)"
+.br
+.ti -1c
+.RI "#define \fBRING_BUFFER_ADVANCE_DENOMINATOR\fP   (4)"
+.br
+.ti -1c
+.RI "#define \fBPA_AUHAL_SET_LAST_HOST_ERROR\fP(\fBerrorCode\fP,  errorText)   \fBPaUtil_SetLastHostErrorInfo\fP( \fBpaCoreAudio\fP, \fBerrorCode\fP, errorText )"
+.br
+.ti -1c
+.RI "#define \fBERR_WRAP\fP(mac_err)   do { result = mac_err ; \fBline\fP = __LINE__ ; \fBif\fP ( result != noErr ) goto \fBerror\fP ; } while(0)"
+.br
+.ti -1c
+.RI "#define \fBHOST_TIME_TO_PA_TIME\fP(x)   ( AudioConvertHostTimeToNanos( (x) ) * 1\&.0E\-09) /* convert to nanoseconds and then to seconds */"
+.br
+.ti -1c
+.RI "#define \fBRING_BUFFER_EMPTY\fP   (1000)"
+.br
+.ti -1c
+.RI "#define \fBERR_WRAP\fP(mac_err)   do { result = mac_err ; \fBif\fP ( result != noErr ) \fBreturn\fP \fBERR\fP(result) ; } while(0)"
+.br
+.ti -1c
+.RI "#define \fBERR_WRAP\fP(mac_err)   do { result = mac_err ; \fBif\fP ( result != noErr ) \fBreturn\fP \fBERR\fP(result) ; } while(0)"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBPaError\fP \fBPaMacCore_Initialize\fP (\fBPaUtilHostApiRepresentation\fP **hostApi, \fBPaHostApiIndex\fP index)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBPaMacCore_SetupStreamInfo\fP (\fBPaMacCoreStreamInfo\fP *\fBdata\fP, \fBconst\fP unsigned long flags)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBPaMacCore_SetupChannelMap\fP (\fBPaMacCoreStreamInfo\fP *\fBdata\fP, \fBconst\fP SInt32 *\fBconst\fP channelMap, \fBconst\fP unsigned long channelMapSize)"
+.br
+.ti -1c
+.RI "\fBconst\fP char * \fBPaMacCore_GetChannelName\fP (\fBint\fP device, \fBint\fP channelIndex, \fBbool\fP input)"
+.br
+.ti -1c
+.RI "\fBPaError\fP \fBPaMacCore_GetBufferSizeRange\fP (\fBPaDeviceIndex\fP device, long *minBufferSizeFrames, long *maxBufferSizeFrames)"
+.br
+.ti -1c
+.RI "AudioDeviceID \fBPaMacCore_GetStreamInputDevice\fP (\fBPaStream\fP *\fBs\fP)"
+.br
+.ti -1c
+.RI "AudioDeviceID \fBPaMacCore_GetStreamOutputDevice\fP (\fBPaStream\fP *\fBs\fP)"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define ERR_WRAP(mac_err)   do { result = mac_err ; \fBline\fP = __LINE__ ; \fBif\fP ( result != noErr ) goto \fBerror\fP ; } while(0)"
+
+.SS "#define ERR_WRAP(mac_err)   do { result = mac_err ; \fBif\fP ( result != noErr ) \fBreturn\fP \fBERR\fP(result) ; } while(0)"
+
+.SS "#define ERR_WRAP(mac_err)   do { result = mac_err ; \fBif\fP ( result != noErr ) \fBreturn\fP \fBERR\fP(result) ; } while(0)"
+
+.SS "#define HOST_TIME_TO_PA_TIME(x)   ( AudioConvertHostTimeToNanos( (x) ) * 1\&.0E\-09) /* convert to nanoseconds and then to seconds */"
+
+.PP
+Definition at line 2098 of file pa_mac_core\&.c\&.
+.SS "#define PA_AUHAL_SET_LAST_HOST_ERROR(\fBerrorCode\fP, errorText)   \fBPaUtil_SetLastHostErrorInfo\fP( \fBpaCoreAudio\fP, \fBerrorCode\fP, errorText )"
+
+.PP
+Definition at line 309 of file pa_mac_core\&.c\&.
+.SS "#define PA_MAC_SMALL_BUFFER_SIZE   (64)"
+
+.PP
+Definition at line 81 of file pa_mac_core\&.c\&.
+.SS "#define RING_BUFFER_ADVANCE_DENOMINATOR   (4)"
+
+.PP
+Definition at line 258 of file pa_mac_core\&.c\&.
+.SS "#define RING_BUFFER_EMPTY   (1000)"
+
+.PP
+Definition at line 2105 of file pa_mac_core\&.c\&.
+.SH "Function Documentation"
+.PP 
+.SS "\fBPaError\fP PaMacCore_GetBufferSizeRange (\fBPaDeviceIndex\fP device, long * minBufferSizeFrames, long * maxBufferSizeFrames)"
+Retrieve the range of legal native buffer sizes for the specificed device, in sample frames\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdevice\fP The global index of the PortAudio device about which the query is being made\&. 
+.br
+\fIminBufferSizeFrames\fP A pointer to the location which will receive the minimum buffer size value\&. 
+.br
+\fImaxBufferSizeFrames\fP A pointer to the location which will receive the maximum buffer size value\&.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+kAudioDevicePropertyBufferFrameSizeRange \fBin\fP \fBthe\fP CoreAudio SDK\&. 
+.RE
+.PP
+
+.PP
+Definition at line 203 of file pa_mac_core\&.c\&.
+.SS "\fBconst\fP char* PaMacCore_GetChannelName (\fBint\fP device, \fBint\fP channelIndex, \fBbool\fP input)"
+Returns a statically allocated string with the device's name for the given channel\&. NULL will be returned on failure\&.
+.PP
+This function's implemenation is not complete!
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdevice\fP The PortAudio device index\&. 
+.br
+\fIchannel\fP The channel number who's name is requested\&. 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+a statically allocated string with the name of the device\&. Because this string is statically allocated, it must be coppied if it is to be saved and used by the user after another call to this function\&. 
+.RE
+.PP
+
+.PP
+Definition at line 126 of file pa_mac_core\&.c\&.
+.SS "AudioDeviceID PaMacCore_GetStreamInputDevice (\fBPaStream\fP * s)"
+Retrieve the AudioDeviceID of the input device assigned to an open stream
+.PP
+\fBParameters:\fP
+.RS 4
+\fIs\fP The stream to query\&.
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+A valid AudioDeviceID, or NULL if an error occurred\&. 
+.RE
+.PP
+
+.PP
+Definition at line 238 of file pa_mac_core\&.c\&.
+.SS "AudioDeviceID PaMacCore_GetStreamOutputDevice (\fBPaStream\fP * s)"
+Retrieve the AudioDeviceID of the output device assigned to an open stream
+.PP
+\fBParameters:\fP
+.RS 4
+\fIs\fP The stream to query\&.
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+A valid AudioDeviceID, or NULL if an error occurred\&. 
+.RE
+.PP
+
+.PP
+Definition at line 246 of file pa_mac_core\&.c\&.
+.SS "\fBPaError\fP PaMacCore_Initialize (\fBPaUtilHostApiRepresentation\fP ** hostApi, \fBPaHostApiIndex\fP index)"
+
+.PP
+Definition at line 718 of file pa_mac_core\&.c\&.
+.SS "\fBvoid\fP PaMacCore_SetupChannelMap (\fBPaMacCoreStreamInfo\fP * data, \fBconst\fP SInt32 *\fBconst\fP channelMap, unsigned long channelMapSize)"
+call this after pa_SetupMacCoreStreamInfo to use channel mapping as described in notes\&.txt\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdata\fP The stream info structure to assign a channel mapping to 
+.br
+\fIchannelMap\fP The channel map array, as described in notes\&.txt\&. This array pointer will be used directly (ie the underlying data will not be copied), so the caller should not free the array until after the stream has been opened\&. 
+.br
+\fIchannelMapSize\fP The size of the channel map array\&. 
+.RE
+.PP
+
+.PP
+Definition at line 104 of file pa_mac_core\&.c\&.
+.SS "\fBvoid\fP PaMacCore_SetupStreamInfo (\fBPaMacCoreStreamInfo\fP * data, unsigned long flags)"
+Functions Use this function to initialize a paMacCoreStreamInfo struct using the requested flags\&. Note that channel mapping is turned off after a call to this function\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdata\fP The datastructure to initialize 
+.br
+\fIflags\fP The flags to initialize the datastructure with\&. 
+.RE
+.PP
+
+.PP
+Definition at line 90 of file pa_mac_core\&.c\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

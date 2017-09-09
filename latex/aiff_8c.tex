@@ -1,0 +1,580 @@
+\hypertarget{aiff_8c}{}\section{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/libsndfile/src/aiff.c File Reference}
+\label{aiff_8c}\index{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/libsndfile/src/aiff.\+c@{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/libsndfile/src/aiff.\+c}}
+{\ttfamily \#include \char`\"{}sfconfig.\+h\char`\"{}}\\*
+{\ttfamily \#include $<$stdio.\+h$>$}\\*
+{\ttfamily \#include $<$stdlib.\+h$>$}\\*
+{\ttfamily \#include $<$string.\+h$>$}\\*
+{\ttfamily \#include $<$time.\+h$>$}\\*
+{\ttfamily \#include $<$ctype.\+h$>$}\\*
+{\ttfamily \#include $<$inttypes.\+h$>$}\\*
+{\ttfamily \#include \char`\"{}sndfile.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}sfendian.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}common.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}chanmap.\+h\char`\"{}}\\*
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{struct_c_o_m_m___c_h_u_n_k}{C\+O\+M\+M\+\_\+\+C\+H\+U\+NK}
+\item 
+struct \hyperlink{struct_s_s_n_d___c_h_u_n_k}{S\+S\+N\+D\+\_\+\+C\+H\+U\+NK}
+\item 
+struct \hyperlink{struct_i_n_s_t___l_o_o_p}{I\+N\+S\+T\+\_\+\+L\+O\+OP}
+\item 
+struct \hyperlink{struct_i_n_s_t___c_h_u_n_k}{I\+N\+S\+T\+\_\+\+C\+H\+U\+NK}
+\item 
+struct \hyperlink{structbasc___c_h_u_n_k}{basc\+\_\+\+C\+H\+U\+NK}
+\item 
+struct \hyperlink{struct_m_a_r_k___i_d___p_o_s}{M\+A\+R\+K\+\_\+\+I\+D\+\_\+\+P\+OS}
+\item 
+struct \hyperlink{struct_a_i_f_f___p_r_i_v_a_t_e}{A\+I\+F\+F\+\_\+\+P\+R\+I\+V\+A\+TE}
+\end{DoxyCompactItemize}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{aiff_8c_a97715acefbf28ec5c959a621280b7171}{F\+O\+R\+M\+\_\+\+M\+A\+R\+K\+ER}~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}\hyperlink{xlftab_8c_a42257a545daf5b7933d6e8f96adc74f2}{F}\textquotesingle{}, \textquotesingle{}O\textquotesingle{}, \textquotesingle{}R\textquotesingle{}, \textquotesingle{}\hyperlink{rfft2d_test_m_l_8m_aad05f78187c942f9dd521605fa81f1ba}{M}\textquotesingle{}))
+\item 
+\#define \hyperlink{aiff_8c_a9c13c0cfdc085b8a72c0955b4c178626}{A\+I\+F\+F\+\_\+\+M\+A\+R\+K\+ER}~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}\hyperlink{libnyquist_2nyquist_2nyqsrc_2add_8c_a955f504eccf76b4eb2489c0adab03121}{A}\textquotesingle{}, \textquotesingle{}I\textquotesingle{}, \textquotesingle{}\hyperlink{xlftab_8c_a42257a545daf5b7933d6e8f96adc74f2}{F}\textquotesingle{}, \textquotesingle{}\hyperlink{xlftab_8c_a42257a545daf5b7933d6e8f96adc74f2}{F}\textquotesingle{}))
+\item 
+\#define \hyperlink{aiff_8c_a1356542807c01e5a19bd5480ffcd3fb6}{A\+I\+F\+C\+\_\+\+M\+A\+R\+K\+ER}~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}\hyperlink{libnyquist_2nyquist_2nyqsrc_2add_8c_a955f504eccf76b4eb2489c0adab03121}{A}\textquotesingle{}, \textquotesingle{}I\textquotesingle{}, \textquotesingle{}\hyperlink{xlftab_8c_a42257a545daf5b7933d6e8f96adc74f2}{F}\textquotesingle{}, \textquotesingle{}C\textquotesingle{}))
+\item 
+\#define \hyperlink{aiff_8c_a49a1208bc6f7b7c366fce4482a2632b7}{C\+O\+M\+M\+\_\+\+M\+A\+R\+K\+ER}~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}C\textquotesingle{}, \textquotesingle{}O\textquotesingle{}, \textquotesingle{}\hyperlink{rfft2d_test_m_l_8m_aad05f78187c942f9dd521605fa81f1ba}{M}\textquotesingle{}, \textquotesingle{}\hyperlink{rfft2d_test_m_l_8m_aad05f78187c942f9dd521605fa81f1ba}{M}\textquotesingle{}))
+\item 
+\#define \hyperlink{aiff_8c_a8fcd4365dadbfa253a0f71e5aea8c00a}{S\+S\+N\+D\+\_\+\+M\+A\+R\+K\+ER}~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}\hyperlink{xlftab_8c_af933676109efed7ab34cea71d748a517}{S}\textquotesingle{}, \textquotesingle{}\hyperlink{xlftab_8c_af933676109efed7ab34cea71d748a517}{S}\textquotesingle{}, \textquotesingle{}\hyperlink{rfft2d_test_m_l_8m_af6d1246b147a7c5763d9fc83082020ff}{N}\textquotesingle{}, \textquotesingle{}\hyperlink{trigger_8c_af316c33cc298530f245e8b55330e86b5}{D}\textquotesingle{}))
+\item 
+\#define \hyperlink{aiff_8c_a3e08582cb1c37dfb7786bb58d71f6fd5}{M\+A\+R\+K\+\_\+\+M\+A\+R\+K\+ER}~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}\hyperlink{rfft2d_test_m_l_8m_aad05f78187c942f9dd521605fa81f1ba}{M}\textquotesingle{}, \textquotesingle{}\hyperlink{libnyquist_2nyquist_2nyqsrc_2add_8c_a955f504eccf76b4eb2489c0adab03121}{A}\textquotesingle{}, \textquotesingle{}R\textquotesingle{}, \textquotesingle{}K\textquotesingle{}))
+\item 
+\#define \hyperlink{aiff_8c_ad753446ce67d803a5001e087e495ab66}{I\+N\+S\+T\+\_\+\+M\+A\+R\+K\+ER}~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}I\textquotesingle{}, \textquotesingle{}\hyperlink{rfft2d_test_m_l_8m_af6d1246b147a7c5763d9fc83082020ff}{N}\textquotesingle{}, \textquotesingle{}\hyperlink{xlftab_8c_af933676109efed7ab34cea71d748a517}{S}\textquotesingle{}, \textquotesingle{}\hyperlink{xmltchar_8h_a16a0f7e7053a679c9bf4289b441a2be7}{T}\textquotesingle{}))
+\item 
+\#define \hyperlink{aiff_8c_a32aa426b06a919983500e4eb3e623a91}{A\+P\+P\+L\+\_\+\+M\+A\+R\+K\+ER}~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}\hyperlink{libnyquist_2nyquist_2nyqsrc_2add_8c_a955f504eccf76b4eb2489c0adab03121}{A}\textquotesingle{}, \textquotesingle{}P\textquotesingle{}, \textquotesingle{}P\textquotesingle{}, \textquotesingle{}L\textquotesingle{}))
+\item 
+\#define \hyperlink{aiff_8c_a3288d49b03da9e694f0553c44544e67a}{C\+H\+A\+N\+\_\+\+M\+A\+R\+K\+ER}~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}C\textquotesingle{}, \textquotesingle{}H\textquotesingle{}, \textquotesingle{}\hyperlink{libnyquist_2nyquist_2nyqsrc_2add_8c_a955f504eccf76b4eb2489c0adab03121}{A}\textquotesingle{}, \textquotesingle{}\hyperlink{rfft2d_test_m_l_8m_af6d1246b147a7c5763d9fc83082020ff}{N}\textquotesingle{}))
+\item 
+\#define \hyperlink{aiff_8c_a97ea984f50caae92d65a5f953003e113}{c\+\_\+\+M\+A\+R\+K\+ER}~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}(\textquotesingle{}, \textquotesingle{}\hyperlink{rfft2d_test_m_l_8m_ae0323a9039add2978bf5b49550572c7c}{c}\textquotesingle{}, \textquotesingle{})\textquotesingle{}, \textquotesingle{} \textquotesingle{}))
+\item 
+\#define \hyperlink{aiff_8c_aa9042fb35d58bfabe74ed3fa7754b1c5}{N\+A\+M\+E\+\_\+\+M\+A\+R\+K\+ER}~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}\hyperlink{rfft2d_test_m_l_8m_af6d1246b147a7c5763d9fc83082020ff}{N}\textquotesingle{}, \textquotesingle{}\hyperlink{libnyquist_2nyquist_2nyqsrc_2add_8c_a955f504eccf76b4eb2489c0adab03121}{A}\textquotesingle{}, \textquotesingle{}\hyperlink{rfft2d_test_m_l_8m_aad05f78187c942f9dd521605fa81f1ba}{M}\textquotesingle{}, \textquotesingle{}\hyperlink{twolame_2libtwolame_2common_8h_a07484107e6d9fdf38b53edf631d6511d}{E}\textquotesingle{}))
+\item 
+\#define \hyperlink{aiff_8c_ae0dc7d21f83eb865ef2033573ec44696}{A\+U\+T\+H\+\_\+\+M\+A\+R\+K\+ER}~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}\hyperlink{libnyquist_2nyquist_2nyqsrc_2add_8c_a955f504eccf76b4eb2489c0adab03121}{A}\textquotesingle{}, \textquotesingle{}U\textquotesingle{}, \textquotesingle{}\hyperlink{xmltchar_8h_a16a0f7e7053a679c9bf4289b441a2be7}{T}\textquotesingle{}, \textquotesingle{}H\textquotesingle{}))
+\item 
+\#define \hyperlink{aiff_8c_af3721af413cf41ba1ff48f17aa0b76d1}{A\+N\+N\+O\+\_\+\+M\+A\+R\+K\+ER}~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}\hyperlink{libnyquist_2nyquist_2nyqsrc_2add_8c_a955f504eccf76b4eb2489c0adab03121}{A}\textquotesingle{}, \textquotesingle{}\hyperlink{rfft2d_test_m_l_8m_af6d1246b147a7c5763d9fc83082020ff}{N}\textquotesingle{}, \textquotesingle{}\hyperlink{rfft2d_test_m_l_8m_af6d1246b147a7c5763d9fc83082020ff}{N}\textquotesingle{}, \textquotesingle{}O\textquotesingle{}))
+\item 
+\#define \hyperlink{aiff_8c_ad2a7550e6a16b551def7f416911ade5d}{C\+O\+M\+T\+\_\+\+M\+A\+R\+K\+ER}~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}C\textquotesingle{}, \textquotesingle{}O\textquotesingle{}, \textquotesingle{}\hyperlink{rfft2d_test_m_l_8m_aad05f78187c942f9dd521605fa81f1ba}{M}\textquotesingle{}, \textquotesingle{}\hyperlink{xmltchar_8h_a16a0f7e7053a679c9bf4289b441a2be7}{T}\textquotesingle{}))
+\item 
+\#define \hyperlink{aiff_8c_aa69950aa1b238248dfa38a3cf37f9a17}{F\+V\+E\+R\+\_\+\+M\+A\+R\+K\+ER}~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}\hyperlink{xlftab_8c_a42257a545daf5b7933d6e8f96adc74f2}{F}\textquotesingle{}, \textquotesingle{}\hyperlink{hillclimb_8cpp_af40a326b23c68a27cebe60f16634a2cb}{V}\textquotesingle{}, \textquotesingle{}\hyperlink{twolame_2libtwolame_2common_8h_a07484107e6d9fdf38b53edf631d6511d}{E}\textquotesingle{}, \textquotesingle{}R\textquotesingle{}))
+\item 
+\#define \hyperlink{aiff_8c_a7e0a5b368400be717d1af0bfba07bc17}{S\+F\+X\+\_\+\+M\+A\+R\+K\+ER}~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}\hyperlink{xlftab_8c_af933676109efed7ab34cea71d748a517}{S}\textquotesingle{}, \textquotesingle{}\hyperlink{xlftab_8c_a42257a545daf5b7933d6e8f96adc74f2}{F}\textquotesingle{}, \textquotesingle{}X\textquotesingle{}, \textquotesingle{}!\textquotesingle{}))
+\item 
+\#define \hyperlink{aiff_8c_a51e17bd890e7ffd54c4924499b79a582}{P\+E\+A\+K\+\_\+\+M\+A\+R\+K\+ER}~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}P\textquotesingle{}, \textquotesingle{}\hyperlink{twolame_2libtwolame_2common_8h_a07484107e6d9fdf38b53edf631d6511d}{E}\textquotesingle{}, \textquotesingle{}\hyperlink{libnyquist_2nyquist_2nyqsrc_2add_8c_a955f504eccf76b4eb2489c0adab03121}{A}\textquotesingle{}, \textquotesingle{}K\textquotesingle{}))
+\item 
+\#define \hyperlink{aiff_8c_a2bd7c50d8287c41f284be86692b9a502}{basc\+\_\+\+M\+A\+R\+K\+ER}~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}\hyperlink{convtest_8m_a21ad0bd836b90d08f4cf640b4c298e7c}{b}\textquotesingle{}, \textquotesingle{}\hyperlink{rfft2d_test_m_l_8m_a4124bc0a9335c27f086f24ba207a4912}{a}\textquotesingle{}, \textquotesingle{}\hyperlink{lib_2expat_8h_a755339d27872b13735c2cab829e47157}{s}\textquotesingle{}, \textquotesingle{}\hyperlink{rfft2d_test_m_l_8m_ae0323a9039add2978bf5b49550572c7c}{c}\textquotesingle{}))
+\item 
+\#define \hyperlink{aiff_8c_a158138fc324a0973999ebc47fa790f42}{N\+O\+N\+E\+\_\+\+M\+A\+R\+K\+ER}~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}\hyperlink{rfft2d_test_m_l_8m_af6d1246b147a7c5763d9fc83082020ff}{N}\textquotesingle{}, \textquotesingle{}O\textquotesingle{}, \textquotesingle{}\hyperlink{rfft2d_test_m_l_8m_af6d1246b147a7c5763d9fc83082020ff}{N}\textquotesingle{}, \textquotesingle{}\hyperlink{twolame_2libtwolame_2common_8h_a07484107e6d9fdf38b53edf631d6511d}{E}\textquotesingle{}))
+\item 
+\#define \hyperlink{aiff_8c_a84f3ad1771bb9772a77c597085cf345e}{sowt\+\_\+\+M\+A\+R\+K\+ER}~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}\hyperlink{lib_2expat_8h_a755339d27872b13735c2cab829e47157}{s}\textquotesingle{}, \textquotesingle{}o\textquotesingle{}, \textquotesingle{}w\textquotesingle{}, \textquotesingle{}\hyperlink{octave__test_8m_aaccc9105df5383111407fd5b41255e23}{t}\textquotesingle{}))
+\item 
+\#define \hyperlink{aiff_8c_a583f0f1156a779468df672567df7f290}{twos\+\_\+\+M\+A\+R\+K\+ER}~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}\hyperlink{octave__test_8m_aaccc9105df5383111407fd5b41255e23}{t}\textquotesingle{}, \textquotesingle{}w\textquotesingle{}, \textquotesingle{}o\textquotesingle{}, \textquotesingle{}\hyperlink{lib_2expat_8h_a755339d27872b13735c2cab829e47157}{s}\textquotesingle{}))
+\item 
+\#define \hyperlink{aiff_8c_a8df215d5daf6f4beca91d5a38d06674a}{raw\+\_\+\+M\+A\+R\+K\+ER}~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}r\textquotesingle{}, \textquotesingle{}\hyperlink{rfft2d_test_m_l_8m_a4124bc0a9335c27f086f24ba207a4912}{a}\textquotesingle{}, \textquotesingle{}w\textquotesingle{}, \textquotesingle{} \textquotesingle{}))
+\item 
+\#define \hyperlink{aiff_8c_acc5887f09d31dd0603f84bca816e6283}{in24\+\_\+\+M\+A\+R\+K\+ER}~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}\hyperlink{checksum_8c_ab80e330a3bc9e38c1297fe17381e92b4}{i}\textquotesingle{}, \textquotesingle{}n\textquotesingle{}, \textquotesingle{}2\textquotesingle{}, \textquotesingle{}4\textquotesingle{}))
+\item 
+\#define \hyperlink{aiff_8c_ad5786fdfbc977366f6f1af312de82510}{ni24\+\_\+\+M\+A\+R\+K\+ER}~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}4\textquotesingle{}, \textquotesingle{}2\textquotesingle{}, \textquotesingle{}n\textquotesingle{}, \textquotesingle{}1\textquotesingle{}))
+\item 
+\#define \hyperlink{aiff_8c_a0a8adf30c58e712f7f174cdc9204c427}{in32\+\_\+\+M\+A\+R\+K\+ER}~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}\hyperlink{checksum_8c_ab80e330a3bc9e38c1297fe17381e92b4}{i}\textquotesingle{}, \textquotesingle{}n\textquotesingle{}, \textquotesingle{}3\textquotesingle{}, \textquotesingle{}2\textquotesingle{}))
+\item 
+\#define \hyperlink{aiff_8c_aab10055a7bfcb87c9127c11e522ddc9d}{ni32\+\_\+\+M\+A\+R\+K\+ER}~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}2\textquotesingle{}, \textquotesingle{}3\textquotesingle{}, \textquotesingle{}n\textquotesingle{}, \textquotesingle{}\hyperlink{checksum_8c_ab80e330a3bc9e38c1297fe17381e92b4}{i}\textquotesingle{}))
+\item 
+\#define \hyperlink{aiff_8c_a5be058cb7ff54c0745ea145f69c19d0a}{fl32\+\_\+\+M\+A\+R\+K\+ER}~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}\hyperlink{checksum_8c_ae747d72a1a803f5ff4a4b2602857d93b}{f}\textquotesingle{}, \textquotesingle{}\hyperlink{layer3_8c_a741dbb4d8e78c3cb69915db7282fcec0}{l}\textquotesingle{}, \textquotesingle{}3\textquotesingle{}, \textquotesingle{}2\textquotesingle{}))
+\item 
+\#define \hyperlink{aiff_8c_a1118c2bf2eaf7da03a09f02f7d3e14bd}{F\+L32\+\_\+\+M\+A\+R\+K\+ER}~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}\hyperlink{xlftab_8c_a42257a545daf5b7933d6e8f96adc74f2}{F}\textquotesingle{}, \textquotesingle{}L\textquotesingle{}, \textquotesingle{}3\textquotesingle{}, \textquotesingle{}2\textquotesingle{}))
+\item 
+\#define \hyperlink{aiff_8c_a9000dc143e059de5d8a88af25e7f6cb8}{fl64\+\_\+\+M\+A\+R\+K\+ER}~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}\hyperlink{checksum_8c_ae747d72a1a803f5ff4a4b2602857d93b}{f}\textquotesingle{}, \textquotesingle{}\hyperlink{layer3_8c_a741dbb4d8e78c3cb69915db7282fcec0}{l}\textquotesingle{}, \textquotesingle{}6\textquotesingle{}, \textquotesingle{}4\textquotesingle{}))
+\item 
+\#define \hyperlink{aiff_8c_ac5fec70744bf22edcf5adf8495ed2a13}{F\+L64\+\_\+\+M\+A\+R\+K\+ER}~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}\hyperlink{xlftab_8c_a42257a545daf5b7933d6e8f96adc74f2}{F}\textquotesingle{}, \textquotesingle{}L\textquotesingle{}, \textquotesingle{}6\textquotesingle{}, \textquotesingle{}4\textquotesingle{}))
+\item 
+\#define \hyperlink{aiff_8c_a66080967ca2ce443de61965f8d1399e3}{ulaw\+\_\+\+M\+A\+R\+K\+ER}~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}u\textquotesingle{}, \textquotesingle{}\hyperlink{layer3_8c_a741dbb4d8e78c3cb69915db7282fcec0}{l}\textquotesingle{}, \textquotesingle{}\hyperlink{rfft2d_test_m_l_8m_a4124bc0a9335c27f086f24ba207a4912}{a}\textquotesingle{}, \textquotesingle{}w\textquotesingle{}))
+\item 
+\#define \hyperlink{aiff_8c_ac6178b56dd2375b164de49b5bbbe313a}{U\+L\+A\+W\+\_\+\+M\+A\+R\+K\+ER}~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}U\textquotesingle{}, \textquotesingle{}L\textquotesingle{}, \textquotesingle{}\hyperlink{libnyquist_2nyquist_2nyqsrc_2add_8c_a955f504eccf76b4eb2489c0adab03121}{A}\textquotesingle{}, \textquotesingle{}W\textquotesingle{}))
+\item 
+\#define \hyperlink{aiff_8c_a49c55d5ea373504efcab950b0bc5dbe1}{alaw\+\_\+\+M\+A\+R\+K\+ER}~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}\hyperlink{rfft2d_test_m_l_8m_a4124bc0a9335c27f086f24ba207a4912}{a}\textquotesingle{}, \textquotesingle{}\hyperlink{layer3_8c_a741dbb4d8e78c3cb69915db7282fcec0}{l}\textquotesingle{}, \textquotesingle{}\hyperlink{rfft2d_test_m_l_8m_a4124bc0a9335c27f086f24ba207a4912}{a}\textquotesingle{}, \textquotesingle{}w\textquotesingle{}))
+\item 
+\#define \hyperlink{aiff_8c_a71c0be7363d6d2fed9082f477e399451}{A\+L\+A\+W\+\_\+\+M\+A\+R\+K\+ER}~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}\hyperlink{libnyquist_2nyquist_2nyqsrc_2add_8c_a955f504eccf76b4eb2489c0adab03121}{A}\textquotesingle{}, \textquotesingle{}L\textquotesingle{}, \textquotesingle{}\hyperlink{libnyquist_2nyquist_2nyqsrc_2add_8c_a955f504eccf76b4eb2489c0adab03121}{A}\textquotesingle{}, \textquotesingle{}W\textquotesingle{}))
+\item 
+\#define \hyperlink{aiff_8c_a174d229f7dac4b3e328bf38d77bc733d}{D\+W\+V\+W\+\_\+\+M\+A\+R\+K\+ER}~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}\hyperlink{trigger_8c_af316c33cc298530f245e8b55330e86b5}{D}\textquotesingle{}, \textquotesingle{}W\textquotesingle{}, \textquotesingle{}\hyperlink{hillclimb_8cpp_af40a326b23c68a27cebe60f16634a2cb}{V}\textquotesingle{}, \textquotesingle{}W\textquotesingle{}))
+\item 
+\#define \hyperlink{aiff_8c_a1bd583de5d02a84d35a177ff7266d30b}{G\+S\+M\+\_\+\+M\+A\+R\+K\+ER}~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}G\textquotesingle{}, \textquotesingle{}\hyperlink{xlftab_8c_af933676109efed7ab34cea71d748a517}{S}\textquotesingle{}, \textquotesingle{}\hyperlink{rfft2d_test_m_l_8m_aad05f78187c942f9dd521605fa81f1ba}{M}\textquotesingle{}, \textquotesingle{} \textquotesingle{}))
+\item 
+\#define \hyperlink{aiff_8c_a9c0cca8bb581541b4f96f57b741f31d6}{ima4\+\_\+\+M\+A\+R\+K\+ER}~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}\hyperlink{checksum_8c_ab80e330a3bc9e38c1297fe17381e92b4}{i}\textquotesingle{}, \textquotesingle{}\hyperlink{layer3_8c_a4b8bfe70f28d6faddcb10d6ecf8c1989}{m}\textquotesingle{}, \textquotesingle{}\hyperlink{rfft2d_test_m_l_8m_a4124bc0a9335c27f086f24ba207a4912}{a}\textquotesingle{}, \textquotesingle{}4\textquotesingle{}))
+\item 
+\#define \hyperlink{aiff_8c_a0cb1477083da8232d829b756b0a7fa83}{m3ga\+\_\+\+M\+A\+R\+K\+ER}~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}\hyperlink{layer3_8c_a4b8bfe70f28d6faddcb10d6ecf8c1989}{m}\textquotesingle{}, \textquotesingle{}3\textquotesingle{}, \textquotesingle{}g\textquotesingle{}, \textquotesingle{}\hyperlink{rfft2d_test_m_l_8m_a4124bc0a9335c27f086f24ba207a4912}{a}\textquotesingle{}))
+\item 
+\#define \hyperlink{aiff_8c_a034d7d18e5f2a7d1b8d1460de15c37ba}{M\+A\+C3\+\_\+\+M\+A\+R\+K\+ER}~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}\hyperlink{rfft2d_test_m_l_8m_aad05f78187c942f9dd521605fa81f1ba}{M}\textquotesingle{}, \textquotesingle{}\hyperlink{libnyquist_2nyquist_2nyqsrc_2add_8c_a955f504eccf76b4eb2489c0adab03121}{A}\textquotesingle{}, \textquotesingle{}C\textquotesingle{}, \textquotesingle{}3\textquotesingle{}))
+\item 
+\#define \hyperlink{aiff_8c_adb6e25cb30af505ccebaa5e1711907a6}{M\+A\+C6\+\_\+\+M\+A\+R\+K\+ER}~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}\hyperlink{rfft2d_test_m_l_8m_aad05f78187c942f9dd521605fa81f1ba}{M}\textquotesingle{}, \textquotesingle{}\hyperlink{libnyquist_2nyquist_2nyqsrc_2add_8c_a955f504eccf76b4eb2489c0adab03121}{A}\textquotesingle{}, \textquotesingle{}C\textquotesingle{}, \textquotesingle{}6\textquotesingle{}))
+\item 
+\#define \hyperlink{aiff_8c_a47800edfb8490c8193a35c58ad1ebd6a}{A\+D\+P4\+\_\+\+M\+A\+R\+K\+ER}~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}\hyperlink{libnyquist_2nyquist_2nyqsrc_2add_8c_a955f504eccf76b4eb2489c0adab03121}{A}\textquotesingle{}, \textquotesingle{}\hyperlink{trigger_8c_af316c33cc298530f245e8b55330e86b5}{D}\textquotesingle{}, \textquotesingle{}P\textquotesingle{}, \textquotesingle{}4\textquotesingle{}))
+\item 
+\#define \hyperlink{aiff_8c_a43c19662546c5f37b93d6631faecc868}{S\+I\+Z\+E\+O\+F\+\_\+\+A\+I\+F\+F\+\_\+\+C\+O\+MM}~18
+\item 
+\#define \hyperlink{aiff_8c_a972eccdaf502da194f26d7b3aa7f7184}{S\+I\+Z\+E\+O\+F\+\_\+\+A\+I\+F\+C\+\_\+\+C\+O\+M\+M\+\_\+\+M\+IN}~22
+\item 
+\#define \hyperlink{aiff_8c_ac813b7b5fa5d9c3c90e0237a6822d1fb}{S\+I\+Z\+E\+O\+F\+\_\+\+A\+I\+F\+C\+\_\+\+C\+O\+MM}~24
+\item 
+\#define \hyperlink{aiff_8c_abedcddd5d497ab76dae8890b3039cb0c}{S\+I\+Z\+E\+O\+F\+\_\+\+S\+S\+N\+D\+\_\+\+C\+H\+U\+NK}~8
+\item 
+\#define \hyperlink{aiff_8c_acf07fd5e8185c39fc3a01b67a3003a1a}{S\+I\+Z\+E\+O\+F\+\_\+\+I\+N\+S\+T\+\_\+\+C\+H\+U\+NK}~20
+\item 
+\#define \hyperlink{aiff_8c_a96a3b391ddfba430935059f1bf124c20}{A\+I\+F\+C\+\_\+\+I\+M\+A4\+\_\+\+B\+L\+O\+C\+K\+\_\+\+L\+EN}~34
+\item 
+\#define \hyperlink{aiff_8c_aa4079e0f4e1b0bf3942c84bd58c7c850}{A\+I\+F\+C\+\_\+\+I\+M\+A4\+\_\+\+S\+A\+M\+P\+L\+E\+S\+\_\+\+P\+E\+R\+\_\+\+B\+L\+O\+CK}~64
+\item 
+\#define \hyperlink{aiff_8c_a2ac770f452f388381ed1a88b764f425c}{A\+I\+F\+F\+\_\+\+P\+E\+A\+K\+\_\+\+C\+H\+U\+N\+K\+\_\+\+S\+I\+ZE}(ch)~(2 $\ast$ sizeof (\hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int}) + ch $\ast$ (sizeof (float) + sizeof (\hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int})))
+\end{DoxyCompactItemize}
+\subsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \{ \\*
+\hyperlink{aiff_8c_a26c0312ac66c00f31cf886616c48afa2aa72e223e5a14e289cbf07780026fee2e}{H\+A\+V\+E\+\_\+\+F\+O\+RM} = 0x01, 
+\hyperlink{aiff_8c_a26c0312ac66c00f31cf886616c48afa2ac68a63187736faec1258f724997c8d95}{H\+A\+V\+E\+\_\+\+A\+I\+FF} = 0x02, 
+\hyperlink{aiff_8c_a26c0312ac66c00f31cf886616c48afa2a29a84b4c1e09f6f7fd9157a18eb2bd5f}{H\+A\+V\+E\+\_\+\+A\+I\+FC} = 0x04, 
+\hyperlink{aiff_8c_a26c0312ac66c00f31cf886616c48afa2ad4f4e3b6aaae7c0d4d0968e2df2c07df}{H\+A\+V\+E\+\_\+\+F\+V\+ER} = 0x08, 
+\\*
+\hyperlink{aiff_8c_a26c0312ac66c00f31cf886616c48afa2a11b78bf793db7408bbc3a1cb9a051b78}{H\+A\+V\+E\+\_\+\+C\+O\+MM} = 0x10, 
+\hyperlink{aiff_8c_a26c0312ac66c00f31cf886616c48afa2aec47f6a568a1811505bb4438ef727bc1}{H\+A\+V\+E\+\_\+\+S\+S\+ND} = 0x20
+ \}
+\item 
+enum \{ \hyperlink{aiff_8c_aecd12a18eeb0ee701fc7b0efd5068266abed224e29657a4a8f15fab00c1145c41}{basc\+\_\+\+S\+C\+A\+L\+E\+\_\+\+M\+I\+N\+OR} = 1, 
+\hyperlink{aiff_8c_aecd12a18eeb0ee701fc7b0efd5068266a0a6a9855208f82118b0c6c15b42cb078}{basc\+\_\+\+S\+C\+A\+L\+E\+\_\+\+M\+A\+J\+OR}, 
+\hyperlink{aiff_8c_aecd12a18eeb0ee701fc7b0efd5068266aed6bebc4b507a3c6b49d6d3f0f7b1637}{basc\+\_\+\+S\+C\+A\+L\+E\+\_\+\+N\+E\+I\+T\+H\+ER}, 
+\hyperlink{aiff_8c_aecd12a18eeb0ee701fc7b0efd5068266a5a00e1ddc376330f8b5a3c9cce90ae43}{basc\+\_\+\+S\+C\+A\+L\+E\+\_\+\+B\+O\+TH}
+ \}
+\item 
+enum \{ \hyperlink{aiff_8c_a8420dba71b9cc240cf981b0bef892004a5501b54fb900c74c108a8ef5b02da348}{basc\+\_\+\+T\+Y\+P\+E\+\_\+\+L\+O\+OP} = 0, 
+\hyperlink{aiff_8c_a8420dba71b9cc240cf981b0bef892004accf7de61350955adc48346a8d545b203}{basc\+\_\+\+T\+Y\+P\+E\+\_\+\+O\+N\+E\+\_\+\+S\+H\+OT}
+ \}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{aiff_8c_aee1a26cc4312bd3d5ff214f233d8a0dc}{aiff\+\_\+open} (\hyperlink{libsndfile_2src_2common_8h_ab5debd339ecaf40f50a223e218900c24}{S\+F\+\_\+\+P\+R\+I\+V\+A\+TE} $\ast$psf)
+\end{DoxyCompactItemize}
+
+
+\subsection{Macro Definition Documentation}
+\index{aiff.\+c@{aiff.\+c}!A\+D\+P4\+\_\+\+M\+A\+R\+K\+ER@{A\+D\+P4\+\_\+\+M\+A\+R\+K\+ER}}
+\index{A\+D\+P4\+\_\+\+M\+A\+R\+K\+ER@{A\+D\+P4\+\_\+\+M\+A\+R\+K\+ER}!aiff.\+c@{aiff.\+c}}
+\subsubsection[{\texorpdfstring{A\+D\+P4\+\_\+\+M\+A\+R\+K\+ER}{ADP4_MARKER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define A\+D\+P4\+\_\+\+M\+A\+R\+K\+ER~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}{\bf A}\textquotesingle{}, \textquotesingle{}{\bf D}\textquotesingle{}, \textquotesingle{}P\textquotesingle{}, \textquotesingle{}4\textquotesingle{}))}\hypertarget{aiff_8c_a47800edfb8490c8193a35c58ad1ebd6a}{}\label{aiff_8c_a47800edfb8490c8193a35c58ad1ebd6a}
+
+
+Definition at line 95 of file aiff.\+c.
+
+\index{aiff.\+c@{aiff.\+c}!A\+I\+F\+C\+\_\+\+I\+M\+A4\+\_\+\+B\+L\+O\+C\+K\+\_\+\+L\+EN@{A\+I\+F\+C\+\_\+\+I\+M\+A4\+\_\+\+B\+L\+O\+C\+K\+\_\+\+L\+EN}}
+\index{A\+I\+F\+C\+\_\+\+I\+M\+A4\+\_\+\+B\+L\+O\+C\+K\+\_\+\+L\+EN@{A\+I\+F\+C\+\_\+\+I\+M\+A4\+\_\+\+B\+L\+O\+C\+K\+\_\+\+L\+EN}!aiff.\+c@{aiff.\+c}}
+\subsubsection[{\texorpdfstring{A\+I\+F\+C\+\_\+\+I\+M\+A4\+\_\+\+B\+L\+O\+C\+K\+\_\+\+L\+EN}{AIFC_IMA4_BLOCK_LEN}}]{\setlength{\rightskip}{0pt plus 5cm}\#define A\+I\+F\+C\+\_\+\+I\+M\+A4\+\_\+\+B\+L\+O\+C\+K\+\_\+\+L\+EN~34}\hypertarget{aiff_8c_a96a3b391ddfba430935059f1bf124c20}{}\label{aiff_8c_a96a3b391ddfba430935059f1bf124c20}
+
+
+Definition at line 107 of file aiff.\+c.
+
+\index{aiff.\+c@{aiff.\+c}!A\+I\+F\+C\+\_\+\+I\+M\+A4\+\_\+\+S\+A\+M\+P\+L\+E\+S\+\_\+\+P\+E\+R\+\_\+\+B\+L\+O\+CK@{A\+I\+F\+C\+\_\+\+I\+M\+A4\+\_\+\+S\+A\+M\+P\+L\+E\+S\+\_\+\+P\+E\+R\+\_\+\+B\+L\+O\+CK}}
+\index{A\+I\+F\+C\+\_\+\+I\+M\+A4\+\_\+\+S\+A\+M\+P\+L\+E\+S\+\_\+\+P\+E\+R\+\_\+\+B\+L\+O\+CK@{A\+I\+F\+C\+\_\+\+I\+M\+A4\+\_\+\+S\+A\+M\+P\+L\+E\+S\+\_\+\+P\+E\+R\+\_\+\+B\+L\+O\+CK}!aiff.\+c@{aiff.\+c}}
+\subsubsection[{\texorpdfstring{A\+I\+F\+C\+\_\+\+I\+M\+A4\+\_\+\+S\+A\+M\+P\+L\+E\+S\+\_\+\+P\+E\+R\+\_\+\+B\+L\+O\+CK}{AIFC_IMA4_SAMPLES_PER_BLOCK}}]{\setlength{\rightskip}{0pt plus 5cm}\#define A\+I\+F\+C\+\_\+\+I\+M\+A4\+\_\+\+S\+A\+M\+P\+L\+E\+S\+\_\+\+P\+E\+R\+\_\+\+B\+L\+O\+CK~64}\hypertarget{aiff_8c_aa4079e0f4e1b0bf3942c84bd58c7c850}{}\label{aiff_8c_aa4079e0f4e1b0bf3942c84bd58c7c850}
+
+
+Definition at line 108 of file aiff.\+c.
+
+\index{aiff.\+c@{aiff.\+c}!A\+I\+F\+C\+\_\+\+M\+A\+R\+K\+ER@{A\+I\+F\+C\+\_\+\+M\+A\+R\+K\+ER}}
+\index{A\+I\+F\+C\+\_\+\+M\+A\+R\+K\+ER@{A\+I\+F\+C\+\_\+\+M\+A\+R\+K\+ER}!aiff.\+c@{aiff.\+c}}
+\subsubsection[{\texorpdfstring{A\+I\+F\+C\+\_\+\+M\+A\+R\+K\+ER}{AIFC_MARKER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define A\+I\+F\+C\+\_\+\+M\+A\+R\+K\+ER~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}{\bf A}\textquotesingle{}, \textquotesingle{}I\textquotesingle{}, \textquotesingle{}{\bf F}\textquotesingle{}, \textquotesingle{}C\textquotesingle{}))}\hypertarget{aiff_8c_a1356542807c01e5a19bd5480ffcd3fb6}{}\label{aiff_8c_a1356542807c01e5a19bd5480ffcd3fb6}
+
+
+Definition at line 40 of file aiff.\+c.
+
+\index{aiff.\+c@{aiff.\+c}!A\+I\+F\+F\+\_\+\+M\+A\+R\+K\+ER@{A\+I\+F\+F\+\_\+\+M\+A\+R\+K\+ER}}
+\index{A\+I\+F\+F\+\_\+\+M\+A\+R\+K\+ER@{A\+I\+F\+F\+\_\+\+M\+A\+R\+K\+ER}!aiff.\+c@{aiff.\+c}}
+\subsubsection[{\texorpdfstring{A\+I\+F\+F\+\_\+\+M\+A\+R\+K\+ER}{AIFF_MARKER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define A\+I\+F\+F\+\_\+\+M\+A\+R\+K\+ER~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}{\bf A}\textquotesingle{}, \textquotesingle{}I\textquotesingle{}, \textquotesingle{}{\bf F}\textquotesingle{}, \textquotesingle{}{\bf F}\textquotesingle{}))}\hypertarget{aiff_8c_a9c13c0cfdc085b8a72c0955b4c178626}{}\label{aiff_8c_a9c13c0cfdc085b8a72c0955b4c178626}
+
+
+Definition at line 39 of file aiff.\+c.
+
+\index{aiff.\+c@{aiff.\+c}!A\+I\+F\+F\+\_\+\+P\+E\+A\+K\+\_\+\+C\+H\+U\+N\+K\+\_\+\+S\+I\+ZE@{A\+I\+F\+F\+\_\+\+P\+E\+A\+K\+\_\+\+C\+H\+U\+N\+K\+\_\+\+S\+I\+ZE}}
+\index{A\+I\+F\+F\+\_\+\+P\+E\+A\+K\+\_\+\+C\+H\+U\+N\+K\+\_\+\+S\+I\+ZE@{A\+I\+F\+F\+\_\+\+P\+E\+A\+K\+\_\+\+C\+H\+U\+N\+K\+\_\+\+S\+I\+ZE}!aiff.\+c@{aiff.\+c}}
+\subsubsection[{\texorpdfstring{A\+I\+F\+F\+\_\+\+P\+E\+A\+K\+\_\+\+C\+H\+U\+N\+K\+\_\+\+S\+I\+ZE}{AIFF_PEAK_CHUNK_SIZE}}]{\setlength{\rightskip}{0pt plus 5cm}\#define A\+I\+F\+F\+\_\+\+P\+E\+A\+K\+\_\+\+C\+H\+U\+N\+K\+\_\+\+S\+I\+ZE(
+\begin{DoxyParamCaption}
+\item[{}]{ch}
+\end{DoxyParamCaption}
+)~(2 $\ast$ sizeof ({\bf int}) + ch $\ast$ (sizeof (float) + sizeof ({\bf int})))}\hypertarget{aiff_8c_a2ac770f452f388381ed1a88b764f425c}{}\label{aiff_8c_a2ac770f452f388381ed1a88b764f425c}
+
+
+Definition at line 110 of file aiff.\+c.
+
+\index{aiff.\+c@{aiff.\+c}!alaw\+\_\+\+M\+A\+R\+K\+ER@{alaw\+\_\+\+M\+A\+R\+K\+ER}}
+\index{alaw\+\_\+\+M\+A\+R\+K\+ER@{alaw\+\_\+\+M\+A\+R\+K\+ER}!aiff.\+c@{aiff.\+c}}
+\subsubsection[{\texorpdfstring{alaw\+\_\+\+M\+A\+R\+K\+ER}{alaw_MARKER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define alaw\+\_\+\+M\+A\+R\+K\+ER~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}{\bf a}\textquotesingle{}, \textquotesingle{}{\bf l}\textquotesingle{}, \textquotesingle{}{\bf a}\textquotesingle{}, \textquotesingle{}w\textquotesingle{}))}\hypertarget{aiff_8c_a49c55d5ea373504efcab950b0bc5dbe1}{}\label{aiff_8c_a49c55d5ea373504efcab950b0bc5dbe1}
+
+
+Definition at line 76 of file aiff.\+c.
+
+\index{aiff.\+c@{aiff.\+c}!A\+L\+A\+W\+\_\+\+M\+A\+R\+K\+ER@{A\+L\+A\+W\+\_\+\+M\+A\+R\+K\+ER}}
+\index{A\+L\+A\+W\+\_\+\+M\+A\+R\+K\+ER@{A\+L\+A\+W\+\_\+\+M\+A\+R\+K\+ER}!aiff.\+c@{aiff.\+c}}
+\subsubsection[{\texorpdfstring{A\+L\+A\+W\+\_\+\+M\+A\+R\+K\+ER}{ALAW_MARKER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define A\+L\+A\+W\+\_\+\+M\+A\+R\+K\+ER~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}{\bf A}\textquotesingle{}, \textquotesingle{}L\textquotesingle{}, \textquotesingle{}{\bf A}\textquotesingle{}, \textquotesingle{}W\textquotesingle{}))}\hypertarget{aiff_8c_a71c0be7363d6d2fed9082f477e399451}{}\label{aiff_8c_a71c0be7363d6d2fed9082f477e399451}
+
+
+Definition at line 77 of file aiff.\+c.
+
+\index{aiff.\+c@{aiff.\+c}!A\+N\+N\+O\+\_\+\+M\+A\+R\+K\+ER@{A\+N\+N\+O\+\_\+\+M\+A\+R\+K\+ER}}
+\index{A\+N\+N\+O\+\_\+\+M\+A\+R\+K\+ER@{A\+N\+N\+O\+\_\+\+M\+A\+R\+K\+ER}!aiff.\+c@{aiff.\+c}}
+\subsubsection[{\texorpdfstring{A\+N\+N\+O\+\_\+\+M\+A\+R\+K\+ER}{ANNO_MARKER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define A\+N\+N\+O\+\_\+\+M\+A\+R\+K\+ER~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}{\bf A}\textquotesingle{}, \textquotesingle{}{\bf N}\textquotesingle{}, \textquotesingle{}{\bf N}\textquotesingle{}, \textquotesingle{}O\textquotesingle{}))}\hypertarget{aiff_8c_af3721af413cf41ba1ff48f17aa0b76d1}{}\label{aiff_8c_af3721af413cf41ba1ff48f17aa0b76d1}
+
+
+Definition at line 51 of file aiff.\+c.
+
+\index{aiff.\+c@{aiff.\+c}!A\+P\+P\+L\+\_\+\+M\+A\+R\+K\+ER@{A\+P\+P\+L\+\_\+\+M\+A\+R\+K\+ER}}
+\index{A\+P\+P\+L\+\_\+\+M\+A\+R\+K\+ER@{A\+P\+P\+L\+\_\+\+M\+A\+R\+K\+ER}!aiff.\+c@{aiff.\+c}}
+\subsubsection[{\texorpdfstring{A\+P\+P\+L\+\_\+\+M\+A\+R\+K\+ER}{APPL_MARKER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define A\+P\+P\+L\+\_\+\+M\+A\+R\+K\+ER~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}{\bf A}\textquotesingle{}, \textquotesingle{}P\textquotesingle{}, \textquotesingle{}P\textquotesingle{}, \textquotesingle{}L\textquotesingle{}))}\hypertarget{aiff_8c_a32aa426b06a919983500e4eb3e623a91}{}\label{aiff_8c_a32aa426b06a919983500e4eb3e623a91}
+
+
+Definition at line 45 of file aiff.\+c.
+
+\index{aiff.\+c@{aiff.\+c}!A\+U\+T\+H\+\_\+\+M\+A\+R\+K\+ER@{A\+U\+T\+H\+\_\+\+M\+A\+R\+K\+ER}}
+\index{A\+U\+T\+H\+\_\+\+M\+A\+R\+K\+ER@{A\+U\+T\+H\+\_\+\+M\+A\+R\+K\+ER}!aiff.\+c@{aiff.\+c}}
+\subsubsection[{\texorpdfstring{A\+U\+T\+H\+\_\+\+M\+A\+R\+K\+ER}{AUTH_MARKER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define A\+U\+T\+H\+\_\+\+M\+A\+R\+K\+ER~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}{\bf A}\textquotesingle{}, \textquotesingle{}U\textquotesingle{}, \textquotesingle{}{\bf T}\textquotesingle{}, \textquotesingle{}H\textquotesingle{}))}\hypertarget{aiff_8c_ae0dc7d21f83eb865ef2033573ec44696}{}\label{aiff_8c_ae0dc7d21f83eb865ef2033573ec44696}
+
+
+Definition at line 50 of file aiff.\+c.
+
+\index{aiff.\+c@{aiff.\+c}!basc\+\_\+\+M\+A\+R\+K\+ER@{basc\+\_\+\+M\+A\+R\+K\+ER}}
+\index{basc\+\_\+\+M\+A\+R\+K\+ER@{basc\+\_\+\+M\+A\+R\+K\+ER}!aiff.\+c@{aiff.\+c}}
+\subsubsection[{\texorpdfstring{basc\+\_\+\+M\+A\+R\+K\+ER}{basc_MARKER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define basc\+\_\+\+M\+A\+R\+K\+ER~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}{\bf b}\textquotesingle{}, \textquotesingle{}{\bf a}\textquotesingle{}, \textquotesingle{}{\bf s}\textquotesingle{}, \textquotesingle{}{\bf c}\textquotesingle{}))}\hypertarget{aiff_8c_a2bd7c50d8287c41f284be86692b9a502}{}\label{aiff_8c_a2bd7c50d8287c41f284be86692b9a502}
+
+
+Definition at line 57 of file aiff.\+c.
+
+\index{aiff.\+c@{aiff.\+c}!c\+\_\+\+M\+A\+R\+K\+ER@{c\+\_\+\+M\+A\+R\+K\+ER}}
+\index{c\+\_\+\+M\+A\+R\+K\+ER@{c\+\_\+\+M\+A\+R\+K\+ER}!aiff.\+c@{aiff.\+c}}
+\subsubsection[{\texorpdfstring{c\+\_\+\+M\+A\+R\+K\+ER}{c_MARKER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define c\+\_\+\+M\+A\+R\+K\+ER~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}(\textquotesingle{}, \textquotesingle{}{\bf c}\textquotesingle{}, \textquotesingle{})\textquotesingle{}, \textquotesingle{} \textquotesingle{}))}\hypertarget{aiff_8c_a97ea984f50caae92d65a5f953003e113}{}\label{aiff_8c_a97ea984f50caae92d65a5f953003e113}
+
+
+Definition at line 48 of file aiff.\+c.
+
+\index{aiff.\+c@{aiff.\+c}!C\+H\+A\+N\+\_\+\+M\+A\+R\+K\+ER@{C\+H\+A\+N\+\_\+\+M\+A\+R\+K\+ER}}
+\index{C\+H\+A\+N\+\_\+\+M\+A\+R\+K\+ER@{C\+H\+A\+N\+\_\+\+M\+A\+R\+K\+ER}!aiff.\+c@{aiff.\+c}}
+\subsubsection[{\texorpdfstring{C\+H\+A\+N\+\_\+\+M\+A\+R\+K\+ER}{CHAN_MARKER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define C\+H\+A\+N\+\_\+\+M\+A\+R\+K\+ER~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}C\textquotesingle{}, \textquotesingle{}H\textquotesingle{}, \textquotesingle{}{\bf A}\textquotesingle{}, \textquotesingle{}{\bf N}\textquotesingle{}))}\hypertarget{aiff_8c_a3288d49b03da9e694f0553c44544e67a}{}\label{aiff_8c_a3288d49b03da9e694f0553c44544e67a}
+
+
+Definition at line 46 of file aiff.\+c.
+
+\index{aiff.\+c@{aiff.\+c}!C\+O\+M\+M\+\_\+\+M\+A\+R\+K\+ER@{C\+O\+M\+M\+\_\+\+M\+A\+R\+K\+ER}}
+\index{C\+O\+M\+M\+\_\+\+M\+A\+R\+K\+ER@{C\+O\+M\+M\+\_\+\+M\+A\+R\+K\+ER}!aiff.\+c@{aiff.\+c}}
+\subsubsection[{\texorpdfstring{C\+O\+M\+M\+\_\+\+M\+A\+R\+K\+ER}{COMM_MARKER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define C\+O\+M\+M\+\_\+\+M\+A\+R\+K\+ER~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}C\textquotesingle{}, \textquotesingle{}O\textquotesingle{}, \textquotesingle{}{\bf M}\textquotesingle{}, \textquotesingle{}{\bf M}\textquotesingle{}))}\hypertarget{aiff_8c_a49a1208bc6f7b7c366fce4482a2632b7}{}\label{aiff_8c_a49a1208bc6f7b7c366fce4482a2632b7}
+
+
+Definition at line 41 of file aiff.\+c.
+
+\index{aiff.\+c@{aiff.\+c}!C\+O\+M\+T\+\_\+\+M\+A\+R\+K\+ER@{C\+O\+M\+T\+\_\+\+M\+A\+R\+K\+ER}}
+\index{C\+O\+M\+T\+\_\+\+M\+A\+R\+K\+ER@{C\+O\+M\+T\+\_\+\+M\+A\+R\+K\+ER}!aiff.\+c@{aiff.\+c}}
+\subsubsection[{\texorpdfstring{C\+O\+M\+T\+\_\+\+M\+A\+R\+K\+ER}{COMT_MARKER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define C\+O\+M\+T\+\_\+\+M\+A\+R\+K\+ER~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}C\textquotesingle{}, \textquotesingle{}O\textquotesingle{}, \textquotesingle{}{\bf M}\textquotesingle{}, \textquotesingle{}{\bf T}\textquotesingle{}))}\hypertarget{aiff_8c_ad2a7550e6a16b551def7f416911ade5d}{}\label{aiff_8c_ad2a7550e6a16b551def7f416911ade5d}
+
+
+Definition at line 52 of file aiff.\+c.
+
+\index{aiff.\+c@{aiff.\+c}!D\+W\+V\+W\+\_\+\+M\+A\+R\+K\+ER@{D\+W\+V\+W\+\_\+\+M\+A\+R\+K\+ER}}
+\index{D\+W\+V\+W\+\_\+\+M\+A\+R\+K\+ER@{D\+W\+V\+W\+\_\+\+M\+A\+R\+K\+ER}!aiff.\+c@{aiff.\+c}}
+\subsubsection[{\texorpdfstring{D\+W\+V\+W\+\_\+\+M\+A\+R\+K\+ER}{DWVW_MARKER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define D\+W\+V\+W\+\_\+\+M\+A\+R\+K\+ER~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}{\bf D}\textquotesingle{}, \textquotesingle{}W\textquotesingle{}, \textquotesingle{}{\bf V}\textquotesingle{}, \textquotesingle{}W\textquotesingle{}))}\hypertarget{aiff_8c_a174d229f7dac4b3e328bf38d77bc733d}{}\label{aiff_8c_a174d229f7dac4b3e328bf38d77bc733d}
+
+
+Definition at line 79 of file aiff.\+c.
+
+\index{aiff.\+c@{aiff.\+c}!fl32\+\_\+\+M\+A\+R\+K\+ER@{fl32\+\_\+\+M\+A\+R\+K\+ER}}
+\index{fl32\+\_\+\+M\+A\+R\+K\+ER@{fl32\+\_\+\+M\+A\+R\+K\+ER}!aiff.\+c@{aiff.\+c}}
+\subsubsection[{\texorpdfstring{fl32\+\_\+\+M\+A\+R\+K\+ER}{fl32_MARKER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define fl32\+\_\+\+M\+A\+R\+K\+ER~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}{\bf f}\textquotesingle{}, \textquotesingle{}{\bf l}\textquotesingle{}, \textquotesingle{}3\textquotesingle{}, \textquotesingle{}2\textquotesingle{}))}\hypertarget{aiff_8c_a5be058cb7ff54c0745ea145f69c19d0a}{}\label{aiff_8c_a5be058cb7ff54c0745ea145f69c19d0a}
+
+
+Definition at line 69 of file aiff.\+c.
+
+\index{aiff.\+c@{aiff.\+c}!F\+L32\+\_\+\+M\+A\+R\+K\+ER@{F\+L32\+\_\+\+M\+A\+R\+K\+ER}}
+\index{F\+L32\+\_\+\+M\+A\+R\+K\+ER@{F\+L32\+\_\+\+M\+A\+R\+K\+ER}!aiff.\+c@{aiff.\+c}}
+\subsubsection[{\texorpdfstring{F\+L32\+\_\+\+M\+A\+R\+K\+ER}{FL32_MARKER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define F\+L32\+\_\+\+M\+A\+R\+K\+ER~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}{\bf F}\textquotesingle{}, \textquotesingle{}L\textquotesingle{}, \textquotesingle{}3\textquotesingle{}, \textquotesingle{}2\textquotesingle{}))}\hypertarget{aiff_8c_a1118c2bf2eaf7da03a09f02f7d3e14bd}{}\label{aiff_8c_a1118c2bf2eaf7da03a09f02f7d3e14bd}
+
+
+Definition at line 70 of file aiff.\+c.
+
+\index{aiff.\+c@{aiff.\+c}!fl64\+\_\+\+M\+A\+R\+K\+ER@{fl64\+\_\+\+M\+A\+R\+K\+ER}}
+\index{fl64\+\_\+\+M\+A\+R\+K\+ER@{fl64\+\_\+\+M\+A\+R\+K\+ER}!aiff.\+c@{aiff.\+c}}
+\subsubsection[{\texorpdfstring{fl64\+\_\+\+M\+A\+R\+K\+ER}{fl64_MARKER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define fl64\+\_\+\+M\+A\+R\+K\+ER~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}{\bf f}\textquotesingle{}, \textquotesingle{}{\bf l}\textquotesingle{}, \textquotesingle{}6\textquotesingle{}, \textquotesingle{}4\textquotesingle{}))}\hypertarget{aiff_8c_a9000dc143e059de5d8a88af25e7f6cb8}{}\label{aiff_8c_a9000dc143e059de5d8a88af25e7f6cb8}
+
+
+Definition at line 71 of file aiff.\+c.
+
+\index{aiff.\+c@{aiff.\+c}!F\+L64\+\_\+\+M\+A\+R\+K\+ER@{F\+L64\+\_\+\+M\+A\+R\+K\+ER}}
+\index{F\+L64\+\_\+\+M\+A\+R\+K\+ER@{F\+L64\+\_\+\+M\+A\+R\+K\+ER}!aiff.\+c@{aiff.\+c}}
+\subsubsection[{\texorpdfstring{F\+L64\+\_\+\+M\+A\+R\+K\+ER}{FL64_MARKER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define F\+L64\+\_\+\+M\+A\+R\+K\+ER~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}{\bf F}\textquotesingle{}, \textquotesingle{}L\textquotesingle{}, \textquotesingle{}6\textquotesingle{}, \textquotesingle{}4\textquotesingle{}))}\hypertarget{aiff_8c_ac5fec70744bf22edcf5adf8495ed2a13}{}\label{aiff_8c_ac5fec70744bf22edcf5adf8495ed2a13}
+
+
+Definition at line 72 of file aiff.\+c.
+
+\index{aiff.\+c@{aiff.\+c}!F\+O\+R\+M\+\_\+\+M\+A\+R\+K\+ER@{F\+O\+R\+M\+\_\+\+M\+A\+R\+K\+ER}}
+\index{F\+O\+R\+M\+\_\+\+M\+A\+R\+K\+ER@{F\+O\+R\+M\+\_\+\+M\+A\+R\+K\+ER}!aiff.\+c@{aiff.\+c}}
+\subsubsection[{\texorpdfstring{F\+O\+R\+M\+\_\+\+M\+A\+R\+K\+ER}{FORM_MARKER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define F\+O\+R\+M\+\_\+\+M\+A\+R\+K\+ER~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}{\bf F}\textquotesingle{}, \textquotesingle{}O\textquotesingle{}, \textquotesingle{}R\textquotesingle{}, \textquotesingle{}{\bf M}\textquotesingle{}))}\hypertarget{aiff_8c_a97715acefbf28ec5c959a621280b7171}{}\label{aiff_8c_a97715acefbf28ec5c959a621280b7171}
+
+
+Definition at line 38 of file aiff.\+c.
+
+\index{aiff.\+c@{aiff.\+c}!F\+V\+E\+R\+\_\+\+M\+A\+R\+K\+ER@{F\+V\+E\+R\+\_\+\+M\+A\+R\+K\+ER}}
+\index{F\+V\+E\+R\+\_\+\+M\+A\+R\+K\+ER@{F\+V\+E\+R\+\_\+\+M\+A\+R\+K\+ER}!aiff.\+c@{aiff.\+c}}
+\subsubsection[{\texorpdfstring{F\+V\+E\+R\+\_\+\+M\+A\+R\+K\+ER}{FVER_MARKER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define F\+V\+E\+R\+\_\+\+M\+A\+R\+K\+ER~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}{\bf F}\textquotesingle{}, \textquotesingle{}{\bf V}\textquotesingle{}, \textquotesingle{}{\bf E}\textquotesingle{}, \textquotesingle{}R\textquotesingle{}))}\hypertarget{aiff_8c_aa69950aa1b238248dfa38a3cf37f9a17}{}\label{aiff_8c_aa69950aa1b238248dfa38a3cf37f9a17}
+
+
+Definition at line 53 of file aiff.\+c.
+
+\index{aiff.\+c@{aiff.\+c}!G\+S\+M\+\_\+\+M\+A\+R\+K\+ER@{G\+S\+M\+\_\+\+M\+A\+R\+K\+ER}}
+\index{G\+S\+M\+\_\+\+M\+A\+R\+K\+ER@{G\+S\+M\+\_\+\+M\+A\+R\+K\+ER}!aiff.\+c@{aiff.\+c}}
+\subsubsection[{\texorpdfstring{G\+S\+M\+\_\+\+M\+A\+R\+K\+ER}{GSM_MARKER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define G\+S\+M\+\_\+\+M\+A\+R\+K\+ER~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}G\textquotesingle{}, \textquotesingle{}{\bf S}\textquotesingle{}, \textquotesingle{}{\bf M}\textquotesingle{}, \textquotesingle{} \textquotesingle{}))}\hypertarget{aiff_8c_a1bd583de5d02a84d35a177ff7266d30b}{}\label{aiff_8c_a1bd583de5d02a84d35a177ff7266d30b}
+
+
+Definition at line 80 of file aiff.\+c.
+
+\index{aiff.\+c@{aiff.\+c}!ima4\+\_\+\+M\+A\+R\+K\+ER@{ima4\+\_\+\+M\+A\+R\+K\+ER}}
+\index{ima4\+\_\+\+M\+A\+R\+K\+ER@{ima4\+\_\+\+M\+A\+R\+K\+ER}!aiff.\+c@{aiff.\+c}}
+\subsubsection[{\texorpdfstring{ima4\+\_\+\+M\+A\+R\+K\+ER}{ima4_MARKER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define ima4\+\_\+\+M\+A\+R\+K\+ER~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}{\bf i}\textquotesingle{}, \textquotesingle{}{\bf m}\textquotesingle{}, \textquotesingle{}{\bf a}\textquotesingle{}, \textquotesingle{}4\textquotesingle{}))}\hypertarget{aiff_8c_a9c0cca8bb581541b4f96f57b741f31d6}{}\label{aiff_8c_a9c0cca8bb581541b4f96f57b741f31d6}
+
+
+Definition at line 81 of file aiff.\+c.
+
+\index{aiff.\+c@{aiff.\+c}!in24\+\_\+\+M\+A\+R\+K\+ER@{in24\+\_\+\+M\+A\+R\+K\+ER}}
+\index{in24\+\_\+\+M\+A\+R\+K\+ER@{in24\+\_\+\+M\+A\+R\+K\+ER}!aiff.\+c@{aiff.\+c}}
+\subsubsection[{\texorpdfstring{in24\+\_\+\+M\+A\+R\+K\+ER}{in24_MARKER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define in24\+\_\+\+M\+A\+R\+K\+ER~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}{\bf i}\textquotesingle{}, \textquotesingle{}n\textquotesingle{}, \textquotesingle{}2\textquotesingle{}, \textquotesingle{}4\textquotesingle{}))}\hypertarget{aiff_8c_acc5887f09d31dd0603f84bca816e6283}{}\label{aiff_8c_acc5887f09d31dd0603f84bca816e6283}
+
+
+Definition at line 64 of file aiff.\+c.
+
+\index{aiff.\+c@{aiff.\+c}!in32\+\_\+\+M\+A\+R\+K\+ER@{in32\+\_\+\+M\+A\+R\+K\+ER}}
+\index{in32\+\_\+\+M\+A\+R\+K\+ER@{in32\+\_\+\+M\+A\+R\+K\+ER}!aiff.\+c@{aiff.\+c}}
+\subsubsection[{\texorpdfstring{in32\+\_\+\+M\+A\+R\+K\+ER}{in32_MARKER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define in32\+\_\+\+M\+A\+R\+K\+ER~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}{\bf i}\textquotesingle{}, \textquotesingle{}n\textquotesingle{}, \textquotesingle{}3\textquotesingle{}, \textquotesingle{}2\textquotesingle{}))}\hypertarget{aiff_8c_a0a8adf30c58e712f7f174cdc9204c427}{}\label{aiff_8c_a0a8adf30c58e712f7f174cdc9204c427}
+
+
+Definition at line 66 of file aiff.\+c.
+
+\index{aiff.\+c@{aiff.\+c}!I\+N\+S\+T\+\_\+\+M\+A\+R\+K\+ER@{I\+N\+S\+T\+\_\+\+M\+A\+R\+K\+ER}}
+\index{I\+N\+S\+T\+\_\+\+M\+A\+R\+K\+ER@{I\+N\+S\+T\+\_\+\+M\+A\+R\+K\+ER}!aiff.\+c@{aiff.\+c}}
+\subsubsection[{\texorpdfstring{I\+N\+S\+T\+\_\+\+M\+A\+R\+K\+ER}{INST_MARKER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define I\+N\+S\+T\+\_\+\+M\+A\+R\+K\+ER~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}I\textquotesingle{}, \textquotesingle{}{\bf N}\textquotesingle{}, \textquotesingle{}{\bf S}\textquotesingle{}, \textquotesingle{}{\bf T}\textquotesingle{}))}\hypertarget{aiff_8c_ad753446ce67d803a5001e087e495ab66}{}\label{aiff_8c_ad753446ce67d803a5001e087e495ab66}
+
+
+Definition at line 44 of file aiff.\+c.
+
+\index{aiff.\+c@{aiff.\+c}!m3ga\+\_\+\+M\+A\+R\+K\+ER@{m3ga\+\_\+\+M\+A\+R\+K\+ER}}
+\index{m3ga\+\_\+\+M\+A\+R\+K\+ER@{m3ga\+\_\+\+M\+A\+R\+K\+ER}!aiff.\+c@{aiff.\+c}}
+\subsubsection[{\texorpdfstring{m3ga\+\_\+\+M\+A\+R\+K\+ER}{m3ga_MARKER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define m3ga\+\_\+\+M\+A\+R\+K\+ER~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}{\bf m}\textquotesingle{}, \textquotesingle{}3\textquotesingle{}, \textquotesingle{}g\textquotesingle{}, \textquotesingle{}{\bf a}\textquotesingle{}))}\hypertarget{aiff_8c_a0cb1477083da8232d829b756b0a7fa83}{}\label{aiff_8c_a0cb1477083da8232d829b756b0a7fa83}
+
+
+Definition at line 89 of file aiff.\+c.
+
+\index{aiff.\+c@{aiff.\+c}!M\+A\+C3\+\_\+\+M\+A\+R\+K\+ER@{M\+A\+C3\+\_\+\+M\+A\+R\+K\+ER}}
+\index{M\+A\+C3\+\_\+\+M\+A\+R\+K\+ER@{M\+A\+C3\+\_\+\+M\+A\+R\+K\+ER}!aiff.\+c@{aiff.\+c}}
+\subsubsection[{\texorpdfstring{M\+A\+C3\+\_\+\+M\+A\+R\+K\+ER}{MAC3_MARKER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+A\+C3\+\_\+\+M\+A\+R\+K\+ER~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}{\bf M}\textquotesingle{}, \textquotesingle{}{\bf A}\textquotesingle{}, \textquotesingle{}C\textquotesingle{}, \textquotesingle{}3\textquotesingle{}))}\hypertarget{aiff_8c_a034d7d18e5f2a7d1b8d1460de15c37ba}{}\label{aiff_8c_a034d7d18e5f2a7d1b8d1460de15c37ba}
+
+
+Definition at line 93 of file aiff.\+c.
+
+\index{aiff.\+c@{aiff.\+c}!M\+A\+C6\+\_\+\+M\+A\+R\+K\+ER@{M\+A\+C6\+\_\+\+M\+A\+R\+K\+ER}}
+\index{M\+A\+C6\+\_\+\+M\+A\+R\+K\+ER@{M\+A\+C6\+\_\+\+M\+A\+R\+K\+ER}!aiff.\+c@{aiff.\+c}}
+\subsubsection[{\texorpdfstring{M\+A\+C6\+\_\+\+M\+A\+R\+K\+ER}{MAC6_MARKER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+A\+C6\+\_\+\+M\+A\+R\+K\+ER~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}{\bf M}\textquotesingle{}, \textquotesingle{}{\bf A}\textquotesingle{}, \textquotesingle{}C\textquotesingle{}, \textquotesingle{}6\textquotesingle{}))}\hypertarget{aiff_8c_adb6e25cb30af505ccebaa5e1711907a6}{}\label{aiff_8c_adb6e25cb30af505ccebaa5e1711907a6}
+
+
+Definition at line 94 of file aiff.\+c.
+
+\index{aiff.\+c@{aiff.\+c}!M\+A\+R\+K\+\_\+\+M\+A\+R\+K\+ER@{M\+A\+R\+K\+\_\+\+M\+A\+R\+K\+ER}}
+\index{M\+A\+R\+K\+\_\+\+M\+A\+R\+K\+ER@{M\+A\+R\+K\+\_\+\+M\+A\+R\+K\+ER}!aiff.\+c@{aiff.\+c}}
+\subsubsection[{\texorpdfstring{M\+A\+R\+K\+\_\+\+M\+A\+R\+K\+ER}{MARK_MARKER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+A\+R\+K\+\_\+\+M\+A\+R\+K\+ER~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}{\bf M}\textquotesingle{}, \textquotesingle{}{\bf A}\textquotesingle{}, \textquotesingle{}R\textquotesingle{}, \textquotesingle{}K\textquotesingle{}))}\hypertarget{aiff_8c_a3e08582cb1c37dfb7786bb58d71f6fd5}{}\label{aiff_8c_a3e08582cb1c37dfb7786bb58d71f6fd5}
+
+
+Definition at line 43 of file aiff.\+c.
+
+\index{aiff.\+c@{aiff.\+c}!N\+A\+M\+E\+\_\+\+M\+A\+R\+K\+ER@{N\+A\+M\+E\+\_\+\+M\+A\+R\+K\+ER}}
+\index{N\+A\+M\+E\+\_\+\+M\+A\+R\+K\+ER@{N\+A\+M\+E\+\_\+\+M\+A\+R\+K\+ER}!aiff.\+c@{aiff.\+c}}
+\subsubsection[{\texorpdfstring{N\+A\+M\+E\+\_\+\+M\+A\+R\+K\+ER}{NAME_MARKER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define N\+A\+M\+E\+\_\+\+M\+A\+R\+K\+ER~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}{\bf N}\textquotesingle{}, \textquotesingle{}{\bf A}\textquotesingle{}, \textquotesingle{}{\bf M}\textquotesingle{}, \textquotesingle{}{\bf E}\textquotesingle{}))}\hypertarget{aiff_8c_aa9042fb35d58bfabe74ed3fa7754b1c5}{}\label{aiff_8c_aa9042fb35d58bfabe74ed3fa7754b1c5}
+
+
+Definition at line 49 of file aiff.\+c.
+
+\index{aiff.\+c@{aiff.\+c}!ni24\+\_\+\+M\+A\+R\+K\+ER@{ni24\+\_\+\+M\+A\+R\+K\+ER}}
+\index{ni24\+\_\+\+M\+A\+R\+K\+ER@{ni24\+\_\+\+M\+A\+R\+K\+ER}!aiff.\+c@{aiff.\+c}}
+\subsubsection[{\texorpdfstring{ni24\+\_\+\+M\+A\+R\+K\+ER}{ni24_MARKER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define ni24\+\_\+\+M\+A\+R\+K\+ER~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}4\textquotesingle{}, \textquotesingle{}2\textquotesingle{}, \textquotesingle{}n\textquotesingle{}, \textquotesingle{}1\textquotesingle{}))}\hypertarget{aiff_8c_ad5786fdfbc977366f6f1af312de82510}{}\label{aiff_8c_ad5786fdfbc977366f6f1af312de82510}
+
+
+Definition at line 65 of file aiff.\+c.
+
+\index{aiff.\+c@{aiff.\+c}!ni32\+\_\+\+M\+A\+R\+K\+ER@{ni32\+\_\+\+M\+A\+R\+K\+ER}}
+\index{ni32\+\_\+\+M\+A\+R\+K\+ER@{ni32\+\_\+\+M\+A\+R\+K\+ER}!aiff.\+c@{aiff.\+c}}
+\subsubsection[{\texorpdfstring{ni32\+\_\+\+M\+A\+R\+K\+ER}{ni32_MARKER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define ni32\+\_\+\+M\+A\+R\+K\+ER~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}2\textquotesingle{}, \textquotesingle{}3\textquotesingle{}, \textquotesingle{}n\textquotesingle{}, \textquotesingle{}{\bf i}\textquotesingle{}))}\hypertarget{aiff_8c_aab10055a7bfcb87c9127c11e522ddc9d}{}\label{aiff_8c_aab10055a7bfcb87c9127c11e522ddc9d}
+
+
+Definition at line 67 of file aiff.\+c.
+
+\index{aiff.\+c@{aiff.\+c}!N\+O\+N\+E\+\_\+\+M\+A\+R\+K\+ER@{N\+O\+N\+E\+\_\+\+M\+A\+R\+K\+ER}}
+\index{N\+O\+N\+E\+\_\+\+M\+A\+R\+K\+ER@{N\+O\+N\+E\+\_\+\+M\+A\+R\+K\+ER}!aiff.\+c@{aiff.\+c}}
+\subsubsection[{\texorpdfstring{N\+O\+N\+E\+\_\+\+M\+A\+R\+K\+ER}{NONE_MARKER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define N\+O\+N\+E\+\_\+\+M\+A\+R\+K\+ER~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}{\bf N}\textquotesingle{}, \textquotesingle{}O\textquotesingle{}, \textquotesingle{}{\bf N}\textquotesingle{}, \textquotesingle{}{\bf E}\textquotesingle{}))}\hypertarget{aiff_8c_a158138fc324a0973999ebc47fa790f42}{}\label{aiff_8c_a158138fc324a0973999ebc47fa790f42}
+
+
+Definition at line 60 of file aiff.\+c.
+
+\index{aiff.\+c@{aiff.\+c}!P\+E\+A\+K\+\_\+\+M\+A\+R\+K\+ER@{P\+E\+A\+K\+\_\+\+M\+A\+R\+K\+ER}}
+\index{P\+E\+A\+K\+\_\+\+M\+A\+R\+K\+ER@{P\+E\+A\+K\+\_\+\+M\+A\+R\+K\+ER}!aiff.\+c@{aiff.\+c}}
+\subsubsection[{\texorpdfstring{P\+E\+A\+K\+\_\+\+M\+A\+R\+K\+ER}{PEAK_MARKER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define P\+E\+A\+K\+\_\+\+M\+A\+R\+K\+ER~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}P\textquotesingle{}, \textquotesingle{}{\bf E}\textquotesingle{}, \textquotesingle{}{\bf A}\textquotesingle{}, \textquotesingle{}K\textquotesingle{}))}\hypertarget{aiff_8c_a51e17bd890e7ffd54c4924499b79a582}{}\label{aiff_8c_a51e17bd890e7ffd54c4924499b79a582}
+
+
+Definition at line 56 of file aiff.\+c.
+
+\index{aiff.\+c@{aiff.\+c}!raw\+\_\+\+M\+A\+R\+K\+ER@{raw\+\_\+\+M\+A\+R\+K\+ER}}
+\index{raw\+\_\+\+M\+A\+R\+K\+ER@{raw\+\_\+\+M\+A\+R\+K\+ER}!aiff.\+c@{aiff.\+c}}
+\subsubsection[{\texorpdfstring{raw\+\_\+\+M\+A\+R\+K\+ER}{raw_MARKER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define raw\+\_\+\+M\+A\+R\+K\+ER~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}r\textquotesingle{}, \textquotesingle{}{\bf a}\textquotesingle{}, \textquotesingle{}w\textquotesingle{}, \textquotesingle{} \textquotesingle{}))}\hypertarget{aiff_8c_a8df215d5daf6f4beca91d5a38d06674a}{}\label{aiff_8c_a8df215d5daf6f4beca91d5a38d06674a}
+
+
+Definition at line 63 of file aiff.\+c.
+
+\index{aiff.\+c@{aiff.\+c}!S\+F\+X\+\_\+\+M\+A\+R\+K\+ER@{S\+F\+X\+\_\+\+M\+A\+R\+K\+ER}}
+\index{S\+F\+X\+\_\+\+M\+A\+R\+K\+ER@{S\+F\+X\+\_\+\+M\+A\+R\+K\+ER}!aiff.\+c@{aiff.\+c}}
+\subsubsection[{\texorpdfstring{S\+F\+X\+\_\+\+M\+A\+R\+K\+ER}{SFX_MARKER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define S\+F\+X\+\_\+\+M\+A\+R\+K\+ER~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}{\bf S}\textquotesingle{}, \textquotesingle{}{\bf F}\textquotesingle{}, \textquotesingle{}X\textquotesingle{}, \textquotesingle{}!\textquotesingle{}))}\hypertarget{aiff_8c_a7e0a5b368400be717d1af0bfba07bc17}{}\label{aiff_8c_a7e0a5b368400be717d1af0bfba07bc17}
+
+
+Definition at line 54 of file aiff.\+c.
+
+\index{aiff.\+c@{aiff.\+c}!S\+I\+Z\+E\+O\+F\+\_\+\+A\+I\+F\+C\+\_\+\+C\+O\+MM@{S\+I\+Z\+E\+O\+F\+\_\+\+A\+I\+F\+C\+\_\+\+C\+O\+MM}}
+\index{S\+I\+Z\+E\+O\+F\+\_\+\+A\+I\+F\+C\+\_\+\+C\+O\+MM@{S\+I\+Z\+E\+O\+F\+\_\+\+A\+I\+F\+C\+\_\+\+C\+O\+MM}!aiff.\+c@{aiff.\+c}}
+\subsubsection[{\texorpdfstring{S\+I\+Z\+E\+O\+F\+\_\+\+A\+I\+F\+C\+\_\+\+C\+O\+MM}{SIZEOF_AIFC_COMM}}]{\setlength{\rightskip}{0pt plus 5cm}\#define S\+I\+Z\+E\+O\+F\+\_\+\+A\+I\+F\+C\+\_\+\+C\+O\+MM~24}\hypertarget{aiff_8c_ac813b7b5fa5d9c3c90e0237a6822d1fb}{}\label{aiff_8c_ac813b7b5fa5d9c3c90e0237a6822d1fb}
+
+
+Definition at line 100 of file aiff.\+c.
+
+\index{aiff.\+c@{aiff.\+c}!S\+I\+Z\+E\+O\+F\+\_\+\+A\+I\+F\+C\+\_\+\+C\+O\+M\+M\+\_\+\+M\+IN@{S\+I\+Z\+E\+O\+F\+\_\+\+A\+I\+F\+C\+\_\+\+C\+O\+M\+M\+\_\+\+M\+IN}}
+\index{S\+I\+Z\+E\+O\+F\+\_\+\+A\+I\+F\+C\+\_\+\+C\+O\+M\+M\+\_\+\+M\+IN@{S\+I\+Z\+E\+O\+F\+\_\+\+A\+I\+F\+C\+\_\+\+C\+O\+M\+M\+\_\+\+M\+IN}!aiff.\+c@{aiff.\+c}}
+\subsubsection[{\texorpdfstring{S\+I\+Z\+E\+O\+F\+\_\+\+A\+I\+F\+C\+\_\+\+C\+O\+M\+M\+\_\+\+M\+IN}{SIZEOF_AIFC_COMM_MIN}}]{\setlength{\rightskip}{0pt plus 5cm}\#define S\+I\+Z\+E\+O\+F\+\_\+\+A\+I\+F\+C\+\_\+\+C\+O\+M\+M\+\_\+\+M\+IN~22}\hypertarget{aiff_8c_a972eccdaf502da194f26d7b3aa7f7184}{}\label{aiff_8c_a972eccdaf502da194f26d7b3aa7f7184}
+
+
+Definition at line 99 of file aiff.\+c.
+
+\index{aiff.\+c@{aiff.\+c}!S\+I\+Z\+E\+O\+F\+\_\+\+A\+I\+F\+F\+\_\+\+C\+O\+MM@{S\+I\+Z\+E\+O\+F\+\_\+\+A\+I\+F\+F\+\_\+\+C\+O\+MM}}
+\index{S\+I\+Z\+E\+O\+F\+\_\+\+A\+I\+F\+F\+\_\+\+C\+O\+MM@{S\+I\+Z\+E\+O\+F\+\_\+\+A\+I\+F\+F\+\_\+\+C\+O\+MM}!aiff.\+c@{aiff.\+c}}
+\subsubsection[{\texorpdfstring{S\+I\+Z\+E\+O\+F\+\_\+\+A\+I\+F\+F\+\_\+\+C\+O\+MM}{SIZEOF_AIFF_COMM}}]{\setlength{\rightskip}{0pt plus 5cm}\#define S\+I\+Z\+E\+O\+F\+\_\+\+A\+I\+F\+F\+\_\+\+C\+O\+MM~18}\hypertarget{aiff_8c_a43c19662546c5f37b93d6631faecc868}{}\label{aiff_8c_a43c19662546c5f37b93d6631faecc868}
+
+
+Definition at line 98 of file aiff.\+c.
+
+\index{aiff.\+c@{aiff.\+c}!S\+I\+Z\+E\+O\+F\+\_\+\+I\+N\+S\+T\+\_\+\+C\+H\+U\+NK@{S\+I\+Z\+E\+O\+F\+\_\+\+I\+N\+S\+T\+\_\+\+C\+H\+U\+NK}}
+\index{S\+I\+Z\+E\+O\+F\+\_\+\+I\+N\+S\+T\+\_\+\+C\+H\+U\+NK@{S\+I\+Z\+E\+O\+F\+\_\+\+I\+N\+S\+T\+\_\+\+C\+H\+U\+NK}!aiff.\+c@{aiff.\+c}}
+\subsubsection[{\texorpdfstring{S\+I\+Z\+E\+O\+F\+\_\+\+I\+N\+S\+T\+\_\+\+C\+H\+U\+NK}{SIZEOF_INST_CHUNK}}]{\setlength{\rightskip}{0pt plus 5cm}\#define S\+I\+Z\+E\+O\+F\+\_\+\+I\+N\+S\+T\+\_\+\+C\+H\+U\+NK~20}\hypertarget{aiff_8c_acf07fd5e8185c39fc3a01b67a3003a1a}{}\label{aiff_8c_acf07fd5e8185c39fc3a01b67a3003a1a}
+
+
+Definition at line 102 of file aiff.\+c.
+
+\index{aiff.\+c@{aiff.\+c}!S\+I\+Z\+E\+O\+F\+\_\+\+S\+S\+N\+D\+\_\+\+C\+H\+U\+NK@{S\+I\+Z\+E\+O\+F\+\_\+\+S\+S\+N\+D\+\_\+\+C\+H\+U\+NK}}
+\index{S\+I\+Z\+E\+O\+F\+\_\+\+S\+S\+N\+D\+\_\+\+C\+H\+U\+NK@{S\+I\+Z\+E\+O\+F\+\_\+\+S\+S\+N\+D\+\_\+\+C\+H\+U\+NK}!aiff.\+c@{aiff.\+c}}
+\subsubsection[{\texorpdfstring{S\+I\+Z\+E\+O\+F\+\_\+\+S\+S\+N\+D\+\_\+\+C\+H\+U\+NK}{SIZEOF_SSND_CHUNK}}]{\setlength{\rightskip}{0pt plus 5cm}\#define S\+I\+Z\+E\+O\+F\+\_\+\+S\+S\+N\+D\+\_\+\+C\+H\+U\+NK~8}\hypertarget{aiff_8c_abedcddd5d497ab76dae8890b3039cb0c}{}\label{aiff_8c_abedcddd5d497ab76dae8890b3039cb0c}
+
+
+Definition at line 101 of file aiff.\+c.
+
+\index{aiff.\+c@{aiff.\+c}!sowt\+\_\+\+M\+A\+R\+K\+ER@{sowt\+\_\+\+M\+A\+R\+K\+ER}}
+\index{sowt\+\_\+\+M\+A\+R\+K\+ER@{sowt\+\_\+\+M\+A\+R\+K\+ER}!aiff.\+c@{aiff.\+c}}
+\subsubsection[{\texorpdfstring{sowt\+\_\+\+M\+A\+R\+K\+ER}{sowt_MARKER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define sowt\+\_\+\+M\+A\+R\+K\+ER~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}{\bf s}\textquotesingle{}, \textquotesingle{}o\textquotesingle{}, \textquotesingle{}w\textquotesingle{}, \textquotesingle{}{\bf t}\textquotesingle{}))}\hypertarget{aiff_8c_a84f3ad1771bb9772a77c597085cf345e}{}\label{aiff_8c_a84f3ad1771bb9772a77c597085cf345e}
+
+
+Definition at line 61 of file aiff.\+c.
+
+\index{aiff.\+c@{aiff.\+c}!S\+S\+N\+D\+\_\+\+M\+A\+R\+K\+ER@{S\+S\+N\+D\+\_\+\+M\+A\+R\+K\+ER}}
+\index{S\+S\+N\+D\+\_\+\+M\+A\+R\+K\+ER@{S\+S\+N\+D\+\_\+\+M\+A\+R\+K\+ER}!aiff.\+c@{aiff.\+c}}
+\subsubsection[{\texorpdfstring{S\+S\+N\+D\+\_\+\+M\+A\+R\+K\+ER}{SSND_MARKER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define S\+S\+N\+D\+\_\+\+M\+A\+R\+K\+ER~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}{\bf S}\textquotesingle{}, \textquotesingle{}{\bf S}\textquotesingle{}, \textquotesingle{}{\bf N}\textquotesingle{}, \textquotesingle{}{\bf D}\textquotesingle{}))}\hypertarget{aiff_8c_a8fcd4365dadbfa253a0f71e5aea8c00a}{}\label{aiff_8c_a8fcd4365dadbfa253a0f71e5aea8c00a}
+
+
+Definition at line 42 of file aiff.\+c.
+
+\index{aiff.\+c@{aiff.\+c}!twos\+\_\+\+M\+A\+R\+K\+ER@{twos\+\_\+\+M\+A\+R\+K\+ER}}
+\index{twos\+\_\+\+M\+A\+R\+K\+ER@{twos\+\_\+\+M\+A\+R\+K\+ER}!aiff.\+c@{aiff.\+c}}
+\subsubsection[{\texorpdfstring{twos\+\_\+\+M\+A\+R\+K\+ER}{twos_MARKER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define twos\+\_\+\+M\+A\+R\+K\+ER~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}{\bf t}\textquotesingle{}, \textquotesingle{}w\textquotesingle{}, \textquotesingle{}o\textquotesingle{}, \textquotesingle{}{\bf s}\textquotesingle{}))}\hypertarget{aiff_8c_a583f0f1156a779468df672567df7f290}{}\label{aiff_8c_a583f0f1156a779468df672567df7f290}
+
+
+Definition at line 62 of file aiff.\+c.
+
+\index{aiff.\+c@{aiff.\+c}!ulaw\+\_\+\+M\+A\+R\+K\+ER@{ulaw\+\_\+\+M\+A\+R\+K\+ER}}
+\index{ulaw\+\_\+\+M\+A\+R\+K\+ER@{ulaw\+\_\+\+M\+A\+R\+K\+ER}!aiff.\+c@{aiff.\+c}}
+\subsubsection[{\texorpdfstring{ulaw\+\_\+\+M\+A\+R\+K\+ER}{ulaw_MARKER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define ulaw\+\_\+\+M\+A\+R\+K\+ER~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}u\textquotesingle{}, \textquotesingle{}{\bf l}\textquotesingle{}, \textquotesingle{}{\bf a}\textquotesingle{}, \textquotesingle{}w\textquotesingle{}))}\hypertarget{aiff_8c_a66080967ca2ce443de61965f8d1399e3}{}\label{aiff_8c_a66080967ca2ce443de61965f8d1399e3}
+
+
+Definition at line 74 of file aiff.\+c.
+
+\index{aiff.\+c@{aiff.\+c}!U\+L\+A\+W\+\_\+\+M\+A\+R\+K\+ER@{U\+L\+A\+W\+\_\+\+M\+A\+R\+K\+ER}}
+\index{U\+L\+A\+W\+\_\+\+M\+A\+R\+K\+ER@{U\+L\+A\+W\+\_\+\+M\+A\+R\+K\+ER}!aiff.\+c@{aiff.\+c}}
+\subsubsection[{\texorpdfstring{U\+L\+A\+W\+\_\+\+M\+A\+R\+K\+ER}{ULAW_MARKER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define U\+L\+A\+W\+\_\+\+M\+A\+R\+K\+ER~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}U\textquotesingle{}, \textquotesingle{}L\textquotesingle{}, \textquotesingle{}{\bf A}\textquotesingle{}, \textquotesingle{}W\textquotesingle{}))}\hypertarget{aiff_8c_ac6178b56dd2375b164de49b5bbbe313a}{}\label{aiff_8c_ac6178b56dd2375b164de49b5bbbe313a}
+
+
+Definition at line 75 of file aiff.\+c.
+
+
+
+\subsection{Enumeration Type Documentation}
+\subsubsection[{\texorpdfstring{anonymous enum}{anonymous enum}}]{\setlength{\rightskip}{0pt plus 5cm}anonymous enum}\hypertarget{aiff_8c_a26c0312ac66c00f31cf886616c48afa2}{}\label{aiff_8c_a26c0312ac66c00f31cf886616c48afa2}
+\begin{Desc}
+\item[Enumerator]\par
+\begin{description}
+\index{H\+A\+V\+E\+\_\+\+F\+O\+RM@{H\+A\+V\+E\+\_\+\+F\+O\+RM}!aiff.\+c@{aiff.\+c}}\index{aiff.\+c@{aiff.\+c}!H\+A\+V\+E\+\_\+\+F\+O\+RM@{H\+A\+V\+E\+\_\+\+F\+O\+RM}}\item[{\em 
+H\+A\+V\+E\+\_\+\+F\+O\+RM\hypertarget{aiff_8c_a26c0312ac66c00f31cf886616c48afa2aa72e223e5a14e289cbf07780026fee2e}{}\label{aiff_8c_a26c0312ac66c00f31cf886616c48afa2aa72e223e5a14e289cbf07780026fee2e}
+}]\index{H\+A\+V\+E\+\_\+\+A\+I\+FF@{H\+A\+V\+E\+\_\+\+A\+I\+FF}!aiff.\+c@{aiff.\+c}}\index{aiff.\+c@{aiff.\+c}!H\+A\+V\+E\+\_\+\+A\+I\+FF@{H\+A\+V\+E\+\_\+\+A\+I\+FF}}\item[{\em 
+H\+A\+V\+E\+\_\+\+A\+I\+FF\hypertarget{aiff_8c_a26c0312ac66c00f31cf886616c48afa2ac68a63187736faec1258f724997c8d95}{}\label{aiff_8c_a26c0312ac66c00f31cf886616c48afa2ac68a63187736faec1258f724997c8d95}
+}]\index{H\+A\+V\+E\+\_\+\+A\+I\+FC@{H\+A\+V\+E\+\_\+\+A\+I\+FC}!aiff.\+c@{aiff.\+c}}\index{aiff.\+c@{aiff.\+c}!H\+A\+V\+E\+\_\+\+A\+I\+FC@{H\+A\+V\+E\+\_\+\+A\+I\+FC}}\item[{\em 
+H\+A\+V\+E\+\_\+\+A\+I\+FC\hypertarget{aiff_8c_a26c0312ac66c00f31cf886616c48afa2a29a84b4c1e09f6f7fd9157a18eb2bd5f}{}\label{aiff_8c_a26c0312ac66c00f31cf886616c48afa2a29a84b4c1e09f6f7fd9157a18eb2bd5f}
+}]\index{H\+A\+V\+E\+\_\+\+F\+V\+ER@{H\+A\+V\+E\+\_\+\+F\+V\+ER}!aiff.\+c@{aiff.\+c}}\index{aiff.\+c@{aiff.\+c}!H\+A\+V\+E\+\_\+\+F\+V\+ER@{H\+A\+V\+E\+\_\+\+F\+V\+ER}}\item[{\em 
+H\+A\+V\+E\+\_\+\+F\+V\+ER\hypertarget{aiff_8c_a26c0312ac66c00f31cf886616c48afa2ad4f4e3b6aaae7c0d4d0968e2df2c07df}{}\label{aiff_8c_a26c0312ac66c00f31cf886616c48afa2ad4f4e3b6aaae7c0d4d0968e2df2c07df}
+}]\index{H\+A\+V\+E\+\_\+\+C\+O\+MM@{H\+A\+V\+E\+\_\+\+C\+O\+MM}!aiff.\+c@{aiff.\+c}}\index{aiff.\+c@{aiff.\+c}!H\+A\+V\+E\+\_\+\+C\+O\+MM@{H\+A\+V\+E\+\_\+\+C\+O\+MM}}\item[{\em 
+H\+A\+V\+E\+\_\+\+C\+O\+MM\hypertarget{aiff_8c_a26c0312ac66c00f31cf886616c48afa2a11b78bf793db7408bbc3a1cb9a051b78}{}\label{aiff_8c_a26c0312ac66c00f31cf886616c48afa2a11b78bf793db7408bbc3a1cb9a051b78}
+}]\index{H\+A\+V\+E\+\_\+\+S\+S\+ND@{H\+A\+V\+E\+\_\+\+S\+S\+ND}!aiff.\+c@{aiff.\+c}}\index{aiff.\+c@{aiff.\+c}!H\+A\+V\+E\+\_\+\+S\+S\+ND@{H\+A\+V\+E\+\_\+\+S\+S\+ND}}\item[{\em 
+H\+A\+V\+E\+\_\+\+S\+S\+ND\hypertarget{aiff_8c_a26c0312ac66c00f31cf886616c48afa2aec47f6a568a1811505bb4438ef727bc1}{}\label{aiff_8c_a26c0312ac66c00f31cf886616c48afa2aec47f6a568a1811505bb4438ef727bc1}
+}]\end{description}
+\end{Desc}
+
+
+Definition at line 116 of file aiff.\+c.
+
+\subsubsection[{\texorpdfstring{anonymous enum}{anonymous enum}}]{\setlength{\rightskip}{0pt plus 5cm}anonymous enum}\hypertarget{aiff_8c_aecd12a18eeb0ee701fc7b0efd5068266}{}\label{aiff_8c_aecd12a18eeb0ee701fc7b0efd5068266}
+\begin{Desc}
+\item[Enumerator]\par
+\begin{description}
+\index{basc\+\_\+\+S\+C\+A\+L\+E\+\_\+\+M\+I\+N\+OR@{basc\+\_\+\+S\+C\+A\+L\+E\+\_\+\+M\+I\+N\+OR}!aiff.\+c@{aiff.\+c}}\index{aiff.\+c@{aiff.\+c}!basc\+\_\+\+S\+C\+A\+L\+E\+\_\+\+M\+I\+N\+OR@{basc\+\_\+\+S\+C\+A\+L\+E\+\_\+\+M\+I\+N\+OR}}\item[{\em 
+basc\+\_\+\+S\+C\+A\+L\+E\+\_\+\+M\+I\+N\+OR\hypertarget{aiff_8c_aecd12a18eeb0ee701fc7b0efd5068266abed224e29657a4a8f15fab00c1145c41}{}\label{aiff_8c_aecd12a18eeb0ee701fc7b0efd5068266abed224e29657a4a8f15fab00c1145c41}
+}]\index{basc\+\_\+\+S\+C\+A\+L\+E\+\_\+\+M\+A\+J\+OR@{basc\+\_\+\+S\+C\+A\+L\+E\+\_\+\+M\+A\+J\+OR}!aiff.\+c@{aiff.\+c}}\index{aiff.\+c@{aiff.\+c}!basc\+\_\+\+S\+C\+A\+L\+E\+\_\+\+M\+A\+J\+OR@{basc\+\_\+\+S\+C\+A\+L\+E\+\_\+\+M\+A\+J\+OR}}\item[{\em 
+basc\+\_\+\+S\+C\+A\+L\+E\+\_\+\+M\+A\+J\+OR\hypertarget{aiff_8c_aecd12a18eeb0ee701fc7b0efd5068266a0a6a9855208f82118b0c6c15b42cb078}{}\label{aiff_8c_aecd12a18eeb0ee701fc7b0efd5068266a0a6a9855208f82118b0c6c15b42cb078}
+}]\index{basc\+\_\+\+S\+C\+A\+L\+E\+\_\+\+N\+E\+I\+T\+H\+ER@{basc\+\_\+\+S\+C\+A\+L\+E\+\_\+\+N\+E\+I\+T\+H\+ER}!aiff.\+c@{aiff.\+c}}\index{aiff.\+c@{aiff.\+c}!basc\+\_\+\+S\+C\+A\+L\+E\+\_\+\+N\+E\+I\+T\+H\+ER@{basc\+\_\+\+S\+C\+A\+L\+E\+\_\+\+N\+E\+I\+T\+H\+ER}}\item[{\em 
+basc\+\_\+\+S\+C\+A\+L\+E\+\_\+\+N\+E\+I\+T\+H\+ER\hypertarget{aiff_8c_aecd12a18eeb0ee701fc7b0efd5068266aed6bebc4b507a3c6b49d6d3f0f7b1637}{}\label{aiff_8c_aecd12a18eeb0ee701fc7b0efd5068266aed6bebc4b507a3c6b49d6d3f0f7b1637}
+}]\index{basc\+\_\+\+S\+C\+A\+L\+E\+\_\+\+B\+O\+TH@{basc\+\_\+\+S\+C\+A\+L\+E\+\_\+\+B\+O\+TH}!aiff.\+c@{aiff.\+c}}\index{aiff.\+c@{aiff.\+c}!basc\+\_\+\+S\+C\+A\+L\+E\+\_\+\+B\+O\+TH@{basc\+\_\+\+S\+C\+A\+L\+E\+\_\+\+B\+O\+TH}}\item[{\em 
+basc\+\_\+\+S\+C\+A\+L\+E\+\_\+\+B\+O\+TH\hypertarget{aiff_8c_aecd12a18eeb0ee701fc7b0efd5068266a5a00e1ddc376330f8b5a3c9cce90ae43}{}\label{aiff_8c_aecd12a18eeb0ee701fc7b0efd5068266a5a00e1ddc376330f8b5a3c9cce90ae43}
+}]\end{description}
+\end{Desc}
+
+
+Definition at line 159 of file aiff.\+c.
+
+\subsubsection[{\texorpdfstring{anonymous enum}{anonymous enum}}]{\setlength{\rightskip}{0pt plus 5cm}anonymous enum}\hypertarget{aiff_8c_a8420dba71b9cc240cf981b0bef892004}{}\label{aiff_8c_a8420dba71b9cc240cf981b0bef892004}
+\begin{Desc}
+\item[Enumerator]\par
+\begin{description}
+\index{basc\+\_\+\+T\+Y\+P\+E\+\_\+\+L\+O\+OP@{basc\+\_\+\+T\+Y\+P\+E\+\_\+\+L\+O\+OP}!aiff.\+c@{aiff.\+c}}\index{aiff.\+c@{aiff.\+c}!basc\+\_\+\+T\+Y\+P\+E\+\_\+\+L\+O\+OP@{basc\+\_\+\+T\+Y\+P\+E\+\_\+\+L\+O\+OP}}\item[{\em 
+basc\+\_\+\+T\+Y\+P\+E\+\_\+\+L\+O\+OP\hypertarget{aiff_8c_a8420dba71b9cc240cf981b0bef892004a5501b54fb900c74c108a8ef5b02da348}{}\label{aiff_8c_a8420dba71b9cc240cf981b0bef892004a5501b54fb900c74c108a8ef5b02da348}
+}]\index{basc\+\_\+\+T\+Y\+P\+E\+\_\+\+O\+N\+E\+\_\+\+S\+H\+OT@{basc\+\_\+\+T\+Y\+P\+E\+\_\+\+O\+N\+E\+\_\+\+S\+H\+OT}!aiff.\+c@{aiff.\+c}}\index{aiff.\+c@{aiff.\+c}!basc\+\_\+\+T\+Y\+P\+E\+\_\+\+O\+N\+E\+\_\+\+S\+H\+OT@{basc\+\_\+\+T\+Y\+P\+E\+\_\+\+O\+N\+E\+\_\+\+S\+H\+OT}}\item[{\em 
+basc\+\_\+\+T\+Y\+P\+E\+\_\+\+O\+N\+E\+\_\+\+S\+H\+OT\hypertarget{aiff_8c_a8420dba71b9cc240cf981b0bef892004accf7de61350955adc48346a8d545b203}{}\label{aiff_8c_a8420dba71b9cc240cf981b0bef892004accf7de61350955adc48346a8d545b203}
+}]\end{description}
+\end{Desc}
+
+
+Definition at line 166 of file aiff.\+c.
+
+
+
+\subsection{Function Documentation}
+\index{aiff.\+c@{aiff.\+c}!aiff\+\_\+open@{aiff\+\_\+open}}
+\index{aiff\+\_\+open@{aiff\+\_\+open}!aiff.\+c@{aiff.\+c}}
+\subsubsection[{\texorpdfstring{aiff\+\_\+open(\+S\+F\+\_\+\+P\+R\+I\+V\+A\+T\+E $\ast$psf)}{aiff_open(SF_PRIVATE *psf)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf int} aiff\+\_\+open (
+\begin{DoxyParamCaption}
+\item[{{\bf S\+F\+\_\+\+P\+R\+I\+V\+A\+TE} $\ast$}]{psf}
+\end{DoxyParamCaption}
+)}\hypertarget{aiff_8c_aee1a26cc4312bd3d5ff214f233d8a0dc}{}\label{aiff_8c_aee1a26cc4312bd3d5ff214f233d8a0dc}
+
+
+Definition at line 232 of file aiff.\+c.
+

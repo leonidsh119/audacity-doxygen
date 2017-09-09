@@ -1,0 +1,155 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="lv2docgen_8py" kind="file" language="Python">
+    <compoundname>lv2docgen.py</compoundname>
+    <innernamespace refid="namespacelv2docgen">lv2docgen</innernamespace>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1" refid="namespacelv2docgen" refkind="compound"><highlight class="comment">#!/usr/bin/env<sp/>python</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="comment">#<sp/>-*-<sp/>coding:<sp/>utf-8<sp/>-*-</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="comment">#</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="comment">#<sp/>lv2docgen,<sp/>a<sp/>documentation<sp/>generator<sp/>for<sp/>LV2<sp/>plugins</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="comment">#<sp/>Copyright<sp/>2012<sp/>David<sp/>Robillard<sp/>&lt;d@drobilla.net&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="comment">#</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="comment">#<sp/>Permission<sp/>to<sp/>use,<sp/>copy,<sp/>modify,<sp/>and/or<sp/>distribute<sp/>this<sp/>software<sp/>for<sp/>any</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight><highlight class="comment">#<sp/>purpose<sp/>with<sp/>or<sp/>without<sp/>fee<sp/>is<sp/>hereby<sp/>granted,<sp/>provided<sp/>that<sp/>the<sp/>above</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight><highlight class="comment">#<sp/>copyright<sp/>notice<sp/>and<sp/>this<sp/>permission<sp/>notice<sp/>appear<sp/>in<sp/>all<sp/>copies.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight><highlight class="comment">#</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight><highlight class="comment">#<sp/>THIS<sp/>SOFTWARE<sp/>IS<sp/>PROVIDED<sp/>&quot;AS<sp/>IS&quot;<sp/>AND<sp/>THE<sp/>AUTHOR<sp/>DISCLAIMS<sp/>ALL<sp/>WARRANTIES</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight><highlight class="comment">#<sp/>WITH<sp/>REGARD<sp/>TO<sp/>THIS<sp/>SOFTWARE<sp/>INCLUDING<sp/>ALL<sp/>IMPLIED<sp/>WARRANTIES<sp/>OF</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight><highlight class="comment">#<sp/>MERCHANTABILITY<sp/>AND<sp/>FITNESS.<sp/>IN<sp/>NO<sp/>EVENT<sp/>SHALL<sp/>THE<sp/>AUTHOR<sp/>BE<sp/>LIABLE<sp/>FOR</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight><highlight class="comment">#<sp/>ANY<sp/>SPECIAL,<sp/>DIRECT,<sp/>INDIRECT,<sp/>OR<sp/>CONSEQUENTIAL<sp/>DAMAGES<sp/>OR<sp/>ANY<sp/>DAMAGES</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight><highlight class="comment">#<sp/>WHATSOEVER<sp/>RESULTING<sp/>FROM<sp/>LOSS<sp/>OF<sp/>USE,<sp/>DATA<sp/>OR<sp/>PROFITS,<sp/>WHETHER<sp/>IN<sp/>AN</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="16"><highlight class="normal"></highlight><highlight class="comment">#<sp/>ACTION<sp/>OF<sp/>CONTRACT,<sp/>NEGLIGENCE<sp/>OR<sp/>OTHER<sp/>TORTIOUS<sp/>ACTION,<sp/>ARISING<sp/>OUT<sp/>OF</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="17"><highlight class="normal"></highlight><highlight class="comment">#<sp/>OR<sp/>IN<sp/>CONNECTION<sp/>WITH<sp/>THE<sp/>USE<sp/>OR<sp/>PERFORMANCE<sp/>OF<sp/>THIS<sp/>SOFTWARE.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="18"><highlight class="normal"></highlight></codeline>
+<codeline lineno="19"><highlight class="normal">__date__<sp/><sp/><sp/><sp/>=<sp/></highlight><highlight class="stringliteral">&apos;2012-03-27&apos;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="20"><highlight class="normal">__version__<sp/>=<sp/></highlight><highlight class="stringliteral">&apos;0.0.0&apos;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="21"><highlight class="normal">__authors__<sp/>=<sp/></highlight><highlight class="stringliteral">&apos;David<sp/>Robillard&apos;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="22"><highlight class="normal">__license__<sp/>=<sp/></highlight><highlight class="stringliteral">&apos;ISC<sp/>License<sp/>&lt;http://www.opensource.org/licenses/isc&gt;&apos;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="23"><highlight class="normal">__contact__<sp/>=<sp/></highlight><highlight class="stringliteral">&apos;devel@lists.lv2plug.in&apos;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="24"><highlight class="normal"></highlight></codeline>
+<codeline lineno="25"><highlight class="normal"></highlight><highlight class="keyword">import</highlight><highlight class="normal"><sp/>errno</highlight></codeline>
+<codeline lineno="26"><highlight class="normal"></highlight><highlight class="keyword">import</highlight><highlight class="normal"><sp/>os</highlight></codeline>
+<codeline lineno="27"><highlight class="normal"></highlight><highlight class="keyword">import</highlight><highlight class="normal"><sp/>sys</highlight></codeline>
+<codeline lineno="28"><highlight class="normal"></highlight></codeline>
+<codeline lineno="29"><highlight class="normal"></highlight><highlight class="keywordflow">try</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="30"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">import</highlight><highlight class="normal"><sp/>rdflib</highlight></codeline>
+<codeline lineno="31"><highlight class="normal"></highlight><highlight class="keywordflow">except</highlight><highlight class="normal"><sp/>ImportError:</highlight></codeline>
+<codeline lineno="32"><highlight class="normal"><sp/><sp/><sp/><sp/>sys.exit(</highlight><highlight class="stringliteral">&apos;Error<sp/>importing<sp/>rdflib&apos;</highlight><highlight class="normal">)</highlight></codeline>
+<codeline lineno="33"><highlight class="normal"></highlight></codeline>
+<codeline lineno="34" refid="namespacelv2docgen_1a087b4f03c6a2406454850630dfa612d3" refkind="member"><highlight class="normal">doap<sp/>=<sp/>rdflib.Namespace(</highlight><highlight class="stringliteral">&apos;http://usefulinc.com/ns/doap#&apos;</highlight><highlight class="normal">)</highlight></codeline>
+<codeline lineno="35" refid="namespacelv2docgen_1a9009471fe4bb1cea6073a223e6418b5a" refkind="member"><highlight class="normal">lv2<sp/><sp/>=<sp/>rdflib.Namespace(</highlight><highlight class="stringliteral">&apos;http://lv2plug.in/ns/lv2core#&apos;</highlight><highlight class="normal">)</highlight></codeline>
+<codeline lineno="36" refid="namespacelv2docgen_1afca3a2919bd7c9bef9f07c7d7286122d" refkind="member"><highlight class="normal">rdf<sp/><sp/>=<sp/>rdflib.Namespace(</highlight><highlight class="stringliteral">&apos;http://www.w3.org/1999/02/22-rdf-syntax-ns#&apos;</highlight><highlight class="normal">)</highlight></codeline>
+<codeline lineno="37" refid="namespacelv2docgen_1a2c4f1023b8c871bcdc6b47859ad0d9a1" refkind="member"><highlight class="normal">rdfs<sp/>=<sp/>rdflib.Namespace(</highlight><highlight class="stringliteral">&apos;http://www.w3.org/2000/01/rdf-schema#&apos;</highlight><highlight class="normal">)</highlight></codeline>
+<codeline lineno="38"><highlight class="normal"></highlight></codeline>
+<codeline lineno="39" refid="namespacelv2docgen_1a4bded19b57aa94a9f14d74ebce83c470" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal"><ref refid="namespacelv2docgen_1a4bded19b57aa94a9f14d74ebce83c470" kindref="member">uri_to_path</ref>(uri):</highlight></codeline>
+<codeline lineno="40"><highlight class="normal"><sp/><sp/><sp/><sp/>path<sp/>=<sp/>uri[uri.find(</highlight><highlight class="stringliteral">&apos;:&apos;</highlight><highlight class="normal">):]</highlight></codeline>
+<codeline lineno="41"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">while</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordflow">not</highlight><highlight class="normal"><sp/>path[0].isalpha():</highlight></codeline>
+<codeline lineno="42"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>path<sp/>=<sp/>path[1:]</highlight></codeline>
+<codeline lineno="43"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>path</highlight></codeline>
+<codeline lineno="44"><highlight class="normal"></highlight></codeline>
+<codeline lineno="45" refid="namespacelv2docgen_1a3fb8f6c76d5c87762bb1aa98fa6e454a" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal"><ref refid="namespacelv2docgen_1a3fb8f6c76d5c87762bb1aa98fa6e454a" kindref="member">get_doc</ref>(model,<sp/>subject):</highlight></codeline>
+<codeline lineno="46"><highlight class="normal"><sp/><sp/><sp/><sp/>comment<sp/>=<sp/>model.value(subject,<sp/>rdfs.comment,<sp/></highlight><highlight class="keywordtype">None</highlight><highlight class="normal">)</highlight></codeline>
+<codeline lineno="47"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>comment:</highlight></codeline>
+<codeline lineno="48"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/></highlight><highlight class="stringliteral">&apos;&lt;p<sp/>class=&quot;content&quot;&gt;%s&lt;/p&gt;&apos;</highlight><highlight class="normal"><sp/>%<sp/>comment</highlight></codeline>
+<codeline lineno="49"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/></highlight><highlight class="stringliteral">&apos;&apos;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="50"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="51" refid="namespacelv2docgen_1a89de4fc46e4583f0b5879cfc7a747c80" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal"><ref refid="namespacelv2docgen_1a89de4fc46e4583f0b5879cfc7a747c80" kindref="member">port_doc</ref>(model,<sp/>port):</highlight></codeline>
+<codeline lineno="52"><highlight class="normal"><sp/><sp/><sp/><sp/>name<sp/>=<sp/>model.value(port,<sp/>lv2.name,<sp/></highlight><highlight class="keywordtype">None</highlight><highlight class="normal">)</highlight></codeline>
+<codeline lineno="53"><highlight class="normal"><sp/><sp/><sp/><sp/>comment<sp/>=<sp/>model.value(port,<sp/>rdfs.comment,<sp/></highlight><highlight class="keywordtype">None</highlight><highlight class="normal">)</highlight></codeline>
+<codeline lineno="54"><highlight class="normal"><sp/><sp/><sp/><sp/>html<sp/>=<sp/></highlight><highlight class="stringliteral">&apos;&lt;div<sp/>class=&quot;specterm&quot;&gt;&lt;h3&gt;%s&lt;/h3&gt;&apos;</highlight><highlight class="normal"><sp/>%<sp/>name</highlight></codeline>
+<codeline lineno="55"><highlight class="normal"><sp/><sp/><sp/><sp/>html<sp/>+=<sp/><ref refid="namespacelv2docgen_1a3fb8f6c76d5c87762bb1aa98fa6e454a" kindref="member">get_doc</ref>(model,<sp/>port)</highlight></codeline>
+<codeline lineno="56"><highlight class="normal"><sp/><sp/><sp/><sp/>html<sp/>+=<sp/></highlight><highlight class="stringliteral">&apos;&lt;/div&gt;&apos;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="57"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>html</highlight></codeline>
+<codeline lineno="58"><highlight class="normal"></highlight></codeline>
+<codeline lineno="59" refid="namespacelv2docgen_1aaa222eb953c3fe42990ce8641fc9e84b" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal"><ref refid="namespacelv2docgen_1aaa222eb953c3fe42990ce8641fc9e84b" kindref="member">plugin_doc</ref>(model,<sp/>plugin,<sp/>style_uri):</highlight></codeline>
+<codeline lineno="60"><highlight class="normal"><sp/><sp/><sp/><sp/>uri<sp/><sp/>=<sp/><ref refid="sndfile__save_8m_1a4b99ff73a8a869319570237b5c57ab03" kindref="member">str</ref>(plugin)</highlight></codeline>
+<codeline lineno="61"><highlight class="normal"><sp/><sp/><sp/><sp/>name<sp/>=<sp/>model.value(plugin,<sp/>doap.name,<sp/></highlight><highlight class="keywordtype">None</highlight><highlight class="normal">)</highlight></codeline>
+<codeline lineno="62"><highlight class="normal"></highlight></codeline>
+<codeline lineno="63"><highlight class="normal"><sp/><sp/><sp/><sp/>html<sp/>=<sp/></highlight><highlight class="stringliteral">&apos;&apos;&apos;&lt;!DOCTYPE<sp/>html<sp/>PUBLIC<sp/>&quot;-//W3C//DTD<sp/>XHTML+RDFa<sp/>1.0//EN&quot;<sp/>&quot;http://www.w3.org/MarkUp/DTD/xhtml-rdfa-1.dtd&quot;&gt;</highlight></codeline>
+<codeline lineno="64"><highlight class="stringliteral">&lt;html<sp/>about=&quot;%s&quot;</highlight></codeline>
+<codeline lineno="65"><highlight class="stringliteral"><sp/><sp/><sp/><sp/><sp/><sp/>xmlns=&quot;http://www.w3.org/1999/xhtml&quot;</highlight></codeline>
+<codeline lineno="66"><highlight class="stringliteral"><sp/><sp/><sp/><sp/><sp/><sp/>xmlns:rdf=&quot;http://www.w3.org/1999/02/22-rdf-syntax-ns#&quot;</highlight></codeline>
+<codeline lineno="67"><highlight class="stringliteral"><sp/><sp/><sp/><sp/><sp/><sp/>xmlns:rdfs=&quot;http://www.w3.org/2000/01/rdf-schema#&quot;</highlight></codeline>
+<codeline lineno="68"><highlight class="stringliteral"><sp/><sp/><sp/><sp/><sp/><sp/>xmlns:lv2=&quot;http://lv2plug.in/ns/lv2core#&quot;</highlight></codeline>
+<codeline lineno="69"><highlight class="stringliteral"><sp/><sp/><sp/><sp/><sp/><sp/>xml:lang=&quot;en&quot;&gt;&apos;&apos;&apos;</highlight><highlight class="normal"><sp/>%<sp/>uri</highlight></codeline>
+<codeline lineno="70"><highlight class="normal"></highlight></codeline>
+<codeline lineno="71"><highlight class="normal"><sp/><sp/><sp/><sp/>html<sp/>+=<sp/></highlight><highlight class="stringliteral">&apos;&apos;&apos;&lt;head&gt;</highlight></codeline>
+<codeline lineno="72"><highlight class="stringliteral"><sp/><sp/><sp/><sp/>&lt;title&gt;%s&lt;/title&gt;</highlight></codeline>
+<codeline lineno="73"><highlight class="stringliteral"><sp/><sp/><sp/><sp/>&lt;meta<sp/>http-equiv=&quot;content-type&quot;<sp/>content=&quot;text/xhtml+xml;<sp/>charset=utf-8&quot;<sp/>/&gt;</highlight></codeline>
+<codeline lineno="74"><highlight class="stringliteral"><sp/><sp/><sp/><sp/>&lt;meta<sp/>name=&quot;generator&quot;<sp/>content=&quot;lv2docgen&quot;<sp/>/&gt;</highlight></codeline>
+<codeline lineno="75"><highlight class="stringliteral"><sp/><sp/><sp/><sp/>&lt;link<sp/>href=&quot;%s&quot;<sp/>rel=&quot;stylesheet&quot;<sp/>type=&quot;text/css&quot;<sp/>/&gt;</highlight></codeline>
+<codeline lineno="76"><highlight class="stringliteral"><sp/><sp/>&lt;/head&gt;</highlight></codeline>
+<codeline lineno="77"><highlight class="stringliteral"><sp/><sp/>&lt;body&gt;&apos;&apos;&apos;</highlight><highlight class="normal"><sp/>%<sp/>(name,<sp/>style_uri)</highlight></codeline>
+<codeline lineno="78"><highlight class="normal"></highlight></codeline>
+<codeline lineno="79"><highlight class="normal"><sp/><sp/><sp/><sp/>html<sp/>+=<sp/></highlight><highlight class="stringliteral">&apos;&apos;&apos;</highlight></codeline>
+<codeline lineno="80"><highlight class="stringliteral"><sp/><sp/>&lt;!--<sp/>HEADER<sp/>--&gt;</highlight></codeline>
+<codeline lineno="81"><highlight class="stringliteral"><sp/><sp/>&lt;div<sp/>id=&quot;header&quot;&gt;</highlight></codeline>
+<codeline lineno="82"><highlight class="stringliteral"><sp/><sp/><sp/><sp/>&lt;h1<sp/>id=&quot;title&quot;&gt;%s&lt;/h1&gt;</highlight></codeline>
+<codeline lineno="83"><highlight class="stringliteral"><sp/><sp/><sp/><sp/>&lt;table<sp/>id=&quot;meta&quot;&gt;</highlight></codeline>
+<codeline lineno="84"><highlight class="stringliteral"><sp/><sp/><sp/><sp/><sp/><sp/>&lt;tr&gt;&lt;th&gt;URI&lt;/th&gt;&lt;td&gt;&lt;a<sp/>href=&quot;%s&quot;&gt;%s&lt;/a&gt;&lt;/td&gt;&lt;/tr&gt;</highlight></codeline>
+<codeline lineno="85"><highlight class="stringliteral"><sp/><sp/><sp/><sp/><sp/><sp/>&lt;tr&gt;&lt;th&gt;Version&lt;/th&gt;&lt;td&gt;%s&lt;/td&gt;&lt;/tr&gt;</highlight></codeline>
+<codeline lineno="86"><highlight class="stringliteral"><sp/><sp/><sp/><sp/>&lt;/table&gt;</highlight></codeline>
+<codeline lineno="87"><highlight class="stringliteral"><sp/><sp/>&lt;/div&gt;</highlight></codeline>
+<codeline lineno="88"><highlight class="stringliteral">&apos;&apos;&apos;</highlight><highlight class="normal"><sp/>%<sp/>(name,<sp/>uri,<sp/>uri,<sp/></highlight><highlight class="stringliteral">&apos;0.0.0&apos;</highlight><highlight class="normal">)</highlight></codeline>
+<codeline lineno="89"><highlight class="normal"></highlight></codeline>
+<codeline lineno="90"><highlight class="normal"><sp/><sp/><sp/><sp/>html<sp/>+=<sp/><ref refid="namespacelv2docgen_1a3fb8f6c76d5c87762bb1aa98fa6e454a" kindref="member">get_doc</ref>(model,<sp/>plugin)</highlight></codeline>
+<codeline lineno="91"><highlight class="normal"></highlight></codeline>
+<codeline lineno="92"><highlight class="normal"><sp/><sp/><sp/><sp/>ports_html<sp/>=<sp/></highlight><highlight class="stringliteral">&apos;&apos;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="93"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>p<sp/></highlight><highlight class="keywordflow">in</highlight><highlight class="normal"><sp/>model.triples([plugin,<sp/>lv2.port,<sp/></highlight><highlight class="keywordtype">None</highlight><highlight class="normal">]):</highlight></codeline>
+<codeline lineno="94"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>ports_html<sp/>+=<sp/><ref refid="namespacelv2docgen_1a89de4fc46e4583f0b5879cfc7a747c80" kindref="member">port_doc</ref>(model,<sp/>p[2])</highlight></codeline>
+<codeline lineno="95"><highlight class="normal"></highlight></codeline>
+<codeline lineno="96"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>len(ports_html):</highlight></codeline>
+<codeline lineno="97"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>html<sp/>+=<sp/></highlight><highlight class="stringliteral">&apos;&apos;&apos;</highlight></codeline>
+<codeline lineno="98"><highlight class="stringliteral"><sp/><sp/>&lt;h2<sp/>class=&quot;sec&quot;&gt;Ports&lt;/h2&gt;</highlight></codeline>
+<codeline lineno="99"><highlight class="stringliteral"><sp/><sp/>&lt;div<sp/>class=&quot;content&quot;&gt;</highlight></codeline>
+<codeline lineno="100"><highlight class="stringliteral">%s</highlight></codeline>
+<codeline lineno="101"><highlight class="stringliteral"><sp/><sp/>&lt;/div&gt;&apos;&apos;&apos;</highlight><highlight class="normal"><sp/>%<sp/>ports_html</highlight></codeline>
+<codeline lineno="102"><highlight class="normal"></highlight></codeline>
+<codeline lineno="103"><highlight class="normal"><sp/><sp/><sp/><sp/>html<sp/>+=<sp/></highlight><highlight class="stringliteral">&apos;<sp/><sp/>&lt;/body&gt;&lt;/html&gt;&apos;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="104"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>html</highlight></codeline>
+<codeline lineno="105"><highlight class="normal"></highlight></codeline>
+<codeline lineno="106"><highlight class="normal"></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>__name__<sp/>==<sp/></highlight><highlight class="stringliteral">&apos;__main__&apos;</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="107"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&apos;LV2<sp/>plugin<sp/>documentation<sp/>generator&apos;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="108"><highlight class="normal"></highlight></codeline>
+<codeline lineno="109"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>len(sys.argv)<sp/>&lt;<sp/>2:</highlight></codeline>
+<codeline lineno="110"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>print(</highlight><highlight class="stringliteral">&apos;Usage:<sp/>%s<sp/>OUTDIR<sp/>FILE...&apos;</highlight><highlight class="normal"><sp/>%<sp/>sys.argv[0])</highlight></codeline>
+<codeline lineno="111"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>sys.exit(1)</highlight></codeline>
+<codeline lineno="112"><highlight class="normal"></highlight></codeline>
+<codeline lineno="113" refid="namespacelv2docgen_1aac93b4f696d4d83b93b68db08de2a9e0" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>outdir<sp/>=<sp/>sys.argv[1]</highlight></codeline>
+<codeline lineno="114" refid="namespacelv2docgen_1a2be4ec33b98834ddad6dbf8e8779cfb9" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>files<sp/>=<sp/>sys.argv[2:]</highlight></codeline>
+<codeline lineno="115" refid="namespacelv2docgen_1ae1e22ed57f3a6f2ae8a8135e1bd15b37" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>model<sp/>=<sp/>rdflib.ConjunctiveGraph()</highlight></codeline>
+<codeline lineno="116"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>f<sp/></highlight><highlight class="keywordflow">in</highlight><highlight class="normal"><sp/>files:</highlight></codeline>
+<codeline lineno="117" refid="namespacelv2docgen_1a2b91455cd6425494b5dd21b4662ae441" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>model.parse(f,<sp/>format=</highlight><highlight class="stringliteral">&apos;n3&apos;</highlight><highlight class="normal">)</highlight></codeline>
+<codeline lineno="118"><highlight class="normal"></highlight></codeline>
+<codeline lineno="119" refid="namespacelv2docgen_1aa8202cda5fd7a4be38bce51b21fed0c0" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>style_uri<sp/>=<sp/>os.path.abspath(os.path.join(outdir,<sp/></highlight><highlight class="stringliteral">&apos;style.css&apos;</highlight><highlight class="normal">))</highlight></codeline>
+<codeline lineno="120"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>p<sp/></highlight><highlight class="keywordflow">in</highlight><highlight class="normal"><sp/>model.triples([</highlight><highlight class="keywordtype">None</highlight><highlight class="normal">,<sp/>rdf.type,<sp/>lv2.Plugin]):</highlight></codeline>
+<codeline lineno="121" refid="namespacelv2docgen_1afc728ef34e814436971ab700cb7db3de" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>plugin<sp/>=<sp/>p[0]</highlight></codeline>
+<codeline lineno="122" refid="namespacelv2docgen_1aa004997a70dee0a0506ce9497cdee44b" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>html<sp/>=<sp/><ref refid="namespacelv2docgen_1aaa222eb953c3fe42990ce8641fc9e84b" kindref="member">plugin_doc</ref>(model,<sp/>plugin,<sp/>style_uri)</highlight></codeline>
+<codeline lineno="123" refid="namespacelv2docgen_1ae75d75173fc2ea012acad7d886aa2f9d" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>path<sp/>=<sp/><ref refid="namespacelv2docgen_1a4bded19b57aa94a9f14d74ebce83c470" kindref="member">uri_to_path</ref>(plugin)</highlight></codeline>
+<codeline lineno="124"><highlight class="normal"></highlight></codeline>
+<codeline lineno="125" refid="namespacelv2docgen_1a59e093b7cb6f5f76bd9a728ba1494191" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>outpath<sp/>=<sp/>os.path.join(outdir,<sp/>path<sp/>+<sp/></highlight><highlight class="stringliteral">&apos;.html&apos;</highlight><highlight class="normal">)</highlight></codeline>
+<codeline lineno="126"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">try</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="127"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>os.makedirs(os.path.dirname(outpath))</highlight></codeline>
+<codeline lineno="128"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">except</highlight><highlight class="normal"><sp/>OSError:</highlight></codeline>
+<codeline lineno="129" refid="namespacelv2docgen_1a4405dc5a2509537b9ff3b4de10bc28d6" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>e<sp/>=<sp/>sys.exc_info()[1]</highlight></codeline>
+<codeline lineno="130"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>e.errno<sp/>==<sp/>errno.EEXIST:</highlight></codeline>
+<codeline lineno="131"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">pass</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="132"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="133"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">raise</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="134"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="135"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">print</highlight><highlight class="normal"><sp/></highlight><highlight class="stringliteral">&apos;Writing<sp/>&lt;%s&gt;<sp/>documentation<sp/>to<sp/>%s&apos;</highlight><highlight class="normal"><sp/>%<sp/>(plugin,<sp/>outpath)</highlight></codeline>
+<codeline lineno="136" refid="namespacelv2docgen_1ae4bfb5380ca9e3e62abd97fe801aab94" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>out<sp/>=<sp/>open(outpath,<sp/></highlight><highlight class="stringliteral">&apos;w&apos;</highlight><highlight class="normal">)</highlight></codeline>
+<codeline lineno="137"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>out.write(html)</highlight></codeline>
+<codeline lineno="138"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>out.close()</highlight></codeline>
+<codeline lineno="139"><highlight class="normal"></highlight></codeline>
+<codeline lineno="140"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="141"><highlight class="normal"></highlight></codeline>
+    </programlisting>
+    <location file="C:/_dev/OpenU/Audacity/audacity/lib-src/lv2/lv2/lv2specgen/lv2docgen.py"/>
+  </compounddef>
+</doxygen>

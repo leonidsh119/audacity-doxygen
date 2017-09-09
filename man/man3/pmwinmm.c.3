@@ -1,0 +1,289 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/lib-src/portmidi/pm_win/pmwinmm.c" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/lib-src/portmidi/pm_win/pmwinmm.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include 'windows\&.h'\fP
+.br
+\fC#include 'mmsystem\&.h'\fP
+.br
+\fC#include 'portmidi\&.h'\fP
+.br
+\fC#include 'pmutil\&.h'\fP
+.br
+\fC#include 'pminternal\&.h'\fP
+.br
+\fC#include 'pmwinmm\&.h'\fP
+.br
+\fC#include <string\&.h>\fP
+.br
+\fC#include 'porttime\&.h'\fP
+.br
+\fC#include <assert\&.h>\fP
+.br
+
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "struct \fBmidiwinmm_struct\fP"
+.br
+.in -1c
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fB_WIN32_WINNT\fP   0x0500"
+.br
+.ti -1c
+.RI "#define \fBstreql\fP(x,  y)   (strcmp(x, y) == 0)"
+.br
+.ti -1c
+.RI "#define \fBMIDI_SYSEX\fP   0xf0"
+.br
+.ti -1c
+.RI "#define \fBMIDI_EOX\fP   0xf7"
+.br
+.ti -1c
+.RI "#define \fBNUM_SIMPLE_SYSEX_BUFFERS\fP   3"
+.br
+.ti -1c
+.RI "#define \fBMIN_SIMPLE_SYSEX_LEN\fP   256"
+.br
+.ti -1c
+.RI "#define \fBMIN_STREAM_BUFFERS\fP   16"
+.br
+.ti -1c
+.RI "#define \fBSTREAM_BUFFER_LEN\fP   24"
+.br
+.ti -1c
+.RI "#define \fBINPUT_SYSEX_LEN\fP   64"
+.br
+.ti -1c
+.RI "#define \fBMIN_INPUT_BUFFERS\fP   16"
+.br
+.ti -1c
+.RI "#define \fBNUM_EXPANSION_BUFFERS\fP   128"
+.br
+.ti -1c
+.RI "#define \fBEXPANSION_BUFFER_LEN\fP   1024"
+.br
+.ti -1c
+.RI "#define \fBMIDIHDR_SYSEX_BUFFER_LENGTH\fP(x)   ((x) + sizeof(long)*3)"
+.br
+.ti -1c
+.RI "#define \fBMIDIHDR_SYSEX_SIZE\fP(x)   (\fBMIDIHDR_SYSEX_BUFFER_LENGTH\fP(x) + sizeof(MIDIHDR))"
+.br
+.ti -1c
+.RI "#define \fBwinmm_begin_sysex\fP   winmm_write_flush"
+.br
+.ti -1c
+.RI "#define \fBwinmm_in_abort\fP   \fBpm_fail_fn\fP"
+.br
+.in -1c
+.SS "Typedefs"
+
+.in +1c
+.ti -1c
+.RI "typedef struct \fBmidiwinmm_struct\fP \fBmidiwinmm_node\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBmidiwinmm_struct\fP * \fBmidiwinmm_type\fP"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBvoid\fP \fBpm_winmm_init\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBpm_winmm_term\fP (\fBvoid\fP)"
+.br
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "\fBpm_fns_node\fP \fBpm_winmm_in_dictionary\fP"
+.br
+.ti -1c
+.RI "\fBpm_fns_node\fP \fBpm_winmm_out_dictionary\fP"
+.br
+.ti -1c
+.RI "MIDIINCAPS * \fBmidi_in_caps\fP = \fBNULL\fP"
+.br
+.ti -1c
+.RI "MIDIINCAPS \fBmidi_in_mapper_caps\fP"
+.br
+.ti -1c
+.RI "\fBUINT\fP \fBmidi_num_inputs\fP = 0"
+.br
+.ti -1c
+.RI "MIDIOUTCAPS * \fBmidi_out_caps\fP = \fBNULL\fP"
+.br
+.ti -1c
+.RI "MIDIOUTCAPS \fBmidi_out_mapper_caps\fP"
+.br
+.ti -1c
+.RI "\fBUINT\fP \fBmidi_num_outputs\fP = 0"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define _WIN32_WINNT   0x0500"
+
+.PP
+Definition at line 11 of file pmwinmm\&.c\&.
+.SS "#define EXPANSION_BUFFER_LEN   1024"
+
+.PP
+Definition at line 94 of file pmwinmm\&.c\&.
+.SS "#define INPUT_SYSEX_LEN   64"
+
+.PP
+Definition at line 87 of file pmwinmm\&.c\&.
+.SS "#define MIDI_EOX   0xf7"
+
+.PP
+Definition at line 37 of file pmwinmm\&.c\&.
+.SS "#define MIDI_SYSEX   0xf0"
+
+.PP
+Definition at line 36 of file pmwinmm\&.c\&.
+.SS "#define MIDIHDR_SYSEX_BUFFER_LENGTH(x)   ((x) + sizeof(long)*3)"
+
+.PP
+Definition at line 97 of file pmwinmm\&.c\&.
+.SS "#define MIDIHDR_SYSEX_SIZE(x)   (\fBMIDIHDR_SYSEX_BUFFER_LENGTH\fP(x) + sizeof(MIDIHDR))"
+
+.PP
+Definition at line 99 of file pmwinmm\&.c\&.
+.SS "#define MIN_INPUT_BUFFERS   16"
+
+.PP
+Definition at line 88 of file pmwinmm\&.c\&.
+.SS "#define MIN_SIMPLE_SYSEX_LEN   256"
+
+.PP
+Definition at line 82 of file pmwinmm\&.c\&.
+.SS "#define MIN_STREAM_BUFFERS   16"
+
+.PP
+Definition at line 84 of file pmwinmm\&.c\&.
+.SS "#define NUM_EXPANSION_BUFFERS   128"
+
+.PP
+Definition at line 93 of file pmwinmm\&.c\&.
+.SS "#define NUM_SIMPLE_SYSEX_BUFFERS   3"
+
+.PP
+Definition at line 81 of file pmwinmm\&.c\&.
+.SS "#define STREAM_BUFFER_LEN   24"
+
+.PP
+Definition at line 85 of file pmwinmm\&.c\&.
+.SS "#define streql(x, y)   (strcmp(x, y) == 0)"
+
+.PP
+Definition at line 34 of file pmwinmm\&.c\&.
+.SS "#define winmm_begin_sysex   winmm_write_flush"
+
+.PP
+Definition at line 1140 of file pmwinmm\&.c\&.
+.SS "#define winmm_in_abort   \fBpm_fail_fn\fP"
+
+.PP
+Definition at line 1360 of file pmwinmm\&.c\&.
+.SH "Typedef Documentation"
+.PP 
+.SS "typedef struct \fBmidiwinmm_struct\fP  \fBmidiwinmm_node\fP"
+
+.SS "typedef struct \fBmidiwinmm_struct\fP * \fBmidiwinmm_type\fP"
+
+.SH "Function Documentation"
+.PP 
+.SS "\fBvoid\fP pm_winmm_init (\fBvoid\fP)"
+
+.PP
+Definition at line 1403 of file pmwinmm\&.c\&.
+.SS "\fBvoid\fP pm_winmm_term (\fBvoid\fP)"
+
+.PP
+Definition at line 1416 of file pmwinmm\&.c\&.
+.SH "Variable Documentation"
+.PP 
+.SS "MIDIINCAPS* midi_in_caps = \fBNULL\fP"
+
+.PP
+Definition at line 112 of file pmwinmm\&.c\&.
+.SS "MIDIINCAPS midi_in_mapper_caps"
+
+.PP
+Definition at line 113 of file pmwinmm\&.c\&.
+.SS "\fBUINT\fP midi_num_inputs = 0"
+
+.PP
+Definition at line 114 of file pmwinmm\&.c\&.
+.SS "\fBUINT\fP midi_num_outputs = 0"
+
+.PP
+Definition at line 117 of file pmwinmm\&.c\&.
+.SS "MIDIOUTCAPS* midi_out_caps = \fBNULL\fP"
+
+.PP
+Definition at line 115 of file pmwinmm\&.c\&.
+.SS "MIDIOUTCAPS midi_out_mapper_caps"
+
+.PP
+Definition at line 116 of file pmwinmm\&.c\&.
+.SS "\fBpm_fns_node\fP pm_winmm_in_dictionary"
+\fBInitial value:\fP
+.PP
+.nf
+= {
+                                         none_write_short,
+                                         none_sysex,
+                                         none_sysex,
+                                         none_write_byte,
+                                         none_write_short,
+                                         none_write_flush,
+                                         winmm_synchronize,
+                                         winmm_in_open,
+                                         winmm_in_abort,
+                                         winmm_in_close,
+                                         winmm_in_poll,
+                                         winmm_has_host_error,
+                                         winmm_get_host_error
+                                     }
+.fi
+.PP
+Definition at line 1361 of file pmwinmm\&.c\&.
+.SS "\fBpm_fns_node\fP pm_winmm_out_dictionary"
+\fBInitial value:\fP
+.PP
+.nf
+= {
+                                          winmm_write_short,
+                                          winmm_begin_sysex,
+                                          winmm_end_sysex,
+                                          winmm_write_byte,
+                                          winmm_write_short,  
+                                          winmm_write_flush,
+                                          winmm_synchronize,
+                                          winmm_out_open,
+                                          winmm_out_abort,
+                                          winmm_out_close,
+                                          none_poll,
+                                          winmm_has_host_error,
+                                          winmm_get_host_error
+                                      }
+.fi
+.PP
+Definition at line 1377 of file pmwinmm\&.c\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

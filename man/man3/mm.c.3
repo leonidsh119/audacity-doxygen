@@ -1,0 +1,536 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/lib-src/portmidi/pm_test/mm.c" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/lib-src/portmidi/pm_test/mm.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include 'stdlib\&.h'\fP
+.br
+\fC#include 'ctype\&.h'\fP
+.br
+\fC#include 'string\&.h'\fP
+.br
+\fC#include 'stdio\&.h'\fP
+.br
+\fC#include 'porttime\&.h'\fP
+.br
+\fC#include 'portmidi\&.h'\fP
+.br
+
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBSTRING_MAX\fP   80"
+.br
+.ti -1c
+.RI "#define \fBMIDI_CODE_MASK\fP   0xf0"
+.br
+.ti -1c
+.RI "#define \fBMIDI_CHN_MASK\fP   0x0f"
+.br
+.ti -1c
+.RI "#define \fBMIDI_OFF_NOTE\fP   0x80"
+.br
+.ti -1c
+.RI "#define \fBMIDI_ON_NOTE\fP   0x90"
+.br
+.ti -1c
+.RI "#define \fBMIDI_POLY_TOUCH\fP   0xa0"
+.br
+.ti -1c
+.RI "#define \fBMIDI_CTRL\fP   0xb0"
+.br
+.ti -1c
+.RI "#define \fBMIDI_CH_PROGRAM\fP   0xc0"
+.br
+.ti -1c
+.RI "#define \fBMIDI_TOUCH\fP   0xd0"
+.br
+.ti -1c
+.RI "#define \fBMIDI_BEND\fP   0xe0"
+.br
+.ti -1c
+.RI "#define \fBMIDI_SYSEX\fP   0xf0"
+.br
+.ti -1c
+.RI "#define \fBMIDI_Q_FRAME\fP   0xf1"
+.br
+.ti -1c
+.RI "#define \fBMIDI_SONG_POINTER\fP   0xf2"
+.br
+.ti -1c
+.RI "#define \fBMIDI_SONG_SELECT\fP   0xf3"
+.br
+.ti -1c
+.RI "#define \fBMIDI_TUNE_REQ\fP   0xf6"
+.br
+.ti -1c
+.RI "#define \fBMIDI_EOX\fP   0xf7"
+.br
+.ti -1c
+.RI "#define \fBMIDI_TIME_CLOCK\fP   0xf8"
+.br
+.ti -1c
+.RI "#define \fBMIDI_START\fP   0xfa"
+.br
+.ti -1c
+.RI "#define \fBMIDI_CONTINUE\fP   0xfb"
+.br
+.ti -1c
+.RI "#define \fBMIDI_STOP\fP   0xfc"
+.br
+.ti -1c
+.RI "#define \fBMIDI_ACTIVE_SENSING\fP   0xfe"
+.br
+.ti -1c
+.RI "#define \fBMIDI_SYS_RESET\fP   0xff"
+.br
+.ti -1c
+.RI "#define \fBMIDI_ALL_SOUND_OFF\fP   0x78"
+.br
+.ti -1c
+.RI "#define \fBMIDI_RESET_CONTROLLERS\fP   0x79"
+.br
+.ti -1c
+.RI "#define \fBMIDI_LOCAL\fP   0x7a"
+.br
+.ti -1c
+.RI "#define \fBMIDI_ALL_OFF\fP   0x7b"
+.br
+.ti -1c
+.RI "#define \fBMIDI_OMNI_OFF\fP   0x7c"
+.br
+.ti -1c
+.RI "#define \fBMIDI_OMNI_ON\fP   0x7d"
+.br
+.ti -1c
+.RI "#define \fBMIDI_MONO_ON\fP   0x7e"
+.br
+.ti -1c
+.RI "#define \fBMIDI_POLY_ON\fP   0x7f"
+.br
+.ti -1c
+.RI "#define \fBprivate\fP   static"
+.br
+.ti -1c
+.RI "#define \fBfalse\fP   0"
+.br
+.ti -1c
+.RI "#define \fBtrue\fP   1"
+.br
+.ti -1c
+.RI "#define \fBsysex_max\fP   16"
+.br
+.in -1c
+.SS "Typedefs"
+
+.in +1c
+.ti -1c
+.RI "typedef \fBint\fP \fBboolean\fP"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBprivate\fP \fBvoid\fP \fBmmexit\fP (\fBint\fP code)"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBvoid\fP \fBoutput\fP (\fBPmMessage\fP \fBdata\fP)"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBint\fP \fBput_pitch\fP (\fBint\fP \fBp\fP)"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBvoid\fP \fBshowhelp\fP ()"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBvoid\fP \fBshowbytes\fP (\fBPmMessage\fP \fBdata\fP, \fBint\fP \fBlen\fP, \fBboolean\fP newline)"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBvoid\fP \fBshowstatus\fP (\fBboolean\fP flag)"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBvoid\fP \fBdoascii\fP (char \fBc\fP)"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBint\fP \fBget_number\fP (char *prompt)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBreceive_poll\fP (\fBPtTimestamp\fP timestamp, \fBvoid\fP *\fBuserData\fP)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBmain\fP (\fBint\fP \fBargc\fP, char **\fBargv\fP)"
+.br
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "\fBint\fP \fBdebug\fP = \fBfalse\fP"
+.br
+.ti -1c
+.RI "\fBPmStream\fP * \fBmidi_in\fP"
+.br
+.ti -1c
+.RI "\fBboolean\fP \fBactive\fP = \fBfalse\fP"
+.br
+.ti -1c
+.RI "\fBboolean\fP \fBin_sysex\fP = \fBfalse\fP"
+.br
+.ti -1c
+.RI "\fBboolean\fP \fBinited\fP = \fBfalse\fP"
+.br
+.ti -1c
+.RI "\fBboolean\fP \fBdone\fP = \fBfalse\fP"
+.br
+.ti -1c
+.RI "\fBboolean\fP \fBnotes\fP = \fBtrue\fP"
+.br
+.ti -1c
+.RI "\fBboolean\fP \fBcontrols\fP = \fBtrue\fP"
+.br
+.ti -1c
+.RI "\fBboolean\fP \fBbender\fP = \fBtrue\fP"
+.br
+.ti -1c
+.RI "\fBboolean\fP \fBexcldata\fP = \fBtrue\fP"
+.br
+.ti -1c
+.RI "\fBboolean\fP \fBverbose\fP = \fBtrue\fP"
+.br
+.ti -1c
+.RI "\fBboolean\fP \fBrealdata\fP = \fBtrue\fP"
+.br
+.ti -1c
+.RI "\fBboolean\fP \fBclksencnt\fP = \fBtrue\fP"
+.br
+.ti -1c
+.RI "\fBboolean\fP \fBchmode\fP = \fBtrue\fP"
+.br
+.ti -1c
+.RI "\fBboolean\fP \fBpgchanges\fP = \fBtrue\fP"
+.br
+.ti -1c
+.RI "\fBboolean\fP \fBflush\fP = \fBfalse\fP"
+.br
+.ti -1c
+.RI "\fBuint32_t\fP \fBfilter\fP = 0"
+.br
+.ti -1c
+.RI "\fBuint32_t\fP \fBclockcount\fP = 0"
+.br
+.ti -1c
+.RI "\fBuint32_t\fP \fBactsensecount\fP = 0"
+.br
+.ti -1c
+.RI "\fBuint32_t\fP \fBnotescount\fP = 0"
+.br
+.ti -1c
+.RI "\fBuint32_t\fP \fBnotestotal\fP = 0"
+.br
+.ti -1c
+.RI "char \fBval_format\fP [] = ' Val %d\\n'"
+.br
+.ti -1c
+.RI "\fBint\fP \fBabort_flag\fP"
+.br
+.ti -1c
+.RI "char \fBvel_format\fP [] = ' Vel %d\\n'"
+.br
+.ti -1c
+.RI "char \fBnib_to_hex\fP [] = '0123456789ABCDEF'"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define false   0"
+
+.PP
+Definition at line 64 of file mm\&.c\&.
+.SS "#define MIDI_ACTIVE_SENSING   0xfe"
+
+.PP
+Definition at line 48 of file mm\&.c\&.
+.SS "#define MIDI_ALL_OFF   0x7b"
+
+.PP
+Definition at line 54 of file mm\&.c\&.
+.SS "#define MIDI_ALL_SOUND_OFF   0x78"
+
+.PP
+Definition at line 51 of file mm\&.c\&.
+.SS "#define MIDI_BEND   0xe0"
+
+.PP
+Definition at line 36 of file mm\&.c\&.
+.SS "#define MIDI_CH_PROGRAM   0xc0"
+
+.PP
+Definition at line 34 of file mm\&.c\&.
+.SS "#define MIDI_CHN_MASK   0x0f"
+
+.PP
+Definition at line 27 of file mm\&.c\&.
+.SS "#define MIDI_CODE_MASK   0xf0"
+
+.PP
+Definition at line 26 of file mm\&.c\&.
+.SS "#define MIDI_CONTINUE   0xfb"
+
+.PP
+Definition at line 46 of file mm\&.c\&.
+.SS "#define MIDI_CTRL   0xb0"
+
+.PP
+Definition at line 33 of file mm\&.c\&.
+.SS "#define MIDI_EOX   0xf7"
+
+.PP
+Definition at line 43 of file mm\&.c\&.
+.SS "#define MIDI_LOCAL   0x7a"
+
+.PP
+Definition at line 53 of file mm\&.c\&.
+.SS "#define MIDI_MONO_ON   0x7e"
+
+.PP
+Definition at line 57 of file mm\&.c\&.
+.SS "#define MIDI_OFF_NOTE   0x80"
+
+.PP
+Definition at line 30 of file mm\&.c\&.
+.SS "#define MIDI_OMNI_OFF   0x7c"
+
+.PP
+Definition at line 55 of file mm\&.c\&.
+.SS "#define MIDI_OMNI_ON   0x7d"
+
+.PP
+Definition at line 56 of file mm\&.c\&.
+.SS "#define MIDI_ON_NOTE   0x90"
+
+.PP
+Definition at line 31 of file mm\&.c\&.
+.SS "#define MIDI_POLY_ON   0x7f"
+
+.PP
+Definition at line 58 of file mm\&.c\&.
+.SS "#define MIDI_POLY_TOUCH   0xa0"
+
+.PP
+Definition at line 32 of file mm\&.c\&.
+.SS "#define MIDI_Q_FRAME   0xf1"
+
+.PP
+Definition at line 39 of file mm\&.c\&.
+.SS "#define MIDI_RESET_CONTROLLERS   0x79"
+
+.PP
+Definition at line 52 of file mm\&.c\&.
+.SS "#define MIDI_SONG_POINTER   0xf2"
+
+.PP
+Definition at line 40 of file mm\&.c\&.
+.SS "#define MIDI_SONG_SELECT   0xf3"
+
+.PP
+Definition at line 41 of file mm\&.c\&.
+.SS "#define MIDI_START   0xfa"
+
+.PP
+Definition at line 45 of file mm\&.c\&.
+.SS "#define MIDI_STOP   0xfc"
+
+.PP
+Definition at line 47 of file mm\&.c\&.
+.SS "#define MIDI_SYS_RESET   0xff"
+
+.PP
+Definition at line 49 of file mm\&.c\&.
+.SS "#define MIDI_SYSEX   0xf0"
+
+.PP
+Definition at line 38 of file mm\&.c\&.
+.SS "#define MIDI_TIME_CLOCK   0xf8"
+
+.PP
+Definition at line 44 of file mm\&.c\&.
+.SS "#define MIDI_TOUCH   0xd0"
+
+.PP
+Definition at line 35 of file mm\&.c\&.
+.SS "#define MIDI_TUNE_REQ   0xf6"
+
+.PP
+Definition at line 42 of file mm\&.c\&.
+.SS "#define private   static"
+
+.PP
+Definition at line 61 of file mm\&.c\&.
+.SS "#define STRING_MAX   80"
+
+.PP
+Definition at line 24 of file mm\&.c\&.
+.SS "#define sysex_max   16"
+
+.SS "#define true   1"
+
+.PP
+Definition at line 65 of file mm\&.c\&.
+.SH "Typedef Documentation"
+.PP 
+.SS "typedef \fBint\fP \fBboolean\fP"
+
+.PP
+Definition at line 68 of file mm\&.c\&.
+.SH "Function Documentation"
+.PP 
+.SS "\fBprivate\fP \fBvoid\fP doascii (char c)"
+
+.PP
+Definition at line 201 of file mm\&.c\&.
+.SS "\fBprivate\fP \fBint\fP get_number (char * prompt)"
+
+.PP
+Definition at line 118 of file mm\&.c\&.
+.SS "\fBint\fP main (\fBint\fP argc, char ** argv)"
+
+.PP
+Definition at line 149 of file mm\&.c\&.
+.SS "\fBprivate\fP \fBvoid\fP mmexit (\fBint\fP code)"
+
+.PP
+Definition at line 277 of file mm\&.c\&.
+.SS "\fBprivate\fP \fBvoid\fP output (\fBPmMessage\fP data)"
+
+.PP
+Definition at line 295 of file mm\&.c\&.
+.SS "\fBprivate\fP \fBint\fP put_pitch (\fBint\fP p)"
+
+.PP
+Definition at line 479 of file mm\&.c\&.
+.SS "\fBvoid\fP receive_poll (\fBPtTimestamp\fP timestamp, \fBvoid\fP * userData)"
+
+.PP
+Definition at line 132 of file mm\&.c\&.
+.SS "\fBprivate\fP \fBvoid\fP showbytes (\fBPmMessage\fP data, \fBint\fP len, \fBboolean\fP newline)"
+
+.PP
+Definition at line 499 of file mm\&.c\&.
+.SS "\fBprivate\fP \fBvoid\fP showhelp ()"
+
+.PP
+Definition at line 530 of file mm\&.c\&.
+.SS "\fBprivate\fP \fBvoid\fP showstatus (\fBboolean\fP flag)"
+
+.PP
+Definition at line 569 of file mm\&.c\&.
+.SH "Variable Documentation"
+.PP 
+.SS "\fBint\fP abort_flag"
+
+.PP
+Definition at line 187 of file userio\&.c\&.
+.SS "\fBboolean\fP active = \fBfalse\fP"
+
+.PP
+Definition at line 72 of file mm\&.c\&.
+.SS "\fBuint32_t\fP actsensecount = 0"
+
+.PP
+Definition at line 90 of file mm\&.c\&.
+.SS "\fBboolean\fP bender = \fBtrue\fP"
+
+.PP
+Definition at line 78 of file mm\&.c\&.
+.SS "\fBboolean\fP chmode = \fBtrue\fP"
+
+.PP
+Definition at line 83 of file mm\&.c\&.
+.SS "\fBboolean\fP clksencnt = \fBtrue\fP"
+
+.PP
+Definition at line 82 of file mm\&.c\&.
+.SS "\fBuint32_t\fP clockcount = 0"
+
+.PP
+Definition at line 89 of file mm\&.c\&.
+.SS "\fBboolean\fP controls = \fBtrue\fP"
+
+.PP
+Definition at line 77 of file mm\&.c\&.
+.SS "\fBint\fP debug = \fBfalse\fP"
+
+.PP
+Definition at line 70 of file mm\&.c\&.
+.SS "\fBboolean\fP done = \fBfalse\fP"
+
+.PP
+Definition at line 75 of file mm\&.c\&.
+.SS "\fBboolean\fP excldata = \fBtrue\fP"
+
+.PP
+Definition at line 79 of file mm\&.c\&.
+.SS "\fBuint32_t\fP filter = 0"
+
+.PP
+Definition at line 87 of file mm\&.c\&.
+.SS "\fBboolean\fP flush = \fBfalse\fP"
+
+.PP
+Definition at line 85 of file mm\&.c\&.
+.SS "\fBboolean\fP in_sysex = \fBfalse\fP"
+
+.PP
+Definition at line 73 of file mm\&.c\&.
+.SS "\fBboolean\fP inited = \fBfalse\fP"
+
+.PP
+Definition at line 74 of file mm\&.c\&.
+.SS "\fBPmStream\fP* midi_in"
+
+.PP
+Definition at line 71 of file mm\&.c\&.
+.SS "char nib_to_hex[] = '0123456789ABCDEF'"
+
+.PP
+Definition at line 497 of file mm\&.c\&.
+.SS "\fBboolean\fP notes = \fBtrue\fP"
+
+.PP
+Definition at line 76 of file mm\&.c\&.
+.SS "\fBuint32_t\fP notescount = 0"
+
+.PP
+Definition at line 91 of file mm\&.c\&.
+.SS "\fBuint32_t\fP notestotal = 0"
+
+.PP
+Definition at line 92 of file mm\&.c\&.
+.SS "\fBboolean\fP pgchanges = \fBtrue\fP"
+
+.PP
+Definition at line 84 of file mm\&.c\&.
+.SS "\fBboolean\fP realdata = \fBtrue\fP"
+
+.PP
+Definition at line 81 of file mm\&.c\&.
+.SS "char val_format[] = ' Val %d\\n'"
+
+.PP
+Definition at line 94 of file mm\&.c\&.
+.SS "char vel_format[] = ' Vel %d\\n'"
+
+.PP
+Definition at line 293 of file mm\&.c\&.
+.SS "\fBboolean\fP verbose = \fBtrue\fP"
+
+.PP
+Definition at line 80 of file mm\&.c\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

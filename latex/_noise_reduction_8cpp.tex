@@ -1,0 +1,152 @@
+\hypertarget{_noise_reduction_8cpp}{}\section{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/src/effects/\+Noise\+Reduction.cpp File Reference}
+\label{_noise_reduction_8cpp}\index{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/src/effects/\+Noise\+Reduction.\+cpp@{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/src/effects/\+Noise\+Reduction.\+cpp}}
+{\ttfamily \#include \char`\"{}../\+Audacity.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../\+Experimental.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Noise\+Reduction.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Effect\+Manager.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../\+Shuttle\+Gui.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../\+Prefs.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../\+Wave\+Track.\+h\char`\"{}}\\*
+{\ttfamily \#include $<$algorithm$>$}\\*
+{\ttfamily \#include $<$vector$>$}\\*
+{\ttfamily \#include $<$math.\+h$>$}\\*
+{\ttfamily \#include $<$wx/button.\+h$>$}\\*
+{\ttfamily \#include $<$wx/choice.\+h$>$}\\*
+{\ttfamily \#include $<$wx/dialog.\+h$>$}\\*
+{\ttfamily \#include $<$wx/radiobut.\+h$>$}\\*
+{\ttfamily \#include $<$wx/slider.\+h$>$}\\*
+{\ttfamily \#include $<$wx/valtext.\+h$>$}\\*
+{\ttfamily \#include $<$wx/textctrl.\+h$>$}\\*
+{\ttfamily \#include $<$wx/sizer.\+h$>$}\\*
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \hyperlink{class_effect_noise_reduction_1_1_statistics}{Effect\+Noise\+Reduction\+::\+Statistics}
+\item 
+class \hyperlink{class_effect_noise_reduction_1_1_settings}{Effect\+Noise\+Reduction\+::\+Settings}
+\item 
+class \hyperlink{class_effect_noise_reduction_1_1_worker}{Effect\+Noise\+Reduction\+::\+Worker}
+\item 
+class \hyperlink{class_effect_noise_reduction_1_1_dialog}{Effect\+Noise\+Reduction\+::\+Dialog}
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_effect_noise_reduction_1_1_dialog}{Dialog} used with \hyperlink{class_effect_noise_reduction}{Effect\+Noise\+Reduction}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{_noise_reduction_8cpp_a218c49528d756ea81ebe2fa38c2ae9db}{R\+E\+S\+I\+D\+U\+E\+\_\+\+C\+H\+O\+I\+CE}
+\end{DoxyCompactItemize}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef std\+::vector$<$ float $>$ \hyperlink{_noise_reduction_8cpp_a64be07a13efb96ba9d376c4cbc6f501e}{Float\+Vector}
+\end{DoxyCompactItemize}
+\subsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \hyperlink{_noise_reduction_8cpp_a32fbcbc85aab14bb60b15358bb7917eb}{Discrimination\+Method} 
+\item 
+enum \hyperlink{_noise_reduction_8cpp_a58ad3159a8b1f24a1d3497efcd541b69}{Window\+Types} 
+\item 
+enum 
+\item 
+enum \hyperlink{_noise_reduction_8cpp_a467334a229f715a676938085a52b61c2}{Noise\+Reduction\+Choice} 
+\item 
+enum \{ \\*
+\hyperlink{_noise_reduction_8cpp_a0341d081395407fd92061819ba76eb96a1ae9215fdbd510aa098b276de3241d14}{I\+D\+\_\+\+B\+U\+T\+T\+O\+N\+\_\+\+G\+E\+T\+P\+R\+O\+F\+I\+LE} = 10001, 
+\hyperlink{_noise_reduction_8cpp_a0341d081395407fd92061819ba76eb96ac464a1ac67cb4151d10de967e150eb64}{I\+D\+\_\+\+R\+A\+D\+I\+O\+B\+U\+T\+T\+O\+N\+\_\+\+K\+E\+E\+P\+S\+I\+G\+N\+AL}, 
+\hyperlink{_noise_reduction_8cpp_a0341d081395407fd92061819ba76eb96a96b12d6226e5bbead121b52ac8b5e6ba}{I\+D\+\_\+\+R\+A\+D\+I\+O\+B\+U\+T\+T\+O\+N\+\_\+\+R\+E\+S\+I\+D\+UE}, 
+\hyperlink{_noise_reduction_8cpp_a0341d081395407fd92061819ba76eb96a1c554a3cf3435eb54967259fc7bbdbc2}{I\+D\+\_\+\+G\+A\+I\+N\+\_\+\+S\+L\+I\+D\+ER}, 
+\\*
+\hyperlink{_noise_reduction_8cpp_a0341d081395407fd92061819ba76eb96a0f9f6d111ab6c41a6c0627ccc1769426}{I\+D\+\_\+\+G\+A\+I\+N\+\_\+\+T\+E\+XT}, 
+\hyperlink{_noise_reduction_8cpp_a0341d081395407fd92061819ba76eb96a1dad4dd6b2d875165dcba436fd958162}{I\+D\+\_\+\+N\+E\+W\+\_\+\+S\+E\+N\+S\+I\+T\+I\+V\+I\+T\+Y\+\_\+\+S\+L\+I\+D\+ER}, 
+\hyperlink{_noise_reduction_8cpp_a0341d081395407fd92061819ba76eb96aa55ea7d1b1875214fb831e5c8d9bc3d6}{I\+D\+\_\+\+N\+E\+W\+\_\+\+S\+E\+N\+S\+I\+T\+I\+V\+I\+T\+Y\+\_\+\+T\+E\+XT}, 
+\hyperlink{_noise_reduction_8cpp_a0341d081395407fd92061819ba76eb96a27044b77ecdb13db0926cb63749d2255}{I\+D\+\_\+\+F\+R\+E\+Q\+\_\+\+S\+L\+I\+D\+ER}, 
+\\*
+\hyperlink{_noise_reduction_8cpp_a0341d081395407fd92061819ba76eb96ade8c28123faab7710accec1d4f4a6b47}{I\+D\+\_\+\+F\+R\+E\+Q\+\_\+\+T\+E\+XT}, 
+\hyperlink{_noise_reduction_8cpp_a0341d081395407fd92061819ba76eb96a6ed1c9f1eed68a848b0a9ecfe3ae509d}{E\+N\+D\+\_\+\+O\+F\+\_\+\+B\+A\+S\+I\+C\+\_\+\+S\+L\+I\+D\+E\+RS}, 
+\hyperlink{_noise_reduction_8cpp_a0341d081395407fd92061819ba76eb96a48ba953126c788cf919b66f64de186e7}{E\+N\+D\+\_\+\+O\+F\+\_\+\+S\+L\+I\+D\+E\+RS} = E\+N\+D\+\_\+\+O\+F\+\_\+\+B\+A\+S\+I\+C\+\_\+\+S\+L\+I\+D\+E\+RS, 
+\hyperlink{_noise_reduction_8cpp_a0341d081395407fd92061819ba76eb96ac8ee536c53f485a980dfc3698ed21801}{F\+I\+R\+S\+T\+\_\+\+S\+L\+I\+D\+ER} = I\+D\+\_\+\+G\+A\+I\+N\+\_\+\+S\+L\+I\+D\+ER
+ \}
+\end{DoxyCompactItemize}
+
+
+\subsection{Macro Definition Documentation}
+\index{Noise\+Reduction.\+cpp@{Noise\+Reduction.\+cpp}!R\+E\+S\+I\+D\+U\+E\+\_\+\+C\+H\+O\+I\+CE@{R\+E\+S\+I\+D\+U\+E\+\_\+\+C\+H\+O\+I\+CE}}
+\index{R\+E\+S\+I\+D\+U\+E\+\_\+\+C\+H\+O\+I\+CE@{R\+E\+S\+I\+D\+U\+E\+\_\+\+C\+H\+O\+I\+CE}!Noise\+Reduction.\+cpp@{Noise\+Reduction.\+cpp}}
+\subsubsection[{\texorpdfstring{R\+E\+S\+I\+D\+U\+E\+\_\+\+C\+H\+O\+I\+CE}{RESIDUE_CHOICE}}]{\setlength{\rightskip}{0pt plus 5cm}\#define R\+E\+S\+I\+D\+U\+E\+\_\+\+C\+H\+O\+I\+CE}\hypertarget{_noise_reduction_8cpp_a218c49528d756ea81ebe2fa38c2ae9db}{}\label{_noise_reduction_8cpp_a218c49528d756ea81ebe2fa38c2ae9db}
+
+
+Definition at line 74 of file Noise\+Reduction.\+cpp.
+
+
+
+\subsection{Typedef Documentation}
+\index{Noise\+Reduction.\+cpp@{Noise\+Reduction.\+cpp}!Float\+Vector@{Float\+Vector}}
+\index{Float\+Vector@{Float\+Vector}!Noise\+Reduction.\+cpp@{Noise\+Reduction.\+cpp}}
+\subsubsection[{\texorpdfstring{Float\+Vector}{FloatVector}}]{\setlength{\rightskip}{0pt plus 5cm}typedef std\+::vector$<$float$>$ {\bf Float\+Vector}}\hypertarget{_noise_reduction_8cpp_a64be07a13efb96ba9d376c4cbc6f501e}{}\label{_noise_reduction_8cpp_a64be07a13efb96ba9d376c4cbc6f501e}
+
+
+Definition at line 71 of file Noise\+Reduction.\+cpp.
+
+
+
+\subsection{Enumeration Type Documentation}
+\subsubsection[{\texorpdfstring{anonymous enum}{anonymous enum}}]{\setlength{\rightskip}{0pt plus 5cm}anonymous enum}\hypertarget{_noise_reduction_8cpp_a0341d081395407fd92061819ba76eb96}{}\label{_noise_reduction_8cpp_a0341d081395407fd92061819ba76eb96}
+\begin{Desc}
+\item[Enumerator]\par
+\begin{description}
+\index{I\+D\+\_\+\+B\+U\+T\+T\+O\+N\+\_\+\+G\+E\+T\+P\+R\+O\+F\+I\+LE@{I\+D\+\_\+\+B\+U\+T\+T\+O\+N\+\_\+\+G\+E\+T\+P\+R\+O\+F\+I\+LE}!Noise\+Reduction.\+cpp@{Noise\+Reduction.\+cpp}}\index{Noise\+Reduction.\+cpp@{Noise\+Reduction.\+cpp}!I\+D\+\_\+\+B\+U\+T\+T\+O\+N\+\_\+\+G\+E\+T\+P\+R\+O\+F\+I\+LE@{I\+D\+\_\+\+B\+U\+T\+T\+O\+N\+\_\+\+G\+E\+T\+P\+R\+O\+F\+I\+LE}}\item[{\em 
+I\+D\+\_\+\+B\+U\+T\+T\+O\+N\+\_\+\+G\+E\+T\+P\+R\+O\+F\+I\+LE\hypertarget{_noise_reduction_8cpp_a0341d081395407fd92061819ba76eb96a1ae9215fdbd510aa098b276de3241d14}{}\label{_noise_reduction_8cpp_a0341d081395407fd92061819ba76eb96a1ae9215fdbd510aa098b276de3241d14}
+}]\index{I\+D\+\_\+\+R\+A\+D\+I\+O\+B\+U\+T\+T\+O\+N\+\_\+\+K\+E\+E\+P\+S\+I\+G\+N\+AL@{I\+D\+\_\+\+R\+A\+D\+I\+O\+B\+U\+T\+T\+O\+N\+\_\+\+K\+E\+E\+P\+S\+I\+G\+N\+AL}!Noise\+Reduction.\+cpp@{Noise\+Reduction.\+cpp}}\index{Noise\+Reduction.\+cpp@{Noise\+Reduction.\+cpp}!I\+D\+\_\+\+R\+A\+D\+I\+O\+B\+U\+T\+T\+O\+N\+\_\+\+K\+E\+E\+P\+S\+I\+G\+N\+AL@{I\+D\+\_\+\+R\+A\+D\+I\+O\+B\+U\+T\+T\+O\+N\+\_\+\+K\+E\+E\+P\+S\+I\+G\+N\+AL}}\item[{\em 
+I\+D\+\_\+\+R\+A\+D\+I\+O\+B\+U\+T\+T\+O\+N\+\_\+\+K\+E\+E\+P\+S\+I\+G\+N\+AL\hypertarget{_noise_reduction_8cpp_a0341d081395407fd92061819ba76eb96ac464a1ac67cb4151d10de967e150eb64}{}\label{_noise_reduction_8cpp_a0341d081395407fd92061819ba76eb96ac464a1ac67cb4151d10de967e150eb64}
+}]\index{I\+D\+\_\+\+R\+A\+D\+I\+O\+B\+U\+T\+T\+O\+N\+\_\+\+R\+E\+S\+I\+D\+UE@{I\+D\+\_\+\+R\+A\+D\+I\+O\+B\+U\+T\+T\+O\+N\+\_\+\+R\+E\+S\+I\+D\+UE}!Noise\+Reduction.\+cpp@{Noise\+Reduction.\+cpp}}\index{Noise\+Reduction.\+cpp@{Noise\+Reduction.\+cpp}!I\+D\+\_\+\+R\+A\+D\+I\+O\+B\+U\+T\+T\+O\+N\+\_\+\+R\+E\+S\+I\+D\+UE@{I\+D\+\_\+\+R\+A\+D\+I\+O\+B\+U\+T\+T\+O\+N\+\_\+\+R\+E\+S\+I\+D\+UE}}\item[{\em 
+I\+D\+\_\+\+R\+A\+D\+I\+O\+B\+U\+T\+T\+O\+N\+\_\+\+R\+E\+S\+I\+D\+UE\hypertarget{_noise_reduction_8cpp_a0341d081395407fd92061819ba76eb96a96b12d6226e5bbead121b52ac8b5e6ba}{}\label{_noise_reduction_8cpp_a0341d081395407fd92061819ba76eb96a96b12d6226e5bbead121b52ac8b5e6ba}
+}]\index{I\+D\+\_\+\+G\+A\+I\+N\+\_\+\+S\+L\+I\+D\+ER@{I\+D\+\_\+\+G\+A\+I\+N\+\_\+\+S\+L\+I\+D\+ER}!Noise\+Reduction.\+cpp@{Noise\+Reduction.\+cpp}}\index{Noise\+Reduction.\+cpp@{Noise\+Reduction.\+cpp}!I\+D\+\_\+\+G\+A\+I\+N\+\_\+\+S\+L\+I\+D\+ER@{I\+D\+\_\+\+G\+A\+I\+N\+\_\+\+S\+L\+I\+D\+ER}}\item[{\em 
+I\+D\+\_\+\+G\+A\+I\+N\+\_\+\+S\+L\+I\+D\+ER\hypertarget{_noise_reduction_8cpp_a0341d081395407fd92061819ba76eb96a1c554a3cf3435eb54967259fc7bbdbc2}{}\label{_noise_reduction_8cpp_a0341d081395407fd92061819ba76eb96a1c554a3cf3435eb54967259fc7bbdbc2}
+}]\index{I\+D\+\_\+\+G\+A\+I\+N\+\_\+\+T\+E\+XT@{I\+D\+\_\+\+G\+A\+I\+N\+\_\+\+T\+E\+XT}!Noise\+Reduction.\+cpp@{Noise\+Reduction.\+cpp}}\index{Noise\+Reduction.\+cpp@{Noise\+Reduction.\+cpp}!I\+D\+\_\+\+G\+A\+I\+N\+\_\+\+T\+E\+XT@{I\+D\+\_\+\+G\+A\+I\+N\+\_\+\+T\+E\+XT}}\item[{\em 
+I\+D\+\_\+\+G\+A\+I\+N\+\_\+\+T\+E\+XT\hypertarget{_noise_reduction_8cpp_a0341d081395407fd92061819ba76eb96a0f9f6d111ab6c41a6c0627ccc1769426}{}\label{_noise_reduction_8cpp_a0341d081395407fd92061819ba76eb96a0f9f6d111ab6c41a6c0627ccc1769426}
+}]\index{I\+D\+\_\+\+N\+E\+W\+\_\+\+S\+E\+N\+S\+I\+T\+I\+V\+I\+T\+Y\+\_\+\+S\+L\+I\+D\+ER@{I\+D\+\_\+\+N\+E\+W\+\_\+\+S\+E\+N\+S\+I\+T\+I\+V\+I\+T\+Y\+\_\+\+S\+L\+I\+D\+ER}!Noise\+Reduction.\+cpp@{Noise\+Reduction.\+cpp}}\index{Noise\+Reduction.\+cpp@{Noise\+Reduction.\+cpp}!I\+D\+\_\+\+N\+E\+W\+\_\+\+S\+E\+N\+S\+I\+T\+I\+V\+I\+T\+Y\+\_\+\+S\+L\+I\+D\+ER@{I\+D\+\_\+\+N\+E\+W\+\_\+\+S\+E\+N\+S\+I\+T\+I\+V\+I\+T\+Y\+\_\+\+S\+L\+I\+D\+ER}}\item[{\em 
+I\+D\+\_\+\+N\+E\+W\+\_\+\+S\+E\+N\+S\+I\+T\+I\+V\+I\+T\+Y\+\_\+\+S\+L\+I\+D\+ER\hypertarget{_noise_reduction_8cpp_a0341d081395407fd92061819ba76eb96a1dad4dd6b2d875165dcba436fd958162}{}\label{_noise_reduction_8cpp_a0341d081395407fd92061819ba76eb96a1dad4dd6b2d875165dcba436fd958162}
+}]\index{I\+D\+\_\+\+N\+E\+W\+\_\+\+S\+E\+N\+S\+I\+T\+I\+V\+I\+T\+Y\+\_\+\+T\+E\+XT@{I\+D\+\_\+\+N\+E\+W\+\_\+\+S\+E\+N\+S\+I\+T\+I\+V\+I\+T\+Y\+\_\+\+T\+E\+XT}!Noise\+Reduction.\+cpp@{Noise\+Reduction.\+cpp}}\index{Noise\+Reduction.\+cpp@{Noise\+Reduction.\+cpp}!I\+D\+\_\+\+N\+E\+W\+\_\+\+S\+E\+N\+S\+I\+T\+I\+V\+I\+T\+Y\+\_\+\+T\+E\+XT@{I\+D\+\_\+\+N\+E\+W\+\_\+\+S\+E\+N\+S\+I\+T\+I\+V\+I\+T\+Y\+\_\+\+T\+E\+XT}}\item[{\em 
+I\+D\+\_\+\+N\+E\+W\+\_\+\+S\+E\+N\+S\+I\+T\+I\+V\+I\+T\+Y\+\_\+\+T\+E\+XT\hypertarget{_noise_reduction_8cpp_a0341d081395407fd92061819ba76eb96aa55ea7d1b1875214fb831e5c8d9bc3d6}{}\label{_noise_reduction_8cpp_a0341d081395407fd92061819ba76eb96aa55ea7d1b1875214fb831e5c8d9bc3d6}
+}]\index{I\+D\+\_\+\+F\+R\+E\+Q\+\_\+\+S\+L\+I\+D\+ER@{I\+D\+\_\+\+F\+R\+E\+Q\+\_\+\+S\+L\+I\+D\+ER}!Noise\+Reduction.\+cpp@{Noise\+Reduction.\+cpp}}\index{Noise\+Reduction.\+cpp@{Noise\+Reduction.\+cpp}!I\+D\+\_\+\+F\+R\+E\+Q\+\_\+\+S\+L\+I\+D\+ER@{I\+D\+\_\+\+F\+R\+E\+Q\+\_\+\+S\+L\+I\+D\+ER}}\item[{\em 
+I\+D\+\_\+\+F\+R\+E\+Q\+\_\+\+S\+L\+I\+D\+ER\hypertarget{_noise_reduction_8cpp_a0341d081395407fd92061819ba76eb96a27044b77ecdb13db0926cb63749d2255}{}\label{_noise_reduction_8cpp_a0341d081395407fd92061819ba76eb96a27044b77ecdb13db0926cb63749d2255}
+}]\index{I\+D\+\_\+\+F\+R\+E\+Q\+\_\+\+T\+E\+XT@{I\+D\+\_\+\+F\+R\+E\+Q\+\_\+\+T\+E\+XT}!Noise\+Reduction.\+cpp@{Noise\+Reduction.\+cpp}}\index{Noise\+Reduction.\+cpp@{Noise\+Reduction.\+cpp}!I\+D\+\_\+\+F\+R\+E\+Q\+\_\+\+T\+E\+XT@{I\+D\+\_\+\+F\+R\+E\+Q\+\_\+\+T\+E\+XT}}\item[{\em 
+I\+D\+\_\+\+F\+R\+E\+Q\+\_\+\+T\+E\+XT\hypertarget{_noise_reduction_8cpp_a0341d081395407fd92061819ba76eb96ade8c28123faab7710accec1d4f4a6b47}{}\label{_noise_reduction_8cpp_a0341d081395407fd92061819ba76eb96ade8c28123faab7710accec1d4f4a6b47}
+}]\index{E\+N\+D\+\_\+\+O\+F\+\_\+\+B\+A\+S\+I\+C\+\_\+\+S\+L\+I\+D\+E\+RS@{E\+N\+D\+\_\+\+O\+F\+\_\+\+B\+A\+S\+I\+C\+\_\+\+S\+L\+I\+D\+E\+RS}!Noise\+Reduction.\+cpp@{Noise\+Reduction.\+cpp}}\index{Noise\+Reduction.\+cpp@{Noise\+Reduction.\+cpp}!E\+N\+D\+\_\+\+O\+F\+\_\+\+B\+A\+S\+I\+C\+\_\+\+S\+L\+I\+D\+E\+RS@{E\+N\+D\+\_\+\+O\+F\+\_\+\+B\+A\+S\+I\+C\+\_\+\+S\+L\+I\+D\+E\+RS}}\item[{\em 
+E\+N\+D\+\_\+\+O\+F\+\_\+\+B\+A\+S\+I\+C\+\_\+\+S\+L\+I\+D\+E\+RS\hypertarget{_noise_reduction_8cpp_a0341d081395407fd92061819ba76eb96a6ed1c9f1eed68a848b0a9ecfe3ae509d}{}\label{_noise_reduction_8cpp_a0341d081395407fd92061819ba76eb96a6ed1c9f1eed68a848b0a9ecfe3ae509d}
+}]\index{E\+N\+D\+\_\+\+O\+F\+\_\+\+S\+L\+I\+D\+E\+RS@{E\+N\+D\+\_\+\+O\+F\+\_\+\+S\+L\+I\+D\+E\+RS}!Noise\+Reduction.\+cpp@{Noise\+Reduction.\+cpp}}\index{Noise\+Reduction.\+cpp@{Noise\+Reduction.\+cpp}!E\+N\+D\+\_\+\+O\+F\+\_\+\+S\+L\+I\+D\+E\+RS@{E\+N\+D\+\_\+\+O\+F\+\_\+\+S\+L\+I\+D\+E\+RS}}\item[{\em 
+E\+N\+D\+\_\+\+O\+F\+\_\+\+S\+L\+I\+D\+E\+RS\hypertarget{_noise_reduction_8cpp_a0341d081395407fd92061819ba76eb96a48ba953126c788cf919b66f64de186e7}{}\label{_noise_reduction_8cpp_a0341d081395407fd92061819ba76eb96a48ba953126c788cf919b66f64de186e7}
+}]\index{F\+I\+R\+S\+T\+\_\+\+S\+L\+I\+D\+ER@{F\+I\+R\+S\+T\+\_\+\+S\+L\+I\+D\+ER}!Noise\+Reduction.\+cpp@{Noise\+Reduction.\+cpp}}\index{Noise\+Reduction.\+cpp@{Noise\+Reduction.\+cpp}!F\+I\+R\+S\+T\+\_\+\+S\+L\+I\+D\+ER@{F\+I\+R\+S\+T\+\_\+\+S\+L\+I\+D\+ER}}\item[{\em 
+F\+I\+R\+S\+T\+\_\+\+S\+L\+I\+D\+ER\hypertarget{_noise_reduction_8cpp_a0341d081395407fd92061819ba76eb96ac8ee536c53f485a980dfc3698ed21801}{}\label{_noise_reduction_8cpp_a0341d081395407fd92061819ba76eb96ac8ee536c53f485a980dfc3698ed21801}
+}]\end{description}
+\end{Desc}
+
+
+Definition at line 1349 of file Noise\+Reduction.\+cpp.
+
+\subsubsection[{\texorpdfstring{anonymous enum}{anonymous enum}}]{\setlength{\rightskip}{0pt plus 5cm}anonymous enum}\hypertarget{_noise_reduction_8cpp_a540c98815fbf3a535e5c3474823ca58c}{}\label{_noise_reduction_8cpp_a540c98815fbf3a535e5c3474823ca58c}
+
+
+Definition at line 142 of file Noise\+Reduction.\+cpp.
+
+\index{Noise\+Reduction.\+cpp@{Noise\+Reduction.\+cpp}!Discrimination\+Method@{Discrimination\+Method}}
+\index{Discrimination\+Method@{Discrimination\+Method}!Noise\+Reduction.\+cpp@{Noise\+Reduction.\+cpp}}
+\subsubsection[{\texorpdfstring{Discrimination\+Method}{DiscriminationMethod}}]{\setlength{\rightskip}{0pt plus 5cm}enum {\bf Discrimination\+Method}}\hypertarget{_noise_reduction_8cpp_a32fbcbc85aab14bb60b15358bb7917eb}{}\label{_noise_reduction_8cpp_a32fbcbc85aab14bb60b15358bb7917eb}
+
+
+Definition at line 88 of file Noise\+Reduction.\+cpp.
+
+\index{Noise\+Reduction.\+cpp@{Noise\+Reduction.\+cpp}!Noise\+Reduction\+Choice@{Noise\+Reduction\+Choice}}
+\index{Noise\+Reduction\+Choice@{Noise\+Reduction\+Choice}!Noise\+Reduction.\+cpp@{Noise\+Reduction.\+cpp}}
+\subsubsection[{\texorpdfstring{Noise\+Reduction\+Choice}{NoiseReductionChoice}}]{\setlength{\rightskip}{0pt plus 5cm}enum {\bf Noise\+Reduction\+Choice}}\hypertarget{_noise_reduction_8cpp_a467334a229f715a676938085a52b61c2}{}\label{_noise_reduction_8cpp_a467334a229f715a676938085a52b61c2}
+
+
+Definition at line 147 of file Noise\+Reduction.\+cpp.
+
+\index{Noise\+Reduction.\+cpp@{Noise\+Reduction.\+cpp}!Window\+Types@{Window\+Types}}
+\index{Window\+Types@{Window\+Types}!Noise\+Reduction.\+cpp@{Noise\+Reduction.\+cpp}}
+\subsubsection[{\texorpdfstring{Window\+Types}{WindowTypes}}]{\setlength{\rightskip}{0pt plus 5cm}enum {\bf Window\+Types}}\hypertarget{_noise_reduction_8cpp_a58ad3159a8b1f24a1d3497efcd541b69}{}\label{_noise_reduction_8cpp_a58ad3159a8b1f24a1d3497efcd541b69}
+
+
+Definition at line 109 of file Noise\+Reduction.\+cpp.
+

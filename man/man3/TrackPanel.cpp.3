@@ -1,0 +1,411 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/src/TrackPanel.cpp" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/src/TrackPanel.cpp \- Implements \fBTrackPanel\fP and \fBTrackInfo\fP\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+\fC#include 'Audacity\&.h'\fP
+.br
+\fC#include 'Experimental\&.h'\fP
+.br
+\fC#include 'TrackPanel\&.h'\fP
+.br
+\fC#include <wx/fontenum\&.h>\fP
+.br
+\fC#include <wx/numdlg\&.h>\fP
+.br
+\fC#include <wx/spinctrl\&.h>\fP
+.br
+\fC#include 'FreqWindow\&.h'\fP
+.br
+\fC#include 'AColor\&.h'\fP
+.br
+\fC#include 'AllThemeResources\&.h'\fP
+.br
+\fC#include 'AudioIO\&.h'\fP
+.br
+\fC#include 'Envelope\&.h'\fP
+.br
+\fC#include 'float_cast\&.h'\fP
+.br
+\fC#include 'LabelTrack\&.h'\fP
+.br
+\fC#include 'MixerBoard\&.h'\fP
+.br
+\fC#include 'NoteTrack\&.h'\fP
+.br
+\fC#include 'NumberScale\&.h'\fP
+.br
+\fC#include 'Prefs\&.h'\fP
+.br
+\fC#include 'Snap\&.h'\fP
+.br
+\fC#include 'ShuttleGui\&.h'\fP
+.br
+\fC#include 'TimeTrack\&.h'\fP
+.br
+\fC#include 'TrackArtist\&.h'\fP
+.br
+\fC#include 'TrackPanelAx\&.h'\fP
+.br
+\fC#include 'UndoManager\&.h'\fP
+.br
+\fC#include 'WaveTrack\&.h'\fP
+.br
+\fC#include 'commands/Keyboard\&.h'\fP
+.br
+\fC#include 'ondemand/ODManager\&.h'\fP
+.br
+\fC#include 'prefs/PrefsDialog\&.h'\fP
+.br
+\fC#include 'prefs/SpectrumPrefs\&.h'\fP
+.br
+\fC#include 'prefs/WaveformPrefs\&.h'\fP
+.br
+\fC#include 'toolbars/ControlToolBar\&.h'\fP
+.br
+\fC#include 'toolbars/ToolsToolBar\&.h'\fP
+.br
+\fC#include '\&.\&./images/Cursors\&.h'\fP
+.br
+
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "class \fBViewSettingsDialog\fP"
+.br
+.ti -1c
+.RI "class \fBTrackPanelFontEnumerator\fP"
+.br
+.in -1c
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBZOOMLIMIT\fP   0\&.001f"
+.br
+.in -1c
+.SS "Enumerations"
+
+.in +1c
+.ti -1c
+.RI "enum { \fBkLeftInset\fP = 4, \fBkRightInset\fP = kLeftInset, \fBkTopInset\fP = 4, \fBkShadowThickness\fP = 1, \fBkBorderThickness\fP = 1, \fBkTopMargin\fP = kTopInset + kBorderThickness, \fBkBottomMargin\fP = kShadowThickness + kBorderThickness, \fBkLeftMargin\fP = kLeftInset + kBorderThickness, \fBkRightMargin\fP = kRightInset + kShadowThickness + kBorderThickness, \fBkTimerInterval\fP = 50, \fBkOneSecondCountdown\fP = 1000 / kTimerInterval }"
+.br
+.ti -1c
+.RI "enum { \fBSCRUBBING_PIXEL_TOLERANCE\fP = 10, \fBScrubSpeedStepsPerOctave\fP = 4 }"
+.br
+.ti -1c
+.RI "enum { \fBTrackPanelFirstID\fP = 2000, \fBOnSetNameID\fP, \fBOnSetFontID\fP, \fBOnMoveUpID\fP, \fBOnMoveDownID\fP, \fBOnMoveTopID\fP, \fBOnMoveBottomID\fP, \fBOnUpOctaveID\fP, \fBOnDownOctaveID\fP, \fBOnChannelLeftID\fP, \fBOnChannelRightID\fP, \fBOnChannelMonoID\fP, \fBOnRate8ID\fP, \fBOnRate11ID\fP, \fBOnRate16ID\fP, \fBOnRate22ID\fP, \fBOnRate44ID\fP, \fBOnRate48ID\fP, \fBOnRate88ID\fP, \fBOnRate96ID\fP, \fBOnRate176ID\fP, \fBOnRate192ID\fP, \fBOnRate352ID\fP, \fBOnRate384ID\fP, \fBOnRateOtherID\fP, \fBOn16BitID\fP, \fBOn24BitID\fP, \fBOnFloatID\fP, \fBOnWaveformID\fP, \fBOnWaveformDBID\fP, \fBOnSpectrumID\fP, \fBOnSpectrogramSettingsID\fP, \fBOnSplitStereoID\fP, \fBOnSplitStereoMonoID\fP, \fBOnMergeStereoID\fP, \fBOnSwapChannelsID\fP, \fBOnSetTimeTrackRangeID\fP, \fBOnTimeTrackLinID\fP, \fBOnTimeTrackLogID\fP, \fBOnTimeTrackLogIntID\fP, \fBOnFirstWaveformScaleID\fP, \fBOnLastWaveformScaleID\fP = OnFirstWaveformScaleID + 9, \fBOnFirstSpectrumScaleID\fP, \fBOnLastSpectrumScaleID\fP = OnFirstSpectrumScaleID + 19, \fBOnZoomInVerticalID\fP, \fBOnZoomOutVerticalID\fP, \fBOnZoomFitVerticalID\fP }"
+.br
+.ti -1c
+.RI "enum { \fBFREQ_SNAP_DISTANCE\fP = 10 }"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "template<class A , class B , class DIST > \fBbool\fP \fBwithin\fP (\fBA\fP \fBa\fP, \fBB\fP \fBb\fP, DIST \fBd\fP)"
+.br
+.ti -1c
+.RI "template<class LOW , class MID , class HIGH > \fBbool\fP \fBbetween_incexc\fP (LOW \fBl\fP, MID \fBm\fP, HIGH h)"
+.br
+.ti -1c
+.RI "template<class CLIPPEE , class CLIPVAL > \fBvoid\fP \fBclip_top\fP (CLIPPEE &clippee, CLIPVAL val)"
+.br
+.ti -1c
+.RI "template<class CLIPPEE , class CLIPVAL > \fBvoid\fP \fBclip_bottom\fP (CLIPPEE &clippee, CLIPVAL val)"
+.br
+.ti -1c
+.RI "\fBEVT_MENU_RANGE\fP (\fBOnChannelLeftID\fP, \fBOnChannelMonoID\fP, \fBTrackPanel::OnChannelChange\fP) wxCursor *\fBMakeCursor\fP(\fBint\fP WXUNUSED(CursorId)"
+.br
+.ti -1c
+.RI "\fBImage\fP \fBSetMaskColour\fP (255, 0, 0)"
+.br
+.ti -1c
+.RI "\fBImage\fP \fBSetMask\fP ()"
+.br
+.ti -1c
+.RI "\fBImage\fP \fBSetOption\fP (wxIMAGE_OPTION_CUR_HOTSPOT_X, \fBHotX\fP\-\fBHotAdjust\fP)"
+.br
+.ti -1c
+.RI "\fBImage\fP \fBSetOption\fP (wxIMAGE_OPTION_CUR_HOTSPOT_Y, \fBHotY\fP\-\fBHotAdjust\fP)"
+.br
+.ti -1c
+.RI "template<typename T > \fBvoid\fP \fBSetIfNotNull\fP (\fBT\fP *pValue, \fBconst\fP \fBT\fP Value)"
+.br
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "\fBconst\fP char * \fBpXpm\fP [36]"
+.br
+.ti -1c
+.RI "\fBconst\fP char \fBint\fP \fBHotX\fP"
+.br
+.ti -1c
+.RI "\fBconst\fP char \fBint\fP \fBint\fP \fBHotY\fP"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBHotAdjust\fP =0"
+.br
+.ti -1c
+.RI "wxImage \fBImage\fP = wxImage(wxBitmap(\fBpXpm\fP)\&.ConvertToImage())"
+.br
+.ti -1c
+.RI "\fBpCursor\fP = new wxCursor( \fBImage\fP )"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBnRates\fP =12"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Implements \fBTrackPanel\fP and \fBTrackInfo\fP\&. 
+
+
+.PP
+\fBTodo\fP
+.RS 4
+Refactoring of the \fBTrackPanel\fP, possibly as described in \fBTrack Panel Refactor\fP
+.RE
+.PP
+.PP
+\fBTrackPanel\&.cpp\fP is currently some of the worst code in Audacity\&. It's not really unreadable, there's just way too much stuff in this one file\&. Rather than apply a quick fix, the long-term plan is to create a GUITrack class that knows how to draw itself and handle events\&. Then this class just helps coordinate between tracks\&.
+.PP
+Plans under discussion are described in \fBTrack Panel Refactor\fP 
+.PP
+Definition in file \fBTrackPanel\&.cpp\fP\&.
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define ZOOMLIMIT   0\&.001f"
+
+.PP
+Definition at line 198 of file TrackPanel\&.cpp\&.
+.SH "Enumeration Type Documentation"
+.PP 
+.SS "anonymous enum"
+
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fIkLeftInset \fP\fP
+.TP
+\fB\fIkRightInset \fP\fP
+.TP
+\fB\fIkTopInset \fP\fP
+.TP
+\fB\fIkShadowThickness \fP\fP
+.TP
+\fB\fIkBorderThickness \fP\fP
+.TP
+\fB\fIkTopMargin \fP\fP
+.TP
+\fB\fIkBottomMargin \fP\fP
+.TP
+\fB\fIkLeftMargin \fP\fP
+.TP
+\fB\fIkRightMargin \fP\fP
+.TP
+\fB\fIkTimerInterval \fP\fP
+.TP
+\fB\fIkOneSecondCountdown \fP\fP
+.PP
+Definition at line 258 of file TrackPanel\&.cpp\&.
+.SS "anonymous enum"
+
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fISCRUBBING_PIXEL_TOLERANCE \fP\fP
+.TP
+\fB\fIScrubSpeedStepsPerOctave \fP\fP
+.PP
+Definition at line 273 of file TrackPanel\&.cpp\&.
+.SS "anonymous enum"
+
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fITrackPanelFirstID \fP\fP
+.TP
+\fB\fIOnSetNameID \fP\fP
+.TP
+\fB\fIOnSetFontID \fP\fP
+.TP
+\fB\fIOnMoveUpID \fP\fP
+.TP
+\fB\fIOnMoveDownID \fP\fP
+.TP
+\fB\fIOnMoveTopID \fP\fP
+.TP
+\fB\fIOnMoveBottomID \fP\fP
+.TP
+\fB\fIOnUpOctaveID \fP\fP
+.TP
+\fB\fIOnDownOctaveID \fP\fP
+.TP
+\fB\fIOnChannelLeftID \fP\fP
+.TP
+\fB\fIOnChannelRightID \fP\fP
+.TP
+\fB\fIOnChannelMonoID \fP\fP
+.TP
+\fB\fIOnRate8ID \fP\fP
+.TP
+\fB\fIOnRate11ID \fP\fP
+.TP
+\fB\fIOnRate16ID \fP\fP
+.TP
+\fB\fIOnRate22ID \fP\fP
+.TP
+\fB\fIOnRate44ID \fP\fP
+.TP
+\fB\fIOnRate48ID \fP\fP
+.TP
+\fB\fIOnRate88ID \fP\fP
+.TP
+\fB\fIOnRate96ID \fP\fP
+.TP
+\fB\fIOnRate176ID \fP\fP
+.TP
+\fB\fIOnRate192ID \fP\fP
+.TP
+\fB\fIOnRate352ID \fP\fP
+.TP
+\fB\fIOnRate384ID \fP\fP
+.TP
+\fB\fIOnRateOtherID \fP\fP
+.TP
+\fB\fIOn16BitID \fP\fP
+.TP
+\fB\fIOn24BitID \fP\fP
+.TP
+\fB\fIOnFloatID \fP\fP
+.TP
+\fB\fIOnWaveformID \fP\fP
+.TP
+\fB\fIOnWaveformDBID \fP\fP
+.TP
+\fB\fIOnSpectrumID \fP\fP
+.TP
+\fB\fIOnSpectrogramSettingsID \fP\fP
+.TP
+\fB\fIOnSplitStereoID \fP\fP
+.TP
+\fB\fIOnSplitStereoMonoID \fP\fP
+.TP
+\fB\fIOnMergeStereoID \fP\fP
+.TP
+\fB\fIOnSwapChannelsID \fP\fP
+.TP
+\fB\fIOnSetTimeTrackRangeID \fP\fP
+.TP
+\fB\fIOnTimeTrackLinID \fP\fP
+.TP
+\fB\fIOnTimeTrackLogID \fP\fP
+.TP
+\fB\fIOnTimeTrackLogIntID \fP\fP
+.TP
+\fB\fIOnFirstWaveformScaleID \fP\fP
+.TP
+\fB\fIOnLastWaveformScaleID \fP\fP
+.TP
+\fB\fIOnFirstSpectrumScaleID \fP\fP
+.TP
+\fB\fIOnLastSpectrumScaleID \fP\fP
+.TP
+\fB\fIOnZoomInVerticalID \fP\fP
+.TP
+\fB\fIOnZoomOutVerticalID \fP\fP
+.TP
+\fB\fIOnZoomFitVerticalID \fP\fP
+.PP
+Definition at line 310 of file TrackPanel\&.cpp\&.
+.SS "anonymous enum"
+
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fIFREQ_SNAP_DISTANCE \fP\fP
+.PP
+Definition at line 3426 of file TrackPanel\&.cpp\&.
+.SH "Function Documentation"
+.PP 
+.SS "template<class LOW , class MID , class HIGH > \fBbool\fP between_incexc (LOW l, MID m, HIGH h)"
+
+.PP
+Definition at line 291 of file TrackPanel\&.cpp\&.
+.SS "template<class CLIPPEE , class CLIPVAL > \fBvoid\fP clip_bottom (CLIPPEE & clippee, CLIPVAL val)"
+
+.PP
+Definition at line 304 of file TrackPanel\&.cpp\&.
+.SS "template<class CLIPPEE , class CLIPVAL > \fBvoid\fP clip_top (CLIPPEE & clippee, CLIPVAL val)"
+
+.PP
+Definition at line 297 of file TrackPanel\&.cpp\&.
+.SS "EVT_MENU_RANGE (\fBOnChannelLeftID\fP, \fBOnChannelMonoID\fP, \fBTrackPanel::OnChannelChange\fP)"
+Makes a cursor from an XPM, uses CursorId as a fallback\&. TODO: Move this function to some other source file for reuse elsewhere\&. 
+.SS "template<typename T > \fBvoid\fP SetIfNotNull (\fBT\fP * pValue, \fBconst\fP \fBT\fP Value)\fC [inline]\fP"
+
+.PP
+Definition at line 3472 of file TrackPanel\&.cpp\&.
+.SS "\fBImage\fP SetMask ()"
+
+.SS "\fBImage\fP SetMaskColour (255, 0, 0)"
+
+.SS "\fBImage\fP SetOption (wxIMAGE_OPTION_CUR_HOTSPOT_X, \fBHotX\fP\- HotAdjust)"
+
+.SS "\fBImage\fP SetOption (wxIMAGE_OPTION_CUR_HOTSPOT_Y, \fBHotY\fP\- HotAdjust)"
+
+.SS "template<class A , class B , class DIST > \fBbool\fP within (\fBA\fP a, \fBB\fP b, DIST d)"
+
+.PP
+Definition at line 285 of file TrackPanel\&.cpp\&.
+.SH "Variable Documentation"
+.PP 
+.SS "\fBconst\fP \fBint\fP HotAdjust =0"
+
+.PP
+Definition at line 426 of file TrackPanel\&.cpp\&.
+.SS "\fBconst\fP char \fBint\fP HotX"
+
+.PP
+Definition at line 421 of file TrackPanel\&.cpp\&.
+.SS "\fBconst\fP char \fBint\fP \fBint\fP HotY"
+\fBInitial value:\fP
+.PP
+.nf
+{
+   wxCursor * pCursor
+.fi
+.PP
+Definition at line 422 of file TrackPanel\&.cpp\&.
+.SS "wxImage Image = wxImage(wxBitmap(\fBpXpm\fP)\&.ConvertToImage())"
+
+.PP
+Definition at line 431 of file TrackPanel\&.cpp\&.
+.SS "\fBconst\fP \fBint\fP nRates =12"
+
+.PP
+Definition at line 9049 of file TrackPanel\&.cpp\&.
+.SS "\fBreturn\fP pCursor = new wxCursor( \fBImage\fP )"
+
+.PP
+Definition at line 437 of file TrackPanel\&.cpp\&.
+.SS "\fBconst\fP char* pXpm[36]"
+
+.PP
+Definition at line 421 of file TrackPanel\&.cpp\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

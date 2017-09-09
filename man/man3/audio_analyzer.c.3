@@ -1,0 +1,239 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/lib-src/portaudio-v19/qa/loopback/src/audio_analyzer.c" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/lib-src/portaudio-v19/qa/loopback/src/audio_analyzer.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <stdio\&.h>\fP
+.br
+\fC#include <stdlib\&.h>\fP
+.br
+\fC#include <string\&.h>\fP
+.br
+\fC#include <assert\&.h>\fP
+.br
+\fC#include <math\&.h>\fP
+.br
+\fC#include 'qa_tools\&.h'\fP
+.br
+\fC#include 'audio_analyzer\&.h'\fP
+.br
+\fC#include 'write_wav\&.h'\fP
+.br
+
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBPAQA_POP_THRESHOLD\fP   (0\&.04)"
+.br
+.ti -1c
+.RI "#define \fBNUM_SAMPLES\fP   (200)"
+.br
+.ti -1c
+.RI "#define \fBMAX_BUFFER_SIZE\fP   2048"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "double \fBPaQa_GetNthFrequency\fP (double baseFrequency, \fBint\fP index)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBPaQa_EraseBuffer\fP (float *\fBbuffer\fP, \fBint\fP numFrames, \fBint\fP samplesPerFrame)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBPaQa_SetupSineGenerator\fP (\fBPaQaSineGenerator\fP *generator, double frequency, double amplitude, double frameRate)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBPaQa_MixSine\fP (\fBPaQaSineGenerator\fP *generator, float *\fBbuffer\fP, \fBint\fP numSamples, \fBint\fP stride)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBPaQa_GenerateCrackDISABLED\fP (float *\fBbuffer\fP, \fBint\fP numSamples, \fBint\fP stride)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBPaQa_InitializeRecording\fP (\fBPaQaRecording\fP *recording, \fBint\fP maxFrames, \fBint\fP frameRate)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBPaQa_TerminateRecording\fP (\fBPaQaRecording\fP *recording)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBPaQa_WriteRecording\fP (\fBPaQaRecording\fP *recording, float *\fBbuffer\fP, \fBint\fP numFrames, \fBint\fP stride)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBPaQa_WriteSilence\fP (\fBPaQaRecording\fP *recording, \fBint\fP numFrames)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBPaQa_RecordFreeze\fP (\fBPaQaRecording\fP *recording, \fBint\fP numFrames)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBPaQa_SaveRecordingToWaveFile\fP (\fBPaQaRecording\fP *recording, \fBconst\fP char *\fBfilename\fP)"
+.br
+.ti -1c
+.RI "double \fBPaQa_MeasureCrossingSlope\fP (float *\fBbuffer\fP, \fBint\fP numFrames)"
+.br
+.ti -1c
+.RI "double \fBPaQa_MeasureSineAmplitudeBySlope\fP (\fBPaQaRecording\fP *recording, double frequency, double frameRate, \fBint\fP startFrame, \fBint\fP numFrames)"
+.br
+.ti -1c
+.RI "double \fBPaQa_CorrelateSine\fP (\fBPaQaRecording\fP *recording, double frequency, double frameRate, \fBint\fP startFrame, \fBint\fP numFrames, double *phasePtr)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBPaQa_FilterRecording\fP (\fBPaQaRecording\fP *input, \fBPaQaRecording\fP *\fBoutput\fP, \fBBiquadFilter\fP *\fBfilter\fP)"
+.br
+.ti -1c
+.RI "double \fBPaQa_FindFirstMatch\fP (\fBPaQaRecording\fP *recording, float *\fBbuffer\fP, \fBint\fP numFrames, double threshold)"
+.br
+.ti -1c
+.RI "double \fBPaQa_MeasureArea\fP (float *\fBbuffer\fP, \fBint\fP numFrames, \fBint\fP stride)"
+.br
+.ti -1c
+.RI "double \fBPaQa_MeasureRootMeanSquare\fP (float *\fBbuffer\fP, \fBint\fP numFrames)"
+.br
+.ti -1c
+.RI "double \fBPaQa_CompareAmplitudes\fP (\fBPaQaRecording\fP *recording, \fBint\fP startAt, float *\fBbuffer\fP, \fBint\fP numFrames)"
+.br
+.ti -1c
+.RI "double \fBPaQa_ComputePhaseDifference\fP (double phase1, double phase2)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBPaQa_MeasureLatency\fP (\fBPaQaRecording\fP *recording, \fBPaQaTestTone\fP *testTone, \fBPaQaAnalysisResult\fP *analysisResult)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBPaQa_FadeInRecording\fP (\fBPaQaRecording\fP *recording, \fBint\fP startFrame, \fBint\fP \fBcount\fP)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBPaQa_DetectPop\fP (\fBPaQaRecording\fP *recording, \fBPaQaTestTone\fP *testTone, \fBPaQaAnalysisResult\fP *analysisResult)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBPaQa_DetectPhaseError\fP (\fBPaQaRecording\fP *recording, \fBPaQaTestTone\fP *testTone, \fBPaQaAnalysisResult\fP *analysisResult)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBPaQa_AnalyseRecording\fP (\fBPaQaRecording\fP *recording, \fBPaQaTestTone\fP *testTone, \fBPaQaAnalysisResult\fP *analysisResult)"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define MAX_BUFFER_SIZE   2048"
+
+.SS "#define NUM_SAMPLES   (200)"
+
+.SS "#define PAQA_POP_THRESHOLD   (0\&.04)"
+
+.PP
+Definition at line 48 of file audio_analyzer\&.c\&.
+.SH "Function Documentation"
+.PP 
+.SS "\fBint\fP PaQa_AnalyseRecording (\fBPaQaRecording\fP * recording, \fBPaQaTestTone\fP * testTone, \fBPaQaAnalysisResult\fP * analysisResult)"
+Analyse a recording of a sine wave\&. Measure latency and look for dropped frames, etc\&. 
+.PP
+Definition at line 685 of file audio_analyzer\&.c\&.
+.SS "double PaQa_CompareAmplitudes (\fBPaQaRecording\fP * recording, \fBint\fP startAt, float * buffer, \fBint\fP numSamples)"
+Compare the amplitudes of these two signals\&. Return ratio of recorded signal over buffer signal\&. 
+.PP
+Definition at line 447 of file audio_analyzer\&.c\&.
+.SS "double PaQa_ComputePhaseDifference (double phase1, double phase2)"
+
+.PP
+Definition at line 463 of file audio_analyzer\&.c\&.
+.SS "double PaQa_CorrelateSine (\fBPaQaRecording\fP * recording, double frequency, double frameRate, \fBint\fP startFrame, \fBint\fP numFrames, double * phasePtr)"
+
+.PP
+Definition at line 299 of file audio_analyzer\&.c\&.
+.SS "\fBint\fP PaQa_DetectPhaseError (\fBPaQaRecording\fP * recording, \fBPaQaTestTone\fP * testTone, \fBPaQaAnalysisResult\fP * analysisResult)"
+
+.PP
+Definition at line 611 of file audio_analyzer\&.c\&.
+.SS "\fBint\fP PaQa_DetectPop (\fBPaQaRecording\fP * recording, \fBPaQaTestTone\fP * testTone, \fBPaQaAnalysisResult\fP * analysisResult)"
+Apply notch filter and high pass filter then detect remaining energy\&. 
+.PP
+Definition at line 541 of file audio_analyzer\&.c\&.
+.SS "\fBvoid\fP PaQa_EraseBuffer (float * buffer, \fBint\fP numFrames, \fBint\fP samplesPerFrame)"
+
+.PP
+Definition at line 58 of file audio_analyzer\&.c\&.
+.SS "\fBvoid\fP PaQa_FadeInRecording (\fBPaQaRecording\fP * recording, \fBint\fP startFrame, \fBint\fP count)"
+
+.PP
+Definition at line 508 of file audio_analyzer\&.c\&.
+.SS "\fBvoid\fP PaQa_FilterRecording (\fBPaQaRecording\fP * input, \fBPaQaRecording\fP * output, \fBBiquadFilter\fP * filter)"
+Apply a biquad filter to the audio from the input recording and write it to the output recording\&. 
+.PP
+Definition at line 340 of file audio_analyzer\&.c\&.
+.SS "double PaQa_FindFirstMatch (\fBPaQaRecording\fP * recording, float * buffer, \fBint\fP numFrames, double threshold)"
+Scan until we get a correlation of a single that goes over the tolerance level, peaks then drops to half the peak\&. Look for inverse correlation as well\&. 
+.PP
+Definition at line 352 of file audio_analyzer\&.c\&.
+.SS "\fBvoid\fP PaQa_GenerateCrackDISABLED (float * buffer, \fBint\fP numSamples, \fBint\fP stride)"
+
+.PP
+Definition at line 96 of file audio_analyzer\&.c\&.
+.SS "double PaQa_GetNthFrequency (double baseFrequency, \fBint\fP index)"
+Calculate Nth frequency of a series for use in testing multiple channels\&. Series should avoid harmonic overlap between channels\&. 
+.PP
+Definition at line 51 of file audio_analyzer\&.c\&.
+.SS "\fBint\fP PaQa_InitializeRecording (\fBPaQaRecording\fP * recording, \fBint\fP maxSamples, \fBint\fP sampleRate)"
+Allocate memory for containg a mono audio signal\&. Set up recording for writing\&. 
+.PP
+Definition at line 114 of file audio_analyzer\&.c\&.
+.SS "double PaQa_MeasureArea (float * buffer, \fBint\fP numFrames, \fBint\fP stride)"
+Measure the area under the curve by summing absolute value of each value\&. 
+.PP
+Definition at line 414 of file audio_analyzer\&.c\&.
+.SS "double PaQa_MeasureCrossingSlope (float * buffer, \fBint\fP numFrames)"
+Measure slope of the positive zero crossings\&. 
+.PP
+Definition at line 251 of file audio_analyzer\&.c\&.
+.SS "\fBint\fP PaQa_MeasureLatency (\fBPaQaRecording\fP * recording, \fBPaQaTestTone\fP * testTone, \fBPaQaAnalysisResult\fP * analysisResult)"
+
+.PP
+Definition at line 478 of file audio_analyzer\&.c\&.
+.SS "double PaQa_MeasureRootMeanSquare (float * buffer, \fBint\fP numFrames)"
+
+.PP
+Definition at line 428 of file audio_analyzer\&.c\&.
+.SS "double PaQa_MeasureSineAmplitudeBySlope (\fBPaQaRecording\fP * recording, double frequency, double frameRate, \fBint\fP startFrame, \fBint\fP numFrames)"
+Estimate the original amplitude of a clipped sine wave by measuring its average slope at the zero crossings\&. 
+.PP
+Definition at line 287 of file audio_analyzer\&.c\&.
+.SS "\fBvoid\fP PaQa_MixSine (\fBPaQaSineGenerator\fP * generator, float * buffer, \fBint\fP numSamples, \fBint\fP stride)"
+
+.PP
+Definition at line 78 of file audio_analyzer\&.c\&.
+.SS "\fBint\fP PaQa_RecordFreeze (\fBPaQaRecording\fP * recording, \fBint\fP numFrames)"
+
+.PP
+Definition at line 181 of file audio_analyzer\&.c\&.
+.SS "\fBint\fP PaQa_SaveRecordingToWaveFile (\fBPaQaRecording\fP * recording, \fBconst\fP char * filename)"
+Write recording to WAV file\&. 
+.PP
+Definition at line 206 of file audio_analyzer\&.c\&.
+.SS "\fBvoid\fP PaQa_SetupSineGenerator (\fBPaQaSineGenerator\fP * generator, double frequency, double amplitude, double frameRate)"
+Prepare an oscillator that can generate a sine tone for testing\&. 
+.PP
+Definition at line 69 of file audio_analyzer\&.c\&.
+.SS "\fBvoid\fP PaQa_TerminateRecording (\fBPaQaRecording\fP * recording)"
+Free memory allocated by PaQa_InitializeRecording\&. 
+.PP
+Definition at line 127 of file audio_analyzer\&.c\&.
+.SS "\fBint\fP PaQa_WriteRecording (\fBPaQaRecording\fP * recording, float * buffer, \fBint\fP numSamples, \fBint\fP stride)"
+
+.PP
+\fBParameters:\fP
+.RS 4
+\fIstride\fP is the spacing of samples to skip in the input buffer\&. To use every samples pass 1\&. To use every other sample pass 2\&. 
+.RE
+.PP
+
+.PP
+Definition at line 138 of file audio_analyzer\&.c\&.
+.SS "\fBint\fP PaQa_WriteSilence (\fBPaQaRecording\fP * recording, \fBint\fP numSamples)"
+Write zeros into a recording\&. 
+.PP
+Definition at line 160 of file audio_analyzer\&.c\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

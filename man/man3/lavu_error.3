@@ -1,0 +1,266 @@
+.TH "lavu_error" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+lavu_error \- Error Codes
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBAVERROR\fP(e)   (e)"
+.br
+.ti -1c
+.RI "#define \fBAVUNERROR\fP(e)   (e)"
+.br
+.ti -1c
+.RI "#define \fBFFERRTAG\fP(\fBa\fP,  \fBb\fP,  \fBc\fP,  \fBd\fP)   (\-(\fBint\fP)\fBMKTAG\fP(\fBa\fP, \fBb\fP, \fBc\fP, \fBd\fP))"
+.br
+.ti -1c
+.RI "#define \fBAVERROR_BSF_NOT_FOUND\fP   \fBFFERRTAG\fP(0xF8,'B','S','F')"
+.br
+.RI "\fIBitstream filter not found\&. \fP"
+.ti -1c
+.RI "#define \fBAVERROR_BUG\fP   \fBFFERRTAG\fP( '\fBB\fP','U','G','!')"
+.br
+.RI "\fIInternal bug, also see AVERROR_BUG2\&. \fP"
+.ti -1c
+.RI "#define \fBAVERROR_BUFFER_TOO_SMALL\fP   \fBFFERRTAG\fP( '\fBB\fP','U','\fBF\fP','\fBS\fP')"
+.br
+.RI "\fIBuffer too small\&. \fP"
+.ti -1c
+.RI "#define \fBAVERROR_DECODER_NOT_FOUND\fP   \fBFFERRTAG\fP(0xF8,'D','E','C')"
+.br
+.RI "\fI\fBDecoder\fP not found\&. \fP"
+.ti -1c
+.RI "#define \fBAVERROR_DEMUXER_NOT_FOUND\fP   \fBFFERRTAG\fP(0xF8,'D','E','M')"
+.br
+.RI "\fIDemuxer not found\&. \fP"
+.ti -1c
+.RI "#define \fBAVERROR_ENCODER_NOT_FOUND\fP   \fBFFERRTAG\fP(0xF8,'E','N','C')"
+.br
+.RI "\fIEncoder not found\&. \fP"
+.ti -1c
+.RI "#define \fBAVERROR_EOF\fP   \fBFFERRTAG\fP( '\fBE\fP','O','\fBF\fP',' ')"
+.br
+.RI "\fIEnd of file\&. \fP"
+.ti -1c
+.RI "#define \fBAVERROR_EXIT\fP   \fBFFERRTAG\fP( '\fBE\fP','X','I','\fBT\fP')"
+.br
+.RI "\fIImmediate exit was requested; the called function should not be restarted\&. \fP"
+.ti -1c
+.RI "#define \fBAVERROR_EXTERNAL\fP   \fBFFERRTAG\fP( '\fBE\fP','X','\fBT\fP',' ')"
+.br
+.RI "\fIGeneric error in an external library\&. \fP"
+.ti -1c
+.RI "#define \fBAVERROR_FILTER_NOT_FOUND\fP   \fBFFERRTAG\fP(0xF8,'F','I','L')"
+.br
+.RI "\fI\fBFilter\fP not found\&. \fP"
+.ti -1c
+.RI "#define \fBAVERROR_INVALIDDATA\fP   \fBFFERRTAG\fP( 'I','\fBN\fP','\fBD\fP','\fBA\fP')"
+.br
+.RI "\fIInvalid data found when processing input\&. \fP"
+.ti -1c
+.RI "#define \fBAVERROR_MUXER_NOT_FOUND\fP   \fBFFERRTAG\fP(0xF8,'M','U','X')"
+.br
+.RI "\fIMuxer not found\&. \fP"
+.ti -1c
+.RI "#define \fBAVERROR_OPTION_NOT_FOUND\fP   \fBFFERRTAG\fP(0xF8,'O','P','T')"
+.br
+.RI "\fIOption not found\&. \fP"
+.ti -1c
+.RI "#define \fBAVERROR_PATCHWELCOME\fP   \fBFFERRTAG\fP( 'P','\fBA\fP','W','\fBE\fP')"
+.br
+.RI "\fINot yet implemented in FFmpeg, patches welcome\&. \fP"
+.ti -1c
+.RI "#define \fBAVERROR_PROTOCOL_NOT_FOUND\fP   \fBFFERRTAG\fP(0xF8,'P','R','O')"
+.br
+.RI "\fIProtocol not found\&. \fP"
+.ti -1c
+.RI "#define \fBAVERROR_STREAM_NOT_FOUND\fP   \fBFFERRTAG\fP(0xF8,'S','T','R')"
+.br
+.RI "\fIStream not found\&. \fP"
+.ti -1c
+.RI "#define \fBAVERROR_BUG2\fP   \fBFFERRTAG\fP( '\fBB\fP','U','G',' ')"
+.br
+.ti -1c
+.RI "#define \fBAVERROR_UNKNOWN\fP   \fBFFERRTAG\fP( 'U','\fBN\fP','K','\fBN\fP')"
+.br
+.RI "\fIUnknown error, typically from an external library\&. \fP"
+.ti -1c
+.RI "#define \fBAVERROR_EXPERIMENTAL\fP   (\-0x2bb2afa8)"
+.br
+.RI "\fIRequested feature is flagged experimental\&. Set strict_std_compliance if you really want to use it\&. \fP"
+.ti -1c
+.RI "#define \fBAV_ERROR_MAX_STRING_SIZE\fP   64"
+.br
+.ti -1c
+.RI "#define \fBav_err2str\fP(errnum)   av_make_error_string((char[\fBAV_ERROR_MAX_STRING_SIZE\fP]){0}, \fBAV_ERROR_MAX_STRING_SIZE\fP, errnum)"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBint\fP \fBav_strerror\fP (\fBint\fP errnum, char *errbuf, size_t errbuf_size)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define av_err2str(errnum)   av_make_error_string((char[\fBAV_ERROR_MAX_STRING_SIZE\fP]){0}, \fBAV_ERROR_MAX_STRING_SIZE\fP, errnum)"
+Convenience macro, the return value should be used only directly in function arguments but never stand-alone\&. 
+.PP
+Definition at line 110 of file error\&.h\&.
+.SS "#define AV_ERROR_MAX_STRING_SIZE   64"
+
+.PP
+Definition at line 74 of file error\&.h\&.
+.SS "#define AVERROR(e)   (e)"
+
+.PP
+Definition at line 43 of file error\&.h\&.
+.SS "#define AVERROR_BSF_NOT_FOUND   \fBFFERRTAG\fP(0xF8,'B','S','F')"
+
+.PP
+Bitstream filter not found\&. 
+.PP
+Definition at line 49 of file error\&.h\&.
+.SS "#define AVERROR_BUFFER_TOO_SMALL   \fBFFERRTAG\fP( '\fBB\fP','U','\fBF\fP','\fBS\fP')"
+
+.PP
+Buffer too small\&. 
+.PP
+Definition at line 51 of file error\&.h\&.
+.SS "#define AVERROR_BUG   \fBFFERRTAG\fP( '\fBB\fP','U','G','!')"
+
+.PP
+Internal bug, also see AVERROR_BUG2\&. 
+.PP
+Definition at line 50 of file error\&.h\&.
+.SS "#define AVERROR_BUG2   \fBFFERRTAG\fP( '\fBB\fP','U','G',' ')"
+This is semantically identical to AVERROR_BUG it has been introduced in Libav after our AVERROR_BUG and with a modified value\&. 
+.PP
+Definition at line 70 of file error\&.h\&.
+.SS "#define AVERROR_DECODER_NOT_FOUND   \fBFFERRTAG\fP(0xF8,'D','E','C')"
+
+.PP
+\fBDecoder\fP not found\&. 
+.PP
+Definition at line 52 of file error\&.h\&.
+.SS "#define AVERROR_DEMUXER_NOT_FOUND   \fBFFERRTAG\fP(0xF8,'D','E','M')"
+
+.PP
+Demuxer not found\&. 
+.PP
+Definition at line 53 of file error\&.h\&.
+.SS "#define AVERROR_ENCODER_NOT_FOUND   \fBFFERRTAG\fP(0xF8,'E','N','C')"
+
+.PP
+Encoder not found\&. 
+.PP
+Definition at line 54 of file error\&.h\&.
+.SS "#define AVERROR_EOF   \fBFFERRTAG\fP( '\fBE\fP','O','\fBF\fP',' ')"
+
+.PP
+End of file\&. 
+.PP
+Definition at line 55 of file error\&.h\&.
+.SS "#define AVERROR_EXIT   \fBFFERRTAG\fP( '\fBE\fP','X','I','\fBT\fP')"
+
+.PP
+Immediate exit was requested; the called function should not be restarted\&. 
+.PP
+Definition at line 56 of file error\&.h\&.
+.SS "#define AVERROR_EXPERIMENTAL   (\-0x2bb2afa8)"
+
+.PP
+Requested feature is flagged experimental\&. Set strict_std_compliance if you really want to use it\&. 
+.PP
+Definition at line 72 of file error\&.h\&.
+.SS "#define AVERROR_EXTERNAL   \fBFFERRTAG\fP( '\fBE\fP','X','\fBT\fP',' ')"
+
+.PP
+Generic error in an external library\&. 
+.PP
+Definition at line 57 of file error\&.h\&.
+.SS "#define AVERROR_FILTER_NOT_FOUND   \fBFFERRTAG\fP(0xF8,'F','I','L')"
+
+.PP
+\fBFilter\fP not found\&. 
+.PP
+Definition at line 58 of file error\&.h\&.
+.SS "#define AVERROR_INVALIDDATA   \fBFFERRTAG\fP( 'I','\fBN\fP','\fBD\fP','\fBA\fP')"
+
+.PP
+Invalid data found when processing input\&. 
+.PP
+Definition at line 59 of file error\&.h\&.
+.SS "#define AVERROR_MUXER_NOT_FOUND   \fBFFERRTAG\fP(0xF8,'M','U','X')"
+
+.PP
+Muxer not found\&. 
+.PP
+Definition at line 60 of file error\&.h\&.
+.SS "#define AVERROR_OPTION_NOT_FOUND   \fBFFERRTAG\fP(0xF8,'O','P','T')"
+
+.PP
+Option not found\&. 
+.PP
+Definition at line 61 of file error\&.h\&.
+.SS "#define AVERROR_PATCHWELCOME   \fBFFERRTAG\fP( 'P','\fBA\fP','W','\fBE\fP')"
+
+.PP
+Not yet implemented in FFmpeg, patches welcome\&. 
+.PP
+Definition at line 62 of file error\&.h\&.
+.SS "#define AVERROR_PROTOCOL_NOT_FOUND   \fBFFERRTAG\fP(0xF8,'P','R','O')"
+
+.PP
+Protocol not found\&. 
+.PP
+Definition at line 63 of file error\&.h\&.
+.SS "#define AVERROR_STREAM_NOT_FOUND   \fBFFERRTAG\fP(0xF8,'S','T','R')"
+
+.PP
+Stream not found\&. 
+.PP
+Definition at line 65 of file error\&.h\&.
+.SS "#define AVERROR_UNKNOWN   \fBFFERRTAG\fP( 'U','\fBN\fP','K','\fBN\fP')"
+
+.PP
+Unknown error, typically from an external library\&. 
+.PP
+Definition at line 71 of file error\&.h\&.
+.SS "#define AVUNERROR(e)   (e)"
+
+.PP
+Definition at line 44 of file error\&.h\&.
+.SS "#define FFERRTAG(\fBa\fP, \fBb\fP, \fBc\fP, \fBd\fP)   (\-(\fBint\fP)\fBMKTAG\fP(\fBa\fP, \fBb\fP, \fBc\fP, \fBd\fP))"
+
+.PP
+Definition at line 47 of file error\&.h\&.
+.SH "Function Documentation"
+.PP 
+.SS "\fBint\fP av_strerror (\fBint\fP errnum, char * errbuf, size_t errbuf_size)"
+Put a description of the AVERROR code errnum in errbuf\&. In case of failure the global variable errno is set to indicate the error\&. Even in case of failure \fBav_strerror()\fP will print a generic error message indicating the errnum provided to errbuf\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIerrnum\fP error code to describe 
+.br
+\fIerrbuf\fP buffer to which description is written 
+.br
+\fIerrbuf_size\fP the size in bytes of errbuf 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+0 on success, a negative value if a description for errnum cannot be found 
+.RE
+.PP
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

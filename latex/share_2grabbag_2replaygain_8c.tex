@@ -1,0 +1,362 @@
+\hypertarget{share_2grabbag_2replaygain_8c}{}\section{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/libflac/src/share/grabbag/replaygain.c File Reference}
+\label{share_2grabbag_2replaygain_8c}\index{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/libflac/src/share/grabbag/replaygain.\+c@{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/libflac/src/share/grabbag/replaygain.\+c}}
+{\ttfamily \#include $<$locale.\+h$>$}\\*
+{\ttfamily \#include $<$math.\+h$>$}\\*
+{\ttfamily \#include $<$stdio.\+h$>$}\\*
+{\ttfamily \#include $<$stdlib.\+h$>$}\\*
+{\ttfamily \#include $<$string.\+h$>$}\\*
+{\ttfamily \#include $<$sys/stat.\+h$>$}\\*
+{\ttfamily \#include \char`\"{}F\+L\+A\+C/assert.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}F\+L\+A\+C/metadata.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}F\+L\+A\+C/stream\+\_\+decoder.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}share/grabbag.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}share/replaygain\+\_\+analysis.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}share/safe\+\_\+str.\+h\char`\"{}}\\*
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{struct_decoder_instance}{Decoder\+Instance}
+\end{DoxyCompactItemize}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{share_2grabbag_2replaygain_8c_a960e09d251b8ebb80ef935cc555cd30b}{local\+\_\+min}(\hyperlink{rfft2d_test_m_l_8m_a4124bc0a9335c27f086f24ba207a4912}{a},  \hyperlink{convtest_8m_a21ad0bd836b90d08f4cf640b4c298e7c}{b})~((\hyperlink{rfft2d_test_m_l_8m_a4124bc0a9335c27f086f24ba207a4912}{a})$<$(\hyperlink{convtest_8m_a21ad0bd836b90d08f4cf640b4c298e7c}{b})?(\hyperlink{rfft2d_test_m_l_8m_a4124bc0a9335c27f086f24ba207a4912}{a})\+:(\hyperlink{convtest_8m_a21ad0bd836b90d08f4cf640b4c298e7c}{b}))
+\item 
+\#define \hyperlink{share_2grabbag_2replaygain_8c_af3695acf37a2f6c42779314baff5e905}{local\+\_\+max}(\hyperlink{rfft2d_test_m_l_8m_a4124bc0a9335c27f086f24ba207a4912}{a},  \hyperlink{convtest_8m_a21ad0bd836b90d08f4cf640b4c298e7c}{b})~((\hyperlink{rfft2d_test_m_l_8m_a4124bc0a9335c27f086f24ba207a4912}{a})$>$(\hyperlink{convtest_8m_a21ad0bd836b90d08f4cf640b4c298e7c}{b})?(\hyperlink{rfft2d_test_m_l_8m_a4124bc0a9335c27f086f24ba207a4912}{a})\+:(\hyperlink{convtest_8m_a21ad0bd836b90d08f4cf640b4c298e7c}{b}))
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{ordinals_8h_a95103469f1cbd78b8cf250194985b34e}{F\+L\+A\+C\+\_\+\+\_\+bool} \hyperlink{share_2grabbag_2replaygain_8c_ae15d7d5e331d5cde16b14d3be087272f}{grabbag\+\_\+\+\_\+replaygain\+\_\+is\+\_\+valid\+\_\+sample\+\_\+frequency} (unsigned sample\+\_\+frequency)
+\item 
+\hyperlink{ordinals_8h_a95103469f1cbd78b8cf250194985b34e}{F\+L\+A\+C\+\_\+\+\_\+bool} \hyperlink{share_2grabbag_2replaygain_8c_a0bc321baf9ab526f3ec48c08a7392e78}{grabbag\+\_\+\+\_\+replaygain\+\_\+init} (unsigned sample\+\_\+frequency)
+\item 
+\hyperlink{ordinals_8h_a95103469f1cbd78b8cf250194985b34e}{F\+L\+A\+C\+\_\+\+\_\+bool} \hyperlink{share_2grabbag_2replaygain_8c_a8d09071d6db8722f3d982fedec6e1072}{grabbag\+\_\+\+\_\+replaygain\+\_\+analyze} (\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{ordinals_8h_a33fd77bfe6d685541a0c034a75deccdc}{F\+L\+A\+C\+\_\+\+\_\+int32} $\ast$\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} input\mbox{[}$\,$\mbox{]}, \hyperlink{ordinals_8h_a95103469f1cbd78b8cf250194985b34e}{F\+L\+A\+C\+\_\+\+\_\+bool} is\+\_\+stereo, unsigned bps, unsigned \hyperlink{test__w__saw8_8c_a54185623a5a093f671a73e5fba6197a1}{samples})
+\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{share_2grabbag_2replaygain_8c_ad555b95611dca20c0c97b3a361f33102}{grabbag\+\_\+\+\_\+replaygain\+\_\+get\+\_\+album} (float $\ast$gain, float $\ast$peak)
+\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{share_2grabbag_2replaygain_8c_a1ae23044f0d8bb3e8d85c05414d837e8}{grabbag\+\_\+\+\_\+replaygain\+\_\+get\+\_\+title} (float $\ast$gain, float $\ast$peak)
+\item 
+\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} char $\ast$ \hyperlink{share_2grabbag_2replaygain_8c_ac2d2eb81f661527bdb055778a4394a67}{grabbag\+\_\+\+\_\+replaygain\+\_\+analyze\+\_\+file} (\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} char $\ast$\hyperlink{test__portburn_8cpp_a7efa5e9c7494c7d4586359300221aa5d}{filename}, float $\ast$title\+\_\+gain, float $\ast$title\+\_\+peak)
+\item 
+\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} char $\ast$ \hyperlink{share_2grabbag_2replaygain_8c_aaefee0eed5c80d9d3edb5a3c23f49083}{grabbag\+\_\+\+\_\+replaygain\+\_\+store\+\_\+to\+\_\+vorbiscomment} (\hyperlink{struct_f_l_a_c_____stream_metadata}{F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Metadata} $\ast$\hyperlink{structblock}{block}, float album\+\_\+gain, float album\+\_\+peak, float title\+\_\+gain, float title\+\_\+peak)
+\item 
+\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} char $\ast$ \hyperlink{share_2grabbag_2replaygain_8c_a2ed72fd5c42c1854abe4c23d1f995445}{grabbag\+\_\+\+\_\+replaygain\+\_\+store\+\_\+to\+\_\+vorbiscomment\+\_\+reference} (\hyperlink{struct_f_l_a_c_____stream_metadata}{F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Metadata} $\ast$\hyperlink{structblock}{block})
+\item 
+\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} char $\ast$ \hyperlink{share_2grabbag_2replaygain_8c_aa7d4e152f3d0ca1252a1b22192364456}{grabbag\+\_\+\+\_\+replaygain\+\_\+store\+\_\+to\+\_\+vorbiscomment\+\_\+album} (\hyperlink{struct_f_l_a_c_____stream_metadata}{F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Metadata} $\ast$\hyperlink{structblock}{block}, float album\+\_\+gain, float album\+\_\+peak)
+\item 
+\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} char $\ast$ \hyperlink{share_2grabbag_2replaygain_8c_ad418b5129d1a91d1047375819d968791}{grabbag\+\_\+\+\_\+replaygain\+\_\+store\+\_\+to\+\_\+vorbiscomment\+\_\+title} (\hyperlink{struct_f_l_a_c_____stream_metadata}{F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Metadata} $\ast$\hyperlink{structblock}{block}, float title\+\_\+gain, float title\+\_\+peak)
+\item 
+\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} char $\ast$ \hyperlink{share_2grabbag_2replaygain_8c_aafd7cc63525668cbeafd56290642835a}{grabbag\+\_\+\+\_\+replaygain\+\_\+store\+\_\+to\+\_\+file} (\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} char $\ast$\hyperlink{test__portburn_8cpp_a7efa5e9c7494c7d4586359300221aa5d}{filename}, float album\+\_\+gain, float album\+\_\+peak, float title\+\_\+gain, float title\+\_\+peak, \hyperlink{ordinals_8h_a95103469f1cbd78b8cf250194985b34e}{F\+L\+A\+C\+\_\+\+\_\+bool} \hyperlink{src_2flac_2main_8c_a921fd1d0688722b00c63cf97573fc46e}{preserve\+\_\+modtime})
+\item 
+\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} char $\ast$ \hyperlink{share_2grabbag_2replaygain_8c_ad34d4615321fa2c75528da1b2f8131d5}{grabbag\+\_\+\+\_\+replaygain\+\_\+store\+\_\+to\+\_\+file\+\_\+reference} (\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} char $\ast$\hyperlink{test__portburn_8cpp_a7efa5e9c7494c7d4586359300221aa5d}{filename}, \hyperlink{ordinals_8h_a95103469f1cbd78b8cf250194985b34e}{F\+L\+A\+C\+\_\+\+\_\+bool} \hyperlink{src_2flac_2main_8c_a921fd1d0688722b00c63cf97573fc46e}{preserve\+\_\+modtime})
+\item 
+\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} char $\ast$ \hyperlink{share_2grabbag_2replaygain_8c_a376954788b3f19538da81044a6410226}{grabbag\+\_\+\+\_\+replaygain\+\_\+store\+\_\+to\+\_\+file\+\_\+album} (\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} char $\ast$\hyperlink{test__portburn_8cpp_a7efa5e9c7494c7d4586359300221aa5d}{filename}, float album\+\_\+gain, float album\+\_\+peak, \hyperlink{ordinals_8h_a95103469f1cbd78b8cf250194985b34e}{F\+L\+A\+C\+\_\+\+\_\+bool} \hyperlink{src_2flac_2main_8c_a921fd1d0688722b00c63cf97573fc46e}{preserve\+\_\+modtime})
+\item 
+\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} char $\ast$ \hyperlink{share_2grabbag_2replaygain_8c_a320f9ce456815ca248f9a07f78b21bca}{grabbag\+\_\+\+\_\+replaygain\+\_\+store\+\_\+to\+\_\+file\+\_\+title} (\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} char $\ast$\hyperlink{test__portburn_8cpp_a7efa5e9c7494c7d4586359300221aa5d}{filename}, float title\+\_\+gain, float title\+\_\+peak, \hyperlink{ordinals_8h_a95103469f1cbd78b8cf250194985b34e}{F\+L\+A\+C\+\_\+\+\_\+bool} \hyperlink{src_2flac_2main_8c_a921fd1d0688722b00c63cf97573fc46e}{preserve\+\_\+modtime})
+\item 
+\hyperlink{ordinals_8h_a95103469f1cbd78b8cf250194985b34e}{F\+L\+A\+C\+\_\+\+\_\+bool} \hyperlink{share_2grabbag_2replaygain_8c_a12b1528e48408386c8a541fff96f51a5}{grabbag\+\_\+\+\_\+replaygain\+\_\+load\+\_\+from\+\_\+vorbiscomment} (\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{struct_f_l_a_c_____stream_metadata}{F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Metadata} $\ast$\hyperlink{structblock}{block}, \hyperlink{ordinals_8h_a95103469f1cbd78b8cf250194985b34e}{F\+L\+A\+C\+\_\+\+\_\+bool} album\+\_\+mode, \hyperlink{ordinals_8h_a95103469f1cbd78b8cf250194985b34e}{F\+L\+A\+C\+\_\+\+\_\+bool} strict, double $\ast$reference, double $\ast$gain, double $\ast$peak)
+\item 
+double \hyperlink{share_2grabbag_2replaygain_8c_a387d47a61f296d1c4e53896695a599ed}{grabbag\+\_\+\+\_\+replaygain\+\_\+compute\+\_\+scale\+\_\+factor} (double peak, double gain, double preamp, \hyperlink{ordinals_8h_a95103469f1cbd78b8cf250194985b34e}{F\+L\+A\+C\+\_\+\+\_\+bool} prevent\+\_\+clipping)
+\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} unsigned \hyperlink{share_2grabbag_2replaygain_8c_a958485d7480fc38154df4c3b890ec0b9}{G\+R\+A\+B\+B\+A\+G\+\_\+\+\_\+\+R\+E\+P\+L\+A\+Y\+G\+A\+I\+N\+\_\+\+M\+A\+X\+\_\+\+T\+A\+G\+\_\+\+S\+P\+A\+C\+E\+\_\+\+R\+E\+Q\+U\+I\+R\+ED} = 190
+\item 
+\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{ordinals_8h_a5eb569b12d5b047cdacada4d57924ee3}{F\+L\+A\+C\+\_\+\+\_\+byte} $\ast$\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{share_2grabbag_2replaygain_8c_a67b45e7309964c21aac01cd8dcb062a3}{G\+R\+A\+B\+B\+A\+G\+\_\+\+\_\+\+R\+E\+P\+L\+A\+Y\+G\+A\+I\+N\+\_\+\+T\+A\+G\+\_\+\+R\+E\+F\+E\+R\+E\+N\+C\+E\+\_\+\+L\+O\+U\+D\+N\+E\+SS} = (\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{ordinals_8h_a5eb569b12d5b047cdacada4d57924ee3}{F\+L\+A\+C\+\_\+\+\_\+byte} $\ast$ \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const})\char`\"{}R\+E\+P\+L\+A\+Y\+G\+A\+I\+N\+\_\+\+R\+E\+F\+E\+R\+E\+N\+C\+E\+\_\+\+L\+O\+U\+D\+N\+E\+SS\char`\"{}
+\item 
+\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{ordinals_8h_a5eb569b12d5b047cdacada4d57924ee3}{F\+L\+A\+C\+\_\+\+\_\+byte} $\ast$\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{share_2grabbag_2replaygain_8c_a01e71191addbade0b378d122b09abf57}{G\+R\+A\+B\+B\+A\+G\+\_\+\+\_\+\+R\+E\+P\+L\+A\+Y\+G\+A\+I\+N\+\_\+\+T\+A\+G\+\_\+\+T\+I\+T\+L\+E\+\_\+\+G\+A\+IN} = (\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{ordinals_8h_a5eb569b12d5b047cdacada4d57924ee3}{F\+L\+A\+C\+\_\+\+\_\+byte} $\ast$ \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const})\char`\"{}R\+E\+P\+L\+A\+Y\+G\+A\+I\+N\+\_\+\+T\+R\+A\+C\+K\+\_\+\+G\+A\+IN\char`\"{}
+\item 
+\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{ordinals_8h_a5eb569b12d5b047cdacada4d57924ee3}{F\+L\+A\+C\+\_\+\+\_\+byte} $\ast$\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{share_2grabbag_2replaygain_8c_a73ea0742ab1a47c63afb9023c63a426a}{G\+R\+A\+B\+B\+A\+G\+\_\+\+\_\+\+R\+E\+P\+L\+A\+Y\+G\+A\+I\+N\+\_\+\+T\+A\+G\+\_\+\+T\+I\+T\+L\+E\+\_\+\+P\+E\+AK} = (\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{ordinals_8h_a5eb569b12d5b047cdacada4d57924ee3}{F\+L\+A\+C\+\_\+\+\_\+byte} $\ast$ \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const})\char`\"{}R\+E\+P\+L\+A\+Y\+G\+A\+I\+N\+\_\+\+T\+R\+A\+C\+K\+\_\+\+P\+E\+AK\char`\"{}
+\item 
+\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{ordinals_8h_a5eb569b12d5b047cdacada4d57924ee3}{F\+L\+A\+C\+\_\+\+\_\+byte} $\ast$\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{share_2grabbag_2replaygain_8c_a623a99dd13670d1361092b28726aaa5a}{G\+R\+A\+B\+B\+A\+G\+\_\+\+\_\+\+R\+E\+P\+L\+A\+Y\+G\+A\+I\+N\+\_\+\+T\+A\+G\+\_\+\+A\+L\+B\+U\+M\+\_\+\+G\+A\+IN} = (\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{ordinals_8h_a5eb569b12d5b047cdacada4d57924ee3}{F\+L\+A\+C\+\_\+\+\_\+byte} $\ast$ \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const})\char`\"{}R\+E\+P\+L\+A\+Y\+G\+A\+I\+N\+\_\+\+A\+L\+B\+U\+M\+\_\+\+G\+A\+IN\char`\"{}
+\item 
+\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{ordinals_8h_a5eb569b12d5b047cdacada4d57924ee3}{F\+L\+A\+C\+\_\+\+\_\+byte} $\ast$\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{share_2grabbag_2replaygain_8c_a631dda92d54e573bfc62b7ac25ca6f2e}{G\+R\+A\+B\+B\+A\+G\+\_\+\+\_\+\+R\+E\+P\+L\+A\+Y\+G\+A\+I\+N\+\_\+\+T\+A\+G\+\_\+\+A\+L\+B\+U\+M\+\_\+\+P\+E\+AK} = (\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{ordinals_8h_a5eb569b12d5b047cdacada4d57924ee3}{F\+L\+A\+C\+\_\+\+\_\+byte} $\ast$ \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const})\char`\"{}R\+E\+P\+L\+A\+Y\+G\+A\+I\+N\+\_\+\+A\+L\+B\+U\+M\+\_\+\+P\+E\+AK\char`\"{}
+\end{DoxyCompactItemize}
+
+
+\subsection{Macro Definition Documentation}
+\index{share/grabbag/replaygain.\+c@{share/grabbag/replaygain.\+c}!local\+\_\+max@{local\+\_\+max}}
+\index{local\+\_\+max@{local\+\_\+max}!share/grabbag/replaygain.\+c@{share/grabbag/replaygain.\+c}}
+\subsubsection[{\texorpdfstring{local\+\_\+max}{local_max}}]{\setlength{\rightskip}{0pt plus 5cm}\#define local\+\_\+max(
+\begin{DoxyParamCaption}
+\item[{}]{{\bf a}, }
+\item[{}]{{\bf b}}
+\end{DoxyParamCaption}
+)~(({\bf a})$>$({\bf b})?({\bf a})\+:({\bf b}))}\hypertarget{share_2grabbag_2replaygain_8c_af3695acf37a2f6c42779314baff5e905}{}\label{share_2grabbag_2replaygain_8c_af3695acf37a2f6c42779314baff5e905}
+
+
+Definition at line 49 of file replaygain.\+c.
+
+\index{share/grabbag/replaygain.\+c@{share/grabbag/replaygain.\+c}!local\+\_\+min@{local\+\_\+min}}
+\index{local\+\_\+min@{local\+\_\+min}!share/grabbag/replaygain.\+c@{share/grabbag/replaygain.\+c}}
+\subsubsection[{\texorpdfstring{local\+\_\+min}{local_min}}]{\setlength{\rightskip}{0pt plus 5cm}\#define local\+\_\+min(
+\begin{DoxyParamCaption}
+\item[{}]{{\bf a}, }
+\item[{}]{{\bf b}}
+\end{DoxyParamCaption}
+)~(({\bf a})$<$({\bf b})?({\bf a})\+:({\bf b}))}\hypertarget{share_2grabbag_2replaygain_8c_a960e09d251b8ebb80ef935cc555cd30b}{}\label{share_2grabbag_2replaygain_8c_a960e09d251b8ebb80ef935cc555cd30b}
+
+
+Definition at line 44 of file replaygain.\+c.
+
+
+
+\subsection{Function Documentation}
+\index{share/grabbag/replaygain.\+c@{share/grabbag/replaygain.\+c}!grabbag\+\_\+\+\_\+replaygain\+\_\+analyze@{grabbag\+\_\+\+\_\+replaygain\+\_\+analyze}}
+\index{grabbag\+\_\+\+\_\+replaygain\+\_\+analyze@{grabbag\+\_\+\+\_\+replaygain\+\_\+analyze}!share/grabbag/replaygain.\+c@{share/grabbag/replaygain.\+c}}
+\subsubsection[{\texorpdfstring{grabbag\+\_\+\+\_\+replaygain\+\_\+analyze(const F\+L\+A\+C\+\_\+\+\_\+int32 $\ast$const input[], F\+L\+A\+C\+\_\+\+\_\+bool is\+\_\+stereo, unsigned bps, unsigned samples)}{grabbag__replaygain_analyze(const FLAC__int32 *const input[], FLAC__bool is_stereo, unsigned bps, unsigned samples)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf F\+L\+A\+C\+\_\+\+\_\+bool} grabbag\+\_\+\+\_\+replaygain\+\_\+analyze (
+\begin{DoxyParamCaption}
+\item[{{\bf const} {\bf F\+L\+A\+C\+\_\+\+\_\+int32} $\ast${\bf const}}]{input\mbox{[}$\,$\mbox{]}, }
+\item[{{\bf F\+L\+A\+C\+\_\+\+\_\+bool}}]{is\+\_\+stereo, }
+\item[{unsigned}]{bps, }
+\item[{unsigned}]{samples}
+\end{DoxyParamCaption}
+)}\hypertarget{share_2grabbag_2replaygain_8c_a8d09071d6db8722f3d982fedec6e1072}{}\label{share_2grabbag_2replaygain_8c_a8d09071d6db8722f3d982fedec6e1072}
+
+
+Definition at line 129 of file replaygain.\+c.
+
+\index{share/grabbag/replaygain.\+c@{share/grabbag/replaygain.\+c}!grabbag\+\_\+\+\_\+replaygain\+\_\+analyze\+\_\+file@{grabbag\+\_\+\+\_\+replaygain\+\_\+analyze\+\_\+file}}
+\index{grabbag\+\_\+\+\_\+replaygain\+\_\+analyze\+\_\+file@{grabbag\+\_\+\+\_\+replaygain\+\_\+analyze\+\_\+file}!share/grabbag/replaygain.\+c@{share/grabbag/replaygain.\+c}}
+\subsubsection[{\texorpdfstring{grabbag\+\_\+\+\_\+replaygain\+\_\+analyze\+\_\+file(const char $\ast$filename, float $\ast$title\+\_\+gain, float $\ast$title\+\_\+peak)}{grabbag__replaygain_analyze_file(const char *filename, float *title_gain, float *title_peak)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf const} char$\ast$ grabbag\+\_\+\+\_\+replaygain\+\_\+analyze\+\_\+file (
+\begin{DoxyParamCaption}
+\item[{{\bf const} char $\ast$}]{filename, }
+\item[{float $\ast$}]{title\+\_\+gain, }
+\item[{float $\ast$}]{title\+\_\+peak}
+\end{DoxyParamCaption}
+)}\hypertarget{share_2grabbag_2replaygain_8c_ac2d2eb81f661527bdb055778a4394a67}{}\label{share_2grabbag_2replaygain_8c_ac2d2eb81f661527bdb055778a4394a67}
+
+
+Definition at line 322 of file replaygain.\+c.
+
+\index{share/grabbag/replaygain.\+c@{share/grabbag/replaygain.\+c}!grabbag\+\_\+\+\_\+replaygain\+\_\+compute\+\_\+scale\+\_\+factor@{grabbag\+\_\+\+\_\+replaygain\+\_\+compute\+\_\+scale\+\_\+factor}}
+\index{grabbag\+\_\+\+\_\+replaygain\+\_\+compute\+\_\+scale\+\_\+factor@{grabbag\+\_\+\+\_\+replaygain\+\_\+compute\+\_\+scale\+\_\+factor}!share/grabbag/replaygain.\+c@{share/grabbag/replaygain.\+c}}
+\subsubsection[{\texorpdfstring{grabbag\+\_\+\+\_\+replaygain\+\_\+compute\+\_\+scale\+\_\+factor(double peak, double gain, double preamp, F\+L\+A\+C\+\_\+\+\_\+bool prevent\+\_\+clipping)}{grabbag__replaygain_compute_scale_factor(double peak, double gain, double preamp, FLAC__bool prevent_clipping)}}]{\setlength{\rightskip}{0pt plus 5cm}double grabbag\+\_\+\+\_\+replaygain\+\_\+compute\+\_\+scale\+\_\+factor (
+\begin{DoxyParamCaption}
+\item[{double}]{peak, }
+\item[{double}]{gain, }
+\item[{double}]{preamp, }
+\item[{{\bf F\+L\+A\+C\+\_\+\+\_\+bool}}]{prevent\+\_\+clipping}
+\end{DoxyParamCaption}
+)}\hypertarget{share_2grabbag_2replaygain_8c_a387d47a61f296d1c4e53896695a599ed}{}\label{share_2grabbag_2replaygain_8c_a387d47a61f296d1c4e53896695a599ed}
+
+
+Definition at line 656 of file replaygain.\+c.
+
+\index{share/grabbag/replaygain.\+c@{share/grabbag/replaygain.\+c}!grabbag\+\_\+\+\_\+replaygain\+\_\+get\+\_\+album@{grabbag\+\_\+\+\_\+replaygain\+\_\+get\+\_\+album}}
+\index{grabbag\+\_\+\+\_\+replaygain\+\_\+get\+\_\+album@{grabbag\+\_\+\+\_\+replaygain\+\_\+get\+\_\+album}!share/grabbag/replaygain.\+c@{share/grabbag/replaygain.\+c}}
+\subsubsection[{\texorpdfstring{grabbag\+\_\+\+\_\+replaygain\+\_\+get\+\_\+album(float $\ast$gain, float $\ast$peak)}{grabbag__replaygain_get_album(float *gain, float *peak)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} grabbag\+\_\+\+\_\+replaygain\+\_\+get\+\_\+album (
+\begin{DoxyParamCaption}
+\item[{float $\ast$}]{gain, }
+\item[{float $\ast$}]{peak}
+\end{DoxyParamCaption}
+)}\hypertarget{share_2grabbag_2replaygain_8c_ad555b95611dca20c0c97b3a361f33102}{}\label{share_2grabbag_2replaygain_8c_ad555b95611dca20c0c97b3a361f33102}
+
+
+Definition at line 239 of file replaygain.\+c.
+
+\index{share/grabbag/replaygain.\+c@{share/grabbag/replaygain.\+c}!grabbag\+\_\+\+\_\+replaygain\+\_\+get\+\_\+title@{grabbag\+\_\+\+\_\+replaygain\+\_\+get\+\_\+title}}
+\index{grabbag\+\_\+\+\_\+replaygain\+\_\+get\+\_\+title@{grabbag\+\_\+\+\_\+replaygain\+\_\+get\+\_\+title}!share/grabbag/replaygain.\+c@{share/grabbag/replaygain.\+c}}
+\subsubsection[{\texorpdfstring{grabbag\+\_\+\+\_\+replaygain\+\_\+get\+\_\+title(float $\ast$gain, float $\ast$peak)}{grabbag__replaygain_get_title(float *gain, float *peak)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} grabbag\+\_\+\+\_\+replaygain\+\_\+get\+\_\+title (
+\begin{DoxyParamCaption}
+\item[{float $\ast$}]{gain, }
+\item[{float $\ast$}]{peak}
+\end{DoxyParamCaption}
+)}\hypertarget{share_2grabbag_2replaygain_8c_a1ae23044f0d8bb3e8d85c05414d837e8}{}\label{share_2grabbag_2replaygain_8c_a1ae23044f0d8bb3e8d85c05414d837e8}
+
+
+Definition at line 246 of file replaygain.\+c.
+
+\index{share/grabbag/replaygain.\+c@{share/grabbag/replaygain.\+c}!grabbag\+\_\+\+\_\+replaygain\+\_\+init@{grabbag\+\_\+\+\_\+replaygain\+\_\+init}}
+\index{grabbag\+\_\+\+\_\+replaygain\+\_\+init@{grabbag\+\_\+\+\_\+replaygain\+\_\+init}!share/grabbag/replaygain.\+c@{share/grabbag/replaygain.\+c}}
+\subsubsection[{\texorpdfstring{grabbag\+\_\+\+\_\+replaygain\+\_\+init(unsigned sample\+\_\+frequency)}{grabbag__replaygain_init(unsigned sample_frequency)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf F\+L\+A\+C\+\_\+\+\_\+bool} grabbag\+\_\+\+\_\+replaygain\+\_\+init (
+\begin{DoxyParamCaption}
+\item[{unsigned}]{sample\+\_\+frequency}
+\end{DoxyParamCaption}
+)}\hypertarget{share_2grabbag_2replaygain_8c_a0bc321baf9ab526f3ec48c08a7392e78}{}\label{share_2grabbag_2replaygain_8c_a0bc321baf9ab526f3ec48c08a7392e78}
+
+
+Definition at line 123 of file replaygain.\+c.
+
+\index{share/grabbag/replaygain.\+c@{share/grabbag/replaygain.\+c}!grabbag\+\_\+\+\_\+replaygain\+\_\+is\+\_\+valid\+\_\+sample\+\_\+frequency@{grabbag\+\_\+\+\_\+replaygain\+\_\+is\+\_\+valid\+\_\+sample\+\_\+frequency}}
+\index{grabbag\+\_\+\+\_\+replaygain\+\_\+is\+\_\+valid\+\_\+sample\+\_\+frequency@{grabbag\+\_\+\+\_\+replaygain\+\_\+is\+\_\+valid\+\_\+sample\+\_\+frequency}!share/grabbag/replaygain.\+c@{share/grabbag/replaygain.\+c}}
+\subsubsection[{\texorpdfstring{grabbag\+\_\+\+\_\+replaygain\+\_\+is\+\_\+valid\+\_\+sample\+\_\+frequency(unsigned sample\+\_\+frequency)}{grabbag__replaygain_is_valid_sample_frequency(unsigned sample_frequency)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf F\+L\+A\+C\+\_\+\+\_\+bool} grabbag\+\_\+\+\_\+replaygain\+\_\+is\+\_\+valid\+\_\+sample\+\_\+frequency (
+\begin{DoxyParamCaption}
+\item[{unsigned}]{sample\+\_\+frequency}
+\end{DoxyParamCaption}
+)}\hypertarget{share_2grabbag_2replaygain_8c_ae15d7d5e331d5cde16b14d3be087272f}{}\label{share_2grabbag_2replaygain_8c_ae15d7d5e331d5cde16b14d3be087272f}
+
+
+Definition at line 118 of file replaygain.\+c.
+
+\index{share/grabbag/replaygain.\+c@{share/grabbag/replaygain.\+c}!grabbag\+\_\+\+\_\+replaygain\+\_\+load\+\_\+from\+\_\+vorbiscomment@{grabbag\+\_\+\+\_\+replaygain\+\_\+load\+\_\+from\+\_\+vorbiscomment}}
+\index{grabbag\+\_\+\+\_\+replaygain\+\_\+load\+\_\+from\+\_\+vorbiscomment@{grabbag\+\_\+\+\_\+replaygain\+\_\+load\+\_\+from\+\_\+vorbiscomment}!share/grabbag/replaygain.\+c@{share/grabbag/replaygain.\+c}}
+\subsubsection[{\texorpdfstring{grabbag\+\_\+\+\_\+replaygain\+\_\+load\+\_\+from\+\_\+vorbiscomment(const F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Metadata $\ast$block, F\+L\+A\+C\+\_\+\+\_\+bool album\+\_\+mode, F\+L\+A\+C\+\_\+\+\_\+bool strict, double $\ast$reference, double $\ast$gain, double $\ast$peak)}{grabbag__replaygain_load_from_vorbiscomment(const FLAC__StreamMetadata *block, FLAC__bool album_mode, FLAC__bool strict, double *reference, double *gain, double *peak)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf F\+L\+A\+C\+\_\+\+\_\+bool} grabbag\+\_\+\+\_\+replaygain\+\_\+load\+\_\+from\+\_\+vorbiscomment (
+\begin{DoxyParamCaption}
+\item[{{\bf const} {\bf F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Metadata} $\ast$}]{block, }
+\item[{{\bf F\+L\+A\+C\+\_\+\+\_\+bool}}]{album\+\_\+mode, }
+\item[{{\bf F\+L\+A\+C\+\_\+\+\_\+bool}}]{strict, }
+\item[{double $\ast$}]{reference, }
+\item[{double $\ast$}]{gain, }
+\item[{double $\ast$}]{peak}
+\end{DoxyParamCaption}
+)}\hypertarget{share_2grabbag_2replaygain_8c_a12b1528e48408386c8a541fff96f51a5}{}\label{share_2grabbag_2replaygain_8c_a12b1528e48408386c8a541fff96f51a5}
+
+
+Definition at line 607 of file replaygain.\+c.
+
+\index{share/grabbag/replaygain.\+c@{share/grabbag/replaygain.\+c}!grabbag\+\_\+\+\_\+replaygain\+\_\+store\+\_\+to\+\_\+file@{grabbag\+\_\+\+\_\+replaygain\+\_\+store\+\_\+to\+\_\+file}}
+\index{grabbag\+\_\+\+\_\+replaygain\+\_\+store\+\_\+to\+\_\+file@{grabbag\+\_\+\+\_\+replaygain\+\_\+store\+\_\+to\+\_\+file}!share/grabbag/replaygain.\+c@{share/grabbag/replaygain.\+c}}
+\subsubsection[{\texorpdfstring{grabbag\+\_\+\+\_\+replaygain\+\_\+store\+\_\+to\+\_\+file(const char $\ast$filename, float album\+\_\+gain, float album\+\_\+peak, float title\+\_\+gain, float title\+\_\+peak, F\+L\+A\+C\+\_\+\+\_\+bool preserve\+\_\+modtime)}{grabbag__replaygain_store_to_file(const char *filename, float album_gain, float album_peak, float title_gain, float title_peak, FLAC__bool preserve_modtime)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf const} char$\ast$ grabbag\+\_\+\+\_\+replaygain\+\_\+store\+\_\+to\+\_\+file (
+\begin{DoxyParamCaption}
+\item[{{\bf const} char $\ast$}]{filename, }
+\item[{float}]{album\+\_\+gain, }
+\item[{float}]{album\+\_\+peak, }
+\item[{float}]{title\+\_\+gain, }
+\item[{float}]{title\+\_\+peak, }
+\item[{{\bf F\+L\+A\+C\+\_\+\+\_\+bool}}]{preserve\+\_\+modtime}
+\end{DoxyParamCaption}
+)}\hypertarget{share_2grabbag_2replaygain_8c_aafd7cc63525668cbeafd56290642835a}{}\label{share_2grabbag_2replaygain_8c_aafd7cc63525668cbeafd56290642835a}
+
+
+Definition at line 503 of file replaygain.\+c.
+
+\index{share/grabbag/replaygain.\+c@{share/grabbag/replaygain.\+c}!grabbag\+\_\+\+\_\+replaygain\+\_\+store\+\_\+to\+\_\+file\+\_\+album@{grabbag\+\_\+\+\_\+replaygain\+\_\+store\+\_\+to\+\_\+file\+\_\+album}}
+\index{grabbag\+\_\+\+\_\+replaygain\+\_\+store\+\_\+to\+\_\+file\+\_\+album@{grabbag\+\_\+\+\_\+replaygain\+\_\+store\+\_\+to\+\_\+file\+\_\+album}!share/grabbag/replaygain.\+c@{share/grabbag/replaygain.\+c}}
+\subsubsection[{\texorpdfstring{grabbag\+\_\+\+\_\+replaygain\+\_\+store\+\_\+to\+\_\+file\+\_\+album(const char $\ast$filename, float album\+\_\+gain, float album\+\_\+peak, F\+L\+A\+C\+\_\+\+\_\+bool preserve\+\_\+modtime)}{grabbag__replaygain_store_to_file_album(const char *filename, float album_gain, float album_peak, FLAC__bool preserve_modtime)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf const} char$\ast$ grabbag\+\_\+\+\_\+replaygain\+\_\+store\+\_\+to\+\_\+file\+\_\+album (
+\begin{DoxyParamCaption}
+\item[{{\bf const} char $\ast$}]{filename, }
+\item[{float}]{album\+\_\+gain, }
+\item[{float}]{album\+\_\+peak, }
+\item[{{\bf F\+L\+A\+C\+\_\+\+\_\+bool}}]{preserve\+\_\+modtime}
+\end{DoxyParamCaption}
+)}\hypertarget{share_2grabbag_2replaygain_8c_a376954788b3f19538da81044a6410226}{}\label{share_2grabbag_2replaygain_8c_a376954788b3f19538da81044a6410226}
+
+
+Definition at line 543 of file replaygain.\+c.
+
+\index{share/grabbag/replaygain.\+c@{share/grabbag/replaygain.\+c}!grabbag\+\_\+\+\_\+replaygain\+\_\+store\+\_\+to\+\_\+file\+\_\+reference@{grabbag\+\_\+\+\_\+replaygain\+\_\+store\+\_\+to\+\_\+file\+\_\+reference}}
+\index{grabbag\+\_\+\+\_\+replaygain\+\_\+store\+\_\+to\+\_\+file\+\_\+reference@{grabbag\+\_\+\+\_\+replaygain\+\_\+store\+\_\+to\+\_\+file\+\_\+reference}!share/grabbag/replaygain.\+c@{share/grabbag/replaygain.\+c}}
+\subsubsection[{\texorpdfstring{grabbag\+\_\+\+\_\+replaygain\+\_\+store\+\_\+to\+\_\+file\+\_\+reference(const char $\ast$filename, F\+L\+A\+C\+\_\+\+\_\+bool preserve\+\_\+modtime)}{grabbag__replaygain_store_to_file_reference(const char *filename, FLAC__bool preserve_modtime)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf const} char$\ast$ grabbag\+\_\+\+\_\+replaygain\+\_\+store\+\_\+to\+\_\+file\+\_\+reference (
+\begin{DoxyParamCaption}
+\item[{{\bf const} char $\ast$}]{filename, }
+\item[{{\bf F\+L\+A\+C\+\_\+\+\_\+bool}}]{preserve\+\_\+modtime}
+\end{DoxyParamCaption}
+)}\hypertarget{share_2grabbag_2replaygain_8c_ad34d4615321fa2c75528da1b2f8131d5}{}\label{share_2grabbag_2replaygain_8c_ad34d4615321fa2c75528da1b2f8131d5}
+
+
+Definition at line 523 of file replaygain.\+c.
+
+\index{share/grabbag/replaygain.\+c@{share/grabbag/replaygain.\+c}!grabbag\+\_\+\+\_\+replaygain\+\_\+store\+\_\+to\+\_\+file\+\_\+title@{grabbag\+\_\+\+\_\+replaygain\+\_\+store\+\_\+to\+\_\+file\+\_\+title}}
+\index{grabbag\+\_\+\+\_\+replaygain\+\_\+store\+\_\+to\+\_\+file\+\_\+title@{grabbag\+\_\+\+\_\+replaygain\+\_\+store\+\_\+to\+\_\+file\+\_\+title}!share/grabbag/replaygain.\+c@{share/grabbag/replaygain.\+c}}
+\subsubsection[{\texorpdfstring{grabbag\+\_\+\+\_\+replaygain\+\_\+store\+\_\+to\+\_\+file\+\_\+title(const char $\ast$filename, float title\+\_\+gain, float title\+\_\+peak, F\+L\+A\+C\+\_\+\+\_\+bool preserve\+\_\+modtime)}{grabbag__replaygain_store_to_file_title(const char *filename, float title_gain, float title_peak, FLAC__bool preserve_modtime)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf const} char$\ast$ grabbag\+\_\+\+\_\+replaygain\+\_\+store\+\_\+to\+\_\+file\+\_\+title (
+\begin{DoxyParamCaption}
+\item[{{\bf const} char $\ast$}]{filename, }
+\item[{float}]{title\+\_\+gain, }
+\item[{float}]{title\+\_\+peak, }
+\item[{{\bf F\+L\+A\+C\+\_\+\+\_\+bool}}]{preserve\+\_\+modtime}
+\end{DoxyParamCaption}
+)}\hypertarget{share_2grabbag_2replaygain_8c_a320f9ce456815ca248f9a07f78b21bca}{}\label{share_2grabbag_2replaygain_8c_a320f9ce456815ca248f9a07f78b21bca}
+
+
+Definition at line 563 of file replaygain.\+c.
+
+\index{share/grabbag/replaygain.\+c@{share/grabbag/replaygain.\+c}!grabbag\+\_\+\+\_\+replaygain\+\_\+store\+\_\+to\+\_\+vorbiscomment@{grabbag\+\_\+\+\_\+replaygain\+\_\+store\+\_\+to\+\_\+vorbiscomment}}
+\index{grabbag\+\_\+\+\_\+replaygain\+\_\+store\+\_\+to\+\_\+vorbiscomment@{grabbag\+\_\+\+\_\+replaygain\+\_\+store\+\_\+to\+\_\+vorbiscomment}!share/grabbag/replaygain.\+c@{share/grabbag/replaygain.\+c}}
+\subsubsection[{\texorpdfstring{grabbag\+\_\+\+\_\+replaygain\+\_\+store\+\_\+to\+\_\+vorbiscomment(\+F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Metadata $\ast$block, float album\+\_\+gain, float album\+\_\+peak, float title\+\_\+gain, float title\+\_\+peak)}{grabbag__replaygain_store_to_vorbiscomment(FLAC__StreamMetadata *block, float album_gain, float album_peak, float title_gain, float title_peak)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf const} char$\ast$ grabbag\+\_\+\+\_\+replaygain\+\_\+store\+\_\+to\+\_\+vorbiscomment (
+\begin{DoxyParamCaption}
+\item[{{\bf F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Metadata} $\ast$}]{block, }
+\item[{float}]{album\+\_\+gain, }
+\item[{float}]{album\+\_\+peak, }
+\item[{float}]{title\+\_\+gain, }
+\item[{float}]{title\+\_\+peak}
+\end{DoxyParamCaption}
+)}\hypertarget{share_2grabbag_2replaygain_8c_aaefee0eed5c80d9d3edb5a3c23f49083}{}\label{share_2grabbag_2replaygain_8c_aaefee0eed5c80d9d3edb5a3c23f49083}
+
+
+Definition at line 354 of file replaygain.\+c.
+
+\index{share/grabbag/replaygain.\+c@{share/grabbag/replaygain.\+c}!grabbag\+\_\+\+\_\+replaygain\+\_\+store\+\_\+to\+\_\+vorbiscomment\+\_\+album@{grabbag\+\_\+\+\_\+replaygain\+\_\+store\+\_\+to\+\_\+vorbiscomment\+\_\+album}}
+\index{grabbag\+\_\+\+\_\+replaygain\+\_\+store\+\_\+to\+\_\+vorbiscomment\+\_\+album@{grabbag\+\_\+\+\_\+replaygain\+\_\+store\+\_\+to\+\_\+vorbiscomment\+\_\+album}!share/grabbag/replaygain.\+c@{share/grabbag/replaygain.\+c}}
+\subsubsection[{\texorpdfstring{grabbag\+\_\+\+\_\+replaygain\+\_\+store\+\_\+to\+\_\+vorbiscomment\+\_\+album(\+F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Metadata $\ast$block, float album\+\_\+gain, float album\+\_\+peak)}{grabbag__replaygain_store_to_vorbiscomment_album(FLAC__StreamMetadata *block, float album_gain, float album_peak)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf const} char$\ast$ grabbag\+\_\+\+\_\+replaygain\+\_\+store\+\_\+to\+\_\+vorbiscomment\+\_\+album (
+\begin{DoxyParamCaption}
+\item[{{\bf F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Metadata} $\ast$}]{block, }
+\item[{float}]{album\+\_\+gain, }
+\item[{float}]{album\+\_\+peak}
+\end{DoxyParamCaption}
+)}\hypertarget{share_2grabbag_2replaygain_8c_aa7d4e152f3d0ca1252a1b22192364456}{}\label{share_2grabbag_2replaygain_8c_aa7d4e152f3d0ca1252a1b22192364456}
+
+
+Definition at line 384 of file replaygain.\+c.
+
+\index{share/grabbag/replaygain.\+c@{share/grabbag/replaygain.\+c}!grabbag\+\_\+\+\_\+replaygain\+\_\+store\+\_\+to\+\_\+vorbiscomment\+\_\+reference@{grabbag\+\_\+\+\_\+replaygain\+\_\+store\+\_\+to\+\_\+vorbiscomment\+\_\+reference}}
+\index{grabbag\+\_\+\+\_\+replaygain\+\_\+store\+\_\+to\+\_\+vorbiscomment\+\_\+reference@{grabbag\+\_\+\+\_\+replaygain\+\_\+store\+\_\+to\+\_\+vorbiscomment\+\_\+reference}!share/grabbag/replaygain.\+c@{share/grabbag/replaygain.\+c}}
+\subsubsection[{\texorpdfstring{grabbag\+\_\+\+\_\+replaygain\+\_\+store\+\_\+to\+\_\+vorbiscomment\+\_\+reference(\+F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Metadata $\ast$block)}{grabbag__replaygain_store_to_vorbiscomment_reference(FLAC__StreamMetadata *block)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf const} char$\ast$ grabbag\+\_\+\+\_\+replaygain\+\_\+store\+\_\+to\+\_\+vorbiscomment\+\_\+reference (
+\begin{DoxyParamCaption}
+\item[{{\bf F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Metadata} $\ast$}]{block}
+\end{DoxyParamCaption}
+)}\hypertarget{share_2grabbag_2replaygain_8c_a2ed72fd5c42c1854abe4c23d1f995445}{}\label{share_2grabbag_2replaygain_8c_a2ed72fd5c42c1854abe4c23d1f995445}
+
+
+Definition at line 370 of file replaygain.\+c.
+
+\index{share/grabbag/replaygain.\+c@{share/grabbag/replaygain.\+c}!grabbag\+\_\+\+\_\+replaygain\+\_\+store\+\_\+to\+\_\+vorbiscomment\+\_\+title@{grabbag\+\_\+\+\_\+replaygain\+\_\+store\+\_\+to\+\_\+vorbiscomment\+\_\+title}}
+\index{grabbag\+\_\+\+\_\+replaygain\+\_\+store\+\_\+to\+\_\+vorbiscomment\+\_\+title@{grabbag\+\_\+\+\_\+replaygain\+\_\+store\+\_\+to\+\_\+vorbiscomment\+\_\+title}!share/grabbag/replaygain.\+c@{share/grabbag/replaygain.\+c}}
+\subsubsection[{\texorpdfstring{grabbag\+\_\+\+\_\+replaygain\+\_\+store\+\_\+to\+\_\+vorbiscomment\+\_\+title(\+F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Metadata $\ast$block, float title\+\_\+gain, float title\+\_\+peak)}{grabbag__replaygain_store_to_vorbiscomment_title(FLAC__StreamMetadata *block, float title_gain, float title_peak)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf const} char$\ast$ grabbag\+\_\+\+\_\+replaygain\+\_\+store\+\_\+to\+\_\+vorbiscomment\+\_\+title (
+\begin{DoxyParamCaption}
+\item[{{\bf F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Metadata} $\ast$}]{block, }
+\item[{float}]{title\+\_\+gain, }
+\item[{float}]{title\+\_\+peak}
+\end{DoxyParamCaption}
+)}\hypertarget{share_2grabbag_2replaygain_8c_ad418b5129d1a91d1047375819d968791}{}\label{share_2grabbag_2replaygain_8c_ad418b5129d1a91d1047375819d968791}
+
+
+Definition at line 404 of file replaygain.\+c.
+
+
+
+\subsection{Variable Documentation}
+\index{share/grabbag/replaygain.\+c@{share/grabbag/replaygain.\+c}!G\+R\+A\+B\+B\+A\+G\+\_\+\+\_\+\+R\+E\+P\+L\+A\+Y\+G\+A\+I\+N\+\_\+\+M\+A\+X\+\_\+\+T\+A\+G\+\_\+\+S\+P\+A\+C\+E\+\_\+\+R\+E\+Q\+U\+I\+R\+ED@{G\+R\+A\+B\+B\+A\+G\+\_\+\+\_\+\+R\+E\+P\+L\+A\+Y\+G\+A\+I\+N\+\_\+\+M\+A\+X\+\_\+\+T\+A\+G\+\_\+\+S\+P\+A\+C\+E\+\_\+\+R\+E\+Q\+U\+I\+R\+ED}}
+\index{G\+R\+A\+B\+B\+A\+G\+\_\+\+\_\+\+R\+E\+P\+L\+A\+Y\+G\+A\+I\+N\+\_\+\+M\+A\+X\+\_\+\+T\+A\+G\+\_\+\+S\+P\+A\+C\+E\+\_\+\+R\+E\+Q\+U\+I\+R\+ED@{G\+R\+A\+B\+B\+A\+G\+\_\+\+\_\+\+R\+E\+P\+L\+A\+Y\+G\+A\+I\+N\+\_\+\+M\+A\+X\+\_\+\+T\+A\+G\+\_\+\+S\+P\+A\+C\+E\+\_\+\+R\+E\+Q\+U\+I\+R\+ED}!share/grabbag/replaygain.\+c@{share/grabbag/replaygain.\+c}}
+\subsubsection[{\texorpdfstring{G\+R\+A\+B\+B\+A\+G\+\_\+\+\_\+\+R\+E\+P\+L\+A\+Y\+G\+A\+I\+N\+\_\+\+M\+A\+X\+\_\+\+T\+A\+G\+\_\+\+S\+P\+A\+C\+E\+\_\+\+R\+E\+Q\+U\+I\+R\+ED}{GRABBAG__REPLAYGAIN_MAX_TAG_SPACE_REQUIRED}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf const} unsigned G\+R\+A\+B\+B\+A\+G\+\_\+\+\_\+\+R\+E\+P\+L\+A\+Y\+G\+A\+I\+N\+\_\+\+M\+A\+X\+\_\+\+T\+A\+G\+\_\+\+S\+P\+A\+C\+E\+\_\+\+R\+E\+Q\+U\+I\+R\+ED = 190}\hypertarget{share_2grabbag_2replaygain_8c_a958485d7480fc38154df4c3b890ec0b9}{}\label{share_2grabbag_2replaygain_8c_a958485d7480fc38154df4c3b890ec0b9}
+
+
+Definition at line 57 of file replaygain.\+c.
+
+\index{share/grabbag/replaygain.\+c@{share/grabbag/replaygain.\+c}!G\+R\+A\+B\+B\+A\+G\+\_\+\+\_\+\+R\+E\+P\+L\+A\+Y\+G\+A\+I\+N\+\_\+\+T\+A\+G\+\_\+\+A\+L\+B\+U\+M\+\_\+\+G\+A\+IN@{G\+R\+A\+B\+B\+A\+G\+\_\+\+\_\+\+R\+E\+P\+L\+A\+Y\+G\+A\+I\+N\+\_\+\+T\+A\+G\+\_\+\+A\+L\+B\+U\+M\+\_\+\+G\+A\+IN}}
+\index{G\+R\+A\+B\+B\+A\+G\+\_\+\+\_\+\+R\+E\+P\+L\+A\+Y\+G\+A\+I\+N\+\_\+\+T\+A\+G\+\_\+\+A\+L\+B\+U\+M\+\_\+\+G\+A\+IN@{G\+R\+A\+B\+B\+A\+G\+\_\+\+\_\+\+R\+E\+P\+L\+A\+Y\+G\+A\+I\+N\+\_\+\+T\+A\+G\+\_\+\+A\+L\+B\+U\+M\+\_\+\+G\+A\+IN}!share/grabbag/replaygain.\+c@{share/grabbag/replaygain.\+c}}
+\subsubsection[{\texorpdfstring{G\+R\+A\+B\+B\+A\+G\+\_\+\+\_\+\+R\+E\+P\+L\+A\+Y\+G\+A\+I\+N\+\_\+\+T\+A\+G\+\_\+\+A\+L\+B\+U\+M\+\_\+\+G\+A\+IN}{GRABBAG__REPLAYGAIN_TAG_ALBUM_GAIN}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf const} {\bf F\+L\+A\+C\+\_\+\+\_\+byte}$\ast$ {\bf const} G\+R\+A\+B\+B\+A\+G\+\_\+\+\_\+\+R\+E\+P\+L\+A\+Y\+G\+A\+I\+N\+\_\+\+T\+A\+G\+\_\+\+A\+L\+B\+U\+M\+\_\+\+G\+A\+IN = ({\bf const} {\bf F\+L\+A\+C\+\_\+\+\_\+byte} $\ast$ {\bf const})\char`\"{}R\+E\+P\+L\+A\+Y\+G\+A\+I\+N\+\_\+\+A\+L\+B\+U\+M\+\_\+\+G\+A\+IN\char`\"{}}\hypertarget{share_2grabbag_2replaygain_8c_a623a99dd13670d1361092b28726aaa5a}{}\label{share_2grabbag_2replaygain_8c_a623a99dd13670d1361092b28726aaa5a}
+
+
+Definition at line 69 of file replaygain.\+c.
+
+\index{share/grabbag/replaygain.\+c@{share/grabbag/replaygain.\+c}!G\+R\+A\+B\+B\+A\+G\+\_\+\+\_\+\+R\+E\+P\+L\+A\+Y\+G\+A\+I\+N\+\_\+\+T\+A\+G\+\_\+\+A\+L\+B\+U\+M\+\_\+\+P\+E\+AK@{G\+R\+A\+B\+B\+A\+G\+\_\+\+\_\+\+R\+E\+P\+L\+A\+Y\+G\+A\+I\+N\+\_\+\+T\+A\+G\+\_\+\+A\+L\+B\+U\+M\+\_\+\+P\+E\+AK}}
+\index{G\+R\+A\+B\+B\+A\+G\+\_\+\+\_\+\+R\+E\+P\+L\+A\+Y\+G\+A\+I\+N\+\_\+\+T\+A\+G\+\_\+\+A\+L\+B\+U\+M\+\_\+\+P\+E\+AK@{G\+R\+A\+B\+B\+A\+G\+\_\+\+\_\+\+R\+E\+P\+L\+A\+Y\+G\+A\+I\+N\+\_\+\+T\+A\+G\+\_\+\+A\+L\+B\+U\+M\+\_\+\+P\+E\+AK}!share/grabbag/replaygain.\+c@{share/grabbag/replaygain.\+c}}
+\subsubsection[{\texorpdfstring{G\+R\+A\+B\+B\+A\+G\+\_\+\+\_\+\+R\+E\+P\+L\+A\+Y\+G\+A\+I\+N\+\_\+\+T\+A\+G\+\_\+\+A\+L\+B\+U\+M\+\_\+\+P\+E\+AK}{GRABBAG__REPLAYGAIN_TAG_ALBUM_PEAK}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf const} {\bf F\+L\+A\+C\+\_\+\+\_\+byte}$\ast$ {\bf const} G\+R\+A\+B\+B\+A\+G\+\_\+\+\_\+\+R\+E\+P\+L\+A\+Y\+G\+A\+I\+N\+\_\+\+T\+A\+G\+\_\+\+A\+L\+B\+U\+M\+\_\+\+P\+E\+AK = ({\bf const} {\bf F\+L\+A\+C\+\_\+\+\_\+byte} $\ast$ {\bf const})\char`\"{}R\+E\+P\+L\+A\+Y\+G\+A\+I\+N\+\_\+\+A\+L\+B\+U\+M\+\_\+\+P\+E\+AK\char`\"{}}\hypertarget{share_2grabbag_2replaygain_8c_a631dda92d54e573bfc62b7ac25ca6f2e}{}\label{share_2grabbag_2replaygain_8c_a631dda92d54e573bfc62b7ac25ca6f2e}
+
+
+Definition at line 70 of file replaygain.\+c.
+
+\index{share/grabbag/replaygain.\+c@{share/grabbag/replaygain.\+c}!G\+R\+A\+B\+B\+A\+G\+\_\+\+\_\+\+R\+E\+P\+L\+A\+Y\+G\+A\+I\+N\+\_\+\+T\+A\+G\+\_\+\+R\+E\+F\+E\+R\+E\+N\+C\+E\+\_\+\+L\+O\+U\+D\+N\+E\+SS@{G\+R\+A\+B\+B\+A\+G\+\_\+\+\_\+\+R\+E\+P\+L\+A\+Y\+G\+A\+I\+N\+\_\+\+T\+A\+G\+\_\+\+R\+E\+F\+E\+R\+E\+N\+C\+E\+\_\+\+L\+O\+U\+D\+N\+E\+SS}}
+\index{G\+R\+A\+B\+B\+A\+G\+\_\+\+\_\+\+R\+E\+P\+L\+A\+Y\+G\+A\+I\+N\+\_\+\+T\+A\+G\+\_\+\+R\+E\+F\+E\+R\+E\+N\+C\+E\+\_\+\+L\+O\+U\+D\+N\+E\+SS@{G\+R\+A\+B\+B\+A\+G\+\_\+\+\_\+\+R\+E\+P\+L\+A\+Y\+G\+A\+I\+N\+\_\+\+T\+A\+G\+\_\+\+R\+E\+F\+E\+R\+E\+N\+C\+E\+\_\+\+L\+O\+U\+D\+N\+E\+SS}!share/grabbag/replaygain.\+c@{share/grabbag/replaygain.\+c}}
+\subsubsection[{\texorpdfstring{G\+R\+A\+B\+B\+A\+G\+\_\+\+\_\+\+R\+E\+P\+L\+A\+Y\+G\+A\+I\+N\+\_\+\+T\+A\+G\+\_\+\+R\+E\+F\+E\+R\+E\+N\+C\+E\+\_\+\+L\+O\+U\+D\+N\+E\+SS}{GRABBAG__REPLAYGAIN_TAG_REFERENCE_LOUDNESS}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf const} {\bf F\+L\+A\+C\+\_\+\+\_\+byte}$\ast$ {\bf const} G\+R\+A\+B\+B\+A\+G\+\_\+\+\_\+\+R\+E\+P\+L\+A\+Y\+G\+A\+I\+N\+\_\+\+T\+A\+G\+\_\+\+R\+E\+F\+E\+R\+E\+N\+C\+E\+\_\+\+L\+O\+U\+D\+N\+E\+SS = ({\bf const} {\bf F\+L\+A\+C\+\_\+\+\_\+byte} $\ast$ {\bf const})\char`\"{}R\+E\+P\+L\+A\+Y\+G\+A\+I\+N\+\_\+\+R\+E\+F\+E\+R\+E\+N\+C\+E\+\_\+\+L\+O\+U\+D\+N\+E\+SS\char`\"{}}\hypertarget{share_2grabbag_2replaygain_8c_a67b45e7309964c21aac01cd8dcb062a3}{}\label{share_2grabbag_2replaygain_8c_a67b45e7309964c21aac01cd8dcb062a3}
+
+
+Definition at line 66 of file replaygain.\+c.
+
+\index{share/grabbag/replaygain.\+c@{share/grabbag/replaygain.\+c}!G\+R\+A\+B\+B\+A\+G\+\_\+\+\_\+\+R\+E\+P\+L\+A\+Y\+G\+A\+I\+N\+\_\+\+T\+A\+G\+\_\+\+T\+I\+T\+L\+E\+\_\+\+G\+A\+IN@{G\+R\+A\+B\+B\+A\+G\+\_\+\+\_\+\+R\+E\+P\+L\+A\+Y\+G\+A\+I\+N\+\_\+\+T\+A\+G\+\_\+\+T\+I\+T\+L\+E\+\_\+\+G\+A\+IN}}
+\index{G\+R\+A\+B\+B\+A\+G\+\_\+\+\_\+\+R\+E\+P\+L\+A\+Y\+G\+A\+I\+N\+\_\+\+T\+A\+G\+\_\+\+T\+I\+T\+L\+E\+\_\+\+G\+A\+IN@{G\+R\+A\+B\+B\+A\+G\+\_\+\+\_\+\+R\+E\+P\+L\+A\+Y\+G\+A\+I\+N\+\_\+\+T\+A\+G\+\_\+\+T\+I\+T\+L\+E\+\_\+\+G\+A\+IN}!share/grabbag/replaygain.\+c@{share/grabbag/replaygain.\+c}}
+\subsubsection[{\texorpdfstring{G\+R\+A\+B\+B\+A\+G\+\_\+\+\_\+\+R\+E\+P\+L\+A\+Y\+G\+A\+I\+N\+\_\+\+T\+A\+G\+\_\+\+T\+I\+T\+L\+E\+\_\+\+G\+A\+IN}{GRABBAG__REPLAYGAIN_TAG_TITLE_GAIN}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf const} {\bf F\+L\+A\+C\+\_\+\+\_\+byte}$\ast$ {\bf const} G\+R\+A\+B\+B\+A\+G\+\_\+\+\_\+\+R\+E\+P\+L\+A\+Y\+G\+A\+I\+N\+\_\+\+T\+A\+G\+\_\+\+T\+I\+T\+L\+E\+\_\+\+G\+A\+IN = ({\bf const} {\bf F\+L\+A\+C\+\_\+\+\_\+byte} $\ast$ {\bf const})\char`\"{}R\+E\+P\+L\+A\+Y\+G\+A\+I\+N\+\_\+\+T\+R\+A\+C\+K\+\_\+\+G\+A\+IN\char`\"{}}\hypertarget{share_2grabbag_2replaygain_8c_a01e71191addbade0b378d122b09abf57}{}\label{share_2grabbag_2replaygain_8c_a01e71191addbade0b378d122b09abf57}
+
+
+Definition at line 67 of file replaygain.\+c.
+
+\index{share/grabbag/replaygain.\+c@{share/grabbag/replaygain.\+c}!G\+R\+A\+B\+B\+A\+G\+\_\+\+\_\+\+R\+E\+P\+L\+A\+Y\+G\+A\+I\+N\+\_\+\+T\+A\+G\+\_\+\+T\+I\+T\+L\+E\+\_\+\+P\+E\+AK@{G\+R\+A\+B\+B\+A\+G\+\_\+\+\_\+\+R\+E\+P\+L\+A\+Y\+G\+A\+I\+N\+\_\+\+T\+A\+G\+\_\+\+T\+I\+T\+L\+E\+\_\+\+P\+E\+AK}}
+\index{G\+R\+A\+B\+B\+A\+G\+\_\+\+\_\+\+R\+E\+P\+L\+A\+Y\+G\+A\+I\+N\+\_\+\+T\+A\+G\+\_\+\+T\+I\+T\+L\+E\+\_\+\+P\+E\+AK@{G\+R\+A\+B\+B\+A\+G\+\_\+\+\_\+\+R\+E\+P\+L\+A\+Y\+G\+A\+I\+N\+\_\+\+T\+A\+G\+\_\+\+T\+I\+T\+L\+E\+\_\+\+P\+E\+AK}!share/grabbag/replaygain.\+c@{share/grabbag/replaygain.\+c}}
+\subsubsection[{\texorpdfstring{G\+R\+A\+B\+B\+A\+G\+\_\+\+\_\+\+R\+E\+P\+L\+A\+Y\+G\+A\+I\+N\+\_\+\+T\+A\+G\+\_\+\+T\+I\+T\+L\+E\+\_\+\+P\+E\+AK}{GRABBAG__REPLAYGAIN_TAG_TITLE_PEAK}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf const} {\bf F\+L\+A\+C\+\_\+\+\_\+byte}$\ast$ {\bf const} G\+R\+A\+B\+B\+A\+G\+\_\+\+\_\+\+R\+E\+P\+L\+A\+Y\+G\+A\+I\+N\+\_\+\+T\+A\+G\+\_\+\+T\+I\+T\+L\+E\+\_\+\+P\+E\+AK = ({\bf const} {\bf F\+L\+A\+C\+\_\+\+\_\+byte} $\ast$ {\bf const})\char`\"{}R\+E\+P\+L\+A\+Y\+G\+A\+I\+N\+\_\+\+T\+R\+A\+C\+K\+\_\+\+P\+E\+AK\char`\"{}}\hypertarget{share_2grabbag_2replaygain_8c_a73ea0742ab1a47c63afb9023c63a426a}{}\label{share_2grabbag_2replaygain_8c_a73ea0742ab1a47c63afb9023c63a426a}
+
+
+Definition at line 68 of file replaygain.\+c.
+

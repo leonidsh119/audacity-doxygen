@@ -1,0 +1,245 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/lib-src/libflac/src/libFLAC/metadata_iterators.c" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/lib-src/libflac/src/libFLAC/metadata_iterators.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <errno\&.h>\fP
+.br
+\fC#include <stdio\&.h>\fP
+.br
+\fC#include <stdlib\&.h>\fP
+.br
+\fC#include <string\&.h>\fP
+.br
+\fC#include <stdarg\&.h>\fP
+.br
+\fC#include <sys/stat\&.h>\fP
+.br
+\fC#include 'private/metadata\&.h'\fP
+.br
+\fC#include 'FLAC/assert\&.h'\fP
+.br
+\fC#include 'FLAC/stream_decoder\&.h'\fP
+.br
+\fC#include 'share/alloc\&.h'\fP
+.br
+\fC#include 'share/compat\&.h'\fP
+.br
+\fC#include 'share/macros\&.h'\fP
+.br
+\fC#include 'share/safe_str\&.h'\fP
+.br
+\fC#include 'private/macros\&.h'\fP
+.br
+\fC#include 'private/memory\&.h'\fP
+.br
+
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "struct \fBlevel0_client_data\fP"
+.br
+.ti -1c
+.RI "struct \fBFLAC__Metadata_SimpleIterator\fP"
+.br
+.ti -1c
+.RI "struct \fBFLAC__Metadata_Node\fP"
+.br
+.ti -1c
+.RI "struct \fBFLAC__Metadata_Chain\fP"
+.br
+.ti -1c
+.RI "struct \fBFLAC__Metadata_Iterator\fP"
+.br
+.in -1c
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBsafe_malloc_mul_2op_\fP   \fBsafe_malloc_mul_2op_p\fP"
+.br
+.ti -1c
+.RI "#define \fBlocal__fwrite\fP   fwrite"
+.br
+.ti -1c
+.RI "#define \fBSIMPLE_ITERATOR_MAX_PUSH_DEPTH\fP   (1+4)"
+.br
+.in -1c
+.SS "Typedefs"
+
+.in +1c
+.ti -1c
+.RI "typedef struct \fBFLAC__Metadata_Node\fP \fBFLAC__Metadata_Node\fP"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__metadata_get_streaminfo\fP (\fBconst\fP char *\fBfilename\fP, \fBFLAC__StreamMetadata\fP *streaminfo)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__metadata_get_tags\fP (\fBconst\fP char *\fBfilename\fP, \fBFLAC__StreamMetadata\fP **tags)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__metadata_get_cuesheet\fP (\fBconst\fP char *\fBfilename\fP, \fBFLAC__StreamMetadata\fP **cuesheet)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__metadata_get_picture\fP (\fBconst\fP char *\fBfilename\fP, \fBFLAC__StreamMetadata\fP **picture, \fBFLAC__StreamMetadata_Picture_Type\fP type, \fBconst\fP char *mime_type, \fBconst\fP \fBFLAC__byte\fP *description, unsigned max_width, unsigned max_height, unsigned max_depth, unsigned max_colors)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__Metadata_SimpleIterator\fP * \fBFLAC__metadata_simple_iterator_new\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBvoid\fP \fBFLAC__metadata_simple_iterator_delete\fP (\fBFLAC__Metadata_SimpleIterator\fP *iterator)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__Metadata_SimpleIteratorStatus\fP \fBFLAC__metadata_simple_iterator_status\fP (\fBFLAC__Metadata_SimpleIterator\fP *iterator)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__metadata_simple_iterator_init\fP (\fBFLAC__Metadata_SimpleIterator\fP *iterator, \fBconst\fP char *\fBfilename\fP, \fBFLAC__bool\fP read_only, \fBFLAC__bool\fP preserve_file_stats)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__metadata_simple_iterator_is_writable\fP (\fBconst\fP \fBFLAC__Metadata_SimpleIterator\fP *iterator)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__metadata_simple_iterator_next\fP (\fBFLAC__Metadata_SimpleIterator\fP *iterator)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__metadata_simple_iterator_prev\fP (\fBFLAC__Metadata_SimpleIterator\fP *iterator)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__metadata_simple_iterator_is_last\fP (\fBconst\fP \fBFLAC__Metadata_SimpleIterator\fP *iterator)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBoff_t\fP \fBFLAC__metadata_simple_iterator_get_block_offset\fP (\fBconst\fP \fBFLAC__Metadata_SimpleIterator\fP *iterator)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__MetadataType\fP \fBFLAC__metadata_simple_iterator_get_block_type\fP (\fBconst\fP \fBFLAC__Metadata_SimpleIterator\fP *iterator)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP unsigned \fBFLAC__metadata_simple_iterator_get_block_length\fP (\fBconst\fP \fBFLAC__Metadata_SimpleIterator\fP *iterator)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__metadata_simple_iterator_get_application_id\fP (\fBFLAC__Metadata_SimpleIterator\fP *iterator, \fBFLAC__byte\fP *id)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__StreamMetadata\fP * \fBFLAC__metadata_simple_iterator_get_block\fP (\fBFLAC__Metadata_SimpleIterator\fP *iterator)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__metadata_simple_iterator_set_block\fP (\fBFLAC__Metadata_SimpleIterator\fP *iterator, \fBFLAC__StreamMetadata\fP *\fBblock\fP, \fBFLAC__bool\fP use_padding)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__metadata_simple_iterator_insert_block_after\fP (\fBFLAC__Metadata_SimpleIterator\fP *iterator, \fBFLAC__StreamMetadata\fP *\fBblock\fP, \fBFLAC__bool\fP use_padding)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__metadata_simple_iterator_delete_block\fP (\fBFLAC__Metadata_SimpleIterator\fP *iterator, \fBFLAC__bool\fP use_padding)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__Metadata_Chain\fP * \fBFLAC__metadata_chain_new\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBvoid\fP \fBFLAC__metadata_chain_delete\fP (\fBFLAC__Metadata_Chain\fP *chain)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__Metadata_ChainStatus\fP \fBFLAC__metadata_chain_status\fP (\fBFLAC__Metadata_Chain\fP *chain)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__metadata_chain_read\fP (\fBFLAC__Metadata_Chain\fP *chain, \fBconst\fP char *\fBfilename\fP)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__metadata_chain_read_ogg\fP (\fBFLAC__Metadata_Chain\fP *chain, \fBconst\fP char *\fBfilename\fP)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__metadata_chain_read_with_callbacks\fP (\fBFLAC__Metadata_Chain\fP *chain, \fBFLAC__IOHandle\fP handle, \fBFLAC__IOCallbacks\fP callbacks)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__metadata_chain_read_ogg_with_callbacks\fP (\fBFLAC__Metadata_Chain\fP *chain, \fBFLAC__IOHandle\fP handle, \fBFLAC__IOCallbacks\fP callbacks)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__metadata_chain_check_if_tempfile_needed\fP (\fBFLAC__Metadata_Chain\fP *chain, \fBFLAC__bool\fP use_padding)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__metadata_chain_write\fP (\fBFLAC__Metadata_Chain\fP *chain, \fBFLAC__bool\fP use_padding, \fBFLAC__bool\fP preserve_file_stats)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__metadata_chain_write_with_callbacks\fP (\fBFLAC__Metadata_Chain\fP *chain, \fBFLAC__bool\fP use_padding, \fBFLAC__IOHandle\fP handle, \fBFLAC__IOCallbacks\fP callbacks)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__metadata_chain_write_with_callbacks_and_tempfile\fP (\fBFLAC__Metadata_Chain\fP *chain, \fBFLAC__bool\fP use_padding, \fBFLAC__IOHandle\fP handle, \fBFLAC__IOCallbacks\fP callbacks, \fBFLAC__IOHandle\fP temp_handle, \fBFLAC__IOCallbacks\fP temp_callbacks)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBvoid\fP \fBFLAC__metadata_chain_merge_padding\fP (\fBFLAC__Metadata_Chain\fP *chain)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBvoid\fP \fBFLAC__metadata_chain_sort_padding\fP (\fBFLAC__Metadata_Chain\fP *chain)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__Metadata_Iterator\fP * \fBFLAC__metadata_iterator_new\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBvoid\fP \fBFLAC__metadata_iterator_delete\fP (\fBFLAC__Metadata_Iterator\fP *iterator)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBvoid\fP \fBFLAC__metadata_iterator_init\fP (\fBFLAC__Metadata_Iterator\fP *iterator, \fBFLAC__Metadata_Chain\fP *chain)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__metadata_iterator_next\fP (\fBFLAC__Metadata_Iterator\fP *iterator)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__metadata_iterator_prev\fP (\fBFLAC__Metadata_Iterator\fP *iterator)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__MetadataType\fP \fBFLAC__metadata_iterator_get_block_type\fP (\fBconst\fP \fBFLAC__Metadata_Iterator\fP *iterator)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__StreamMetadata\fP * \fBFLAC__metadata_iterator_get_block\fP (\fBFLAC__Metadata_Iterator\fP *iterator)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__metadata_iterator_set_block\fP (\fBFLAC__Metadata_Iterator\fP *iterator, \fBFLAC__StreamMetadata\fP *\fBblock\fP)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__metadata_iterator_delete_block\fP (\fBFLAC__Metadata_Iterator\fP *iterator, \fBFLAC__bool\fP replace_with_padding)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__metadata_iterator_insert_block_before\fP (\fBFLAC__Metadata_Iterator\fP *iterator, \fBFLAC__StreamMetadata\fP *\fBblock\fP)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__metadata_iterator_insert_block_after\fP (\fBFLAC__Metadata_Iterator\fP *iterator, \fBFLAC__StreamMetadata\fP *\fBblock\fP)"
+.br
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "\fBFLAC_API\fP \fBconst\fP char *\fBconst\fP \fBFLAC__Metadata_SimpleIteratorStatusString\fP []"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBconst\fP char *\fBconst\fP \fBFLAC__Metadata_ChainStatusString\fP []"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define local__fwrite   fwrite"
+
+.PP
+Definition at line 140 of file metadata_iterators\&.c\&.
+.SS "#define safe_malloc_mul_2op_   \fBsafe_malloc_mul_2op_p\fP"
+
+.PP
+Definition at line 57 of file metadata_iterators\&.c\&.
+.SS "#define SIMPLE_ITERATOR_MAX_PUSH_DEPTH   (1+4)"
+
+.PP
+Definition at line 325 of file metadata_iterators\&.c\&.
+.SH "Typedef Documentation"
+.PP 
+.SS "typedef struct \fBFLAC__Metadata_Node\fP  \fBFLAC__Metadata_Node\fP"
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

@@ -1,0 +1,284 @@
+.TH "soundtouch::RateTransposer" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+soundtouch::RateTransposer \- 
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <RateTransposer\&.h>\fP
+.PP
+Inherits \fBsoundtouch::FIFOProcessor\fP\&.
+.PP
+Inherited by \fBRateTransposerFloat\fP, and \fBRateTransposerInteger\fP\&.
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBRateTransposer\fP ()"
+.br
+.ti -1c
+.RI "virtual \fB~RateTransposer\fP ()"
+.br
+.ti -1c
+.RI "\fBFIFOSamplePipe\fP * \fBgetOutput\fP ()"
+.br
+.RI "\fIReturns the output buffer object\&. \fP"
+.ti -1c
+.RI "\fBFIFOSamplePipe\fP * \fBgetStore\fP ()"
+.br
+.RI "\fIReturns the store buffer object\&. \fP"
+.ti -1c
+.RI "\fBAAFilter\fP * \fBgetAAFilter\fP ()"
+.br
+.RI "\fIReturn anti-alias filter object\&. \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBenableAAFilter\fP (\fBBOOL\fP newMode)"
+.br
+.RI "\fIEnables/disables the anti-alias filter\&. Zero to disable, nonzero to enable\&. \fP"
+.ti -1c
+.RI "\fBBOOL\fP \fBisAAFilterEnabled\fP () \fBconst\fP "
+.br
+.RI "\fIReturns nonzero if anti-alias filter is enabled\&. \fP"
+.ti -1c
+.RI "virtual \fBvoid\fP \fBsetRate\fP (float newRate)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBsetChannels\fP (\fBint\fP channels)"
+.br
+.RI "\fISets the number of channels, 1 = mono, 2 = stereo\&. \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBputSamples\fP (\fBconst\fP \fBSAMPLETYPE\fP *\fBsamples\fP, \fBuint\fP \fBnumSamples\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBclear\fP ()"
+.br
+.RI "\fIClears all the samples in the object\&. \fP"
+.ti -1c
+.RI "\fBint\fP \fBisEmpty\fP () \fBconst\fP "
+.br
+.RI "\fIReturns nonzero if there aren't any samples available for outputting\&. \fP"
+.in -1c
+.SS "Static Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "static \fBvoid\fP * \fBoperator new\fP (size_t \fBs\fP)"
+.br
+.ti -1c
+.RI "static \fBRateTransposer\fP * \fBnewInstance\fP ()"
+.br
+.in -1c
+.SS "Protected Member Functions"
+
+.in +1c
+.ti -1c
+.RI "virtual \fBvoid\fP \fBresetRegisters\fP ()=0"
+.br
+.ti -1c
+.RI "virtual \fBuint\fP \fBtransposeStereo\fP (\fBSAMPLETYPE\fP *dest, \fBconst\fP \fBSAMPLETYPE\fP *src, \fBuint\fP \fBnumSamples\fP)=0"
+.br
+.ti -1c
+.RI "virtual \fBuint\fP \fBtransposeMono\fP (\fBSAMPLETYPE\fP *dest, \fBconst\fP \fBSAMPLETYPE\fP *src, \fBuint\fP \fBnumSamples\fP)=0"
+.br
+.ti -1c
+.RI "\fBuint\fP \fBtranspose\fP (\fBSAMPLETYPE\fP *dest, \fBconst\fP \fBSAMPLETYPE\fP *src, \fBuint\fP \fBnumSamples\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBdownsample\fP (\fBconst\fP \fBSAMPLETYPE\fP *src, \fBuint\fP \fBnumSamples\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBupsample\fP (\fBconst\fP \fBSAMPLETYPE\fP *src, \fBuint\fP \fBnumSamples\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBprocessSamples\fP (\fBconst\fP \fBSAMPLETYPE\fP *src, \fBuint\fP \fBnumSamples\fP)"
+.br
+.in -1c
+.SS "Protected Attributes"
+
+.in +1c
+.ti -1c
+.RI "\fBAAFilter\fP * \fBpAAFilter\fP"
+.br
+.RI "\fIAnti-alias filter object\&. \fP"
+.ti -1c
+.RI "float \fBfRate\fP"
+.br
+.ti -1c
+.RI "\fBint\fP \fBnumChannels\fP"
+.br
+.ti -1c
+.RI "\fBFIFOSampleBuffer\fP \fBstoreBuffer\fP"
+.br
+.ti -1c
+.RI "\fBFIFOSampleBuffer\fP \fBtempBuffer\fP"
+.br
+.RI "\fIBuffer for keeping samples between transposing & anti-alias filter\&. \fP"
+.ti -1c
+.RI "\fBFIFOSampleBuffer\fP \fBoutputBuffer\fP"
+.br
+.RI "\fIOutput sample buffer\&. \fP"
+.ti -1c
+.RI "\fBBOOL\fP \fBbUseAAFilter\fP"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+A common linear samplerate transposer class\&.
+.PP
+Note: Use function 'RateTransposer::newInstance()' to create a new class instance instead of the 'new' operator; that function automatically chooses a correct implementation depending on if integer or floating arithmetics are to be used\&. 
+.PP
+Definition at line 64 of file RateTransposer\&.h\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "RateTransposer::RateTransposer ()"
+
+.PP
+Definition at line 125 of file RateTransposer\&.cpp\&.
+.SS "RateTransposer::~RateTransposer ()\fC [virtual]\fP"
+
+.PP
+Definition at line 138 of file RateTransposer\&.cpp\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "\fBvoid\fP RateTransposer::clear (\fBvoid\fP)\fC [virtual]\fP"
+
+.PP
+Clears all the samples in the object\&. 
+.PP
+Implements \fBsoundtouch::FIFOSamplePipe\fP\&.
+.PP
+Definition at line 343 of file RateTransposer\&.cpp\&.
+.SS "\fBvoid\fP RateTransposer::downsample (\fBconst\fP \fBSAMPLETYPE\fP * src, \fBuint\fP numSamples)\fC [protected]\fP"
+
+.PP
+Definition at line 243 of file RateTransposer\&.cpp\&.
+.SS "\fBvoid\fP RateTransposer::enableAAFilter (\fBBOOL\fP newMode)"
+
+.PP
+Enables/disables the anti-alias filter\&. Zero to disable, nonzero to enable\&. 
+.PP
+Definition at line 146 of file RateTransposer\&.cpp\&.
+.SS "\fBAAFilter\fP * RateTransposer::getAAFilter ()"
+
+.PP
+Return anti-alias filter object\&. 
+.PP
+Definition at line 159 of file RateTransposer\&.cpp\&.
+.SS "\fBFIFOSamplePipe\fP* soundtouch::RateTransposer::getOutput ()\fC [inline]\fP"
+
+.PP
+Returns the output buffer object\&. 
+.PP
+Definition at line 125 of file RateTransposer\&.h\&.
+.SS "\fBFIFOSamplePipe\fP* soundtouch::RateTransposer::getStore ()\fC [inline]\fP"
+
+.PP
+Returns the store buffer object\&. 
+.PP
+Definition at line 128 of file RateTransposer\&.h\&.
+.SS "\fBBOOL\fP RateTransposer::isAAFilterEnabled () const"
+
+.PP
+Returns nonzero if anti-alias filter is enabled\&. 
+.PP
+Definition at line 153 of file RateTransposer\&.cpp\&.
+.SS "\fBint\fP RateTransposer::isEmpty () const\fC [virtual]\fP"
+
+.PP
+Returns nonzero if there aren't any samples available for outputting\&. 
+.PP
+Reimplemented from \fBsoundtouch::FIFOProcessor\fP\&.
+.PP
+Definition at line 351 of file RateTransposer\&.cpp\&.
+.SS "\fBRateTransposer\fP * RateTransposer::newInstance ()\fC [static]\fP"
+Use this function instead of 'new' operator to create a new instance of this class\&. This function automatically chooses a correct implementation, depending on if integer ot floating point arithmetics are to be used\&. 
+.PP
+Definition at line 114 of file RateTransposer\&.cpp\&.
+.SS "\fBvoid\fP * RateTransposer::operator new (size_t s)\fC [static]\fP"
+Operator 'new' is overloaded so that it automatically creates a suitable instance depending on if we're to use integer or floating point arithmetics\&. 
+.PP
+Definition at line 107 of file RateTransposer\&.cpp\&.
+.SS "\fBvoid\fP RateTransposer::processSamples (\fBconst\fP \fBSAMPLETYPE\fP * src, \fBuint\fP numSamples)\fC [protected]\fP"
+Transposes sample rate by applying anti-alias filter to prevent folding\&. Returns amount of samples returned in the 'dest' buffer\&. The maximum amount of samples that can be returned at a time is set by the 'set_returnBuffer_size' function\&. 
+.PP
+Definition at line 279 of file RateTransposer\&.cpp\&.
+.SS "\fBvoid\fP RateTransposer::putSamples (\fBconst\fP \fBSAMPLETYPE\fP * samples, \fBuint\fP numSamples)\fC [virtual]\fP"
+Adds 'numSamples' pcs of samples from the 'samples' memory position into the input of the object\&. 
+.PP
+Implements \fBsoundtouch::FIFOSamplePipe\fP\&.
+.PP
+Definition at line 205 of file RateTransposer\&.cpp\&.
+.SS "virtual \fBvoid\fP soundtouch::RateTransposer::resetRegisters ()\fC [protected]\fP, \fC [pure virtual]\fP"
+
+.PP
+Implemented in \fBRateTransposerFloat\fP, and \fBRateTransposerInteger\fP\&.
+.SS "\fBvoid\fP RateTransposer::setChannels (\fBint\fP channels)"
+
+.PP
+Sets the number of channels, 1 = mono, 2 = stereo\&. 
+.PP
+Definition at line 325 of file RateTransposer\&.cpp\&.
+.SS "\fBvoid\fP RateTransposer::setRate (float newRate)\fC [virtual]\fP"
+Sets new target rate\&. Normal rate = 1\&.0, smaller values represent slower rate, larger faster rates\&. 
+.PP
+Reimplemented in \fBRateTransposerInteger\fP\&.
+.PP
+Definition at line 168 of file RateTransposer\&.cpp\&.
+.SS "\fBuint\fP RateTransposer::transpose (\fBSAMPLETYPE\fP * dest, \fBconst\fP \fBSAMPLETYPE\fP * src, \fBuint\fP numSamples)\fC [inline]\fP, \fC [protected]\fP"
+
+.PP
+Definition at line 311 of file RateTransposer\&.cpp\&.
+.SS "virtual \fBuint\fP soundtouch::RateTransposer::transposeMono (\fBSAMPLETYPE\fP * dest, \fBconst\fP \fBSAMPLETYPE\fP * src, \fBuint\fP numSamples)\fC [protected]\fP, \fC [pure virtual]\fP"
+
+.PP
+Implemented in \fBRateTransposerFloat\fP, and \fBRateTransposerInteger\fP\&.
+.SS "virtual \fBuint\fP soundtouch::RateTransposer::transposeStereo (\fBSAMPLETYPE\fP * dest, \fBconst\fP \fBSAMPLETYPE\fP * src, \fBuint\fP numSamples)\fC [protected]\fP, \fC [pure virtual]\fP"
+
+.PP
+Implemented in \fBRateTransposerFloat\fP, and \fBRateTransposerInteger\fP\&.
+.SS "\fBvoid\fP RateTransposer::upsample (\fBconst\fP \fBSAMPLETYPE\fP * src, \fBuint\fP numSamples)\fC [protected]\fP"
+
+.PP
+Definition at line 214 of file RateTransposer\&.cpp\&.
+.SH "Member Data Documentation"
+.PP 
+.SS "\fBBOOL\fP soundtouch::RateTransposer::bUseAAFilter\fC [protected]\fP"
+
+.PP
+Definition at line 84 of file RateTransposer\&.h\&.
+.SS "float soundtouch::RateTransposer::fRate\fC [protected]\fP"
+
+.PP
+Definition at line 70 of file RateTransposer\&.h\&.
+.SS "\fBint\fP soundtouch::RateTransposer::numChannels\fC [protected]\fP"
+
+.PP
+Definition at line 72 of file RateTransposer\&.h\&.
+.SS "\fBFIFOSampleBuffer\fP soundtouch::RateTransposer::outputBuffer\fC [protected]\fP"
+
+.PP
+Output sample buffer\&. 
+.PP
+Definition at line 82 of file RateTransposer\&.h\&.
+.SS "\fBAAFilter\fP* soundtouch::RateTransposer::pAAFilter\fC [protected]\fP"
+
+.PP
+Anti-alias filter object\&. 
+.PP
+Definition at line 68 of file RateTransposer\&.h\&.
+.SS "\fBFIFOSampleBuffer\fP soundtouch::RateTransposer::storeBuffer\fC [protected]\fP"
+Buffer for collecting samples to feed the anti-alias filter between two batches 
+.PP
+Definition at line 76 of file RateTransposer\&.h\&.
+.SS "\fBFIFOSampleBuffer\fP soundtouch::RateTransposer::tempBuffer\fC [protected]\fP"
+
+.PP
+Buffer for keeping samples between transposing & anti-alias filter\&. 
+.PP
+Definition at line 79 of file RateTransposer\&.h\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

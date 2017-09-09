@@ -1,0 +1,56 @@
+.TH "_LV2_Worker_Schedule" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+_LV2_Worker_Schedule \- 
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <worker\&.h>\fP
+.SS "Public Attributes"
+
+.in +1c
+.ti -1c
+.RI "\fBLV2_Worker_Schedule_Handle\fP \fBhandle\fP"
+.br
+.ti -1c
+.RI "\fBLV2_Worker_Status\fP(* \fBschedule_work\fP )(\fBLV2_Worker_Schedule_Handle\fP \fBhandle\fP, \fBuint32_t\fP \fBsize\fP, \fBconst\fP \fBvoid\fP *\fBdata\fP)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Definition at line 117 of file worker\&.h\&.
+.SH "Member Data Documentation"
+.PP 
+.SS "\fBLV2_Worker_Schedule_Handle\fP _LV2_Worker_Schedule::handle"
+Opaque host data\&. 
+.PP
+Definition at line 121 of file worker\&.h\&.
+.SS "\fBLV2_Worker_Status\fP(* _LV2_Worker_Schedule::schedule_work) (\fBLV2_Worker_Schedule_Handle\fP \fBhandle\fP, \fBuint32_t\fP \fBsize\fP, \fBconst\fP \fBvoid\fP *\fBdata\fP)"
+Request from \fBrun()\fP that the host call the worker\&.
+.PP
+This function is in the audio threading class\&. It should be called from \fBrun()\fP to request that the host call the work() method in a non-realtime context with the given arguments\&.
+.PP
+This function is always safe to call from \fBrun()\fP, but it is not guaranteed that the worker is actually called from a different thread\&. In particular, when free-wheeling (e\&.g\&. for offline rendering), the worker may be executed immediately\&. This allows single-threaded processing with sample accuracy and avoids timing problems when \fBrun()\fP is executing much faster or slower than real-time\&.
+.PP
+Plugins SHOULD be written in such a way that if the worker runs immediately, and responses from the worker are delivered immediately, the effect of the work takes place immediately with sample accuracy\&.
+.PP
+The \fCdata\fP MUST be safe for the host to copy and later pass to work(), and the host MUST guarantee that it will be eventually passed to work() if this function returns LV2_WORKER_SUCCESS\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIhandle\fP The handle field of this struct\&. 
+.br
+\fIsize\fP The size of \fCdata\fP\&. 
+.br
+\fIdata\fP Message to pass to work(), or NULL\&. 
+.RE
+.PP
+
+.PP
+Definition at line 149 of file worker\&.h\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

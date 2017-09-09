@@ -1,0 +1,112 @@
+
+\begin{DoxyRefList}
+\item[\label{todo__todo000043}%
+\hypertarget{todo__todo000043}{}%
+Class \hyperlink{class_audio_i_o}{Audio\+IO} ]run through all functions called from audio and portaudio threads to verify they are thread-\/safe. Note that synchronization of the style\+: \char`\"{}\+A sets flag to signal B, B clears flag to acknowledge completion\char`\"{} is not thread safe in a general multiple-\/\+C\+PU context. For example, B can write to a buffer and set a completion flag. The flag write can occur before the buffer write due to out-\/of-\/order execution. Then A can see the flag and read the buffer before buffer writes complete. 
+\item[\label{todo__todo000044}%
+\hypertarget{todo__todo000044}{}%
+Member \hyperlink{class_audio_i_o_a71facd3c7274394b70eaff652e1bc97e}{Audio\+IO\+:\+:Get\+Optimal\+Supported\+Sample\+Rate} ()]\+: should this take into account Port\+Audio\textquotesingle{}s value for \hyperlink{struct_pa_device_info_a68f435353bfe1a4c9b632203a9afcacb}{Pa\+Device\+Info\+::default\+Sample\+Rate}? In principal this should let us work out which rates are \char`\"{}real\char`\"{} and which resampled in the drivers, and so prefer the real rates.  
+\item[\label{todo__todo000045}%
+\hypertarget{todo__todo000045}{}%
+Member \hyperlink{class_audio_i_o_aef42a8e615a55e2b914a989e8b63af0b}{Audio\+IO\+:\+:Handle\+Device\+Change} ()]\+: Make this do a sample rate query and store the result in the \hyperlink{class_audio_i_o}{Audio\+IO} object to avoid doing it later? Would simplify the Get\+Supported$\ast$\+Rate functions considerably  
+\item[\label{todo__todo000005}%
+\hypertarget{todo__todo000005}{}%
+Member \hyperlink{samplefmt_8h_a4db4c77f928d32c7d8854732f50b8c04}{av\+\_\+samples\+\_\+alloc} (uint8\+\_\+t $\ast$$\ast$audio\+\_\+data, int $\ast$linesize, int nb\+\_\+channels, int nb\+\_\+samples, enum A\+V\+Sample\+Format sample\+\_\+fmt, int align)]return the size of the allocated buffer in case of success at the next bump  
+\item[\label{todo__todo000004}%
+\hypertarget{todo__todo000004}{}%
+Member \hyperlink{samplefmt_8h_a673254a62fa75dab3211caf17c73c6eb}{av\+\_\+samples\+\_\+fill\+\_\+arrays} (uint8\+\_\+t $\ast$$\ast$audio\+\_\+data, int $\ast$linesize, const uint8\+\_\+t $\ast$buf, int nb\+\_\+channels, int nb\+\_\+samples, enum A\+V\+Sample\+Format sample\+\_\+fmt, int align)]return minimum size in bytes required for the buffer in case of success at the next bump  
+\item[\label{todo__todo000001}%
+\hypertarget{todo__todo000001}{}%
+Member \hyperlink{group__lavc__misc_ga66b44aad56fa22a78fb8916eb8cc0516}{avcodec\+\_\+fill\+\_\+audio\+\_\+frame} (\hyperlink{struct_a_v_frame}{A\+V\+Frame} $\ast$frame, int nb\+\_\+channels, enum A\+V\+Sample\+Format sample\+\_\+fmt, const uint8\+\_\+t $\ast$buf, int buf\+\_\+size, int align)]return the size in bytes required to store the samples in case of success, at the next libavutil bump  
+\item[\label{todo__todo000002}%
+\hypertarget{todo__todo000002}{}%
+Member \hyperlink{group__lavf__decoding_gad42172e27cddafb81096939783b157bb}{avformat\+\_\+find\+\_\+stream\+\_\+info} (\hyperlink{struct_a_v_format_context}{A\+V\+Format\+Context} $\ast$ic, A\+V\+Dictionary $\ast$$\ast$options)]Let the user decide somehow what information is needed so that we do not waste time getting stuff the user does not need.  
+\item[\label{todo__todo000003}%
+\hypertarget{todo__todo000003}{}%
+Member \hyperlink{struct_a_v_option_a6c72d22b8c599e89abba088b85dfcd8a}{A\+V\+Option\+:\+:help} ]What about other languages?  
+\item[\label{todo__todo000062}%
+\hypertarget{todo__todo000062}{}%
+Member \hyperlink{class_expanding_tool_bar_ad1dc9d80b11f61df0f9761c55d5aa33d}{Expanding\+Tool\+Bar\+:\+:Expanding\+Tool\+Bar} (wx\+Window $\ast$parent, wx\+Window\+ID id, const wx\+Point \&pos=wx\+Default\+Position, const wx\+Size \&size=wx\+Default\+Size)]check whether this is a memory leak (and check similar code)  
+\item[\label{todo__todo000046}%
+\hypertarget{todo__todo000046}{}%
+Member \hyperlink{class_file_names_a703e46fe9ac21e11b497d08f3856400c}{File\+Names\+:\+:Temp\+Dir} ()]put a counter in here to see if it gets used a lot. if it does, then maybe we should cache the path name each time.  
+\item[\label{todo__todo000051}%
+\hypertarget{todo__todo000051}{}%
+Member \hyperlink{_track_artist_8h_a00fc87b63f1436536d3090852d57f810}{Get\+Wave\+Y\+Pos} (float value, float min, float max, int height, bool dB, bool outer, float d\+Br, bool clip)]Should this function move int Gui\+Wave\+Track where it can then use the zoom\+Min, zoom\+Max and height values without having to have them passed in to it??  
+\item[\label{todo__todo000015}%
+\hypertarget{todo__todo000015}{}%
+Member \hyperlink{pa__front_8c_a92f56f88cbd14da0e8e03077e835d104}{Pa\+\_\+\+Close\+Stream} (Pa\+Stream $\ast$stream)]R\+E\+V\+I\+EW\+: shouldn\textquotesingle{}t we close anyway? see\+: \href{http://www.portaudio.com/trac/ticket/115}{\tt http\+://www.\+portaudio.\+com/trac/ticket/115}  
+\item[\label{todo__todo000007}%
+\hypertarget{todo__todo000007}{}%
+File \hyperlink{pa__converters_8c}{pa\+\_\+converters.c} ]Consider whether functions which dither but don\textquotesingle{}t clip should exist, V18 automatically enabled clipping whenever dithering was selected. Perhaps we should do the same. see\+: \char`\"{}require clipping for dithering sample conversion functions?\char`\"{} \href{http://www.portaudio.com/trac/ticket/112}{\tt http\+://www.\+portaudio.\+com/trac/ticket/112}
+
+implement the converters marked I\+M\+P\+L\+E\+M\+E\+NT ME\+: Int32\+\_\+\+To\+\_\+\+Int24\+\_\+\+Dither, Int32\+\_\+\+To\+\_\+\+U\+Int8\+\_\+\+Dither, Int24\+\_\+\+To\+\_\+\+Int16\+\_\+\+Dither, Int24\+\_\+\+To\+\_\+\+Int8\+\_\+\+Dither, Int24\+\_\+\+To\+\_\+\+U\+Int8\+\_\+\+Dither, Int16\+\_\+\+To\+\_\+\+Int8\+\_\+\+Dither, Int16\+\_\+\+To\+\_\+\+U\+Int8\+\_\+\+Dither see\+: \char`\"{}some conversion functions are not implemented in pa\+\_\+converters.\+c\char`\"{} \href{http://www.portaudio.com/trac/ticket/35}{\tt http\+://www.\+portaudio.\+com/trac/ticket/35}
+
+review the converters marked R\+E\+V\+I\+EW\+: Float32\+\_\+\+To\+\_\+\+Int32, Float32\+\_\+\+To\+\_\+\+Int32\+\_\+\+Dither, Float32\+\_\+\+To\+\_\+\+Int32\+\_\+\+Clip, Float32\+\_\+\+To\+\_\+\+Int32\+\_\+\+Dither\+Clip, Int32\+\_\+\+To\+\_\+\+Int16\+\_\+\+Dither, Int32\+\_\+\+To\+\_\+\+Int8\+\_\+\+Dither, Int16\+\_\+\+To\+\_\+\+Int32  
+\item[\label{todo__todo000010}%
+\hypertarget{todo__todo000010}{}%
+File \hyperlink{pa__cpuload_8c}{pa\+\_\+cpuload.c} ]Dynamically calculate the coefficients used to smooth the C\+PU Load Measurements over time to provide a uniform characterisation of C\+PU Load independent of rate at which Pa\+Util\+\_\+\+Begin\+Cpu\+Load\+Measurement / Pa\+Util\+\_\+\+End\+Cpu\+Load\+Measurement are called. see \href{http://www.portaudio.com/trac/ticket/113}{\tt http\+://www.\+portaudio.\+com/trac/ticket/113}  
+\item[\label{todo__todo000013}%
+\hypertarget{todo__todo000013}{}%
+Member \hyperlink{pa__front_8c_ae606855a611cf29c7d2d7421df5e3b5d}{Pa\+\_\+\+Get\+Error\+Text} (Pa\+Error error\+Code)]could catenate the last host error text to result in the case of pa\+Unanticipated\+Host\+Error. see\+: \href{http://www.portaudio.com/trac/ticket/114}{\tt http\+://www.\+portaudio.\+com/trac/ticket/114}  
+\item[\label{todo__todo000042}%
+\hypertarget{todo__todo000042}{}%
+File \hyperlink{patest__toomanysines_8c}{patest\+\_\+toomanysines.c} ]This may not be needed now that we have \char`\"{}patest\+\_\+out\+\_\+overflow.\+c\char`\"{}.  
+\item[\label{todo__todo000011}%
+\hypertarget{todo__todo000011}{}%
+Member \hyperlink{pa__cpuload_8h_a8c29cc1cf3b6fd9bf18a2c3fc9f0ef2a}{Pa\+Util\+\_\+\+End\+Cpu\+Load\+Measurement} (\hyperlink{struct_pa_util_cpu_load_measurer}{Pa\+Util\+Cpu\+Load\+Measurer} $\ast$measurer, unsigned long frames\+Processed)]these coefficients shouldn\textquotesingle{}t be hardwired see\+: \href{http://www.portaudio.com/trac/ticket/113}{\tt http\+://www.\+portaudio.\+com/trac/ticket/113}  
+\item[\label{todo__todo000027}%
+\hypertarget{todo__todo000027}{}%
+Member \hyperlink{pa__win__wmme_8c_af8f8a8ef4c1f1a39686109801807a4ee}{Processing\+Thread\+Proc} (void $\ast$p\+Arg)]support pa\+Input\+Underflow, pa\+Output\+Overflow and pa\+Never\+Drop\+Input 
+
+F\+I\+X\+M\+E/\+R\+E\+V\+I\+EW\+: can\textquotesingle{}t return host error info from an asyncronous thread. see \href{http://www.portaudio.com/trac/ticket/143}{\tt http\+://www.\+portaudio.\+com/trac/ticket/143} 
+
+if all of the other buffers are also ready then we discard all but the most recent. This is an input buffer overflow. F\+I\+X\+ME\+: these buffers should be passed to the callback in a pa\+Never\+Drop\+Input stream. \href{http://www.portaudio.com/trac/ticket/142}{\tt http\+://www.\+portaudio.\+com/trac/ticket/142}
+
+implement input\+Buffer\+Adc\+Time 
+
+F\+I\+X\+ME\+: should probably reset the output device immediately once the callback returns pa\+Abort see\+: \href{http://www.portaudio.com/trac/ticket/141}{\tt http\+://www.\+portaudio.\+com/trac/ticket/141} 
+
+need to handle Pa\+Never\+Drop\+Input here where necessary  
+\item[\label{todo__todo000040}%
+\hypertarget{todo__todo000040}{}%
+Member \hyperlink{pa__mac__core__internal_8h_a3aa8874a48f232c61d4101706df2b269}{Read\+Stream} (Pa\+Stream $\ast$stream, void $\ast$buffer, unsigned long frames)]R\+E\+V\+I\+EW\+: consider what to do if the input overflows. do we requeue all of the buffers? should we be running a thread to make sure they are always queued? see\+: \href{http://www.portaudio.com/trac/ticket/117}{\tt http\+://www.\+portaudio.\+com/trac/ticket/117}  
+\item[\label{todo__todo000048}%
+\hypertarget{todo__todo000048}{}%
+Member \hyperlink{class_shuttle_ab9d16128c80cdb3c494b0830127a6936}{Shuttle\+:\+:Transfer\+Long\+Long} (const wx\+String \&Name, wx\+Long\+Long\+\_\+t \&i\+Value, const wx\+Long\+Long\+\_\+t \&i\+Default)]Fix for long long values.  
+\item[\label{todo__todo000049}%
+\hypertarget{todo__todo000049}{}%
+Member \hyperlink{class_shuttle_gui_base_a7f7670bb731cda2f9c1da83640ba2e2d}{Shuttle\+Gui\+Base\+:\+:Add\+Radio\+Button} (const wx\+String \&Prompt)]This function and the next one, suitably adapted, could be used by Tie\+Radio\+Button.  
+\item[\label{todo__todo000050}%
+\hypertarget{todo__todo000050}{}%
+Member \hyperlink{class_theme_base_abb088440b44d8fa1274094c8e8e9096c}{Theme\+Base\+:\+:Read\+Image\+Cache} (bool b\+Binary\+Read=true, bool b\+Ok\+If\+Not\+Found=false)]revisit this hack which makes adding N\+EW colours easier but which prevents a colour of (1,1,1) from being added. find an alternative way to make adding N\+EW colours easier. e.\+g. initialise the background to translucent, perhaps.  
+\item[\label{todo__todo000052}%
+\hypertarget{todo__todo000052}{}%
+File \hyperlink{_track_panel_8cpp}{Track\+Panel.cpp} ]Refactoring of the \hyperlink{class_track_panel}{Track\+Panel}, possibly as described in \hyperlink{TrackPanelRefactor}{Track Panel Refactor} 
+\item[\label{todo__todo000053}%
+\hypertarget{todo__todo000053}{}%
+Member \hyperlink{class_track_panel_a81709530372aa825194618eca5e6b6c2}{Track\+Panel\+:\+:Do\+Zoom\+In\+Out} (wx\+Mouse\+Event \&event, int x)]M\+A\+G\+IC N\+U\+M\+B\+ER\+: We\textquotesingle{}ve got several in this method.  
+\item[\label{todo__todo000056}%
+\hypertarget{todo__todo000056}{}%
+Member \hyperlink{class_track_panel_a984cfefe6eb6bcc49b44d1b2346ef166}{Track\+Panel\+:\+:Handle\+Glyph\+Drag\+Release} (\hyperlink{class_label_track}{Label\+Track} $\ast$l\+Track, wx\+Mouse\+Event \&event)]This method is one of a large number of methods in \hyperlink{class_track_panel}{Track\+Panel} which suitably modified belong in other classes.  
+\item[\label{todo__todo000055}%
+\hypertarget{todo__todo000055}{}%
+Member \hyperlink{class_track_panel_aa9dd18c1cdb37737045a87617db85323}{Track\+Panel\+:\+:Handle\+Label\+Track\+Click} (\hyperlink{class_label_track}{Label\+Track} $\ast$l\+Track, wx\+Rect \&rect, wx\+Mouse\+Event \&event)]This method is one of a large number of methods in \hyperlink{class_track_panel}{Track\+Panel} which suitably modified belong in other classes.  
+\item[\label{todo__todo000054}%
+\hypertarget{todo__todo000054}{}%
+Member \hyperlink{class_track_panel_a701733b821a60732c8c4d66676b8b5b1}{Track\+Panel\+:\+:Handle\+Sample\+Editing\+Click} (wx\+Mouse\+Event \&event)]Should m\+Captured\+Track take the place of m\+Drawing\+Track??  
+\item[\label{todo__todo000057}%
+\hypertarget{todo__todo000057}{}%
+Member \hyperlink{class_track_panel_a39f65a04ecb950f794590d58261ab133}{Track\+Panel\+:\+:Handle\+Text\+Drag\+Release} (\hyperlink{class_label_track}{Label\+Track} $\ast$l\+Track, wx\+Mouse\+Event \&event)]This method is one of a large number of methods in \hyperlink{class_track_panel}{Track\+Panel} which suitably modified belong in other classes.  
+\item[\label{todo__todo000058}%
+\hypertarget{todo__todo000058}{}%
+Member \hyperlink{class_track_panel_a47315148ac50d0e24e7d88148973c8c4}{Track\+Panel\+:\+:On\+Prev\+Track} (bool shift=false)]Merge related methods, \hyperlink{class_track_panel_a47315148ac50d0e24e7d88148973c8c4}{Track\+Panel\+::\+On\+Prev\+Track} and \hyperlink{class_track_panel_ae6a78ddc3629f49a13437566200a4f95}{Track\+Panel\+::\+On\+Next\+Track}.  
+\item[\label{todo__todo000059}%
+\hypertarget{todo__todo000059}{}%
+Member \hyperlink{class_track_panel_a3b538964a9818c509d22f76d14629981}{Track\+Panel\+:\+:On\+Rate\+Other} (wx\+Command\+Event \&event)]Remove artificial constants!! 
+
+Make a real dialog box out of this!!  
+\item[\label{todo__todo000041}%
+\hypertarget{todo__todo000041}{}%
+Member \hyperlink{pa__mac__core__internal_8h_a3520d8a8ca48a25c9b99708f6033811d}{Write\+Stream} (Pa\+Stream $\ast$stream, const void $\ast$buffer, unsigned long frames)]R\+E\+V\+I\+EW\+: consider what to do if the output underflows. do we requeue all the existing buffers with zeros? should we run a separate thread to keep the buffers enqueued at all times? see\+: \href{http://www.portaudio.com/trac/ticket/117}{\tt http\+://www.\+portaudio.\+com/trac/ticket/117} 
+\end{DoxyRefList}

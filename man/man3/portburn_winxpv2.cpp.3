@@ -1,0 +1,240 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/lib-src/portburn/portburn_winxpv2.cpp" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/lib-src/portburn/portburn_winxpv2.cpp \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include 'portburn\&.h'\fP
+.br
+\fC#include <windows\&.h>\fP
+.br
+\fC#include <tchar\&.h>\fP
+.br
+\fC#include <malloc\&.h>\fP
+.br
+\fC#include <imapi2\&.h>\fP
+.br
+\fC#include <imapi2error\&.h>\fP
+.br
+\fC#include <Objidl\&.h>\fP
+.br
+\fC#include <ObjBase\&.h>\fP
+.br
+\fC#include <stdio\&.h>\fP
+.br
+
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "struct \fBPBHandlev2\fP"
+.br
+.ti -1c
+.RI "class \fBWriteEventsTAO\fP"
+.br
+.ti -1c
+.RI "class \fBWriteEventsDAO\fP"
+.br
+.ti -1c
+.RI "class \fBEraseEvents\fP"
+.br
+.in -1c
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fB_WIN32_WINNT\fP   0x0400"
+.br
+.ti -1c
+.RI "#define \fBDEBUG\fP(\fBa\fP)   \fBprintf\fP \fBa\fP"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBDWORD\fP \fBWINAPI\fP \fBPortBurn_v2_RecordDiscTAO\fP (LPVOID lpParam)"
+.br
+.ti -1c
+.RI "\fBDWORD\fP \fBWINAPI\fP \fBPortBurn_v2_RecordDiscDAO\fP (LPVOID lpParam)"
+.br
+.ti -1c
+.RI "\fBDWORD\fP \fBWINAPI\fP \fBPortBurn_v2_EraseDisc\fP (LPVOID lpParam)"
+.br
+.ti -1c
+.RI "\fBvoid\fP * \fBPortBurn_v2_Open\fP ()"
+.br
+.ti -1c
+.RI "\fBint\fP \fBPortBurn_v2_CloseDevice\fP (\fBvoid\fP *handle)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBPortBurn_v2_Close\fP (\fBvoid\fP *handle)"
+.br
+.ti -1c
+.RI "char * \fBPortBurn_v2_LastError\fP (\fBvoid\fP *handle)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBPortBurn_v2_GetNumDevices\fP (\fBvoid\fP *handle)"
+.br
+.ti -1c
+.RI "char * \fBPortBurn_v2_GetDeviceName\fP (\fBvoid\fP *handle, \fBint\fP index)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBPortBurn_v2_OpenDevice\fP (\fBvoid\fP *handle, \fBint\fP index)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBPortBurn_v2_EjectDevice\fP (\fBvoid\fP *handle)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBPortBurn_v2_StartStaging\fP (\fBvoid\fP *handle, \fBconst\fP char *tmpdir)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBPortBurn_v2_StartTrack\fP (\fBvoid\fP *handle, \fBconst\fP char *\fBname\fP)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBPortBurn_v2_AddFrame\fP (\fBvoid\fP *handle, short *\fBbuffer\fP)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBPortBurn_v2_EndTrack\fP (\fBvoid\fP *handle)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBPortBurn_v2_StartBurning\fP (\fBvoid\fP *handle)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBPortBurn_v2_CancelBurning\fP (\fBvoid\fP *handle)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBPortBurn_v2_GetStatus\fP (\fBvoid\fP *handle, float *out_fraction_complete)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBPortBurn_v2_GetOption\fP (\fBvoid\fP *handle, \fBint\fP option, \fBint\fP *\fBvalue\fP)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBPortBurn_v2_SetOption\fP (\fBvoid\fP *handle, \fBint\fP option, \fBint\fP \fBvalue\fP)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBPortBurn_v2_StartErasing\fP (\fBvoid\fP *handle, \fBint\fP type)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBPortBurn_v2_GetEraseStatus\fP (\fBvoid\fP *handle, float *out_fraction_complete)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBPortBurn_v2_GetMediaState\fP (\fBvoid\fP *handle, \fBint\fP *state)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBPortBurn_v2_GetSupportedSpeeds\fP (\fBvoid\fP *handle, \fBint\fP *cnt, \fBint\fP *speeds[])"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define _WIN32_WINNT   0x0400"
+
+.PP
+Definition at line 13 of file portburn_winxpv2\&.cpp\&.
+.SS "#define DEBUG(\fBa\fP)   \fBprintf\fP \fBa\fP"
+
+.PP
+Definition at line 24 of file portburn_winxpv2\&.cpp\&.
+.SH "Function Documentation"
+.PP 
+.SS "\fBint\fP PortBurn_v2_AddFrame (\fBvoid\fP * handle, short * buffer)"
+
+.PP
+Definition at line 1801 of file portburn_winxpv2\&.cpp\&.
+.SS "\fBint\fP PortBurn_v2_CancelBurning (\fBvoid\fP * handle)"
+
+.PP
+Definition at line 1902 of file portburn_winxpv2\&.cpp\&.
+.SS "\fBvoid\fP PortBurn_v2_Close (\fBvoid\fP * handle)"
+
+.PP
+Definition at line 1407 of file portburn_winxpv2\&.cpp\&.
+.SS "\fBint\fP PortBurn_v2_CloseDevice (\fBvoid\fP * handle)"
+
+.PP
+Definition at line 1608 of file portburn_winxpv2\&.cpp\&.
+.SS "\fBint\fP PortBurn_v2_EjectDevice (\fBvoid\fP * handle)"
+
+.PP
+Definition at line 1664 of file portburn_winxpv2\&.cpp\&.
+.SS "\fBint\fP PortBurn_v2_EndTrack (\fBvoid\fP * handle)"
+
+.PP
+Definition at line 1825 of file portburn_winxpv2\&.cpp\&.
+.SS "\fBDWORD\fP \fBWINAPI\fP PortBurn_v2_EraseDisc (LPVOID lpParam)"
+
+.PP
+Definition at line 1145 of file portburn_winxpv2\&.cpp\&.
+.SS "char* PortBurn_v2_GetDeviceName (\fBvoid\fP * handle, \fBint\fP index)"
+
+.PP
+Definition at line 1502 of file portburn_winxpv2\&.cpp\&.
+.SS "\fBint\fP PortBurn_v2_GetEraseStatus (\fBvoid\fP * handle, float * out_fraction_complete)"
+
+.PP
+Definition at line 2113 of file portburn_winxpv2\&.cpp\&.
+.SS "\fBint\fP PortBurn_v2_GetMediaState (\fBvoid\fP * handle, \fBint\fP * state)"
+
+.PP
+Definition at line 2146 of file portburn_winxpv2\&.cpp\&.
+.SS "\fBint\fP PortBurn_v2_GetNumDevices (\fBvoid\fP * handle)"
+
+.PP
+Definition at line 1477 of file portburn_winxpv2\&.cpp\&.
+.SS "\fBint\fP PortBurn_v2_GetOption (\fBvoid\fP * handle, \fBint\fP option, \fBint\fP * value)"
+
+.PP
+Definition at line 1967 of file portburn_winxpv2\&.cpp\&.
+.SS "\fBint\fP PortBurn_v2_GetStatus (\fBvoid\fP * handle, float * out_fraction_complete)"
+
+.PP
+Definition at line 1928 of file portburn_winxpv2\&.cpp\&.
+.SS "\fBint\fP PortBurn_v2_GetSupportedSpeeds (\fBvoid\fP * handle, \fBint\fP * cnt, \fBint\fP * speeds[])"
+
+.PP
+Definition at line 2231 of file portburn_winxpv2\&.cpp\&.
+.SS "char* PortBurn_v2_LastError (\fBvoid\fP * handle)"
+
+.PP
+Definition at line 1428 of file portburn_winxpv2\&.cpp\&.
+.SS "\fBvoid\fP* PortBurn_v2_Open ()"
+
+.PP
+Definition at line 1370 of file portburn_winxpv2\&.cpp\&.
+.SS "\fBint\fP PortBurn_v2_OpenDevice (\fBvoid\fP * handle, \fBint\fP index)"
+
+.PP
+Definition at line 1585 of file portburn_winxpv2\&.cpp\&.
+.SS "\fBDWORD\fP \fBWINAPI\fP PortBurn_v2_RecordDiscDAO (LPVOID lpParam)"
+
+.PP
+Definition at line 729 of file portburn_winxpv2\&.cpp\&.
+.SS "\fBDWORD\fP \fBWINAPI\fP PortBurn_v2_RecordDiscTAO (LPVOID lpParam)"
+
+.PP
+Definition at line 308 of file portburn_winxpv2\&.cpp\&.
+.SS "\fBint\fP PortBurn_v2_SetOption (\fBvoid\fP * handle, \fBint\fP option, \fBint\fP value)"
+
+.PP
+Definition at line 2023 of file portburn_winxpv2\&.cpp\&.
+.SS "\fBint\fP PortBurn_v2_StartBurning (\fBvoid\fP * handle)"
+
+.PP
+Definition at line 1847 of file portburn_winxpv2\&.cpp\&.
+.SS "\fBint\fP PortBurn_v2_StartErasing (\fBvoid\fP * handle, \fBint\fP type)"
+
+.PP
+Definition at line 2081 of file portburn_winxpv2\&.cpp\&.
+.SS "\fBint\fP PortBurn_v2_StartStaging (\fBvoid\fP * handle, \fBconst\fP char * tmpdir)"
+
+.PP
+Definition at line 1709 of file portburn_winxpv2\&.cpp\&.
+.SS "\fBint\fP PortBurn_v2_StartTrack (\fBvoid\fP * handle, \fBconst\fP char * name)"
+
+.PP
+Definition at line 1758 of file portburn_winxpv2\&.cpp\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

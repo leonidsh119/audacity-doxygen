@@ -1,0 +1,889 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/src/effects/VST/aeffectx.h" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/src/effects/VST/aeffectx.h \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <stdint\&.h>\fP
+.br
+
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "class \fBVstMidiEvent\fP"
+.br
+.ti -1c
+.RI "class \fBVstEvent\fP"
+.br
+.ti -1c
+.RI "class \fBVstEvents\fP"
+.br
+.ti -1c
+.RI "class \fBVstParameterProperties\fP"
+.br
+.ti -1c
+.RI "class \fBAEffect\fP"
+.br
+.ti -1c
+.RI "class \fBVstTimeInfo\fP"
+.br
+.ti -1c
+.RI "struct \fBVstPatchChunkInfo\fP"
+.br
+.ti -1c
+.RI "class \fBVstRect\fP"
+.br
+.in -1c
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBCCONST\fP(\fBa\fP,  \fBb\fP,  \fBc\fP,  \fBd\fP)"
+.br
+.in -1c
+.SS "Typedefs"
+
+.in +1c
+.ti -1c
+.RI "typedef \fBintptr_t\fP(* \fBaudioMasterCallback\fP) (\fBAEffect\fP *, \fBint32_t\fP, \fBint32_t\fP, \fBintptr_t\fP, \fBvoid\fP *, float)"
+.br
+.in -1c
+.SS "Enumerations"
+
+.in +1c
+.ti -1c
+.RI "enum \fBVstParameterFlags\fP { \fBkVstParameterIsSwitch\fP = 1 << 0, \fBkVstParameterUsesIntegerMinMax\fP = 1 << 1, \fBkVstParameterUsesFloatStep\fP = 1 << 2, \fBkVstParameterUsesIntStep\fP = 1 << 3, \fBkVstParameterSupportsDisplayIndex\fP = 1 << 4, \fBkVstParameterSupportsDisplayCategory\fP = 1 << 5, \fBkVstParameterCanRamp\fP = 1 << 6 }"
+.br
+.ti -1c
+.RI "enum \fBVstPlugCategory\fP { \fBkPlugCategUnknown\fP = 0, \fBkPlugCategEffect\fP, \fBkPlugCategSynth\fP, \fBkPlugCategAnalysis\fP, \fBkPlugCategMastering\fP, \fBkPlugCategSpacializer\fP, \fBkPlugCategRoomFx\fP, \fBkPlugSurroundFx\fP, \fBkPlugCategRestoration\fP, \fBkPlugCategOfflineProcess\fP, \fBkPlugCategShell\fP, \fBkPlugCategGenerator\fP, \fBkPlugCategMaxCount\fP }"
+.br
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBaudioMasterAutomate\fP = 0"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBaudioMasterVersion\fP = 1"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBaudioMasterCurrentId\fP = 2"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBaudioMasterIdle\fP = 3"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBaudioMasterPinConnected\fP = 4"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBaudioMasterWantMidi\fP = 6"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBaudioMasterGetTime\fP = 7"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBaudioMasterProcessEvents\fP = 8"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBaudioMasterSetTime\fP = 9"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBaudioMasterTempoAt\fP = 10"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBaudioMasterGetNumAutomatableParameters\fP = 11"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBaudioMasterGetParameterQuantization\fP = 12"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBaudioMasterIOChanged\fP = 13"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBaudioMasterNeedIdle\fP = 14"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBaudioMasterSizeWindow\fP = 15"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBaudioMasterGetSampleRate\fP = 16"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBaudioMasterGetBlockSize\fP = 17"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBaudioMasterGetInputLatency\fP = 18"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBaudioMasterGetOutputLatency\fP = 19"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBaudioMasterGetPreviousPlug\fP = 20"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBaudioMasterGetNextPlug\fP = 21"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBaudioMasterWillReplaceOrAccumulate\fP = 22"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBaudioMasterGetCurrentProcessLevel\fP = 23"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBaudioMasterGetAutomationState\fP = 24"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBaudioMasterOfflineStart\fP = 25"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBaudioMasterOfflineRead\fP = 26"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBaudioMasterOfflineWrite\fP = 27"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBaudioMasterOfflineGetCurrentPass\fP = 28"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBaudioMasterOfflineGetCurrentMetaPass\fP = 29"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBaudioMasterSetOutputSampleRate\fP = 30"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBaudioMasterGetSpeakerArrangement\fP = 31"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBaudioMasterGetVendorString\fP = 32"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBaudioMasterGetProductString\fP = 33"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBaudioMasterGetVendorVersion\fP = 34"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBaudioMasterVendorSpecific\fP = 35"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBaudioMasterSetIcon\fP = 36"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBaudioMasterCanDo\fP = 37"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBaudioMasterGetLanguage\fP = 38"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBaudioMasterOpenWindow\fP = 39"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBaudioMasterCloseWindow\fP = 40"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBaudioMasterGetDirectory\fP = 41"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBaudioMasterUpdateDisplay\fP = 42"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBaudioMasterBeginEdit\fP = 43"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBaudioMasterEndEdit\fP = 44"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBaudioMasterOpenFileSelector\fP = 45"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBaudioMasterCloseFileSelector\fP = 46"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBaudioMasterEditFile\fP = 47"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBaudioMasterGetChunkFile\fP = 48"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBaudioMasterGetInputSpeakerArrangement\fP = 49"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBeffFlagsHasEditor\fP = 1"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBeffFlagsCanReplacing\fP = 1 << 4"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBeffFlagsProgramChunks\fP = 1 << 5"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBeffFlagsIsSynth\fP = 1 << 8"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBeffOpen\fP = 0"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBeffClose\fP = 1"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBeffSetProgram\fP = 2"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBeffGetProgram\fP = 3"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBeffSetProgramName\fP = 4"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBeffGetProgramName\fP = 5"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBeffGetParamLabel\fP = 6"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBeffGetParamDisplay\fP = 7"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBeffGetParamName\fP = 8"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBeffSetSampleRate\fP = 10"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBeffSetBlockSize\fP = 11"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBeffMainsChanged\fP = 12"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBeffEditGetRect\fP = 13"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBeffEditOpen\fP = 14"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBeffEditClose\fP = 15"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBeffEditIdle\fP = 19"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBeffEditTop\fP = 20"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBeffIdentify\fP = 22"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBeffGetChunk\fP = 23"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBeffSetChunk\fP = 24"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBeffProcessEvents\fP = 25"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBeffCanBeAutomated\fP = 26"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBeffGetProgramNameIndexed\fP = 29"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBeffGetPlugCategory\fP = 35"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBeffGetEffectName\fP = 45"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBeffGetParameterProperties\fP = 56"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBeffGetVendorString\fP = 47"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBeffGetProductString\fP = 48"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBeffGetVendorVersion\fP = 49"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBeffCanDo\fP = 51"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBeffIdle\fP = 53"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBeffGetVstVersion\fP = 58"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBeffBeginSetProgram\fP = 67"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBeffEndSetProgram\fP = 68"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBeffShellGetNextPlugin\fP = 70"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBeffBeginLoadBank\fP = 75"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBeffBeginLoadProgram\fP = 76"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBeffStartProcess\fP = 71"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBeffStopProcess\fP = 72"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBkEffectMagic\fP = \fBCCONST\fP( '\fBV\fP', '\fBs\fP', '\fBt\fP', 'P' )"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBkVstLangEnglish\fP = 1"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBkVstMidiType\fP = 1"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBkVstNanosValid\fP = 1 << 8"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBkVstPpqPosValid\fP = 1 << 9"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBkVstTempoValid\fP = 1 << 10"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBkVstBarsValid\fP = 1 << 11"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBkVstCyclePosValid\fP = 1 << 12"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBkVstTimeSigValid\fP = 1 << 13"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBkVstSmpteValid\fP = 1 << 14"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBkVstClockValid\fP = 1 << 15"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBkVstTransportPlaying\fP = 1 << 1"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBkVstTransportCycleActive\fP = 1 << 2"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBkVstTransportChanged\fP = 1"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define CCONST(\fBa\fP, \fBb\fP, \fBc\fP, \fBd\fP)"
+\fBValue:\fP
+.PP
+.nf
+( ( ( (int) a ) << 24 ) |      \
+            ( ( (int) b ) << 16 ) |    \
+            ( ( (int) c ) << 8 ) |     \
+            ( ( (int) d ) << 0 ) )
+.fi
+.PP
+Definition at line 29 of file aeffectx\&.h\&.
+.SH "Typedef Documentation"
+.PP 
+.SS "typedef \fBintptr_t\fP(*  audioMasterCallback) (\fBAEffect\fP *, \fBint32_t\fP, \fBint32_t\fP, \fBintptr_t\fP, \fBvoid\fP *, float)"
+
+.PP
+Definition at line 337 of file aeffectx\&.h\&.
+.SH "Enumeration Type Documentation"
+.PP 
+.SS "enum \fBVstParameterFlags\fP"
+
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fIkVstParameterIsSwitch \fP\fP
+.TP
+\fB\fIkVstParameterUsesIntegerMinMax \fP\fP
+.TP
+\fB\fIkVstParameterUsesFloatStep \fP\fP
+.TP
+\fB\fIkVstParameterUsesIntStep \fP\fP
+.TP
+\fB\fIkVstParameterSupportsDisplayIndex \fP\fP
+.TP
+\fB\fIkVstParameterSupportsDisplayCategory \fP\fP
+.TP
+\fB\fIkVstParameterCanRamp \fP\fP
+.PP
+Definition at line 341 of file aeffectx\&.h\&.
+.SS "enum \fBVstPlugCategory\fP"
+
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fIkPlugCategUnknown \fP\fP
+.TP
+\fB\fIkPlugCategEffect \fP\fP
+.TP
+\fB\fIkPlugCategSynth \fP\fP
+.TP
+\fB\fIkPlugCategAnalysis \fP\fP
+.TP
+\fB\fIkPlugCategMastering \fP\fP
+.TP
+\fB\fIkPlugCategSpacializer \fP\fP
+.TP
+\fB\fIkPlugCategRoomFx \fP\fP
+.TP
+\fB\fIkPlugSurroundFx \fP\fP
+.TP
+\fB\fIkPlugCategRestoration \fP\fP
+.TP
+\fB\fIkPlugCategOfflineProcess \fP\fP
+.TP
+\fB\fIkPlugCategShell \fP\fP
+.TP
+\fB\fIkPlugCategGenerator \fP\fP
+.TP
+\fB\fIkPlugCategMaxCount \fP\fP
+.PP
+Definition at line 363 of file aeffectx\&.h\&.
+.SH "Variable Documentation"
+.PP 
+.SS "\fBconst\fP \fBint\fP audioMasterAutomate = 0"
+
+.PP
+Definition at line 34 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP audioMasterBeginEdit = 43"
+
+.PP
+Definition at line 78 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP audioMasterCanDo = 37"
+
+.PP
+Definition at line 72 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP audioMasterCloseFileSelector = 46"
+
+.PP
+Definition at line 81 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP audioMasterCloseWindow = 40"
+
+.PP
+Definition at line 75 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP audioMasterCurrentId = 2"
+
+.PP
+Definition at line 36 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP audioMasterEditFile = 47"
+
+.PP
+Definition at line 82 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP audioMasterEndEdit = 44"
+
+.PP
+Definition at line 79 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP audioMasterGetAutomationState = 24"
+
+.PP
+Definition at line 58 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP audioMasterGetBlockSize = 17"
+
+.PP
+Definition at line 51 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP audioMasterGetChunkFile = 48"
+
+.PP
+Definition at line 83 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP audioMasterGetCurrentProcessLevel = 23"
+
+.PP
+Definition at line 57 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP audioMasterGetDirectory = 41"
+
+.PP
+Definition at line 76 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP audioMasterGetInputLatency = 18"
+
+.PP
+Definition at line 52 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP audioMasterGetInputSpeakerArrangement = 49"
+
+.PP
+Definition at line 84 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP audioMasterGetLanguage = 38"
+
+.PP
+Definition at line 73 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP audioMasterGetNextPlug = 21"
+
+.PP
+Definition at line 55 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP audioMasterGetNumAutomatableParameters = 11"
+
+.PP
+Definition at line 45 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP audioMasterGetOutputLatency = 19"
+
+.PP
+Definition at line 53 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP audioMasterGetParameterQuantization = 12"
+
+.PP
+Definition at line 46 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP audioMasterGetPreviousPlug = 20"
+
+.PP
+Definition at line 54 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP audioMasterGetProductString = 33"
+
+.PP
+Definition at line 68 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP audioMasterGetSampleRate = 16"
+
+.PP
+Definition at line 50 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP audioMasterGetSpeakerArrangement = 31"
+
+.PP
+Definition at line 66 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP audioMasterGetTime = 7"
+
+.PP
+Definition at line 41 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP audioMasterGetVendorString = 32"
+
+.PP
+Definition at line 67 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP audioMasterGetVendorVersion = 34"
+
+.PP
+Definition at line 69 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP audioMasterIdle = 3"
+
+.PP
+Definition at line 37 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP audioMasterIOChanged = 13"
+
+.PP
+Definition at line 47 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP audioMasterNeedIdle = 14"
+
+.PP
+Definition at line 48 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP audioMasterOfflineGetCurrentMetaPass = 29"
+
+.PP
+Definition at line 63 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP audioMasterOfflineGetCurrentPass = 28"
+
+.PP
+Definition at line 62 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP audioMasterOfflineRead = 26"
+
+.PP
+Definition at line 60 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP audioMasterOfflineStart = 25"
+
+.PP
+Definition at line 59 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP audioMasterOfflineWrite = 27"
+
+.PP
+Definition at line 61 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP audioMasterOpenFileSelector = 45"
+
+.PP
+Definition at line 80 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP audioMasterOpenWindow = 39"
+
+.PP
+Definition at line 74 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP audioMasterPinConnected = 4"
+
+.PP
+Definition at line 38 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP audioMasterProcessEvents = 8"
+
+.PP
+Definition at line 42 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP audioMasterSetIcon = 36"
+
+.PP
+Definition at line 71 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP audioMasterSetOutputSampleRate = 30"
+
+.PP
+Definition at line 64 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP audioMasterSetTime = 9"
+
+.PP
+Definition at line 43 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP audioMasterSizeWindow = 15"
+
+.PP
+Definition at line 49 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP audioMasterTempoAt = 10"
+
+.PP
+Definition at line 44 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP audioMasterUpdateDisplay = 42"
+
+.PP
+Definition at line 77 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP audioMasterVendorSpecific = 35"
+
+.PP
+Definition at line 70 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP audioMasterVersion = 1"
+
+.PP
+Definition at line 35 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP audioMasterWantMidi = 6"
+
+.PP
+Definition at line 40 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP audioMasterWillReplaceOrAccumulate = 22"
+
+.PP
+Definition at line 56 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP effBeginLoadBank = 75"
+
+.PP
+Definition at line 136 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP effBeginLoadProgram = 76"
+
+.PP
+Definition at line 138 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP effBeginSetProgram = 67"
+
+.PP
+Definition at line 130 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP effCanBeAutomated = 26"
+
+.PP
+Definition at line 115 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP effCanDo = 51"
+
+.PP
+Definition at line 125 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP effClose = 1"
+
+.PP
+Definition at line 92 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP effEditClose = 15"
+
+.PP
+Definition at line 107 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP effEditGetRect = 13"
+
+.PP
+Definition at line 105 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP effEditIdle = 19"
+
+.PP
+Definition at line 108 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP effEditOpen = 14"
+
+.PP
+Definition at line 106 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP effEditTop = 20"
+
+.PP
+Definition at line 109 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP effEndSetProgram = 68"
+
+.PP
+Definition at line 132 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP effFlagsCanReplacing = 1 << 4"
+
+.PP
+Definition at line 87 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP effFlagsHasEditor = 1"
+
+.PP
+Definition at line 86 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP effFlagsIsSynth = 1 << 8"
+
+.PP
+Definition at line 89 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP effFlagsProgramChunks = 1 << 5"
+
+.PP
+Definition at line 88 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP effGetChunk = 23"
+
+.PP
+Definition at line 111 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP effGetEffectName = 45"
+
+.PP
+Definition at line 120 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP effGetParamDisplay = 7"
+
+.PP
+Definition at line 100 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP effGetParameterProperties = 56"
+
+.PP
+Definition at line 121 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP effGetParamLabel = 6"
+
+.PP
+Definition at line 99 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP effGetParamName = 8"
+
+.PP
+Definition at line 101 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP effGetPlugCategory = 35"
+
+.PP
+Definition at line 119 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP effGetProductString = 48"
+
+.PP
+Definition at line 123 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP effGetProgram = 3"
+
+.PP
+Definition at line 94 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP effGetProgramName = 5"
+
+.PP
+Definition at line 97 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP effGetProgramNameIndexed = 29"
+
+.PP
+Definition at line 117 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP effGetVendorString = 47"
+
+.PP
+Definition at line 122 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP effGetVendorVersion = 49"
+
+.PP
+Definition at line 124 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP effGetVstVersion = 58"
+
+.PP
+Definition at line 128 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP effIdentify = 22"
+
+.PP
+Definition at line 110 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP effIdle = 53"
+
+.PP
+Definition at line 127 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP effMainsChanged = 12"
+
+.PP
+Definition at line 104 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP effOpen = 0"
+
+.PP
+Definition at line 91 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP effProcessEvents = 25"
+
+.PP
+Definition at line 113 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP effSetBlockSize = 11"
+
+.PP
+Definition at line 103 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP effSetChunk = 24"
+
+.PP
+Definition at line 112 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP effSetProgram = 2"
+
+.PP
+Definition at line 93 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP effSetProgramName = 4"
+
+.PP
+Definition at line 96 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP effSetSampleRate = 10"
+
+.PP
+Definition at line 102 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP effShellGetNextPlugin = 70"
+
+.PP
+Definition at line 134 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP effStartProcess = 71"
+
+.PP
+Definition at line 141 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP effStopProcess = 72"
+
+.PP
+Definition at line 142 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP kEffectMagic = \fBCCONST\fP( '\fBV\fP', '\fBs\fP', '\fBt\fP', 'P' )"
+
+.PP
+Definition at line 144 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP kVstBarsValid = 1 << 11"
+
+.PP
+Definition at line 151 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP kVstClockValid = 1 << 15"
+
+.PP
+Definition at line 155 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP kVstCyclePosValid = 1 << 12"
+
+.PP
+Definition at line 152 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP kVstLangEnglish = 1"
+
+.PP
+Definition at line 145 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP kVstMidiType = 1"
+
+.PP
+Definition at line 146 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP kVstNanosValid = 1 << 8"
+
+.PP
+Definition at line 148 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP kVstPpqPosValid = 1 << 9"
+
+.PP
+Definition at line 149 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP kVstSmpteValid = 1 << 14"
+
+.PP
+Definition at line 154 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP kVstTempoValid = 1 << 10"
+
+.PP
+Definition at line 150 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP kVstTimeSigValid = 1 << 13"
+
+.PP
+Definition at line 153 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP kVstTransportChanged = 1"
+
+.PP
+Definition at line 159 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP kVstTransportCycleActive = 1 << 2"
+
+.PP
+Definition at line 158 of file aeffectx\&.h\&.
+.SS "\fBconst\fP \fBint\fP kVstTransportPlaying = 1 << 1"
+
+.PP
+Definition at line 157 of file aeffectx\&.h\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

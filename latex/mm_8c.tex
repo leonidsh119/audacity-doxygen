@@ -1,0 +1,702 @@
+\hypertarget{mm_8c}{}\section{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/portmidi/pm\+\_\+test/mm.c File Reference}
+\label{mm_8c}\index{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/portmidi/pm\+\_\+test/mm.\+c@{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/portmidi/pm\+\_\+test/mm.\+c}}
+{\ttfamily \#include \char`\"{}stdlib.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}ctype.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}string.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}stdio.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}porttime.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}portmidi.\+h\char`\"{}}\\*
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{mm_8c_a41f16f17393bc7dfd8c3a44a6ba595ba}{S\+T\+R\+I\+N\+G\+\_\+\+M\+AX}~80
+\item 
+\#define \hyperlink{mm_8c_ad0a97b26a50383f240ed1863bd6c966b}{M\+I\+D\+I\+\_\+\+C\+O\+D\+E\+\_\+\+M\+A\+SK}~0xf0
+\item 
+\#define \hyperlink{mm_8c_a8e374cd09feb55c6ee27b31727a3c4ab}{M\+I\+D\+I\+\_\+\+C\+H\+N\+\_\+\+M\+A\+SK}~0x0f
+\item 
+\#define \hyperlink{mm_8c_acfcd8fbc10b91d7bf9ac128a19785de7}{M\+I\+D\+I\+\_\+\+O\+F\+F\+\_\+\+N\+O\+TE}~0x80
+\item 
+\#define \hyperlink{mm_8c_a84715565b6746f4859214d524b68e523}{M\+I\+D\+I\+\_\+\+O\+N\+\_\+\+N\+O\+TE}~0x90
+\item 
+\#define \hyperlink{mm_8c_afabc79495fd6a929f4ec570ac1796326}{M\+I\+D\+I\+\_\+\+P\+O\+L\+Y\+\_\+\+T\+O\+U\+CH}~0xa0
+\item 
+\#define \hyperlink{mm_8c_a64b08db61b463b1769d8f18fae1ea8e4}{M\+I\+D\+I\+\_\+\+C\+T\+RL}~0xb0
+\item 
+\#define \hyperlink{mm_8c_ac214d76a2221db38b283109496a784b8}{M\+I\+D\+I\+\_\+\+C\+H\+\_\+\+P\+R\+O\+G\+R\+AM}~0xc0
+\item 
+\#define \hyperlink{mm_8c_a3bbe71db78d44f6f45cdd778fc86ffbb}{M\+I\+D\+I\+\_\+\+T\+O\+U\+CH}~0xd0
+\item 
+\#define \hyperlink{mm_8c_a0585fa061162b26f17693f0add57db6c}{M\+I\+D\+I\+\_\+\+B\+E\+ND}~0xe0
+\item 
+\#define \hyperlink{mm_8c_aa2197f6ca200566c0986e737edd211e4}{M\+I\+D\+I\+\_\+\+S\+Y\+S\+EX}~0xf0
+\item 
+\#define \hyperlink{mm_8c_afabbdee3a297a5aeb348ffe50501ab8e}{M\+I\+D\+I\+\_\+\+Q\+\_\+\+F\+R\+A\+ME}~0xf1
+\item 
+\#define \hyperlink{mm_8c_aaf213a32bb24466af17f6b73dcd27072}{M\+I\+D\+I\+\_\+\+S\+O\+N\+G\+\_\+\+P\+O\+I\+N\+T\+ER}~0xf2
+\item 
+\#define \hyperlink{mm_8c_a987812a08f0139737bb71393a2fa5adf}{M\+I\+D\+I\+\_\+\+S\+O\+N\+G\+\_\+\+S\+E\+L\+E\+CT}~0xf3
+\item 
+\#define \hyperlink{mm_8c_aac3142724fa4e0f26fa1e000b4b349ed}{M\+I\+D\+I\+\_\+\+T\+U\+N\+E\+\_\+\+R\+EQ}~0xf6
+\item 
+\#define \hyperlink{mm_8c_a140c8cfa4bbf1a03494abdbd639d49f2}{M\+I\+D\+I\+\_\+\+E\+OX}~0xf7
+\item 
+\#define \hyperlink{mm_8c_abfb348193aa3d495c67008b06c274f76}{M\+I\+D\+I\+\_\+\+T\+I\+M\+E\+\_\+\+C\+L\+O\+CK}~0xf8
+\item 
+\#define \hyperlink{mm_8c_a8233631c85823aa546f932ad8975caa4}{M\+I\+D\+I\+\_\+\+S\+T\+A\+RT}~0xfa
+\item 
+\#define \hyperlink{mm_8c_ab24430f0081e27215b0da84dd0ee745c}{M\+I\+D\+I\+\_\+\+C\+O\+N\+T\+I\+N\+UE}~0xfb
+\item 
+\#define \hyperlink{mm_8c_a3af9271d4b1f0d22904a0b055f48cf62}{M\+I\+D\+I\+\_\+\+S\+T\+OP}~0xfc
+\item 
+\#define \hyperlink{mm_8c_a8ea23b80925528a33957102ec9bb1e22}{M\+I\+D\+I\+\_\+\+A\+C\+T\+I\+V\+E\+\_\+\+S\+E\+N\+S\+I\+NG}~0xfe
+\item 
+\#define \hyperlink{mm_8c_a30f2401a495012921067c4b313207fa2}{M\+I\+D\+I\+\_\+\+S\+Y\+S\+\_\+\+R\+E\+S\+ET}~0xff
+\item 
+\#define \hyperlink{mm_8c_a582a12a37a3cbec3a8c49e702265c789}{M\+I\+D\+I\+\_\+\+A\+L\+L\+\_\+\+S\+O\+U\+N\+D\+\_\+\+O\+FF}~0x78
+\item 
+\#define \hyperlink{mm_8c_a69daf54404b0e9b54c61d22a57a68018}{M\+I\+D\+I\+\_\+\+R\+E\+S\+E\+T\+\_\+\+C\+O\+N\+T\+R\+O\+L\+L\+E\+RS}~0x79
+\item 
+\#define \hyperlink{mm_8c_a9cbea4f197c6bef555ef260781834bc2}{M\+I\+D\+I\+\_\+\+L\+O\+C\+AL}~0x7a
+\item 
+\#define \hyperlink{mm_8c_a44ab54b0efb425501d8d1c2e7729d763}{M\+I\+D\+I\+\_\+\+A\+L\+L\+\_\+\+O\+FF}~0x7b
+\item 
+\#define \hyperlink{mm_8c_a5ac28c52e3c50efb5846dd2f55df12a6}{M\+I\+D\+I\+\_\+\+O\+M\+N\+I\+\_\+\+O\+FF}~0x7c
+\item 
+\#define \hyperlink{mm_8c_a79f5ffc2444aa10277b72772a20e1915}{M\+I\+D\+I\+\_\+\+O\+M\+N\+I\+\_\+\+ON}~0x7d
+\item 
+\#define \hyperlink{mm_8c_ae08bde23960de8535e83f3d222f4f342}{M\+I\+D\+I\+\_\+\+M\+O\+N\+O\+\_\+\+ON}~0x7e
+\item 
+\#define \hyperlink{mm_8c_ac748db303557f631cdfbe595a70c9350}{M\+I\+D\+I\+\_\+\+P\+O\+L\+Y\+\_\+\+ON}~0x7f
+\item 
+\#define \hyperlink{mm_8c_a6a1d6e1a12975a4e9a0b5b952e79eaad}{private}~static
+\item 
+\#define \hyperlink{mm_8c_a65e9886d74aaee76545e83dd09011727}{false}~0
+\item 
+\#define \hyperlink{mm_8c_a41f9c5fb8b08eb5dc3edce4dcb37fee7}{true}~1
+\item 
+\#define \hyperlink{mm_8c_aee489e4a34a12547554d1207682e4b97}{sysex\+\_\+max}~16
+\end{DoxyCompactItemize}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{mm_8c_a621c38f1f10a1c565d897e3178b16d6e}{boolean}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{mm_8c_a6a1d6e1a12975a4e9a0b5b952e79eaad}{private} \hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{mm_8c_a32e1e97da16aac3e07ae67b5c1f99598}{mmexit} (\hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} code)
+\item 
+\hyperlink{mm_8c_a6a1d6e1a12975a4e9a0b5b952e79eaad}{private} \hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{mm_8c_aeb3fcf4ab0f02cc4420e5a97568a07ef}{output} (\hyperlink{group__grp__events__filters_gad8455e4afe978a74c68e345bef99761d}{Pm\+Message} \hyperlink{lib_2expat_8h_ac39e72a1de1cb50dbdc54b08d0432a24}{data})
+\item 
+\hyperlink{mm_8c_a6a1d6e1a12975a4e9a0b5b952e79eaad}{private} \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{mm_8c_ad67b866d301d8d7debc27b6f4a038d33}{put\+\_\+pitch} (\hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p})
+\item 
+\hyperlink{mm_8c_a6a1d6e1a12975a4e9a0b5b952e79eaad}{private} \hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{mm_8c_a37323635ab112c17f8cccd8d117b33c1}{showhelp} ()
+\item 
+\hyperlink{mm_8c_a6a1d6e1a12975a4e9a0b5b952e79eaad}{private} \hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{mm_8c_a1c77d7824a7c2bc75870b18ec7e7953b}{showbytes} (\hyperlink{group__grp__events__filters_gad8455e4afe978a74c68e345bef99761d}{Pm\+Message} \hyperlink{lib_2expat_8h_ac39e72a1de1cb50dbdc54b08d0432a24}{data}, \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{lib_2expat_8h_af86d325fecfc8f47b61fbf5a5146f582}{len}, \hyperlink{cext_8h_a7670a4e8a07d9ebb00411948b0bbf86d}{boolean} newline)
+\item 
+\hyperlink{mm_8c_a6a1d6e1a12975a4e9a0b5b952e79eaad}{private} \hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{mm_8c_aa0a8157af5f2a78061a93db5a87f93e4}{showstatus} (\hyperlink{cext_8h_a7670a4e8a07d9ebb00411948b0bbf86d}{boolean} flag)
+\item 
+\hyperlink{mm_8c_a6a1d6e1a12975a4e9a0b5b952e79eaad}{private} \hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{mm_8c_ac6d1f2a2ddc4e88d106ae916b9c0d524}{doascii} (char \hyperlink{rfft2d_test_m_l_8m_ae0323a9039add2978bf5b49550572c7c}{c})
+\item 
+\hyperlink{mm_8c_a6a1d6e1a12975a4e9a0b5b952e79eaad}{private} \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{mm_8c_ad961aceb2a0ddb6208b7a55a533ab43c}{get\+\_\+number} (char $\ast$prompt)
+\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{mm_8c_a6ce7e9003355a45a6d47a3682737e3fb}{receive\+\_\+poll} (\hyperlink{porttime_8h_afae5a66584458fb7e0e9ace7f200a7a3}{Pt\+Timestamp} timestamp, \hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} $\ast$\hyperlink{xmlparse_8c_a4b666535c828e23ccd16510a0a1a1943}{user\+Data})
+\item 
+\hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{mm_8c_a3c04138a5bfe5d72780bb7e82a18e627}{main} (\hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{cmdline_8c_aaffeb1bf2056ea44af5b5d0ee4d6ff07}{argc}, char $\ast$$\ast$\hyperlink{cmdline_8c_ad407d5ba91709bd9b092003858600723}{argv})
+\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{mm_8c_ac3e1795766a80ec63b157951b4b9a7d4}{debug} = \hyperlink{mac_2config_2i386_2lib-src_2libsoxr_2soxr-config_8h_a65e9886d74aaee76545e83dd09011727}{false}
+\item 
+\hyperlink{portmidi_8h_a00ffab472a8cb21bd3511721c9474658}{Pm\+Stream} $\ast$ \hyperlink{mm_8c_aa62d25e95dcdb574e6d9d3d5b678a1a2}{midi\+\_\+in}
+\item 
+\hyperlink{cext_8h_a7670a4e8a07d9ebb00411948b0bbf86d}{boolean} \hyperlink{mm_8c_a3acee43f445ecc4630f3ed3419730515}{active} = \hyperlink{mac_2config_2i386_2lib-src_2libsoxr_2soxr-config_8h_a65e9886d74aaee76545e83dd09011727}{false}
+\item 
+\hyperlink{cext_8h_a7670a4e8a07d9ebb00411948b0bbf86d}{boolean} \hyperlink{mm_8c_ad6d010b0f72f9e718b30fad5ff12261a}{in\+\_\+sysex} = \hyperlink{mac_2config_2i386_2lib-src_2libsoxr_2soxr-config_8h_a65e9886d74aaee76545e83dd09011727}{false}
+\item 
+\hyperlink{cext_8h_a7670a4e8a07d9ebb00411948b0bbf86d}{boolean} \hyperlink{mm_8c_a313729710067219385abab9918334898}{inited} = \hyperlink{mac_2config_2i386_2lib-src_2libsoxr_2soxr-config_8h_a65e9886d74aaee76545e83dd09011727}{false}
+\item 
+\hyperlink{cext_8h_a7670a4e8a07d9ebb00411948b0bbf86d}{boolean} \hyperlink{mm_8c_a5f689029e53f12e337967312e0a17717}{done} = \hyperlink{mac_2config_2i386_2lib-src_2libsoxr_2soxr-config_8h_a65e9886d74aaee76545e83dd09011727}{false}
+\item 
+\hyperlink{cext_8h_a7670a4e8a07d9ebb00411948b0bbf86d}{boolean} \hyperlink{mm_8c_a03f09e5a6d1f1cd816f8082ce05c2752}{notes} = \hyperlink{mac_2config_2i386_2lib-src_2libsoxr_2soxr-config_8h_a41f9c5fb8b08eb5dc3edce4dcb37fee7}{true}
+\item 
+\hyperlink{cext_8h_a7670a4e8a07d9ebb00411948b0bbf86d}{boolean} \hyperlink{mm_8c_a47684a52d379371b13d19f2d8fa0dd61}{controls} = \hyperlink{mac_2config_2i386_2lib-src_2libsoxr_2soxr-config_8h_a41f9c5fb8b08eb5dc3edce4dcb37fee7}{true}
+\item 
+\hyperlink{cext_8h_a7670a4e8a07d9ebb00411948b0bbf86d}{boolean} \hyperlink{mm_8c_a196d263df2822db023350277b5e91b4f}{bender} = \hyperlink{mac_2config_2i386_2lib-src_2libsoxr_2soxr-config_8h_a41f9c5fb8b08eb5dc3edce4dcb37fee7}{true}
+\item 
+\hyperlink{cext_8h_a7670a4e8a07d9ebb00411948b0bbf86d}{boolean} \hyperlink{mm_8c_a232cf10e47c8bec8a021f32b5feb5311}{excldata} = \hyperlink{mac_2config_2i386_2lib-src_2libsoxr_2soxr-config_8h_a41f9c5fb8b08eb5dc3edce4dcb37fee7}{true}
+\item 
+\hyperlink{cext_8h_a7670a4e8a07d9ebb00411948b0bbf86d}{boolean} \hyperlink{mm_8c_ab421ea2a103f8a57c338dc30e3cf4f6b}{verbose} = \hyperlink{mac_2config_2i386_2lib-src_2libsoxr_2soxr-config_8h_a41f9c5fb8b08eb5dc3edce4dcb37fee7}{true}
+\item 
+\hyperlink{cext_8h_a7670a4e8a07d9ebb00411948b0bbf86d}{boolean} \hyperlink{mm_8c_aa7534a978d1820626707abed4ea1a683}{realdata} = \hyperlink{mac_2config_2i386_2lib-src_2libsoxr_2soxr-config_8h_a41f9c5fb8b08eb5dc3edce4dcb37fee7}{true}
+\item 
+\hyperlink{cext_8h_a7670a4e8a07d9ebb00411948b0bbf86d}{boolean} \hyperlink{mm_8c_a8729f1460520cfce8a4c6bf0db90a087}{clksencnt} = \hyperlink{mac_2config_2i386_2lib-src_2libsoxr_2soxr-config_8h_a41f9c5fb8b08eb5dc3edce4dcb37fee7}{true}
+\item 
+\hyperlink{cext_8h_a7670a4e8a07d9ebb00411948b0bbf86d}{boolean} \hyperlink{mm_8c_ad82d035c0be0f60040ffe1205dd2d34c}{chmode} = \hyperlink{mac_2config_2i386_2lib-src_2libsoxr_2soxr-config_8h_a41f9c5fb8b08eb5dc3edce4dcb37fee7}{true}
+\item 
+\hyperlink{cext_8h_a7670a4e8a07d9ebb00411948b0bbf86d}{boolean} \hyperlink{mm_8c_a9f1bd2ccfd93ec4b8dda9066ee6649c7}{pgchanges} = \hyperlink{mac_2config_2i386_2lib-src_2libsoxr_2soxr-config_8h_a41f9c5fb8b08eb5dc3edce4dcb37fee7}{true}
+\item 
+\hyperlink{cext_8h_a7670a4e8a07d9ebb00411948b0bbf86d}{boolean} \hyperlink{mm_8c_a16c5a58c6350aaae15268b27e4e5d5ba}{flush} = \hyperlink{mac_2config_2i386_2lib-src_2libsoxr_2soxr-config_8h_a65e9886d74aaee76545e83dd09011727}{false}
+\item 
+\hyperlink{lib-src_2ffmpeg_2win32_2stdint_8h_a6eb1e68cc391dd753bc8ce896dbb8315}{uint32\+\_\+t} \hyperlink{mm_8c_a2719b8cbe8dc1a5064a418269c72e528}{filter} = 0
+\item 
+\hyperlink{lib-src_2ffmpeg_2win32_2stdint_8h_a6eb1e68cc391dd753bc8ce896dbb8315}{uint32\+\_\+t} \hyperlink{mm_8c_a6337e79b350164f9e101cdb4df7be626}{clockcount} = 0
+\item 
+\hyperlink{lib-src_2ffmpeg_2win32_2stdint_8h_a6eb1e68cc391dd753bc8ce896dbb8315}{uint32\+\_\+t} \hyperlink{mm_8c_a8c2d0373b0211300203437b64326fc90}{actsensecount} = 0
+\item 
+\hyperlink{lib-src_2ffmpeg_2win32_2stdint_8h_a6eb1e68cc391dd753bc8ce896dbb8315}{uint32\+\_\+t} \hyperlink{mm_8c_a53296b886be5a842875e711fdaf2aa0c}{notescount} = 0
+\item 
+\hyperlink{lib-src_2ffmpeg_2win32_2stdint_8h_a6eb1e68cc391dd753bc8ce896dbb8315}{uint32\+\_\+t} \hyperlink{mm_8c_affac24f3e5fc28ecb0a18434e46a40f2}{notestotal} = 0
+\item 
+char \hyperlink{mm_8c_af070c22696b2031123dd5cecaf320a73}{val\+\_\+format} \mbox{[}$\,$\mbox{]} = \char`\"{} Val \%d\textbackslash{}n\char`\"{}
+\item 
+\hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{mm_8c_af7e5e4672bfeaa2a9b89ce260eccdbce}{abort\+\_\+flag}
+\item 
+char \hyperlink{mm_8c_a55db09d6991df738202d2c98d442854c}{vel\+\_\+format} \mbox{[}$\,$\mbox{]} = \char`\"{} Vel \%d\textbackslash{}n\char`\"{}
+\item 
+char \hyperlink{mm_8c_a6b2cffa7320c5ba42649ea4a90e8035a}{nib\+\_\+to\+\_\+hex} \mbox{[}$\,$\mbox{]} = \char`\"{}0123456789\+A\+B\+C\+D\+E\+F\char`\"{}
+\end{DoxyCompactItemize}
+
+
+\subsection{Macro Definition Documentation}
+\index{mm.\+c@{mm.\+c}!false@{false}}
+\index{false@{false}!mm.\+c@{mm.\+c}}
+\subsubsection[{\texorpdfstring{false}{false}}]{\setlength{\rightskip}{0pt plus 5cm}\#define false~0}\hypertarget{mm_8c_a65e9886d74aaee76545e83dd09011727}{}\label{mm_8c_a65e9886d74aaee76545e83dd09011727}
+
+
+Definition at line 64 of file mm.\+c.
+
+\index{mm.\+c@{mm.\+c}!M\+I\+D\+I\+\_\+\+A\+C\+T\+I\+V\+E\+\_\+\+S\+E\+N\+S\+I\+NG@{M\+I\+D\+I\+\_\+\+A\+C\+T\+I\+V\+E\+\_\+\+S\+E\+N\+S\+I\+NG}}
+\index{M\+I\+D\+I\+\_\+\+A\+C\+T\+I\+V\+E\+\_\+\+S\+E\+N\+S\+I\+NG@{M\+I\+D\+I\+\_\+\+A\+C\+T\+I\+V\+E\+\_\+\+S\+E\+N\+S\+I\+NG}!mm.\+c@{mm.\+c}}
+\subsubsection[{\texorpdfstring{M\+I\+D\+I\+\_\+\+A\+C\+T\+I\+V\+E\+\_\+\+S\+E\+N\+S\+I\+NG}{MIDI_ACTIVE_SENSING}}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+I\+D\+I\+\_\+\+A\+C\+T\+I\+V\+E\+\_\+\+S\+E\+N\+S\+I\+NG~0xfe}\hypertarget{mm_8c_a8ea23b80925528a33957102ec9bb1e22}{}\label{mm_8c_a8ea23b80925528a33957102ec9bb1e22}
+
+
+Definition at line 48 of file mm.\+c.
+
+\index{mm.\+c@{mm.\+c}!M\+I\+D\+I\+\_\+\+A\+L\+L\+\_\+\+O\+FF@{M\+I\+D\+I\+\_\+\+A\+L\+L\+\_\+\+O\+FF}}
+\index{M\+I\+D\+I\+\_\+\+A\+L\+L\+\_\+\+O\+FF@{M\+I\+D\+I\+\_\+\+A\+L\+L\+\_\+\+O\+FF}!mm.\+c@{mm.\+c}}
+\subsubsection[{\texorpdfstring{M\+I\+D\+I\+\_\+\+A\+L\+L\+\_\+\+O\+FF}{MIDI_ALL_OFF}}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+I\+D\+I\+\_\+\+A\+L\+L\+\_\+\+O\+FF~0x7b}\hypertarget{mm_8c_a44ab54b0efb425501d8d1c2e7729d763}{}\label{mm_8c_a44ab54b0efb425501d8d1c2e7729d763}
+
+
+Definition at line 54 of file mm.\+c.
+
+\index{mm.\+c@{mm.\+c}!M\+I\+D\+I\+\_\+\+A\+L\+L\+\_\+\+S\+O\+U\+N\+D\+\_\+\+O\+FF@{M\+I\+D\+I\+\_\+\+A\+L\+L\+\_\+\+S\+O\+U\+N\+D\+\_\+\+O\+FF}}
+\index{M\+I\+D\+I\+\_\+\+A\+L\+L\+\_\+\+S\+O\+U\+N\+D\+\_\+\+O\+FF@{M\+I\+D\+I\+\_\+\+A\+L\+L\+\_\+\+S\+O\+U\+N\+D\+\_\+\+O\+FF}!mm.\+c@{mm.\+c}}
+\subsubsection[{\texorpdfstring{M\+I\+D\+I\+\_\+\+A\+L\+L\+\_\+\+S\+O\+U\+N\+D\+\_\+\+O\+FF}{MIDI_ALL_SOUND_OFF}}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+I\+D\+I\+\_\+\+A\+L\+L\+\_\+\+S\+O\+U\+N\+D\+\_\+\+O\+FF~0x78}\hypertarget{mm_8c_a582a12a37a3cbec3a8c49e702265c789}{}\label{mm_8c_a582a12a37a3cbec3a8c49e702265c789}
+
+
+Definition at line 51 of file mm.\+c.
+
+\index{mm.\+c@{mm.\+c}!M\+I\+D\+I\+\_\+\+B\+E\+ND@{M\+I\+D\+I\+\_\+\+B\+E\+ND}}
+\index{M\+I\+D\+I\+\_\+\+B\+E\+ND@{M\+I\+D\+I\+\_\+\+B\+E\+ND}!mm.\+c@{mm.\+c}}
+\subsubsection[{\texorpdfstring{M\+I\+D\+I\+\_\+\+B\+E\+ND}{MIDI_BEND}}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+I\+D\+I\+\_\+\+B\+E\+ND~0xe0}\hypertarget{mm_8c_a0585fa061162b26f17693f0add57db6c}{}\label{mm_8c_a0585fa061162b26f17693f0add57db6c}
+
+
+Definition at line 36 of file mm.\+c.
+
+\index{mm.\+c@{mm.\+c}!M\+I\+D\+I\+\_\+\+C\+H\+\_\+\+P\+R\+O\+G\+R\+AM@{M\+I\+D\+I\+\_\+\+C\+H\+\_\+\+P\+R\+O\+G\+R\+AM}}
+\index{M\+I\+D\+I\+\_\+\+C\+H\+\_\+\+P\+R\+O\+G\+R\+AM@{M\+I\+D\+I\+\_\+\+C\+H\+\_\+\+P\+R\+O\+G\+R\+AM}!mm.\+c@{mm.\+c}}
+\subsubsection[{\texorpdfstring{M\+I\+D\+I\+\_\+\+C\+H\+\_\+\+P\+R\+O\+G\+R\+AM}{MIDI_CH_PROGRAM}}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+I\+D\+I\+\_\+\+C\+H\+\_\+\+P\+R\+O\+G\+R\+AM~0xc0}\hypertarget{mm_8c_ac214d76a2221db38b283109496a784b8}{}\label{mm_8c_ac214d76a2221db38b283109496a784b8}
+
+
+Definition at line 34 of file mm.\+c.
+
+\index{mm.\+c@{mm.\+c}!M\+I\+D\+I\+\_\+\+C\+H\+N\+\_\+\+M\+A\+SK@{M\+I\+D\+I\+\_\+\+C\+H\+N\+\_\+\+M\+A\+SK}}
+\index{M\+I\+D\+I\+\_\+\+C\+H\+N\+\_\+\+M\+A\+SK@{M\+I\+D\+I\+\_\+\+C\+H\+N\+\_\+\+M\+A\+SK}!mm.\+c@{mm.\+c}}
+\subsubsection[{\texorpdfstring{M\+I\+D\+I\+\_\+\+C\+H\+N\+\_\+\+M\+A\+SK}{MIDI_CHN_MASK}}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+I\+D\+I\+\_\+\+C\+H\+N\+\_\+\+M\+A\+SK~0x0f}\hypertarget{mm_8c_a8e374cd09feb55c6ee27b31727a3c4ab}{}\label{mm_8c_a8e374cd09feb55c6ee27b31727a3c4ab}
+
+
+Definition at line 27 of file mm.\+c.
+
+\index{mm.\+c@{mm.\+c}!M\+I\+D\+I\+\_\+\+C\+O\+D\+E\+\_\+\+M\+A\+SK@{M\+I\+D\+I\+\_\+\+C\+O\+D\+E\+\_\+\+M\+A\+SK}}
+\index{M\+I\+D\+I\+\_\+\+C\+O\+D\+E\+\_\+\+M\+A\+SK@{M\+I\+D\+I\+\_\+\+C\+O\+D\+E\+\_\+\+M\+A\+SK}!mm.\+c@{mm.\+c}}
+\subsubsection[{\texorpdfstring{M\+I\+D\+I\+\_\+\+C\+O\+D\+E\+\_\+\+M\+A\+SK}{MIDI_CODE_MASK}}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+I\+D\+I\+\_\+\+C\+O\+D\+E\+\_\+\+M\+A\+SK~0xf0}\hypertarget{mm_8c_ad0a97b26a50383f240ed1863bd6c966b}{}\label{mm_8c_ad0a97b26a50383f240ed1863bd6c966b}
+
+
+Definition at line 26 of file mm.\+c.
+
+\index{mm.\+c@{mm.\+c}!M\+I\+D\+I\+\_\+\+C\+O\+N\+T\+I\+N\+UE@{M\+I\+D\+I\+\_\+\+C\+O\+N\+T\+I\+N\+UE}}
+\index{M\+I\+D\+I\+\_\+\+C\+O\+N\+T\+I\+N\+UE@{M\+I\+D\+I\+\_\+\+C\+O\+N\+T\+I\+N\+UE}!mm.\+c@{mm.\+c}}
+\subsubsection[{\texorpdfstring{M\+I\+D\+I\+\_\+\+C\+O\+N\+T\+I\+N\+UE}{MIDI_CONTINUE}}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+I\+D\+I\+\_\+\+C\+O\+N\+T\+I\+N\+UE~0xfb}\hypertarget{mm_8c_ab24430f0081e27215b0da84dd0ee745c}{}\label{mm_8c_ab24430f0081e27215b0da84dd0ee745c}
+
+
+Definition at line 46 of file mm.\+c.
+
+\index{mm.\+c@{mm.\+c}!M\+I\+D\+I\+\_\+\+C\+T\+RL@{M\+I\+D\+I\+\_\+\+C\+T\+RL}}
+\index{M\+I\+D\+I\+\_\+\+C\+T\+RL@{M\+I\+D\+I\+\_\+\+C\+T\+RL}!mm.\+c@{mm.\+c}}
+\subsubsection[{\texorpdfstring{M\+I\+D\+I\+\_\+\+C\+T\+RL}{MIDI_CTRL}}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+I\+D\+I\+\_\+\+C\+T\+RL~0xb0}\hypertarget{mm_8c_a64b08db61b463b1769d8f18fae1ea8e4}{}\label{mm_8c_a64b08db61b463b1769d8f18fae1ea8e4}
+
+
+Definition at line 33 of file mm.\+c.
+
+\index{mm.\+c@{mm.\+c}!M\+I\+D\+I\+\_\+\+E\+OX@{M\+I\+D\+I\+\_\+\+E\+OX}}
+\index{M\+I\+D\+I\+\_\+\+E\+OX@{M\+I\+D\+I\+\_\+\+E\+OX}!mm.\+c@{mm.\+c}}
+\subsubsection[{\texorpdfstring{M\+I\+D\+I\+\_\+\+E\+OX}{MIDI_EOX}}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+I\+D\+I\+\_\+\+E\+OX~0xf7}\hypertarget{mm_8c_a140c8cfa4bbf1a03494abdbd639d49f2}{}\label{mm_8c_a140c8cfa4bbf1a03494abdbd639d49f2}
+
+
+Definition at line 43 of file mm.\+c.
+
+\index{mm.\+c@{mm.\+c}!M\+I\+D\+I\+\_\+\+L\+O\+C\+AL@{M\+I\+D\+I\+\_\+\+L\+O\+C\+AL}}
+\index{M\+I\+D\+I\+\_\+\+L\+O\+C\+AL@{M\+I\+D\+I\+\_\+\+L\+O\+C\+AL}!mm.\+c@{mm.\+c}}
+\subsubsection[{\texorpdfstring{M\+I\+D\+I\+\_\+\+L\+O\+C\+AL}{MIDI_LOCAL}}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+I\+D\+I\+\_\+\+L\+O\+C\+AL~0x7a}\hypertarget{mm_8c_a9cbea4f197c6bef555ef260781834bc2}{}\label{mm_8c_a9cbea4f197c6bef555ef260781834bc2}
+
+
+Definition at line 53 of file mm.\+c.
+
+\index{mm.\+c@{mm.\+c}!M\+I\+D\+I\+\_\+\+M\+O\+N\+O\+\_\+\+ON@{M\+I\+D\+I\+\_\+\+M\+O\+N\+O\+\_\+\+ON}}
+\index{M\+I\+D\+I\+\_\+\+M\+O\+N\+O\+\_\+\+ON@{M\+I\+D\+I\+\_\+\+M\+O\+N\+O\+\_\+\+ON}!mm.\+c@{mm.\+c}}
+\subsubsection[{\texorpdfstring{M\+I\+D\+I\+\_\+\+M\+O\+N\+O\+\_\+\+ON}{MIDI_MONO_ON}}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+I\+D\+I\+\_\+\+M\+O\+N\+O\+\_\+\+ON~0x7e}\hypertarget{mm_8c_ae08bde23960de8535e83f3d222f4f342}{}\label{mm_8c_ae08bde23960de8535e83f3d222f4f342}
+
+
+Definition at line 57 of file mm.\+c.
+
+\index{mm.\+c@{mm.\+c}!M\+I\+D\+I\+\_\+\+O\+F\+F\+\_\+\+N\+O\+TE@{M\+I\+D\+I\+\_\+\+O\+F\+F\+\_\+\+N\+O\+TE}}
+\index{M\+I\+D\+I\+\_\+\+O\+F\+F\+\_\+\+N\+O\+TE@{M\+I\+D\+I\+\_\+\+O\+F\+F\+\_\+\+N\+O\+TE}!mm.\+c@{mm.\+c}}
+\subsubsection[{\texorpdfstring{M\+I\+D\+I\+\_\+\+O\+F\+F\+\_\+\+N\+O\+TE}{MIDI_OFF_NOTE}}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+I\+D\+I\+\_\+\+O\+F\+F\+\_\+\+N\+O\+TE~0x80}\hypertarget{mm_8c_acfcd8fbc10b91d7bf9ac128a19785de7}{}\label{mm_8c_acfcd8fbc10b91d7bf9ac128a19785de7}
+
+
+Definition at line 30 of file mm.\+c.
+
+\index{mm.\+c@{mm.\+c}!M\+I\+D\+I\+\_\+\+O\+M\+N\+I\+\_\+\+O\+FF@{M\+I\+D\+I\+\_\+\+O\+M\+N\+I\+\_\+\+O\+FF}}
+\index{M\+I\+D\+I\+\_\+\+O\+M\+N\+I\+\_\+\+O\+FF@{M\+I\+D\+I\+\_\+\+O\+M\+N\+I\+\_\+\+O\+FF}!mm.\+c@{mm.\+c}}
+\subsubsection[{\texorpdfstring{M\+I\+D\+I\+\_\+\+O\+M\+N\+I\+\_\+\+O\+FF}{MIDI_OMNI_OFF}}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+I\+D\+I\+\_\+\+O\+M\+N\+I\+\_\+\+O\+FF~0x7c}\hypertarget{mm_8c_a5ac28c52e3c50efb5846dd2f55df12a6}{}\label{mm_8c_a5ac28c52e3c50efb5846dd2f55df12a6}
+
+
+Definition at line 55 of file mm.\+c.
+
+\index{mm.\+c@{mm.\+c}!M\+I\+D\+I\+\_\+\+O\+M\+N\+I\+\_\+\+ON@{M\+I\+D\+I\+\_\+\+O\+M\+N\+I\+\_\+\+ON}}
+\index{M\+I\+D\+I\+\_\+\+O\+M\+N\+I\+\_\+\+ON@{M\+I\+D\+I\+\_\+\+O\+M\+N\+I\+\_\+\+ON}!mm.\+c@{mm.\+c}}
+\subsubsection[{\texorpdfstring{M\+I\+D\+I\+\_\+\+O\+M\+N\+I\+\_\+\+ON}{MIDI_OMNI_ON}}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+I\+D\+I\+\_\+\+O\+M\+N\+I\+\_\+\+ON~0x7d}\hypertarget{mm_8c_a79f5ffc2444aa10277b72772a20e1915}{}\label{mm_8c_a79f5ffc2444aa10277b72772a20e1915}
+
+
+Definition at line 56 of file mm.\+c.
+
+\index{mm.\+c@{mm.\+c}!M\+I\+D\+I\+\_\+\+O\+N\+\_\+\+N\+O\+TE@{M\+I\+D\+I\+\_\+\+O\+N\+\_\+\+N\+O\+TE}}
+\index{M\+I\+D\+I\+\_\+\+O\+N\+\_\+\+N\+O\+TE@{M\+I\+D\+I\+\_\+\+O\+N\+\_\+\+N\+O\+TE}!mm.\+c@{mm.\+c}}
+\subsubsection[{\texorpdfstring{M\+I\+D\+I\+\_\+\+O\+N\+\_\+\+N\+O\+TE}{MIDI_ON_NOTE}}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+I\+D\+I\+\_\+\+O\+N\+\_\+\+N\+O\+TE~0x90}\hypertarget{mm_8c_a84715565b6746f4859214d524b68e523}{}\label{mm_8c_a84715565b6746f4859214d524b68e523}
+
+
+Definition at line 31 of file mm.\+c.
+
+\index{mm.\+c@{mm.\+c}!M\+I\+D\+I\+\_\+\+P\+O\+L\+Y\+\_\+\+ON@{M\+I\+D\+I\+\_\+\+P\+O\+L\+Y\+\_\+\+ON}}
+\index{M\+I\+D\+I\+\_\+\+P\+O\+L\+Y\+\_\+\+ON@{M\+I\+D\+I\+\_\+\+P\+O\+L\+Y\+\_\+\+ON}!mm.\+c@{mm.\+c}}
+\subsubsection[{\texorpdfstring{M\+I\+D\+I\+\_\+\+P\+O\+L\+Y\+\_\+\+ON}{MIDI_POLY_ON}}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+I\+D\+I\+\_\+\+P\+O\+L\+Y\+\_\+\+ON~0x7f}\hypertarget{mm_8c_ac748db303557f631cdfbe595a70c9350}{}\label{mm_8c_ac748db303557f631cdfbe595a70c9350}
+
+
+Definition at line 58 of file mm.\+c.
+
+\index{mm.\+c@{mm.\+c}!M\+I\+D\+I\+\_\+\+P\+O\+L\+Y\+\_\+\+T\+O\+U\+CH@{M\+I\+D\+I\+\_\+\+P\+O\+L\+Y\+\_\+\+T\+O\+U\+CH}}
+\index{M\+I\+D\+I\+\_\+\+P\+O\+L\+Y\+\_\+\+T\+O\+U\+CH@{M\+I\+D\+I\+\_\+\+P\+O\+L\+Y\+\_\+\+T\+O\+U\+CH}!mm.\+c@{mm.\+c}}
+\subsubsection[{\texorpdfstring{M\+I\+D\+I\+\_\+\+P\+O\+L\+Y\+\_\+\+T\+O\+U\+CH}{MIDI_POLY_TOUCH}}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+I\+D\+I\+\_\+\+P\+O\+L\+Y\+\_\+\+T\+O\+U\+CH~0xa0}\hypertarget{mm_8c_afabc79495fd6a929f4ec570ac1796326}{}\label{mm_8c_afabc79495fd6a929f4ec570ac1796326}
+
+
+Definition at line 32 of file mm.\+c.
+
+\index{mm.\+c@{mm.\+c}!M\+I\+D\+I\+\_\+\+Q\+\_\+\+F\+R\+A\+ME@{M\+I\+D\+I\+\_\+\+Q\+\_\+\+F\+R\+A\+ME}}
+\index{M\+I\+D\+I\+\_\+\+Q\+\_\+\+F\+R\+A\+ME@{M\+I\+D\+I\+\_\+\+Q\+\_\+\+F\+R\+A\+ME}!mm.\+c@{mm.\+c}}
+\subsubsection[{\texorpdfstring{M\+I\+D\+I\+\_\+\+Q\+\_\+\+F\+R\+A\+ME}{MIDI_Q_FRAME}}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+I\+D\+I\+\_\+\+Q\+\_\+\+F\+R\+A\+ME~0xf1}\hypertarget{mm_8c_afabbdee3a297a5aeb348ffe50501ab8e}{}\label{mm_8c_afabbdee3a297a5aeb348ffe50501ab8e}
+
+
+Definition at line 39 of file mm.\+c.
+
+\index{mm.\+c@{mm.\+c}!M\+I\+D\+I\+\_\+\+R\+E\+S\+E\+T\+\_\+\+C\+O\+N\+T\+R\+O\+L\+L\+E\+RS@{M\+I\+D\+I\+\_\+\+R\+E\+S\+E\+T\+\_\+\+C\+O\+N\+T\+R\+O\+L\+L\+E\+RS}}
+\index{M\+I\+D\+I\+\_\+\+R\+E\+S\+E\+T\+\_\+\+C\+O\+N\+T\+R\+O\+L\+L\+E\+RS@{M\+I\+D\+I\+\_\+\+R\+E\+S\+E\+T\+\_\+\+C\+O\+N\+T\+R\+O\+L\+L\+E\+RS}!mm.\+c@{mm.\+c}}
+\subsubsection[{\texorpdfstring{M\+I\+D\+I\+\_\+\+R\+E\+S\+E\+T\+\_\+\+C\+O\+N\+T\+R\+O\+L\+L\+E\+RS}{MIDI_RESET_CONTROLLERS}}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+I\+D\+I\+\_\+\+R\+E\+S\+E\+T\+\_\+\+C\+O\+N\+T\+R\+O\+L\+L\+E\+RS~0x79}\hypertarget{mm_8c_a69daf54404b0e9b54c61d22a57a68018}{}\label{mm_8c_a69daf54404b0e9b54c61d22a57a68018}
+
+
+Definition at line 52 of file mm.\+c.
+
+\index{mm.\+c@{mm.\+c}!M\+I\+D\+I\+\_\+\+S\+O\+N\+G\+\_\+\+P\+O\+I\+N\+T\+ER@{M\+I\+D\+I\+\_\+\+S\+O\+N\+G\+\_\+\+P\+O\+I\+N\+T\+ER}}
+\index{M\+I\+D\+I\+\_\+\+S\+O\+N\+G\+\_\+\+P\+O\+I\+N\+T\+ER@{M\+I\+D\+I\+\_\+\+S\+O\+N\+G\+\_\+\+P\+O\+I\+N\+T\+ER}!mm.\+c@{mm.\+c}}
+\subsubsection[{\texorpdfstring{M\+I\+D\+I\+\_\+\+S\+O\+N\+G\+\_\+\+P\+O\+I\+N\+T\+ER}{MIDI_SONG_POINTER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+I\+D\+I\+\_\+\+S\+O\+N\+G\+\_\+\+P\+O\+I\+N\+T\+ER~0xf2}\hypertarget{mm_8c_aaf213a32bb24466af17f6b73dcd27072}{}\label{mm_8c_aaf213a32bb24466af17f6b73dcd27072}
+
+
+Definition at line 40 of file mm.\+c.
+
+\index{mm.\+c@{mm.\+c}!M\+I\+D\+I\+\_\+\+S\+O\+N\+G\+\_\+\+S\+E\+L\+E\+CT@{M\+I\+D\+I\+\_\+\+S\+O\+N\+G\+\_\+\+S\+E\+L\+E\+CT}}
+\index{M\+I\+D\+I\+\_\+\+S\+O\+N\+G\+\_\+\+S\+E\+L\+E\+CT@{M\+I\+D\+I\+\_\+\+S\+O\+N\+G\+\_\+\+S\+E\+L\+E\+CT}!mm.\+c@{mm.\+c}}
+\subsubsection[{\texorpdfstring{M\+I\+D\+I\+\_\+\+S\+O\+N\+G\+\_\+\+S\+E\+L\+E\+CT}{MIDI_SONG_SELECT}}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+I\+D\+I\+\_\+\+S\+O\+N\+G\+\_\+\+S\+E\+L\+E\+CT~0xf3}\hypertarget{mm_8c_a987812a08f0139737bb71393a2fa5adf}{}\label{mm_8c_a987812a08f0139737bb71393a2fa5adf}
+
+
+Definition at line 41 of file mm.\+c.
+
+\index{mm.\+c@{mm.\+c}!M\+I\+D\+I\+\_\+\+S\+T\+A\+RT@{M\+I\+D\+I\+\_\+\+S\+T\+A\+RT}}
+\index{M\+I\+D\+I\+\_\+\+S\+T\+A\+RT@{M\+I\+D\+I\+\_\+\+S\+T\+A\+RT}!mm.\+c@{mm.\+c}}
+\subsubsection[{\texorpdfstring{M\+I\+D\+I\+\_\+\+S\+T\+A\+RT}{MIDI_START}}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+I\+D\+I\+\_\+\+S\+T\+A\+RT~0xfa}\hypertarget{mm_8c_a8233631c85823aa546f932ad8975caa4}{}\label{mm_8c_a8233631c85823aa546f932ad8975caa4}
+
+
+Definition at line 45 of file mm.\+c.
+
+\index{mm.\+c@{mm.\+c}!M\+I\+D\+I\+\_\+\+S\+T\+OP@{M\+I\+D\+I\+\_\+\+S\+T\+OP}}
+\index{M\+I\+D\+I\+\_\+\+S\+T\+OP@{M\+I\+D\+I\+\_\+\+S\+T\+OP}!mm.\+c@{mm.\+c}}
+\subsubsection[{\texorpdfstring{M\+I\+D\+I\+\_\+\+S\+T\+OP}{MIDI_STOP}}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+I\+D\+I\+\_\+\+S\+T\+OP~0xfc}\hypertarget{mm_8c_a3af9271d4b1f0d22904a0b055f48cf62}{}\label{mm_8c_a3af9271d4b1f0d22904a0b055f48cf62}
+
+
+Definition at line 47 of file mm.\+c.
+
+\index{mm.\+c@{mm.\+c}!M\+I\+D\+I\+\_\+\+S\+Y\+S\+\_\+\+R\+E\+S\+ET@{M\+I\+D\+I\+\_\+\+S\+Y\+S\+\_\+\+R\+E\+S\+ET}}
+\index{M\+I\+D\+I\+\_\+\+S\+Y\+S\+\_\+\+R\+E\+S\+ET@{M\+I\+D\+I\+\_\+\+S\+Y\+S\+\_\+\+R\+E\+S\+ET}!mm.\+c@{mm.\+c}}
+\subsubsection[{\texorpdfstring{M\+I\+D\+I\+\_\+\+S\+Y\+S\+\_\+\+R\+E\+S\+ET}{MIDI_SYS_RESET}}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+I\+D\+I\+\_\+\+S\+Y\+S\+\_\+\+R\+E\+S\+ET~0xff}\hypertarget{mm_8c_a30f2401a495012921067c4b313207fa2}{}\label{mm_8c_a30f2401a495012921067c4b313207fa2}
+
+
+Definition at line 49 of file mm.\+c.
+
+\index{mm.\+c@{mm.\+c}!M\+I\+D\+I\+\_\+\+S\+Y\+S\+EX@{M\+I\+D\+I\+\_\+\+S\+Y\+S\+EX}}
+\index{M\+I\+D\+I\+\_\+\+S\+Y\+S\+EX@{M\+I\+D\+I\+\_\+\+S\+Y\+S\+EX}!mm.\+c@{mm.\+c}}
+\subsubsection[{\texorpdfstring{M\+I\+D\+I\+\_\+\+S\+Y\+S\+EX}{MIDI_SYSEX}}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+I\+D\+I\+\_\+\+S\+Y\+S\+EX~0xf0}\hypertarget{mm_8c_aa2197f6ca200566c0986e737edd211e4}{}\label{mm_8c_aa2197f6ca200566c0986e737edd211e4}
+
+
+Definition at line 38 of file mm.\+c.
+
+\index{mm.\+c@{mm.\+c}!M\+I\+D\+I\+\_\+\+T\+I\+M\+E\+\_\+\+C\+L\+O\+CK@{M\+I\+D\+I\+\_\+\+T\+I\+M\+E\+\_\+\+C\+L\+O\+CK}}
+\index{M\+I\+D\+I\+\_\+\+T\+I\+M\+E\+\_\+\+C\+L\+O\+CK@{M\+I\+D\+I\+\_\+\+T\+I\+M\+E\+\_\+\+C\+L\+O\+CK}!mm.\+c@{mm.\+c}}
+\subsubsection[{\texorpdfstring{M\+I\+D\+I\+\_\+\+T\+I\+M\+E\+\_\+\+C\+L\+O\+CK}{MIDI_TIME_CLOCK}}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+I\+D\+I\+\_\+\+T\+I\+M\+E\+\_\+\+C\+L\+O\+CK~0xf8}\hypertarget{mm_8c_abfb348193aa3d495c67008b06c274f76}{}\label{mm_8c_abfb348193aa3d495c67008b06c274f76}
+
+
+Definition at line 44 of file mm.\+c.
+
+\index{mm.\+c@{mm.\+c}!M\+I\+D\+I\+\_\+\+T\+O\+U\+CH@{M\+I\+D\+I\+\_\+\+T\+O\+U\+CH}}
+\index{M\+I\+D\+I\+\_\+\+T\+O\+U\+CH@{M\+I\+D\+I\+\_\+\+T\+O\+U\+CH}!mm.\+c@{mm.\+c}}
+\subsubsection[{\texorpdfstring{M\+I\+D\+I\+\_\+\+T\+O\+U\+CH}{MIDI_TOUCH}}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+I\+D\+I\+\_\+\+T\+O\+U\+CH~0xd0}\hypertarget{mm_8c_a3bbe71db78d44f6f45cdd778fc86ffbb}{}\label{mm_8c_a3bbe71db78d44f6f45cdd778fc86ffbb}
+
+
+Definition at line 35 of file mm.\+c.
+
+\index{mm.\+c@{mm.\+c}!M\+I\+D\+I\+\_\+\+T\+U\+N\+E\+\_\+\+R\+EQ@{M\+I\+D\+I\+\_\+\+T\+U\+N\+E\+\_\+\+R\+EQ}}
+\index{M\+I\+D\+I\+\_\+\+T\+U\+N\+E\+\_\+\+R\+EQ@{M\+I\+D\+I\+\_\+\+T\+U\+N\+E\+\_\+\+R\+EQ}!mm.\+c@{mm.\+c}}
+\subsubsection[{\texorpdfstring{M\+I\+D\+I\+\_\+\+T\+U\+N\+E\+\_\+\+R\+EQ}{MIDI_TUNE_REQ}}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+I\+D\+I\+\_\+\+T\+U\+N\+E\+\_\+\+R\+EQ~0xf6}\hypertarget{mm_8c_aac3142724fa4e0f26fa1e000b4b349ed}{}\label{mm_8c_aac3142724fa4e0f26fa1e000b4b349ed}
+
+
+Definition at line 42 of file mm.\+c.
+
+\index{mm.\+c@{mm.\+c}!private@{private}}
+\index{private@{private}!mm.\+c@{mm.\+c}}
+\subsubsection[{\texorpdfstring{private}{private}}]{\setlength{\rightskip}{0pt plus 5cm}\#define private~static}\hypertarget{mm_8c_a6a1d6e1a12975a4e9a0b5b952e79eaad}{}\label{mm_8c_a6a1d6e1a12975a4e9a0b5b952e79eaad}
+
+
+Definition at line 61 of file mm.\+c.
+
+\index{mm.\+c@{mm.\+c}!S\+T\+R\+I\+N\+G\+\_\+\+M\+AX@{S\+T\+R\+I\+N\+G\+\_\+\+M\+AX}}
+\index{S\+T\+R\+I\+N\+G\+\_\+\+M\+AX@{S\+T\+R\+I\+N\+G\+\_\+\+M\+AX}!mm.\+c@{mm.\+c}}
+\subsubsection[{\texorpdfstring{S\+T\+R\+I\+N\+G\+\_\+\+M\+AX}{STRING_MAX}}]{\setlength{\rightskip}{0pt plus 5cm}\#define S\+T\+R\+I\+N\+G\+\_\+\+M\+AX~80}\hypertarget{mm_8c_a41f16f17393bc7dfd8c3a44a6ba595ba}{}\label{mm_8c_a41f16f17393bc7dfd8c3a44a6ba595ba}
+
+
+Definition at line 24 of file mm.\+c.
+
+\index{mm.\+c@{mm.\+c}!sysex\+\_\+max@{sysex\+\_\+max}}
+\index{sysex\+\_\+max@{sysex\+\_\+max}!mm.\+c@{mm.\+c}}
+\subsubsection[{\texorpdfstring{sysex\+\_\+max}{sysex_max}}]{\setlength{\rightskip}{0pt plus 5cm}\#define sysex\+\_\+max~16}\hypertarget{mm_8c_aee489e4a34a12547554d1207682e4b97}{}\label{mm_8c_aee489e4a34a12547554d1207682e4b97}
+\index{mm.\+c@{mm.\+c}!true@{true}}
+\index{true@{true}!mm.\+c@{mm.\+c}}
+\subsubsection[{\texorpdfstring{true}{true}}]{\setlength{\rightskip}{0pt plus 5cm}\#define true~1}\hypertarget{mm_8c_a41f9c5fb8b08eb5dc3edce4dcb37fee7}{}\label{mm_8c_a41f9c5fb8b08eb5dc3edce4dcb37fee7}
+
+
+Definition at line 65 of file mm.\+c.
+
+
+
+\subsection{Typedef Documentation}
+\index{mm.\+c@{mm.\+c}!boolean@{boolean}}
+\index{boolean@{boolean}!mm.\+c@{mm.\+c}}
+\subsubsection[{\texorpdfstring{boolean}{boolean}}]{\setlength{\rightskip}{0pt plus 5cm}typedef {\bf int} {\bf boolean}}\hypertarget{mm_8c_a621c38f1f10a1c565d897e3178b16d6e}{}\label{mm_8c_a621c38f1f10a1c565d897e3178b16d6e}
+
+
+Definition at line 68 of file mm.\+c.
+
+
+
+\subsection{Function Documentation}
+\index{mm.\+c@{mm.\+c}!doascii@{doascii}}
+\index{doascii@{doascii}!mm.\+c@{mm.\+c}}
+\subsubsection[{\texorpdfstring{doascii(char c)}{doascii(char c)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf private} {\bf void} doascii (
+\begin{DoxyParamCaption}
+\item[{char}]{c}
+\end{DoxyParamCaption}
+)}\hypertarget{mm_8c_ac6d1f2a2ddc4e88d106ae916b9c0d524}{}\label{mm_8c_ac6d1f2a2ddc4e88d106ae916b9c0d524}
+
+
+Definition at line 201 of file mm.\+c.
+
+\index{mm.\+c@{mm.\+c}!get\+\_\+number@{get\+\_\+number}}
+\index{get\+\_\+number@{get\+\_\+number}!mm.\+c@{mm.\+c}}
+\subsubsection[{\texorpdfstring{get\+\_\+number(char $\ast$prompt)}{get_number(char *prompt)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf private} {\bf int} get\+\_\+number (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{prompt}
+\end{DoxyParamCaption}
+)}\hypertarget{mm_8c_ad961aceb2a0ddb6208b7a55a533ab43c}{}\label{mm_8c_ad961aceb2a0ddb6208b7a55a533ab43c}
+
+
+Definition at line 118 of file mm.\+c.
+
+\index{mm.\+c@{mm.\+c}!main@{main}}
+\index{main@{main}!mm.\+c@{mm.\+c}}
+\subsubsection[{\texorpdfstring{main(int argc, char $\ast$$\ast$argv)}{main(int argc, char **argv)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf int} main (
+\begin{DoxyParamCaption}
+\item[{{\bf int}}]{argc, }
+\item[{char $\ast$$\ast$}]{argv}
+\end{DoxyParamCaption}
+)}\hypertarget{mm_8c_a3c04138a5bfe5d72780bb7e82a18e627}{}\label{mm_8c_a3c04138a5bfe5d72780bb7e82a18e627}
+
+
+Definition at line 149 of file mm.\+c.
+
+\index{mm.\+c@{mm.\+c}!mmexit@{mmexit}}
+\index{mmexit@{mmexit}!mm.\+c@{mm.\+c}}
+\subsubsection[{\texorpdfstring{mmexit(int code)}{mmexit(int code)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf private} {\bf void} mmexit (
+\begin{DoxyParamCaption}
+\item[{{\bf int}}]{code}
+\end{DoxyParamCaption}
+)}\hypertarget{mm_8c_a32e1e97da16aac3e07ae67b5c1f99598}{}\label{mm_8c_a32e1e97da16aac3e07ae67b5c1f99598}
+
+
+Definition at line 277 of file mm.\+c.
+
+\index{mm.\+c@{mm.\+c}!output@{output}}
+\index{output@{output}!mm.\+c@{mm.\+c}}
+\subsubsection[{\texorpdfstring{output(\+Pm\+Message data)}{output(PmMessage data)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf private} {\bf void} output (
+\begin{DoxyParamCaption}
+\item[{{\bf Pm\+Message}}]{data}
+\end{DoxyParamCaption}
+)}\hypertarget{mm_8c_aeb3fcf4ab0f02cc4420e5a97568a07ef}{}\label{mm_8c_aeb3fcf4ab0f02cc4420e5a97568a07ef}
+
+
+Definition at line 295 of file mm.\+c.
+
+\index{mm.\+c@{mm.\+c}!put\+\_\+pitch@{put\+\_\+pitch}}
+\index{put\+\_\+pitch@{put\+\_\+pitch}!mm.\+c@{mm.\+c}}
+\subsubsection[{\texorpdfstring{put\+\_\+pitch(int p)}{put_pitch(int p)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf private} {\bf int} put\+\_\+pitch (
+\begin{DoxyParamCaption}
+\item[{{\bf int}}]{p}
+\end{DoxyParamCaption}
+)}\hypertarget{mm_8c_ad67b866d301d8d7debc27b6f4a038d33}{}\label{mm_8c_ad67b866d301d8d7debc27b6f4a038d33}
+
+
+Definition at line 479 of file mm.\+c.
+
+\index{mm.\+c@{mm.\+c}!receive\+\_\+poll@{receive\+\_\+poll}}
+\index{receive\+\_\+poll@{receive\+\_\+poll}!mm.\+c@{mm.\+c}}
+\subsubsection[{\texorpdfstring{receive\+\_\+poll(\+Pt\+Timestamp timestamp, void $\ast$user\+Data)}{receive_poll(PtTimestamp timestamp, void *userData)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} receive\+\_\+poll (
+\begin{DoxyParamCaption}
+\item[{{\bf Pt\+Timestamp}}]{timestamp, }
+\item[{{\bf void} $\ast$}]{user\+Data}
+\end{DoxyParamCaption}
+)}\hypertarget{mm_8c_a6ce7e9003355a45a6d47a3682737e3fb}{}\label{mm_8c_a6ce7e9003355a45a6d47a3682737e3fb}
+
+
+Definition at line 132 of file mm.\+c.
+
+\index{mm.\+c@{mm.\+c}!showbytes@{showbytes}}
+\index{showbytes@{showbytes}!mm.\+c@{mm.\+c}}
+\subsubsection[{\texorpdfstring{showbytes(\+Pm\+Message data, int len, boolean newline)}{showbytes(PmMessage data, int len, boolean newline)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf private} {\bf void} showbytes (
+\begin{DoxyParamCaption}
+\item[{{\bf Pm\+Message}}]{data, }
+\item[{{\bf int}}]{len, }
+\item[{{\bf boolean}}]{newline}
+\end{DoxyParamCaption}
+)}\hypertarget{mm_8c_a1c77d7824a7c2bc75870b18ec7e7953b}{}\label{mm_8c_a1c77d7824a7c2bc75870b18ec7e7953b}
+
+
+Definition at line 499 of file mm.\+c.
+
+\index{mm.\+c@{mm.\+c}!showhelp@{showhelp}}
+\index{showhelp@{showhelp}!mm.\+c@{mm.\+c}}
+\subsubsection[{\texorpdfstring{showhelp()}{showhelp()}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf private} {\bf void} showhelp (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{mm_8c_a37323635ab112c17f8cccd8d117b33c1}{}\label{mm_8c_a37323635ab112c17f8cccd8d117b33c1}
+
+
+Definition at line 530 of file mm.\+c.
+
+\index{mm.\+c@{mm.\+c}!showstatus@{showstatus}}
+\index{showstatus@{showstatus}!mm.\+c@{mm.\+c}}
+\subsubsection[{\texorpdfstring{showstatus(boolean flag)}{showstatus(boolean flag)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf private} {\bf void} showstatus (
+\begin{DoxyParamCaption}
+\item[{{\bf boolean}}]{flag}
+\end{DoxyParamCaption}
+)}\hypertarget{mm_8c_aa0a8157af5f2a78061a93db5a87f93e4}{}\label{mm_8c_aa0a8157af5f2a78061a93db5a87f93e4}
+
+
+Definition at line 569 of file mm.\+c.
+
+
+
+\subsection{Variable Documentation}
+\index{mm.\+c@{mm.\+c}!abort\+\_\+flag@{abort\+\_\+flag}}
+\index{abort\+\_\+flag@{abort\+\_\+flag}!mm.\+c@{mm.\+c}}
+\subsubsection[{\texorpdfstring{abort\+\_\+flag}{abort_flag}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf int} abort\+\_\+flag}\hypertarget{mm_8c_af7e5e4672bfeaa2a9b89ce260eccdbce}{}\label{mm_8c_af7e5e4672bfeaa2a9b89ce260eccdbce}
+
+
+Definition at line 187 of file userio.\+c.
+
+\index{mm.\+c@{mm.\+c}!active@{active}}
+\index{active@{active}!mm.\+c@{mm.\+c}}
+\subsubsection[{\texorpdfstring{active}{active}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf boolean} active = {\bf false}}\hypertarget{mm_8c_a3acee43f445ecc4630f3ed3419730515}{}\label{mm_8c_a3acee43f445ecc4630f3ed3419730515}
+
+
+Definition at line 72 of file mm.\+c.
+
+\index{mm.\+c@{mm.\+c}!actsensecount@{actsensecount}}
+\index{actsensecount@{actsensecount}!mm.\+c@{mm.\+c}}
+\subsubsection[{\texorpdfstring{actsensecount}{actsensecount}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint32\+\_\+t} actsensecount = 0}\hypertarget{mm_8c_a8c2d0373b0211300203437b64326fc90}{}\label{mm_8c_a8c2d0373b0211300203437b64326fc90}
+
+
+Definition at line 90 of file mm.\+c.
+
+\index{mm.\+c@{mm.\+c}!bender@{bender}}
+\index{bender@{bender}!mm.\+c@{mm.\+c}}
+\subsubsection[{\texorpdfstring{bender}{bender}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf boolean} bender = {\bf true}}\hypertarget{mm_8c_a196d263df2822db023350277b5e91b4f}{}\label{mm_8c_a196d263df2822db023350277b5e91b4f}
+
+
+Definition at line 78 of file mm.\+c.
+
+\index{mm.\+c@{mm.\+c}!chmode@{chmode}}
+\index{chmode@{chmode}!mm.\+c@{mm.\+c}}
+\subsubsection[{\texorpdfstring{chmode}{chmode}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf boolean} chmode = {\bf true}}\hypertarget{mm_8c_ad82d035c0be0f60040ffe1205dd2d34c}{}\label{mm_8c_ad82d035c0be0f60040ffe1205dd2d34c}
+
+
+Definition at line 83 of file mm.\+c.
+
+\index{mm.\+c@{mm.\+c}!clksencnt@{clksencnt}}
+\index{clksencnt@{clksencnt}!mm.\+c@{mm.\+c}}
+\subsubsection[{\texorpdfstring{clksencnt}{clksencnt}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf boolean} clksencnt = {\bf true}}\hypertarget{mm_8c_a8729f1460520cfce8a4c6bf0db90a087}{}\label{mm_8c_a8729f1460520cfce8a4c6bf0db90a087}
+
+
+Definition at line 82 of file mm.\+c.
+
+\index{mm.\+c@{mm.\+c}!clockcount@{clockcount}}
+\index{clockcount@{clockcount}!mm.\+c@{mm.\+c}}
+\subsubsection[{\texorpdfstring{clockcount}{clockcount}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint32\+\_\+t} clockcount = 0}\hypertarget{mm_8c_a6337e79b350164f9e101cdb4df7be626}{}\label{mm_8c_a6337e79b350164f9e101cdb4df7be626}
+
+
+Definition at line 89 of file mm.\+c.
+
+\index{mm.\+c@{mm.\+c}!controls@{controls}}
+\index{controls@{controls}!mm.\+c@{mm.\+c}}
+\subsubsection[{\texorpdfstring{controls}{controls}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf boolean} controls = {\bf true}}\hypertarget{mm_8c_a47684a52d379371b13d19f2d8fa0dd61}{}\label{mm_8c_a47684a52d379371b13d19f2d8fa0dd61}
+
+
+Definition at line 77 of file mm.\+c.
+
+\index{mm.\+c@{mm.\+c}!debug@{debug}}
+\index{debug@{debug}!mm.\+c@{mm.\+c}}
+\subsubsection[{\texorpdfstring{debug}{debug}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf int} debug = {\bf false}}\hypertarget{mm_8c_ac3e1795766a80ec63b157951b4b9a7d4}{}\label{mm_8c_ac3e1795766a80ec63b157951b4b9a7d4}
+
+
+Definition at line 70 of file mm.\+c.
+
+\index{mm.\+c@{mm.\+c}!done@{done}}
+\index{done@{done}!mm.\+c@{mm.\+c}}
+\subsubsection[{\texorpdfstring{done}{done}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf boolean} done = {\bf false}}\hypertarget{mm_8c_a5f689029e53f12e337967312e0a17717}{}\label{mm_8c_a5f689029e53f12e337967312e0a17717}
+
+
+Definition at line 75 of file mm.\+c.
+
+\index{mm.\+c@{mm.\+c}!excldata@{excldata}}
+\index{excldata@{excldata}!mm.\+c@{mm.\+c}}
+\subsubsection[{\texorpdfstring{excldata}{excldata}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf boolean} excldata = {\bf true}}\hypertarget{mm_8c_a232cf10e47c8bec8a021f32b5feb5311}{}\label{mm_8c_a232cf10e47c8bec8a021f32b5feb5311}
+
+
+Definition at line 79 of file mm.\+c.
+
+\index{mm.\+c@{mm.\+c}!filter@{filter}}
+\index{filter@{filter}!mm.\+c@{mm.\+c}}
+\subsubsection[{\texorpdfstring{filter}{filter}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint32\+\_\+t} filter = 0}\hypertarget{mm_8c_a2719b8cbe8dc1a5064a418269c72e528}{}\label{mm_8c_a2719b8cbe8dc1a5064a418269c72e528}
+
+
+Definition at line 87 of file mm.\+c.
+
+\index{mm.\+c@{mm.\+c}!flush@{flush}}
+\index{flush@{flush}!mm.\+c@{mm.\+c}}
+\subsubsection[{\texorpdfstring{flush}{flush}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf boolean} flush = {\bf false}}\hypertarget{mm_8c_a16c5a58c6350aaae15268b27e4e5d5ba}{}\label{mm_8c_a16c5a58c6350aaae15268b27e4e5d5ba}
+
+
+Definition at line 85 of file mm.\+c.
+
+\index{mm.\+c@{mm.\+c}!in\+\_\+sysex@{in\+\_\+sysex}}
+\index{in\+\_\+sysex@{in\+\_\+sysex}!mm.\+c@{mm.\+c}}
+\subsubsection[{\texorpdfstring{in\+\_\+sysex}{in_sysex}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf boolean} in\+\_\+sysex = {\bf false}}\hypertarget{mm_8c_ad6d010b0f72f9e718b30fad5ff12261a}{}\label{mm_8c_ad6d010b0f72f9e718b30fad5ff12261a}
+
+
+Definition at line 73 of file mm.\+c.
+
+\index{mm.\+c@{mm.\+c}!inited@{inited}}
+\index{inited@{inited}!mm.\+c@{mm.\+c}}
+\subsubsection[{\texorpdfstring{inited}{inited}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf boolean} inited = {\bf false}}\hypertarget{mm_8c_a313729710067219385abab9918334898}{}\label{mm_8c_a313729710067219385abab9918334898}
+
+
+Definition at line 74 of file mm.\+c.
+
+\index{mm.\+c@{mm.\+c}!midi\+\_\+in@{midi\+\_\+in}}
+\index{midi\+\_\+in@{midi\+\_\+in}!mm.\+c@{mm.\+c}}
+\subsubsection[{\texorpdfstring{midi\+\_\+in}{midi_in}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Pm\+Stream}$\ast$ midi\+\_\+in}\hypertarget{mm_8c_aa62d25e95dcdb574e6d9d3d5b678a1a2}{}\label{mm_8c_aa62d25e95dcdb574e6d9d3d5b678a1a2}
+
+
+Definition at line 71 of file mm.\+c.
+
+\index{mm.\+c@{mm.\+c}!nib\+\_\+to\+\_\+hex@{nib\+\_\+to\+\_\+hex}}
+\index{nib\+\_\+to\+\_\+hex@{nib\+\_\+to\+\_\+hex}!mm.\+c@{mm.\+c}}
+\subsubsection[{\texorpdfstring{nib\+\_\+to\+\_\+hex}{nib_to_hex}}]{\setlength{\rightskip}{0pt plus 5cm}char nib\+\_\+to\+\_\+hex\mbox{[}$\,$\mbox{]} = \char`\"{}0123456789\+A\+B\+C\+D\+E\+F\char`\"{}}\hypertarget{mm_8c_a6b2cffa7320c5ba42649ea4a90e8035a}{}\label{mm_8c_a6b2cffa7320c5ba42649ea4a90e8035a}
+
+
+Definition at line 497 of file mm.\+c.
+
+\index{mm.\+c@{mm.\+c}!notes@{notes}}
+\index{notes@{notes}!mm.\+c@{mm.\+c}}
+\subsubsection[{\texorpdfstring{notes}{notes}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf boolean} notes = {\bf true}}\hypertarget{mm_8c_a03f09e5a6d1f1cd816f8082ce05c2752}{}\label{mm_8c_a03f09e5a6d1f1cd816f8082ce05c2752}
+
+
+Definition at line 76 of file mm.\+c.
+
+\index{mm.\+c@{mm.\+c}!notescount@{notescount}}
+\index{notescount@{notescount}!mm.\+c@{mm.\+c}}
+\subsubsection[{\texorpdfstring{notescount}{notescount}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint32\+\_\+t} notescount = 0}\hypertarget{mm_8c_a53296b886be5a842875e711fdaf2aa0c}{}\label{mm_8c_a53296b886be5a842875e711fdaf2aa0c}
+
+
+Definition at line 91 of file mm.\+c.
+
+\index{mm.\+c@{mm.\+c}!notestotal@{notestotal}}
+\index{notestotal@{notestotal}!mm.\+c@{mm.\+c}}
+\subsubsection[{\texorpdfstring{notestotal}{notestotal}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint32\+\_\+t} notestotal = 0}\hypertarget{mm_8c_affac24f3e5fc28ecb0a18434e46a40f2}{}\label{mm_8c_affac24f3e5fc28ecb0a18434e46a40f2}
+
+
+Definition at line 92 of file mm.\+c.
+
+\index{mm.\+c@{mm.\+c}!pgchanges@{pgchanges}}
+\index{pgchanges@{pgchanges}!mm.\+c@{mm.\+c}}
+\subsubsection[{\texorpdfstring{pgchanges}{pgchanges}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf boolean} pgchanges = {\bf true}}\hypertarget{mm_8c_a9f1bd2ccfd93ec4b8dda9066ee6649c7}{}\label{mm_8c_a9f1bd2ccfd93ec4b8dda9066ee6649c7}
+
+
+Definition at line 84 of file mm.\+c.
+
+\index{mm.\+c@{mm.\+c}!realdata@{realdata}}
+\index{realdata@{realdata}!mm.\+c@{mm.\+c}}
+\subsubsection[{\texorpdfstring{realdata}{realdata}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf boolean} realdata = {\bf true}}\hypertarget{mm_8c_aa7534a978d1820626707abed4ea1a683}{}\label{mm_8c_aa7534a978d1820626707abed4ea1a683}
+
+
+Definition at line 81 of file mm.\+c.
+
+\index{mm.\+c@{mm.\+c}!val\+\_\+format@{val\+\_\+format}}
+\index{val\+\_\+format@{val\+\_\+format}!mm.\+c@{mm.\+c}}
+\subsubsection[{\texorpdfstring{val\+\_\+format}{val_format}}]{\setlength{\rightskip}{0pt plus 5cm}char val\+\_\+format\mbox{[}$\,$\mbox{]} = \char`\"{} Val \%d\textbackslash{}n\char`\"{}}\hypertarget{mm_8c_af070c22696b2031123dd5cecaf320a73}{}\label{mm_8c_af070c22696b2031123dd5cecaf320a73}
+
+
+Definition at line 94 of file mm.\+c.
+
+\index{mm.\+c@{mm.\+c}!vel\+\_\+format@{vel\+\_\+format}}
+\index{vel\+\_\+format@{vel\+\_\+format}!mm.\+c@{mm.\+c}}
+\subsubsection[{\texorpdfstring{vel\+\_\+format}{vel_format}}]{\setlength{\rightskip}{0pt plus 5cm}char vel\+\_\+format\mbox{[}$\,$\mbox{]} = \char`\"{} Vel \%d\textbackslash{}n\char`\"{}}\hypertarget{mm_8c_a55db09d6991df738202d2c98d442854c}{}\label{mm_8c_a55db09d6991df738202d2c98d442854c}
+
+
+Definition at line 293 of file mm.\+c.
+
+\index{mm.\+c@{mm.\+c}!verbose@{verbose}}
+\index{verbose@{verbose}!mm.\+c@{mm.\+c}}
+\subsubsection[{\texorpdfstring{verbose}{verbose}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf boolean} verbose = {\bf true}}\hypertarget{mm_8c_ab421ea2a103f8a57c338dc30e3cf4f6b}{}\label{mm_8c_ab421ea2a103f8a57c338dc30e3cf4f6b}
+
+
+Definition at line 80 of file mm.\+c.
+

@@ -1,0 +1,332 @@
+\hypertarget{_dither_8cpp}{}\section{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/src/\+Dither.cpp File Reference}
+\label{_dither_8cpp}\index{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/src/\+Dither.\+cpp@{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/src/\+Dither.\+cpp}}
+{\ttfamily \#include \char`\"{}float\+\_\+cast.\+h\char`\"{}}\\*
+{\ttfamily \#include $<$stdlib.\+h$>$}\\*
+{\ttfamily \#include $<$math.\+h$>$}\\*
+{\ttfamily \#include $<$string.\+h$>$}\\*
+{\ttfamily \#include $<$wx/defs.\+h$>$}\\*
+{\ttfamily \#include \char`\"{}Dither.\+h\char`\"{}}\\*
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{_dither_8cpp_ade4a8104b2bcd7fb7141eb6a252fe39a}{D\+I\+T\+H\+E\+R\+\_\+\+N\+O\+I\+SE}~(rand() / (float)R\+A\+N\+D\+\_\+\+M\+AX -\/ 0.\+5f)
+\item 
+\#define \hyperlink{_dither_8cpp_a435355833f4e882f7a8b9208d3b312b2}{C\+O\+N\+V\+E\+R\+T\+\_\+\+D\+I\+V16}~float(1$<$$<$15)
+\item 
+\#define \hyperlink{_dither_8cpp_a44e120ab95bfee187efcf3b18c53bd51}{C\+O\+N\+V\+E\+R\+T\+\_\+\+D\+I\+V24}~float(1$<$$<$23)
+\item 
+\#define \hyperlink{_dither_8cpp_a227fcfd645c1b97c48db382e7152e5c6}{F\+R\+O\+M\+\_\+\+I\+N\+T16}(ptr)~($\ast$((short$\ast$)(ptr)) / \hyperlink{_dither_8cpp_a435355833f4e882f7a8b9208d3b312b2}{C\+O\+N\+V\+E\+R\+T\+\_\+\+D\+I\+V16})
+\item 
+\#define \hyperlink{_dither_8cpp_a84e03a6a96bffea7e0909323b2dadc79}{F\+R\+O\+M\+\_\+\+I\+N\+T24}(ptr)~($\ast$((  \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int}$\ast$)(ptr)) / \hyperlink{_dither_8cpp_a44e120ab95bfee187efcf3b18c53bd51}{C\+O\+N\+V\+E\+R\+T\+\_\+\+D\+I\+V24})
+\item 
+\#define \hyperlink{_dither_8cpp_ae06915704c105d9bb81da3c4214fdc56}{F\+R\+O\+M\+\_\+\+F\+L\+O\+AT}(ptr)
+\item 
+\#define \hyperlink{_dither_8cpp_ae1c0ba97b2cdd4baa6df23a6ee332143}{P\+R\+O\+M\+O\+T\+E\+\_\+\+T\+O\+\_\+\+I\+N\+T16}(sample)~((sample) $\ast$ \hyperlink{_dither_8cpp_a435355833f4e882f7a8b9208d3b312b2}{C\+O\+N\+V\+E\+R\+T\+\_\+\+D\+I\+V16})
+\item 
+\#define \hyperlink{_dither_8cpp_aa714872407ee1d58635bf97cec2ccd79}{P\+R\+O\+M\+O\+T\+E\+\_\+\+T\+O\+\_\+\+I\+N\+T24}(sample)~((sample) $\ast$ \hyperlink{_dither_8cpp_a44e120ab95bfee187efcf3b18c53bd51}{C\+O\+N\+V\+E\+R\+T\+\_\+\+D\+I\+V24})
+\item 
+\#define \hyperlink{_dither_8cpp_a5f066290901548b4021059a3bbbd0227}{I\+M\+P\+L\+E\+M\+E\+N\+T\+\_\+\+S\+T\+O\+RE}(ptr,  sample,  ptr\+\_\+type,  min\+\_\+bound,  max\+\_\+bound)
+\item 
+\#define \hyperlink{_dither_8cpp_a75a0f210e1aa7d754c6b048a04a2317d}{S\+T\+O\+R\+E\+\_\+\+I\+N\+T16}(ptr,  sample)~\hyperlink{_dither_8cpp_a5f066290901548b4021059a3bbbd0227}{I\+M\+P\+L\+E\+M\+E\+N\+T\+\_\+\+S\+T\+O\+RE}((ptr), (sample), short, -\/32768, 32767)
+\item 
+\#define \hyperlink{_dither_8cpp_a0bd9af25f11f615561e6518e5b64b415}{S\+T\+O\+R\+E\+\_\+\+I\+N\+T24}(ptr,  sample)~\hyperlink{_dither_8cpp_a5f066290901548b4021059a3bbbd0227}{I\+M\+P\+L\+E\+M\+E\+N\+T\+\_\+\+S\+T\+O\+RE}((ptr), (sample), \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int}, -\/8388608, 8388607)
+\item 
+\#define \hyperlink{_dither_8cpp_af1a7ee3f968a9485f8b372796a939175}{D\+I\+T\+H\+E\+R\+\_\+\+T\+O\+\_\+\+I\+N\+T16}(dither,  dst,  sample)~\hyperlink{_dither_8cpp_a75a0f210e1aa7d754c6b048a04a2317d}{S\+T\+O\+R\+E\+\_\+\+I\+N\+T16}((dst), dither(\hyperlink{_dither_8cpp_ae1c0ba97b2cdd4baa6df23a6ee332143}{P\+R\+O\+M\+O\+T\+E\+\_\+\+T\+O\+\_\+\+I\+N\+T16}(sample)))
+\item 
+\#define \hyperlink{_dither_8cpp_a56b2a38710dd30a561cb1084ee453c49}{D\+I\+T\+H\+E\+R\+\_\+\+T\+O\+\_\+\+I\+N\+T24}(dither,  dst,  sample)~\hyperlink{_dither_8cpp_a0bd9af25f11f615561e6518e5b64b415}{S\+T\+O\+R\+E\+\_\+\+I\+N\+T24}((dst), dither(\hyperlink{_dither_8cpp_aa714872407ee1d58635bf97cec2ccd79}{P\+R\+O\+M\+O\+T\+E\+\_\+\+T\+O\+\_\+\+I\+N\+T24}(sample)))
+\item 
+\#define \hyperlink{_dither_8cpp_aea25831fbc1ea8c9895ab50afe8491ed}{D\+I\+T\+H\+E\+R\+\_\+\+S\+T\+EP}(dither,  store,  load,  dst,  src)~store(dither, (dst), load(src))
+\item 
+\#define \hyperlink{_dither_8cpp_a242b9a395ee72a563f72b326bedce22e}{D\+I\+T\+H\+E\+R\+\_\+\+L\+O\+OP}(dither,  store,  load,  dst,  dst\+Format,  dst\+Stride,  src,  src\+Format,  src\+Stride,  \hyperlink{lib_2expat_8h_af86d325fecfc8f47b61fbf5a5146f582}{len})
+\item 
+\#define \hyperlink{_dither_8cpp_a71fe1effc21678affbbb5eca7ec4d595}{D\+I\+T\+H\+E\+R\+\_\+\+I\+N\+T24\+\_\+\+T\+O\+\_\+\+I\+N\+T16}(dither,  dst,  dst\+Stride,  src,  src\+Stride,  \hyperlink{lib_2expat_8h_af86d325fecfc8f47b61fbf5a5146f582}{len})~\hyperlink{_dither_8cpp_a242b9a395ee72a563f72b326bedce22e}{D\+I\+T\+H\+E\+R\+\_\+\+L\+O\+OP}(dither, \hyperlink{_dither_8cpp_af1a7ee3f968a9485f8b372796a939175}{D\+I\+T\+H\+E\+R\+\_\+\+T\+O\+\_\+\+I\+N\+T16}, \hyperlink{_dither_8cpp_a84e03a6a96bffea7e0909323b2dadc79}{F\+R\+O\+M\+\_\+\+I\+N\+T24}, dst, \hyperlink{include_2audacity_2_types_8h_a9938d2e2f6adef23e745cd80ef379792aba99d110ae36be71bbf3cb9ad3af4550}{int16\+Sample}, dst\+Stride, src, \hyperlink{include_2audacity_2_types_8h_a9938d2e2f6adef23e745cd80ef379792af7d5dcd7629454f6c6f3d7be44068a5f}{int24\+Sample}, src\+Stride, \hyperlink{lib_2expat_8h_af86d325fecfc8f47b61fbf5a5146f582}{len})
+\item 
+\#define \hyperlink{_dither_8cpp_a33eb8ee5d66dc0d461dd7632ecc431f4}{D\+I\+T\+H\+E\+R\+\_\+\+F\+L\+O\+A\+T\+\_\+\+T\+O\+\_\+\+I\+N\+T16}(dither,  dst,  dst\+Stride,  src,  src\+Stride,  \hyperlink{lib_2expat_8h_af86d325fecfc8f47b61fbf5a5146f582}{len})~\hyperlink{_dither_8cpp_a242b9a395ee72a563f72b326bedce22e}{D\+I\+T\+H\+E\+R\+\_\+\+L\+O\+OP}(dither, \hyperlink{_dither_8cpp_af1a7ee3f968a9485f8b372796a939175}{D\+I\+T\+H\+E\+R\+\_\+\+T\+O\+\_\+\+I\+N\+T16}, \hyperlink{_dither_8cpp_ae06915704c105d9bb81da3c4214fdc56}{F\+R\+O\+M\+\_\+\+F\+L\+O\+AT}, dst, \hyperlink{include_2audacity_2_types_8h_a9938d2e2f6adef23e745cd80ef379792aba99d110ae36be71bbf3cb9ad3af4550}{int16\+Sample}, dst\+Stride, src, \hyperlink{include_2audacity_2_types_8h_a9938d2e2f6adef23e745cd80ef379792aba7300a3d7158e88f04d5f81e613dde2}{float\+Sample}, src\+Stride, \hyperlink{lib_2expat_8h_af86d325fecfc8f47b61fbf5a5146f582}{len})
+\item 
+\#define \hyperlink{_dither_8cpp_aad726da63094514f8446dcb228a2f04b}{D\+I\+T\+H\+E\+R\+\_\+\+F\+L\+O\+A\+T\+\_\+\+T\+O\+\_\+\+I\+N\+T24}(dither,  dst,  dst\+Stride,  src,  src\+Stride,  \hyperlink{lib_2expat_8h_af86d325fecfc8f47b61fbf5a5146f582}{len})~\hyperlink{_dither_8cpp_a242b9a395ee72a563f72b326bedce22e}{D\+I\+T\+H\+E\+R\+\_\+\+L\+O\+OP}(dither, \hyperlink{_dither_8cpp_a56b2a38710dd30a561cb1084ee453c49}{D\+I\+T\+H\+E\+R\+\_\+\+T\+O\+\_\+\+I\+N\+T24}, \hyperlink{_dither_8cpp_ae06915704c105d9bb81da3c4214fdc56}{F\+R\+O\+M\+\_\+\+F\+L\+O\+AT}, dst, \hyperlink{include_2audacity_2_types_8h_a9938d2e2f6adef23e745cd80ef379792af7d5dcd7629454f6c6f3d7be44068a5f}{int24\+Sample}, dst\+Stride, src, \hyperlink{include_2audacity_2_types_8h_a9938d2e2f6adef23e745cd80ef379792aba7300a3d7158e88f04d5f81e613dde2}{float\+Sample}, src\+Stride, \hyperlink{lib_2expat_8h_af86d325fecfc8f47b61fbf5a5146f582}{len})
+\item 
+\#define \hyperlink{_dither_8cpp_a0351d22bb15c26fd07fed07bdb32a626}{D\+I\+T\+H\+ER}(dither,  dst,  dst\+Format,  dst\+Stride,  src,  src\+Format,  src\+Stride,  \hyperlink{lib_2expat_8h_af86d325fecfc8f47b61fbf5a5146f582}{len})
+\end{DoxyCompactItemize}
+
+
+\subsection{Macro Definition Documentation}
+\index{Dither.\+cpp@{Dither.\+cpp}!C\+O\+N\+V\+E\+R\+T\+\_\+\+D\+I\+V16@{C\+O\+N\+V\+E\+R\+T\+\_\+\+D\+I\+V16}}
+\index{C\+O\+N\+V\+E\+R\+T\+\_\+\+D\+I\+V16@{C\+O\+N\+V\+E\+R\+T\+\_\+\+D\+I\+V16}!Dither.\+cpp@{Dither.\+cpp}}
+\subsubsection[{\texorpdfstring{C\+O\+N\+V\+E\+R\+T\+\_\+\+D\+I\+V16}{CONVERT_DIV16}}]{\setlength{\rightskip}{0pt plus 5cm}\#define C\+O\+N\+V\+E\+R\+T\+\_\+\+D\+I\+V16~float(1$<$$<$15)}\hypertarget{_dither_8cpp_a435355833f4e882f7a8b9208d3b312b2}{}\label{_dither_8cpp_a435355833f4e882f7a8b9208d3b312b2}
+
+
+Definition at line 133 of file Dither.\+cpp.
+
+\index{Dither.\+cpp@{Dither.\+cpp}!C\+O\+N\+V\+E\+R\+T\+\_\+\+D\+I\+V24@{C\+O\+N\+V\+E\+R\+T\+\_\+\+D\+I\+V24}}
+\index{C\+O\+N\+V\+E\+R\+T\+\_\+\+D\+I\+V24@{C\+O\+N\+V\+E\+R\+T\+\_\+\+D\+I\+V24}!Dither.\+cpp@{Dither.\+cpp}}
+\subsubsection[{\texorpdfstring{C\+O\+N\+V\+E\+R\+T\+\_\+\+D\+I\+V24}{CONVERT_DIV24}}]{\setlength{\rightskip}{0pt plus 5cm}\#define C\+O\+N\+V\+E\+R\+T\+\_\+\+D\+I\+V24~float(1$<$$<$23)}\hypertarget{_dither_8cpp_a44e120ab95bfee187efcf3b18c53bd51}{}\label{_dither_8cpp_a44e120ab95bfee187efcf3b18c53bd51}
+
+
+Definition at line 134 of file Dither.\+cpp.
+
+\index{Dither.\+cpp@{Dither.\+cpp}!D\+I\+T\+H\+ER@{D\+I\+T\+H\+ER}}
+\index{D\+I\+T\+H\+ER@{D\+I\+T\+H\+ER}!Dither.\+cpp@{Dither.\+cpp}}
+\subsubsection[{\texorpdfstring{D\+I\+T\+H\+ER}{DITHER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define D\+I\+T\+H\+ER(
+\begin{DoxyParamCaption}
+\item[{}]{dither, }
+\item[{}]{dst, }
+\item[{}]{dst\+Format, }
+\item[{}]{dst\+Stride, }
+\item[{}]{src, }
+\item[{}]{src\+Format, }
+\item[{}]{src\+Stride, }
+\item[{}]{{\bf len}}
+\end{DoxyParamCaption}
+)}\hypertarget{_dither_8cpp_a0351d22bb15c26fd07fed07bdb32a626}{}\label{_dither_8cpp_a0351d22bb15c26fd07fed07bdb32a626}
+{\bfseries Value\+:}
+\begin{DoxyCode}
+\textcolor{keywordflow}{do} \{ \textcolor{keywordflow}{if} (srcFormat == \hyperlink{include_2audacity_2_types_8h_a9938d2e2f6adef23e745cd80ef379792af7d5dcd7629454f6c6f3d7be44068a5f}{int24Sample} && dstFormat == \hyperlink{include_2audacity_2_types_8h_a9938d2e2f6adef23e745cd80ef379792aba99d110ae36be71bbf3cb9ad3af4550}{int16Sample}) \(\backslash\)
+        DITHER\_INT24\_TO\_INT16(dither, dst, dstStride, src, srcStride, \hyperlink{lib_2expat_8h_af86d325fecfc8f47b61fbf5a5146f582}{len}); \(\backslash\)
+    else \textcolor{keywordflow}{if} (srcFormat == \hyperlink{include_2audacity_2_types_8h_a9938d2e2f6adef23e745cd80ef379792aba7300a3d7158e88f04d5f81e613dde2}{floatSample} && dstFormat == \hyperlink{include_2audacity_2_types_8h_a9938d2e2f6adef23e745cd80ef379792aba99d110ae36be71bbf3cb9ad3af4550}{int16Sample}) \(\backslash\)
+        DITHER\_FLOAT\_TO\_INT16(dither, dst, dstStride, src, srcStride, \hyperlink{lib_2expat_8h_af86d325fecfc8f47b61fbf5a5146f582}{len}); \(\backslash\)
+    else \textcolor{keywordflow}{if} (srcFormat == \hyperlink{include_2audacity_2_types_8h_a9938d2e2f6adef23e745cd80ef379792aba7300a3d7158e88f04d5f81e613dde2}{floatSample} && dstFormat == \hyperlink{include_2audacity_2_types_8h_a9938d2e2f6adef23e745cd80ef379792af7d5dcd7629454f6c6f3d7be44068a5f}{int24Sample}) \(\backslash\)
+        DITHER\_FLOAT\_TO\_INT24(dither, dst, dstStride, src, srcStride, \hyperlink{lib_2expat_8h_af86d325fecfc8f47b61fbf5a5146f582}{len}); \(\backslash\)
+    else \{ wxASSERT(\textcolor{keyword}{false}); \} \(\backslash\)
+    \} \textcolor{keywordflow}{while} (0)
+\end{DoxyCode}
+
+
+Definition at line 196 of file Dither.\+cpp.
+
+\index{Dither.\+cpp@{Dither.\+cpp}!D\+I\+T\+H\+E\+R\+\_\+\+F\+L\+O\+A\+T\+\_\+\+T\+O\+\_\+\+I\+N\+T16@{D\+I\+T\+H\+E\+R\+\_\+\+F\+L\+O\+A\+T\+\_\+\+T\+O\+\_\+\+I\+N\+T16}}
+\index{D\+I\+T\+H\+E\+R\+\_\+\+F\+L\+O\+A\+T\+\_\+\+T\+O\+\_\+\+I\+N\+T16@{D\+I\+T\+H\+E\+R\+\_\+\+F\+L\+O\+A\+T\+\_\+\+T\+O\+\_\+\+I\+N\+T16}!Dither.\+cpp@{Dither.\+cpp}}
+\subsubsection[{\texorpdfstring{D\+I\+T\+H\+E\+R\+\_\+\+F\+L\+O\+A\+T\+\_\+\+T\+O\+\_\+\+I\+N\+T16}{DITHER_FLOAT_TO_INT16}}]{\setlength{\rightskip}{0pt plus 5cm}\#define D\+I\+T\+H\+E\+R\+\_\+\+F\+L\+O\+A\+T\+\_\+\+T\+O\+\_\+\+I\+N\+T16(
+\begin{DoxyParamCaption}
+\item[{}]{dither, }
+\item[{}]{dst, }
+\item[{}]{dst\+Stride, }
+\item[{}]{src, }
+\item[{}]{src\+Stride, }
+\item[{}]{{\bf len}}
+\end{DoxyParamCaption}
+)~{\bf D\+I\+T\+H\+E\+R\+\_\+\+L\+O\+OP}(dither, {\bf D\+I\+T\+H\+E\+R\+\_\+\+T\+O\+\_\+\+I\+N\+T16}, {\bf F\+R\+O\+M\+\_\+\+F\+L\+O\+AT}, dst, {\bf int16\+Sample}, dst\+Stride, src, {\bf float\+Sample}, src\+Stride, {\bf len})}\hypertarget{_dither_8cpp_a33eb8ee5d66dc0d461dd7632ecc431f4}{}\label{_dither_8cpp_a33eb8ee5d66dc0d461dd7632ecc431f4}
+
+
+Definition at line 189 of file Dither.\+cpp.
+
+\index{Dither.\+cpp@{Dither.\+cpp}!D\+I\+T\+H\+E\+R\+\_\+\+F\+L\+O\+A\+T\+\_\+\+T\+O\+\_\+\+I\+N\+T24@{D\+I\+T\+H\+E\+R\+\_\+\+F\+L\+O\+A\+T\+\_\+\+T\+O\+\_\+\+I\+N\+T24}}
+\index{D\+I\+T\+H\+E\+R\+\_\+\+F\+L\+O\+A\+T\+\_\+\+T\+O\+\_\+\+I\+N\+T24@{D\+I\+T\+H\+E\+R\+\_\+\+F\+L\+O\+A\+T\+\_\+\+T\+O\+\_\+\+I\+N\+T24}!Dither.\+cpp@{Dither.\+cpp}}
+\subsubsection[{\texorpdfstring{D\+I\+T\+H\+E\+R\+\_\+\+F\+L\+O\+A\+T\+\_\+\+T\+O\+\_\+\+I\+N\+T24}{DITHER_FLOAT_TO_INT24}}]{\setlength{\rightskip}{0pt plus 5cm}\#define D\+I\+T\+H\+E\+R\+\_\+\+F\+L\+O\+A\+T\+\_\+\+T\+O\+\_\+\+I\+N\+T24(
+\begin{DoxyParamCaption}
+\item[{}]{dither, }
+\item[{}]{dst, }
+\item[{}]{dst\+Stride, }
+\item[{}]{src, }
+\item[{}]{src\+Stride, }
+\item[{}]{{\bf len}}
+\end{DoxyParamCaption}
+)~{\bf D\+I\+T\+H\+E\+R\+\_\+\+L\+O\+OP}(dither, {\bf D\+I\+T\+H\+E\+R\+\_\+\+T\+O\+\_\+\+I\+N\+T24}, {\bf F\+R\+O\+M\+\_\+\+F\+L\+O\+AT}, dst, {\bf int24\+Sample}, dst\+Stride, src, {\bf float\+Sample}, src\+Stride, {\bf len})}\hypertarget{_dither_8cpp_aad726da63094514f8446dcb228a2f04b}{}\label{_dither_8cpp_aad726da63094514f8446dcb228a2f04b}
+
+
+Definition at line 191 of file Dither.\+cpp.
+
+\index{Dither.\+cpp@{Dither.\+cpp}!D\+I\+T\+H\+E\+R\+\_\+\+I\+N\+T24\+\_\+\+T\+O\+\_\+\+I\+N\+T16@{D\+I\+T\+H\+E\+R\+\_\+\+I\+N\+T24\+\_\+\+T\+O\+\_\+\+I\+N\+T16}}
+\index{D\+I\+T\+H\+E\+R\+\_\+\+I\+N\+T24\+\_\+\+T\+O\+\_\+\+I\+N\+T16@{D\+I\+T\+H\+E\+R\+\_\+\+I\+N\+T24\+\_\+\+T\+O\+\_\+\+I\+N\+T16}!Dither.\+cpp@{Dither.\+cpp}}
+\subsubsection[{\texorpdfstring{D\+I\+T\+H\+E\+R\+\_\+\+I\+N\+T24\+\_\+\+T\+O\+\_\+\+I\+N\+T16}{DITHER_INT24_TO_INT16}}]{\setlength{\rightskip}{0pt plus 5cm}\#define D\+I\+T\+H\+E\+R\+\_\+\+I\+N\+T24\+\_\+\+T\+O\+\_\+\+I\+N\+T16(
+\begin{DoxyParamCaption}
+\item[{}]{dither, }
+\item[{}]{dst, }
+\item[{}]{dst\+Stride, }
+\item[{}]{src, }
+\item[{}]{src\+Stride, }
+\item[{}]{{\bf len}}
+\end{DoxyParamCaption}
+)~{\bf D\+I\+T\+H\+E\+R\+\_\+\+L\+O\+OP}(dither, {\bf D\+I\+T\+H\+E\+R\+\_\+\+T\+O\+\_\+\+I\+N\+T16}, {\bf F\+R\+O\+M\+\_\+\+I\+N\+T24}, dst, {\bf int16\+Sample}, dst\+Stride, src, {\bf int24\+Sample}, src\+Stride, {\bf len})}\hypertarget{_dither_8cpp_a71fe1effc21678affbbb5eca7ec4d595}{}\label{_dither_8cpp_a71fe1effc21678affbbb5eca7ec4d595}
+
+
+Definition at line 187 of file Dither.\+cpp.
+
+\index{Dither.\+cpp@{Dither.\+cpp}!D\+I\+T\+H\+E\+R\+\_\+\+L\+O\+OP@{D\+I\+T\+H\+E\+R\+\_\+\+L\+O\+OP}}
+\index{D\+I\+T\+H\+E\+R\+\_\+\+L\+O\+OP@{D\+I\+T\+H\+E\+R\+\_\+\+L\+O\+OP}!Dither.\+cpp@{Dither.\+cpp}}
+\subsubsection[{\texorpdfstring{D\+I\+T\+H\+E\+R\+\_\+\+L\+O\+OP}{DITHER_LOOP}}]{\setlength{\rightskip}{0pt plus 5cm}\#define D\+I\+T\+H\+E\+R\+\_\+\+L\+O\+OP(
+\begin{DoxyParamCaption}
+\item[{}]{dither, }
+\item[{}]{store, }
+\item[{}]{load, }
+\item[{}]{dst, }
+\item[{}]{dst\+Format, }
+\item[{}]{dst\+Stride, }
+\item[{}]{src, }
+\item[{}]{src\+Format, }
+\item[{}]{src\+Stride, }
+\item[{}]{{\bf len}}
+\end{DoxyParamCaption}
+)}\hypertarget{_dither_8cpp_a242b9a395ee72a563f72b326bedce22e}{}\label{_dither_8cpp_a242b9a395ee72a563f72b326bedce22e}
+{\bfseries Value\+:}
+\begin{DoxyCode}
+\textcolor{keywordflow}{do} \{ \(\backslash\)
+       char *\hyperlink{poly-fir_8h_a2530554172d8629149ec56816eeaa947}{d}, *\hyperlink{lib_2expat_8h_a755339d27872b13735c2cab829e47157}{s}; \(\backslash\)
+       unsigned \textcolor{keywordtype}{int} \hyperlink{checksum_8c_ab80e330a3bc9e38c1297fe17381e92b4}{i}; \(\backslash\)
+       int \hyperlink{namespacewaflib_1_1_utils_a15fc4f04cecad81fba9772c4e43d40f7}{x}; \(\backslash\)
+       for (d = (\textcolor{keywordtype}{char}*)dst, s = (\textcolor{keywordtype}{char}*)src, i = 0; \(\backslash\)
+            i < \hyperlink{lib_2expat_8h_af86d325fecfc8f47b61fbf5a5146f582}{len}; \(\backslash\)
+            i++, d += \hyperlink{include_2audacity_2_types_8h_a7ecd88c1f16f362ccc891b8d1f6f69cb}{SAMPLE\_SIZE}(dstFormat) * dstStride, \(\backslash\)
+                 s += \hyperlink{include_2audacity_2_types_8h_a7ecd88c1f16f362ccc891b8d1f6f69cb}{SAMPLE\_SIZE}(srcFormat) * srcStride) \(\backslash\)
+          \hyperlink{_dither_8cpp_aea25831fbc1ea8c9895ab50afe8491ed}{DITHER\_STEP}(dither, store, load, d, s); \(\backslash\)
+   \} \textcolor{keywordflow}{while} (0)
+\end{DoxyCode}
+
+
+Definition at line 174 of file Dither.\+cpp.
+
+\index{Dither.\+cpp@{Dither.\+cpp}!D\+I\+T\+H\+E\+R\+\_\+\+N\+O\+I\+SE@{D\+I\+T\+H\+E\+R\+\_\+\+N\+O\+I\+SE}}
+\index{D\+I\+T\+H\+E\+R\+\_\+\+N\+O\+I\+SE@{D\+I\+T\+H\+E\+R\+\_\+\+N\+O\+I\+SE}!Dither.\+cpp@{Dither.\+cpp}}
+\subsubsection[{\texorpdfstring{D\+I\+T\+H\+E\+R\+\_\+\+N\+O\+I\+SE}{DITHER_NOISE}}]{\setlength{\rightskip}{0pt plus 5cm}\#define D\+I\+T\+H\+E\+R\+\_\+\+N\+O\+I\+SE~(rand() / (float)R\+A\+N\+D\+\_\+\+M\+AX -\/ 0.\+5f)}\hypertarget{_dither_8cpp_ade4a8104b2bcd7fb7141eb6a252fe39a}{}\label{_dither_8cpp_ade4a8104b2bcd7fb7141eb6a252fe39a}
+
+
+Definition at line 64 of file Dither.\+cpp.
+
+\index{Dither.\+cpp@{Dither.\+cpp}!D\+I\+T\+H\+E\+R\+\_\+\+S\+T\+EP@{D\+I\+T\+H\+E\+R\+\_\+\+S\+T\+EP}}
+\index{D\+I\+T\+H\+E\+R\+\_\+\+S\+T\+EP@{D\+I\+T\+H\+E\+R\+\_\+\+S\+T\+EP}!Dither.\+cpp@{Dither.\+cpp}}
+\subsubsection[{\texorpdfstring{D\+I\+T\+H\+E\+R\+\_\+\+S\+T\+EP}{DITHER_STEP}}]{\setlength{\rightskip}{0pt plus 5cm}\#define D\+I\+T\+H\+E\+R\+\_\+\+S\+T\+EP(
+\begin{DoxyParamCaption}
+\item[{}]{dither, }
+\item[{}]{store, }
+\item[{}]{load, }
+\item[{}]{dst, }
+\item[{}]{src}
+\end{DoxyParamCaption}
+)~store(dither, (dst), load(src))}\hypertarget{_dither_8cpp_aea25831fbc1ea8c9895ab50afe8491ed}{}\label{_dither_8cpp_aea25831fbc1ea8c9895ab50afe8491ed}
+
+
+Definition at line 169 of file Dither.\+cpp.
+
+\index{Dither.\+cpp@{Dither.\+cpp}!D\+I\+T\+H\+E\+R\+\_\+\+T\+O\+\_\+\+I\+N\+T16@{D\+I\+T\+H\+E\+R\+\_\+\+T\+O\+\_\+\+I\+N\+T16}}
+\index{D\+I\+T\+H\+E\+R\+\_\+\+T\+O\+\_\+\+I\+N\+T16@{D\+I\+T\+H\+E\+R\+\_\+\+T\+O\+\_\+\+I\+N\+T16}!Dither.\+cpp@{Dither.\+cpp}}
+\subsubsection[{\texorpdfstring{D\+I\+T\+H\+E\+R\+\_\+\+T\+O\+\_\+\+I\+N\+T16}{DITHER_TO_INT16}}]{\setlength{\rightskip}{0pt plus 5cm}\#define D\+I\+T\+H\+E\+R\+\_\+\+T\+O\+\_\+\+I\+N\+T16(
+\begin{DoxyParamCaption}
+\item[{}]{dither, }
+\item[{}]{dst, }
+\item[{}]{sample}
+\end{DoxyParamCaption}
+)~{\bf S\+T\+O\+R\+E\+\_\+\+I\+N\+T16}((dst), dither({\bf P\+R\+O\+M\+O\+T\+E\+\_\+\+T\+O\+\_\+\+I\+N\+T16}(sample)))}\hypertarget{_dither_8cpp_af1a7ee3f968a9485f8b372796a939175}{}\label{_dither_8cpp_af1a7ee3f968a9485f8b372796a939175}
+
+
+Definition at line 165 of file Dither.\+cpp.
+
+\index{Dither.\+cpp@{Dither.\+cpp}!D\+I\+T\+H\+E\+R\+\_\+\+T\+O\+\_\+\+I\+N\+T24@{D\+I\+T\+H\+E\+R\+\_\+\+T\+O\+\_\+\+I\+N\+T24}}
+\index{D\+I\+T\+H\+E\+R\+\_\+\+T\+O\+\_\+\+I\+N\+T24@{D\+I\+T\+H\+E\+R\+\_\+\+T\+O\+\_\+\+I\+N\+T24}!Dither.\+cpp@{Dither.\+cpp}}
+\subsubsection[{\texorpdfstring{D\+I\+T\+H\+E\+R\+\_\+\+T\+O\+\_\+\+I\+N\+T24}{DITHER_TO_INT24}}]{\setlength{\rightskip}{0pt plus 5cm}\#define D\+I\+T\+H\+E\+R\+\_\+\+T\+O\+\_\+\+I\+N\+T24(
+\begin{DoxyParamCaption}
+\item[{}]{dither, }
+\item[{}]{dst, }
+\item[{}]{sample}
+\end{DoxyParamCaption}
+)~{\bf S\+T\+O\+R\+E\+\_\+\+I\+N\+T24}((dst), dither({\bf P\+R\+O\+M\+O\+T\+E\+\_\+\+T\+O\+\_\+\+I\+N\+T24}(sample)))}\hypertarget{_dither_8cpp_a56b2a38710dd30a561cb1084ee453c49}{}\label{_dither_8cpp_a56b2a38710dd30a561cb1084ee453c49}
+
+
+Definition at line 166 of file Dither.\+cpp.
+
+\index{Dither.\+cpp@{Dither.\+cpp}!F\+R\+O\+M\+\_\+\+F\+L\+O\+AT@{F\+R\+O\+M\+\_\+\+F\+L\+O\+AT}}
+\index{F\+R\+O\+M\+\_\+\+F\+L\+O\+AT@{F\+R\+O\+M\+\_\+\+F\+L\+O\+AT}!Dither.\+cpp@{Dither.\+cpp}}
+\subsubsection[{\texorpdfstring{F\+R\+O\+M\+\_\+\+F\+L\+O\+AT}{FROM_FLOAT}}]{\setlength{\rightskip}{0pt plus 5cm}\#define F\+R\+O\+M\+\_\+\+F\+L\+O\+AT(
+\begin{DoxyParamCaption}
+\item[{}]{ptr}
+\end{DoxyParamCaption}
+)}\hypertarget{_dither_8cpp_ae06915704c105d9bb81da3c4214fdc56}{}\label{_dither_8cpp_ae06915704c105d9bb81da3c4214fdc56}
+{\bfseries Value\+:}
+\begin{DoxyCode}
+(*((\textcolor{keywordtype}{float}*)(ptr)) >  1.0 ?  1.0 : \(\backslash\)
+                         *((\textcolor{keywordtype}{float}*)(ptr)) < -1.0 ? -1.0 : \(\backslash\)
+                         *((\textcolor{keywordtype}{float}*)(ptr)))
+\end{DoxyCode}
+
+
+Definition at line 143 of file Dither.\+cpp.
+
+\index{Dither.\+cpp@{Dither.\+cpp}!F\+R\+O\+M\+\_\+\+I\+N\+T16@{F\+R\+O\+M\+\_\+\+I\+N\+T16}}
+\index{F\+R\+O\+M\+\_\+\+I\+N\+T16@{F\+R\+O\+M\+\_\+\+I\+N\+T16}!Dither.\+cpp@{Dither.\+cpp}}
+\subsubsection[{\texorpdfstring{F\+R\+O\+M\+\_\+\+I\+N\+T16}{FROM_INT16}}]{\setlength{\rightskip}{0pt plus 5cm}\#define F\+R\+O\+M\+\_\+\+I\+N\+T16(
+\begin{DoxyParamCaption}
+\item[{}]{ptr}
+\end{DoxyParamCaption}
+)~($\ast$((short$\ast$)(ptr)) / {\bf C\+O\+N\+V\+E\+R\+T\+\_\+\+D\+I\+V16})}\hypertarget{_dither_8cpp_a227fcfd645c1b97c48db382e7152e5c6}{}\label{_dither_8cpp_a227fcfd645c1b97c48db382e7152e5c6}
+
+
+Definition at line 137 of file Dither.\+cpp.
+
+\index{Dither.\+cpp@{Dither.\+cpp}!F\+R\+O\+M\+\_\+\+I\+N\+T24@{F\+R\+O\+M\+\_\+\+I\+N\+T24}}
+\index{F\+R\+O\+M\+\_\+\+I\+N\+T24@{F\+R\+O\+M\+\_\+\+I\+N\+T24}!Dither.\+cpp@{Dither.\+cpp}}
+\subsubsection[{\texorpdfstring{F\+R\+O\+M\+\_\+\+I\+N\+T24}{FROM_INT24}}]{\setlength{\rightskip}{0pt plus 5cm}\#define F\+R\+O\+M\+\_\+\+I\+N\+T24(
+\begin{DoxyParamCaption}
+\item[{}]{ptr}
+\end{DoxyParamCaption}
+)~($\ast$((  {\bf int}$\ast$)(ptr)) / {\bf C\+O\+N\+V\+E\+R\+T\+\_\+\+D\+I\+V24})}\hypertarget{_dither_8cpp_a84e03a6a96bffea7e0909323b2dadc79}{}\label{_dither_8cpp_a84e03a6a96bffea7e0909323b2dadc79}
+
+
+Definition at line 138 of file Dither.\+cpp.
+
+\index{Dither.\+cpp@{Dither.\+cpp}!I\+M\+P\+L\+E\+M\+E\+N\+T\+\_\+\+S\+T\+O\+RE@{I\+M\+P\+L\+E\+M\+E\+N\+T\+\_\+\+S\+T\+O\+RE}}
+\index{I\+M\+P\+L\+E\+M\+E\+N\+T\+\_\+\+S\+T\+O\+RE@{I\+M\+P\+L\+E\+M\+E\+N\+T\+\_\+\+S\+T\+O\+RE}!Dither.\+cpp@{Dither.\+cpp}}
+\subsubsection[{\texorpdfstring{I\+M\+P\+L\+E\+M\+E\+N\+T\+\_\+\+S\+T\+O\+RE}{IMPLEMENT_STORE}}]{\setlength{\rightskip}{0pt plus 5cm}\#define I\+M\+P\+L\+E\+M\+E\+N\+T\+\_\+\+S\+T\+O\+RE(
+\begin{DoxyParamCaption}
+\item[{}]{ptr, }
+\item[{}]{sample, }
+\item[{}]{ptr\+\_\+type, }
+\item[{}]{min\+\_\+bound, }
+\item[{}]{max\+\_\+bound}
+\end{DoxyParamCaption}
+)}\hypertarget{_dither_8cpp_a5f066290901548b4021059a3bbbd0227}{}\label{_dither_8cpp_a5f066290901548b4021059a3bbbd0227}
+{\bfseries Value\+:}
+\begin{DoxyCode}
+\textcolor{keywordflow}{do} \{ \(\backslash\)
+    x = \hyperlink{real_8h_a483e8f95ebd254c9279e0ada03a9a6e8}{lrintf}(sample); \(\backslash\)
+    if (\hyperlink{namespacewaflib_1_1_utils_a15fc4f04cecad81fba9772c4e43d40f7}{x}>(max\_bound)) *((ptr\_type*)(ptr))=(max\_bound); \(\backslash\)
+    else \textcolor{keywordflow}{if} (\hyperlink{namespacewaflib_1_1_utils_a15fc4f04cecad81fba9772c4e43d40f7}{x}<(min\_bound)) *((ptr\_type*)(ptr))=(min\_bound); \(\backslash\)
+    else *((ptr\_type*)(ptr))=(ptr\_type)\hyperlink{namespacewaflib_1_1_utils_a15fc4f04cecad81fba9772c4e43d40f7}{x}; \} while (0)
+\end{DoxyCode}
+
+
+Definition at line 154 of file Dither.\+cpp.
+
+\index{Dither.\+cpp@{Dither.\+cpp}!P\+R\+O\+M\+O\+T\+E\+\_\+\+T\+O\+\_\+\+I\+N\+T16@{P\+R\+O\+M\+O\+T\+E\+\_\+\+T\+O\+\_\+\+I\+N\+T16}}
+\index{P\+R\+O\+M\+O\+T\+E\+\_\+\+T\+O\+\_\+\+I\+N\+T16@{P\+R\+O\+M\+O\+T\+E\+\_\+\+T\+O\+\_\+\+I\+N\+T16}!Dither.\+cpp@{Dither.\+cpp}}
+\subsubsection[{\texorpdfstring{P\+R\+O\+M\+O\+T\+E\+\_\+\+T\+O\+\_\+\+I\+N\+T16}{PROMOTE_TO_INT16}}]{\setlength{\rightskip}{0pt plus 5cm}\#define P\+R\+O\+M\+O\+T\+E\+\_\+\+T\+O\+\_\+\+I\+N\+T16(
+\begin{DoxyParamCaption}
+\item[{}]{sample}
+\end{DoxyParamCaption}
+)~((sample) $\ast$ {\bf C\+O\+N\+V\+E\+R\+T\+\_\+\+D\+I\+V16})}\hypertarget{_dither_8cpp_ae1c0ba97b2cdd4baa6df23a6ee332143}{}\label{_dither_8cpp_ae1c0ba97b2cdd4baa6df23a6ee332143}
+
+
+Definition at line 148 of file Dither.\+cpp.
+
+\index{Dither.\+cpp@{Dither.\+cpp}!P\+R\+O\+M\+O\+T\+E\+\_\+\+T\+O\+\_\+\+I\+N\+T24@{P\+R\+O\+M\+O\+T\+E\+\_\+\+T\+O\+\_\+\+I\+N\+T24}}
+\index{P\+R\+O\+M\+O\+T\+E\+\_\+\+T\+O\+\_\+\+I\+N\+T24@{P\+R\+O\+M\+O\+T\+E\+\_\+\+T\+O\+\_\+\+I\+N\+T24}!Dither.\+cpp@{Dither.\+cpp}}
+\subsubsection[{\texorpdfstring{P\+R\+O\+M\+O\+T\+E\+\_\+\+T\+O\+\_\+\+I\+N\+T24}{PROMOTE_TO_INT24}}]{\setlength{\rightskip}{0pt plus 5cm}\#define P\+R\+O\+M\+O\+T\+E\+\_\+\+T\+O\+\_\+\+I\+N\+T24(
+\begin{DoxyParamCaption}
+\item[{}]{sample}
+\end{DoxyParamCaption}
+)~((sample) $\ast$ {\bf C\+O\+N\+V\+E\+R\+T\+\_\+\+D\+I\+V24})}\hypertarget{_dither_8cpp_aa714872407ee1d58635bf97cec2ccd79}{}\label{_dither_8cpp_aa714872407ee1d58635bf97cec2ccd79}
+
+
+Definition at line 149 of file Dither.\+cpp.
+
+\index{Dither.\+cpp@{Dither.\+cpp}!S\+T\+O\+R\+E\+\_\+\+I\+N\+T16@{S\+T\+O\+R\+E\+\_\+\+I\+N\+T16}}
+\index{S\+T\+O\+R\+E\+\_\+\+I\+N\+T16@{S\+T\+O\+R\+E\+\_\+\+I\+N\+T16}!Dither.\+cpp@{Dither.\+cpp}}
+\subsubsection[{\texorpdfstring{S\+T\+O\+R\+E\+\_\+\+I\+N\+T16}{STORE_INT16}}]{\setlength{\rightskip}{0pt plus 5cm}\#define S\+T\+O\+R\+E\+\_\+\+I\+N\+T16(
+\begin{DoxyParamCaption}
+\item[{}]{ptr, }
+\item[{}]{sample}
+\end{DoxyParamCaption}
+)~{\bf I\+M\+P\+L\+E\+M\+E\+N\+T\+\_\+\+S\+T\+O\+RE}((ptr), (sample), short, -\/32768, 32767)}\hypertarget{_dither_8cpp_a75a0f210e1aa7d754c6b048a04a2317d}{}\label{_dither_8cpp_a75a0f210e1aa7d754c6b048a04a2317d}
+
+
+Definition at line 161 of file Dither.\+cpp.
+
+\index{Dither.\+cpp@{Dither.\+cpp}!S\+T\+O\+R\+E\+\_\+\+I\+N\+T24@{S\+T\+O\+R\+E\+\_\+\+I\+N\+T24}}
+\index{S\+T\+O\+R\+E\+\_\+\+I\+N\+T24@{S\+T\+O\+R\+E\+\_\+\+I\+N\+T24}!Dither.\+cpp@{Dither.\+cpp}}
+\subsubsection[{\texorpdfstring{S\+T\+O\+R\+E\+\_\+\+I\+N\+T24}{STORE_INT24}}]{\setlength{\rightskip}{0pt plus 5cm}\#define S\+T\+O\+R\+E\+\_\+\+I\+N\+T24(
+\begin{DoxyParamCaption}
+\item[{}]{ptr, }
+\item[{}]{sample}
+\end{DoxyParamCaption}
+)~{\bf I\+M\+P\+L\+E\+M\+E\+N\+T\+\_\+\+S\+T\+O\+RE}((ptr), (sample), {\bf int}, -\/8388608, 8388607)}\hypertarget{_dither_8cpp_a0bd9af25f11f615561e6518e5b64b415}{}\label{_dither_8cpp_a0bd9af25f11f615561e6518e5b64b415}
+
+
+Definition at line 162 of file Dither.\+cpp.
+

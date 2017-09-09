@@ -1,0 +1,382 @@
+\hypertarget{pa__asio_8cpp}{}\section{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/portaudio-\/v19/src/hostapi/asio/pa\+\_\+asio.cpp File Reference}
+\label{pa__asio_8cpp}\index{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/portaudio-\/v19/src/hostapi/asio/pa\+\_\+asio.\+cpp@{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/portaudio-\/v19/src/hostapi/asio/pa\+\_\+asio.\+cpp}}
+{\ttfamily \#include $<$stdio.\+h$>$}\\*
+{\ttfamily \#include $<$assert.\+h$>$}\\*
+{\ttfamily \#include $<$string.\+h$>$}\\*
+{\ttfamily \#include $<$new$>$}\\*
+{\ttfamily \#include $<$windows.\+h$>$}\\*
+{\ttfamily \#include $<$mmsystem.\+h$>$}\\*
+{\ttfamily \#include \char`\"{}portaudio.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}pa\+\_\+asio.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}pa\+\_\+util.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}pa\+\_\+allocation.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}pa\+\_\+hostapi.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}pa\+\_\+stream.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}pa\+\_\+cpuload.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}pa\+\_\+process.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}pa\+\_\+debugprint.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}pa\+\_\+ringbuffer.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}pa\+\_\+win\+\_\+coinitialize.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}asiosys.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}asio.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}asiodrivers.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}iasiothiscallresolver.\+h\char`\"{}}\\*
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{struct_pa_asio_driver_info}{Pa\+Asio\+Driver\+Info}
+\item 
+struct \hyperlink{struct_pa_asio_host_api_representation}{Pa\+Asio\+Host\+Api\+Representation}
+\item 
+struct \hyperlink{struct_pa_asio_device_info}{Pa\+Asio\+Device\+Info}
+\item 
+struct \hyperlink{struct_pa_asio_stream_blocking_state}{Pa\+Asio\+Stream\+Blocking\+State}
+\item 
+struct \hyperlink{struct_pa_asio_stream}{Pa\+Asio\+Stream}
+\end{DoxyCompactItemize}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{pa__asio_8cpp_a6402e8b8594280624585b8fd643bfb65}{W\+I\+N32}
+\item 
+\#define \hyperlink{pa__asio_8cpp_ac4dc35e43085bd67137978b643ef52ca}{C\+A\+R\+B\+O\+N\+\_\+\+C\+O\+M\+P\+A\+T\+I\+B\+LE}~(0)
+\item 
+\#define \hyperlink{pa__asio_8cpp_a226794e311389512c90be7f00a5d630e}{P\+A\+\_\+\+A\+S\+I\+O\+\_\+\+S\+E\+T\+\_\+\+L\+A\+S\+T\+\_\+\+H\+O\+S\+T\+\_\+\+E\+R\+R\+OR}(\hyperlink{xmlparse_8c_adf47938902be0f6a9c144226d02fd634}{error\+Code},  error\+Text)~\hyperlink{pa__util_8h_a9c3ad627c13c1d695fef054c216667f7}{Pa\+Util\+\_\+\+Set\+Last\+Host\+Error\+Info}( \hyperlink{portaudio_8h_a8eaebe3d39c5ea45598da8f86dc2e5aea540d6dd219e6a6856347b66c4637adbe}{pa\+A\+S\+IO}, \hyperlink{xmlparse_8c_adf47938902be0f6a9c144226d02fd634}{error\+Code}, error\+Text )
+\item 
+\#define \hyperlink{pa__asio_8cpp_a58e6dde4da6f4ae3bef3872d83b10f69}{P\+A\+\_\+\+A\+S\+I\+O\+\_\+\+S\+E\+T\+\_\+\+L\+A\+S\+T\+\_\+\+S\+Y\+S\+T\+E\+M\+\_\+\+E\+R\+R\+OR}(\hyperlink{xmlparse_8c_adf47938902be0f6a9c144226d02fd634}{error\+Code})~Pa\+Asio\+\_\+\+Set\+Last\+System\+Error( \hyperlink{xmlparse_8c_adf47938902be0f6a9c144226d02fd634}{error\+Code} )
+\item 
+\#define \hyperlink{pa__asio_8cpp_ad7919a3bee4b170200f02f669a4aa459}{P\+A\+\_\+\+A\+S\+I\+O\+\_\+\+S\+E\+T\+\_\+\+L\+A\+S\+T\+\_\+\+A\+S\+I\+O\+\_\+\+E\+R\+R\+OR}(asio\+Error)~\hyperlink{pa__util_8h_a9c3ad627c13c1d695fef054c216667f7}{Pa\+Util\+\_\+\+Set\+Last\+Host\+Error\+Info}( \hyperlink{portaudio_8h_a8eaebe3d39c5ea45598da8f86dc2e5aea540d6dd219e6a6856347b66c4637adbe}{pa\+A\+S\+IO}, asio\+Error, Pa\+Asio\+\_\+\+Get\+Asio\+Error\+Text( asio\+Error ) )
+\item 
+\#define \hyperlink{pa__asio_8cpp_aedcbfad29e7dc3f8cd62b6135f6c29b5}{P\+A\+\_\+\+S\+W\+A\+P32\+\_\+}(x)~((x$>$$>$24) $\vert$ ((x$>$$>$8)\&0x\+F\+F00) $\vert$ ((x$<$$<$8)\&0x\+F\+F0000) $\vert$ (x$<$$<$24));
+\item 
+\#define \hyperlink{pa__asio_8cpp_a69d020162e08d8f2e0d58a4f1361cbaf}{P\+A\+\_\+\+S\+W\+A\+P\+\_\+}(x,  y)~temp=x; x = y; y = temp;
+\item 
+\#define \hyperlink{pa__asio_8cpp_a77d8595aeb17c41aa2c3dd98050148c6}{P\+A\+\_\+\+D\+E\+F\+A\+U\+L\+T\+S\+A\+M\+P\+L\+E\+R\+A\+T\+E\+S\+E\+A\+R\+C\+H\+O\+R\+D\+E\+R\+\_\+\+C\+O\+U\+N\+T\+\_\+}~13   /$\ast$ must be \hyperlink{nasm_8h_aaf57ffcfef0bee04f46c6ada2a905a8c}{the} same number \hyperlink{rfft2d_test_m_l_8m_ad1fb8d92192e22cbe6298e4a2c65a711}{of} elements as \hyperlink{latency_8c_a7d946209d777cb95fe30364b8d321207}{in} \hyperlink{nasm_8h_aaf57ffcfef0bee04f46c6ada2a905a8c}{the} array below $\ast$/
+\item 
+\#define \hyperlink{pa__asio_8cpp_a7c6d480084a165486ff2ff4c9f8115b6}{A\+S\+I\+O64to\+Double}(\hyperlink{rfft2d_test_m_l_8m_a4124bc0a9335c27f086f24ba207a4912}{a})~((\hyperlink{rfft2d_test_m_l_8m_a4124bc0a9335c27f086f24ba207a4912}{a}).lo + (\hyperlink{rfft2d_test_m_l_8m_a4124bc0a9335c27f086f24ba207a4912}{a}).hi $\ast$ \hyperlink{pa__asio_8cpp_a4f17b4f3eeffeed3e0505e229dd633fa}{two\+Raised\+To32})
+\end{DoxyCompactItemize}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef struct \hyperlink{struct_pa_asio_driver_info}{Pa\+Asio\+Driver\+Info} \hyperlink{pa__asio_8cpp_a42d1ed45c8f386b5ba1d2c0c1d9c316d}{Pa\+Asio\+Driver\+Info}
+\item 
+typedef \hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{pa__asio_8cpp_aa79f309d7deff671e242cca72615652a}{Pa\+Asio\+Buffer\+Converter}(\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} $\ast$, long, long)
+\item 
+typedef struct \hyperlink{struct_pa_asio_device_info}{Pa\+Asio\+Device\+Info} \hyperlink{pa__asio_8cpp_a3c31bd12ca36a1117a0f327bdc6cf119}{Pa\+Asio\+Device\+Info}
+\item 
+typedef \hyperlink{nfilterkit_8h_a3be13892ae7076009afcf121347dd319}{B\+O\+OL}(\hyperlink{mapinls_8h_a9aa60e1ead64be77ad551e745cbfd4d3}{W\+I\+N\+A\+PI} $\ast$ \hyperlink{pa__asio_8cpp_a222d0bb872ee6f7c6cbd5d7085fe1c77}{Is\+Debugger\+Present\+Ptr}) (V\+O\+ID)
+\item 
+typedef struct \hyperlink{struct_pa_asio_stream_blocking_state}{Pa\+Asio\+Stream\+Blocking\+State} \hyperlink{pa__asio_8cpp_a41c66a45d9020da608657eb770ca2148}{Pa\+Asio\+Stream\+Blocking\+State}
+\item 
+typedef struct \hyperlink{struct_pa_asio_stream}{Pa\+Asio\+Stream} \hyperlink{pa__asio_8cpp_a5135a6aab58625a8c3eb8a58d3573f53}{Pa\+Asio\+Stream}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{portaudio_8h_a4949e4a8ef9f9dbe8cbee414ce69841d}{Pa\+Error} \hyperlink{pa__asio_8cpp_aa84b8c879af0b4a3f59c6bf4339fad0e}{Pa\+Asio\+\_\+\+Initialize} (\hyperlink{struct_pa_util_host_api_representation}{Pa\+Util\+Host\+Api\+Representation} $\ast$$\ast$host\+Api, \hyperlink{portaudio_8h_aeef6da084c57c70aa94be97411e19930}{Pa\+Host\+Api\+Index} host\+Api\+Index)
+\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{pa__asio_8cpp_a975d918d911252f4e6f68dffc18ba49a}{Asio\+Sample\+Type\+L\+OG} (A\+S\+I\+O\+Sample\+Type type)
+\item 
+\hyperlink{portaudio_8h_a4949e4a8ef9f9dbe8cbee414ce69841d}{Pa\+Error} \hyperlink{pa__asio_8cpp_a95dbac9747083dcee51b1e0e4695a912}{Pa\+Asio\+\_\+\+Get\+Available\+Buffer\+Sizes} (\hyperlink{portaudio_8h_ad79317e65bde63d76c4b8e711ac5a361}{Pa\+Device\+Index} device, long $\ast$min\+Buffer\+Size\+Frames, long $\ast$max\+Buffer\+Size\+Frames, long $\ast$preferred\+Buffer\+Size\+Frames, long $\ast$granularity)
+\item 
+\hyperlink{portaudio_8h_a4949e4a8ef9f9dbe8cbee414ce69841d}{Pa\+Error} \hyperlink{pa__asio_8cpp_ac9449ca8f0aedaa7b93027cdca3d6ba3}{Pa\+Asio\+\_\+\+Show\+Control\+Panel} (\hyperlink{portaudio_8h_ad79317e65bde63d76c4b8e711ac5a361}{Pa\+Device\+Index} device, \hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} $\ast$system\+Specific)
+\item 
+\hyperlink{portaudio_8h_a4949e4a8ef9f9dbe8cbee414ce69841d}{Pa\+Error} \hyperlink{pa__asio_8cpp_abaafacb711225e7c6158fff3b3e8b87a}{Pa\+Asio\+\_\+\+Get\+Input\+Channel\+Name} (\hyperlink{portaudio_8h_ad79317e65bde63d76c4b8e711ac5a361}{Pa\+Device\+Index} device, \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} channel\+Index, \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} char $\ast$$\ast$channel\+Name)
+\item 
+\hyperlink{portaudio_8h_a4949e4a8ef9f9dbe8cbee414ce69841d}{Pa\+Error} \hyperlink{pa__asio_8cpp_a97bd5b2192c1321a492ba24d7ef843fa}{Pa\+Asio\+\_\+\+Get\+Output\+Channel\+Name} (\hyperlink{portaudio_8h_ad79317e65bde63d76c4b8e711ac5a361}{Pa\+Device\+Index} device, \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} channel\+Index, \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} char $\ast$$\ast$channel\+Name)
+\item 
+\hyperlink{portaudio_8h_a4949e4a8ef9f9dbe8cbee414ce69841d}{Pa\+Error} \hyperlink{pa__asio_8cpp_abd2852360116a698308bfd3034dfcf09}{Pa\+Asio\+\_\+\+Set\+Stream\+Sample\+Rate} (\hyperlink{portaudio_8h_a19874734f89958fccf86785490d53b4c}{Pa\+Stream} $\ast$\hyperlink{lib_2expat_8h_a755339d27872b13735c2cab829e47157}{s}, double sample\+Rate)
+\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+Asio\+Drivers $\ast$ \hyperlink{pa__asio_8cpp_a6b3fd458b9c902296568943abcfd00ae}{asio\+Drivers}
+\item 
+\hyperlink{pa__asio_8cpp_a222d0bb872ee6f7c6cbd5d7085fe1c77}{Is\+Debugger\+Present\+Ptr} \hyperlink{pa__asio_8cpp_a725af3e55ff36679409873c046128927}{Is\+Debugger\+Present\+\_\+} = 0
+\item 
+\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} double \hyperlink{pa__asio_8cpp_a4f17b4f3eeffeed3e0505e229dd633fa}{two\+Raised\+To32} = 4294967296.
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Note that specific support for pa\+Input\+Underflow, pa\+Output\+Overflow and pa\+Never\+Drop\+Input is not necessary or possible with this driver due to the synchronous full duplex double-\/buffered architecture of A\+S\+IO. 
+
+\subsection{Macro Definition Documentation}
+\index{pa\+\_\+asio.\+cpp@{pa\+\_\+asio.\+cpp}!A\+S\+I\+O64to\+Double@{A\+S\+I\+O64to\+Double}}
+\index{A\+S\+I\+O64to\+Double@{A\+S\+I\+O64to\+Double}!pa\+\_\+asio.\+cpp@{pa\+\_\+asio.\+cpp}}
+\subsubsection[{\texorpdfstring{A\+S\+I\+O64to\+Double}{ASIO64toDouble}}]{\setlength{\rightskip}{0pt plus 5cm}\#define A\+S\+I\+O64to\+Double(
+\begin{DoxyParamCaption}
+\item[{}]{{\bf a}}
+\end{DoxyParamCaption}
+)~(({\bf a}).lo + ({\bf a}).hi $\ast$ {\bf two\+Raised\+To32})}\hypertarget{pa__asio_8cpp_a7c6d480084a165486ff2ff4c9f8115b6}{}\label{pa__asio_8cpp_a7c6d480084a165486ff2ff4c9f8115b6}
+
+
+Definition at line 2901 of file pa\+\_\+asio.\+cpp.
+
+\index{pa\+\_\+asio.\+cpp@{pa\+\_\+asio.\+cpp}!C\+A\+R\+B\+O\+N\+\_\+\+C\+O\+M\+P\+A\+T\+I\+B\+LE@{C\+A\+R\+B\+O\+N\+\_\+\+C\+O\+M\+P\+A\+T\+I\+B\+LE}}
+\index{C\+A\+R\+B\+O\+N\+\_\+\+C\+O\+M\+P\+A\+T\+I\+B\+LE@{C\+A\+R\+B\+O\+N\+\_\+\+C\+O\+M\+P\+A\+T\+I\+B\+LE}!pa\+\_\+asio.\+cpp@{pa\+\_\+asio.\+cpp}}
+\subsubsection[{\texorpdfstring{C\+A\+R\+B\+O\+N\+\_\+\+C\+O\+M\+P\+A\+T\+I\+B\+LE}{CARBON_COMPATIBLE}}]{\setlength{\rightskip}{0pt plus 5cm}\#define C\+A\+R\+B\+O\+N\+\_\+\+C\+O\+M\+P\+A\+T\+I\+B\+LE~(0)}\hypertarget{pa__asio_8cpp_ac4dc35e43085bd67137978b643ef52ca}{}\label{pa__asio_8cpp_ac4dc35e43085bd67137978b643ef52ca}
+
+
+Definition at line 159 of file pa\+\_\+asio.\+cpp.
+
+\index{pa\+\_\+asio.\+cpp@{pa\+\_\+asio.\+cpp}!P\+A\+\_\+\+A\+S\+I\+O\+\_\+\+S\+E\+T\+\_\+\+L\+A\+S\+T\+\_\+\+A\+S\+I\+O\+\_\+\+E\+R\+R\+OR@{P\+A\+\_\+\+A\+S\+I\+O\+\_\+\+S\+E\+T\+\_\+\+L\+A\+S\+T\+\_\+\+A\+S\+I\+O\+\_\+\+E\+R\+R\+OR}}
+\index{P\+A\+\_\+\+A\+S\+I\+O\+\_\+\+S\+E\+T\+\_\+\+L\+A\+S\+T\+\_\+\+A\+S\+I\+O\+\_\+\+E\+R\+R\+OR@{P\+A\+\_\+\+A\+S\+I\+O\+\_\+\+S\+E\+T\+\_\+\+L\+A\+S\+T\+\_\+\+A\+S\+I\+O\+\_\+\+E\+R\+R\+OR}!pa\+\_\+asio.\+cpp@{pa\+\_\+asio.\+cpp}}
+\subsubsection[{\texorpdfstring{P\+A\+\_\+\+A\+S\+I\+O\+\_\+\+S\+E\+T\+\_\+\+L\+A\+S\+T\+\_\+\+A\+S\+I\+O\+\_\+\+E\+R\+R\+OR}{PA_ASIO_SET_LAST_ASIO_ERROR}}]{\setlength{\rightskip}{0pt plus 5cm}\#define P\+A\+\_\+\+A\+S\+I\+O\+\_\+\+S\+E\+T\+\_\+\+L\+A\+S\+T\+\_\+\+A\+S\+I\+O\+\_\+\+E\+R\+R\+OR(
+\begin{DoxyParamCaption}
+\item[{}]{asio\+Error}
+\end{DoxyParamCaption}
+)~{\bf Pa\+Util\+\_\+\+Set\+Last\+Host\+Error\+Info}( {\bf pa\+A\+S\+IO}, asio\+Error, Pa\+Asio\+\_\+\+Get\+Asio\+Error\+Text( asio\+Error ) )}\hypertarget{pa__asio_8cpp_ad7919a3bee4b170200f02f669a4aa459}{}\label{pa__asio_8cpp_ad7919a3bee4b170200f02f669a4aa459}
+
+
+Definition at line 256 of file pa\+\_\+asio.\+cpp.
+
+\index{pa\+\_\+asio.\+cpp@{pa\+\_\+asio.\+cpp}!P\+A\+\_\+\+A\+S\+I\+O\+\_\+\+S\+E\+T\+\_\+\+L\+A\+S\+T\+\_\+\+H\+O\+S\+T\+\_\+\+E\+R\+R\+OR@{P\+A\+\_\+\+A\+S\+I\+O\+\_\+\+S\+E\+T\+\_\+\+L\+A\+S\+T\+\_\+\+H\+O\+S\+T\+\_\+\+E\+R\+R\+OR}}
+\index{P\+A\+\_\+\+A\+S\+I\+O\+\_\+\+S\+E\+T\+\_\+\+L\+A\+S\+T\+\_\+\+H\+O\+S\+T\+\_\+\+E\+R\+R\+OR@{P\+A\+\_\+\+A\+S\+I\+O\+\_\+\+S\+E\+T\+\_\+\+L\+A\+S\+T\+\_\+\+H\+O\+S\+T\+\_\+\+E\+R\+R\+OR}!pa\+\_\+asio.\+cpp@{pa\+\_\+asio.\+cpp}}
+\subsubsection[{\texorpdfstring{P\+A\+\_\+\+A\+S\+I\+O\+\_\+\+S\+E\+T\+\_\+\+L\+A\+S\+T\+\_\+\+H\+O\+S\+T\+\_\+\+E\+R\+R\+OR}{PA_ASIO_SET_LAST_HOST_ERROR}}]{\setlength{\rightskip}{0pt plus 5cm}\#define P\+A\+\_\+\+A\+S\+I\+O\+\_\+\+S\+E\+T\+\_\+\+L\+A\+S\+T\+\_\+\+H\+O\+S\+T\+\_\+\+E\+R\+R\+OR(
+\begin{DoxyParamCaption}
+\item[{}]{{\bf error\+Code}, }
+\item[{}]{error\+Text}
+\end{DoxyParamCaption}
+)~{\bf Pa\+Util\+\_\+\+Set\+Last\+Host\+Error\+Info}( {\bf pa\+A\+S\+IO}, {\bf error\+Code}, error\+Text )}\hypertarget{pa__asio_8cpp_a226794e311389512c90be7f00a5d630e}{}\label{pa__asio_8cpp_a226794e311389512c90be7f00a5d630e}
+
+
+Definition at line 211 of file pa\+\_\+asio.\+cpp.
+
+\index{pa\+\_\+asio.\+cpp@{pa\+\_\+asio.\+cpp}!P\+A\+\_\+\+A\+S\+I\+O\+\_\+\+S\+E\+T\+\_\+\+L\+A\+S\+T\+\_\+\+S\+Y\+S\+T\+E\+M\+\_\+\+E\+R\+R\+OR@{P\+A\+\_\+\+A\+S\+I\+O\+\_\+\+S\+E\+T\+\_\+\+L\+A\+S\+T\+\_\+\+S\+Y\+S\+T\+E\+M\+\_\+\+E\+R\+R\+OR}}
+\index{P\+A\+\_\+\+A\+S\+I\+O\+\_\+\+S\+E\+T\+\_\+\+L\+A\+S\+T\+\_\+\+S\+Y\+S\+T\+E\+M\+\_\+\+E\+R\+R\+OR@{P\+A\+\_\+\+A\+S\+I\+O\+\_\+\+S\+E\+T\+\_\+\+L\+A\+S\+T\+\_\+\+S\+Y\+S\+T\+E\+M\+\_\+\+E\+R\+R\+OR}!pa\+\_\+asio.\+cpp@{pa\+\_\+asio.\+cpp}}
+\subsubsection[{\texorpdfstring{P\+A\+\_\+\+A\+S\+I\+O\+\_\+\+S\+E\+T\+\_\+\+L\+A\+S\+T\+\_\+\+S\+Y\+S\+T\+E\+M\+\_\+\+E\+R\+R\+OR}{PA_ASIO_SET_LAST_SYSTEM_ERROR}}]{\setlength{\rightskip}{0pt plus 5cm}\#define P\+A\+\_\+\+A\+S\+I\+O\+\_\+\+S\+E\+T\+\_\+\+L\+A\+S\+T\+\_\+\+S\+Y\+S\+T\+E\+M\+\_\+\+E\+R\+R\+OR(
+\begin{DoxyParamCaption}
+\item[{}]{{\bf error\+Code}}
+\end{DoxyParamCaption}
+)~Pa\+Asio\+\_\+\+Set\+Last\+System\+Error( {\bf error\+Code} )}\hypertarget{pa__asio_8cpp_a58e6dde4da6f4ae3bef3872d83b10f69}{}\label{pa__asio_8cpp_a58e6dde4da6f4ae3bef3872d83b10f69}
+
+
+Definition at line 231 of file pa\+\_\+asio.\+cpp.
+
+\index{pa\+\_\+asio.\+cpp@{pa\+\_\+asio.\+cpp}!P\+A\+\_\+\+D\+E\+F\+A\+U\+L\+T\+S\+A\+M\+P\+L\+E\+R\+A\+T\+E\+S\+E\+A\+R\+C\+H\+O\+R\+D\+E\+R\+\_\+\+C\+O\+U\+N\+T\+\_\+@{P\+A\+\_\+\+D\+E\+F\+A\+U\+L\+T\+S\+A\+M\+P\+L\+E\+R\+A\+T\+E\+S\+E\+A\+R\+C\+H\+O\+R\+D\+E\+R\+\_\+\+C\+O\+U\+N\+T\+\_\+}}
+\index{P\+A\+\_\+\+D\+E\+F\+A\+U\+L\+T\+S\+A\+M\+P\+L\+E\+R\+A\+T\+E\+S\+E\+A\+R\+C\+H\+O\+R\+D\+E\+R\+\_\+\+C\+O\+U\+N\+T\+\_\+@{P\+A\+\_\+\+D\+E\+F\+A\+U\+L\+T\+S\+A\+M\+P\+L\+E\+R\+A\+T\+E\+S\+E\+A\+R\+C\+H\+O\+R\+D\+E\+R\+\_\+\+C\+O\+U\+N\+T\+\_\+}!pa\+\_\+asio.\+cpp@{pa\+\_\+asio.\+cpp}}
+\subsubsection[{\texorpdfstring{P\+A\+\_\+\+D\+E\+F\+A\+U\+L\+T\+S\+A\+M\+P\+L\+E\+R\+A\+T\+E\+S\+E\+A\+R\+C\+H\+O\+R\+D\+E\+R\+\_\+\+C\+O\+U\+N\+T\+\_\+}{PA_DEFAULTSAMPLERATESEARCHORDER_COUNT_}}]{\setlength{\rightskip}{0pt plus 5cm}\#define P\+A\+\_\+\+D\+E\+F\+A\+U\+L\+T\+S\+A\+M\+P\+L\+E\+R\+A\+T\+E\+S\+E\+A\+R\+C\+H\+O\+R\+D\+E\+R\+\_\+\+C\+O\+U\+N\+T\+\_\+~13   /$\ast$ must be {\bf the} same number {\bf of} elements as {\bf in} {\bf the} array below $\ast$/}\hypertarget{pa__asio_8cpp_a77d8595aeb17c41aa2c3dd98050148c6}{}\label{pa__asio_8cpp_a77d8595aeb17c41aa2c3dd98050148c6}
+
+
+Definition at line 1016 of file pa\+\_\+asio.\+cpp.
+
+\index{pa\+\_\+asio.\+cpp@{pa\+\_\+asio.\+cpp}!P\+A\+\_\+\+S\+W\+A\+P32\+\_\+@{P\+A\+\_\+\+S\+W\+A\+P32\+\_\+}}
+\index{P\+A\+\_\+\+S\+W\+A\+P32\+\_\+@{P\+A\+\_\+\+S\+W\+A\+P32\+\_\+}!pa\+\_\+asio.\+cpp@{pa\+\_\+asio.\+cpp}}
+\subsubsection[{\texorpdfstring{P\+A\+\_\+\+S\+W\+A\+P32\+\_\+}{PA_SWAP32_}}]{\setlength{\rightskip}{0pt plus 5cm}\#define P\+A\+\_\+\+S\+W\+A\+P32\+\_\+(
+\begin{DoxyParamCaption}
+\item[{}]{x}
+\end{DoxyParamCaption}
+)~((x$>$$>$24) $\vert$ ((x$>$$>$8)\&0x\+F\+F00) $\vert$ ((x$<$$<$8)\&0x\+F\+F0000) $\vert$ (x$<$$<$24));}\hypertarget{pa__asio_8cpp_aedcbfad29e7dc3f8cd62b6135f6c29b5}{}\label{pa__asio_8cpp_aedcbfad29e7dc3f8cd62b6135f6c29b5}
+
+
+Definition at line 468 of file pa\+\_\+asio.\+cpp.
+
+\index{pa\+\_\+asio.\+cpp@{pa\+\_\+asio.\+cpp}!P\+A\+\_\+\+S\+W\+A\+P\+\_\+@{P\+A\+\_\+\+S\+W\+A\+P\+\_\+}}
+\index{P\+A\+\_\+\+S\+W\+A\+P\+\_\+@{P\+A\+\_\+\+S\+W\+A\+P\+\_\+}!pa\+\_\+asio.\+cpp@{pa\+\_\+asio.\+cpp}}
+\subsubsection[{\texorpdfstring{P\+A\+\_\+\+S\+W\+A\+P\+\_\+}{PA_SWAP_}}]{\setlength{\rightskip}{0pt plus 5cm}\#define P\+A\+\_\+\+S\+W\+A\+P\+\_\+(
+\begin{DoxyParamCaption}
+\item[{}]{x, }
+\item[{}]{y}
+\end{DoxyParamCaption}
+)~temp=x; x = y; y = temp;}\hypertarget{pa__asio_8cpp_a69d020162e08d8f2e0d58a4f1361cbaf}{}\label{pa__asio_8cpp_a69d020162e08d8f2e0d58a4f1361cbaf}
+
+
+Definition at line 532 of file pa\+\_\+asio.\+cpp.
+
+\index{pa\+\_\+asio.\+cpp@{pa\+\_\+asio.\+cpp}!W\+I\+N32@{W\+I\+N32}}
+\index{W\+I\+N32@{W\+I\+N32}!pa\+\_\+asio.\+cpp@{pa\+\_\+asio.\+cpp}}
+\subsubsection[{\texorpdfstring{W\+I\+N32}{WIN32}}]{\setlength{\rightskip}{0pt plus 5cm}\#define W\+I\+N32}\hypertarget{pa__asio_8cpp_a6402e8b8594280624585b8fd643bfb65}{}\label{pa__asio_8cpp_a6402e8b8594280624585b8fd643bfb65}
+
+
+Definition at line 112 of file pa\+\_\+asio.\+cpp.
+
+
+
+\subsection{Typedef Documentation}
+\index{pa\+\_\+asio.\+cpp@{pa\+\_\+asio.\+cpp}!Is\+Debugger\+Present\+Ptr@{Is\+Debugger\+Present\+Ptr}}
+\index{Is\+Debugger\+Present\+Ptr@{Is\+Debugger\+Present\+Ptr}!pa\+\_\+asio.\+cpp@{pa\+\_\+asio.\+cpp}}
+\subsubsection[{\texorpdfstring{Is\+Debugger\+Present\+Ptr}{IsDebuggerPresentPtr}}]{\setlength{\rightskip}{0pt plus 5cm}typedef {\bf B\+O\+OL}({\bf W\+I\+N\+A\+PI} $\ast$ Is\+Debugger\+Present\+Ptr) (V\+O\+ID)}\hypertarget{pa__asio_8cpp_a222d0bb872ee6f7c6cbd5d7085fe1c77}{}\label{pa__asio_8cpp_a222d0bb872ee6f7c6cbd5d7085fe1c77}
+
+
+Definition at line 1166 of file pa\+\_\+asio.\+cpp.
+
+\index{pa\+\_\+asio.\+cpp@{pa\+\_\+asio.\+cpp}!Pa\+Asio\+Buffer\+Converter@{Pa\+Asio\+Buffer\+Converter}}
+\index{Pa\+Asio\+Buffer\+Converter@{Pa\+Asio\+Buffer\+Converter}!pa\+\_\+asio.\+cpp@{pa\+\_\+asio.\+cpp}}
+\subsubsection[{\texorpdfstring{Pa\+Asio\+Buffer\+Converter}{PaAsioBufferConverter}}]{\setlength{\rightskip}{0pt plus 5cm}typedef {\bf void} Pa\+Asio\+Buffer\+Converter({\bf void} $\ast$, long, long)}\hypertarget{pa__asio_8cpp_aa79f309d7deff671e242cca72615652a}{}\label{pa__asio_8cpp_aa79f309d7deff671e242cca72615652a}
+
+
+Definition at line 606 of file pa\+\_\+asio.\+cpp.
+
+\index{pa\+\_\+asio.\+cpp@{pa\+\_\+asio.\+cpp}!Pa\+Asio\+Device\+Info@{Pa\+Asio\+Device\+Info}}
+\index{Pa\+Asio\+Device\+Info@{Pa\+Asio\+Device\+Info}!pa\+\_\+asio.\+cpp@{pa\+\_\+asio.\+cpp}}
+\subsubsection[{\texorpdfstring{Pa\+Asio\+Device\+Info}{PaAsioDeviceInfo}}]{\setlength{\rightskip}{0pt plus 5cm}typedef struct {\bf Pa\+Asio\+Device\+Info}
+ {\bf Pa\+Asio\+Device\+Info}}\hypertarget{pa__asio_8cpp_a3c31bd12ca36a1117a0f327bdc6cf119}{}\label{pa__asio_8cpp_a3c31bd12ca36a1117a0f327bdc6cf119}
+\index{pa\+\_\+asio.\+cpp@{pa\+\_\+asio.\+cpp}!Pa\+Asio\+Driver\+Info@{Pa\+Asio\+Driver\+Info}}
+\index{Pa\+Asio\+Driver\+Info@{Pa\+Asio\+Driver\+Info}!pa\+\_\+asio.\+cpp@{pa\+\_\+asio.\+cpp}}
+\subsubsection[{\texorpdfstring{Pa\+Asio\+Driver\+Info}{PaAsioDriverInfo}}]{\setlength{\rightskip}{0pt plus 5cm}typedef struct {\bf Pa\+Asio\+Driver\+Info}
+ {\bf Pa\+Asio\+Driver\+Info}}\hypertarget{pa__asio_8cpp_a42d1ed45c8f386b5ba1d2c0c1d9c316d}{}\label{pa__asio_8cpp_a42d1ed45c8f386b5ba1d2c0c1d9c316d}
+\index{pa\+\_\+asio.\+cpp@{pa\+\_\+asio.\+cpp}!Pa\+Asio\+Stream@{Pa\+Asio\+Stream}}
+\index{Pa\+Asio\+Stream@{Pa\+Asio\+Stream}!pa\+\_\+asio.\+cpp@{pa\+\_\+asio.\+cpp}}
+\subsubsection[{\texorpdfstring{Pa\+Asio\+Stream}{PaAsioStream}}]{\setlength{\rightskip}{0pt plus 5cm}typedef struct {\bf Pa\+Asio\+Stream}
+ {\bf Pa\+Asio\+Stream}}\hypertarget{pa__asio_8cpp_a5135a6aab58625a8c3eb8a58d3573f53}{}\label{pa__asio_8cpp_a5135a6aab58625a8c3eb8a58d3573f53}
+\index{pa\+\_\+asio.\+cpp@{pa\+\_\+asio.\+cpp}!Pa\+Asio\+Stream\+Blocking\+State@{Pa\+Asio\+Stream\+Blocking\+State}}
+\index{Pa\+Asio\+Stream\+Blocking\+State@{Pa\+Asio\+Stream\+Blocking\+State}!pa\+\_\+asio.\+cpp@{pa\+\_\+asio.\+cpp}}
+\subsubsection[{\texorpdfstring{Pa\+Asio\+Stream\+Blocking\+State}{PaAsioStreamBlockingState}}]{\setlength{\rightskip}{0pt plus 5cm}typedef struct {\bf Pa\+Asio\+Stream\+Blocking\+State}
+ {\bf Pa\+Asio\+Stream\+Blocking\+State}}\hypertarget{pa__asio_8cpp_a41c66a45d9020da608657eb770ca2148}{}\label{pa__asio_8cpp_a41c66a45d9020da608657eb770ca2148}
+A data structure specifically for storing blocking i/o related data. 
+
+\subsection{Function Documentation}
+\index{pa\+\_\+asio.\+cpp@{pa\+\_\+asio.\+cpp}!Asio\+Sample\+Type\+L\+OG@{Asio\+Sample\+Type\+L\+OG}}
+\index{Asio\+Sample\+Type\+L\+OG@{Asio\+Sample\+Type\+L\+OG}!pa\+\_\+asio.\+cpp@{pa\+\_\+asio.\+cpp}}
+\subsubsection[{\texorpdfstring{Asio\+Sample\+Type\+L\+O\+G(\+A\+S\+I\+O\+Sample\+Type type)}{AsioSampleTypeLOG(ASIOSampleType type)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} Asio\+Sample\+Type\+L\+OG (
+\begin{DoxyParamCaption}
+\item[{A\+S\+I\+O\+Sample\+Type}]{type}
+\end{DoxyParamCaption}
+)}\hypertarget{pa__asio_8cpp_a975d918d911252f4e6f68dffc18ba49a}{}\label{pa__asio_8cpp_a975d918d911252f4e6f68dffc18ba49a}
+
+
+Definition at line 379 of file pa\+\_\+asio.\+cpp.
+
+\index{pa\+\_\+asio.\+cpp@{pa\+\_\+asio.\+cpp}!Pa\+Asio\+\_\+\+Get\+Available\+Buffer\+Sizes@{Pa\+Asio\+\_\+\+Get\+Available\+Buffer\+Sizes}}
+\index{Pa\+Asio\+\_\+\+Get\+Available\+Buffer\+Sizes@{Pa\+Asio\+\_\+\+Get\+Available\+Buffer\+Sizes}!pa\+\_\+asio.\+cpp@{pa\+\_\+asio.\+cpp}}
+\subsubsection[{\texorpdfstring{Pa\+Asio\+\_\+\+Get\+Available\+Buffer\+Sizes(\+Pa\+Device\+Index device, long $\ast$min\+Buffer\+Size\+Frames, long $\ast$max\+Buffer\+Size\+Frames, long $\ast$preferred\+Buffer\+Size\+Frames, long $\ast$granularity)}{PaAsio_GetAvailableBufferSizes(PaDeviceIndex device, long *minBufferSizeFrames, long *maxBufferSizeFrames, long *preferredBufferSizeFrames, long *granularity)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Pa\+Error} Pa\+Asio\+\_\+\+Get\+Available\+Buffer\+Sizes (
+\begin{DoxyParamCaption}
+\item[{{\bf Pa\+Device\+Index}}]{device, }
+\item[{long $\ast$}]{min\+Buffer\+Size\+Frames, }
+\item[{long $\ast$}]{max\+Buffer\+Size\+Frames, }
+\item[{long $\ast$}]{preferred\+Buffer\+Size\+Frames, }
+\item[{long $\ast$}]{granularity}
+\end{DoxyParamCaption}
+)}\hypertarget{pa__asio_8cpp_a95dbac9747083dcee51b1e0e4695a912}{}\label{pa__asio_8cpp_a95dbac9747083dcee51b1e0e4695a912}
+Retrieve legal native buffer sizes for the specificed device, in sample frames.
+
+
+\begin{DoxyParams}{Parameters}
+{\em device} & The global index of the device about which the query is being made. \\
+\hline
+{\em min\+Buffer\+Size\+Frames} & A pointer to the location which will receive the minimum buffer size value. \\
+\hline
+{\em max\+Buffer\+Size\+Frames} & A pointer to the location which will receive the maximum buffer size value. \\
+\hline
+{\em preferred\+Buffer\+Size\+Frames} & A pointer to the location which will receive the preferred buffer size value. \\
+\hline
+{\em granularity} & A pointer to the location which will receive the \char`\"{}granularity\char`\"{}. This value determines the step size used to compute the legal values between min\+Buffer\+Size\+Frames and max\+Buffer\+Size\+Frames. If granularity is -\/1 then available buffer size values are powers of two.\\
+\hline
+\end{DoxyParams}
+\begin{DoxySeeAlso}{See also}
+A\+S\+I\+O\+Get\+Buffer\+Size \hyperlink{latency_8c_a7d946209d777cb95fe30364b8d321207}{in} \hyperlink{nasm_8h_aaf57ffcfef0bee04f46c6ada2a905a8c}{the} A\+S\+IO S\+DK.
+\end{DoxySeeAlso}
+\begin{DoxyNote}{Note}
+\+: this function used to be called Pa\+Asio\+\_\+\+Get\+Available\+Latency\+Values. There is a \#define that maps Pa\+Asio\+\_\+\+Get\+Available\+Latency\+Values to this function for backwards compatibility. 
+\end{DoxyNote}
+
+
+Definition at line 913 of file pa\+\_\+asio.\+cpp.
+
+\index{pa\+\_\+asio.\+cpp@{pa\+\_\+asio.\+cpp}!Pa\+Asio\+\_\+\+Get\+Input\+Channel\+Name@{Pa\+Asio\+\_\+\+Get\+Input\+Channel\+Name}}
+\index{Pa\+Asio\+\_\+\+Get\+Input\+Channel\+Name@{Pa\+Asio\+\_\+\+Get\+Input\+Channel\+Name}!pa\+\_\+asio.\+cpp@{pa\+\_\+asio.\+cpp}}
+\subsubsection[{\texorpdfstring{Pa\+Asio\+\_\+\+Get\+Input\+Channel\+Name(\+Pa\+Device\+Index device, int channel\+Index, const char $\ast$$\ast$channel\+Name)}{PaAsio_GetInputChannelName(PaDeviceIndex device, int channelIndex, const char **channelName)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Pa\+Error} Pa\+Asio\+\_\+\+Get\+Input\+Channel\+Name (
+\begin{DoxyParamCaption}
+\item[{{\bf Pa\+Device\+Index}}]{device, }
+\item[{{\bf int}}]{channel\+Index, }
+\item[{{\bf const} char $\ast$$\ast$}]{channel\+Name}
+\end{DoxyParamCaption}
+)}\hypertarget{pa__asio_8cpp_abaafacb711225e7c6158fff3b3e8b87a}{}\label{pa__asio_8cpp_abaafacb711225e7c6158fff3b3e8b87a}
+Retrieve a pointer to a string containing the name of the specified input channel. The string is valid until Pa\+\_\+\+Terminate is called.
+
+The string will be no longer than 32 characters including the null terminator. 
+
+Definition at line 4137 of file pa\+\_\+asio.\+cpp.
+
+\index{pa\+\_\+asio.\+cpp@{pa\+\_\+asio.\+cpp}!Pa\+Asio\+\_\+\+Get\+Output\+Channel\+Name@{Pa\+Asio\+\_\+\+Get\+Output\+Channel\+Name}}
+\index{Pa\+Asio\+\_\+\+Get\+Output\+Channel\+Name@{Pa\+Asio\+\_\+\+Get\+Output\+Channel\+Name}!pa\+\_\+asio.\+cpp@{pa\+\_\+asio.\+cpp}}
+\subsubsection[{\texorpdfstring{Pa\+Asio\+\_\+\+Get\+Output\+Channel\+Name(\+Pa\+Device\+Index device, int channel\+Index, const char $\ast$$\ast$channel\+Name)}{PaAsio_GetOutputChannelName(PaDeviceIndex device, int channelIndex, const char **channelName)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Pa\+Error} Pa\+Asio\+\_\+\+Get\+Output\+Channel\+Name (
+\begin{DoxyParamCaption}
+\item[{{\bf Pa\+Device\+Index}}]{device, }
+\item[{{\bf int}}]{channel\+Index, }
+\item[{{\bf const} char $\ast$$\ast$}]{channel\+Name}
+\end{DoxyParamCaption}
+)}\hypertarget{pa__asio_8cpp_a97bd5b2192c1321a492ba24d7ef843fa}{}\label{pa__asio_8cpp_a97bd5b2192c1321a492ba24d7ef843fa}
+Retrieve a pointer to a string containing the name of the specified input channel. The string is valid until Pa\+\_\+\+Terminate is called.
+
+The string will be no longer than 32 characters including the null terminator. 
+
+Definition at line 4170 of file pa\+\_\+asio.\+cpp.
+
+\index{pa\+\_\+asio.\+cpp@{pa\+\_\+asio.\+cpp}!Pa\+Asio\+\_\+\+Initialize@{Pa\+Asio\+\_\+\+Initialize}}
+\index{Pa\+Asio\+\_\+\+Initialize@{Pa\+Asio\+\_\+\+Initialize}!pa\+\_\+asio.\+cpp@{pa\+\_\+asio.\+cpp}}
+\subsubsection[{\texorpdfstring{Pa\+Asio\+\_\+\+Initialize(\+Pa\+Util\+Host\+Api\+Representation $\ast$$\ast$host\+Api, Pa\+Host\+Api\+Index host\+Api\+Index)}{PaAsio_Initialize(PaUtilHostApiRepresentation **hostApi, PaHostApiIndex hostApiIndex)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Pa\+Error} Pa\+Asio\+\_\+\+Initialize (
+\begin{DoxyParamCaption}
+\item[{{\bf Pa\+Util\+Host\+Api\+Representation} $\ast$$\ast$}]{host\+Api, }
+\item[{{\bf Pa\+Host\+Api\+Index}}]{host\+Api\+Index}
+\end{DoxyParamCaption}
+)}\hypertarget{pa__asio_8cpp_aa84b8c879af0b4a3f59c6bf4339fad0e}{}\label{pa__asio_8cpp_aa84b8c879af0b4a3f59c6bf4339fad0e}
+
+
+Definition at line 1170 of file pa\+\_\+asio.\+cpp.
+
+\index{pa\+\_\+asio.\+cpp@{pa\+\_\+asio.\+cpp}!Pa\+Asio\+\_\+\+Set\+Stream\+Sample\+Rate@{Pa\+Asio\+\_\+\+Set\+Stream\+Sample\+Rate}}
+\index{Pa\+Asio\+\_\+\+Set\+Stream\+Sample\+Rate@{Pa\+Asio\+\_\+\+Set\+Stream\+Sample\+Rate}!pa\+\_\+asio.\+cpp@{pa\+\_\+asio.\+cpp}}
+\subsubsection[{\texorpdfstring{Pa\+Asio\+\_\+\+Set\+Stream\+Sample\+Rate(\+Pa\+Stream $\ast$s, double sample\+Rate)}{PaAsio_SetStreamSampleRate(PaStream *s, double sampleRate)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Pa\+Error} Pa\+Asio\+\_\+\+Set\+Stream\+Sample\+Rate (
+\begin{DoxyParamCaption}
+\item[{{\bf Pa\+Stream} $\ast$}]{stream, }
+\item[{double}]{sample\+Rate}
+\end{DoxyParamCaption}
+)}\hypertarget{pa__asio_8cpp_abd2852360116a698308bfd3034dfcf09}{}\label{pa__asio_8cpp_abd2852360116a698308bfd3034dfcf09}
+Set the sample rate of an open pa\+A\+S\+IO stream.
+
+
+\begin{DoxyParams}{Parameters}
+{\em stream} & The stream to operate on. \\
+\hline
+{\em sample\+Rate} & The new sample rate.\\
+\hline
+\end{DoxyParams}
+Note that this function may fail if the stream is alredy running and the A\+S\+IO driver does not support switching the sample rate of a running stream.
+
+Returns pa\+Incompatible\+Stream\+Host\+Api if stream is not a pa\+A\+S\+IO stream. 
+
+Definition at line 4239 of file pa\+\_\+asio.\+cpp.
+
+\index{pa\+\_\+asio.\+cpp@{pa\+\_\+asio.\+cpp}!Pa\+Asio\+\_\+\+Show\+Control\+Panel@{Pa\+Asio\+\_\+\+Show\+Control\+Panel}}
+\index{Pa\+Asio\+\_\+\+Show\+Control\+Panel@{Pa\+Asio\+\_\+\+Show\+Control\+Panel}!pa\+\_\+asio.\+cpp@{pa\+\_\+asio.\+cpp}}
+\subsubsection[{\texorpdfstring{Pa\+Asio\+\_\+\+Show\+Control\+Panel(\+Pa\+Device\+Index device, void $\ast$system\+Specific)}{PaAsio_ShowControlPanel(PaDeviceIndex device, void *systemSpecific)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Pa\+Error} Pa\+Asio\+\_\+\+Show\+Control\+Panel (
+\begin{DoxyParamCaption}
+\item[{{\bf Pa\+Device\+Index}}]{device, }
+\item[{{\bf void} $\ast$}]{system\+Specific}
+\end{DoxyParamCaption}
+)}\hypertarget{pa__asio_8cpp_ac9449ca8f0aedaa7b93027cdca3d6ba3}{}\label{pa__asio_8cpp_ac9449ca8f0aedaa7b93027cdca3d6ba3}
+Display the A\+S\+IO control panel for the specified device.
+
+
+\begin{DoxyParams}{Parameters}
+{\em device} & The global index of the device whose control panel is to be displayed. \\
+\hline
+{\em system\+Specific} & On Windows, the calling application\textquotesingle{}s main window handle, on Macintosh this value should be zero. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 4031 of file pa\+\_\+asio.\+cpp.
+
+
+
+\subsection{Variable Documentation}
+\index{pa\+\_\+asio.\+cpp@{pa\+\_\+asio.\+cpp}!asio\+Drivers@{asio\+Drivers}}
+\index{asio\+Drivers@{asio\+Drivers}!pa\+\_\+asio.\+cpp@{pa\+\_\+asio.\+cpp}}
+\subsubsection[{\texorpdfstring{asio\+Drivers}{asioDrivers}}]{\setlength{\rightskip}{0pt plus 5cm}Asio\+Drivers$\ast$ asio\+Drivers}\hypertarget{pa__asio_8cpp_a6b3fd458b9c902296568943abcfd00ae}{}\label{pa__asio_8cpp_a6b3fd458b9c902296568943abcfd00ae}
+\index{pa\+\_\+asio.\+cpp@{pa\+\_\+asio.\+cpp}!Is\+Debugger\+Present\+\_\+@{Is\+Debugger\+Present\+\_\+}}
+\index{Is\+Debugger\+Present\+\_\+@{Is\+Debugger\+Present\+\_\+}!pa\+\_\+asio.\+cpp@{pa\+\_\+asio.\+cpp}}
+\subsubsection[{\texorpdfstring{Is\+Debugger\+Present\+\_\+}{IsDebuggerPresent_}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Is\+Debugger\+Present\+Ptr} Is\+Debugger\+Present\+\_\+ = 0}\hypertarget{pa__asio_8cpp_a725af3e55ff36679409873c046128927}{}\label{pa__asio_8cpp_a725af3e55ff36679409873c046128927}
+
+
+Definition at line 1167 of file pa\+\_\+asio.\+cpp.
+
+\index{pa\+\_\+asio.\+cpp@{pa\+\_\+asio.\+cpp}!two\+Raised\+To32@{two\+Raised\+To32}}
+\index{two\+Raised\+To32@{two\+Raised\+To32}!pa\+\_\+asio.\+cpp@{pa\+\_\+asio.\+cpp}}
+\subsubsection[{\texorpdfstring{two\+Raised\+To32}{twoRaisedTo32}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf const} double two\+Raised\+To32 = 4294967296.}\hypertarget{pa__asio_8cpp_a4f17b4f3eeffeed3e0505e229dd633fa}{}\label{pa__asio_8cpp_a4f17b4f3eeffeed3e0505e229dd633fa}
+
+
+Definition at line 2900 of file pa\+\_\+asio.\+cpp.
+

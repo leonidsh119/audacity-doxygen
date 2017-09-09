@@ -1,0 +1,2300 @@
+\hypertarget{xmlparse_8c}{}\section{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/expat/lib/xmlparse.c File Reference}
+\label{xmlparse_8c}\index{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/expat/lib/xmlparse.\+c@{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/expat/lib/xmlparse.\+c}}
+{\ttfamily \#include $<$stddef.\+h$>$}\\*
+{\ttfamily \#include $<$string.\+h$>$}\\*
+{\ttfamily \#include $<$assert.\+h$>$}\\*
+{\ttfamily \#include $<$limits.\+h$>$}\\*
+{\ttfamily \#include $<$time.\+h$>$}\\*
+{\ttfamily \#include \char`\"{}ascii.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}expat.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}internal.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}xmltok.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}xmlrole.\+h\char`\"{}}\\*
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{struct_n_a_m_e_d}{N\+A\+M\+ED}
+\item 
+struct \hyperlink{struct_h_a_s_h___t_a_b_l_e}{H\+A\+S\+H\+\_\+\+T\+A\+B\+LE}
+\item 
+struct \hyperlink{struct_h_a_s_h___t_a_b_l_e___i_t_e_r}{H\+A\+S\+H\+\_\+\+T\+A\+B\+L\+E\+\_\+\+I\+T\+ER}
+\item 
+struct \hyperlink{structbinding}{binding}
+\item 
+struct \hyperlink{structprefix}{prefix}
+\item 
+struct \hyperlink{struct_t_a_g___n_a_m_e}{T\+A\+G\+\_\+\+N\+A\+ME}
+\item 
+struct \hyperlink{structtag}{tag}
+\item 
+struct \hyperlink{struct_e_n_t_i_t_y}{E\+N\+T\+I\+TY}
+\item 
+struct \hyperlink{struct_c_o_n_t_e_n_t___s_c_a_f_f_o_l_d}{C\+O\+N\+T\+E\+N\+T\+\_\+\+S\+C\+A\+F\+F\+O\+LD}
+\item 
+struct \hyperlink{structblock}{block}
+\item 
+struct \hyperlink{struct_s_t_r_i_n_g___p_o_o_l}{S\+T\+R\+I\+N\+G\+\_\+\+P\+O\+OL}
+\item 
+struct \hyperlink{structattribute__id}{attribute\+\_\+id}
+\item 
+struct \hyperlink{struct_d_e_f_a_u_l_t___a_t_t_r_i_b_u_t_e}{D\+E\+F\+A\+U\+L\+T\+\_\+\+A\+T\+T\+R\+I\+B\+U\+TE}
+\item 
+struct \hyperlink{struct_n_s___a_t_t}{N\+S\+\_\+\+A\+TT}
+\item 
+struct \hyperlink{struct_e_l_e_m_e_n_t___t_y_p_e}{E\+L\+E\+M\+E\+N\+T\+\_\+\+T\+Y\+PE}
+\item 
+struct \hyperlink{struct_d_t_d}{D\+TD}
+\item 
+struct \hyperlink{structopen__internal__entity}{open\+\_\+internal\+\_\+entity}
+\item 
+struct \hyperlink{struct_x_m_l___parser_struct}{X\+M\+L\+\_\+\+Parser\+Struct}
+\end{DoxyCompactItemize}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{xmlparse_8c_a375b1d5bc99cff1692e0875ac1d8a953}{X\+M\+L\+\_\+\+B\+U\+I\+L\+D\+I\+N\+G\+\_\+\+E\+X\+P\+AT}~1
+\item 
+\#define \hyperlink{xmlparse_8c_a361cb41d18ca477abbdbd2ea157d3557}{X\+M\+L\+\_\+\+E\+N\+C\+O\+D\+E\+\_\+\+M\+AX}~\hyperlink{xmltok_8h_a8fefe7b18536c40a32b581a2f40aa2fe}{X\+M\+L\+\_\+\+U\+T\+F8\+\_\+\+E\+N\+C\+O\+D\+E\+\_\+\+M\+AX}
+\item 
+\#define \hyperlink{xmlparse_8c_a243c0ebc4d48626afba079cce7160dc0}{Xml\+Convert}~\hyperlink{xmltok_8h_a2b4273f95ae9afa03fd097aaa807be9e}{Xml\+Utf8\+Convert}
+\item 
+\#define \hyperlink{xmlparse_8c_aa0aa4b543a8778d25ce95b5a3550203b}{Xml\+Get\+Internal\+Encoding}~\hyperlink{xmltok_8h_a64165f5cd093ceab395d98e0cb80fc3d}{Xml\+Get\+Utf8\+Internal\+Encoding}
+\item 
+\#define \hyperlink{xmlparse_8c_a7e11bb4c4079140bfe8a907490e87d52}{Xml\+Get\+Internal\+Encoding\+NS}~\hyperlink{xmltok_8h_a4111b4a4799b494f3f721f5675f0106c}{Xml\+Get\+Utf8\+Internal\+Encoding\+NS}
+\item 
+\#define \hyperlink{xmlparse_8c_affd43373927d22c9caad69f323506a3e}{Xml\+Encode}~\hyperlink{xmltok_8h_a56e56e234fd330d912619501fcc01054}{Xml\+Utf8\+Encode}
+\item 
+\#define \hyperlink{xmlparse_8c_a62142e6359fd5641bb5e0678ca3e1dfe}{M\+U\+S\+T\+\_\+\+C\+O\+N\+V\+E\+RT}(enc,  \hyperlink{lib_2expat_8h_a755339d27872b13735c2cab829e47157}{s})~(!(enc)-\/$>$is\+Utf8)
+\item 
+\#define \hyperlink{xmlparse_8c_aabf84ba1b49d38a26cd4706af414f452}{Xml\+Init\+Encoding\+NS}~\hyperlink{xmltok_8h_a9fa3e317508ec3052e285957e931ae13}{Xml\+Init\+Encoding}
+\item 
+\#define \hyperlink{xmlparse_8c_a4dc93e90a190ce8de7e813c2e5f55b68}{Xml\+Init\+Unknown\+Encoding\+NS}~\hyperlink{xmltok_8h_a7bd2980a71390ec11b4039e2f10a41da}{Xml\+Init\+Unknown\+Encoding}
+\item 
+\#define \hyperlink{xmlparse_8c_a7e11bb4c4079140bfe8a907490e87d52}{Xml\+Get\+Internal\+Encoding\+NS}~\hyperlink{xmlparse_8c_aa0aa4b543a8778d25ce95b5a3550203b}{Xml\+Get\+Internal\+Encoding}
+\item 
+\#define \hyperlink{xmlparse_8c_ae78ba61b9eaaafd2b29a3a3b61a296b9}{Xml\+Parse\+Xml\+Decl\+NS}~\hyperlink{xmltok_8h_a10982a55deba3bb46e373700d7a4ec2e}{Xml\+Parse\+Xml\+Decl}
+\item 
+\#define \hyperlink{xmlparse_8c_ae4b64ebad65f8eddc2cf1c159ba06f55}{X\+M\+L\+\_\+T}(x)~x
+\item 
+\#define \hyperlink{xmlparse_8c_a9810f833cdfe0cddebb60a20257e0e59}{X\+M\+L\+\_\+L}(x)~x
+\item 
+\#define \hyperlink{xmlparse_8c_a6b15bd61b34718150a8b92ffc21d49a3}{R\+O\+U\+N\+D\+\_\+\+UP}(n,  sz)~(((n) + ((sz) -\/ 1)) \& $\sim$((sz) -\/ 1))
+\item 
+\#define \hyperlink{xmlparse_8c_aebf7e3a011794d1f74e3710a75203b2c}{C\+H\+A\+R\+\_\+\+H\+A\+SH}(h,  \hyperlink{rfft2d_test_m_l_8m_ae0323a9039add2978bf5b49550572c7c}{c})~(((h) $\ast$ 0x\+F4243) $^\wedge$ (unsigned char)(c))
+\item 
+\#define \hyperlink{xmlparse_8c_a6e9fcd1e2aea63f6d799aff591d89a6a}{S\+E\+C\+O\+N\+D\+\_\+\+H\+A\+SH}(\hyperlink{xlsym_8c_ac6dd7f9597bde69a9a1a196f2f87c9be}{hash},  \hyperlink{structmask}{mask},  power)~((((\hyperlink{xlsym_8c_ac6dd7f9597bde69a9a1a196f2f87c9be}{hash}) \& $\sim$(\hyperlink{structmask}{mask})) $>$$>$ ((power) -\/ 1)) \& ((\hyperlink{structmask}{mask}) $>$$>$ 2))
+\item 
+\#define \hyperlink{xmlparse_8c_a1fe8c2d28329fb8ad8e4bc1e77748e15}{P\+R\+O\+B\+E\+\_\+\+S\+T\+EP}(\hyperlink{xlsym_8c_ac6dd7f9597bde69a9a1a196f2f87c9be}{hash},  \hyperlink{structmask}{mask},  power)~((unsigned char)((\hyperlink{xmlparse_8c_a6e9fcd1e2aea63f6d799aff591d89a6a}{S\+E\+C\+O\+N\+D\+\_\+\+H\+A\+SH}(\hyperlink{xlsym_8c_ac6dd7f9597bde69a9a1a196f2f87c9be}{hash}, \hyperlink{structmask}{mask}, power)) $\vert$ 1))
+\item 
+\#define \hyperlink{xmlparse_8c_a836411019fe8b351db35f9a79fea3f48}{I\+N\+I\+T\+\_\+\+T\+A\+G\+\_\+\+B\+U\+F\+\_\+\+S\+I\+ZE}~32  /$\ast$ must be \hyperlink{rfft2d_test_m_l_8m_a4124bc0a9335c27f086f24ba207a4912}{a} multiple \hyperlink{rfft2d_test_m_l_8m_ad1fb8d92192e22cbe6298e4a2c65a711}{of} sizeof(\hyperlink{amiga_2include_2libraries_2expat_8h_a63da96463e775e1ec3a7d1f076208127}{X\+M\+L\+\_\+\+Char}) $\ast$/
+\item 
+\#define \hyperlink{xmlparse_8c_a3b0620f311e691900243a0cc71ab7d05}{I\+N\+I\+T\+\_\+\+D\+A\+T\+A\+\_\+\+B\+U\+F\+\_\+\+S\+I\+ZE}~1024
+\item 
+\#define \hyperlink{xmlparse_8c_a794ada822e287f29805e4896b0e9b62b}{I\+N\+I\+T\+\_\+\+A\+T\+T\+S\+\_\+\+S\+I\+ZE}~16
+\item 
+\#define \hyperlink{xmlparse_8c_a58ece3d52c803a3ae784df018f71a42d}{I\+N\+I\+T\+\_\+\+A\+T\+T\+S\+\_\+\+V\+E\+R\+S\+I\+ON}~0x\+F\+F\+F\+F\+F\+F\+FF
+\item 
+\#define \hyperlink{xmlparse_8c_a154c2ccca4bd8cc781b8a05c910d8aaa}{I\+N\+I\+T\+\_\+\+B\+L\+O\+C\+K\+\_\+\+S\+I\+ZE}~1024
+\item 
+\#define \hyperlink{xmlparse_8c_a455ba2f0e322260b0c454d7da073af0e}{I\+N\+I\+T\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+S\+I\+ZE}~1024
+\item 
+\#define \hyperlink{xmlparse_8c_abe06cd496f0f41a085b86aeeb3a31988}{E\+X\+P\+A\+N\+D\+\_\+\+S\+P\+A\+RE}~24
+\item 
+\#define \hyperlink{xmlparse_8c_a2bdecceeac199b0c8e7e2ccce5ac7490}{I\+N\+I\+T\+\_\+\+S\+C\+A\+F\+F\+O\+L\+D\+\_\+\+E\+L\+E\+M\+E\+N\+TS}~32
+\item 
+\#define \hyperlink{xmlparse_8c_a386cd1d223c3a07e77de4009a70dfc99}{pool\+Start}(pool)~((pool)-\/$>$\hyperlink{seqread_8c_ac503262ae470564980711da4f78b1181}{start})
+\item 
+\#define \hyperlink{xmlparse_8c_a2e97b873d7bb94bc451bfe3656c314d9}{pool\+End}(pool)~((pool)-\/$>$ptr)
+\item 
+\#define \hyperlink{xmlparse_8c_a634e57fbfe06dcbcfa782dc5950c1c1d}{pool\+Length}(pool)~((pool)-\/$>$ptr -\/ (pool)-\/$>$\hyperlink{seqread_8c_ac503262ae470564980711da4f78b1181}{start})
+\item 
+\#define \hyperlink{xmlparse_8c_ad856ba8e9a9305a2a0b5539f999bbeaa}{pool\+Chop}(pool)~((\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void})-\/-\/(pool-\/$>$ptr))
+\item 
+\#define \hyperlink{xmlparse_8c_ae6cc829455aa2a976f41d93cd3c81162}{pool\+Last\+Char}(pool)~(((pool)-\/$>$ptr)\mbox{[}-\/1\mbox{]})
+\item 
+\#define \hyperlink{xmlparse_8c_ac42e54028bfc6d8b168cf1eb1936d10e}{pool\+Discard}(pool)~((pool)-\/$>$ptr = (pool)-\/$>$\hyperlink{seqread_8c_ac503262ae470564980711da4f78b1181}{start})
+\item 
+\#define \hyperlink{xmlparse_8c_a9db839b65943e8e94afadfeff3c8f8a4}{pool\+Finish}(pool)~((pool)-\/$>$\hyperlink{seqread_8c_ac503262ae470564980711da4f78b1181}{start} = (pool)-\/$>$ptr)
+\item 
+\#define \hyperlink{xmlparse_8c_ae072bed74fc5fff224ec324737871399}{pool\+Append\+Char}(pool,  \hyperlink{rfft2d_test_m_l_8m_ae0323a9039add2978bf5b49550572c7c}{c})
+\item 
+\#define \hyperlink{xmlparse_8c_ab8d499913046f671dedfa9ec2fee39e4}{M\+A\+L\+L\+OC}(\hyperlink{lib_2expat_8h_a755339d27872b13735c2cab829e47157}{s})~(parser-\/$>$m\+\_\+mem.\+malloc\+\_\+fcn((\hyperlink{lib_2expat_8h_a755339d27872b13735c2cab829e47157}{s})))
+\item 
+\#define \hyperlink{xmlparse_8c_a17d9af8542e3c215a173f67977fb06aa}{R\+E\+A\+L\+L\+OC}(\hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p},  \hyperlink{lib_2expat_8h_a755339d27872b13735c2cab829e47157}{s})~(parser-\/$>$m\+\_\+mem.\+realloc\+\_\+fcn((\hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p}),(\hyperlink{lib_2expat_8h_a755339d27872b13735c2cab829e47157}{s})))
+\item 
+\#define \hyperlink{xmlparse_8c_a02048bf846e8bc87e3ce188e4957ef06}{F\+R\+EE}(\hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p})~(parser-\/$>$m\+\_\+mem.\+free\+\_\+fcn((\hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p})))
+\item 
+\#define \hyperlink{xmlparse_8c_a4b666535c828e23ccd16510a0a1a1943}{user\+Data}~(parser-\/$>$m\+\_\+user\+Data)
+\item 
+\#define \hyperlink{xmlparse_8c_a9e12f8140a29d958bcecacda5a59cbca}{handler\+Arg}~(parser-\/$>$m\+\_\+handler\+Arg)
+\item 
+\#define \hyperlink{xmlparse_8c_a922a52c6d583f208de2de02834e30efd}{start\+Element\+Handler}~(parser-\/$>$m\+\_\+start\+Element\+Handler)
+\item 
+\#define \hyperlink{xmlparse_8c_a6a38d6f7c95b6156002415993d2c28c6}{end\+Element\+Handler}~(parser-\/$>$m\+\_\+end\+Element\+Handler)
+\item 
+\#define \hyperlink{xmlparse_8c_ae5a7ce062c7f3598d17434f686efecb5}{character\+Data\+Handler}~(parser-\/$>$m\+\_\+character\+Data\+Handler)
+\item 
+\#define \hyperlink{xmlparse_8c_a16aeaf3e01c64f9301a6954762951b74}{processing\+Instruction\+Handler}~(parser-\/$>$m\+\_\+processing\+Instruction\+Handler)
+\item 
+\#define \hyperlink{xmlparse_8c_a4ae8e829913d65184867babb99eaf289}{comment\+Handler}~(parser-\/$>$m\+\_\+comment\+Handler)
+\item 
+\#define \hyperlink{xmlparse_8c_a65f06f03eda785674477bcfed1d85f62}{start\+Cdata\+Section\+Handler}~(parser-\/$>$m\+\_\+start\+Cdata\+Section\+Handler)
+\item 
+\#define \hyperlink{xmlparse_8c_a0afd2cfae012d84b77e78092b8f60428}{end\+Cdata\+Section\+Handler}~(parser-\/$>$m\+\_\+end\+Cdata\+Section\+Handler)
+\item 
+\#define \hyperlink{xmlparse_8c_a67f2d0c9fb94706d75a67d63ccda9204}{default\+Handler}~(parser-\/$>$m\+\_\+default\+Handler)
+\item 
+\#define \hyperlink{xmlparse_8c_a8b81c0ef4b22fa60a1268c1722bf0580}{start\+Doctype\+Decl\+Handler}~(parser-\/$>$m\+\_\+start\+Doctype\+Decl\+Handler)
+\item 
+\#define \hyperlink{xmlparse_8c_a4bd18e877f70ade25ab75e02f0ce90e3}{end\+Doctype\+Decl\+Handler}~(parser-\/$>$m\+\_\+end\+Doctype\+Decl\+Handler)
+\item 
+\#define \hyperlink{xmlparse_8c_ac7472317816f3b7da8ee4852ef91eeb5}{unparsed\+Entity\+Decl\+Handler}~(parser-\/$>$m\+\_\+unparsed\+Entity\+Decl\+Handler)
+\item 
+\#define \hyperlink{xmlparse_8c_a4654af496a67984a651f956c01b30902}{notation\+Decl\+Handler}~(parser-\/$>$m\+\_\+notation\+Decl\+Handler)
+\item 
+\#define \hyperlink{xmlparse_8c_a8ae71caf8f589aef75fa7bc71956e0da}{start\+Namespace\+Decl\+Handler}~(parser-\/$>$m\+\_\+start\+Namespace\+Decl\+Handler)
+\item 
+\#define \hyperlink{xmlparse_8c_abd868dfac40b53a57ce9e9563474045f}{end\+Namespace\+Decl\+Handler}~(parser-\/$>$m\+\_\+end\+Namespace\+Decl\+Handler)
+\item 
+\#define \hyperlink{xmlparse_8c_aa688fadc801cd636da72805cb7596c0d}{not\+Standalone\+Handler}~(parser-\/$>$m\+\_\+not\+Standalone\+Handler)
+\item 
+\#define \hyperlink{xmlparse_8c_a694cff29644917f9d1fdb2e550859296}{external\+Entity\+Ref\+Handler}~(parser-\/$>$m\+\_\+external\+Entity\+Ref\+Handler)
+\item 
+\#define \hyperlink{xmlparse_8c_a05354e48a97b2791d64152fcb4ca2434}{external\+Entity\+Ref\+Handler\+Arg}~(parser-\/$>$m\+\_\+external\+Entity\+Ref\+Handler\+Arg)
+\item 
+\#define \hyperlink{xmlparse_8c_ad675f805860a1b401be85d2a3a7708b5}{internal\+Entity\+Ref\+Handler}~(parser-\/$>$m\+\_\+internal\+Entity\+Ref\+Handler)
+\item 
+\#define \hyperlink{xmlparse_8c_a1753cfebea0f1d60dbf7d00f2e825bbe}{skipped\+Entity\+Handler}~(parser-\/$>$m\+\_\+skipped\+Entity\+Handler)
+\item 
+\#define \hyperlink{xmlparse_8c_a49ce74526fcb51273686528a09b34ac3}{unknown\+Encoding\+Handler}~(parser-\/$>$m\+\_\+unknown\+Encoding\+Handler)
+\item 
+\#define \hyperlink{xmlparse_8c_a1e61af8958b7c3b3f1b64d2ea2cbecc8}{element\+Decl\+Handler}~(parser-\/$>$m\+\_\+element\+Decl\+Handler)
+\item 
+\#define \hyperlink{xmlparse_8c_ab0e2251928e40680b2418ff0373a954a}{attlist\+Decl\+Handler}~(parser-\/$>$m\+\_\+attlist\+Decl\+Handler)
+\item 
+\#define \hyperlink{xmlparse_8c_a9e8683e389402cd0b46f3af737955fc1}{entity\+Decl\+Handler}~(parser-\/$>$m\+\_\+entity\+Decl\+Handler)
+\item 
+\#define \hyperlink{xmlparse_8c_a64170e3e35c6d95084c210e28f48fb00}{xml\+Decl\+Handler}~(parser-\/$>$m\+\_\+xml\+Decl\+Handler)
+\item 
+\#define \hyperlink{xmlparse_8c_a4d1151f66e93840b8a8c9169852a95dd}{encoding}~(parser-\/$>$m\+\_\+encoding)
+\item 
+\#define \hyperlink{xmlparse_8c_a49f744a2302f39b471f72005c0e8836b}{init\+Encoding}~(parser-\/$>$m\+\_\+init\+Encoding)
+\item 
+\#define \hyperlink{xmlparse_8c_a1b33093c602147d9a9c8d532f61c7dd0}{internal\+Encoding}~(parser-\/$>$m\+\_\+internal\+Encoding)
+\item 
+\#define \hyperlink{xmlparse_8c_a56a3130a18d2b72be03748455780e708}{unknown\+Encoding\+Mem}~(parser-\/$>$m\+\_\+unknown\+Encoding\+Mem)
+\item 
+\#define \hyperlink{xmlparse_8c_a9581e7e60c6db8d6a0122b0e559beb0c}{unknown\+Encoding\+Data}~(parser-\/$>$m\+\_\+unknown\+Encoding\+Data)
+\item 
+\#define \hyperlink{xmlparse_8c_a714386346dd4bede749ba4daa41d7586}{unknown\+Encoding\+Handler\+Data}~(parser-\/$>$m\+\_\+unknown\+Encoding\+Handler\+Data)
+\item 
+\#define \hyperlink{xmlparse_8c_a4711580e5eb92ef35d766bb7c86b9487}{unknown\+Encoding\+Release}~(parser-\/$>$m\+\_\+unknown\+Encoding\+Release)
+\item 
+\#define \hyperlink{xmlparse_8c_a7acee91eaf16102f30a0b769adc0db04}{protocol\+Encoding\+Name}~(parser-\/$>$m\+\_\+protocol\+Encoding\+Name)
+\item 
+\#define \hyperlink{xmlparse_8c_ab269c6a72273579c35715ec77b41b634}{ns}~(parser-\/$>$m\+\_\+ns)
+\item 
+\#define \hyperlink{xmlparse_8c_a70104d002b09d7b6eb9ad34d599a64f0}{ns\+\_\+triplets}~(parser-\/$>$m\+\_\+ns\+\_\+triplets)
+\item 
+\#define \hyperlink{xmlparse_8c_af493a8c6fd0c8fec5539c52661fda630}{prolog\+State}~(parser-\/$>$m\+\_\+prolog\+State)
+\item 
+\#define \hyperlink{xmlparse_8c_ae2e049b4850fa94870e78619701bbeb0}{processor}~(parser-\/$>$m\+\_\+processor)
+\item 
+\#define \hyperlink{xmlparse_8c_adf47938902be0f6a9c144226d02fd634}{error\+Code}~(parser-\/$>$m\+\_\+error\+Code)
+\item 
+\#define \hyperlink{xmlparse_8c_a095b4f7c37923ec949d4a63316ab5f4e}{event\+Ptr}~(parser-\/$>$m\+\_\+event\+Ptr)
+\item 
+\#define \hyperlink{xmlparse_8c_ac5fcab6621c83f8c96c04c7cdcd7e88d}{event\+End\+Ptr}~(parser-\/$>$m\+\_\+event\+End\+Ptr)
+\item 
+\#define \hyperlink{xmlparse_8c_aed5d95cbb171c2dfa8bce638f533a273}{position\+Ptr}~(parser-\/$>$m\+\_\+position\+Ptr)
+\item 
+\#define \hyperlink{xmlparse_8c_a38975acbb6db0fe600f77477050279a4}{position}~(parser-\/$>$m\+\_\+position)
+\item 
+\#define \hyperlink{xmlparse_8c_a5df0641cd43a44ba64ce0d3087d952f9}{open\+Internal\+Entities}~(parser-\/$>$m\+\_\+open\+Internal\+Entities)
+\item 
+\#define \hyperlink{xmlparse_8c_ab276ffc03932347093fbd842a6107e7e}{free\+Internal\+Entities}~(parser-\/$>$m\+\_\+free\+Internal\+Entities)
+\item 
+\#define \hyperlink{xmlparse_8c_a0a72476230b17bb7c062faf0952165a1}{default\+Expand\+Internal\+Entities}~(parser-\/$>$m\+\_\+default\+Expand\+Internal\+Entities)
+\item 
+\#define \hyperlink{xmlparse_8c_a89227e5719171a2b7a05963fc67fcbc2}{tag\+Level}~(parser-\/$>$m\+\_\+tag\+Level)
+\item 
+\#define \hyperlink{xmlparse_8c_aaadc06b5dac8070de2c8677210967bdb}{buffer}~(parser-\/$>$m\+\_\+buffer)
+\item 
+\#define \hyperlink{xmlparse_8c_af0e9c27e1d82202b57e87eebacf0dccf}{buffer\+Ptr}~(parser-\/$>$m\+\_\+buffer\+Ptr)
+\item 
+\#define \hyperlink{xmlparse_8c_a59827c0775f8adab8222031c7c774d45}{buffer\+End}~(parser-\/$>$m\+\_\+buffer\+End)
+\item 
+\#define \hyperlink{xmlparse_8c_ab74018925dc84567939663e8c76b6856}{parse\+End\+Byte\+Index}~(parser-\/$>$m\+\_\+parse\+End\+Byte\+Index)
+\item 
+\#define \hyperlink{xmlparse_8c_a69edecf818e64e82c1e550bdb6520481}{parse\+End\+Ptr}~(parser-\/$>$m\+\_\+parse\+End\+Ptr)
+\item 
+\#define \hyperlink{xmlparse_8c_aa196955726141832a26d8b852df43b36}{buffer\+Lim}~(parser-\/$>$m\+\_\+buffer\+Lim)
+\item 
+\#define \hyperlink{xmlparse_8c_a243c9d2243ec2a35cd52d3ecf7cb1614}{data\+Buf}~(parser-\/$>$m\+\_\+data\+Buf)
+\item 
+\#define \hyperlink{xmlparse_8c_ad25359f37bbcd96c503ec8031fe995ab}{data\+Buf\+End}~(parser-\/$>$m\+\_\+data\+Buf\+End)
+\item 
+\#define \hyperlink{xmlparse_8c_ab35a2e4e656add004181d213bcf636c6}{\+\_\+dtd}~(parser-\/$>$m\+\_\+dtd)
+\item 
+\#define \hyperlink{xmlparse_8c_ac10942bb14f0f6fefea1e5986743997b}{cur\+Base}~(parser-\/$>$m\+\_\+cur\+Base)
+\item 
+\#define \hyperlink{xmlparse_8c_afcb60c35c976932aec4feabf7fb93dbd}{decl\+Entity}~(parser-\/$>$m\+\_\+decl\+Entity)
+\item 
+\#define \hyperlink{xmlparse_8c_a2c9f84bb2d7b6ef6a6a06721629b5309}{doctype\+Name}~(parser-\/$>$m\+\_\+doctype\+Name)
+\item 
+\#define \hyperlink{xmlparse_8c_a52cf3e26329a6665642366d608f19a93}{doctype\+Sysid}~(parser-\/$>$m\+\_\+doctype\+Sysid)
+\item 
+\#define \hyperlink{xmlparse_8c_a725bf115f2a36febb31e7aa6f890a9e8}{doctype\+Pubid}~(parser-\/$>$m\+\_\+doctype\+Pubid)
+\item 
+\#define \hyperlink{xmlparse_8c_aabd2799fe59009c99e55a0d02172e24b}{decl\+Attribute\+Type}~(parser-\/$>$m\+\_\+decl\+Attribute\+Type)
+\item 
+\#define \hyperlink{xmlparse_8c_a443d2b32f4610f80eb466606f314554e}{decl\+Notation\+Name}~(parser-\/$>$m\+\_\+decl\+Notation\+Name)
+\item 
+\#define \hyperlink{xmlparse_8c_a49c865a339297b69d1d5b74e8efe963d}{decl\+Notation\+Public\+Id}~(parser-\/$>$m\+\_\+decl\+Notation\+Public\+Id)
+\item 
+\#define \hyperlink{xmlparse_8c_a323503a05f3d05471fb204b95ba644ed}{decl\+Element\+Type}~(parser-\/$>$m\+\_\+decl\+Element\+Type)
+\item 
+\#define \hyperlink{xmlparse_8c_a09e5ab6ebce8719cab5ab801a7be2f6d}{decl\+Attribute\+Id}~(parser-\/$>$m\+\_\+decl\+Attribute\+Id)
+\item 
+\#define \hyperlink{xmlparse_8c_a72d90a570297f91e21fe6bedbe0c78ac}{decl\+Attribute\+Is\+Cdata}~(parser-\/$>$m\+\_\+decl\+Attribute\+Is\+Cdata)
+\item 
+\#define \hyperlink{xmlparse_8c_a175bed4f9d770eb6f8171fc48bbecedc}{decl\+Attribute\+Is\+Id}~(parser-\/$>$m\+\_\+decl\+Attribute\+Is\+Id)
+\item 
+\#define \hyperlink{xmlparse_8c_ad9aa870e1aa35543520a0c9d57a06124}{free\+Tag\+List}~(parser-\/$>$m\+\_\+free\+Tag\+List)
+\item 
+\#define \hyperlink{xmlparse_8c_a2e870588ca527c3605dbbbdb4b30c34b}{free\+Binding\+List}~(parser-\/$>$m\+\_\+free\+Binding\+List)
+\item 
+\#define \hyperlink{xmlparse_8c_a3104174926495d41334f41ecf7625d4b}{inherited\+Bindings}~(parser-\/$>$m\+\_\+inherited\+Bindings)
+\item 
+\#define \hyperlink{xmlparse_8c_a158f3ae07186f4c5e0ac37df749ceaec}{tag\+Stack}~(parser-\/$>$m\+\_\+tag\+Stack)
+\item 
+\#define \hyperlink{xmlparse_8c_a5bbadff5cdbbd3feb492c555b546a292}{atts}~(parser-\/$>$m\+\_\+atts)
+\item 
+\#define \hyperlink{xmlparse_8c_adc65825a80dd14608940f5a9a07d68ab}{atts\+Size}~(parser-\/$>$m\+\_\+atts\+Size)
+\item 
+\#define \hyperlink{xmlparse_8c_a130782f9100283fe154bf08918292c58}{n\+Specified\+Atts}~(parser-\/$>$m\+\_\+n\+Specified\+Atts)
+\item 
+\#define \hyperlink{xmlparse_8c_a01055fe9c05bdbca693e0e22ab85a0e5}{id\+Att\+Index}~(parser-\/$>$m\+\_\+id\+Att\+Index)
+\item 
+\#define \hyperlink{xmlparse_8c_a455151da0e6b245f8a98f00480626376}{ns\+Atts}~(parser-\/$>$m\+\_\+ns\+Atts)
+\item 
+\#define \hyperlink{xmlparse_8c_a4c7a8d2ec61115ce2ee0fbf95f5abe21}{ns\+Atts\+Version}~(parser-\/$>$m\+\_\+ns\+Atts\+Version)
+\item 
+\#define \hyperlink{xmlparse_8c_a50d8728e72c0b424a2d360c599f53779}{ns\+Atts\+Power}~(parser-\/$>$m\+\_\+ns\+Atts\+Power)
+\item 
+\#define \hyperlink{xmlparse_8c_aea59fdd2111549308a0d031f7fd02599}{att\+Info}~(parser-\/$>$m\+\_\+att\+Info)
+\item 
+\#define \hyperlink{xmlparse_8c_a39a63433fd9ac53dbbe600beb1043adf}{temp\+Pool}~(parser-\/$>$m\+\_\+temp\+Pool)
+\item 
+\#define \hyperlink{xmlparse_8c_a3027782cb1859b39383988b3dc5a32d4}{temp2\+Pool}~(parser-\/$>$m\+\_\+temp2\+Pool)
+\item 
+\#define \hyperlink{xmlparse_8c_a263678263938e54165f88cd889b6ce75}{group\+Connector}~(parser-\/$>$m\+\_\+group\+Connector)
+\item 
+\#define \hyperlink{xmlparse_8c_a694d8b982b62eb3e685dcc3957aa8894}{group\+Size}~(parser-\/$>$m\+\_\+group\+Size)
+\item 
+\#define \hyperlink{xmlparse_8c_a736bbc99314e2a5bf4f783a70cb88b2f}{namespace\+Separator}~(parser-\/$>$m\+\_\+namespace\+Separator)
+\item 
+\#define \hyperlink{xmlparse_8c_a9d763c133618f3e809bea574786ac52d}{parent\+Parser}~(parser-\/$>$m\+\_\+parent\+Parser)
+\item 
+\#define \hyperlink{xmlparse_8c_aa9b2258587e65f28344754d3377ca60c}{ps\+\_\+parsing}~(parser-\/$>$m\+\_\+parsing\+Status.\+parsing)
+\item 
+\#define \hyperlink{xmlparse_8c_a138303ba865325ae5574c370eec9ae46}{ps\+\_\+final\+Buffer}~(parser-\/$>$m\+\_\+parsing\+Status.\+final\+Buffer)
+\item 
+\#define \hyperlink{xmlparse_8c_adc80f62ce9a1bc68b9ec1d9d013c2227}{hash\+\_\+secret\+\_\+salt}~(parser-\/$>$m\+\_\+hash\+\_\+secret\+\_\+salt)
+\item 
+\#define \hyperlink{xmlparse_8c_a98b7c00e73b6d8f13214cc4646383aab}{V1}(\hyperlink{rfft2d_test_m_l_8m_a4124bc0a9335c27f086f24ba207a4912}{a},  \hyperlink{convtest_8m_a21ad0bd836b90d08f4cf640b4c298e7c}{b},  \hyperlink{rfft2d_test_m_l_8m_ae0323a9039add2978bf5b49550572c7c}{c})~\hyperlink{xmlparse_8c_a9810f833cdfe0cddebb60a20257e0e59}{X\+M\+L\+\_\+L}(\#\hyperlink{rfft2d_test_m_l_8m_a4124bc0a9335c27f086f24ba207a4912}{a})\hyperlink{xmlparse_8c_a9810f833cdfe0cddebb60a20257e0e59}{X\+M\+L\+\_\+L}(\char`\"{}.\char`\"{})\hyperlink{xmlparse_8c_a9810f833cdfe0cddebb60a20257e0e59}{X\+M\+L\+\_\+L}(\#\hyperlink{convtest_8m_a21ad0bd836b90d08f4cf640b4c298e7c}{b})\hyperlink{xmlparse_8c_a9810f833cdfe0cddebb60a20257e0e59}{X\+M\+L\+\_\+L}(\char`\"{}.\char`\"{})\hyperlink{xmlparse_8c_a9810f833cdfe0cddebb60a20257e0e59}{X\+M\+L\+\_\+L}(\#\hyperlink{rfft2d_test_m_l_8m_ae0323a9039add2978bf5b49550572c7c}{c})
+\item 
+\#define \hyperlink{xmlparse_8c_affd35bbd101bc1b065a2183790195dd1}{V2}(\hyperlink{rfft2d_test_m_l_8m_a4124bc0a9335c27f086f24ba207a4912}{a},  \hyperlink{convtest_8m_a21ad0bd836b90d08f4cf640b4c298e7c}{b},  \hyperlink{rfft2d_test_m_l_8m_ae0323a9039add2978bf5b49550572c7c}{c})~\hyperlink{xmlparse_8c_a9810f833cdfe0cddebb60a20257e0e59}{X\+M\+L\+\_\+L}(\char`\"{}expat\+\_\+\char`\"{})V1(\hyperlink{rfft2d_test_m_l_8m_a4124bc0a9335c27f086f24ba207a4912}{a},\hyperlink{convtest_8m_a21ad0bd836b90d08f4cf640b4c298e7c}{b},\hyperlink{rfft2d_test_m_l_8m_ae0323a9039add2978bf5b49550572c7c}{c})
+\item 
+\#define \hyperlink{xmlparse_8c_a1b87d5794a5bcabf1862019a8df60e97}{C\+O\+N\+T\+E\+X\+T\+\_\+\+S\+EP}~\hyperlink{xmlparse_8c_ae4b64ebad65f8eddc2cf1c159ba06f55}{X\+M\+L\+\_\+T}(\hyperlink{ascii_8h_a0c327eae6ca8b55faf5a07684d33de78}{A\+S\+C\+I\+I\+\_\+\+FF})
+\item 
+\#define \hyperlink{xmlparse_8c_a00541dfec332b4293dd3bbf560742e03}{I\+N\+I\+T\+\_\+\+P\+O\+W\+ER}~6
+\end{DoxyCompactItemize}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef char \hyperlink{xmlparse_8c_ac4b0eb8553f2e9c4325b04af8dac5264}{I\+C\+H\+AR}
+\item 
+typedef \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{amiga_2include_2libraries_2expat_8h_a63da96463e775e1ec3a7d1f076208127}{X\+M\+L\+\_\+\+Char} $\ast$ \hyperlink{xmlparse_8c_ab993fe892165ffeae5facd4ab9ded1e9}{K\+EY}
+\item 
+typedef struct \hyperlink{structbinding}{binding} \hyperlink{xmlparse_8c_a243b660be2393a4a7269d15d76c5fc15}{B\+I\+N\+D\+I\+NG}
+\item 
+typedef struct \hyperlink{structprefix}{prefix} \hyperlink{xmlparse_8c_aa3f98fd58683acd364daca2ddc737491}{P\+R\+E\+F\+IX}
+\item 
+typedef struct \hyperlink{structtag}{tag} \hyperlink{xmlparse_8c_a48a238acc041757391868dd2a19eb9c2}{T\+AG}
+\item 
+typedef struct \hyperlink{structblock}{block} \hyperlink{xmlparse_8c_a36711bca7556a427bbb3cf0f49620956}{B\+L\+O\+CK}
+\item 
+typedef struct \hyperlink{structattribute__id}{attribute\+\_\+id} \hyperlink{xmlparse_8c_ab0dc92cf6eadf5e62d25ee83cf2605f4}{A\+T\+T\+R\+I\+B\+U\+T\+E\+\_\+\+ID}
+\item 
+typedef struct \hyperlink{structopen__internal__entity}{open\+\_\+internal\+\_\+entity} \hyperlink{xmlparse_8c_a3cd960f4356314fc70dbef66f990d596}{O\+P\+E\+N\+\_\+\+I\+N\+T\+E\+R\+N\+A\+L\+\_\+\+E\+N\+T\+I\+TY}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+enum \hyperlink{amiga_2include_2libraries_2expat_8h_a6a06dad2fbbc37dd288c51e577494118}{X\+M\+L\+\_\+\+Error} \hyperlink{expat_2lib_2internal_8h_af44f68911377fd55f6e1588b0c89b3e5}{P\+T\+R\+C\+A\+LL} \hyperlink{xmlparse_8c_a91ac003478582480fcfc8c0fd9377cbc}{Processor} (\hyperlink{amiga_2include_2libraries_2expat_8h_a9dc0003156857c67b3a60b3993846013}{X\+M\+L\+\_\+\+Parser} parser, \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} char $\ast$\hyperlink{seqread_8c_ac503262ae470564980711da4f78b1181}{start}, \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} char $\ast$\hyperlink{convtest_8m_afb358f48b1646c750fb9da6c6585be2b}{end}, \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} char $\ast$$\ast$end\+Ptr)
+\item 
+\hyperlink{amiga_2include_2libraries_2expat_8h_a9dc0003156857c67b3a60b3993846013}{X\+M\+L\+\_\+\+Parser} \hyperlink{expat__external_8h_aad85d290912c3ffed7a2ec0b6173dad3}{X\+M\+L\+C\+A\+LL} \hyperlink{xmlparse_8c_a01f18ce453fd8d56fddd20b95e8c67cb}{X\+M\+L\+\_\+\+Parser\+Create} (\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{amiga_2include_2libraries_2expat_8h_a63da96463e775e1ec3a7d1f076208127}{X\+M\+L\+\_\+\+Char} $\ast$encoding\+Name)
+\item 
+\hyperlink{amiga_2include_2libraries_2expat_8h_a9dc0003156857c67b3a60b3993846013}{X\+M\+L\+\_\+\+Parser} \hyperlink{expat__external_8h_aad85d290912c3ffed7a2ec0b6173dad3}{X\+M\+L\+C\+A\+LL} \hyperlink{xmlparse_8c_a3762c40e9b7e108bc5c6b399888b4bce}{X\+M\+L\+\_\+\+Parser\+Create\+NS} (\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{amiga_2include_2libraries_2expat_8h_a63da96463e775e1ec3a7d1f076208127}{X\+M\+L\+\_\+\+Char} $\ast$encoding\+Name, \hyperlink{amiga_2include_2libraries_2expat_8h_a63da96463e775e1ec3a7d1f076208127}{X\+M\+L\+\_\+\+Char} ns\+Sep)
+\item 
+\hyperlink{amiga_2include_2libraries_2expat_8h_a9dc0003156857c67b3a60b3993846013}{X\+M\+L\+\_\+\+Parser} \hyperlink{expat__external_8h_aad85d290912c3ffed7a2ec0b6173dad3}{X\+M\+L\+C\+A\+LL} \hyperlink{xmlparse_8c_a39ec83ab7ecadd8f5a760cd3becd45f4}{X\+M\+L\+\_\+\+Parser\+Create\+\_\+\+MM} (\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{amiga_2include_2libraries_2expat_8h_a63da96463e775e1ec3a7d1f076208127}{X\+M\+L\+\_\+\+Char} $\ast$encoding\+Name, \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{struct_x_m_l___memory___handling___suite}{X\+M\+L\+\_\+\+Memory\+\_\+\+Handling\+\_\+\+Suite} $\ast$memsuite, \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{amiga_2include_2libraries_2expat_8h_a63da96463e775e1ec3a7d1f076208127}{X\+M\+L\+\_\+\+Char} $\ast$name\+Sep)
+\item 
+\hyperlink{amiga_2include_2libraries_2expat_8h_a5fe41bca8b7a23b2405f1b967e70f33a}{X\+M\+L\+\_\+\+Bool} \hyperlink{expat__external_8h_aad85d290912c3ffed7a2ec0b6173dad3}{X\+M\+L\+C\+A\+LL} \hyperlink{xmlparse_8c_aacda009967692067b7b37502b0bc8df7}{X\+M\+L\+\_\+\+Parser\+Reset} (\hyperlink{amiga_2include_2libraries_2expat_8h_a9dc0003156857c67b3a60b3993846013}{X\+M\+L\+\_\+\+Parser} parser, \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{amiga_2include_2libraries_2expat_8h_a63da96463e775e1ec3a7d1f076208127}{X\+M\+L\+\_\+\+Char} $\ast$encoding\+Name)
+\item 
+enum \hyperlink{amiga_2include_2libraries_2expat_8h_aef71ca3ac8198499d56aaa7b474303bb}{X\+M\+L\+\_\+\+Status} \hyperlink{expat__external_8h_aad85d290912c3ffed7a2ec0b6173dad3}{X\+M\+L\+C\+A\+LL} \hyperlink{xmlparse_8c_a760f6f635c22ef02952a4864863822f6}{X\+M\+L\+\_\+\+Set\+Encoding} (\hyperlink{amiga_2include_2libraries_2expat_8h_a9dc0003156857c67b3a60b3993846013}{X\+M\+L\+\_\+\+Parser} parser, \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{amiga_2include_2libraries_2expat_8h_a63da96463e775e1ec3a7d1f076208127}{X\+M\+L\+\_\+\+Char} $\ast$encoding\+Name)
+\item 
+\hyperlink{amiga_2include_2libraries_2expat_8h_a9dc0003156857c67b3a60b3993846013}{X\+M\+L\+\_\+\+Parser} \hyperlink{expat__external_8h_aad85d290912c3ffed7a2ec0b6173dad3}{X\+M\+L\+C\+A\+LL} \hyperlink{xmlparse_8c_a5007cc50cec12841afd76cf150e9cc2d}{X\+M\+L\+\_\+\+External\+Entity\+Parser\+Create} (\hyperlink{amiga_2include_2libraries_2expat_8h_a9dc0003156857c67b3a60b3993846013}{X\+M\+L\+\_\+\+Parser} old\+Parser, \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{amiga_2include_2libraries_2expat_8h_a63da96463e775e1ec3a7d1f076208127}{X\+M\+L\+\_\+\+Char} $\ast$\hyperlink{structcontext}{context}, \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{amiga_2include_2libraries_2expat_8h_a63da96463e775e1ec3a7d1f076208127}{X\+M\+L\+\_\+\+Char} $\ast$encoding\+Name)
+\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{expat__external_8h_aad85d290912c3ffed7a2ec0b6173dad3}{X\+M\+L\+C\+A\+LL} \hyperlink{xmlparse_8c_afa94bb8a8566c2280106a526ffb6a95b}{X\+M\+L\+\_\+\+Parser\+Free} (\hyperlink{amiga_2include_2libraries_2expat_8h_a9dc0003156857c67b3a60b3993846013}{X\+M\+L\+\_\+\+Parser} parser)
+\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{expat__external_8h_aad85d290912c3ffed7a2ec0b6173dad3}{X\+M\+L\+C\+A\+LL} \hyperlink{xmlparse_8c_af02353a908b28e1b4eb2b444ec274890}{X\+M\+L\+\_\+\+Use\+Parser\+As\+Handler\+Arg} (\hyperlink{amiga_2include_2libraries_2expat_8h_a9dc0003156857c67b3a60b3993846013}{X\+M\+L\+\_\+\+Parser} parser)
+\item 
+enum \hyperlink{amiga_2include_2libraries_2expat_8h_a6a06dad2fbbc37dd288c51e577494118}{X\+M\+L\+\_\+\+Error} \hyperlink{expat__external_8h_aad85d290912c3ffed7a2ec0b6173dad3}{X\+M\+L\+C\+A\+LL} \hyperlink{xmlparse_8c_ad0a2e22d4dcc22326917659c9668fa4a}{X\+M\+L\+\_\+\+Use\+Foreign\+D\+TD} (\hyperlink{amiga_2include_2libraries_2expat_8h_a9dc0003156857c67b3a60b3993846013}{X\+M\+L\+\_\+\+Parser} parser, \hyperlink{amiga_2include_2libraries_2expat_8h_a5fe41bca8b7a23b2405f1b967e70f33a}{X\+M\+L\+\_\+\+Bool} use\+D\+TD)
+\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{expat__external_8h_aad85d290912c3ffed7a2ec0b6173dad3}{X\+M\+L\+C\+A\+LL} \hyperlink{xmlparse_8c_af07f7d27748e891778eca7a14865a39b}{X\+M\+L\+\_\+\+Set\+Return\+N\+S\+Triplet} (\hyperlink{amiga_2include_2libraries_2expat_8h_a9dc0003156857c67b3a60b3993846013}{X\+M\+L\+\_\+\+Parser} parser, \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} do\+\_\+nst)
+\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{expat__external_8h_aad85d290912c3ffed7a2ec0b6173dad3}{X\+M\+L\+C\+A\+LL} \hyperlink{xmlparse_8c_acef3ab4e977f1ebcb37c3be9a3879938}{X\+M\+L\+\_\+\+Set\+User\+Data} (\hyperlink{amiga_2include_2libraries_2expat_8h_a9dc0003156857c67b3a60b3993846013}{X\+M\+L\+\_\+\+Parser} parser, \hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} $\ast$\hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p})
+\item 
+enum \hyperlink{amiga_2include_2libraries_2expat_8h_aef71ca3ac8198499d56aaa7b474303bb}{X\+M\+L\+\_\+\+Status} \hyperlink{expat__external_8h_aad85d290912c3ffed7a2ec0b6173dad3}{X\+M\+L\+C\+A\+LL} \hyperlink{xmlparse_8c_a102ae76f998e2cb8eb542eb08b05b4a4}{X\+M\+L\+\_\+\+Set\+Base} (\hyperlink{amiga_2include_2libraries_2expat_8h_a9dc0003156857c67b3a60b3993846013}{X\+M\+L\+\_\+\+Parser} parser, \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{amiga_2include_2libraries_2expat_8h_a63da96463e775e1ec3a7d1f076208127}{X\+M\+L\+\_\+\+Char} $\ast$\hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p})
+\item 
+\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{amiga_2include_2libraries_2expat_8h_a63da96463e775e1ec3a7d1f076208127}{X\+M\+L\+\_\+\+Char} $\ast$\hyperlink{expat__external_8h_aad85d290912c3ffed7a2ec0b6173dad3}{X\+M\+L\+C\+A\+LL} \hyperlink{xmlparse_8c_abdb6c85284082fe8a74efa0fa141a1da}{X\+M\+L\+\_\+\+Get\+Base} (\hyperlink{amiga_2include_2libraries_2expat_8h_a9dc0003156857c67b3a60b3993846013}{X\+M\+L\+\_\+\+Parser} parser)
+\item 
+\hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{expat__external_8h_aad85d290912c3ffed7a2ec0b6173dad3}{X\+M\+L\+C\+A\+LL} \hyperlink{xmlparse_8c_a25aaf9db249abd012a042c248a9642d6}{X\+M\+L\+\_\+\+Get\+Specified\+Attribute\+Count} (\hyperlink{amiga_2include_2libraries_2expat_8h_a9dc0003156857c67b3a60b3993846013}{X\+M\+L\+\_\+\+Parser} parser)
+\item 
+\hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{expat__external_8h_aad85d290912c3ffed7a2ec0b6173dad3}{X\+M\+L\+C\+A\+LL} \hyperlink{xmlparse_8c_a605f45f0d2783982343a5778f6f11851}{X\+M\+L\+\_\+\+Get\+Id\+Attribute\+Index} (\hyperlink{amiga_2include_2libraries_2expat_8h_a9dc0003156857c67b3a60b3993846013}{X\+M\+L\+\_\+\+Parser} parser)
+\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{expat__external_8h_aad85d290912c3ffed7a2ec0b6173dad3}{X\+M\+L\+C\+A\+LL} \hyperlink{xmlparse_8c_a464be65bf6755de9b7035d55c74d1367}{X\+M\+L\+\_\+\+Set\+Element\+Handler} (\hyperlink{amiga_2include_2libraries_2expat_8h_a9dc0003156857c67b3a60b3993846013}{X\+M\+L\+\_\+\+Parser} parser, \hyperlink{amiga_2include_2libraries_2expat_8h_ae673a34e69303b3e6e9d112ddcc86aad}{X\+M\+L\+\_\+\+Start\+Element\+Handler} \hyperlink{seqread_8c_ac503262ae470564980711da4f78b1181}{start}, \hyperlink{amiga_2include_2libraries_2expat_8h_a4c030e2ecb6cf8f953541923e0c5c4bc}{X\+M\+L\+\_\+\+End\+Element\+Handler} \hyperlink{convtest_8m_afb358f48b1646c750fb9da6c6585be2b}{end})
+\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{expat__external_8h_aad85d290912c3ffed7a2ec0b6173dad3}{X\+M\+L\+C\+A\+LL} \hyperlink{xmlparse_8c_ae1ecca353e62eb473f25ac874ad44341}{X\+M\+L\+\_\+\+Set\+Start\+Element\+Handler} (\hyperlink{amiga_2include_2libraries_2expat_8h_a9dc0003156857c67b3a60b3993846013}{X\+M\+L\+\_\+\+Parser} parser, \hyperlink{amiga_2include_2libraries_2expat_8h_ae673a34e69303b3e6e9d112ddcc86aad}{X\+M\+L\+\_\+\+Start\+Element\+Handler} \hyperlink{seqread_8c_ac503262ae470564980711da4f78b1181}{start})
+\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{expat__external_8h_aad85d290912c3ffed7a2ec0b6173dad3}{X\+M\+L\+C\+A\+LL} \hyperlink{xmlparse_8c_a9a33295b5dfc3c22af331847f0ff705a}{X\+M\+L\+\_\+\+Set\+End\+Element\+Handler} (\hyperlink{amiga_2include_2libraries_2expat_8h_a9dc0003156857c67b3a60b3993846013}{X\+M\+L\+\_\+\+Parser} parser, \hyperlink{amiga_2include_2libraries_2expat_8h_a4c030e2ecb6cf8f953541923e0c5c4bc}{X\+M\+L\+\_\+\+End\+Element\+Handler} \hyperlink{convtest_8m_afb358f48b1646c750fb9da6c6585be2b}{end})
+\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{expat__external_8h_aad85d290912c3ffed7a2ec0b6173dad3}{X\+M\+L\+C\+A\+LL} \hyperlink{xmlparse_8c_ae1b46a8b1815c2d11a3b88c0900d8d16}{X\+M\+L\+\_\+\+Set\+Character\+Data\+Handler} (\hyperlink{amiga_2include_2libraries_2expat_8h_a9dc0003156857c67b3a60b3993846013}{X\+M\+L\+\_\+\+Parser} parser, \hyperlink{amiga_2include_2libraries_2expat_8h_a49ea4b8c43b9d179add2746e20a5db97}{X\+M\+L\+\_\+\+Character\+Data\+Handler} handler)
+\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{expat__external_8h_aad85d290912c3ffed7a2ec0b6173dad3}{X\+M\+L\+C\+A\+LL} \hyperlink{xmlparse_8c_a194c76e50a44f5ba64d50ca3579db8a7}{X\+M\+L\+\_\+\+Set\+Processing\+Instruction\+Handler} (\hyperlink{amiga_2include_2libraries_2expat_8h_a9dc0003156857c67b3a60b3993846013}{X\+M\+L\+\_\+\+Parser} parser, \hyperlink{amiga_2include_2libraries_2expat_8h_aea2f9d08064fb45ff04f9e74b6b407c2}{X\+M\+L\+\_\+\+Processing\+Instruction\+Handler} handler)
+\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{expat__external_8h_aad85d290912c3ffed7a2ec0b6173dad3}{X\+M\+L\+C\+A\+LL} \hyperlink{xmlparse_8c_afb073dff3e7cb1dc01a0d30031764bca}{X\+M\+L\+\_\+\+Set\+Comment\+Handler} (\hyperlink{amiga_2include_2libraries_2expat_8h_a9dc0003156857c67b3a60b3993846013}{X\+M\+L\+\_\+\+Parser} parser, \hyperlink{amiga_2include_2libraries_2expat_8h_a7bf5731181aec35012d70d1634edcef1}{X\+M\+L\+\_\+\+Comment\+Handler} handler)
+\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{expat__external_8h_aad85d290912c3ffed7a2ec0b6173dad3}{X\+M\+L\+C\+A\+LL} \hyperlink{xmlparse_8c_ae193379d2b09d758e44c6d03e42a0631}{X\+M\+L\+\_\+\+Set\+Cdata\+Section\+Handler} (\hyperlink{amiga_2include_2libraries_2expat_8h_a9dc0003156857c67b3a60b3993846013}{X\+M\+L\+\_\+\+Parser} parser, \hyperlink{amiga_2include_2libraries_2expat_8h_a68a18e698f04c0cfedac814093d01a43}{X\+M\+L\+\_\+\+Start\+Cdata\+Section\+Handler} \hyperlink{seqread_8c_ac503262ae470564980711da4f78b1181}{start}, \hyperlink{amiga_2include_2libraries_2expat_8h_a52f3541344fd2e255bbd06f6b08321e2}{X\+M\+L\+\_\+\+End\+Cdata\+Section\+Handler} \hyperlink{convtest_8m_afb358f48b1646c750fb9da6c6585be2b}{end})
+\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{expat__external_8h_aad85d290912c3ffed7a2ec0b6173dad3}{X\+M\+L\+C\+A\+LL} \hyperlink{xmlparse_8c_acff1b6a7a10e86fcb7fe02f01ff45876}{X\+M\+L\+\_\+\+Set\+Start\+Cdata\+Section\+Handler} (\hyperlink{amiga_2include_2libraries_2expat_8h_a9dc0003156857c67b3a60b3993846013}{X\+M\+L\+\_\+\+Parser} parser, \hyperlink{amiga_2include_2libraries_2expat_8h_a68a18e698f04c0cfedac814093d01a43}{X\+M\+L\+\_\+\+Start\+Cdata\+Section\+Handler} \hyperlink{seqread_8c_ac503262ae470564980711da4f78b1181}{start})
+\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{expat__external_8h_aad85d290912c3ffed7a2ec0b6173dad3}{X\+M\+L\+C\+A\+LL} \hyperlink{xmlparse_8c_a8b9ba355810270c0d00f76c722fb3edd}{X\+M\+L\+\_\+\+Set\+End\+Cdata\+Section\+Handler} (\hyperlink{amiga_2include_2libraries_2expat_8h_a9dc0003156857c67b3a60b3993846013}{X\+M\+L\+\_\+\+Parser} parser, \hyperlink{amiga_2include_2libraries_2expat_8h_a52f3541344fd2e255bbd06f6b08321e2}{X\+M\+L\+\_\+\+End\+Cdata\+Section\+Handler} \hyperlink{convtest_8m_afb358f48b1646c750fb9da6c6585be2b}{end})
+\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{expat__external_8h_aad85d290912c3ffed7a2ec0b6173dad3}{X\+M\+L\+C\+A\+LL} \hyperlink{xmlparse_8c_a883fafa5002c6df8e098d75827057132}{X\+M\+L\+\_\+\+Set\+Default\+Handler} (\hyperlink{amiga_2include_2libraries_2expat_8h_a9dc0003156857c67b3a60b3993846013}{X\+M\+L\+\_\+\+Parser} parser, \hyperlink{amiga_2include_2libraries_2expat_8h_adbfd4da0da32dc94f3f99d1504ff579e}{X\+M\+L\+\_\+\+Default\+Handler} handler)
+\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{expat__external_8h_aad85d290912c3ffed7a2ec0b6173dad3}{X\+M\+L\+C\+A\+LL} \hyperlink{xmlparse_8c_a1c99bb060330d671b4fe7bfa852bad9a}{X\+M\+L\+\_\+\+Set\+Default\+Handler\+Expand} (\hyperlink{amiga_2include_2libraries_2expat_8h_a9dc0003156857c67b3a60b3993846013}{X\+M\+L\+\_\+\+Parser} parser, \hyperlink{amiga_2include_2libraries_2expat_8h_adbfd4da0da32dc94f3f99d1504ff579e}{X\+M\+L\+\_\+\+Default\+Handler} handler)
+\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{expat__external_8h_aad85d290912c3ffed7a2ec0b6173dad3}{X\+M\+L\+C\+A\+LL} \hyperlink{xmlparse_8c_ad6b174f1be7b95b1e175c86151d0bdac}{X\+M\+L\+\_\+\+Set\+Doctype\+Decl\+Handler} (\hyperlink{amiga_2include_2libraries_2expat_8h_a9dc0003156857c67b3a60b3993846013}{X\+M\+L\+\_\+\+Parser} parser, \hyperlink{amiga_2include_2libraries_2expat_8h_abc8c0b8372904ae53fa99781b108c5d5}{X\+M\+L\+\_\+\+Start\+Doctype\+Decl\+Handler} \hyperlink{seqread_8c_ac503262ae470564980711da4f78b1181}{start}, \hyperlink{lib_2expat_8h_a43568a006caf34bcf94e4346031b85a0}{X\+M\+L\+\_\+\+End\+Doctype\+Decl\+Handler} \hyperlink{convtest_8m_afb358f48b1646c750fb9da6c6585be2b}{end})
+\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{expat__external_8h_aad85d290912c3ffed7a2ec0b6173dad3}{X\+M\+L\+C\+A\+LL} \hyperlink{xmlparse_8c_ae1b7981d6b3c94b73474794fa3622dca}{X\+M\+L\+\_\+\+Set\+Start\+Doctype\+Decl\+Handler} (\hyperlink{amiga_2include_2libraries_2expat_8h_a9dc0003156857c67b3a60b3993846013}{X\+M\+L\+\_\+\+Parser} parser, \hyperlink{amiga_2include_2libraries_2expat_8h_abc8c0b8372904ae53fa99781b108c5d5}{X\+M\+L\+\_\+\+Start\+Doctype\+Decl\+Handler} \hyperlink{seqread_8c_ac503262ae470564980711da4f78b1181}{start})
+\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{expat__external_8h_aad85d290912c3ffed7a2ec0b6173dad3}{X\+M\+L\+C\+A\+LL} \hyperlink{xmlparse_8c_a0735c84e413353e5840b387a26cd699e}{X\+M\+L\+\_\+\+Set\+End\+Doctype\+Decl\+Handler} (\hyperlink{amiga_2include_2libraries_2expat_8h_a9dc0003156857c67b3a60b3993846013}{X\+M\+L\+\_\+\+Parser} parser, \hyperlink{lib_2expat_8h_a43568a006caf34bcf94e4346031b85a0}{X\+M\+L\+\_\+\+End\+Doctype\+Decl\+Handler} \hyperlink{convtest_8m_afb358f48b1646c750fb9da6c6585be2b}{end})
+\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{expat__external_8h_aad85d290912c3ffed7a2ec0b6173dad3}{X\+M\+L\+C\+A\+LL} \hyperlink{xmlparse_8c_af84fba5765b4c3edc8fb79ae3078ed44}{X\+M\+L\+\_\+\+Set\+Unparsed\+Entity\+Decl\+Handler} (\hyperlink{amiga_2include_2libraries_2expat_8h_a9dc0003156857c67b3a60b3993846013}{X\+M\+L\+\_\+\+Parser} parser, \hyperlink{amiga_2include_2libraries_2expat_8h_ac9efd6bd68d4a7fe131a5b7c3aea3ecb}{X\+M\+L\+\_\+\+Unparsed\+Entity\+Decl\+Handler} handler)
+\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{expat__external_8h_aad85d290912c3ffed7a2ec0b6173dad3}{X\+M\+L\+C\+A\+LL} \hyperlink{xmlparse_8c_a1443eb9edac79dc6b6fc180875974f91}{X\+M\+L\+\_\+\+Set\+Notation\+Decl\+Handler} (\hyperlink{amiga_2include_2libraries_2expat_8h_a9dc0003156857c67b3a60b3993846013}{X\+M\+L\+\_\+\+Parser} parser, \hyperlink{amiga_2include_2libraries_2expat_8h_aef0016a1ec3be3897018f6a9650bbb4c}{X\+M\+L\+\_\+\+Notation\+Decl\+Handler} handler)
+\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{expat__external_8h_aad85d290912c3ffed7a2ec0b6173dad3}{X\+M\+L\+C\+A\+LL} \hyperlink{xmlparse_8c_a6aff6d9ee0856597f7ede366fc466f45}{X\+M\+L\+\_\+\+Set\+Namespace\+Decl\+Handler} (\hyperlink{amiga_2include_2libraries_2expat_8h_a9dc0003156857c67b3a60b3993846013}{X\+M\+L\+\_\+\+Parser} parser, \hyperlink{amiga_2include_2libraries_2expat_8h_ac7cab9ef88e3ff98ce6e7ff84a8581e5}{X\+M\+L\+\_\+\+Start\+Namespace\+Decl\+Handler} \hyperlink{seqread_8c_ac503262ae470564980711da4f78b1181}{start}, \hyperlink{amiga_2include_2libraries_2expat_8h_a4441a99b0c8de22aed4ced86b425c5e7}{X\+M\+L\+\_\+\+End\+Namespace\+Decl\+Handler} \hyperlink{convtest_8m_afb358f48b1646c750fb9da6c6585be2b}{end})
+\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{expat__external_8h_aad85d290912c3ffed7a2ec0b6173dad3}{X\+M\+L\+C\+A\+LL} \hyperlink{xmlparse_8c_abd5e1b94f23420a31f784c7f071c05fc}{X\+M\+L\+\_\+\+Set\+Start\+Namespace\+Decl\+Handler} (\hyperlink{amiga_2include_2libraries_2expat_8h_a9dc0003156857c67b3a60b3993846013}{X\+M\+L\+\_\+\+Parser} parser, \hyperlink{amiga_2include_2libraries_2expat_8h_ac7cab9ef88e3ff98ce6e7ff84a8581e5}{X\+M\+L\+\_\+\+Start\+Namespace\+Decl\+Handler} \hyperlink{seqread_8c_ac503262ae470564980711da4f78b1181}{start})
+\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{expat__external_8h_aad85d290912c3ffed7a2ec0b6173dad3}{X\+M\+L\+C\+A\+LL} \hyperlink{xmlparse_8c_a788fd4e2cf86c45f9185d756aa6bb9be}{X\+M\+L\+\_\+\+Set\+End\+Namespace\+Decl\+Handler} (\hyperlink{amiga_2include_2libraries_2expat_8h_a9dc0003156857c67b3a60b3993846013}{X\+M\+L\+\_\+\+Parser} parser, \hyperlink{amiga_2include_2libraries_2expat_8h_a4441a99b0c8de22aed4ced86b425c5e7}{X\+M\+L\+\_\+\+End\+Namespace\+Decl\+Handler} \hyperlink{convtest_8m_afb358f48b1646c750fb9da6c6585be2b}{end})
+\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{expat__external_8h_aad85d290912c3ffed7a2ec0b6173dad3}{X\+M\+L\+C\+A\+LL} \hyperlink{xmlparse_8c_a36205b954dd7e145efd9c38f22cd9d63}{X\+M\+L\+\_\+\+Set\+Not\+Standalone\+Handler} (\hyperlink{amiga_2include_2libraries_2expat_8h_a9dc0003156857c67b3a60b3993846013}{X\+M\+L\+\_\+\+Parser} parser, \hyperlink{amiga_2include_2libraries_2expat_8h_a1cadb615cc7347bd076a4eafcaf687fa}{X\+M\+L\+\_\+\+Not\+Standalone\+Handler} handler)
+\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{expat__external_8h_aad85d290912c3ffed7a2ec0b6173dad3}{X\+M\+L\+C\+A\+LL} \hyperlink{xmlparse_8c_ac22b935c501868c79e42212ade1047fa}{X\+M\+L\+\_\+\+Set\+External\+Entity\+Ref\+Handler} (\hyperlink{amiga_2include_2libraries_2expat_8h_a9dc0003156857c67b3a60b3993846013}{X\+M\+L\+\_\+\+Parser} parser, \hyperlink{amiga_2include_2libraries_2expat_8h_ac8ff16e5cabd8d1c5543bc091ded0498}{X\+M\+L\+\_\+\+External\+Entity\+Ref\+Handler} handler)
+\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{expat__external_8h_aad85d290912c3ffed7a2ec0b6173dad3}{X\+M\+L\+C\+A\+LL} \hyperlink{xmlparse_8c_af861af5b3b5b6a71ee0e0bcd32a827a0}{X\+M\+L\+\_\+\+Set\+External\+Entity\+Ref\+Handler\+Arg} (\hyperlink{amiga_2include_2libraries_2expat_8h_a9dc0003156857c67b3a60b3993846013}{X\+M\+L\+\_\+\+Parser} parser, \hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} $\ast$arg)
+\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{expat__external_8h_aad85d290912c3ffed7a2ec0b6173dad3}{X\+M\+L\+C\+A\+LL} \hyperlink{xmlparse_8c_ad1e95b219bb4413e35faa96879b34010}{X\+M\+L\+\_\+\+Set\+Skipped\+Entity\+Handler} (\hyperlink{amiga_2include_2libraries_2expat_8h_a9dc0003156857c67b3a60b3993846013}{X\+M\+L\+\_\+\+Parser} parser, \hyperlink{amiga_2include_2libraries_2expat_8h_ab88af945eaab479fcd1af46a350fdaea}{X\+M\+L\+\_\+\+Skipped\+Entity\+Handler} handler)
+\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{expat__external_8h_aad85d290912c3ffed7a2ec0b6173dad3}{X\+M\+L\+C\+A\+LL} \hyperlink{xmlparse_8c_a0dc336d28ebbe1d5b14e41501fd8ddc9}{X\+M\+L\+\_\+\+Set\+Unknown\+Encoding\+Handler} (\hyperlink{amiga_2include_2libraries_2expat_8h_a9dc0003156857c67b3a60b3993846013}{X\+M\+L\+\_\+\+Parser} parser, \hyperlink{amiga_2include_2libraries_2expat_8h_ab691c80c3d3d8d26ecf07c81c1bcf28b}{X\+M\+L\+\_\+\+Unknown\+Encoding\+Handler} handler, \hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} $\ast$\hyperlink{lib_2expat_8h_ac39e72a1de1cb50dbdc54b08d0432a24}{data})
+\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{expat__external_8h_aad85d290912c3ffed7a2ec0b6173dad3}{X\+M\+L\+C\+A\+LL} \hyperlink{xmlparse_8c_a3fb5d41e5bd0097e05b5be0d2eda0ac6}{X\+M\+L\+\_\+\+Set\+Element\+Decl\+Handler} (\hyperlink{amiga_2include_2libraries_2expat_8h_a9dc0003156857c67b3a60b3993846013}{X\+M\+L\+\_\+\+Parser} parser, \hyperlink{amiga_2include_2libraries_2expat_8h_ae7ba85fbf531f8be7646b1a7d8c2200b}{X\+M\+L\+\_\+\+Element\+Decl\+Handler} eldecl)
+\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{expat__external_8h_aad85d290912c3ffed7a2ec0b6173dad3}{X\+M\+L\+C\+A\+LL} \hyperlink{xmlparse_8c_a2764dbc7f78d5a01d111f2738f9348bd}{X\+M\+L\+\_\+\+Set\+Attlist\+Decl\+Handler} (\hyperlink{amiga_2include_2libraries_2expat_8h_a9dc0003156857c67b3a60b3993846013}{X\+M\+L\+\_\+\+Parser} parser, \hyperlink{amiga_2include_2libraries_2expat_8h_affe403a7f9a01a3044ae1648bb661906}{X\+M\+L\+\_\+\+Attlist\+Decl\+Handler} attdecl)
+\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{expat__external_8h_aad85d290912c3ffed7a2ec0b6173dad3}{X\+M\+L\+C\+A\+LL} \hyperlink{xmlparse_8c_ae71e92fd7ca3228d2d9f6eff5b62ff82}{X\+M\+L\+\_\+\+Set\+Entity\+Decl\+Handler} (\hyperlink{amiga_2include_2libraries_2expat_8h_a9dc0003156857c67b3a60b3993846013}{X\+M\+L\+\_\+\+Parser} parser, \hyperlink{amiga_2include_2libraries_2expat_8h_a9806a496065b861aa5c11da5e65c4935}{X\+M\+L\+\_\+\+Entity\+Decl\+Handler} handler)
+\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{expat__external_8h_aad85d290912c3ffed7a2ec0b6173dad3}{X\+M\+L\+C\+A\+LL} \hyperlink{xmlparse_8c_a83ceb9f75e8d266c0e4da8b398d1537d}{X\+M\+L\+\_\+\+Set\+Xml\+Decl\+Handler} (\hyperlink{amiga_2include_2libraries_2expat_8h_a9dc0003156857c67b3a60b3993846013}{X\+M\+L\+\_\+\+Parser} parser, \hyperlink{amiga_2include_2libraries_2expat_8h_a93cd2f7ceeaa5aa3cfbe71e1b8a788af}{X\+M\+L\+\_\+\+Xml\+Decl\+Handler} handler)
+\item 
+\hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{expat__external_8h_aad85d290912c3ffed7a2ec0b6173dad3}{X\+M\+L\+C\+A\+LL} \hyperlink{xmlparse_8c_ae87007cc8e3e60cc0bb8fe0032932cd7}{X\+M\+L\+\_\+\+Set\+Param\+Entity\+Parsing} (\hyperlink{amiga_2include_2libraries_2expat_8h_a9dc0003156857c67b3a60b3993846013}{X\+M\+L\+\_\+\+Parser} parser, enum \hyperlink{amiga_2include_2libraries_2expat_8h_a83ffd61320d59d0c6c33dfcf1a0c098f}{X\+M\+L\+\_\+\+Param\+Entity\+Parsing} pe\+Parsing)
+\item 
+\hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{expat__external_8h_aad85d290912c3ffed7a2ec0b6173dad3}{X\+M\+L\+C\+A\+LL} \hyperlink{xmlparse_8c_aca7bec4fc6fd929cf2207ea54183a393}{X\+M\+L\+\_\+\+Set\+Hash\+Salt} (\hyperlink{amiga_2include_2libraries_2expat_8h_a9dc0003156857c67b3a60b3993846013}{X\+M\+L\+\_\+\+Parser} parser, unsigned long hash\+\_\+salt)
+\item 
+enum \hyperlink{amiga_2include_2libraries_2expat_8h_aef71ca3ac8198499d56aaa7b474303bb}{X\+M\+L\+\_\+\+Status} \hyperlink{expat__external_8h_aad85d290912c3ffed7a2ec0b6173dad3}{X\+M\+L\+C\+A\+LL} \hyperlink{xmlparse_8c_a62a6555a21bb12d37d3ef7baf9972cac}{X\+M\+L\+\_\+\+Parse} (\hyperlink{amiga_2include_2libraries_2expat_8h_a9dc0003156857c67b3a60b3993846013}{X\+M\+L\+\_\+\+Parser} parser, \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} char $\ast$\hyperlink{lib_2expat_8h_a755339d27872b13735c2cab829e47157}{s}, \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{lib_2expat_8h_af86d325fecfc8f47b61fbf5a5146f582}{len}, \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} is\+Final)
+\item 
+enum \hyperlink{amiga_2include_2libraries_2expat_8h_aef71ca3ac8198499d56aaa7b474303bb}{X\+M\+L\+\_\+\+Status} \hyperlink{expat__external_8h_aad85d290912c3ffed7a2ec0b6173dad3}{X\+M\+L\+C\+A\+LL} \hyperlink{xmlparse_8c_af02b28fc9c4ab4ed26145ab5d83cea22}{X\+M\+L\+\_\+\+Parse\+Buffer} (\hyperlink{amiga_2include_2libraries_2expat_8h_a9dc0003156857c67b3a60b3993846013}{X\+M\+L\+\_\+\+Parser} parser, \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{lib_2expat_8h_af86d325fecfc8f47b61fbf5a5146f582}{len}, \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} is\+Final)
+\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} $\ast$\hyperlink{expat__external_8h_aad85d290912c3ffed7a2ec0b6173dad3}{X\+M\+L\+C\+A\+LL} \hyperlink{xmlparse_8c_a846f46601c54e0bd4e4a996307ba3f9b}{X\+M\+L\+\_\+\+Get\+Buffer} (\hyperlink{amiga_2include_2libraries_2expat_8h_a9dc0003156857c67b3a60b3993846013}{X\+M\+L\+\_\+\+Parser} parser, \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{lib_2expat_8h_af86d325fecfc8f47b61fbf5a5146f582}{len})
+\item 
+enum \hyperlink{amiga_2include_2libraries_2expat_8h_aef71ca3ac8198499d56aaa7b474303bb}{X\+M\+L\+\_\+\+Status} \hyperlink{expat__external_8h_aad85d290912c3ffed7a2ec0b6173dad3}{X\+M\+L\+C\+A\+LL} \hyperlink{xmlparse_8c_a2babb2f5ac4826f4ffb0c14f87984bf5}{X\+M\+L\+\_\+\+Stop\+Parser} (\hyperlink{amiga_2include_2libraries_2expat_8h_a9dc0003156857c67b3a60b3993846013}{X\+M\+L\+\_\+\+Parser} parser, \hyperlink{amiga_2include_2libraries_2expat_8h_a5fe41bca8b7a23b2405f1b967e70f33a}{X\+M\+L\+\_\+\+Bool} resumable)
+\item 
+enum \hyperlink{amiga_2include_2libraries_2expat_8h_aef71ca3ac8198499d56aaa7b474303bb}{X\+M\+L\+\_\+\+Status} \hyperlink{expat__external_8h_aad85d290912c3ffed7a2ec0b6173dad3}{X\+M\+L\+C\+A\+LL} \hyperlink{xmlparse_8c_aeff65950eef53d5817533fca6af93ae8}{X\+M\+L\+\_\+\+Resume\+Parser} (\hyperlink{amiga_2include_2libraries_2expat_8h_a9dc0003156857c67b3a60b3993846013}{X\+M\+L\+\_\+\+Parser} parser)
+\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{expat__external_8h_aad85d290912c3ffed7a2ec0b6173dad3}{X\+M\+L\+C\+A\+LL} \hyperlink{xmlparse_8c_a7204cad48398e82b75a68a185619e88f}{X\+M\+L\+\_\+\+Get\+Parsing\+Status} (\hyperlink{amiga_2include_2libraries_2expat_8h_a9dc0003156857c67b3a60b3993846013}{X\+M\+L\+\_\+\+Parser} parser, \hyperlink{struct_x_m_l___parsing_status}{X\+M\+L\+\_\+\+Parsing\+Status} $\ast$\hyperlink{rfft2d_test_m_l_8m_a1b5437a866e6f95107b07ba845bc1800}{status})
+\item 
+enum \hyperlink{amiga_2include_2libraries_2expat_8h_a6a06dad2fbbc37dd288c51e577494118}{X\+M\+L\+\_\+\+Error} \hyperlink{expat__external_8h_aad85d290912c3ffed7a2ec0b6173dad3}{X\+M\+L\+C\+A\+LL} \hyperlink{xmlparse_8c_a6127be821a2d4cb2be74afc31f41f29f}{X\+M\+L\+\_\+\+Get\+Error\+Code} (\hyperlink{amiga_2include_2libraries_2expat_8h_a9dc0003156857c67b3a60b3993846013}{X\+M\+L\+\_\+\+Parser} parser)
+\item 
+\hyperlink{amiga_2include_2libraries_2expat_8h_ae2a9a55c7071b0c6da19fea14ce8f504}{X\+M\+L\+\_\+\+Index} \hyperlink{expat__external_8h_aad85d290912c3ffed7a2ec0b6173dad3}{X\+M\+L\+C\+A\+LL} \hyperlink{xmlparse_8c_a643677b451f2ee9103f396de161aab52}{X\+M\+L\+\_\+\+Get\+Current\+Byte\+Index} (\hyperlink{amiga_2include_2libraries_2expat_8h_a9dc0003156857c67b3a60b3993846013}{X\+M\+L\+\_\+\+Parser} parser)
+\item 
+\hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{expat__external_8h_aad85d290912c3ffed7a2ec0b6173dad3}{X\+M\+L\+C\+A\+LL} \hyperlink{xmlparse_8c_af930a6c7c396ff07b8e70b9883602400}{X\+M\+L\+\_\+\+Get\+Current\+Byte\+Count} (\hyperlink{amiga_2include_2libraries_2expat_8h_a9dc0003156857c67b3a60b3993846013}{X\+M\+L\+\_\+\+Parser} parser)
+\item 
+\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} char $\ast$\hyperlink{expat__external_8h_aad85d290912c3ffed7a2ec0b6173dad3}{X\+M\+L\+C\+A\+LL} \hyperlink{xmlparse_8c_a4d8d190e2eed2972f15288f78f3486ca}{X\+M\+L\+\_\+\+Get\+Input\+Context} (\hyperlink{amiga_2include_2libraries_2expat_8h_a9dc0003156857c67b3a60b3993846013}{X\+M\+L\+\_\+\+Parser} parser, \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} $\ast$\hyperlink{layer12_8c_a33d71f23ba2052d17f0b754dc35265b0}{offset}, \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} $\ast$\hyperlink{group__lavu__mem_ga854352f53b148adc24983a58a1866d66}{size})
+\item 
+\hyperlink{amiga_2include_2libraries_2expat_8h_ad22a225e6e62127360b44b2f7559f789}{X\+M\+L\+\_\+\+Size} \hyperlink{expat__external_8h_aad85d290912c3ffed7a2ec0b6173dad3}{X\+M\+L\+C\+A\+LL} \hyperlink{xmlparse_8c_a5f0c9f83229fdaa9dcb48a8447045243}{X\+M\+L\+\_\+\+Get\+Current\+Line\+Number} (\hyperlink{amiga_2include_2libraries_2expat_8h_a9dc0003156857c67b3a60b3993846013}{X\+M\+L\+\_\+\+Parser} parser)
+\item 
+\hyperlink{amiga_2include_2libraries_2expat_8h_ad22a225e6e62127360b44b2f7559f789}{X\+M\+L\+\_\+\+Size} \hyperlink{expat__external_8h_aad85d290912c3ffed7a2ec0b6173dad3}{X\+M\+L\+C\+A\+LL} \hyperlink{xmlparse_8c_a45f92a94ac5382b44a9c3fed893f8921}{X\+M\+L\+\_\+\+Get\+Current\+Column\+Number} (\hyperlink{amiga_2include_2libraries_2expat_8h_a9dc0003156857c67b3a60b3993846013}{X\+M\+L\+\_\+\+Parser} parser)
+\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{expat__external_8h_aad85d290912c3ffed7a2ec0b6173dad3}{X\+M\+L\+C\+A\+LL} \hyperlink{xmlparse_8c_a362c3420424d6a4c6181af97ca2678c0}{X\+M\+L\+\_\+\+Free\+Content\+Model} (\hyperlink{amiga_2include_2libraries_2expat_8h_a9dc0003156857c67b3a60b3993846013}{X\+M\+L\+\_\+\+Parser} parser, \hyperlink{amiga_2include_2libraries_2expat_8h_a791d9e7de669ec5395df17978e1c507e}{X\+M\+L\+\_\+\+Content} $\ast$\hyperlink{lib_2expat_8h_ac517f0c27408fbd365e7dd34e032faca}{model})
+\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} $\ast$\hyperlink{expat__external_8h_aad85d290912c3ffed7a2ec0b6173dad3}{X\+M\+L\+C\+A\+LL} \hyperlink{xmlparse_8c_a74f8b2d9ee7d5ad1a54d18732d54135b}{X\+M\+L\+\_\+\+Mem\+Malloc} (\hyperlink{amiga_2include_2libraries_2expat_8h_a9dc0003156857c67b3a60b3993846013}{X\+M\+L\+\_\+\+Parser} parser, size\+\_\+t \hyperlink{group__lavu__mem_ga854352f53b148adc24983a58a1866d66}{size})
+\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} $\ast$\hyperlink{expat__external_8h_aad85d290912c3ffed7a2ec0b6173dad3}{X\+M\+L\+C\+A\+LL} \hyperlink{xmlparse_8c_a54b947209ad0b01141588900fe33ee5e}{X\+M\+L\+\_\+\+Mem\+Realloc} (\hyperlink{amiga_2include_2libraries_2expat_8h_a9dc0003156857c67b3a60b3993846013}{X\+M\+L\+\_\+\+Parser} parser, \hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} $\ast$ptr, size\+\_\+t \hyperlink{group__lavu__mem_ga854352f53b148adc24983a58a1866d66}{size})
+\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{expat__external_8h_aad85d290912c3ffed7a2ec0b6173dad3}{X\+M\+L\+C\+A\+LL} \hyperlink{xmlparse_8c_aa2ce2b1966277c78b16da3efd122a44d}{X\+M\+L\+\_\+\+Mem\+Free} (\hyperlink{amiga_2include_2libraries_2expat_8h_a9dc0003156857c67b3a60b3993846013}{X\+M\+L\+\_\+\+Parser} parser, \hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} $\ast$ptr)
+\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{expat__external_8h_aad85d290912c3ffed7a2ec0b6173dad3}{X\+M\+L\+C\+A\+LL} \hyperlink{xmlparse_8c_a822d96f2e6d25c735d31388e2ee7550e}{X\+M\+L\+\_\+\+Default\+Current} (\hyperlink{amiga_2include_2libraries_2expat_8h_a9dc0003156857c67b3a60b3993846013}{X\+M\+L\+\_\+\+Parser} parser)
+\item 
+\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{amiga_2include_2libraries_2expat_8h_a728c9a3114531eaeb70753ba4601c418}{X\+M\+L\+\_\+\+L\+Char} $\ast$\hyperlink{expat__external_8h_aad85d290912c3ffed7a2ec0b6173dad3}{X\+M\+L\+C\+A\+LL} \hyperlink{xmlparse_8c_a41b7167b409d9894c4928e6659b80dd5}{X\+M\+L\+\_\+\+Error\+String} (enum \hyperlink{amiga_2include_2libraries_2expat_8h_a6a06dad2fbbc37dd288c51e577494118}{X\+M\+L\+\_\+\+Error} code)
+\item 
+\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{amiga_2include_2libraries_2expat_8h_a728c9a3114531eaeb70753ba4601c418}{X\+M\+L\+\_\+\+L\+Char} $\ast$\hyperlink{expat__external_8h_aad85d290912c3ffed7a2ec0b6173dad3}{X\+M\+L\+C\+A\+LL} \hyperlink{xmlparse_8c_ac65b562b6d15c0187ef971f426a35e71}{X\+M\+L\+\_\+\+Expat\+Version} (\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void})
+\item 
+\hyperlink{struct_x_m_l___expat___version}{X\+M\+L\+\_\+\+Expat\+\_\+\+Version} \hyperlink{expat__external_8h_aad85d290912c3ffed7a2ec0b6173dad3}{X\+M\+L\+C\+A\+LL} \hyperlink{xmlparse_8c_a48973ae7f75c6032603e192b4281efcb}{X\+M\+L\+\_\+\+Expat\+Version\+Info} (\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void})
+\item 
+\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{struct_x_m_l___feature}{X\+M\+L\+\_\+\+Feature} $\ast$\hyperlink{expat__external_8h_aad85d290912c3ffed7a2ec0b6173dad3}{X\+M\+L\+C\+A\+LL} \hyperlink{xmlparse_8c_aa56362be962a8cb87ddacbe96a50370b}{X\+M\+L\+\_\+\+Get\+Feature\+List} (\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void})
+\end{DoxyCompactItemize}
+
+
+\subsection{Macro Definition Documentation}
+\index{xmlparse.\+c@{xmlparse.\+c}!\+\_\+dtd@{\+\_\+dtd}}
+\index{\+\_\+dtd@{\+\_\+dtd}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{\+\_\+dtd}{_dtd}}]{\setlength{\rightskip}{0pt plus 5cm}\#define \+\_\+dtd~(parser-\/$>$m\+\_\+dtd)}\hypertarget{xmlparse_8c_ab35a2e4e656add004181d213bcf636c6}{}\label{xmlparse_8c_ab35a2e4e656add004181d213bcf636c6}
+
+
+Definition at line 630 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!att\+Info@{att\+Info}}
+\index{att\+Info@{att\+Info}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{att\+Info}{attInfo}}]{\setlength{\rightskip}{0pt plus 5cm}\#define att\+Info~(parser-\/$>$m\+\_\+att\+Info)}\hypertarget{xmlparse_8c_aea59fdd2111549308a0d031f7fd02599}{}\label{xmlparse_8c_aea59fdd2111549308a0d031f7fd02599}
+
+
+Definition at line 654 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!attlist\+Decl\+Handler@{attlist\+Decl\+Handler}}
+\index{attlist\+Decl\+Handler@{attlist\+Decl\+Handler}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{attlist\+Decl\+Handler}{attlistDeclHandler}}]{\setlength{\rightskip}{0pt plus 5cm}\#define attlist\+Decl\+Handler~(parser-\/$>$m\+\_\+attlist\+Decl\+Handler)}\hypertarget{xmlparse_8c_ab0e2251928e40680b2418ff0373a954a}{}\label{xmlparse_8c_ab0e2251928e40680b2418ff0373a954a}
+
+
+Definition at line 596 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!atts@{atts}}
+\index{atts@{atts}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{atts}{atts}}]{\setlength{\rightskip}{0pt plus 5cm}\#define {\bf atts}~(parser-\/$>$m\+\_\+atts)}\hypertarget{xmlparse_8c_a5bbadff5cdbbd3feb492c555b546a292}{}\label{xmlparse_8c_a5bbadff5cdbbd3feb492c555b546a292}
+
+
+Definition at line 647 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!atts\+Size@{atts\+Size}}
+\index{atts\+Size@{atts\+Size}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{atts\+Size}{attsSize}}]{\setlength{\rightskip}{0pt plus 5cm}\#define atts\+Size~(parser-\/$>$m\+\_\+atts\+Size)}\hypertarget{xmlparse_8c_adc65825a80dd14608940f5a9a07d68ab}{}\label{xmlparse_8c_adc65825a80dd14608940f5a9a07d68ab}
+
+
+Definition at line 648 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!buffer@{buffer}}
+\index{buffer@{buffer}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{buffer}{buffer}}]{\setlength{\rightskip}{0pt plus 5cm}\#define {\bf buffer}~(parser-\/$>$m\+\_\+buffer)}\hypertarget{xmlparse_8c_aaadc06b5dac8070de2c8677210967bdb}{}\label{xmlparse_8c_aaadc06b5dac8070de2c8677210967bdb}
+
+
+Definition at line 622 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!buffer\+End@{buffer\+End}}
+\index{buffer\+End@{buffer\+End}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{buffer\+End}{bufferEnd}}]{\setlength{\rightskip}{0pt plus 5cm}\#define buffer\+End~(parser-\/$>$m\+\_\+buffer\+End)}\hypertarget{xmlparse_8c_a59827c0775f8adab8222031c7c774d45}{}\label{xmlparse_8c_a59827c0775f8adab8222031c7c774d45}
+
+
+Definition at line 624 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!buffer\+Lim@{buffer\+Lim}}
+\index{buffer\+Lim@{buffer\+Lim}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{buffer\+Lim}{bufferLim}}]{\setlength{\rightskip}{0pt plus 5cm}\#define buffer\+Lim~(parser-\/$>$m\+\_\+buffer\+Lim)}\hypertarget{xmlparse_8c_aa196955726141832a26d8b852df43b36}{}\label{xmlparse_8c_aa196955726141832a26d8b852df43b36}
+
+
+Definition at line 627 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!buffer\+Ptr@{buffer\+Ptr}}
+\index{buffer\+Ptr@{buffer\+Ptr}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{buffer\+Ptr}{bufferPtr}}]{\setlength{\rightskip}{0pt plus 5cm}\#define buffer\+Ptr~(parser-\/$>$m\+\_\+buffer\+Ptr)}\hypertarget{xmlparse_8c_af0e9c27e1d82202b57e87eebacf0dccf}{}\label{xmlparse_8c_af0e9c27e1d82202b57e87eebacf0dccf}
+
+
+Definition at line 623 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!C\+H\+A\+R\+\_\+\+H\+A\+SH@{C\+H\+A\+R\+\_\+\+H\+A\+SH}}
+\index{C\+H\+A\+R\+\_\+\+H\+A\+SH@{C\+H\+A\+R\+\_\+\+H\+A\+SH}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{C\+H\+A\+R\+\_\+\+H\+A\+SH}{CHAR_HASH}}]{\setlength{\rightskip}{0pt plus 5cm}\#define C\+H\+A\+R\+\_\+\+H\+A\+SH(
+\begin{DoxyParamCaption}
+\item[{}]{h, }
+\item[{}]{{\bf c}}
+\end{DoxyParamCaption}
+)~(((h) $\ast$ 0x\+F4243) $^\wedge$ (unsigned char)(c))}\hypertarget{xmlparse_8c_aebf7e3a011794d1f74e3710a75203b2c}{}\label{xmlparse_8c_aebf7e3a011794d1f74e3710a75203b2c}
+
+
+Definition at line 113 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!character\+Data\+Handler@{character\+Data\+Handler}}
+\index{character\+Data\+Handler@{character\+Data\+Handler}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{character\+Data\+Handler}{characterDataHandler}}]{\setlength{\rightskip}{0pt plus 5cm}\#define character\+Data\+Handler~(parser-\/$>$m\+\_\+character\+Data\+Handler)}\hypertarget{xmlparse_8c_ae5a7ce062c7f3598d17434f686efecb5}{}\label{xmlparse_8c_ae5a7ce062c7f3598d17434f686efecb5}
+
+
+Definition at line 570 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!comment\+Handler@{comment\+Handler}}
+\index{comment\+Handler@{comment\+Handler}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{comment\+Handler}{commentHandler}}]{\setlength{\rightskip}{0pt plus 5cm}\#define comment\+Handler~(parser-\/$>$m\+\_\+comment\+Handler)}\hypertarget{xmlparse_8c_a4ae8e829913d65184867babb99eaf289}{}\label{xmlparse_8c_a4ae8e829913d65184867babb99eaf289}
+
+
+Definition at line 573 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!C\+O\+N\+T\+E\+X\+T\+\_\+\+S\+EP@{C\+O\+N\+T\+E\+X\+T\+\_\+\+S\+EP}}
+\index{C\+O\+N\+T\+E\+X\+T\+\_\+\+S\+EP@{C\+O\+N\+T\+E\+X\+T\+\_\+\+S\+EP}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{C\+O\+N\+T\+E\+X\+T\+\_\+\+S\+EP}{CONTEXT_SEP}}]{\setlength{\rightskip}{0pt plus 5cm}\#define C\+O\+N\+T\+E\+X\+T\+\_\+\+S\+EP~{\bf X\+M\+L\+\_\+T}({\bf A\+S\+C\+I\+I\+\_\+\+FF})}\hypertarget{xmlparse_8c_a1b87d5794a5bcabf1862019a8df60e97}{}\label{xmlparse_8c_a1b87d5794a5bcabf1862019a8df60e97}
+
+
+Definition at line 5490 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!cur\+Base@{cur\+Base}}
+\index{cur\+Base@{cur\+Base}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{cur\+Base}{curBase}}]{\setlength{\rightskip}{0pt plus 5cm}\#define cur\+Base~(parser-\/$>$m\+\_\+cur\+Base)}\hypertarget{xmlparse_8c_ac10942bb14f0f6fefea1e5986743997b}{}\label{xmlparse_8c_ac10942bb14f0f6fefea1e5986743997b}
+
+
+Definition at line 631 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!data\+Buf@{data\+Buf}}
+\index{data\+Buf@{data\+Buf}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{data\+Buf}{dataBuf}}]{\setlength{\rightskip}{0pt plus 5cm}\#define data\+Buf~(parser-\/$>$m\+\_\+data\+Buf)}\hypertarget{xmlparse_8c_a243c9d2243ec2a35cd52d3ecf7cb1614}{}\label{xmlparse_8c_a243c9d2243ec2a35cd52d3ecf7cb1614}
+
+
+Definition at line 628 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!data\+Buf\+End@{data\+Buf\+End}}
+\index{data\+Buf\+End@{data\+Buf\+End}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{data\+Buf\+End}{dataBufEnd}}]{\setlength{\rightskip}{0pt plus 5cm}\#define data\+Buf\+End~(parser-\/$>$m\+\_\+data\+Buf\+End)}\hypertarget{xmlparse_8c_ad25359f37bbcd96c503ec8031fe995ab}{}\label{xmlparse_8c_ad25359f37bbcd96c503ec8031fe995ab}
+
+
+Definition at line 629 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!decl\+Attribute\+Id@{decl\+Attribute\+Id}}
+\index{decl\+Attribute\+Id@{decl\+Attribute\+Id}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{decl\+Attribute\+Id}{declAttributeId}}]{\setlength{\rightskip}{0pt plus 5cm}\#define decl\+Attribute\+Id~(parser-\/$>$m\+\_\+decl\+Attribute\+Id)}\hypertarget{xmlparse_8c_a09e5ab6ebce8719cab5ab801a7be2f6d}{}\label{xmlparse_8c_a09e5ab6ebce8719cab5ab801a7be2f6d}
+
+
+Definition at line 640 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!decl\+Attribute\+Is\+Cdata@{decl\+Attribute\+Is\+Cdata}}
+\index{decl\+Attribute\+Is\+Cdata@{decl\+Attribute\+Is\+Cdata}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{decl\+Attribute\+Is\+Cdata}{declAttributeIsCdata}}]{\setlength{\rightskip}{0pt plus 5cm}\#define decl\+Attribute\+Is\+Cdata~(parser-\/$>$m\+\_\+decl\+Attribute\+Is\+Cdata)}\hypertarget{xmlparse_8c_a72d90a570297f91e21fe6bedbe0c78ac}{}\label{xmlparse_8c_a72d90a570297f91e21fe6bedbe0c78ac}
+
+
+Definition at line 641 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!decl\+Attribute\+Is\+Id@{decl\+Attribute\+Is\+Id}}
+\index{decl\+Attribute\+Is\+Id@{decl\+Attribute\+Is\+Id}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{decl\+Attribute\+Is\+Id}{declAttributeIsId}}]{\setlength{\rightskip}{0pt plus 5cm}\#define decl\+Attribute\+Is\+Id~(parser-\/$>$m\+\_\+decl\+Attribute\+Is\+Id)}\hypertarget{xmlparse_8c_a175bed4f9d770eb6f8171fc48bbecedc}{}\label{xmlparse_8c_a175bed4f9d770eb6f8171fc48bbecedc}
+
+
+Definition at line 642 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!decl\+Attribute\+Type@{decl\+Attribute\+Type}}
+\index{decl\+Attribute\+Type@{decl\+Attribute\+Type}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{decl\+Attribute\+Type}{declAttributeType}}]{\setlength{\rightskip}{0pt plus 5cm}\#define decl\+Attribute\+Type~(parser-\/$>$m\+\_\+decl\+Attribute\+Type)}\hypertarget{xmlparse_8c_aabd2799fe59009c99e55a0d02172e24b}{}\label{xmlparse_8c_aabd2799fe59009c99e55a0d02172e24b}
+
+
+Definition at line 636 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!decl\+Element\+Type@{decl\+Element\+Type}}
+\index{decl\+Element\+Type@{decl\+Element\+Type}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{decl\+Element\+Type}{declElementType}}]{\setlength{\rightskip}{0pt plus 5cm}\#define decl\+Element\+Type~(parser-\/$>$m\+\_\+decl\+Element\+Type)}\hypertarget{xmlparse_8c_a323503a05f3d05471fb204b95ba644ed}{}\label{xmlparse_8c_a323503a05f3d05471fb204b95ba644ed}
+
+
+Definition at line 639 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!decl\+Entity@{decl\+Entity}}
+\index{decl\+Entity@{decl\+Entity}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{decl\+Entity}{declEntity}}]{\setlength{\rightskip}{0pt plus 5cm}\#define decl\+Entity~(parser-\/$>$m\+\_\+decl\+Entity)}\hypertarget{xmlparse_8c_afcb60c35c976932aec4feabf7fb93dbd}{}\label{xmlparse_8c_afcb60c35c976932aec4feabf7fb93dbd}
+
+
+Definition at line 632 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!decl\+Notation\+Name@{decl\+Notation\+Name}}
+\index{decl\+Notation\+Name@{decl\+Notation\+Name}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{decl\+Notation\+Name}{declNotationName}}]{\setlength{\rightskip}{0pt plus 5cm}\#define decl\+Notation\+Name~(parser-\/$>$m\+\_\+decl\+Notation\+Name)}\hypertarget{xmlparse_8c_a443d2b32f4610f80eb466606f314554e}{}\label{xmlparse_8c_a443d2b32f4610f80eb466606f314554e}
+
+
+Definition at line 637 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!decl\+Notation\+Public\+Id@{decl\+Notation\+Public\+Id}}
+\index{decl\+Notation\+Public\+Id@{decl\+Notation\+Public\+Id}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{decl\+Notation\+Public\+Id}{declNotationPublicId}}]{\setlength{\rightskip}{0pt plus 5cm}\#define decl\+Notation\+Public\+Id~(parser-\/$>$m\+\_\+decl\+Notation\+Public\+Id)}\hypertarget{xmlparse_8c_a49c865a339297b69d1d5b74e8efe963d}{}\label{xmlparse_8c_a49c865a339297b69d1d5b74e8efe963d}
+
+
+Definition at line 638 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!default\+Expand\+Internal\+Entities@{default\+Expand\+Internal\+Entities}}
+\index{default\+Expand\+Internal\+Entities@{default\+Expand\+Internal\+Entities}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{default\+Expand\+Internal\+Entities}{defaultExpandInternalEntities}}]{\setlength{\rightskip}{0pt plus 5cm}\#define default\+Expand\+Internal\+Entities~(parser-\/$>$m\+\_\+default\+Expand\+Internal\+Entities)}\hypertarget{xmlparse_8c_a0a72476230b17bb7c062faf0952165a1}{}\label{xmlparse_8c_a0a72476230b17bb7c062faf0952165a1}
+
+
+Definition at line 619 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!default\+Handler@{default\+Handler}}
+\index{default\+Handler@{default\+Handler}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{default\+Handler}{defaultHandler}}]{\setlength{\rightskip}{0pt plus 5cm}\#define default\+Handler~(parser-\/$>$m\+\_\+default\+Handler)}\hypertarget{xmlparse_8c_a67f2d0c9fb94706d75a67d63ccda9204}{}\label{xmlparse_8c_a67f2d0c9fb94706d75a67d63ccda9204}
+
+
+Definition at line 577 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!doctype\+Name@{doctype\+Name}}
+\index{doctype\+Name@{doctype\+Name}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{doctype\+Name}{doctypeName}}]{\setlength{\rightskip}{0pt plus 5cm}\#define {\bf doctype\+Name}~(parser-\/$>$m\+\_\+doctype\+Name)}\hypertarget{xmlparse_8c_a2c9f84bb2d7b6ef6a6a06721629b5309}{}\label{xmlparse_8c_a2c9f84bb2d7b6ef6a6a06721629b5309}
+
+
+Definition at line 633 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!doctype\+Pubid@{doctype\+Pubid}}
+\index{doctype\+Pubid@{doctype\+Pubid}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{doctype\+Pubid}{doctypePubid}}]{\setlength{\rightskip}{0pt plus 5cm}\#define doctype\+Pubid~(parser-\/$>$m\+\_\+doctype\+Pubid)}\hypertarget{xmlparse_8c_a725bf115f2a36febb31e7aa6f890a9e8}{}\label{xmlparse_8c_a725bf115f2a36febb31e7aa6f890a9e8}
+
+
+Definition at line 635 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!doctype\+Sysid@{doctype\+Sysid}}
+\index{doctype\+Sysid@{doctype\+Sysid}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{doctype\+Sysid}{doctypeSysid}}]{\setlength{\rightskip}{0pt plus 5cm}\#define doctype\+Sysid~(parser-\/$>$m\+\_\+doctype\+Sysid)}\hypertarget{xmlparse_8c_a52cf3e26329a6665642366d608f19a93}{}\label{xmlparse_8c_a52cf3e26329a6665642366d608f19a93}
+
+
+Definition at line 634 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!element\+Decl\+Handler@{element\+Decl\+Handler}}
+\index{element\+Decl\+Handler@{element\+Decl\+Handler}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{element\+Decl\+Handler}{elementDeclHandler}}]{\setlength{\rightskip}{0pt plus 5cm}\#define element\+Decl\+Handler~(parser-\/$>$m\+\_\+element\+Decl\+Handler)}\hypertarget{xmlparse_8c_a1e61af8958b7c3b3f1b64d2ea2cbecc8}{}\label{xmlparse_8c_a1e61af8958b7c3b3f1b64d2ea2cbecc8}
+
+
+Definition at line 595 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!encoding@{encoding}}
+\index{encoding@{encoding}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{encoding}{encoding}}]{\setlength{\rightskip}{0pt plus 5cm}\#define {\bf encoding}~(parser-\/$>$m\+\_\+encoding)}\hypertarget{xmlparse_8c_a4d1151f66e93840b8a8c9169852a95dd}{}\label{xmlparse_8c_a4d1151f66e93840b8a8c9169852a95dd}
+
+
+Definition at line 599 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!end\+Cdata\+Section\+Handler@{end\+Cdata\+Section\+Handler}}
+\index{end\+Cdata\+Section\+Handler@{end\+Cdata\+Section\+Handler}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{end\+Cdata\+Section\+Handler}{endCdataSectionHandler}}]{\setlength{\rightskip}{0pt plus 5cm}\#define end\+Cdata\+Section\+Handler~(parser-\/$>$m\+\_\+end\+Cdata\+Section\+Handler)}\hypertarget{xmlparse_8c_a0afd2cfae012d84b77e78092b8f60428}{}\label{xmlparse_8c_a0afd2cfae012d84b77e78092b8f60428}
+
+
+Definition at line 576 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!end\+Doctype\+Decl\+Handler@{end\+Doctype\+Decl\+Handler}}
+\index{end\+Doctype\+Decl\+Handler@{end\+Doctype\+Decl\+Handler}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{end\+Doctype\+Decl\+Handler}{endDoctypeDeclHandler}}]{\setlength{\rightskip}{0pt plus 5cm}\#define end\+Doctype\+Decl\+Handler~(parser-\/$>$m\+\_\+end\+Doctype\+Decl\+Handler)}\hypertarget{xmlparse_8c_a4bd18e877f70ade25ab75e02f0ce90e3}{}\label{xmlparse_8c_a4bd18e877f70ade25ab75e02f0ce90e3}
+
+
+Definition at line 579 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!end\+Element\+Handler@{end\+Element\+Handler}}
+\index{end\+Element\+Handler@{end\+Element\+Handler}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{end\+Element\+Handler}{endElementHandler}}]{\setlength{\rightskip}{0pt plus 5cm}\#define end\+Element\+Handler~(parser-\/$>$m\+\_\+end\+Element\+Handler)}\hypertarget{xmlparse_8c_a6a38d6f7c95b6156002415993d2c28c6}{}\label{xmlparse_8c_a6a38d6f7c95b6156002415993d2c28c6}
+
+
+Definition at line 569 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!end\+Namespace\+Decl\+Handler@{end\+Namespace\+Decl\+Handler}}
+\index{end\+Namespace\+Decl\+Handler@{end\+Namespace\+Decl\+Handler}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{end\+Namespace\+Decl\+Handler}{endNamespaceDeclHandler}}]{\setlength{\rightskip}{0pt plus 5cm}\#define end\+Namespace\+Decl\+Handler~(parser-\/$>$m\+\_\+end\+Namespace\+Decl\+Handler)}\hypertarget{xmlparse_8c_abd868dfac40b53a57ce9e9563474045f}{}\label{xmlparse_8c_abd868dfac40b53a57ce9e9563474045f}
+
+
+Definition at line 585 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!entity\+Decl\+Handler@{entity\+Decl\+Handler}}
+\index{entity\+Decl\+Handler@{entity\+Decl\+Handler}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{entity\+Decl\+Handler}{entityDeclHandler}}]{\setlength{\rightskip}{0pt plus 5cm}\#define entity\+Decl\+Handler~(parser-\/$>$m\+\_\+entity\+Decl\+Handler)}\hypertarget{xmlparse_8c_a9e8683e389402cd0b46f3af737955fc1}{}\label{xmlparse_8c_a9e8683e389402cd0b46f3af737955fc1}
+
+
+Definition at line 597 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!error\+Code@{error\+Code}}
+\index{error\+Code@{error\+Code}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{error\+Code}{errorCode}}]{\setlength{\rightskip}{0pt plus 5cm}\#define error\+Code~(parser-\/$>$m\+\_\+error\+Code)}\hypertarget{xmlparse_8c_adf47938902be0f6a9c144226d02fd634}{}\label{xmlparse_8c_adf47938902be0f6a9c144226d02fd634}
+
+
+Definition at line 612 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!event\+End\+Ptr@{event\+End\+Ptr}}
+\index{event\+End\+Ptr@{event\+End\+Ptr}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{event\+End\+Ptr}{eventEndPtr}}]{\setlength{\rightskip}{0pt plus 5cm}\#define event\+End\+Ptr~(parser-\/$>$m\+\_\+event\+End\+Ptr)}\hypertarget{xmlparse_8c_ac5fcab6621c83f8c96c04c7cdcd7e88d}{}\label{xmlparse_8c_ac5fcab6621c83f8c96c04c7cdcd7e88d}
+
+
+Definition at line 614 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!event\+Ptr@{event\+Ptr}}
+\index{event\+Ptr@{event\+Ptr}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{event\+Ptr}{eventPtr}}]{\setlength{\rightskip}{0pt plus 5cm}\#define event\+Ptr~(parser-\/$>$m\+\_\+event\+Ptr)}\hypertarget{xmlparse_8c_a095b4f7c37923ec949d4a63316ab5f4e}{}\label{xmlparse_8c_a095b4f7c37923ec949d4a63316ab5f4e}
+
+
+Definition at line 613 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!E\+X\+P\+A\+N\+D\+\_\+\+S\+P\+A\+RE@{E\+X\+P\+A\+N\+D\+\_\+\+S\+P\+A\+RE}}
+\index{E\+X\+P\+A\+N\+D\+\_\+\+S\+P\+A\+RE@{E\+X\+P\+A\+N\+D\+\_\+\+S\+P\+A\+RE}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{E\+X\+P\+A\+N\+D\+\_\+\+S\+P\+A\+RE}{EXPAND_SPARE}}]{\setlength{\rightskip}{0pt plus 5cm}\#define E\+X\+P\+A\+N\+D\+\_\+\+S\+P\+A\+RE~24}\hypertarget{xmlparse_8c_abe06cd496f0f41a085b86aeeb3a31988}{}\label{xmlparse_8c_abe06cd496f0f41a085b86aeeb3a31988}
+
+
+Definition at line 142 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!external\+Entity\+Ref\+Handler@{external\+Entity\+Ref\+Handler}}
+\index{external\+Entity\+Ref\+Handler@{external\+Entity\+Ref\+Handler}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{external\+Entity\+Ref\+Handler}{externalEntityRefHandler}}]{\setlength{\rightskip}{0pt plus 5cm}\#define external\+Entity\+Ref\+Handler~(parser-\/$>$m\+\_\+external\+Entity\+Ref\+Handler)}\hypertarget{xmlparse_8c_a694cff29644917f9d1fdb2e550859296}{}\label{xmlparse_8c_a694cff29644917f9d1fdb2e550859296}
+
+
+Definition at line 587 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!external\+Entity\+Ref\+Handler\+Arg@{external\+Entity\+Ref\+Handler\+Arg}}
+\index{external\+Entity\+Ref\+Handler\+Arg@{external\+Entity\+Ref\+Handler\+Arg}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{external\+Entity\+Ref\+Handler\+Arg}{externalEntityRefHandlerArg}}]{\setlength{\rightskip}{0pt plus 5cm}\#define external\+Entity\+Ref\+Handler\+Arg~(parser-\/$>$m\+\_\+external\+Entity\+Ref\+Handler\+Arg)}\hypertarget{xmlparse_8c_a05354e48a97b2791d64152fcb4ca2434}{}\label{xmlparse_8c_a05354e48a97b2791d64152fcb4ca2434}
+
+
+Definition at line 589 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!F\+R\+EE@{F\+R\+EE}}
+\index{F\+R\+EE@{F\+R\+EE}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{F\+R\+EE}{FREE}}]{\setlength{\rightskip}{0pt plus 5cm}\#define F\+R\+EE(
+\begin{DoxyParamCaption}
+\item[{}]{{\bf p}}
+\end{DoxyParamCaption}
+)~(parser-\/$>$m\+\_\+mem.\+free\+\_\+fcn(({\bf p})))}\hypertarget{xmlparse_8c_a02048bf846e8bc87e3ce188e4957ef06}{}\label{xmlparse_8c_a02048bf846e8bc87e3ce188e4957ef06}
+
+
+Definition at line 564 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!free\+Binding\+List@{free\+Binding\+List}}
+\index{free\+Binding\+List@{free\+Binding\+List}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{free\+Binding\+List}{freeBindingList}}]{\setlength{\rightskip}{0pt plus 5cm}\#define free\+Binding\+List~(parser-\/$>$m\+\_\+free\+Binding\+List)}\hypertarget{xmlparse_8c_a2e870588ca527c3605dbbbdb4b30c34b}{}\label{xmlparse_8c_a2e870588ca527c3605dbbbdb4b30c34b}
+
+
+Definition at line 644 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!free\+Internal\+Entities@{free\+Internal\+Entities}}
+\index{free\+Internal\+Entities@{free\+Internal\+Entities}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{free\+Internal\+Entities}{freeInternalEntities}}]{\setlength{\rightskip}{0pt plus 5cm}\#define free\+Internal\+Entities~(parser-\/$>$m\+\_\+free\+Internal\+Entities)}\hypertarget{xmlparse_8c_ab276ffc03932347093fbd842a6107e7e}{}\label{xmlparse_8c_ab276ffc03932347093fbd842a6107e7e}
+
+
+Definition at line 618 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!free\+Tag\+List@{free\+Tag\+List}}
+\index{free\+Tag\+List@{free\+Tag\+List}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{free\+Tag\+List}{freeTagList}}]{\setlength{\rightskip}{0pt plus 5cm}\#define free\+Tag\+List~(parser-\/$>$m\+\_\+free\+Tag\+List)}\hypertarget{xmlparse_8c_ad9aa870e1aa35543520a0c9d57a06124}{}\label{xmlparse_8c_ad9aa870e1aa35543520a0c9d57a06124}
+
+
+Definition at line 643 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!group\+Connector@{group\+Connector}}
+\index{group\+Connector@{group\+Connector}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{group\+Connector}{groupConnector}}]{\setlength{\rightskip}{0pt plus 5cm}\#define group\+Connector~(parser-\/$>$m\+\_\+group\+Connector)}\hypertarget{xmlparse_8c_a263678263938e54165f88cd889b6ce75}{}\label{xmlparse_8c_a263678263938e54165f88cd889b6ce75}
+
+
+Definition at line 657 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!group\+Size@{group\+Size}}
+\index{group\+Size@{group\+Size}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{group\+Size}{groupSize}}]{\setlength{\rightskip}{0pt plus 5cm}\#define group\+Size~(parser-\/$>$m\+\_\+group\+Size)}\hypertarget{xmlparse_8c_a694d8b982b62eb3e685dcc3957aa8894}{}\label{xmlparse_8c_a694d8b982b62eb3e685dcc3957aa8894}
+
+
+Definition at line 658 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!handler\+Arg@{handler\+Arg}}
+\index{handler\+Arg@{handler\+Arg}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{handler\+Arg}{handlerArg}}]{\setlength{\rightskip}{0pt plus 5cm}\#define handler\+Arg~(parser-\/$>$m\+\_\+handler\+Arg)}\hypertarget{xmlparse_8c_a9e12f8140a29d958bcecacda5a59cbca}{}\label{xmlparse_8c_a9e12f8140a29d958bcecacda5a59cbca}
+
+
+Definition at line 567 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!hash\+\_\+secret\+\_\+salt@{hash\+\_\+secret\+\_\+salt}}
+\index{hash\+\_\+secret\+\_\+salt@{hash\+\_\+secret\+\_\+salt}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{hash\+\_\+secret\+\_\+salt}{hash_secret_salt}}]{\setlength{\rightskip}{0pt plus 5cm}\#define hash\+\_\+secret\+\_\+salt~(parser-\/$>$m\+\_\+hash\+\_\+secret\+\_\+salt)}\hypertarget{xmlparse_8c_adc80f62ce9a1bc68b9ec1d9d013c2227}{}\label{xmlparse_8c_adc80f62ce9a1bc68b9ec1d9d013c2227}
+
+
+Definition at line 668 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!id\+Att\+Index@{id\+Att\+Index}}
+\index{id\+Att\+Index@{id\+Att\+Index}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{id\+Att\+Index}{idAttIndex}}]{\setlength{\rightskip}{0pt plus 5cm}\#define id\+Att\+Index~(parser-\/$>$m\+\_\+id\+Att\+Index)}\hypertarget{xmlparse_8c_a01055fe9c05bdbca693e0e22ab85a0e5}{}\label{xmlparse_8c_a01055fe9c05bdbca693e0e22ab85a0e5}
+
+
+Definition at line 650 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!inherited\+Bindings@{inherited\+Bindings}}
+\index{inherited\+Bindings@{inherited\+Bindings}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{inherited\+Bindings}{inheritedBindings}}]{\setlength{\rightskip}{0pt plus 5cm}\#define inherited\+Bindings~(parser-\/$>$m\+\_\+inherited\+Bindings)}\hypertarget{xmlparse_8c_a3104174926495d41334f41ecf7625d4b}{}\label{xmlparse_8c_a3104174926495d41334f41ecf7625d4b}
+
+
+Definition at line 645 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!I\+N\+I\+T\+\_\+\+A\+T\+T\+S\+\_\+\+S\+I\+ZE@{I\+N\+I\+T\+\_\+\+A\+T\+T\+S\+\_\+\+S\+I\+ZE}}
+\index{I\+N\+I\+T\+\_\+\+A\+T\+T\+S\+\_\+\+S\+I\+ZE@{I\+N\+I\+T\+\_\+\+A\+T\+T\+S\+\_\+\+S\+I\+ZE}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{I\+N\+I\+T\+\_\+\+A\+T\+T\+S\+\_\+\+S\+I\+ZE}{INIT_ATTS_SIZE}}]{\setlength{\rightskip}{0pt plus 5cm}\#define I\+N\+I\+T\+\_\+\+A\+T\+T\+S\+\_\+\+S\+I\+ZE~16}\hypertarget{xmlparse_8c_a794ada822e287f29805e4896b0e9b62b}{}\label{xmlparse_8c_a794ada822e287f29805e4896b0e9b62b}
+
+
+Definition at line 137 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!I\+N\+I\+T\+\_\+\+A\+T\+T\+S\+\_\+\+V\+E\+R\+S\+I\+ON@{I\+N\+I\+T\+\_\+\+A\+T\+T\+S\+\_\+\+V\+E\+R\+S\+I\+ON}}
+\index{I\+N\+I\+T\+\_\+\+A\+T\+T\+S\+\_\+\+V\+E\+R\+S\+I\+ON@{I\+N\+I\+T\+\_\+\+A\+T\+T\+S\+\_\+\+V\+E\+R\+S\+I\+ON}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{I\+N\+I\+T\+\_\+\+A\+T\+T\+S\+\_\+\+V\+E\+R\+S\+I\+ON}{INIT_ATTS_VERSION}}]{\setlength{\rightskip}{0pt plus 5cm}\#define I\+N\+I\+T\+\_\+\+A\+T\+T\+S\+\_\+\+V\+E\+R\+S\+I\+ON~0x\+F\+F\+F\+F\+F\+F\+FF}\hypertarget{xmlparse_8c_a58ece3d52c803a3ae784df018f71a42d}{}\label{xmlparse_8c_a58ece3d52c803a3ae784df018f71a42d}
+
+
+Definition at line 138 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!I\+N\+I\+T\+\_\+\+B\+L\+O\+C\+K\+\_\+\+S\+I\+ZE@{I\+N\+I\+T\+\_\+\+B\+L\+O\+C\+K\+\_\+\+S\+I\+ZE}}
+\index{I\+N\+I\+T\+\_\+\+B\+L\+O\+C\+K\+\_\+\+S\+I\+ZE@{I\+N\+I\+T\+\_\+\+B\+L\+O\+C\+K\+\_\+\+S\+I\+ZE}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{I\+N\+I\+T\+\_\+\+B\+L\+O\+C\+K\+\_\+\+S\+I\+ZE}{INIT_BLOCK_SIZE}}]{\setlength{\rightskip}{0pt plus 5cm}\#define I\+N\+I\+T\+\_\+\+B\+L\+O\+C\+K\+\_\+\+S\+I\+ZE~1024}\hypertarget{xmlparse_8c_a154c2ccca4bd8cc781b8a05c910d8aaa}{}\label{xmlparse_8c_a154c2ccca4bd8cc781b8a05c910d8aaa}
+
+
+Definition at line 139 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!I\+N\+I\+T\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+S\+I\+ZE@{I\+N\+I\+T\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+S\+I\+ZE}}
+\index{I\+N\+I\+T\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+S\+I\+ZE@{I\+N\+I\+T\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+S\+I\+ZE}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{I\+N\+I\+T\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+S\+I\+ZE}{INIT_BUFFER_SIZE}}]{\setlength{\rightskip}{0pt plus 5cm}\#define I\+N\+I\+T\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+S\+I\+ZE~1024}\hypertarget{xmlparse_8c_a455ba2f0e322260b0c454d7da073af0e}{}\label{xmlparse_8c_a455ba2f0e322260b0c454d7da073af0e}
+
+
+Definition at line 140 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!I\+N\+I\+T\+\_\+\+D\+A\+T\+A\+\_\+\+B\+U\+F\+\_\+\+S\+I\+ZE@{I\+N\+I\+T\+\_\+\+D\+A\+T\+A\+\_\+\+B\+U\+F\+\_\+\+S\+I\+ZE}}
+\index{I\+N\+I\+T\+\_\+\+D\+A\+T\+A\+\_\+\+B\+U\+F\+\_\+\+S\+I\+ZE@{I\+N\+I\+T\+\_\+\+D\+A\+T\+A\+\_\+\+B\+U\+F\+\_\+\+S\+I\+ZE}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{I\+N\+I\+T\+\_\+\+D\+A\+T\+A\+\_\+\+B\+U\+F\+\_\+\+S\+I\+ZE}{INIT_DATA_BUF_SIZE}}]{\setlength{\rightskip}{0pt plus 5cm}\#define I\+N\+I\+T\+\_\+\+D\+A\+T\+A\+\_\+\+B\+U\+F\+\_\+\+S\+I\+ZE~1024}\hypertarget{xmlparse_8c_a3b0620f311e691900243a0cc71ab7d05}{}\label{xmlparse_8c_a3b0620f311e691900243a0cc71ab7d05}
+
+
+Definition at line 136 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!I\+N\+I\+T\+\_\+\+P\+O\+W\+ER@{I\+N\+I\+T\+\_\+\+P\+O\+W\+ER}}
+\index{I\+N\+I\+T\+\_\+\+P\+O\+W\+ER@{I\+N\+I\+T\+\_\+\+P\+O\+W\+ER}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{I\+N\+I\+T\+\_\+\+P\+O\+W\+ER}{INIT_POWER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define I\+N\+I\+T\+\_\+\+P\+O\+W\+ER~6}\hypertarget{xmlparse_8c_a00541dfec332b4293dd3bbf560742e03}{}\label{xmlparse_8c_a00541dfec332b4293dd3bbf560742e03}
+
+
+Definition at line 5949 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!I\+N\+I\+T\+\_\+\+S\+C\+A\+F\+F\+O\+L\+D\+\_\+\+E\+L\+E\+M\+E\+N\+TS@{I\+N\+I\+T\+\_\+\+S\+C\+A\+F\+F\+O\+L\+D\+\_\+\+E\+L\+E\+M\+E\+N\+TS}}
+\index{I\+N\+I\+T\+\_\+\+S\+C\+A\+F\+F\+O\+L\+D\+\_\+\+E\+L\+E\+M\+E\+N\+TS@{I\+N\+I\+T\+\_\+\+S\+C\+A\+F\+F\+O\+L\+D\+\_\+\+E\+L\+E\+M\+E\+N\+TS}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{I\+N\+I\+T\+\_\+\+S\+C\+A\+F\+F\+O\+L\+D\+\_\+\+E\+L\+E\+M\+E\+N\+TS}{INIT_SCAFFOLD_ELEMENTS}}]{\setlength{\rightskip}{0pt plus 5cm}\#define I\+N\+I\+T\+\_\+\+S\+C\+A\+F\+F\+O\+L\+D\+\_\+\+E\+L\+E\+M\+E\+N\+TS~32}\hypertarget{xmlparse_8c_a2bdecceeac199b0c8e7e2ccce5ac7490}{}\label{xmlparse_8c_a2bdecceeac199b0c8e7e2ccce5ac7490}
+
+
+Definition at line 215 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!I\+N\+I\+T\+\_\+\+T\+A\+G\+\_\+\+B\+U\+F\+\_\+\+S\+I\+ZE@{I\+N\+I\+T\+\_\+\+T\+A\+G\+\_\+\+B\+U\+F\+\_\+\+S\+I\+ZE}}
+\index{I\+N\+I\+T\+\_\+\+T\+A\+G\+\_\+\+B\+U\+F\+\_\+\+S\+I\+ZE@{I\+N\+I\+T\+\_\+\+T\+A\+G\+\_\+\+B\+U\+F\+\_\+\+S\+I\+ZE}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{I\+N\+I\+T\+\_\+\+T\+A\+G\+\_\+\+B\+U\+F\+\_\+\+S\+I\+ZE}{INIT_TAG_BUF_SIZE}}]{\setlength{\rightskip}{0pt plus 5cm}\#define I\+N\+I\+T\+\_\+\+T\+A\+G\+\_\+\+B\+U\+F\+\_\+\+S\+I\+ZE~32  /$\ast$ must be {\bf a} multiple {\bf of} sizeof({\bf X\+M\+L\+\_\+\+Char}) $\ast$/}\hypertarget{xmlparse_8c_a836411019fe8b351db35f9a79fea3f48}{}\label{xmlparse_8c_a836411019fe8b351db35f9a79fea3f48}
+
+
+Definition at line 135 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!init\+Encoding@{init\+Encoding}}
+\index{init\+Encoding@{init\+Encoding}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{init\+Encoding}{initEncoding}}]{\setlength{\rightskip}{0pt plus 5cm}\#define init\+Encoding~(parser-\/$>$m\+\_\+init\+Encoding)}\hypertarget{xmlparse_8c_a49f744a2302f39b471f72005c0e8836b}{}\label{xmlparse_8c_a49f744a2302f39b471f72005c0e8836b}
+
+
+Definition at line 600 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!internal\+Encoding@{internal\+Encoding}}
+\index{internal\+Encoding@{internal\+Encoding}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{internal\+Encoding}{internalEncoding}}]{\setlength{\rightskip}{0pt plus 5cm}\#define internal\+Encoding~(parser-\/$>$m\+\_\+internal\+Encoding)}\hypertarget{xmlparse_8c_a1b33093c602147d9a9c8d532f61c7dd0}{}\label{xmlparse_8c_a1b33093c602147d9a9c8d532f61c7dd0}
+
+
+Definition at line 601 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!internal\+Entity\+Ref\+Handler@{internal\+Entity\+Ref\+Handler}}
+\index{internal\+Entity\+Ref\+Handler@{internal\+Entity\+Ref\+Handler}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{internal\+Entity\+Ref\+Handler}{internalEntityRefHandler}}]{\setlength{\rightskip}{0pt plus 5cm}\#define internal\+Entity\+Ref\+Handler~(parser-\/$>$m\+\_\+internal\+Entity\+Ref\+Handler)}\hypertarget{xmlparse_8c_ad675f805860a1b401be85d2a3a7708b5}{}\label{xmlparse_8c_ad675f805860a1b401be85d2a3a7708b5}
+
+
+Definition at line 591 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!M\+A\+L\+L\+OC@{M\+A\+L\+L\+OC}}
+\index{M\+A\+L\+L\+OC@{M\+A\+L\+L\+OC}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{M\+A\+L\+L\+OC}{MALLOC}}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+A\+L\+L\+OC(
+\begin{DoxyParamCaption}
+\item[{}]{{\bf s}}
+\end{DoxyParamCaption}
+)~(parser-\/$>$m\+\_\+mem.\+malloc\+\_\+fcn(({\bf s})))}\hypertarget{xmlparse_8c_ab8d499913046f671dedfa9ec2fee39e4}{}\label{xmlparse_8c_ab8d499913046f671dedfa9ec2fee39e4}
+
+
+Definition at line 562 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!M\+U\+S\+T\+\_\+\+C\+O\+N\+V\+E\+RT@{M\+U\+S\+T\+\_\+\+C\+O\+N\+V\+E\+RT}}
+\index{M\+U\+S\+T\+\_\+\+C\+O\+N\+V\+E\+RT@{M\+U\+S\+T\+\_\+\+C\+O\+N\+V\+E\+RT}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{M\+U\+S\+T\+\_\+\+C\+O\+N\+V\+E\+RT}{MUST_CONVERT}}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+U\+S\+T\+\_\+\+C\+O\+N\+V\+E\+RT(
+\begin{DoxyParamCaption}
+\item[{}]{enc, }
+\item[{}]{{\bf s}}
+\end{DoxyParamCaption}
+)~(!(enc)-\/$>$is\+Utf8)}\hypertarget{xmlparse_8c_a62142e6359fd5641bb5e0678ca3e1dfe}{}\label{xmlparse_8c_a62142e6359fd5641bb5e0678ca3e1dfe}
+
+
+Definition at line 43 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!namespace\+Separator@{namespace\+Separator}}
+\index{namespace\+Separator@{namespace\+Separator}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{namespace\+Separator}{namespaceSeparator}}]{\setlength{\rightskip}{0pt plus 5cm}\#define namespace\+Separator~(parser-\/$>$m\+\_\+namespace\+Separator)}\hypertarget{xmlparse_8c_a736bbc99314e2a5bf4f783a70cb88b2f}{}\label{xmlparse_8c_a736bbc99314e2a5bf4f783a70cb88b2f}
+
+
+Definition at line 659 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!notation\+Decl\+Handler@{notation\+Decl\+Handler}}
+\index{notation\+Decl\+Handler@{notation\+Decl\+Handler}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{notation\+Decl\+Handler}{notationDeclHandler}}]{\setlength{\rightskip}{0pt plus 5cm}\#define notation\+Decl\+Handler~(parser-\/$>$m\+\_\+notation\+Decl\+Handler)}\hypertarget{xmlparse_8c_a4654af496a67984a651f956c01b30902}{}\label{xmlparse_8c_a4654af496a67984a651f956c01b30902}
+
+
+Definition at line 582 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!not\+Standalone\+Handler@{not\+Standalone\+Handler}}
+\index{not\+Standalone\+Handler@{not\+Standalone\+Handler}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{not\+Standalone\+Handler}{notStandaloneHandler}}]{\setlength{\rightskip}{0pt plus 5cm}\#define not\+Standalone\+Handler~(parser-\/$>$m\+\_\+not\+Standalone\+Handler)}\hypertarget{xmlparse_8c_aa688fadc801cd636da72805cb7596c0d}{}\label{xmlparse_8c_aa688fadc801cd636da72805cb7596c0d}
+
+
+Definition at line 586 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!ns@{ns}}
+\index{ns@{ns}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{ns}{ns}}]{\setlength{\rightskip}{0pt plus 5cm}\#define ns~(parser-\/$>$m\+\_\+ns)}\hypertarget{xmlparse_8c_ab269c6a72273579c35715ec77b41b634}{}\label{xmlparse_8c_ab269c6a72273579c35715ec77b41b634}
+
+
+Definition at line 608 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!ns\+\_\+triplets@{ns\+\_\+triplets}}
+\index{ns\+\_\+triplets@{ns\+\_\+triplets}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{ns\+\_\+triplets}{ns_triplets}}]{\setlength{\rightskip}{0pt plus 5cm}\#define ns\+\_\+triplets~(parser-\/$>$m\+\_\+ns\+\_\+triplets)}\hypertarget{xmlparse_8c_a70104d002b09d7b6eb9ad34d599a64f0}{}\label{xmlparse_8c_a70104d002b09d7b6eb9ad34d599a64f0}
+
+
+Definition at line 609 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!ns\+Atts@{ns\+Atts}}
+\index{ns\+Atts@{ns\+Atts}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{ns\+Atts}{nsAtts}}]{\setlength{\rightskip}{0pt plus 5cm}\#define ns\+Atts~(parser-\/$>$m\+\_\+ns\+Atts)}\hypertarget{xmlparse_8c_a455151da0e6b245f8a98f00480626376}{}\label{xmlparse_8c_a455151da0e6b245f8a98f00480626376}
+
+
+Definition at line 651 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!ns\+Atts\+Power@{ns\+Atts\+Power}}
+\index{ns\+Atts\+Power@{ns\+Atts\+Power}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{ns\+Atts\+Power}{nsAttsPower}}]{\setlength{\rightskip}{0pt plus 5cm}\#define ns\+Atts\+Power~(parser-\/$>$m\+\_\+ns\+Atts\+Power)}\hypertarget{xmlparse_8c_a50d8728e72c0b424a2d360c599f53779}{}\label{xmlparse_8c_a50d8728e72c0b424a2d360c599f53779}
+
+
+Definition at line 653 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!ns\+Atts\+Version@{ns\+Atts\+Version}}
+\index{ns\+Atts\+Version@{ns\+Atts\+Version}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{ns\+Atts\+Version}{nsAttsVersion}}]{\setlength{\rightskip}{0pt plus 5cm}\#define ns\+Atts\+Version~(parser-\/$>$m\+\_\+ns\+Atts\+Version)}\hypertarget{xmlparse_8c_a4c7a8d2ec61115ce2ee0fbf95f5abe21}{}\label{xmlparse_8c_a4c7a8d2ec61115ce2ee0fbf95f5abe21}
+
+
+Definition at line 652 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!n\+Specified\+Atts@{n\+Specified\+Atts}}
+\index{n\+Specified\+Atts@{n\+Specified\+Atts}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{n\+Specified\+Atts}{nSpecifiedAtts}}]{\setlength{\rightskip}{0pt plus 5cm}\#define n\+Specified\+Atts~(parser-\/$>$m\+\_\+n\+Specified\+Atts)}\hypertarget{xmlparse_8c_a130782f9100283fe154bf08918292c58}{}\label{xmlparse_8c_a130782f9100283fe154bf08918292c58}
+
+
+Definition at line 649 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!open\+Internal\+Entities@{open\+Internal\+Entities}}
+\index{open\+Internal\+Entities@{open\+Internal\+Entities}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{open\+Internal\+Entities}{openInternalEntities}}]{\setlength{\rightskip}{0pt plus 5cm}\#define open\+Internal\+Entities~(parser-\/$>$m\+\_\+open\+Internal\+Entities)}\hypertarget{xmlparse_8c_a5df0641cd43a44ba64ce0d3087d952f9}{}\label{xmlparse_8c_a5df0641cd43a44ba64ce0d3087d952f9}
+
+
+Definition at line 617 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!parent\+Parser@{parent\+Parser}}
+\index{parent\+Parser@{parent\+Parser}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{parent\+Parser}{parentParser}}]{\setlength{\rightskip}{0pt plus 5cm}\#define parent\+Parser~(parser-\/$>$m\+\_\+parent\+Parser)}\hypertarget{xmlparse_8c_a9d763c133618f3e809bea574786ac52d}{}\label{xmlparse_8c_a9d763c133618f3e809bea574786ac52d}
+
+
+Definition at line 660 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!parse\+End\+Byte\+Index@{parse\+End\+Byte\+Index}}
+\index{parse\+End\+Byte\+Index@{parse\+End\+Byte\+Index}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{parse\+End\+Byte\+Index}{parseEndByteIndex}}]{\setlength{\rightskip}{0pt plus 5cm}\#define parse\+End\+Byte\+Index~(parser-\/$>$m\+\_\+parse\+End\+Byte\+Index)}\hypertarget{xmlparse_8c_ab74018925dc84567939663e8c76b6856}{}\label{xmlparse_8c_ab74018925dc84567939663e8c76b6856}
+
+
+Definition at line 625 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!parse\+End\+Ptr@{parse\+End\+Ptr}}
+\index{parse\+End\+Ptr@{parse\+End\+Ptr}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{parse\+End\+Ptr}{parseEndPtr}}]{\setlength{\rightskip}{0pt plus 5cm}\#define parse\+End\+Ptr~(parser-\/$>$m\+\_\+parse\+End\+Ptr)}\hypertarget{xmlparse_8c_a69edecf818e64e82c1e550bdb6520481}{}\label{xmlparse_8c_a69edecf818e64e82c1e550bdb6520481}
+
+
+Definition at line 626 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!pool\+Append\+Char@{pool\+Append\+Char}}
+\index{pool\+Append\+Char@{pool\+Append\+Char}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{pool\+Append\+Char}{poolAppendChar}}]{\setlength{\rightskip}{0pt plus 5cm}\#define pool\+Append\+Char(
+\begin{DoxyParamCaption}
+\item[{}]{pool, }
+\item[{}]{{\bf c}}
+\end{DoxyParamCaption}
+)}\hypertarget{xmlparse_8c_ae072bed74fc5fff224ec324737871399}{}\label{xmlparse_8c_ae072bed74fc5fff224ec324737871399}
+{\bfseries Value\+:}
+\begin{DoxyCode}
+(((pool)->ptr == (pool)->end && !poolGrow(pool)) \(\backslash\)
+   ? 0 \(\backslash\)
+   : ((*((pool)->ptr)++ = \hyperlink{poly-fir_8h_aafc737ea9ef91f59cf9acd287fb8d085}{c}), 1))
+\end{DoxyCode}
+
+
+Definition at line 454 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!pool\+Chop@{pool\+Chop}}
+\index{pool\+Chop@{pool\+Chop}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{pool\+Chop}{poolChop}}]{\setlength{\rightskip}{0pt plus 5cm}\#define pool\+Chop(
+\begin{DoxyParamCaption}
+\item[{}]{pool}
+\end{DoxyParamCaption}
+)~(({\bf void})-\/-\/(pool-\/$>$ptr))}\hypertarget{xmlparse_8c_ad856ba8e9a9305a2a0b5539f999bbeaa}{}\label{xmlparse_8c_ad856ba8e9a9305a2a0b5539f999bbeaa}
+
+
+Definition at line 450 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!pool\+Discard@{pool\+Discard}}
+\index{pool\+Discard@{pool\+Discard}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{pool\+Discard}{poolDiscard}}]{\setlength{\rightskip}{0pt plus 5cm}\#define pool\+Discard(
+\begin{DoxyParamCaption}
+\item[{}]{pool}
+\end{DoxyParamCaption}
+)~((pool)-\/$>$ptr = (pool)-\/$>${\bf start})}\hypertarget{xmlparse_8c_ac42e54028bfc6d8b168cf1eb1936d10e}{}\label{xmlparse_8c_ac42e54028bfc6d8b168cf1eb1936d10e}
+
+
+Definition at line 452 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!pool\+End@{pool\+End}}
+\index{pool\+End@{pool\+End}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{pool\+End}{poolEnd}}]{\setlength{\rightskip}{0pt plus 5cm}\#define pool\+End(
+\begin{DoxyParamCaption}
+\item[{}]{pool}
+\end{DoxyParamCaption}
+)~((pool)-\/$>$ptr)}\hypertarget{xmlparse_8c_a2e97b873d7bb94bc451bfe3656c314d9}{}\label{xmlparse_8c_a2e97b873d7bb94bc451bfe3656c314d9}
+
+
+Definition at line 448 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!pool\+Finish@{pool\+Finish}}
+\index{pool\+Finish@{pool\+Finish}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{pool\+Finish}{poolFinish}}]{\setlength{\rightskip}{0pt plus 5cm}\#define pool\+Finish(
+\begin{DoxyParamCaption}
+\item[{}]{pool}
+\end{DoxyParamCaption}
+)~((pool)-\/$>${\bf start} = (pool)-\/$>$ptr)}\hypertarget{xmlparse_8c_a9db839b65943e8e94afadfeff3c8f8a4}{}\label{xmlparse_8c_a9db839b65943e8e94afadfeff3c8f8a4}
+
+
+Definition at line 453 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!pool\+Last\+Char@{pool\+Last\+Char}}
+\index{pool\+Last\+Char@{pool\+Last\+Char}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{pool\+Last\+Char}{poolLastChar}}]{\setlength{\rightskip}{0pt plus 5cm}\#define pool\+Last\+Char(
+\begin{DoxyParamCaption}
+\item[{}]{pool}
+\end{DoxyParamCaption}
+)~(((pool)-\/$>$ptr)\mbox{[}-\/1\mbox{]})}\hypertarget{xmlparse_8c_ae6cc829455aa2a976f41d93cd3c81162}{}\label{xmlparse_8c_ae6cc829455aa2a976f41d93cd3c81162}
+
+
+Definition at line 451 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!pool\+Length@{pool\+Length}}
+\index{pool\+Length@{pool\+Length}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{pool\+Length}{poolLength}}]{\setlength{\rightskip}{0pt plus 5cm}\#define pool\+Length(
+\begin{DoxyParamCaption}
+\item[{}]{pool}
+\end{DoxyParamCaption}
+)~((pool)-\/$>$ptr -\/ (pool)-\/$>${\bf start})}\hypertarget{xmlparse_8c_a634e57fbfe06dcbcfa782dc5950c1c1d}{}\label{xmlparse_8c_a634e57fbfe06dcbcfa782dc5950c1c1d}
+
+
+Definition at line 449 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!pool\+Start@{pool\+Start}}
+\index{pool\+Start@{pool\+Start}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{pool\+Start}{poolStart}}]{\setlength{\rightskip}{0pt plus 5cm}\#define pool\+Start(
+\begin{DoxyParamCaption}
+\item[{}]{pool}
+\end{DoxyParamCaption}
+)~((pool)-\/$>${\bf start})}\hypertarget{xmlparse_8c_a386cd1d223c3a07e77de4009a70dfc99}{}\label{xmlparse_8c_a386cd1d223c3a07e77de4009a70dfc99}
+
+
+Definition at line 447 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!position@{position}}
+\index{position@{position}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{position}{position}}]{\setlength{\rightskip}{0pt plus 5cm}\#define {\bf position}~(parser-\/$>$m\+\_\+position)}\hypertarget{xmlparse_8c_a38975acbb6db0fe600f77477050279a4}{}\label{xmlparse_8c_a38975acbb6db0fe600f77477050279a4}
+
+
+Definition at line 616 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!position\+Ptr@{position\+Ptr}}
+\index{position\+Ptr@{position\+Ptr}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{position\+Ptr}{positionPtr}}]{\setlength{\rightskip}{0pt plus 5cm}\#define position\+Ptr~(parser-\/$>$m\+\_\+position\+Ptr)}\hypertarget{xmlparse_8c_aed5d95cbb171c2dfa8bce638f533a273}{}\label{xmlparse_8c_aed5d95cbb171c2dfa8bce638f533a273}
+
+
+Definition at line 615 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!P\+R\+O\+B\+E\+\_\+\+S\+T\+EP@{P\+R\+O\+B\+E\+\_\+\+S\+T\+EP}}
+\index{P\+R\+O\+B\+E\+\_\+\+S\+T\+EP@{P\+R\+O\+B\+E\+\_\+\+S\+T\+EP}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{P\+R\+O\+B\+E\+\_\+\+S\+T\+EP}{PROBE_STEP}}]{\setlength{\rightskip}{0pt plus 5cm}\#define P\+R\+O\+B\+E\+\_\+\+S\+T\+EP(
+\begin{DoxyParamCaption}
+\item[{}]{{\bf hash}, }
+\item[{}]{{\bf mask}, }
+\item[{}]{power}
+\end{DoxyParamCaption}
+)~((unsigned char)(({\bf S\+E\+C\+O\+N\+D\+\_\+\+H\+A\+SH}({\bf hash}, {\bf mask}, power)) $\vert$ 1))}\hypertarget{xmlparse_8c_a1fe8c2d28329fb8ad8e4bc1e77748e15}{}\label{xmlparse_8c_a1fe8c2d28329fb8ad8e4bc1e77748e15}
+
+
+Definition at line 127 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!processing\+Instruction\+Handler@{processing\+Instruction\+Handler}}
+\index{processing\+Instruction\+Handler@{processing\+Instruction\+Handler}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{processing\+Instruction\+Handler}{processingInstructionHandler}}]{\setlength{\rightskip}{0pt plus 5cm}\#define processing\+Instruction\+Handler~(parser-\/$>$m\+\_\+processing\+Instruction\+Handler)}\hypertarget{xmlparse_8c_a16aeaf3e01c64f9301a6954762951b74}{}\label{xmlparse_8c_a16aeaf3e01c64f9301a6954762951b74}
+
+
+Definition at line 571 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!processor@{processor}}
+\index{processor@{processor}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{processor}{processor}}]{\setlength{\rightskip}{0pt plus 5cm}\#define processor~(parser-\/$>$m\+\_\+processor)}\hypertarget{xmlparse_8c_ae2e049b4850fa94870e78619701bbeb0}{}\label{xmlparse_8c_ae2e049b4850fa94870e78619701bbeb0}
+
+
+Definition at line 611 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!prolog\+State@{prolog\+State}}
+\index{prolog\+State@{prolog\+State}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{prolog\+State}{prologState}}]{\setlength{\rightskip}{0pt plus 5cm}\#define prolog\+State~(parser-\/$>$m\+\_\+prolog\+State)}\hypertarget{xmlparse_8c_af493a8c6fd0c8fec5539c52661fda630}{}\label{xmlparse_8c_af493a8c6fd0c8fec5539c52661fda630}
+
+
+Definition at line 610 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!protocol\+Encoding\+Name@{protocol\+Encoding\+Name}}
+\index{protocol\+Encoding\+Name@{protocol\+Encoding\+Name}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{protocol\+Encoding\+Name}{protocolEncodingName}}]{\setlength{\rightskip}{0pt plus 5cm}\#define protocol\+Encoding\+Name~(parser-\/$>$m\+\_\+protocol\+Encoding\+Name)}\hypertarget{xmlparse_8c_a7acee91eaf16102f30a0b769adc0db04}{}\label{xmlparse_8c_a7acee91eaf16102f30a0b769adc0db04}
+
+
+Definition at line 607 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!ps\+\_\+final\+Buffer@{ps\+\_\+final\+Buffer}}
+\index{ps\+\_\+final\+Buffer@{ps\+\_\+final\+Buffer}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{ps\+\_\+final\+Buffer}{ps_finalBuffer}}]{\setlength{\rightskip}{0pt plus 5cm}\#define ps\+\_\+final\+Buffer~(parser-\/$>$m\+\_\+parsing\+Status.\+final\+Buffer)}\hypertarget{xmlparse_8c_a138303ba865325ae5574c370eec9ae46}{}\label{xmlparse_8c_a138303ba865325ae5574c370eec9ae46}
+
+
+Definition at line 662 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!ps\+\_\+parsing@{ps\+\_\+parsing}}
+\index{ps\+\_\+parsing@{ps\+\_\+parsing}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{ps\+\_\+parsing}{ps_parsing}}]{\setlength{\rightskip}{0pt plus 5cm}\#define ps\+\_\+parsing~(parser-\/$>$m\+\_\+parsing\+Status.\+parsing)}\hypertarget{xmlparse_8c_aa9b2258587e65f28344754d3377ca60c}{}\label{xmlparse_8c_aa9b2258587e65f28344754d3377ca60c}
+
+
+Definition at line 661 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!R\+E\+A\+L\+L\+OC@{R\+E\+A\+L\+L\+OC}}
+\index{R\+E\+A\+L\+L\+OC@{R\+E\+A\+L\+L\+OC}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{R\+E\+A\+L\+L\+OC}{REALLOC}}]{\setlength{\rightskip}{0pt plus 5cm}\#define R\+E\+A\+L\+L\+OC(
+\begin{DoxyParamCaption}
+\item[{}]{{\bf p}, }
+\item[{}]{{\bf s}}
+\end{DoxyParamCaption}
+)~(parser-\/$>$m\+\_\+mem.\+realloc\+\_\+fcn(({\bf p}),({\bf s})))}\hypertarget{xmlparse_8c_a17d9af8542e3c215a173f67977fb06aa}{}\label{xmlparse_8c_a17d9af8542e3c215a173f67977fb06aa}
+
+
+Definition at line 563 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!R\+O\+U\+N\+D\+\_\+\+UP@{R\+O\+U\+N\+D\+\_\+\+UP}}
+\index{R\+O\+U\+N\+D\+\_\+\+UP@{R\+O\+U\+N\+D\+\_\+\+UP}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{R\+O\+U\+N\+D\+\_\+\+UP}{ROUND_UP}}]{\setlength{\rightskip}{0pt plus 5cm}\#define R\+O\+U\+N\+D\+\_\+\+UP(
+\begin{DoxyParamCaption}
+\item[{}]{n, }
+\item[{}]{sz}
+\end{DoxyParamCaption}
+)~(((n) + ((sz) -\/ 1)) \& $\sim$((sz) -\/ 1))}\hypertarget{xmlparse_8c_a6b15bd61b34718150a8b92ffc21d49a3}{}\label{xmlparse_8c_a6b15bd61b34718150a8b92ffc21d49a3}
+
+
+Definition at line 76 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!S\+E\+C\+O\+N\+D\+\_\+\+H\+A\+SH@{S\+E\+C\+O\+N\+D\+\_\+\+H\+A\+SH}}
+\index{S\+E\+C\+O\+N\+D\+\_\+\+H\+A\+SH@{S\+E\+C\+O\+N\+D\+\_\+\+H\+A\+SH}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{S\+E\+C\+O\+N\+D\+\_\+\+H\+A\+SH}{SECOND_HASH}}]{\setlength{\rightskip}{0pt plus 5cm}\#define S\+E\+C\+O\+N\+D\+\_\+\+H\+A\+SH(
+\begin{DoxyParamCaption}
+\item[{}]{{\bf hash}, }
+\item[{}]{{\bf mask}, }
+\item[{}]{power}
+\end{DoxyParamCaption}
+)~(((({\bf hash}) \& $\sim$({\bf mask})) $>$$>$ ((power) -\/ 1)) \& (({\bf mask}) $>$$>$ 2))}\hypertarget{xmlparse_8c_a6e9fcd1e2aea63f6d799aff591d89a6a}{}\label{xmlparse_8c_a6e9fcd1e2aea63f6d799aff591d89a6a}
+
+
+Definition at line 125 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!skipped\+Entity\+Handler@{skipped\+Entity\+Handler}}
+\index{skipped\+Entity\+Handler@{skipped\+Entity\+Handler}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{skipped\+Entity\+Handler}{skippedEntityHandler}}]{\setlength{\rightskip}{0pt plus 5cm}\#define skipped\+Entity\+Handler~(parser-\/$>$m\+\_\+skipped\+Entity\+Handler)}\hypertarget{xmlparse_8c_a1753cfebea0f1d60dbf7d00f2e825bbe}{}\label{xmlparse_8c_a1753cfebea0f1d60dbf7d00f2e825bbe}
+
+
+Definition at line 593 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!start\+Cdata\+Section\+Handler@{start\+Cdata\+Section\+Handler}}
+\index{start\+Cdata\+Section\+Handler@{start\+Cdata\+Section\+Handler}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{start\+Cdata\+Section\+Handler}{startCdataSectionHandler}}]{\setlength{\rightskip}{0pt plus 5cm}\#define start\+Cdata\+Section\+Handler~(parser-\/$>$m\+\_\+start\+Cdata\+Section\+Handler)}\hypertarget{xmlparse_8c_a65f06f03eda785674477bcfed1d85f62}{}\label{xmlparse_8c_a65f06f03eda785674477bcfed1d85f62}
+
+
+Definition at line 574 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!start\+Doctype\+Decl\+Handler@{start\+Doctype\+Decl\+Handler}}
+\index{start\+Doctype\+Decl\+Handler@{start\+Doctype\+Decl\+Handler}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{start\+Doctype\+Decl\+Handler}{startDoctypeDeclHandler}}]{\setlength{\rightskip}{0pt plus 5cm}\#define start\+Doctype\+Decl\+Handler~(parser-\/$>$m\+\_\+start\+Doctype\+Decl\+Handler)}\hypertarget{xmlparse_8c_a8b81c0ef4b22fa60a1268c1722bf0580}{}\label{xmlparse_8c_a8b81c0ef4b22fa60a1268c1722bf0580}
+
+
+Definition at line 578 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!start\+Element\+Handler@{start\+Element\+Handler}}
+\index{start\+Element\+Handler@{start\+Element\+Handler}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{start\+Element\+Handler}{startElementHandler}}]{\setlength{\rightskip}{0pt plus 5cm}\#define start\+Element\+Handler~(parser-\/$>$m\+\_\+start\+Element\+Handler)}\hypertarget{xmlparse_8c_a922a52c6d583f208de2de02834e30efd}{}\label{xmlparse_8c_a922a52c6d583f208de2de02834e30efd}
+
+
+Definition at line 568 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!start\+Namespace\+Decl\+Handler@{start\+Namespace\+Decl\+Handler}}
+\index{start\+Namespace\+Decl\+Handler@{start\+Namespace\+Decl\+Handler}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{start\+Namespace\+Decl\+Handler}{startNamespaceDeclHandler}}]{\setlength{\rightskip}{0pt plus 5cm}\#define start\+Namespace\+Decl\+Handler~(parser-\/$>$m\+\_\+start\+Namespace\+Decl\+Handler)}\hypertarget{xmlparse_8c_a8ae71caf8f589aef75fa7bc71956e0da}{}\label{xmlparse_8c_a8ae71caf8f589aef75fa7bc71956e0da}
+
+
+Definition at line 583 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!tag\+Level@{tag\+Level}}
+\index{tag\+Level@{tag\+Level}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{tag\+Level}{tagLevel}}]{\setlength{\rightskip}{0pt plus 5cm}\#define tag\+Level~(parser-\/$>$m\+\_\+tag\+Level)}\hypertarget{xmlparse_8c_a89227e5719171a2b7a05963fc67fcbc2}{}\label{xmlparse_8c_a89227e5719171a2b7a05963fc67fcbc2}
+
+
+Definition at line 621 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!tag\+Stack@{tag\+Stack}}
+\index{tag\+Stack@{tag\+Stack}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{tag\+Stack}{tagStack}}]{\setlength{\rightskip}{0pt plus 5cm}\#define tag\+Stack~(parser-\/$>$m\+\_\+tag\+Stack)}\hypertarget{xmlparse_8c_a158f3ae07186f4c5e0ac37df749ceaec}{}\label{xmlparse_8c_a158f3ae07186f4c5e0ac37df749ceaec}
+
+
+Definition at line 646 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!temp2\+Pool@{temp2\+Pool}}
+\index{temp2\+Pool@{temp2\+Pool}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{temp2\+Pool}{temp2Pool}}]{\setlength{\rightskip}{0pt plus 5cm}\#define temp2\+Pool~(parser-\/$>$m\+\_\+temp2\+Pool)}\hypertarget{xmlparse_8c_a3027782cb1859b39383988b3dc5a32d4}{}\label{xmlparse_8c_a3027782cb1859b39383988b3dc5a32d4}
+
+
+Definition at line 656 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!temp\+Pool@{temp\+Pool}}
+\index{temp\+Pool@{temp\+Pool}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{temp\+Pool}{tempPool}}]{\setlength{\rightskip}{0pt plus 5cm}\#define temp\+Pool~(parser-\/$>$m\+\_\+temp\+Pool)}\hypertarget{xmlparse_8c_a39a63433fd9ac53dbbe600beb1043adf}{}\label{xmlparse_8c_a39a63433fd9ac53dbbe600beb1043adf}
+
+
+Definition at line 655 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!unknown\+Encoding\+Data@{unknown\+Encoding\+Data}}
+\index{unknown\+Encoding\+Data@{unknown\+Encoding\+Data}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{unknown\+Encoding\+Data}{unknownEncodingData}}]{\setlength{\rightskip}{0pt plus 5cm}\#define unknown\+Encoding\+Data~(parser-\/$>$m\+\_\+unknown\+Encoding\+Data)}\hypertarget{xmlparse_8c_a9581e7e60c6db8d6a0122b0e559beb0c}{}\label{xmlparse_8c_a9581e7e60c6db8d6a0122b0e559beb0c}
+
+
+Definition at line 603 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!unknown\+Encoding\+Handler@{unknown\+Encoding\+Handler}}
+\index{unknown\+Encoding\+Handler@{unknown\+Encoding\+Handler}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{unknown\+Encoding\+Handler}{unknownEncodingHandler}}]{\setlength{\rightskip}{0pt plus 5cm}\#define unknown\+Encoding\+Handler~(parser-\/$>$m\+\_\+unknown\+Encoding\+Handler)}\hypertarget{xmlparse_8c_a49ce74526fcb51273686528a09b34ac3}{}\label{xmlparse_8c_a49ce74526fcb51273686528a09b34ac3}
+
+
+Definition at line 594 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!unknown\+Encoding\+Handler\+Data@{unknown\+Encoding\+Handler\+Data}}
+\index{unknown\+Encoding\+Handler\+Data@{unknown\+Encoding\+Handler\+Data}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{unknown\+Encoding\+Handler\+Data}{unknownEncodingHandlerData}}]{\setlength{\rightskip}{0pt plus 5cm}\#define unknown\+Encoding\+Handler\+Data~(parser-\/$>$m\+\_\+unknown\+Encoding\+Handler\+Data)}\hypertarget{xmlparse_8c_a714386346dd4bede749ba4daa41d7586}{}\label{xmlparse_8c_a714386346dd4bede749ba4daa41d7586}
+
+
+Definition at line 604 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!unknown\+Encoding\+Mem@{unknown\+Encoding\+Mem}}
+\index{unknown\+Encoding\+Mem@{unknown\+Encoding\+Mem}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{unknown\+Encoding\+Mem}{unknownEncodingMem}}]{\setlength{\rightskip}{0pt plus 5cm}\#define unknown\+Encoding\+Mem~(parser-\/$>$m\+\_\+unknown\+Encoding\+Mem)}\hypertarget{xmlparse_8c_a56a3130a18d2b72be03748455780e708}{}\label{xmlparse_8c_a56a3130a18d2b72be03748455780e708}
+
+
+Definition at line 602 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!unknown\+Encoding\+Release@{unknown\+Encoding\+Release}}
+\index{unknown\+Encoding\+Release@{unknown\+Encoding\+Release}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{unknown\+Encoding\+Release}{unknownEncodingRelease}}]{\setlength{\rightskip}{0pt plus 5cm}\#define unknown\+Encoding\+Release~(parser-\/$>$m\+\_\+unknown\+Encoding\+Release)}\hypertarget{xmlparse_8c_a4711580e5eb92ef35d766bb7c86b9487}{}\label{xmlparse_8c_a4711580e5eb92ef35d766bb7c86b9487}
+
+
+Definition at line 606 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!unparsed\+Entity\+Decl\+Handler@{unparsed\+Entity\+Decl\+Handler}}
+\index{unparsed\+Entity\+Decl\+Handler@{unparsed\+Entity\+Decl\+Handler}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{unparsed\+Entity\+Decl\+Handler}{unparsedEntityDeclHandler}}]{\setlength{\rightskip}{0pt plus 5cm}\#define unparsed\+Entity\+Decl\+Handler~(parser-\/$>$m\+\_\+unparsed\+Entity\+Decl\+Handler)}\hypertarget{xmlparse_8c_ac7472317816f3b7da8ee4852ef91eeb5}{}\label{xmlparse_8c_ac7472317816f3b7da8ee4852ef91eeb5}
+
+
+Definition at line 580 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!user\+Data@{user\+Data}}
+\index{user\+Data@{user\+Data}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{user\+Data}{userData}}]{\setlength{\rightskip}{0pt plus 5cm}\#define user\+Data~(parser-\/$>$m\+\_\+user\+Data)}\hypertarget{xmlparse_8c_a4b666535c828e23ccd16510a0a1a1943}{}\label{xmlparse_8c_a4b666535c828e23ccd16510a0a1a1943}
+
+
+Definition at line 566 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!V1@{V1}}
+\index{V1@{V1}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{V1}{V1}}]{\setlength{\rightskip}{0pt plus 5cm}\#define V1(
+\begin{DoxyParamCaption}
+\item[{}]{{\bf a}, }
+\item[{}]{{\bf b}, }
+\item[{}]{{\bf c}}
+\end{DoxyParamCaption}
+)~{\bf X\+M\+L\+\_\+L}(\#{\bf a}){\bf X\+M\+L\+\_\+L}(\char`\"{}.\char`\"{}){\bf X\+M\+L\+\_\+L}(\#{\bf b}){\bf X\+M\+L\+\_\+L}(\char`\"{}.\char`\"{}){\bf X\+M\+L\+\_\+L}(\#{\bf c})}\hypertarget{xmlparse_8c_a98b7c00e73b6d8f13214cc4646383aab}{}\label{xmlparse_8c_a98b7c00e73b6d8f13214cc4646383aab}
+\index{xmlparse.\+c@{xmlparse.\+c}!V2@{V2}}
+\index{V2@{V2}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{V2}{V2}}]{\setlength{\rightskip}{0pt plus 5cm}\#define V2(
+\begin{DoxyParamCaption}
+\item[{}]{{\bf a}, }
+\item[{}]{{\bf b}, }
+\item[{}]{{\bf c}}
+\end{DoxyParamCaption}
+)~{\bf X\+M\+L\+\_\+L}(\char`\"{}expat\+\_\+\char`\"{})V1({\bf a},{\bf b},{\bf c})}\hypertarget{xmlparse_8c_affd35bbd101bc1b065a2183790195dd1}{}\label{xmlparse_8c_affd35bbd101bc1b065a2183790195dd1}
+\index{xmlparse.\+c@{xmlparse.\+c}!X\+M\+L\+\_\+\+B\+U\+I\+L\+D\+I\+N\+G\+\_\+\+E\+X\+P\+AT@{X\+M\+L\+\_\+\+B\+U\+I\+L\+D\+I\+N\+G\+\_\+\+E\+X\+P\+AT}}
+\index{X\+M\+L\+\_\+\+B\+U\+I\+L\+D\+I\+N\+G\+\_\+\+E\+X\+P\+AT@{X\+M\+L\+\_\+\+B\+U\+I\+L\+D\+I\+N\+G\+\_\+\+E\+X\+P\+AT}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{X\+M\+L\+\_\+\+B\+U\+I\+L\+D\+I\+N\+G\+\_\+\+E\+X\+P\+AT}{XML_BUILDING_EXPAT}}]{\setlength{\rightskip}{0pt plus 5cm}\#define X\+M\+L\+\_\+\+B\+U\+I\+L\+D\+I\+N\+G\+\_\+\+E\+X\+P\+AT~1}\hypertarget{xmlparse_8c_a375b1d5bc99cff1692e0875ac1d8a953}{}\label{xmlparse_8c_a375b1d5bc99cff1692e0875ac1d8a953}
+
+
+Definition at line 11 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!X\+M\+L\+\_\+\+E\+N\+C\+O\+D\+E\+\_\+\+M\+AX@{X\+M\+L\+\_\+\+E\+N\+C\+O\+D\+E\+\_\+\+M\+AX}}
+\index{X\+M\+L\+\_\+\+E\+N\+C\+O\+D\+E\+\_\+\+M\+AX@{X\+M\+L\+\_\+\+E\+N\+C\+O\+D\+E\+\_\+\+M\+AX}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{X\+M\+L\+\_\+\+E\+N\+C\+O\+D\+E\+\_\+\+M\+AX}{XML_ENCODE_MAX}}]{\setlength{\rightskip}{0pt plus 5cm}\#define X\+M\+L\+\_\+\+E\+N\+C\+O\+D\+E\+\_\+\+M\+AX~{\bf X\+M\+L\+\_\+\+U\+T\+F8\+\_\+\+E\+N\+C\+O\+D\+E\+\_\+\+M\+AX}}\hypertarget{xmlparse_8c_a361cb41d18ca477abbdbd2ea157d3557}{}\label{xmlparse_8c_a361cb41d18ca477abbdbd2ea157d3557}
+
+
+Definition at line 38 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!X\+M\+L\+\_\+L@{X\+M\+L\+\_\+L}}
+\index{X\+M\+L\+\_\+L@{X\+M\+L\+\_\+L}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{X\+M\+L\+\_\+L}{XML_L}}]{\setlength{\rightskip}{0pt plus 5cm}\#define X\+M\+L\+\_\+L(
+\begin{DoxyParamCaption}
+\item[{}]{x}
+\end{DoxyParamCaption}
+)~x}\hypertarget{xmlparse_8c_a9810f833cdfe0cddebb60a20257e0e59}{}\label{xmlparse_8c_a9810f833cdfe0cddebb60a20257e0e59}
+
+
+Definition at line 71 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!X\+M\+L\+\_\+T@{X\+M\+L\+\_\+T}}
+\index{X\+M\+L\+\_\+T@{X\+M\+L\+\_\+T}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{X\+M\+L\+\_\+T}{XML_T}}]{\setlength{\rightskip}{0pt plus 5cm}\#define X\+M\+L\+\_\+T(
+\begin{DoxyParamCaption}
+\item[{}]{x}
+\end{DoxyParamCaption}
+)~x}\hypertarget{xmlparse_8c_ae4b64ebad65f8eddc2cf1c159ba06f55}{}\label{xmlparse_8c_ae4b64ebad65f8eddc2cf1c159ba06f55}
+
+
+Definition at line 70 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!Xml\+Convert@{Xml\+Convert}}
+\index{Xml\+Convert@{Xml\+Convert}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{Xml\+Convert}{XmlConvert}}]{\setlength{\rightskip}{0pt plus 5cm}\#define Xml\+Convert~{\bf Xml\+Utf8\+Convert}}\hypertarget{xmlparse_8c_a243c0ebc4d48626afba079cce7160dc0}{}\label{xmlparse_8c_a243c0ebc4d48626afba079cce7160dc0}
+
+
+Definition at line 39 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!xml\+Decl\+Handler@{xml\+Decl\+Handler}}
+\index{xml\+Decl\+Handler@{xml\+Decl\+Handler}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{xml\+Decl\+Handler}{xmlDeclHandler}}]{\setlength{\rightskip}{0pt plus 5cm}\#define xml\+Decl\+Handler~(parser-\/$>$m\+\_\+xml\+Decl\+Handler)}\hypertarget{xmlparse_8c_a64170e3e35c6d95084c210e28f48fb00}{}\label{xmlparse_8c_a64170e3e35c6d95084c210e28f48fb00}
+
+
+Definition at line 598 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!Xml\+Encode@{Xml\+Encode}}
+\index{Xml\+Encode@{Xml\+Encode}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{Xml\+Encode}{XmlEncode}}]{\setlength{\rightskip}{0pt plus 5cm}\#define Xml\+Encode~{\bf Xml\+Utf8\+Encode}}\hypertarget{xmlparse_8c_affd43373927d22c9caad69f323506a3e}{}\label{xmlparse_8c_affd43373927d22c9caad69f323506a3e}
+
+
+Definition at line 42 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!Xml\+Get\+Internal\+Encoding@{Xml\+Get\+Internal\+Encoding}}
+\index{Xml\+Get\+Internal\+Encoding@{Xml\+Get\+Internal\+Encoding}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{Xml\+Get\+Internal\+Encoding}{XmlGetInternalEncoding}}]{\setlength{\rightskip}{0pt plus 5cm}\#define Xml\+Get\+Internal\+Encoding~{\bf Xml\+Get\+Utf8\+Internal\+Encoding}}\hypertarget{xmlparse_8c_aa0aa4b543a8778d25ce95b5a3550203b}{}\label{xmlparse_8c_aa0aa4b543a8778d25ce95b5a3550203b}
+
+
+Definition at line 40 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!Xml\+Get\+Internal\+Encoding\+NS@{Xml\+Get\+Internal\+Encoding\+NS}}
+\index{Xml\+Get\+Internal\+Encoding\+NS@{Xml\+Get\+Internal\+Encoding\+NS}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{Xml\+Get\+Internal\+Encoding\+NS}{XmlGetInternalEncodingNS}}]{\setlength{\rightskip}{0pt plus 5cm}\#define Xml\+Get\+Internal\+Encoding\+NS~{\bf Xml\+Get\+Utf8\+Internal\+Encoding\+NS}}\hypertarget{xmlparse_8c_a7e11bb4c4079140bfe8a907490e87d52}{}\label{xmlparse_8c_a7e11bb4c4079140bfe8a907490e87d52}
+
+
+Definition at line 53 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!Xml\+Get\+Internal\+Encoding\+NS@{Xml\+Get\+Internal\+Encoding\+NS}}
+\index{Xml\+Get\+Internal\+Encoding\+NS@{Xml\+Get\+Internal\+Encoding\+NS}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{Xml\+Get\+Internal\+Encoding\+NS}{XmlGetInternalEncodingNS}}]{\setlength{\rightskip}{0pt plus 5cm}\#define Xml\+Get\+Internal\+Encoding\+NS~{\bf Xml\+Get\+Internal\+Encoding}}\hypertarget{xmlparse_8c_a7e11bb4c4079140bfe8a907490e87d52}{}\label{xmlparse_8c_a7e11bb4c4079140bfe8a907490e87d52}
+
+
+Definition at line 53 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!Xml\+Init\+Encoding\+NS@{Xml\+Init\+Encoding\+NS}}
+\index{Xml\+Init\+Encoding\+NS@{Xml\+Init\+Encoding\+NS}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{Xml\+Init\+Encoding\+NS}{XmlInitEncodingNS}}]{\setlength{\rightskip}{0pt plus 5cm}\#define Xml\+Init\+Encoding\+NS~{\bf Xml\+Init\+Encoding}}\hypertarget{xmlparse_8c_aabf84ba1b49d38a26cd4706af414f452}{}\label{xmlparse_8c_aabf84ba1b49d38a26cd4706af414f452}
+
+
+Definition at line 50 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!Xml\+Init\+Unknown\+Encoding\+NS@{Xml\+Init\+Unknown\+Encoding\+NS}}
+\index{Xml\+Init\+Unknown\+Encoding\+NS@{Xml\+Init\+Unknown\+Encoding\+NS}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{Xml\+Init\+Unknown\+Encoding\+NS}{XmlInitUnknownEncodingNS}}]{\setlength{\rightskip}{0pt plus 5cm}\#define Xml\+Init\+Unknown\+Encoding\+NS~{\bf Xml\+Init\+Unknown\+Encoding}}\hypertarget{xmlparse_8c_a4dc93e90a190ce8de7e813c2e5f55b68}{}\label{xmlparse_8c_a4dc93e90a190ce8de7e813c2e5f55b68}
+
+
+Definition at line 51 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!Xml\+Parse\+Xml\+Decl\+NS@{Xml\+Parse\+Xml\+Decl\+NS}}
+\index{Xml\+Parse\+Xml\+Decl\+NS@{Xml\+Parse\+Xml\+Decl\+NS}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{Xml\+Parse\+Xml\+Decl\+NS}{XmlParseXmlDeclNS}}]{\setlength{\rightskip}{0pt plus 5cm}\#define Xml\+Parse\+Xml\+Decl\+NS~{\bf Xml\+Parse\+Xml\+Decl}}\hypertarget{xmlparse_8c_ae78ba61b9eaaafd2b29a3a3b61a296b9}{}\label{xmlparse_8c_ae78ba61b9eaaafd2b29a3a3b61a296b9}
+
+
+Definition at line 54 of file xmlparse.\+c.
+
+
+
+\subsection{Typedef Documentation}
+\index{xmlparse.\+c@{xmlparse.\+c}!A\+T\+T\+R\+I\+B\+U\+T\+E\+\_\+\+ID@{A\+T\+T\+R\+I\+B\+U\+T\+E\+\_\+\+ID}}
+\index{A\+T\+T\+R\+I\+B\+U\+T\+E\+\_\+\+ID@{A\+T\+T\+R\+I\+B\+U\+T\+E\+\_\+\+ID}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{A\+T\+T\+R\+I\+B\+U\+T\+E\+\_\+\+ID}{ATTRIBUTE_ID}}]{\setlength{\rightskip}{0pt plus 5cm}typedef struct {\bf attribute\+\_\+id}  {\bf A\+T\+T\+R\+I\+B\+U\+T\+E\+\_\+\+ID}}\hypertarget{xmlparse_8c_ab0dc92cf6eadf5e62d25ee83cf2605f4}{}\label{xmlparse_8c_ab0dc92cf6eadf5e62d25ee83cf2605f4}
+\index{xmlparse.\+c@{xmlparse.\+c}!B\+I\+N\+D\+I\+NG@{B\+I\+N\+D\+I\+NG}}
+\index{B\+I\+N\+D\+I\+NG@{B\+I\+N\+D\+I\+NG}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{B\+I\+N\+D\+I\+NG}{BINDING}}]{\setlength{\rightskip}{0pt plus 5cm}typedef struct {\bf binding}  {\bf B\+I\+N\+D\+I\+NG}}\hypertarget{xmlparse_8c_a243b660be2393a4a7269d15d76c5fc15}{}\label{xmlparse_8c_a243b660be2393a4a7269d15d76c5fc15}
+\index{xmlparse.\+c@{xmlparse.\+c}!B\+L\+O\+CK@{B\+L\+O\+CK}}
+\index{B\+L\+O\+CK@{B\+L\+O\+CK}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{B\+L\+O\+CK}{BLOCK}}]{\setlength{\rightskip}{0pt plus 5cm}typedef struct {\bf block}  {\bf B\+L\+O\+CK}}\hypertarget{xmlparse_8c_a36711bca7556a427bbb3cf0f49620956}{}\label{xmlparse_8c_a36711bca7556a427bbb3cf0f49620956}
+\index{xmlparse.\+c@{xmlparse.\+c}!I\+C\+H\+AR@{I\+C\+H\+AR}}
+\index{I\+C\+H\+AR@{I\+C\+H\+AR}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{I\+C\+H\+AR}{ICHAR}}]{\setlength{\rightskip}{0pt plus 5cm}typedef char {\bf I\+C\+H\+AR}}\hypertarget{xmlparse_8c_ac4b0eb8553f2e9c4325b04af8dac5264}{}\label{xmlparse_8c_ac4b0eb8553f2e9c4325b04af8dac5264}
+
+
+Definition at line 44 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!K\+EY@{K\+EY}}
+\index{K\+EY@{K\+EY}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{K\+EY}{KEY}}]{\setlength{\rightskip}{0pt plus 5cm}typedef {\bf const} {\bf X\+M\+L\+\_\+\+Char}$\ast$ {\bf K\+EY}}\hypertarget{xmlparse_8c_ab993fe892165ffeae5facd4ab9ded1e9}{}\label{xmlparse_8c_ab993fe892165ffeae5facd4ab9ded1e9}
+
+
+Definition at line 91 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!O\+P\+E\+N\+\_\+\+I\+N\+T\+E\+R\+N\+A\+L\+\_\+\+E\+N\+T\+I\+TY@{O\+P\+E\+N\+\_\+\+I\+N\+T\+E\+R\+N\+A\+L\+\_\+\+E\+N\+T\+I\+TY}}
+\index{O\+P\+E\+N\+\_\+\+I\+N\+T\+E\+R\+N\+A\+L\+\_\+\+E\+N\+T\+I\+TY@{O\+P\+E\+N\+\_\+\+I\+N\+T\+E\+R\+N\+A\+L\+\_\+\+E\+N\+T\+I\+TY}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{O\+P\+E\+N\+\_\+\+I\+N\+T\+E\+R\+N\+A\+L\+\_\+\+E\+N\+T\+I\+TY}{OPEN_INTERNAL_ENTITY}}]{\setlength{\rightskip}{0pt plus 5cm}typedef struct {\bf open\+\_\+internal\+\_\+entity}  {\bf O\+P\+E\+N\+\_\+\+I\+N\+T\+E\+R\+N\+A\+L\+\_\+\+E\+N\+T\+I\+TY}}\hypertarget{xmlparse_8c_a3cd960f4356314fc70dbef66f990d596}{}\label{xmlparse_8c_a3cd960f4356314fc70dbef66f990d596}
+\index{xmlparse.\+c@{xmlparse.\+c}!P\+R\+E\+F\+IX@{P\+R\+E\+F\+IX}}
+\index{P\+R\+E\+F\+IX@{P\+R\+E\+F\+IX}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{P\+R\+E\+F\+IX}{PREFIX}}]{\setlength{\rightskip}{0pt plus 5cm}typedef struct {\bf prefix}  {\bf P\+R\+E\+F\+IX}}\hypertarget{xmlparse_8c_aa3f98fd58683acd364daca2ddc737491}{}\label{xmlparse_8c_aa3f98fd58683acd364daca2ddc737491}
+\index{xmlparse.\+c@{xmlparse.\+c}!T\+AG@{T\+AG}}
+\index{T\+AG@{T\+AG}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{T\+AG}{TAG}}]{\setlength{\rightskip}{0pt plus 5cm}typedef struct {\bf tag}  {\bf T\+AG}}\hypertarget{xmlparse_8c_a48a238acc041757391868dd2a19eb9c2}{}\label{xmlparse_8c_a48a238acc041757391868dd2a19eb9c2}
+
+
+\subsection{Function Documentation}
+\index{xmlparse.\+c@{xmlparse.\+c}!Processor@{Processor}}
+\index{Processor@{Processor}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{Processor(\+X\+M\+L\+\_\+\+Parser parser, const char $\ast$start, const char $\ast$end, const char $\ast$$\ast$end\+Ptr)}{Processor(XML_Parser parser, const char *start, const char *end, const char **endPtr)}}]{\setlength{\rightskip}{0pt plus 5cm}enum {\bf X\+M\+L\+\_\+\+Error} {\bf P\+T\+R\+C\+A\+LL} Processor (
+\begin{DoxyParamCaption}
+\item[{{\bf X\+M\+L\+\_\+\+Parser}}]{parser, }
+\item[{{\bf const} char $\ast$}]{start, }
+\item[{{\bf const} char $\ast$}]{end, }
+\item[{{\bf const} char $\ast$$\ast$}]{end\+Ptr}
+\end{DoxyParamCaption}
+)}\hypertarget{xmlparse_8c_a91ac003478582480fcfc8c0fd9377cbc}{}\label{xmlparse_8c_a91ac003478582480fcfc8c0fd9377cbc}
+\index{xmlparse.\+c@{xmlparse.\+c}!X\+M\+L\+\_\+\+Default\+Current@{X\+M\+L\+\_\+\+Default\+Current}}
+\index{X\+M\+L\+\_\+\+Default\+Current@{X\+M\+L\+\_\+\+Default\+Current}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{X\+M\+L\+\_\+\+Default\+Current(\+X\+M\+L\+\_\+\+Parser parser)}{XML_DefaultCurrent(XML_Parser parser)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} {\bf X\+M\+L\+C\+A\+LL} X\+M\+L\+\_\+\+Default\+Current (
+\begin{DoxyParamCaption}
+\item[{{\bf X\+M\+L\+\_\+\+Parser}}]{parser}
+\end{DoxyParamCaption}
+)}\hypertarget{xmlparse_8c_a822d96f2e6d25c735d31388e2ee7550e}{}\label{xmlparse_8c_a822d96f2e6d25c735d31388e2ee7550e}
+
+
+Definition at line 1914 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!X\+M\+L\+\_\+\+Error\+String@{X\+M\+L\+\_\+\+Error\+String}}
+\index{X\+M\+L\+\_\+\+Error\+String@{X\+M\+L\+\_\+\+Error\+String}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{X\+M\+L\+\_\+\+Error\+String(enum X\+M\+L\+\_\+\+Error code)}{XML_ErrorString(enum XML_Error code)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf const} {\bf X\+M\+L\+\_\+\+L\+Char}$\ast$ {\bf X\+M\+L\+C\+A\+LL} X\+M\+L\+\_\+\+Error\+String (
+\begin{DoxyParamCaption}
+\item[{enum {\bf X\+M\+L\+\_\+\+Error}}]{code}
+\end{DoxyParamCaption}
+)}\hypertarget{xmlparse_8c_a41b7167b409d9894c4928e6659b80dd5}{}\label{xmlparse_8c_a41b7167b409d9894c4928e6659b80dd5}
+
+
+Definition at line 1928 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!X\+M\+L\+\_\+\+Expat\+Version@{X\+M\+L\+\_\+\+Expat\+Version}}
+\index{X\+M\+L\+\_\+\+Expat\+Version@{X\+M\+L\+\_\+\+Expat\+Version}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{X\+M\+L\+\_\+\+Expat\+Version(void)}{XML_ExpatVersion(void)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf const} {\bf X\+M\+L\+\_\+\+L\+Char}$\ast$ {\bf X\+M\+L\+C\+A\+LL} X\+M\+L\+\_\+\+Expat\+Version (
+\begin{DoxyParamCaption}
+\item[{{\bf void}}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{xmlparse_8c_ac65b562b6d15c0187ef971f426a35e71}{}\label{xmlparse_8c_ac65b562b6d15c0187ef971f426a35e71}
+
+
+Definition at line 1979 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!X\+M\+L\+\_\+\+Expat\+Version\+Info@{X\+M\+L\+\_\+\+Expat\+Version\+Info}}
+\index{X\+M\+L\+\_\+\+Expat\+Version\+Info@{X\+M\+L\+\_\+\+Expat\+Version\+Info}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{X\+M\+L\+\_\+\+Expat\+Version\+Info(void)}{XML_ExpatVersionInfo(void)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf X\+M\+L\+\_\+\+Expat\+\_\+\+Version} {\bf X\+M\+L\+C\+A\+LL} X\+M\+L\+\_\+\+Expat\+Version\+Info (
+\begin{DoxyParamCaption}
+\item[{{\bf void}}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{xmlparse_8c_a48973ae7f75c6032603e192b4281efcb}{}\label{xmlparse_8c_a48973ae7f75c6032603e192b4281efcb}
+
+
+Definition at line 1999 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!X\+M\+L\+\_\+\+External\+Entity\+Parser\+Create@{X\+M\+L\+\_\+\+External\+Entity\+Parser\+Create}}
+\index{X\+M\+L\+\_\+\+External\+Entity\+Parser\+Create@{X\+M\+L\+\_\+\+External\+Entity\+Parser\+Create}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{X\+M\+L\+\_\+\+External\+Entity\+Parser\+Create(\+X\+M\+L\+\_\+\+Parser old\+Parser, const X\+M\+L\+\_\+\+Char $\ast$context, const X\+M\+L\+\_\+\+Char $\ast$encoding\+Name)}{XML_ExternalEntityParserCreate(XML_Parser oldParser, const XML_Char *context, const XML_Char *encodingName)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf X\+M\+L\+\_\+\+Parser} {\bf X\+M\+L\+C\+A\+LL} X\+M\+L\+\_\+\+External\+Entity\+Parser\+Create (
+\begin{DoxyParamCaption}
+\item[{{\bf X\+M\+L\+\_\+\+Parser}}]{old\+Parser, }
+\item[{{\bf const} {\bf X\+M\+L\+\_\+\+Char} $\ast$}]{context, }
+\item[{{\bf const} {\bf X\+M\+L\+\_\+\+Char} $\ast$}]{encoding\+Name}
+\end{DoxyParamCaption}
+)}\hypertarget{xmlparse_8c_a5007cc50cec12841afd76cf150e9cc2d}{}\label{xmlparse_8c_a5007cc50cec12841afd76cf150e9cc2d}
+
+
+Definition at line 980 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!X\+M\+L\+\_\+\+Free\+Content\+Model@{X\+M\+L\+\_\+\+Free\+Content\+Model}}
+\index{X\+M\+L\+\_\+\+Free\+Content\+Model@{X\+M\+L\+\_\+\+Free\+Content\+Model}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{X\+M\+L\+\_\+\+Free\+Content\+Model(\+X\+M\+L\+\_\+\+Parser parser, X\+M\+L\+\_\+\+Content $\ast$model)}{XML_FreeContentModel(XML_Parser parser, XML_Content *model)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} {\bf X\+M\+L\+C\+A\+LL} X\+M\+L\+\_\+\+Free\+Content\+Model (
+\begin{DoxyParamCaption}
+\item[{{\bf X\+M\+L\+\_\+\+Parser}}]{parser, }
+\item[{{\bf X\+M\+L\+\_\+\+Content} $\ast$}]{model}
+\end{DoxyParamCaption}
+)}\hypertarget{xmlparse_8c_a362c3420424d6a4c6181af97ca2678c0}{}\label{xmlparse_8c_a362c3420424d6a4c6181af97ca2678c0}
+
+
+Definition at line 1890 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!X\+M\+L\+\_\+\+Get\+Base@{X\+M\+L\+\_\+\+Get\+Base}}
+\index{X\+M\+L\+\_\+\+Get\+Base@{X\+M\+L\+\_\+\+Get\+Base}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{X\+M\+L\+\_\+\+Get\+Base(\+X\+M\+L\+\_\+\+Parser parser)}{XML_GetBase(XML_Parser parser)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf const} {\bf X\+M\+L\+\_\+\+Char}$\ast$ {\bf X\+M\+L\+C\+A\+LL} X\+M\+L\+\_\+\+Get\+Base (
+\begin{DoxyParamCaption}
+\item[{{\bf X\+M\+L\+\_\+\+Parser}}]{parser}
+\end{DoxyParamCaption}
+)}\hypertarget{xmlparse_8c_abdb6c85284082fe8a74efa0fa141a1da}{}\label{xmlparse_8c_abdb6c85284082fe8a74efa0fa141a1da}
+
+
+Definition at line 1247 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!X\+M\+L\+\_\+\+Get\+Buffer@{X\+M\+L\+\_\+\+Get\+Buffer}}
+\index{X\+M\+L\+\_\+\+Get\+Buffer@{X\+M\+L\+\_\+\+Get\+Buffer}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{X\+M\+L\+\_\+\+Get\+Buffer(\+X\+M\+L\+\_\+\+Parser parser, int len)}{XML_GetBuffer(XML_Parser parser, int len)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void}$\ast$ {\bf X\+M\+L\+C\+A\+LL} X\+M\+L\+\_\+\+Get\+Buffer (
+\begin{DoxyParamCaption}
+\item[{{\bf X\+M\+L\+\_\+\+Parser}}]{parser, }
+\item[{{\bf int}}]{len}
+\end{DoxyParamCaption}
+)}\hypertarget{xmlparse_8c_a846f46601c54e0bd4e4a996307ba3f9b}{}\label{xmlparse_8c_a846f46601c54e0bd4e4a996307ba3f9b}
+
+
+Definition at line 1679 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!X\+M\+L\+\_\+\+Get\+Current\+Byte\+Count@{X\+M\+L\+\_\+\+Get\+Current\+Byte\+Count}}
+\index{X\+M\+L\+\_\+\+Get\+Current\+Byte\+Count@{X\+M\+L\+\_\+\+Get\+Current\+Byte\+Count}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{X\+M\+L\+\_\+\+Get\+Current\+Byte\+Count(\+X\+M\+L\+\_\+\+Parser parser)}{XML_GetCurrentByteCount(XML_Parser parser)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf int} {\bf X\+M\+L\+C\+A\+LL} X\+M\+L\+\_\+\+Get\+Current\+Byte\+Count (
+\begin{DoxyParamCaption}
+\item[{{\bf X\+M\+L\+\_\+\+Parser}}]{parser}
+\end{DoxyParamCaption}
+)}\hypertarget{xmlparse_8c_af930a6c7c396ff07b8e70b9883602400}{}\label{xmlparse_8c_af930a6c7c396ff07b8e70b9883602400}
+
+
+Definition at line 1849 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!X\+M\+L\+\_\+\+Get\+Current\+Byte\+Index@{X\+M\+L\+\_\+\+Get\+Current\+Byte\+Index}}
+\index{X\+M\+L\+\_\+\+Get\+Current\+Byte\+Index@{X\+M\+L\+\_\+\+Get\+Current\+Byte\+Index}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{X\+M\+L\+\_\+\+Get\+Current\+Byte\+Index(\+X\+M\+L\+\_\+\+Parser parser)}{XML_GetCurrentByteIndex(XML_Parser parser)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf X\+M\+L\+\_\+\+Index} {\bf X\+M\+L\+C\+A\+LL} X\+M\+L\+\_\+\+Get\+Current\+Byte\+Index (
+\begin{DoxyParamCaption}
+\item[{{\bf X\+M\+L\+\_\+\+Parser}}]{parser}
+\end{DoxyParamCaption}
+)}\hypertarget{xmlparse_8c_a643677b451f2ee9103f396de161aab52}{}\label{xmlparse_8c_a643677b451f2ee9103f396de161aab52}
+
+
+Definition at line 1841 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!X\+M\+L\+\_\+\+Get\+Current\+Column\+Number@{X\+M\+L\+\_\+\+Get\+Current\+Column\+Number}}
+\index{X\+M\+L\+\_\+\+Get\+Current\+Column\+Number@{X\+M\+L\+\_\+\+Get\+Current\+Column\+Number}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{X\+M\+L\+\_\+\+Get\+Current\+Column\+Number(\+X\+M\+L\+\_\+\+Parser parser)}{XML_GetCurrentColumnNumber(XML_Parser parser)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf X\+M\+L\+\_\+\+Size} {\bf X\+M\+L\+C\+A\+LL} X\+M\+L\+\_\+\+Get\+Current\+Column\+Number (
+\begin{DoxyParamCaption}
+\item[{{\bf X\+M\+L\+\_\+\+Parser}}]{parser}
+\end{DoxyParamCaption}
+)}\hypertarget{xmlparse_8c_a45f92a94ac5382b44a9c3fed893f8921}{}\label{xmlparse_8c_a45f92a94ac5382b44a9c3fed893f8921}
+
+
+Definition at line 1880 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!X\+M\+L\+\_\+\+Get\+Current\+Line\+Number@{X\+M\+L\+\_\+\+Get\+Current\+Line\+Number}}
+\index{X\+M\+L\+\_\+\+Get\+Current\+Line\+Number@{X\+M\+L\+\_\+\+Get\+Current\+Line\+Number}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{X\+M\+L\+\_\+\+Get\+Current\+Line\+Number(\+X\+M\+L\+\_\+\+Parser parser)}{XML_GetCurrentLineNumber(XML_Parser parser)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf X\+M\+L\+\_\+\+Size} {\bf X\+M\+L\+C\+A\+LL} X\+M\+L\+\_\+\+Get\+Current\+Line\+Number (
+\begin{DoxyParamCaption}
+\item[{{\bf X\+M\+L\+\_\+\+Parser}}]{parser}
+\end{DoxyParamCaption}
+)}\hypertarget{xmlparse_8c_a5f0c9f83229fdaa9dcb48a8447045243}{}\label{xmlparse_8c_a5f0c9f83229fdaa9dcb48a8447045243}
+
+
+Definition at line 1870 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!X\+M\+L\+\_\+\+Get\+Error\+Code@{X\+M\+L\+\_\+\+Get\+Error\+Code}}
+\index{X\+M\+L\+\_\+\+Get\+Error\+Code@{X\+M\+L\+\_\+\+Get\+Error\+Code}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{X\+M\+L\+\_\+\+Get\+Error\+Code(\+X\+M\+L\+\_\+\+Parser parser)}{XML_GetErrorCode(XML_Parser parser)}}]{\setlength{\rightskip}{0pt plus 5cm}enum {\bf X\+M\+L\+\_\+\+Error} {\bf X\+M\+L\+C\+A\+LL} X\+M\+L\+\_\+\+Get\+Error\+Code (
+\begin{DoxyParamCaption}
+\item[{{\bf X\+M\+L\+\_\+\+Parser}}]{parser}
+\end{DoxyParamCaption}
+)}\hypertarget{xmlparse_8c_a6127be821a2d4cb2be74afc31f41f29f}{}\label{xmlparse_8c_a6127be821a2d4cb2be74afc31f41f29f}
+
+
+Definition at line 1835 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!X\+M\+L\+\_\+\+Get\+Feature\+List@{X\+M\+L\+\_\+\+Get\+Feature\+List}}
+\index{X\+M\+L\+\_\+\+Get\+Feature\+List@{X\+M\+L\+\_\+\+Get\+Feature\+List}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{X\+M\+L\+\_\+\+Get\+Feature\+List(void)}{XML_GetFeatureList(void)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf const} {\bf X\+M\+L\+\_\+\+Feature}$\ast$ {\bf X\+M\+L\+C\+A\+LL} X\+M\+L\+\_\+\+Get\+Feature\+List (
+\begin{DoxyParamCaption}
+\item[{{\bf void}}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{xmlparse_8c_aa56362be962a8cb87ddacbe96a50370b}{}\label{xmlparse_8c_aa56362be962a8cb87ddacbe96a50370b}
+
+
+Definition at line 2011 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!X\+M\+L\+\_\+\+Get\+Id\+Attribute\+Index@{X\+M\+L\+\_\+\+Get\+Id\+Attribute\+Index}}
+\index{X\+M\+L\+\_\+\+Get\+Id\+Attribute\+Index@{X\+M\+L\+\_\+\+Get\+Id\+Attribute\+Index}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{X\+M\+L\+\_\+\+Get\+Id\+Attribute\+Index(\+X\+M\+L\+\_\+\+Parser parser)}{XML_GetIdAttributeIndex(XML_Parser parser)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf int} {\bf X\+M\+L\+C\+A\+LL} X\+M\+L\+\_\+\+Get\+Id\+Attribute\+Index (
+\begin{DoxyParamCaption}
+\item[{{\bf X\+M\+L\+\_\+\+Parser}}]{parser}
+\end{DoxyParamCaption}
+)}\hypertarget{xmlparse_8c_a605f45f0d2783982343a5778f6f11851}{}\label{xmlparse_8c_a605f45f0d2783982343a5778f6f11851}
+
+
+Definition at line 1259 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!X\+M\+L\+\_\+\+Get\+Input\+Context@{X\+M\+L\+\_\+\+Get\+Input\+Context}}
+\index{X\+M\+L\+\_\+\+Get\+Input\+Context@{X\+M\+L\+\_\+\+Get\+Input\+Context}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{X\+M\+L\+\_\+\+Get\+Input\+Context(\+X\+M\+L\+\_\+\+Parser parser, int $\ast$offset, int $\ast$size)}{XML_GetInputContext(XML_Parser parser, int *offset, int *size)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf const} char$\ast$ {\bf X\+M\+L\+C\+A\+LL} X\+M\+L\+\_\+\+Get\+Input\+Context (
+\begin{DoxyParamCaption}
+\item[{{\bf X\+M\+L\+\_\+\+Parser}}]{parser, }
+\item[{{\bf int} $\ast$}]{offset, }
+\item[{{\bf int} $\ast$}]{size}
+\end{DoxyParamCaption}
+)}\hypertarget{xmlparse_8c_a4d8d190e2eed2972f15288f78f3486ca}{}\label{xmlparse_8c_a4d8d190e2eed2972f15288f78f3486ca}
+
+
+Definition at line 1857 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!X\+M\+L\+\_\+\+Get\+Parsing\+Status@{X\+M\+L\+\_\+\+Get\+Parsing\+Status}}
+\index{X\+M\+L\+\_\+\+Get\+Parsing\+Status@{X\+M\+L\+\_\+\+Get\+Parsing\+Status}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{X\+M\+L\+\_\+\+Get\+Parsing\+Status(\+X\+M\+L\+\_\+\+Parser parser, X\+M\+L\+\_\+\+Parsing\+Status $\ast$status)}{XML_GetParsingStatus(XML_Parser parser, XML_ParsingStatus *status)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} {\bf X\+M\+L\+C\+A\+LL} X\+M\+L\+\_\+\+Get\+Parsing\+Status (
+\begin{DoxyParamCaption}
+\item[{{\bf X\+M\+L\+\_\+\+Parser}}]{parser, }
+\item[{{\bf X\+M\+L\+\_\+\+Parsing\+Status} $\ast$}]{status}
+\end{DoxyParamCaption}
+)}\hypertarget{xmlparse_8c_a7204cad48398e82b75a68a185619e88f}{}\label{xmlparse_8c_a7204cad48398e82b75a68a185619e88f}
+
+
+Definition at line 1828 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!X\+M\+L\+\_\+\+Get\+Specified\+Attribute\+Count@{X\+M\+L\+\_\+\+Get\+Specified\+Attribute\+Count}}
+\index{X\+M\+L\+\_\+\+Get\+Specified\+Attribute\+Count@{X\+M\+L\+\_\+\+Get\+Specified\+Attribute\+Count}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{X\+M\+L\+\_\+\+Get\+Specified\+Attribute\+Count(\+X\+M\+L\+\_\+\+Parser parser)}{XML_GetSpecifiedAttributeCount(XML_Parser parser)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf int} {\bf X\+M\+L\+C\+A\+LL} X\+M\+L\+\_\+\+Get\+Specified\+Attribute\+Count (
+\begin{DoxyParamCaption}
+\item[{{\bf X\+M\+L\+\_\+\+Parser}}]{parser}
+\end{DoxyParamCaption}
+)}\hypertarget{xmlparse_8c_a25aaf9db249abd012a042c248a9642d6}{}\label{xmlparse_8c_a25aaf9db249abd012a042c248a9642d6}
+
+
+Definition at line 1253 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!X\+M\+L\+\_\+\+Mem\+Free@{X\+M\+L\+\_\+\+Mem\+Free}}
+\index{X\+M\+L\+\_\+\+Mem\+Free@{X\+M\+L\+\_\+\+Mem\+Free}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{X\+M\+L\+\_\+\+Mem\+Free(\+X\+M\+L\+\_\+\+Parser parser, void $\ast$ptr)}{XML_MemFree(XML_Parser parser, void *ptr)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} {\bf X\+M\+L\+C\+A\+LL} X\+M\+L\+\_\+\+Mem\+Free (
+\begin{DoxyParamCaption}
+\item[{{\bf X\+M\+L\+\_\+\+Parser}}]{parser, }
+\item[{{\bf void} $\ast$}]{ptr}
+\end{DoxyParamCaption}
+)}\hypertarget{xmlparse_8c_aa2ce2b1966277c78b16da3efd122a44d}{}\label{xmlparse_8c_aa2ce2b1966277c78b16da3efd122a44d}
+
+
+Definition at line 1908 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!X\+M\+L\+\_\+\+Mem\+Malloc@{X\+M\+L\+\_\+\+Mem\+Malloc}}
+\index{X\+M\+L\+\_\+\+Mem\+Malloc@{X\+M\+L\+\_\+\+Mem\+Malloc}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{X\+M\+L\+\_\+\+Mem\+Malloc(\+X\+M\+L\+\_\+\+Parser parser, size\+\_\+t size)}{XML_MemMalloc(XML_Parser parser, size_t size)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void}$\ast$ {\bf X\+M\+L\+C\+A\+LL} X\+M\+L\+\_\+\+Mem\+Malloc (
+\begin{DoxyParamCaption}
+\item[{{\bf X\+M\+L\+\_\+\+Parser}}]{parser, }
+\item[{size\+\_\+t}]{size}
+\end{DoxyParamCaption}
+)}\hypertarget{xmlparse_8c_a74f8b2d9ee7d5ad1a54d18732d54135b}{}\label{xmlparse_8c_a74f8b2d9ee7d5ad1a54d18732d54135b}
+
+
+Definition at line 1896 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!X\+M\+L\+\_\+\+Mem\+Realloc@{X\+M\+L\+\_\+\+Mem\+Realloc}}
+\index{X\+M\+L\+\_\+\+Mem\+Realloc@{X\+M\+L\+\_\+\+Mem\+Realloc}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{X\+M\+L\+\_\+\+Mem\+Realloc(\+X\+M\+L\+\_\+\+Parser parser, void $\ast$ptr, size\+\_\+t size)}{XML_MemRealloc(XML_Parser parser, void *ptr, size_t size)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void}$\ast$ {\bf X\+M\+L\+C\+A\+LL} X\+M\+L\+\_\+\+Mem\+Realloc (
+\begin{DoxyParamCaption}
+\item[{{\bf X\+M\+L\+\_\+\+Parser}}]{parser, }
+\item[{{\bf void} $\ast$}]{ptr, }
+\item[{size\+\_\+t}]{size}
+\end{DoxyParamCaption}
+)}\hypertarget{xmlparse_8c_a54b947209ad0b01141588900fe33ee5e}{}\label{xmlparse_8c_a54b947209ad0b01141588900fe33ee5e}
+
+
+Definition at line 1902 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!X\+M\+L\+\_\+\+Parse@{X\+M\+L\+\_\+\+Parse}}
+\index{X\+M\+L\+\_\+\+Parse@{X\+M\+L\+\_\+\+Parse}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{X\+M\+L\+\_\+\+Parse(\+X\+M\+L\+\_\+\+Parser parser, const char $\ast$s, int len, int is\+Final)}{XML_Parse(XML_Parser parser, const char *s, int len, int isFinal)}}]{\setlength{\rightskip}{0pt plus 5cm}enum {\bf X\+M\+L\+\_\+\+Status} {\bf X\+M\+L\+C\+A\+LL} X\+M\+L\+\_\+\+Parse (
+\begin{DoxyParamCaption}
+\item[{{\bf X\+M\+L\+\_\+\+Parser}}]{parser, }
+\item[{{\bf const} char $\ast$}]{s, }
+\item[{{\bf int}}]{len, }
+\item[{{\bf int}}]{is\+Final}
+\end{DoxyParamCaption}
+)}\hypertarget{xmlparse_8c_a62a6555a21bb12d37d3ef7baf9972cac}{}\label{xmlparse_8c_a62a6555a21bb12d37d3ef7baf9972cac}
+
+
+Definition at line 1500 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!X\+M\+L\+\_\+\+Parse\+Buffer@{X\+M\+L\+\_\+\+Parse\+Buffer}}
+\index{X\+M\+L\+\_\+\+Parse\+Buffer@{X\+M\+L\+\_\+\+Parse\+Buffer}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{X\+M\+L\+\_\+\+Parse\+Buffer(\+X\+M\+L\+\_\+\+Parser parser, int len, int is\+Final)}{XML_ParseBuffer(XML_Parser parser, int len, int isFinal)}}]{\setlength{\rightskip}{0pt plus 5cm}enum {\bf X\+M\+L\+\_\+\+Status} {\bf X\+M\+L\+C\+A\+LL} X\+M\+L\+\_\+\+Parse\+Buffer (
+\begin{DoxyParamCaption}
+\item[{{\bf X\+M\+L\+\_\+\+Parser}}]{parser, }
+\item[{{\bf int}}]{len, }
+\item[{{\bf int}}]{is\+Final}
+\end{DoxyParamCaption}
+)}\hypertarget{xmlparse_8c_af02b28fc9c4ab4ed26145ab5d83cea22}{}\label{xmlparse_8c_af02b28fc9c4ab4ed26145ab5d83cea22}
+
+
+Definition at line 1623 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!X\+M\+L\+\_\+\+Parser\+Create@{X\+M\+L\+\_\+\+Parser\+Create}}
+\index{X\+M\+L\+\_\+\+Parser\+Create@{X\+M\+L\+\_\+\+Parser\+Create}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{X\+M\+L\+\_\+\+Parser\+Create(const X\+M\+L\+\_\+\+Char $\ast$encoding\+Name)}{XML_ParserCreate(const XML_Char *encodingName)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf X\+M\+L\+\_\+\+Parser} {\bf X\+M\+L\+C\+A\+LL} X\+M\+L\+\_\+\+Parser\+Create (
+\begin{DoxyParamCaption}
+\item[{{\bf const} {\bf X\+M\+L\+\_\+\+Char} $\ast$}]{encoding\+Name}
+\end{DoxyParamCaption}
+)}\hypertarget{xmlparse_8c_a01f18ce453fd8d56fddd20b95e8c67cb}{}\label{xmlparse_8c_a01f18ce453fd8d56fddd20b95e8c67cb}
+
+
+Definition at line 671 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!X\+M\+L\+\_\+\+Parser\+Create\+\_\+\+MM@{X\+M\+L\+\_\+\+Parser\+Create\+\_\+\+MM}}
+\index{X\+M\+L\+\_\+\+Parser\+Create\+\_\+\+MM@{X\+M\+L\+\_\+\+Parser\+Create\+\_\+\+MM}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{X\+M\+L\+\_\+\+Parser\+Create\+\_\+\+M\+M(const X\+M\+L\+\_\+\+Char $\ast$encoding\+Name, const X\+M\+L\+\_\+\+Memory\+\_\+\+Handling\+\_\+\+Suite $\ast$memsuite, const X\+M\+L\+\_\+\+Char $\ast$name\+Sep)}{XML_ParserCreate_MM(const XML_Char *encodingName, const XML_Memory_Handling_Suite *memsuite, const XML_Char *nameSep)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf X\+M\+L\+\_\+\+Parser} {\bf X\+M\+L\+C\+A\+LL} X\+M\+L\+\_\+\+Parser\+Create\+\_\+\+MM (
+\begin{DoxyParamCaption}
+\item[{{\bf const} {\bf X\+M\+L\+\_\+\+Char} $\ast$}]{encoding\+Name, }
+\item[{{\bf const} {\bf X\+M\+L\+\_\+\+Memory\+\_\+\+Handling\+\_\+\+Suite} $\ast$}]{memsuite, }
+\item[{{\bf const} {\bf X\+M\+L\+\_\+\+Char} $\ast$}]{name\+Sep}
+\end{DoxyParamCaption}
+)}\hypertarget{xmlparse_8c_a39ec83ab7ecadd8f5a760cd3becd45f4}{}\label{xmlparse_8c_a39ec83ab7ecadd8f5a760cd3becd45f4}
+
+
+Definition at line 717 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!X\+M\+L\+\_\+\+Parser\+Create\+NS@{X\+M\+L\+\_\+\+Parser\+Create\+NS}}
+\index{X\+M\+L\+\_\+\+Parser\+Create\+NS@{X\+M\+L\+\_\+\+Parser\+Create\+NS}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{X\+M\+L\+\_\+\+Parser\+Create\+N\+S(const X\+M\+L\+\_\+\+Char $\ast$encoding\+Name, X\+M\+L\+\_\+\+Char ns\+Sep)}{XML_ParserCreateNS(const XML_Char *encodingName, XML_Char nsSep)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf X\+M\+L\+\_\+\+Parser} {\bf X\+M\+L\+C\+A\+LL} X\+M\+L\+\_\+\+Parser\+Create\+NS (
+\begin{DoxyParamCaption}
+\item[{{\bf const} {\bf X\+M\+L\+\_\+\+Char} $\ast$}]{encoding\+Name, }
+\item[{{\bf X\+M\+L\+\_\+\+Char}}]{ns\+Sep}
+\end{DoxyParamCaption}
+)}\hypertarget{xmlparse_8c_a3762c40e9b7e108bc5c6b399888b4bce}{}\label{xmlparse_8c_a3762c40e9b7e108bc5c6b399888b4bce}
+
+
+Definition at line 677 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!X\+M\+L\+\_\+\+Parser\+Free@{X\+M\+L\+\_\+\+Parser\+Free}}
+\index{X\+M\+L\+\_\+\+Parser\+Free@{X\+M\+L\+\_\+\+Parser\+Free}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{X\+M\+L\+\_\+\+Parser\+Free(\+X\+M\+L\+\_\+\+Parser parser)}{XML_ParserFree(XML_Parser parser)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} {\bf X\+M\+L\+C\+A\+LL} X\+M\+L\+\_\+\+Parser\+Free (
+\begin{DoxyParamCaption}
+\item[{{\bf X\+M\+L\+\_\+\+Parser}}]{parser}
+\end{DoxyParamCaption}
+)}\hypertarget{xmlparse_8c_afa94bb8a8566c2280106a526ffb6a95b}{}\label{xmlparse_8c_afa94bb8a8566c2280106a526ffb6a95b}
+
+
+Definition at line 1130 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!X\+M\+L\+\_\+\+Parser\+Reset@{X\+M\+L\+\_\+\+Parser\+Reset}}
+\index{X\+M\+L\+\_\+\+Parser\+Reset@{X\+M\+L\+\_\+\+Parser\+Reset}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{X\+M\+L\+\_\+\+Parser\+Reset(\+X\+M\+L\+\_\+\+Parser parser, const X\+M\+L\+\_\+\+Char $\ast$encoding\+Name)}{XML_ParserReset(XML_Parser parser, const XML_Char *encodingName)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf X\+M\+L\+\_\+\+Bool} {\bf X\+M\+L\+C\+A\+LL} X\+M\+L\+\_\+\+Parser\+Reset (
+\begin{DoxyParamCaption}
+\item[{{\bf X\+M\+L\+\_\+\+Parser}}]{parser, }
+\item[{{\bf const} {\bf X\+M\+L\+\_\+\+Char} $\ast$}]{encoding\+Name}
+\end{DoxyParamCaption}
+)}\hypertarget{xmlparse_8c_aacda009967692067b7b37502b0bc8df7}{}\label{xmlparse_8c_aacda009967692067b7b37502b0bc8df7}
+
+
+Definition at line 925 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!X\+M\+L\+\_\+\+Resume\+Parser@{X\+M\+L\+\_\+\+Resume\+Parser}}
+\index{X\+M\+L\+\_\+\+Resume\+Parser@{X\+M\+L\+\_\+\+Resume\+Parser}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{X\+M\+L\+\_\+\+Resume\+Parser(\+X\+M\+L\+\_\+\+Parser parser)}{XML_ResumeParser(XML_Parser parser)}}]{\setlength{\rightskip}{0pt plus 5cm}enum {\bf X\+M\+L\+\_\+\+Status} {\bf X\+M\+L\+C\+A\+LL} X\+M\+L\+\_\+\+Resume\+Parser (
+\begin{DoxyParamCaption}
+\item[{{\bf X\+M\+L\+\_\+\+Parser}}]{parser}
+\end{DoxyParamCaption}
+)}\hypertarget{xmlparse_8c_aeff65950eef53d5817533fca6af93ae8}{}\label{xmlparse_8c_aeff65950eef53d5817533fca6af93ae8}
+
+
+Definition at line 1790 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!X\+M\+L\+\_\+\+Set\+Attlist\+Decl\+Handler@{X\+M\+L\+\_\+\+Set\+Attlist\+Decl\+Handler}}
+\index{X\+M\+L\+\_\+\+Set\+Attlist\+Decl\+Handler@{X\+M\+L\+\_\+\+Set\+Attlist\+Decl\+Handler}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{X\+M\+L\+\_\+\+Set\+Attlist\+Decl\+Handler(\+X\+M\+L\+\_\+\+Parser parser, X\+M\+L\+\_\+\+Attlist\+Decl\+Handler attdecl)}{XML_SetAttlistDeclHandler(XML_Parser parser, XML_AttlistDeclHandler attdecl)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} {\bf X\+M\+L\+C\+A\+LL} X\+M\+L\+\_\+\+Set\+Attlist\+Decl\+Handler (
+\begin{DoxyParamCaption}
+\item[{{\bf X\+M\+L\+\_\+\+Parser}}]{parser, }
+\item[{{\bf X\+M\+L\+\_\+\+Attlist\+Decl\+Handler}}]{attdecl}
+\end{DoxyParamCaption}
+)}\hypertarget{xmlparse_8c_a2764dbc7f78d5a01d111f2738f9348bd}{}\label{xmlparse_8c_a2764dbc7f78d5a01d111f2738f9348bd}
+
+
+Definition at line 1454 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!X\+M\+L\+\_\+\+Set\+Base@{X\+M\+L\+\_\+\+Set\+Base}}
+\index{X\+M\+L\+\_\+\+Set\+Base@{X\+M\+L\+\_\+\+Set\+Base}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{X\+M\+L\+\_\+\+Set\+Base(\+X\+M\+L\+\_\+\+Parser parser, const X\+M\+L\+\_\+\+Char $\ast$p)}{XML_SetBase(XML_Parser parser, const XML_Char *p)}}]{\setlength{\rightskip}{0pt plus 5cm}enum {\bf X\+M\+L\+\_\+\+Status} {\bf X\+M\+L\+C\+A\+LL} X\+M\+L\+\_\+\+Set\+Base (
+\begin{DoxyParamCaption}
+\item[{{\bf X\+M\+L\+\_\+\+Parser}}]{parser, }
+\item[{{\bf const} {\bf X\+M\+L\+\_\+\+Char} $\ast$}]{p}
+\end{DoxyParamCaption}
+)}\hypertarget{xmlparse_8c_a102ae76f998e2cb8eb542eb08b05b4a4}{}\label{xmlparse_8c_a102ae76f998e2cb8eb542eb08b05b4a4}
+
+
+Definition at line 1233 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!X\+M\+L\+\_\+\+Set\+Cdata\+Section\+Handler@{X\+M\+L\+\_\+\+Set\+Cdata\+Section\+Handler}}
+\index{X\+M\+L\+\_\+\+Set\+Cdata\+Section\+Handler@{X\+M\+L\+\_\+\+Set\+Cdata\+Section\+Handler}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{X\+M\+L\+\_\+\+Set\+Cdata\+Section\+Handler(\+X\+M\+L\+\_\+\+Parser parser, X\+M\+L\+\_\+\+Start\+Cdata\+Section\+Handler start, X\+M\+L\+\_\+\+End\+Cdata\+Section\+Handler end)}{XML_SetCdataSectionHandler(XML_Parser parser, XML_StartCdataSectionHandler start, XML_EndCdataSectionHandler end)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} {\bf X\+M\+L\+C\+A\+LL} X\+M\+L\+\_\+\+Set\+Cdata\+Section\+Handler (
+\begin{DoxyParamCaption}
+\item[{{\bf X\+M\+L\+\_\+\+Parser}}]{parser, }
+\item[{{\bf X\+M\+L\+\_\+\+Start\+Cdata\+Section\+Handler}}]{start, }
+\item[{{\bf X\+M\+L\+\_\+\+End\+Cdata\+Section\+Handler}}]{end}
+\end{DoxyParamCaption}
+)}\hypertarget{xmlparse_8c_ae193379d2b09d758e44c6d03e42a0631}{}\label{xmlparse_8c_ae193379d2b09d758e44c6d03e42a0631}
+
+
+Definition at line 1315 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!X\+M\+L\+\_\+\+Set\+Character\+Data\+Handler@{X\+M\+L\+\_\+\+Set\+Character\+Data\+Handler}}
+\index{X\+M\+L\+\_\+\+Set\+Character\+Data\+Handler@{X\+M\+L\+\_\+\+Set\+Character\+Data\+Handler}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{X\+M\+L\+\_\+\+Set\+Character\+Data\+Handler(\+X\+M\+L\+\_\+\+Parser parser, X\+M\+L\+\_\+\+Character\+Data\+Handler handler)}{XML_SetCharacterDataHandler(XML_Parser parser, XML_CharacterDataHandler handler)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} {\bf X\+M\+L\+C\+A\+LL} X\+M\+L\+\_\+\+Set\+Character\+Data\+Handler (
+\begin{DoxyParamCaption}
+\item[{{\bf X\+M\+L\+\_\+\+Parser}}]{parser, }
+\item[{{\bf X\+M\+L\+\_\+\+Character\+Data\+Handler}}]{handler}
+\end{DoxyParamCaption}
+)}\hypertarget{xmlparse_8c_ae1b46a8b1815c2d11a3b88c0900d8d16}{}\label{xmlparse_8c_ae1b46a8b1815c2d11a3b88c0900d8d16}
+
+
+Definition at line 1294 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!X\+M\+L\+\_\+\+Set\+Comment\+Handler@{X\+M\+L\+\_\+\+Set\+Comment\+Handler}}
+\index{X\+M\+L\+\_\+\+Set\+Comment\+Handler@{X\+M\+L\+\_\+\+Set\+Comment\+Handler}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{X\+M\+L\+\_\+\+Set\+Comment\+Handler(\+X\+M\+L\+\_\+\+Parser parser, X\+M\+L\+\_\+\+Comment\+Handler handler)}{XML_SetCommentHandler(XML_Parser parser, XML_CommentHandler handler)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} {\bf X\+M\+L\+C\+A\+LL} X\+M\+L\+\_\+\+Set\+Comment\+Handler (
+\begin{DoxyParamCaption}
+\item[{{\bf X\+M\+L\+\_\+\+Parser}}]{parser, }
+\item[{{\bf X\+M\+L\+\_\+\+Comment\+Handler}}]{handler}
+\end{DoxyParamCaption}
+)}\hypertarget{xmlparse_8c_afb073dff3e7cb1dc01a0d30031764bca}{}\label{xmlparse_8c_afb073dff3e7cb1dc01a0d30031764bca}
+
+
+Definition at line 1308 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!X\+M\+L\+\_\+\+Set\+Default\+Handler@{X\+M\+L\+\_\+\+Set\+Default\+Handler}}
+\index{X\+M\+L\+\_\+\+Set\+Default\+Handler@{X\+M\+L\+\_\+\+Set\+Default\+Handler}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{X\+M\+L\+\_\+\+Set\+Default\+Handler(\+X\+M\+L\+\_\+\+Parser parser, X\+M\+L\+\_\+\+Default\+Handler handler)}{XML_SetDefaultHandler(XML_Parser parser, XML_DefaultHandler handler)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} {\bf X\+M\+L\+C\+A\+LL} X\+M\+L\+\_\+\+Set\+Default\+Handler (
+\begin{DoxyParamCaption}
+\item[{{\bf X\+M\+L\+\_\+\+Parser}}]{parser, }
+\item[{{\bf X\+M\+L\+\_\+\+Default\+Handler}}]{handler}
+\end{DoxyParamCaption}
+)}\hypertarget{xmlparse_8c_a883fafa5002c6df8e098d75827057132}{}\label{xmlparse_8c_a883fafa5002c6df8e098d75827057132}
+
+
+Definition at line 1336 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!X\+M\+L\+\_\+\+Set\+Default\+Handler\+Expand@{X\+M\+L\+\_\+\+Set\+Default\+Handler\+Expand}}
+\index{X\+M\+L\+\_\+\+Set\+Default\+Handler\+Expand@{X\+M\+L\+\_\+\+Set\+Default\+Handler\+Expand}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{X\+M\+L\+\_\+\+Set\+Default\+Handler\+Expand(\+X\+M\+L\+\_\+\+Parser parser, X\+M\+L\+\_\+\+Default\+Handler handler)}{XML_SetDefaultHandlerExpand(XML_Parser parser, XML_DefaultHandler handler)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} {\bf X\+M\+L\+C\+A\+LL} X\+M\+L\+\_\+\+Set\+Default\+Handler\+Expand (
+\begin{DoxyParamCaption}
+\item[{{\bf X\+M\+L\+\_\+\+Parser}}]{parser, }
+\item[{{\bf X\+M\+L\+\_\+\+Default\+Handler}}]{handler}
+\end{DoxyParamCaption}
+)}\hypertarget{xmlparse_8c_a1c99bb060330d671b4fe7bfa852bad9a}{}\label{xmlparse_8c_a1c99bb060330d671b4fe7bfa852bad9a}
+
+
+Definition at line 1344 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!X\+M\+L\+\_\+\+Set\+Doctype\+Decl\+Handler@{X\+M\+L\+\_\+\+Set\+Doctype\+Decl\+Handler}}
+\index{X\+M\+L\+\_\+\+Set\+Doctype\+Decl\+Handler@{X\+M\+L\+\_\+\+Set\+Doctype\+Decl\+Handler}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{X\+M\+L\+\_\+\+Set\+Doctype\+Decl\+Handler(\+X\+M\+L\+\_\+\+Parser parser, X\+M\+L\+\_\+\+Start\+Doctype\+Decl\+Handler start, X\+M\+L\+\_\+\+End\+Doctype\+Decl\+Handler end)}{XML_SetDoctypeDeclHandler(XML_Parser parser, XML_StartDoctypeDeclHandler start, XML_EndDoctypeDeclHandler end)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} {\bf X\+M\+L\+C\+A\+LL} X\+M\+L\+\_\+\+Set\+Doctype\+Decl\+Handler (
+\begin{DoxyParamCaption}
+\item[{{\bf X\+M\+L\+\_\+\+Parser}}]{parser, }
+\item[{{\bf X\+M\+L\+\_\+\+Start\+Doctype\+Decl\+Handler}}]{start, }
+\item[{{\bf X\+M\+L\+\_\+\+End\+Doctype\+Decl\+Handler}}]{end}
+\end{DoxyParamCaption}
+)}\hypertarget{xmlparse_8c_ad6b174f1be7b95b1e175c86151d0bdac}{}\label{xmlparse_8c_ad6b174f1be7b95b1e175c86151d0bdac}
+
+
+Definition at line 1352 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!X\+M\+L\+\_\+\+Set\+Element\+Decl\+Handler@{X\+M\+L\+\_\+\+Set\+Element\+Decl\+Handler}}
+\index{X\+M\+L\+\_\+\+Set\+Element\+Decl\+Handler@{X\+M\+L\+\_\+\+Set\+Element\+Decl\+Handler}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{X\+M\+L\+\_\+\+Set\+Element\+Decl\+Handler(\+X\+M\+L\+\_\+\+Parser parser, X\+M\+L\+\_\+\+Element\+Decl\+Handler eldecl)}{XML_SetElementDeclHandler(XML_Parser parser, XML_ElementDeclHandler eldecl)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} {\bf X\+M\+L\+C\+A\+LL} X\+M\+L\+\_\+\+Set\+Element\+Decl\+Handler (
+\begin{DoxyParamCaption}
+\item[{{\bf X\+M\+L\+\_\+\+Parser}}]{parser, }
+\item[{{\bf X\+M\+L\+\_\+\+Element\+Decl\+Handler}}]{eldecl}
+\end{DoxyParamCaption}
+)}\hypertarget{xmlparse_8c_a3fb5d41e5bd0097e05b5be0d2eda0ac6}{}\label{xmlparse_8c_a3fb5d41e5bd0097e05b5be0d2eda0ac6}
+
+
+Definition at line 1447 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!X\+M\+L\+\_\+\+Set\+Element\+Handler@{X\+M\+L\+\_\+\+Set\+Element\+Handler}}
+\index{X\+M\+L\+\_\+\+Set\+Element\+Handler@{X\+M\+L\+\_\+\+Set\+Element\+Handler}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{X\+M\+L\+\_\+\+Set\+Element\+Handler(\+X\+M\+L\+\_\+\+Parser parser, X\+M\+L\+\_\+\+Start\+Element\+Handler start, X\+M\+L\+\_\+\+End\+Element\+Handler end)}{XML_SetElementHandler(XML_Parser parser, XML_StartElementHandler start, XML_EndElementHandler end)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} {\bf X\+M\+L\+C\+A\+LL} X\+M\+L\+\_\+\+Set\+Element\+Handler (
+\begin{DoxyParamCaption}
+\item[{{\bf X\+M\+L\+\_\+\+Parser}}]{parser, }
+\item[{{\bf X\+M\+L\+\_\+\+Start\+Element\+Handler}}]{start, }
+\item[{{\bf X\+M\+L\+\_\+\+End\+Element\+Handler}}]{end}
+\end{DoxyParamCaption}
+)}\hypertarget{xmlparse_8c_a464be65bf6755de9b7035d55c74d1367}{}\label{xmlparse_8c_a464be65bf6755de9b7035d55c74d1367}
+
+
+Definition at line 1273 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!X\+M\+L\+\_\+\+Set\+Encoding@{X\+M\+L\+\_\+\+Set\+Encoding}}
+\index{X\+M\+L\+\_\+\+Set\+Encoding@{X\+M\+L\+\_\+\+Set\+Encoding}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{X\+M\+L\+\_\+\+Set\+Encoding(\+X\+M\+L\+\_\+\+Parser parser, const X\+M\+L\+\_\+\+Char $\ast$encoding\+Name)}{XML_SetEncoding(XML_Parser parser, const XML_Char *encodingName)}}]{\setlength{\rightskip}{0pt plus 5cm}enum {\bf X\+M\+L\+\_\+\+Status} {\bf X\+M\+L\+C\+A\+LL} X\+M\+L\+\_\+\+Set\+Encoding (
+\begin{DoxyParamCaption}
+\item[{{\bf X\+M\+L\+\_\+\+Parser}}]{parser, }
+\item[{{\bf const} {\bf X\+M\+L\+\_\+\+Char} $\ast$}]{encoding\+Name}
+\end{DoxyParamCaption}
+)}\hypertarget{xmlparse_8c_a760f6f635c22ef02952a4864863822f6}{}\label{xmlparse_8c_a760f6f635c22ef02952a4864863822f6}
+
+
+Definition at line 961 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!X\+M\+L\+\_\+\+Set\+End\+Cdata\+Section\+Handler@{X\+M\+L\+\_\+\+Set\+End\+Cdata\+Section\+Handler}}
+\index{X\+M\+L\+\_\+\+Set\+End\+Cdata\+Section\+Handler@{X\+M\+L\+\_\+\+Set\+End\+Cdata\+Section\+Handler}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{X\+M\+L\+\_\+\+Set\+End\+Cdata\+Section\+Handler(\+X\+M\+L\+\_\+\+Parser parser, X\+M\+L\+\_\+\+End\+Cdata\+Section\+Handler end)}{XML_SetEndCdataSectionHandler(XML_Parser parser, XML_EndCdataSectionHandler end)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} {\bf X\+M\+L\+C\+A\+LL} X\+M\+L\+\_\+\+Set\+End\+Cdata\+Section\+Handler (
+\begin{DoxyParamCaption}
+\item[{{\bf X\+M\+L\+\_\+\+Parser}}]{parser, }
+\item[{{\bf X\+M\+L\+\_\+\+End\+Cdata\+Section\+Handler}}]{end}
+\end{DoxyParamCaption}
+)}\hypertarget{xmlparse_8c_a8b9ba355810270c0d00f76c722fb3edd}{}\label{xmlparse_8c_a8b9ba355810270c0d00f76c722fb3edd}
+
+
+Definition at line 1330 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!X\+M\+L\+\_\+\+Set\+End\+Doctype\+Decl\+Handler@{X\+M\+L\+\_\+\+Set\+End\+Doctype\+Decl\+Handler}}
+\index{X\+M\+L\+\_\+\+Set\+End\+Doctype\+Decl\+Handler@{X\+M\+L\+\_\+\+Set\+End\+Doctype\+Decl\+Handler}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{X\+M\+L\+\_\+\+Set\+End\+Doctype\+Decl\+Handler(\+X\+M\+L\+\_\+\+Parser parser, X\+M\+L\+\_\+\+End\+Doctype\+Decl\+Handler end)}{XML_SetEndDoctypeDeclHandler(XML_Parser parser, XML_EndDoctypeDeclHandler end)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} {\bf X\+M\+L\+C\+A\+LL} X\+M\+L\+\_\+\+Set\+End\+Doctype\+Decl\+Handler (
+\begin{DoxyParamCaption}
+\item[{{\bf X\+M\+L\+\_\+\+Parser}}]{parser, }
+\item[{{\bf X\+M\+L\+\_\+\+End\+Doctype\+Decl\+Handler}}]{end}
+\end{DoxyParamCaption}
+)}\hypertarget{xmlparse_8c_a0735c84e413353e5840b387a26cd699e}{}\label{xmlparse_8c_a0735c84e413353e5840b387a26cd699e}
+
+
+Definition at line 1367 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!X\+M\+L\+\_\+\+Set\+End\+Element\+Handler@{X\+M\+L\+\_\+\+Set\+End\+Element\+Handler}}
+\index{X\+M\+L\+\_\+\+Set\+End\+Element\+Handler@{X\+M\+L\+\_\+\+Set\+End\+Element\+Handler}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{X\+M\+L\+\_\+\+Set\+End\+Element\+Handler(\+X\+M\+L\+\_\+\+Parser parser, X\+M\+L\+\_\+\+End\+Element\+Handler end)}{XML_SetEndElementHandler(XML_Parser parser, XML_EndElementHandler end)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} {\bf X\+M\+L\+C\+A\+LL} X\+M\+L\+\_\+\+Set\+End\+Element\+Handler (
+\begin{DoxyParamCaption}
+\item[{{\bf X\+M\+L\+\_\+\+Parser}}]{parser, }
+\item[{{\bf X\+M\+L\+\_\+\+End\+Element\+Handler}}]{end}
+\end{DoxyParamCaption}
+)}\hypertarget{xmlparse_8c_a9a33295b5dfc3c22af331847f0ff705a}{}\label{xmlparse_8c_a9a33295b5dfc3c22af331847f0ff705a}
+
+
+Definition at line 1288 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!X\+M\+L\+\_\+\+Set\+End\+Namespace\+Decl\+Handler@{X\+M\+L\+\_\+\+Set\+End\+Namespace\+Decl\+Handler}}
+\index{X\+M\+L\+\_\+\+Set\+End\+Namespace\+Decl\+Handler@{X\+M\+L\+\_\+\+Set\+End\+Namespace\+Decl\+Handler}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{X\+M\+L\+\_\+\+Set\+End\+Namespace\+Decl\+Handler(\+X\+M\+L\+\_\+\+Parser parser, X\+M\+L\+\_\+\+End\+Namespace\+Decl\+Handler end)}{XML_SetEndNamespaceDeclHandler(XML_Parser parser, XML_EndNamespaceDeclHandler end)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} {\bf X\+M\+L\+C\+A\+LL} X\+M\+L\+\_\+\+Set\+End\+Namespace\+Decl\+Handler (
+\begin{DoxyParamCaption}
+\item[{{\bf X\+M\+L\+\_\+\+Parser}}]{parser, }
+\item[{{\bf X\+M\+L\+\_\+\+End\+Namespace\+Decl\+Handler}}]{end}
+\end{DoxyParamCaption}
+)}\hypertarget{xmlparse_8c_a788fd4e2cf86c45f9185d756aa6bb9be}{}\label{xmlparse_8c_a788fd4e2cf86c45f9185d756aa6bb9be}
+
+
+Definition at line 1402 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!X\+M\+L\+\_\+\+Set\+Entity\+Decl\+Handler@{X\+M\+L\+\_\+\+Set\+Entity\+Decl\+Handler}}
+\index{X\+M\+L\+\_\+\+Set\+Entity\+Decl\+Handler@{X\+M\+L\+\_\+\+Set\+Entity\+Decl\+Handler}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{X\+M\+L\+\_\+\+Set\+Entity\+Decl\+Handler(\+X\+M\+L\+\_\+\+Parser parser, X\+M\+L\+\_\+\+Entity\+Decl\+Handler handler)}{XML_SetEntityDeclHandler(XML_Parser parser, XML_EntityDeclHandler handler)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} {\bf X\+M\+L\+C\+A\+LL} X\+M\+L\+\_\+\+Set\+Entity\+Decl\+Handler (
+\begin{DoxyParamCaption}
+\item[{{\bf X\+M\+L\+\_\+\+Parser}}]{parser, }
+\item[{{\bf X\+M\+L\+\_\+\+Entity\+Decl\+Handler}}]{handler}
+\end{DoxyParamCaption}
+)}\hypertarget{xmlparse_8c_ae71e92fd7ca3228d2d9f6eff5b62ff82}{}\label{xmlparse_8c_ae71e92fd7ca3228d2d9f6eff5b62ff82}
+
+
+Definition at line 1461 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!X\+M\+L\+\_\+\+Set\+External\+Entity\+Ref\+Handler@{X\+M\+L\+\_\+\+Set\+External\+Entity\+Ref\+Handler}}
+\index{X\+M\+L\+\_\+\+Set\+External\+Entity\+Ref\+Handler@{X\+M\+L\+\_\+\+Set\+External\+Entity\+Ref\+Handler}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{X\+M\+L\+\_\+\+Set\+External\+Entity\+Ref\+Handler(\+X\+M\+L\+\_\+\+Parser parser, X\+M\+L\+\_\+\+External\+Entity\+Ref\+Handler handler)}{XML_SetExternalEntityRefHandler(XML_Parser parser, XML_ExternalEntityRefHandler handler)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} {\bf X\+M\+L\+C\+A\+LL} X\+M\+L\+\_\+\+Set\+External\+Entity\+Ref\+Handler (
+\begin{DoxyParamCaption}
+\item[{{\bf X\+M\+L\+\_\+\+Parser}}]{parser, }
+\item[{{\bf X\+M\+L\+\_\+\+External\+Entity\+Ref\+Handler}}]{handler}
+\end{DoxyParamCaption}
+)}\hypertarget{xmlparse_8c_ac22b935c501868c79e42212ade1047fa}{}\label{xmlparse_8c_ac22b935c501868c79e42212ade1047fa}
+
+
+Definition at line 1415 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!X\+M\+L\+\_\+\+Set\+External\+Entity\+Ref\+Handler\+Arg@{X\+M\+L\+\_\+\+Set\+External\+Entity\+Ref\+Handler\+Arg}}
+\index{X\+M\+L\+\_\+\+Set\+External\+Entity\+Ref\+Handler\+Arg@{X\+M\+L\+\_\+\+Set\+External\+Entity\+Ref\+Handler\+Arg}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{X\+M\+L\+\_\+\+Set\+External\+Entity\+Ref\+Handler\+Arg(\+X\+M\+L\+\_\+\+Parser parser, void $\ast$arg)}{XML_SetExternalEntityRefHandlerArg(XML_Parser parser, void *arg)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} {\bf X\+M\+L\+C\+A\+LL} X\+M\+L\+\_\+\+Set\+External\+Entity\+Ref\+Handler\+Arg (
+\begin{DoxyParamCaption}
+\item[{{\bf X\+M\+L\+\_\+\+Parser}}]{parser, }
+\item[{{\bf void} $\ast$}]{arg}
+\end{DoxyParamCaption}
+)}\hypertarget{xmlparse_8c_af861af5b3b5b6a71ee0e0bcd32a827a0}{}\label{xmlparse_8c_af861af5b3b5b6a71ee0e0bcd32a827a0}
+
+
+Definition at line 1422 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!X\+M\+L\+\_\+\+Set\+Hash\+Salt@{X\+M\+L\+\_\+\+Set\+Hash\+Salt}}
+\index{X\+M\+L\+\_\+\+Set\+Hash\+Salt@{X\+M\+L\+\_\+\+Set\+Hash\+Salt}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{X\+M\+L\+\_\+\+Set\+Hash\+Salt(\+X\+M\+L\+\_\+\+Parser parser, unsigned long hash\+\_\+salt)}{XML_SetHashSalt(XML_Parser parser, unsigned long hash_salt)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf int} {\bf X\+M\+L\+C\+A\+LL} X\+M\+L\+\_\+\+Set\+Hash\+Salt (
+\begin{DoxyParamCaption}
+\item[{{\bf X\+M\+L\+\_\+\+Parser}}]{parser, }
+\item[{unsigned long}]{hash\+\_\+salt}
+\end{DoxyParamCaption}
+)}\hypertarget{xmlparse_8c_aca7bec4fc6fd929cf2207ea54183a393}{}\label{xmlparse_8c_aca7bec4fc6fd929cf2207ea54183a393}
+
+
+Definition at line 1489 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!X\+M\+L\+\_\+\+Set\+Namespace\+Decl\+Handler@{X\+M\+L\+\_\+\+Set\+Namespace\+Decl\+Handler}}
+\index{X\+M\+L\+\_\+\+Set\+Namespace\+Decl\+Handler@{X\+M\+L\+\_\+\+Set\+Namespace\+Decl\+Handler}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{X\+M\+L\+\_\+\+Set\+Namespace\+Decl\+Handler(\+X\+M\+L\+\_\+\+Parser parser, X\+M\+L\+\_\+\+Start\+Namespace\+Decl\+Handler start, X\+M\+L\+\_\+\+End\+Namespace\+Decl\+Handler end)}{XML_SetNamespaceDeclHandler(XML_Parser parser, XML_StartNamespaceDeclHandler start, XML_EndNamespaceDeclHandler end)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} {\bf X\+M\+L\+C\+A\+LL} X\+M\+L\+\_\+\+Set\+Namespace\+Decl\+Handler (
+\begin{DoxyParamCaption}
+\item[{{\bf X\+M\+L\+\_\+\+Parser}}]{parser, }
+\item[{{\bf X\+M\+L\+\_\+\+Start\+Namespace\+Decl\+Handler}}]{start, }
+\item[{{\bf X\+M\+L\+\_\+\+End\+Namespace\+Decl\+Handler}}]{end}
+\end{DoxyParamCaption}
+)}\hypertarget{xmlparse_8c_a6aff6d9ee0856597f7ede366fc466f45}{}\label{xmlparse_8c_a6aff6d9ee0856597f7ede366fc466f45}
+
+
+Definition at line 1387 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!X\+M\+L\+\_\+\+Set\+Notation\+Decl\+Handler@{X\+M\+L\+\_\+\+Set\+Notation\+Decl\+Handler}}
+\index{X\+M\+L\+\_\+\+Set\+Notation\+Decl\+Handler@{X\+M\+L\+\_\+\+Set\+Notation\+Decl\+Handler}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{X\+M\+L\+\_\+\+Set\+Notation\+Decl\+Handler(\+X\+M\+L\+\_\+\+Parser parser, X\+M\+L\+\_\+\+Notation\+Decl\+Handler handler)}{XML_SetNotationDeclHandler(XML_Parser parser, XML_NotationDeclHandler handler)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} {\bf X\+M\+L\+C\+A\+LL} X\+M\+L\+\_\+\+Set\+Notation\+Decl\+Handler (
+\begin{DoxyParamCaption}
+\item[{{\bf X\+M\+L\+\_\+\+Parser}}]{parser, }
+\item[{{\bf X\+M\+L\+\_\+\+Notation\+Decl\+Handler}}]{handler}
+\end{DoxyParamCaption}
+)}\hypertarget{xmlparse_8c_a1443eb9edac79dc6b6fc180875974f91}{}\label{xmlparse_8c_a1443eb9edac79dc6b6fc180875974f91}
+
+
+Definition at line 1380 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!X\+M\+L\+\_\+\+Set\+Not\+Standalone\+Handler@{X\+M\+L\+\_\+\+Set\+Not\+Standalone\+Handler}}
+\index{X\+M\+L\+\_\+\+Set\+Not\+Standalone\+Handler@{X\+M\+L\+\_\+\+Set\+Not\+Standalone\+Handler}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{X\+M\+L\+\_\+\+Set\+Not\+Standalone\+Handler(\+X\+M\+L\+\_\+\+Parser parser, X\+M\+L\+\_\+\+Not\+Standalone\+Handler handler)}{XML_SetNotStandaloneHandler(XML_Parser parser, XML_NotStandaloneHandler handler)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} {\bf X\+M\+L\+C\+A\+LL} X\+M\+L\+\_\+\+Set\+Not\+Standalone\+Handler (
+\begin{DoxyParamCaption}
+\item[{{\bf X\+M\+L\+\_\+\+Parser}}]{parser, }
+\item[{{\bf X\+M\+L\+\_\+\+Not\+Standalone\+Handler}}]{handler}
+\end{DoxyParamCaption}
+)}\hypertarget{xmlparse_8c_a36205b954dd7e145efd9c38f22cd9d63}{}\label{xmlparse_8c_a36205b954dd7e145efd9c38f22cd9d63}
+
+
+Definition at line 1408 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!X\+M\+L\+\_\+\+Set\+Param\+Entity\+Parsing@{X\+M\+L\+\_\+\+Set\+Param\+Entity\+Parsing}}
+\index{X\+M\+L\+\_\+\+Set\+Param\+Entity\+Parsing@{X\+M\+L\+\_\+\+Set\+Param\+Entity\+Parsing}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{X\+M\+L\+\_\+\+Set\+Param\+Entity\+Parsing(\+X\+M\+L\+\_\+\+Parser parser, enum X\+M\+L\+\_\+\+Param\+Entity\+Parsing pe\+Parsing)}{XML_SetParamEntityParsing(XML_Parser parser, enum XML_ParamEntityParsing peParsing)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf int} {\bf X\+M\+L\+C\+A\+LL} X\+M\+L\+\_\+\+Set\+Param\+Entity\+Parsing (
+\begin{DoxyParamCaption}
+\item[{{\bf X\+M\+L\+\_\+\+Parser}}]{parser, }
+\item[{enum {\bf X\+M\+L\+\_\+\+Param\+Entity\+Parsing}}]{pe\+Parsing}
+\end{DoxyParamCaption}
+)}\hypertarget{xmlparse_8c_ae87007cc8e3e60cc0bb8fe0032932cd7}{}\label{xmlparse_8c_ae87007cc8e3e60cc0bb8fe0032932cd7}
+
+
+Definition at line 1474 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!X\+M\+L\+\_\+\+Set\+Processing\+Instruction\+Handler@{X\+M\+L\+\_\+\+Set\+Processing\+Instruction\+Handler}}
+\index{X\+M\+L\+\_\+\+Set\+Processing\+Instruction\+Handler@{X\+M\+L\+\_\+\+Set\+Processing\+Instruction\+Handler}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{X\+M\+L\+\_\+\+Set\+Processing\+Instruction\+Handler(\+X\+M\+L\+\_\+\+Parser parser, X\+M\+L\+\_\+\+Processing\+Instruction\+Handler handler)}{XML_SetProcessingInstructionHandler(XML_Parser parser, XML_ProcessingInstructionHandler handler)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} {\bf X\+M\+L\+C\+A\+LL} X\+M\+L\+\_\+\+Set\+Processing\+Instruction\+Handler (
+\begin{DoxyParamCaption}
+\item[{{\bf X\+M\+L\+\_\+\+Parser}}]{parser, }
+\item[{{\bf X\+M\+L\+\_\+\+Processing\+Instruction\+Handler}}]{handler}
+\end{DoxyParamCaption}
+)}\hypertarget{xmlparse_8c_a194c76e50a44f5ba64d50ca3579db8a7}{}\label{xmlparse_8c_a194c76e50a44f5ba64d50ca3579db8a7}
+
+
+Definition at line 1301 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!X\+M\+L\+\_\+\+Set\+Return\+N\+S\+Triplet@{X\+M\+L\+\_\+\+Set\+Return\+N\+S\+Triplet}}
+\index{X\+M\+L\+\_\+\+Set\+Return\+N\+S\+Triplet@{X\+M\+L\+\_\+\+Set\+Return\+N\+S\+Triplet}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{X\+M\+L\+\_\+\+Set\+Return\+N\+S\+Triplet(\+X\+M\+L\+\_\+\+Parser parser, int do\+\_\+nst)}{XML_SetReturnNSTriplet(XML_Parser parser, int do_nst)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} {\bf X\+M\+L\+C\+A\+LL} X\+M\+L\+\_\+\+Set\+Return\+N\+S\+Triplet (
+\begin{DoxyParamCaption}
+\item[{{\bf X\+M\+L\+\_\+\+Parser}}]{parser, }
+\item[{{\bf int}}]{do\+\_\+nst}
+\end{DoxyParamCaption}
+)}\hypertarget{xmlparse_8c_af07f7d27748e891778eca7a14865a39b}{}\label{xmlparse_8c_af07f7d27748e891778eca7a14865a39b}
+
+
+Definition at line 1215 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!X\+M\+L\+\_\+\+Set\+Skipped\+Entity\+Handler@{X\+M\+L\+\_\+\+Set\+Skipped\+Entity\+Handler}}
+\index{X\+M\+L\+\_\+\+Set\+Skipped\+Entity\+Handler@{X\+M\+L\+\_\+\+Set\+Skipped\+Entity\+Handler}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{X\+M\+L\+\_\+\+Set\+Skipped\+Entity\+Handler(\+X\+M\+L\+\_\+\+Parser parser, X\+M\+L\+\_\+\+Skipped\+Entity\+Handler handler)}{XML_SetSkippedEntityHandler(XML_Parser parser, XML_SkippedEntityHandler handler)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} {\bf X\+M\+L\+C\+A\+LL} X\+M\+L\+\_\+\+Set\+Skipped\+Entity\+Handler (
+\begin{DoxyParamCaption}
+\item[{{\bf X\+M\+L\+\_\+\+Parser}}]{parser, }
+\item[{{\bf X\+M\+L\+\_\+\+Skipped\+Entity\+Handler}}]{handler}
+\end{DoxyParamCaption}
+)}\hypertarget{xmlparse_8c_ad1e95b219bb4413e35faa96879b34010}{}\label{xmlparse_8c_ad1e95b219bb4413e35faa96879b34010}
+
+
+Definition at line 1431 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!X\+M\+L\+\_\+\+Set\+Start\+Cdata\+Section\+Handler@{X\+M\+L\+\_\+\+Set\+Start\+Cdata\+Section\+Handler}}
+\index{X\+M\+L\+\_\+\+Set\+Start\+Cdata\+Section\+Handler@{X\+M\+L\+\_\+\+Set\+Start\+Cdata\+Section\+Handler}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{X\+M\+L\+\_\+\+Set\+Start\+Cdata\+Section\+Handler(\+X\+M\+L\+\_\+\+Parser parser, X\+M\+L\+\_\+\+Start\+Cdata\+Section\+Handler start)}{XML_SetStartCdataSectionHandler(XML_Parser parser, XML_StartCdataSectionHandler start)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} {\bf X\+M\+L\+C\+A\+LL} X\+M\+L\+\_\+\+Set\+Start\+Cdata\+Section\+Handler (
+\begin{DoxyParamCaption}
+\item[{{\bf X\+M\+L\+\_\+\+Parser}}]{parser, }
+\item[{{\bf X\+M\+L\+\_\+\+Start\+Cdata\+Section\+Handler}}]{start}
+\end{DoxyParamCaption}
+)}\hypertarget{xmlparse_8c_acff1b6a7a10e86fcb7fe02f01ff45876}{}\label{xmlparse_8c_acff1b6a7a10e86fcb7fe02f01ff45876}
+
+
+Definition at line 1324 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!X\+M\+L\+\_\+\+Set\+Start\+Doctype\+Decl\+Handler@{X\+M\+L\+\_\+\+Set\+Start\+Doctype\+Decl\+Handler}}
+\index{X\+M\+L\+\_\+\+Set\+Start\+Doctype\+Decl\+Handler@{X\+M\+L\+\_\+\+Set\+Start\+Doctype\+Decl\+Handler}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{X\+M\+L\+\_\+\+Set\+Start\+Doctype\+Decl\+Handler(\+X\+M\+L\+\_\+\+Parser parser, X\+M\+L\+\_\+\+Start\+Doctype\+Decl\+Handler start)}{XML_SetStartDoctypeDeclHandler(XML_Parser parser, XML_StartDoctypeDeclHandler start)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} {\bf X\+M\+L\+C\+A\+LL} X\+M\+L\+\_\+\+Set\+Start\+Doctype\+Decl\+Handler (
+\begin{DoxyParamCaption}
+\item[{{\bf X\+M\+L\+\_\+\+Parser}}]{parser, }
+\item[{{\bf X\+M\+L\+\_\+\+Start\+Doctype\+Decl\+Handler}}]{start}
+\end{DoxyParamCaption}
+)}\hypertarget{xmlparse_8c_ae1b7981d6b3c94b73474794fa3622dca}{}\label{xmlparse_8c_ae1b7981d6b3c94b73474794fa3622dca}
+
+
+Definition at line 1361 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!X\+M\+L\+\_\+\+Set\+Start\+Element\+Handler@{X\+M\+L\+\_\+\+Set\+Start\+Element\+Handler}}
+\index{X\+M\+L\+\_\+\+Set\+Start\+Element\+Handler@{X\+M\+L\+\_\+\+Set\+Start\+Element\+Handler}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{X\+M\+L\+\_\+\+Set\+Start\+Element\+Handler(\+X\+M\+L\+\_\+\+Parser parser, X\+M\+L\+\_\+\+Start\+Element\+Handler start)}{XML_SetStartElementHandler(XML_Parser parser, XML_StartElementHandler start)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} {\bf X\+M\+L\+C\+A\+LL} X\+M\+L\+\_\+\+Set\+Start\+Element\+Handler (
+\begin{DoxyParamCaption}
+\item[{{\bf X\+M\+L\+\_\+\+Parser}}]{parser, }
+\item[{{\bf X\+M\+L\+\_\+\+Start\+Element\+Handler}}]{start}
+\end{DoxyParamCaption}
+)}\hypertarget{xmlparse_8c_ae1ecca353e62eb473f25ac874ad44341}{}\label{xmlparse_8c_ae1ecca353e62eb473f25ac874ad44341}
+
+
+Definition at line 1282 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!X\+M\+L\+\_\+\+Set\+Start\+Namespace\+Decl\+Handler@{X\+M\+L\+\_\+\+Set\+Start\+Namespace\+Decl\+Handler}}
+\index{X\+M\+L\+\_\+\+Set\+Start\+Namespace\+Decl\+Handler@{X\+M\+L\+\_\+\+Set\+Start\+Namespace\+Decl\+Handler}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{X\+M\+L\+\_\+\+Set\+Start\+Namespace\+Decl\+Handler(\+X\+M\+L\+\_\+\+Parser parser, X\+M\+L\+\_\+\+Start\+Namespace\+Decl\+Handler start)}{XML_SetStartNamespaceDeclHandler(XML_Parser parser, XML_StartNamespaceDeclHandler start)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} {\bf X\+M\+L\+C\+A\+LL} X\+M\+L\+\_\+\+Set\+Start\+Namespace\+Decl\+Handler (
+\begin{DoxyParamCaption}
+\item[{{\bf X\+M\+L\+\_\+\+Parser}}]{parser, }
+\item[{{\bf X\+M\+L\+\_\+\+Start\+Namespace\+Decl\+Handler}}]{start}
+\end{DoxyParamCaption}
+)}\hypertarget{xmlparse_8c_abd5e1b94f23420a31f784c7f071c05fc}{}\label{xmlparse_8c_abd5e1b94f23420a31f784c7f071c05fc}
+
+
+Definition at line 1396 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!X\+M\+L\+\_\+\+Set\+Unknown\+Encoding\+Handler@{X\+M\+L\+\_\+\+Set\+Unknown\+Encoding\+Handler}}
+\index{X\+M\+L\+\_\+\+Set\+Unknown\+Encoding\+Handler@{X\+M\+L\+\_\+\+Set\+Unknown\+Encoding\+Handler}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{X\+M\+L\+\_\+\+Set\+Unknown\+Encoding\+Handler(\+X\+M\+L\+\_\+\+Parser parser, X\+M\+L\+\_\+\+Unknown\+Encoding\+Handler handler, void $\ast$data)}{XML_SetUnknownEncodingHandler(XML_Parser parser, XML_UnknownEncodingHandler handler, void *data)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} {\bf X\+M\+L\+C\+A\+LL} X\+M\+L\+\_\+\+Set\+Unknown\+Encoding\+Handler (
+\begin{DoxyParamCaption}
+\item[{{\bf X\+M\+L\+\_\+\+Parser}}]{parser, }
+\item[{{\bf X\+M\+L\+\_\+\+Unknown\+Encoding\+Handler}}]{handler, }
+\item[{{\bf void} $\ast$}]{data}
+\end{DoxyParamCaption}
+)}\hypertarget{xmlparse_8c_a0dc336d28ebbe1d5b14e41501fd8ddc9}{}\label{xmlparse_8c_a0dc336d28ebbe1d5b14e41501fd8ddc9}
+
+
+Definition at line 1438 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!X\+M\+L\+\_\+\+Set\+Unparsed\+Entity\+Decl\+Handler@{X\+M\+L\+\_\+\+Set\+Unparsed\+Entity\+Decl\+Handler}}
+\index{X\+M\+L\+\_\+\+Set\+Unparsed\+Entity\+Decl\+Handler@{X\+M\+L\+\_\+\+Set\+Unparsed\+Entity\+Decl\+Handler}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{X\+M\+L\+\_\+\+Set\+Unparsed\+Entity\+Decl\+Handler(\+X\+M\+L\+\_\+\+Parser parser, X\+M\+L\+\_\+\+Unparsed\+Entity\+Decl\+Handler handler)}{XML_SetUnparsedEntityDeclHandler(XML_Parser parser, XML_UnparsedEntityDeclHandler handler)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} {\bf X\+M\+L\+C\+A\+LL} X\+M\+L\+\_\+\+Set\+Unparsed\+Entity\+Decl\+Handler (
+\begin{DoxyParamCaption}
+\item[{{\bf X\+M\+L\+\_\+\+Parser}}]{parser, }
+\item[{{\bf X\+M\+L\+\_\+\+Unparsed\+Entity\+Decl\+Handler}}]{handler}
+\end{DoxyParamCaption}
+)}\hypertarget{xmlparse_8c_af84fba5765b4c3edc8fb79ae3078ed44}{}\label{xmlparse_8c_af84fba5765b4c3edc8fb79ae3078ed44}
+
+
+Definition at line 1373 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!X\+M\+L\+\_\+\+Set\+User\+Data@{X\+M\+L\+\_\+\+Set\+User\+Data}}
+\index{X\+M\+L\+\_\+\+Set\+User\+Data@{X\+M\+L\+\_\+\+Set\+User\+Data}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{X\+M\+L\+\_\+\+Set\+User\+Data(\+X\+M\+L\+\_\+\+Parser parser, void $\ast$p)}{XML_SetUserData(XML_Parser parser, void *p)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} {\bf X\+M\+L\+C\+A\+LL} X\+M\+L\+\_\+\+Set\+User\+Data (
+\begin{DoxyParamCaption}
+\item[{{\bf X\+M\+L\+\_\+\+Parser}}]{parser, }
+\item[{{\bf void} $\ast$}]{p}
+\end{DoxyParamCaption}
+)}\hypertarget{xmlparse_8c_acef3ab4e977f1ebcb37c3be9a3879938}{}\label{xmlparse_8c_acef3ab4e977f1ebcb37c3be9a3879938}
+
+
+Definition at line 1224 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!X\+M\+L\+\_\+\+Set\+Xml\+Decl\+Handler@{X\+M\+L\+\_\+\+Set\+Xml\+Decl\+Handler}}
+\index{X\+M\+L\+\_\+\+Set\+Xml\+Decl\+Handler@{X\+M\+L\+\_\+\+Set\+Xml\+Decl\+Handler}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{X\+M\+L\+\_\+\+Set\+Xml\+Decl\+Handler(\+X\+M\+L\+\_\+\+Parser parser, X\+M\+L\+\_\+\+Xml\+Decl\+Handler handler)}{XML_SetXmlDeclHandler(XML_Parser parser, XML_XmlDeclHandler handler)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} {\bf X\+M\+L\+C\+A\+LL} X\+M\+L\+\_\+\+Set\+Xml\+Decl\+Handler (
+\begin{DoxyParamCaption}
+\item[{{\bf X\+M\+L\+\_\+\+Parser}}]{parser, }
+\item[{{\bf X\+M\+L\+\_\+\+Xml\+Decl\+Handler}}]{handler}
+\end{DoxyParamCaption}
+)}\hypertarget{xmlparse_8c_a83ceb9f75e8d266c0e4da8b398d1537d}{}\label{xmlparse_8c_a83ceb9f75e8d266c0e4da8b398d1537d}
+
+
+Definition at line 1468 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!X\+M\+L\+\_\+\+Stop\+Parser@{X\+M\+L\+\_\+\+Stop\+Parser}}
+\index{X\+M\+L\+\_\+\+Stop\+Parser@{X\+M\+L\+\_\+\+Stop\+Parser}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{X\+M\+L\+\_\+\+Stop\+Parser(\+X\+M\+L\+\_\+\+Parser parser, X\+M\+L\+\_\+\+Bool resumable)}{XML_StopParser(XML_Parser parser, XML_Bool resumable)}}]{\setlength{\rightskip}{0pt plus 5cm}enum {\bf X\+M\+L\+\_\+\+Status} {\bf X\+M\+L\+C\+A\+LL} X\+M\+L\+\_\+\+Stop\+Parser (
+\begin{DoxyParamCaption}
+\item[{{\bf X\+M\+L\+\_\+\+Parser}}]{parser, }
+\item[{{\bf X\+M\+L\+\_\+\+Bool}}]{resumable}
+\end{DoxyParamCaption}
+)}\hypertarget{xmlparse_8c_a2babb2f5ac4826f4ffb0c14f87984bf5}{}\label{xmlparse_8c_a2babb2f5ac4826f4ffb0c14f87984bf5}
+
+
+Definition at line 1760 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!X\+M\+L\+\_\+\+Use\+Foreign\+D\+TD@{X\+M\+L\+\_\+\+Use\+Foreign\+D\+TD}}
+\index{X\+M\+L\+\_\+\+Use\+Foreign\+D\+TD@{X\+M\+L\+\_\+\+Use\+Foreign\+D\+TD}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{X\+M\+L\+\_\+\+Use\+Foreign\+D\+T\+D(\+X\+M\+L\+\_\+\+Parser parser, X\+M\+L\+\_\+\+Bool use\+D\+T\+D)}{XML_UseForeignDTD(XML_Parser parser, XML_Bool useDTD)}}]{\setlength{\rightskip}{0pt plus 5cm}enum {\bf X\+M\+L\+\_\+\+Error} {\bf X\+M\+L\+C\+A\+LL} X\+M\+L\+\_\+\+Use\+Foreign\+D\+TD (
+\begin{DoxyParamCaption}
+\item[{{\bf X\+M\+L\+\_\+\+Parser}}]{parser, }
+\item[{{\bf X\+M\+L\+\_\+\+Bool}}]{use\+D\+TD}
+\end{DoxyParamCaption}
+)}\hypertarget{xmlparse_8c_ad0a2e22d4dcc22326917659c9668fa4a}{}\label{xmlparse_8c_ad0a2e22d4dcc22326917659c9668fa4a}
+
+
+Definition at line 1201 of file xmlparse.\+c.
+
+\index{xmlparse.\+c@{xmlparse.\+c}!X\+M\+L\+\_\+\+Use\+Parser\+As\+Handler\+Arg@{X\+M\+L\+\_\+\+Use\+Parser\+As\+Handler\+Arg}}
+\index{X\+M\+L\+\_\+\+Use\+Parser\+As\+Handler\+Arg@{X\+M\+L\+\_\+\+Use\+Parser\+As\+Handler\+Arg}!xmlparse.\+c@{xmlparse.\+c}}
+\subsubsection[{\texorpdfstring{X\+M\+L\+\_\+\+Use\+Parser\+As\+Handler\+Arg(\+X\+M\+L\+\_\+\+Parser parser)}{XML_UseParserAsHandlerArg(XML_Parser parser)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} {\bf X\+M\+L\+C\+A\+LL} X\+M\+L\+\_\+\+Use\+Parser\+As\+Handler\+Arg (
+\begin{DoxyParamCaption}
+\item[{{\bf X\+M\+L\+\_\+\+Parser}}]{parser}
+\end{DoxyParamCaption}
+)}\hypertarget{xmlparse_8c_af02353a908b28e1b4eb2b444ec274890}{}\label{xmlparse_8c_af02353a908b28e1b4eb2b444ec274890}
+
+
+Definition at line 1195 of file xmlparse.\+c.
+

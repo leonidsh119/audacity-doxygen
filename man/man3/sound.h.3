@@ -1,0 +1,2182 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/lib-src/libnyquist/nyquist/nyqsrc/sound.h" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/lib-src/libnyquist/nyquist/nyqsrc/sound.h \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <math\&.h>\fP
+.br
+\fC#include 'stdefs\&.h'\fP
+.br
+
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "struct \fBsample_block_node\fP"
+.br
+.ti -1c
+.RI "struct \fBsnd_susp_struct\fP"
+.br
+.ti -1c
+.RI "struct \fBsnd_list_struct\fP"
+.br
+.ti -1c
+.RI "struct \fBtable_struct\fP"
+.br
+.ti -1c
+.RI "struct \fBsound_struct\fP"
+.br
+.in -1c
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBPERMS\fP   0644           /* \-rw\-r\-\-r\-\- */"
+.br
+.ti -1c
+.RI "#define \fBMAX_STOP\fP   0x7FFFFFFF"
+.br
+.ti -1c
+.RI "#define \fBMAX_STOP_TIME\fP   10E20"
+.br
+.ti -1c
+.RI "#define \fBMIN_START_TIME\fP   \-10E20"
+.br
+.ti -1c
+.RI "#define \fBSCALE_FACTOR_TO_BYTE\fP   127"
+.br
+.ti -1c
+.RI "#define \fBSCALE_FACTOR_TO_SHORT\fP   32767"
+.br
+.ti -1c
+.RI "#define \fBSCALE_FACTOR_TO_24BIT\fP   0x7FFFFF"
+.br
+.ti -1c
+.RI "#define \fBSCALE_FACTOR_TO_LONG\fP   2147483647"
+.br
+.ti -1c
+.RI "#define \fBINTERP_n\fP   0"
+.br
+.ti -1c
+.RI "#define \fBINTERP_s\fP   1"
+.br
+.ti -1c
+.RI "#define \fBINTERP_i\fP   2"
+.br
+.ti -1c
+.RI "#define \fBINTERP_r\fP   3"
+.br
+.ti -1c
+.RI "#define \fBINTERP_nn\fP   0"
+.br
+.ti -1c
+.RI "#define \fBINTERP_ns\fP   1"
+.br
+.ti -1c
+.RI "#define \fBINTERP_ni\fP   2"
+.br
+.ti -1c
+.RI "#define \fBINTERP_nr\fP   3"
+.br
+.ti -1c
+.RI "#define \fBINTERP_sn\fP   4"
+.br
+.ti -1c
+.RI "#define \fBINTERP_ss\fP   5"
+.br
+.ti -1c
+.RI "#define \fBINTERP_si\fP   6"
+.br
+.ti -1c
+.RI "#define \fBINTERP_sr\fP   7"
+.br
+.ti -1c
+.RI "#define \fBINTERP_in\fP   8"
+.br
+.ti -1c
+.RI "#define \fBINTERP_is\fP   9"
+.br
+.ti -1c
+.RI "#define \fBINTERP_ii\fP   10"
+.br
+.ti -1c
+.RI "#define \fBINTERP_ir\fP   11"
+.br
+.ti -1c
+.RI "#define \fBINTERP_rn\fP   12"
+.br
+.ti -1c
+.RI "#define \fBINTERP_rs\fP   13"
+.br
+.ti -1c
+.RI "#define \fBINTERP_ri\fP   14"
+.br
+.ti -1c
+.RI "#define \fBINTERP_rr\fP   15"
+.br
+.ti -1c
+.RI "#define \fBINTERP_nnn\fP   0"
+.br
+.ti -1c
+.RI "#define \fBINTERP_nns\fP   1"
+.br
+.ti -1c
+.RI "#define \fBINTERP_nni\fP   2"
+.br
+.ti -1c
+.RI "#define \fBINTERP_nnr\fP   3"
+.br
+.ti -1c
+.RI "#define \fBINTERP_nsn\fP   4"
+.br
+.ti -1c
+.RI "#define \fBINTERP_nss\fP   5"
+.br
+.ti -1c
+.RI "#define \fBINTERP_nsi\fP   6"
+.br
+.ti -1c
+.RI "#define \fBINTERP_nsr\fP   7"
+.br
+.ti -1c
+.RI "#define \fBINTERP_nin\fP   8"
+.br
+.ti -1c
+.RI "#define \fBINTERP_nis\fP   9"
+.br
+.ti -1c
+.RI "#define \fBINTERP_nii\fP   10"
+.br
+.ti -1c
+.RI "#define \fBINTERP_nir\fP   11"
+.br
+.ti -1c
+.RI "#define \fBINTERP_nrn\fP   12"
+.br
+.ti -1c
+.RI "#define \fBINTERP_nrs\fP   13"
+.br
+.ti -1c
+.RI "#define \fBINTERP_nri\fP   14"
+.br
+.ti -1c
+.RI "#define \fBINTERP_nrr\fP   15"
+.br
+.ti -1c
+.RI "#define \fBINTERP_snn\fP   16"
+.br
+.ti -1c
+.RI "#define \fBINTERP_sns\fP   17"
+.br
+.ti -1c
+.RI "#define \fBINTERP_sni\fP   18"
+.br
+.ti -1c
+.RI "#define \fBINTERP_snr\fP   19"
+.br
+.ti -1c
+.RI "#define \fBINTERP_ssn\fP   20"
+.br
+.ti -1c
+.RI "#define \fBINTERP_sss\fP   21"
+.br
+.ti -1c
+.RI "#define \fBINTERP_ssi\fP   22"
+.br
+.ti -1c
+.RI "#define \fBINTERP_ssr\fP   23"
+.br
+.ti -1c
+.RI "#define \fBINTERP_sin\fP   24"
+.br
+.ti -1c
+.RI "#define \fBINTERP_sis\fP   25"
+.br
+.ti -1c
+.RI "#define \fBINTERP_sii\fP   26"
+.br
+.ti -1c
+.RI "#define \fBINTERP_sir\fP   27"
+.br
+.ti -1c
+.RI "#define \fBINTERP_srn\fP   28"
+.br
+.ti -1c
+.RI "#define \fBINTERP_srs\fP   29"
+.br
+.ti -1c
+.RI "#define \fBINTERP_sri\fP   30"
+.br
+.ti -1c
+.RI "#define \fBINTERP_srr\fP   31"
+.br
+.ti -1c
+.RI "#define \fBINTERP_inn\fP   32"
+.br
+.ti -1c
+.RI "#define \fBINTERP_ins\fP   33"
+.br
+.ti -1c
+.RI "#define \fBINTERP_ini\fP   34"
+.br
+.ti -1c
+.RI "#define \fBINTERP_inr\fP   35"
+.br
+.ti -1c
+.RI "#define \fBINTERP_isn\fP   36"
+.br
+.ti -1c
+.RI "#define \fBINTERP_iss\fP   37"
+.br
+.ti -1c
+.RI "#define \fBINTERP_isi\fP   38"
+.br
+.ti -1c
+.RI "#define \fBINTERP_isr\fP   39"
+.br
+.ti -1c
+.RI "#define \fBINTERP_iin\fP   40"
+.br
+.ti -1c
+.RI "#define \fBINTERP_iis\fP   41"
+.br
+.ti -1c
+.RI "#define \fBINTERP_iii\fP   42"
+.br
+.ti -1c
+.RI "#define \fBINTERP_iir\fP   43"
+.br
+.ti -1c
+.RI "#define \fBINTERP_irn\fP   44"
+.br
+.ti -1c
+.RI "#define \fBINTERP_irs\fP   45"
+.br
+.ti -1c
+.RI "#define \fBINTERP_iri\fP   46"
+.br
+.ti -1c
+.RI "#define \fBINTERP_irr\fP   47"
+.br
+.ti -1c
+.RI "#define \fBINTERP_rnn\fP   48"
+.br
+.ti -1c
+.RI "#define \fBINTERP_rns\fP   49"
+.br
+.ti -1c
+.RI "#define \fBINTERP_rni\fP   50"
+.br
+.ti -1c
+.RI "#define \fBINTERP_rnr\fP   51"
+.br
+.ti -1c
+.RI "#define \fBINTERP_rsn\fP   52"
+.br
+.ti -1c
+.RI "#define \fBINTERP_rss\fP   53"
+.br
+.ti -1c
+.RI "#define \fBINTERP_rsi\fP   54"
+.br
+.ti -1c
+.RI "#define \fBINTERP_rsr\fP   55"
+.br
+.ti -1c
+.RI "#define \fBINTERP_rin\fP   56"
+.br
+.ti -1c
+.RI "#define \fBINTERP_ris\fP   57"
+.br
+.ti -1c
+.RI "#define \fBINTERP_rii\fP   58"
+.br
+.ti -1c
+.RI "#define \fBINTERP_rir\fP   59"
+.br
+.ti -1c
+.RI "#define \fBINTERP_rrn\fP   60"
+.br
+.ti -1c
+.RI "#define \fBINTERP_rrs\fP   61"
+.br
+.ti -1c
+.RI "#define \fBINTERP_rri\fP   62"
+.br
+.ti -1c
+.RI "#define \fBINTERP_rrr\fP   63"
+.br
+.ti -1c
+.RI "#define \fBINTERP_nnnn\fP   0"
+.br
+.ti -1c
+.RI "#define \fBINTERP_nnns\fP   1"
+.br
+.ti -1c
+.RI "#define \fBINTERP_nnsn\fP   4"
+.br
+.ti -1c
+.RI "#define \fBINTERP_nnss\fP   5"
+.br
+.ti -1c
+.RI "#define \fBINTERP_nsnn\fP   16"
+.br
+.ti -1c
+.RI "#define \fBINTERP_nsns\fP   17"
+.br
+.ti -1c
+.RI "#define \fBINTERP_nssn\fP   20"
+.br
+.ti -1c
+.RI "#define \fBINTERP_nsss\fP   21"
+.br
+.ti -1c
+.RI "#define \fBINTERP_nrrr\fP   63"
+.br
+.ti -1c
+.RI "#define \fBINTERP_snnn\fP   64"
+.br
+.ti -1c
+.RI "#define \fBINTERP_snns\fP   65"
+.br
+.ti -1c
+.RI "#define \fBINTERP_snsn\fP   68"
+.br
+.ti -1c
+.RI "#define \fBINTERP_snss\fP   69"
+.br
+.ti -1c
+.RI "#define \fBINTERP_ssnn\fP   80"
+.br
+.ti -1c
+.RI "#define \fBINTERP_ssns\fP   81"
+.br
+.ti -1c
+.RI "#define \fBINTERP_sssn\fP   84"
+.br
+.ti -1c
+.RI "#define \fBINTERP_ssss\fP   85"
+.br
+.ti -1c
+.RI "#define \fBINTERP_niii\fP   42"
+.br
+.ti -1c
+.RI "#define \fBINTERP_siii\fP   106"
+.br
+.ti -1c
+.RI "#define \fBINTERP_srrr\fP   127"
+.br
+.ti -1c
+.RI "#define \fBINTERP_iiii\fP   170"
+.br
+.ti -1c
+.RI "#define \fBINTERP_rrrr\fP   255"
+.br
+.ti -1c
+.RI "#define \fBINTERP_nnnnnn\fP   0"
+.br
+.ti -1c
+.RI "#define \fBINTERP_nnnnns\fP   1"
+.br
+.ti -1c
+.RI "#define \fBINTERP_nnnnsn\fP   4"
+.br
+.ti -1c
+.RI "#define \fBINTERP_nnnnss\fP   5"
+.br
+.ti -1c
+.RI "#define \fBINTERP_nnnsnn\fP   16"
+.br
+.ti -1c
+.RI "#define \fBINTERP_nnnsns\fP   17"
+.br
+.ti -1c
+.RI "#define \fBINTERP_nnnssn\fP   20"
+.br
+.ti -1c
+.RI "#define \fBINTERP_nnnsss\fP   21"
+.br
+.ti -1c
+.RI "#define \fBINTERP_nnsnnn\fP   64"
+.br
+.ti -1c
+.RI "#define \fBINTERP_nnsnns\fP   65"
+.br
+.ti -1c
+.RI "#define \fBINTERP_nnsnsn\fP   68"
+.br
+.ti -1c
+.RI "#define \fBINTERP_nnsnss\fP   69"
+.br
+.ti -1c
+.RI "#define \fBINTERP_nnssnn\fP   80"
+.br
+.ti -1c
+.RI "#define \fBINTERP_nnssns\fP   81"
+.br
+.ti -1c
+.RI "#define \fBINTERP_nnsssn\fP   84"
+.br
+.ti -1c
+.RI "#define \fBINTERP_nnssss\fP   85"
+.br
+.ti -1c
+.RI "#define \fBINTERP_nsnnnn\fP   256"
+.br
+.ti -1c
+.RI "#define \fBINTERP_nsnnns\fP   257"
+.br
+.ti -1c
+.RI "#define \fBINTERP_nsnnsn\fP   260"
+.br
+.ti -1c
+.RI "#define \fBINTERP_nsnnss\fP   261"
+.br
+.ti -1c
+.RI "#define \fBINTERP_nsnsnn\fP   272"
+.br
+.ti -1c
+.RI "#define \fBINTERP_nsnsns\fP   273"
+.br
+.ti -1c
+.RI "#define \fBINTERP_nsnssn\fP   276"
+.br
+.ti -1c
+.RI "#define \fBINTERP_nsnsss\fP   277"
+.br
+.ti -1c
+.RI "#define \fBINTERP_nssnnn\fP   320"
+.br
+.ti -1c
+.RI "#define \fBINTERP_nssnns\fP   321"
+.br
+.ti -1c
+.RI "#define \fBINTERP_nssnsn\fP   324"
+.br
+.ti -1c
+.RI "#define \fBINTERP_nssnss\fP   325"
+.br
+.ti -1c
+.RI "#define \fBINTERP_nsssnn\fP   336"
+.br
+.ti -1c
+.RI "#define \fBINTERP_nsssns\fP   337"
+.br
+.ti -1c
+.RI "#define \fBINTERP_nssssn\fP   340"
+.br
+.ti -1c
+.RI "#define \fBINTERP_nsssss\fP   341"
+.br
+.ti -1c
+.RI "#define \fBINTERP_snnnnn\fP   1024"
+.br
+.ti -1c
+.RI "#define \fBINTERP_snnnns\fP   1025"
+.br
+.ti -1c
+.RI "#define \fBINTERP_snnnsn\fP   1028"
+.br
+.ti -1c
+.RI "#define \fBINTERP_snnnss\fP   1029"
+.br
+.ti -1c
+.RI "#define \fBINTERP_snnsnn\fP   1040"
+.br
+.ti -1c
+.RI "#define \fBINTERP_snnsns\fP   1041"
+.br
+.ti -1c
+.RI "#define \fBINTERP_snnssn\fP   1044"
+.br
+.ti -1c
+.RI "#define \fBINTERP_snnsss\fP   1045"
+.br
+.ti -1c
+.RI "#define \fBINTERP_snsnnn\fP   1088"
+.br
+.ti -1c
+.RI "#define \fBINTERP_snsnns\fP   1089"
+.br
+.ti -1c
+.RI "#define \fBINTERP_snsnsn\fP   1092"
+.br
+.ti -1c
+.RI "#define \fBINTERP_snsnss\fP   1093"
+.br
+.ti -1c
+.RI "#define \fBINTERP_snssnn\fP   1104"
+.br
+.ti -1c
+.RI "#define \fBINTERP_snssns\fP   1105"
+.br
+.ti -1c
+.RI "#define \fBINTERP_snsssn\fP   1108"
+.br
+.ti -1c
+.RI "#define \fBINTERP_snssss\fP   1109"
+.br
+.ti -1c
+.RI "#define \fBINTERP_ssnnnn\fP   1280"
+.br
+.ti -1c
+.RI "#define \fBINTERP_ssnnns\fP   1281"
+.br
+.ti -1c
+.RI "#define \fBINTERP_ssnnsn\fP   1284"
+.br
+.ti -1c
+.RI "#define \fBINTERP_ssnnss\fP   1285"
+.br
+.ti -1c
+.RI "#define \fBINTERP_ssnsnn\fP   1296"
+.br
+.ti -1c
+.RI "#define \fBINTERP_ssnsns\fP   1297"
+.br
+.ti -1c
+.RI "#define \fBINTERP_ssnssn\fP   1300"
+.br
+.ti -1c
+.RI "#define \fBINTERP_ssnsss\fP   1301"
+.br
+.ti -1c
+.RI "#define \fBINTERP_sssnnn\fP   1344"
+.br
+.ti -1c
+.RI "#define \fBINTERP_sssnns\fP   1345"
+.br
+.ti -1c
+.RI "#define \fBINTERP_sssnsn\fP   1348"
+.br
+.ti -1c
+.RI "#define \fBINTERP_sssnss\fP   1349"
+.br
+.ti -1c
+.RI "#define \fBINTERP_ssssnn\fP   1360"
+.br
+.ti -1c
+.RI "#define \fBINTERP_ssssns\fP   1361"
+.br
+.ti -1c
+.RI "#define \fBINTERP_sssssn\fP   1364"
+.br
+.ti -1c
+.RI "#define \fBINTERP_ssssss\fP   1365"
+.br
+.ti -1c
+.RI "#define \fBINTERP_iiiiii\fP   2730"
+.br
+.ti -1c
+.RI "#define \fBINTERP_rrrrrr\fP   4095"
+.br
+.ti -1c
+.RI "#define \fBINTERP_nnnnnnnn\fP   0"
+.br
+.ti -1c
+.RI "#define \fBINTERP_ssssssss\fP   21845"
+.br
+.ti -1c
+.RI "#define \fBINTERP_MASK\fP   3"
+.br
+.ti -1c
+.RI "#define \fBINTERP_SHIFT\fP   2"
+.br
+.ti -1c
+.RI "#define \fBANGLEBASE\fP   360\&.0"
+.br
+.ti -1c
+.RI "#define \fBMAX_SND_CHANNELS\fP   24"
+.br
+.ti -1c
+.RI "#define \fBmax_table_len\fP   100000"
+.br
+.ti -1c
+.RI "#define \fBmax_sample_block_len\fP   1020"
+.br
+.ti -1c
+.RI "#define \fBMAX_SND_LEN\fP   (\fBMAX_STOP\fP \- \fBmax_sample_block_len\fP * 2)"
+.br
+.ti -1c
+.RI "#define \fBgetsound\fP(x)         ((\fBsound_type\fP) \fBgetinst\fP(x))"
+.br
+.ti -1c
+.RI "#define \fBxlgasound\fP()         (\fBtestarg\fP(\fBtypearg\fP(\fBsoundp\fP)))"
+.br
+.ti -1c
+.RI "#define \fBUNKNOWN\fP   (\-10\-\fBmax_sample_block_len\fP)"
+.br
+.ti -1c
+.RI "#define \fBtable_size_in_bytes\fP(n)   (sizeof(\fBtable_node\fP) + sizeof(\fBsample_type\fP) * ((n) \- 1))"
+.br
+.ti -1c
+.RI "#define \fBxlog\fP(x)   log(x)"
+.br
+.ti -1c
+.RI "#define \fBsnd_time\fP(\fBs\fP)   (\fBs\fP)\->time"
+.br
+.ti -1c
+.RI "#define \fBsnd_srate\fP(\fBs\fP)   (\fBs\fP)\->sr"
+.br
+.ti -1c
+.RI "#define \fBsnd_t0\fP(\fBs\fP)   (\fBs\fP)\->t0"
+.br
+.ti -1c
+.RI "#define \fBblocks_to_watch_max\fP   50"
+.br
+.ti -1c
+.RI "#define \fBsound_get_next\fP(\fBs\fP,  n)   ((*(\fBs\fP\->get_next))(\fBs\fP, n))"
+.br
+.ti -1c
+.RI "#define \fBsusp_print_tree\fP(\fBs\fP,  n)   (*((\fBs\fP)\->print_tree))(\fBs\fP, n)"
+.br
+.ti -1c
+.RI "#define \fBsusp_check_samples\fP(sound,  sample_ptr,  sample_cnt)"
+.br
+.ti -1c
+.RI "#define \fBsusp_check_samples_break\fP(sound,  sample_ptr,  sample_cnt,  x2_sample)"
+.br
+.ti -1c
+.RI "#define \fBsusp_get_samples\fP(sound,  sample_ptr,  sample_cnt)   susp\->sample_ptr = \fBsound_get_next\fP(susp\->sound, &(susp\->sample_cnt))\->\fBsamples\fP"
+.br
+.ti -1c
+.RI "#define \fBsusp_get_block_samples\fP(sound,  sample_block_ptr,  sample_ptr,  sample_cnt)"
+.br
+.ti -1c
+.RI "#define \fBsusp_took\fP(sample_cnt,  n)   susp\->sample_cnt \-= n"
+.br
+.ti -1c
+.RI "#define \fBsusp_fetch_sample\fP(sound,  sample_ptr,  sample_cnt)   (susp\->sound\->\fBscale\fP * (susp\->sample_cnt\-\-, *(susp\->sample_ptr++)))"
+.br
+.ti -1c
+.RI "#define \fBsusp_current_sample\fP(sound,  sample_ptr)   (susp\->sound\->\fBscale\fP * (*(susp\->sample_ptr)))"
+.br
+.ti -1c
+.RI "#define \fBsusp_check_term_samples\fP(sound,  sample_ptr,  sample_cnt)"
+.br
+.ti -1c
+.RI "#define \fBsusp_check_term_log_samples\fP(sound,  sample_ptr,  sample_cnt)"
+.br
+.ti -1c
+.RI "#define \fBsusp_check_term_log_block_samples\fP(sound,  sample_block_ptr,  sample_ptr,  sample_cnt,  bit,  all)"
+.br
+.ti -1c
+.RI "#define \fBlogical_stop_cnt_cvt\fP(sound)"
+.br
+.ti -1c
+.RI "#define \fBlogical_stop_test\fP(sound,  cnt)"
+.br
+.ti -1c
+.RI "#define \fBterminate_test\fP(sample_ptr,  sound,  cnt)"
+.br
+.ti -1c
+.RI "#define \fBsusp_check_log_samples\fP(sound,  sample_ptr,  sample_cnt)"
+.br
+.ti -1c
+.RI "#define \fBsusp_check_term_samples_break\fP(sound,  sample_ptr,  sample_cnt,  x2_sample)"
+.br
+.ti -1c
+.RI "#define \fBsusp_check_log_samples_break\fP(sound,  sample_ptr,  sample_cnt,  x2_sample)"
+.br
+.ti -1c
+.RI "#define \fBsusp_check_term_log_samples_break\fP(sound,  sample_ptr,  sample_cnt,  x2_sample)"
+.br
+.in -1c
+.SS "Typedefs"
+
+.in +1c
+.ti -1c
+.RI "typedef double \fBtime_type\fP"
+.br
+.ti -1c
+.RI "typedef double \fBrate_type\fP"
+.br
+.ti -1c
+.RI "typedef float \fBsample_type\fP"
+.br
+.ti -1c
+.RI "typedef double \fBpromoted_sample_type\fP"
+.br
+.ti -1c
+.RI "typedef short \fBSFDataType\fP"
+.br
+.ti -1c
+.RI "typedef short * \fBSFDataPtr\fP"
+.br
+.ti -1c
+.RI "typedef \fBsample_type\fP \fBsample_block_values\fP[\fBmax_sample_block_len\fP]"
+.br
+.ti -1c
+.RI "typedef \fBsample_type\fP * \fBsample_block_values_type\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBsample_block_node\fP * \fBsample_block_type\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBsnd_list_struct\fP * \fBsnd_list_type\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBsnd_susp_struct\fP \fBsnd_susp_node\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBsnd_susp_struct\fP * \fBsnd_susp_type\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBsnd_list_struct\fP \fBsnd_list_node\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBtable_struct\fP \fBtable_node\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBtable_struct\fP * \fBtable_type\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBsound_struct\fP \fBsound_node\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBsound_struct\fP * \fBsound_type\fP"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBLVAL\fP \fBsnd_badsr\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "long \fBcheck_terminate_cnt\fP (long tc)"
+.br
+.ti -1c
+.RI "double \fBsnd_set_latency\fP (double \fBlatency\fP)"
+.br
+.ti -1c
+.RI "double \fBcompute_phase\fP (double phase, double key, long n, double srate, double new_srate, double freq, double *incr_ptr)"
+.br
+.ti -1c
+.RI "\fBboolean\fP \fBsoundp\fP (\fBLVAL\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBsnd_list_ref\fP (\fBsnd_list_type\fP list)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBsound_unref\fP (\fBsound_type\fP snd)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBsnd_list_unref\fP (\fBsnd_list_type\fP list)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBcvsound\fP (\fBsound_type\fP)"
+.br
+.ti -1c
+.RI "\fBsample_block_type\fP \fBSND_get_next\fP (\fBsound_type\fP snd, long *cnt)"
+.br
+.ti -1c
+.RI "\fBsample_block_type\fP \fBSND_get_first\fP (\fBsound_type\fP snd, long *cnt)"
+.br
+.ti -1c
+.RI "\fBsample_block_type\fP \fBSND_get_zeros\fP (\fBsound_type\fP snd, long *cnt)"
+.br
+.ti -1c
+.RI "\fBsample_block_type\fP \fBSND_flush\fP (\fBsound_type\fP snd, long *cnt)"
+.br
+.ti -1c
+.RI "double \fBhz_to_step\fP (double)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBinterp_style\fP (\fBsound_type\fP \fBs\fP, \fBrate_type\fP sr)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBset_logical_stop_time\fP (\fBsound_type\fP sound, \fBtime_type\fP when)"
+.br
+.ti -1c
+.RI "\fBsnd_list_type\fP \fBsnd_list_create\fP (\fBsnd_susp_type\fP susp)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBsnd_list_terminate\fP (\fBsnd_list_type\fP snd_list)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBsnd_sort_2\fP (\fBsound_type\fP *s1_ptr, \fBsound_type\fP *s2_ptr, \fBrate_type\fP sr)"
+.br
+.ti -1c
+.RI "double \fBsnd_sref\fP (\fBsound_type\fP \fBs\fP, \fBtime_type\fP \fBt\fP)"
+.br
+.ti -1c
+.RI "double \fBsnd_sref_inverse\fP (\fBsound_type\fP \fBs\fP, double val)"
+.br
+.ti -1c
+.RI "double \fBsnd_stop_time\fP (\fBsound_type\fP \fBs\fP)"
+.br
+.ti -1c
+.RI "\fBsound_type\fP \fBsnd_xform\fP (\fBsound_type\fP snd, \fBrate_type\fP sr, \fBtime_type\fP time, \fBtime_type\fP \fBstart_time\fP, \fBtime_type\fP stop_time, \fBpromoted_sample_type\fP \fBscale\fP)"
+.br
+.ti -1c
+.RI "\fBsound_type\fP \fBsound_create\fP (\fBsnd_susp_type\fP susp, \fBtime_type\fP t0, \fBrate_type\fP sr, \fBpromoted_sample_type\fP \fBscale\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBmin_cnt\fP (long *cnt_ptr, \fBsound_type\fP sound, \fBsnd_susp_type\fP susp, long cnt)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBindent\fP (\fBint\fP n)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBsound_prepend_zeros\fP (\fBsound_type\fP snd, \fBtime_type\fP t0)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBblock_watch\fP (long sample_block)"
+.br
+.ti -1c
+.RI "long \fBsound_nth_block\fP (\fBsound_type\fP snd, long n)"
+.br
+.ti -1c
+.RI "\fBsound_type\fP \fBsound_copy\fP (\fBsound_type\fP snd)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBsound_xlmark\fP (\fBvoid\fP *\fBa_sound\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBsound_print\fP (\fBLVAL\fP snd_expr, long n)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBsound_play\fP (\fBLVAL\fP snd_expr)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBstats\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBsound_print_tree\fP (\fBsound_type\fP snd)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBmark_audio_time\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBsound_print_tree_1\fP (\fBsound_type\fP snd, \fBint\fP n)"
+.br
+.ti -1c
+.RI "\fBsound_type\fP \fBsound_scale\fP (double factor, \fBsound_type\fP snd)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBsound_init\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBsound_symbols\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBtable_type\fP \fBsound_to_table\fP (\fBsound_type\fP \fBs\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBtable_unref\fP (\fBtable_type\fP table)"
+.br
+.ti -1c
+.RI "\fBsound_type\fP \fBsound_zero\fP (\fBtime_type\fP t0, \fBrate_type\fP sr)"
+.br
+.ti -1c
+.RI "double \fBstep_to_hz\fP (double)"
+.br
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "long \fBsound_frames\fP"
+.br
+.ti -1c
+.RI "double \fBsound_srate\fP"
+.br
+.ti -1c
+.RI "\fBsnd_list_type\fP \fBlist_watch\fP"
+.br
+.ti -1c
+.RI "\fBsample_block_type\fP \fBzero_block\fP"
+.br
+.ti -1c
+.RI "\fBsample_block_type\fP \fBinternal_zero_block\fP"
+.br
+.ti -1c
+.RI "\fBsnd_list_type\fP \fBzero_snd_list\fP"
+.br
+.ti -1c
+.RI "\fBsound_type\fP \fBprinting_this_sound\fP"
+.br
+.ti -1c
+.RI "double \fBsound_latency\fP"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBa_sound\fP"
+.br
+.ti -1c
+.RI "long \fBblocks_to_watch_len\fP"
+.br
+.ti -1c
+.RI "\fBsample_block_type\fP \fBblocks_to_watch\fP [\fBblocks_to_watch_max\fP]"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define ANGLEBASE   360\&.0"
+
+.PP
+Definition at line 237 of file sound\&.h\&.
+.SS "#define blocks_to_watch_max   50"
+
+.PP
+Definition at line 414 of file sound\&.h\&.
+.SS "#define getsound(x)   ((\fBsound_type\fP) \fBgetinst\fP(x))"
+
+.PP
+Definition at line 258 of file sound\&.h\&.
+.SS "#define INTERP_i   2"
+
+.PP
+Definition at line 45 of file sound\&.h\&.
+.SS "#define INTERP_ii   10"
+
+.PP
+Definition at line 58 of file sound\&.h\&.
+.SS "#define INTERP_iii   42"
+
+.PP
+Definition at line 108 of file sound\&.h\&.
+.SS "#define INTERP_iiii   170"
+
+.PP
+Definition at line 151 of file sound\&.h\&.
+.SS "#define INTERP_iiiiii   2730"
+
+.PP
+Definition at line 218 of file sound\&.h\&.
+.SS "#define INTERP_iin   40"
+
+.PP
+Definition at line 106 of file sound\&.h\&.
+.SS "#define INTERP_iir   43"
+
+.PP
+Definition at line 109 of file sound\&.h\&.
+.SS "#define INTERP_iis   41"
+
+.PP
+Definition at line 107 of file sound\&.h\&.
+.SS "#define INTERP_in   8"
+
+.PP
+Definition at line 56 of file sound\&.h\&.
+.SS "#define INTERP_ini   34"
+
+.PP
+Definition at line 100 of file sound\&.h\&.
+.SS "#define INTERP_inn   32"
+
+.PP
+Definition at line 98 of file sound\&.h\&.
+.SS "#define INTERP_inr   35"
+
+.PP
+Definition at line 101 of file sound\&.h\&.
+.SS "#define INTERP_ins   33"
+
+.PP
+Definition at line 99 of file sound\&.h\&.
+.SS "#define INTERP_ir   11"
+
+.PP
+Definition at line 59 of file sound\&.h\&.
+.SS "#define INTERP_iri   46"
+
+.PP
+Definition at line 112 of file sound\&.h\&.
+.SS "#define INTERP_irn   44"
+
+.PP
+Definition at line 110 of file sound\&.h\&.
+.SS "#define INTERP_irr   47"
+
+.PP
+Definition at line 113 of file sound\&.h\&.
+.SS "#define INTERP_irs   45"
+
+.PP
+Definition at line 111 of file sound\&.h\&.
+.SS "#define INTERP_is   9"
+
+.PP
+Definition at line 57 of file sound\&.h\&.
+.SS "#define INTERP_isi   38"
+
+.PP
+Definition at line 104 of file sound\&.h\&.
+.SS "#define INTERP_isn   36"
+
+.PP
+Definition at line 102 of file sound\&.h\&.
+.SS "#define INTERP_isr   39"
+
+.PP
+Definition at line 105 of file sound\&.h\&.
+.SS "#define INTERP_iss   37"
+
+.PP
+Definition at line 103 of file sound\&.h\&.
+.SS "#define INTERP_MASK   3"
+
+.PP
+Definition at line 225 of file sound\&.h\&.
+.SS "#define INTERP_n   0"
+
+.PP
+Definition at line 43 of file sound\&.h\&.
+.SS "#define INTERP_ni   2"
+
+.PP
+Definition at line 50 of file sound\&.h\&.
+.SS "#define INTERP_nii   10"
+
+.PP
+Definition at line 75 of file sound\&.h\&.
+.SS "#define INTERP_niii   42"
+
+.PP
+Definition at line 148 of file sound\&.h\&.
+.SS "#define INTERP_nin   8"
+
+.PP
+Definition at line 73 of file sound\&.h\&.
+.SS "#define INTERP_nir   11"
+
+.PP
+Definition at line 76 of file sound\&.h\&.
+.SS "#define INTERP_nis   9"
+
+.PP
+Definition at line 74 of file sound\&.h\&.
+.SS "#define INTERP_nn   0"
+
+.PP
+Definition at line 48 of file sound\&.h\&.
+.SS "#define INTERP_nni   2"
+
+.PP
+Definition at line 67 of file sound\&.h\&.
+.SS "#define INTERP_nnn   0"
+
+.PP
+Definition at line 65 of file sound\&.h\&.
+.SS "#define INTERP_nnnn   0"
+
+.PP
+Definition at line 131 of file sound\&.h\&.
+.SS "#define INTERP_nnnnnn   0"
+
+.PP
+Definition at line 154 of file sound\&.h\&.
+.SS "#define INTERP_nnnnnnnn   0"
+
+.PP
+Definition at line 221 of file sound\&.h\&.
+.SS "#define INTERP_nnnnns   1"
+
+.PP
+Definition at line 155 of file sound\&.h\&.
+.SS "#define INTERP_nnnnsn   4"
+
+.PP
+Definition at line 156 of file sound\&.h\&.
+.SS "#define INTERP_nnnnss   5"
+
+.PP
+Definition at line 157 of file sound\&.h\&.
+.SS "#define INTERP_nnns   1"
+
+.PP
+Definition at line 132 of file sound\&.h\&.
+.SS "#define INTERP_nnnsnn   16"
+
+.PP
+Definition at line 158 of file sound\&.h\&.
+.SS "#define INTERP_nnnsns   17"
+
+.PP
+Definition at line 159 of file sound\&.h\&.
+.SS "#define INTERP_nnnssn   20"
+
+.PP
+Definition at line 160 of file sound\&.h\&.
+.SS "#define INTERP_nnnsss   21"
+
+.PP
+Definition at line 161 of file sound\&.h\&.
+.SS "#define INTERP_nnr   3"
+
+.PP
+Definition at line 68 of file sound\&.h\&.
+.SS "#define INTERP_nns   1"
+
+.PP
+Definition at line 66 of file sound\&.h\&.
+.SS "#define INTERP_nnsn   4"
+
+.PP
+Definition at line 133 of file sound\&.h\&.
+.SS "#define INTERP_nnsnnn   64"
+
+.PP
+Definition at line 162 of file sound\&.h\&.
+.SS "#define INTERP_nnsnns   65"
+
+.PP
+Definition at line 163 of file sound\&.h\&.
+.SS "#define INTERP_nnsnsn   68"
+
+.PP
+Definition at line 164 of file sound\&.h\&.
+.SS "#define INTERP_nnsnss   69"
+
+.PP
+Definition at line 165 of file sound\&.h\&.
+.SS "#define INTERP_nnss   5"
+
+.PP
+Definition at line 134 of file sound\&.h\&.
+.SS "#define INTERP_nnssnn   80"
+
+.PP
+Definition at line 166 of file sound\&.h\&.
+.SS "#define INTERP_nnssns   81"
+
+.PP
+Definition at line 167 of file sound\&.h\&.
+.SS "#define INTERP_nnsssn   84"
+
+.PP
+Definition at line 168 of file sound\&.h\&.
+.SS "#define INTERP_nnssss   85"
+
+.PP
+Definition at line 169 of file sound\&.h\&.
+.SS "#define INTERP_nr   3"
+
+.PP
+Definition at line 51 of file sound\&.h\&.
+.SS "#define INTERP_nri   14"
+
+.PP
+Definition at line 79 of file sound\&.h\&.
+.SS "#define INTERP_nrn   12"
+
+.PP
+Definition at line 77 of file sound\&.h\&.
+.SS "#define INTERP_nrr   15"
+
+.PP
+Definition at line 80 of file sound\&.h\&.
+.SS "#define INTERP_nrrr   63"
+
+.PP
+Definition at line 139 of file sound\&.h\&.
+.SS "#define INTERP_nrs   13"
+
+.PP
+Definition at line 78 of file sound\&.h\&.
+.SS "#define INTERP_ns   1"
+
+.PP
+Definition at line 49 of file sound\&.h\&.
+.SS "#define INTERP_nsi   6"
+
+.PP
+Definition at line 71 of file sound\&.h\&.
+.SS "#define INTERP_nsn   4"
+
+.PP
+Definition at line 69 of file sound\&.h\&.
+.SS "#define INTERP_nsnn   16"
+
+.PP
+Definition at line 135 of file sound\&.h\&.
+.SS "#define INTERP_nsnnnn   256"
+
+.PP
+Definition at line 170 of file sound\&.h\&.
+.SS "#define INTERP_nsnnns   257"
+
+.PP
+Definition at line 171 of file sound\&.h\&.
+.SS "#define INTERP_nsnnsn   260"
+
+.PP
+Definition at line 172 of file sound\&.h\&.
+.SS "#define INTERP_nsnnss   261"
+
+.PP
+Definition at line 173 of file sound\&.h\&.
+.SS "#define INTERP_nsns   17"
+
+.PP
+Definition at line 136 of file sound\&.h\&.
+.SS "#define INTERP_nsnsnn   272"
+
+.PP
+Definition at line 174 of file sound\&.h\&.
+.SS "#define INTERP_nsnsns   273"
+
+.PP
+Definition at line 175 of file sound\&.h\&.
+.SS "#define INTERP_nsnssn   276"
+
+.PP
+Definition at line 176 of file sound\&.h\&.
+.SS "#define INTERP_nsnsss   277"
+
+.PP
+Definition at line 177 of file sound\&.h\&.
+.SS "#define INTERP_nsr   7"
+
+.PP
+Definition at line 72 of file sound\&.h\&.
+.SS "#define INTERP_nss   5"
+
+.PP
+Definition at line 70 of file sound\&.h\&.
+.SS "#define INTERP_nssn   20"
+
+.PP
+Definition at line 137 of file sound\&.h\&.
+.SS "#define INTERP_nssnnn   320"
+
+.PP
+Definition at line 178 of file sound\&.h\&.
+.SS "#define INTERP_nssnns   321"
+
+.PP
+Definition at line 179 of file sound\&.h\&.
+.SS "#define INTERP_nssnsn   324"
+
+.PP
+Definition at line 180 of file sound\&.h\&.
+.SS "#define INTERP_nssnss   325"
+
+.PP
+Definition at line 181 of file sound\&.h\&.
+.SS "#define INTERP_nsss   21"
+
+.PP
+Definition at line 138 of file sound\&.h\&.
+.SS "#define INTERP_nsssnn   336"
+
+.PP
+Definition at line 182 of file sound\&.h\&.
+.SS "#define INTERP_nsssns   337"
+
+.PP
+Definition at line 183 of file sound\&.h\&.
+.SS "#define INTERP_nssssn   340"
+
+.PP
+Definition at line 184 of file sound\&.h\&.
+.SS "#define INTERP_nsssss   341"
+
+.PP
+Definition at line 185 of file sound\&.h\&.
+.SS "#define INTERP_r   3"
+
+.PP
+Definition at line 46 of file sound\&.h\&.
+.SS "#define INTERP_ri   14"
+
+.PP
+Definition at line 62 of file sound\&.h\&.
+.SS "#define INTERP_rii   58"
+
+.PP
+Definition at line 124 of file sound\&.h\&.
+.SS "#define INTERP_rin   56"
+
+.PP
+Definition at line 122 of file sound\&.h\&.
+.SS "#define INTERP_rir   59"
+
+.PP
+Definition at line 125 of file sound\&.h\&.
+.SS "#define INTERP_ris   57"
+
+.PP
+Definition at line 123 of file sound\&.h\&.
+.SS "#define INTERP_rn   12"
+
+.PP
+Definition at line 60 of file sound\&.h\&.
+.SS "#define INTERP_rni   50"
+
+.PP
+Definition at line 116 of file sound\&.h\&.
+.SS "#define INTERP_rnn   48"
+
+.PP
+Definition at line 114 of file sound\&.h\&.
+.SS "#define INTERP_rnr   51"
+
+.PP
+Definition at line 117 of file sound\&.h\&.
+.SS "#define INTERP_rns   49"
+
+.PP
+Definition at line 115 of file sound\&.h\&.
+.SS "#define INTERP_rr   15"
+
+.PP
+Definition at line 63 of file sound\&.h\&.
+.SS "#define INTERP_rri   62"
+
+.PP
+Definition at line 128 of file sound\&.h\&.
+.SS "#define INTERP_rrn   60"
+
+.PP
+Definition at line 126 of file sound\&.h\&.
+.SS "#define INTERP_rrr   63"
+
+.PP
+Definition at line 129 of file sound\&.h\&.
+.SS "#define INTERP_rrrr   255"
+
+.PP
+Definition at line 152 of file sound\&.h\&.
+.SS "#define INTERP_rrrrrr   4095"
+
+.PP
+Definition at line 219 of file sound\&.h\&.
+.SS "#define INTERP_rrs   61"
+
+.PP
+Definition at line 127 of file sound\&.h\&.
+.SS "#define INTERP_rs   13"
+
+.PP
+Definition at line 61 of file sound\&.h\&.
+.SS "#define INTERP_rsi   54"
+
+.PP
+Definition at line 120 of file sound\&.h\&.
+.SS "#define INTERP_rsn   52"
+
+.PP
+Definition at line 118 of file sound\&.h\&.
+.SS "#define INTERP_rsr   55"
+
+.PP
+Definition at line 121 of file sound\&.h\&.
+.SS "#define INTERP_rss   53"
+
+.PP
+Definition at line 119 of file sound\&.h\&.
+.SS "#define INTERP_s   1"
+
+.PP
+Definition at line 44 of file sound\&.h\&.
+.SS "#define INTERP_SHIFT   2"
+
+.PP
+Definition at line 226 of file sound\&.h\&.
+.SS "#define INTERP_si   6"
+
+.PP
+Definition at line 54 of file sound\&.h\&.
+.SS "#define INTERP_sii   26"
+
+.PP
+Definition at line 91 of file sound\&.h\&.
+.SS "#define INTERP_siii   106"
+
+.PP
+Definition at line 149 of file sound\&.h\&.
+.SS "#define INTERP_sin   24"
+
+.PP
+Definition at line 89 of file sound\&.h\&.
+.SS "#define INTERP_sir   27"
+
+.PP
+Definition at line 92 of file sound\&.h\&.
+.SS "#define INTERP_sis   25"
+
+.PP
+Definition at line 90 of file sound\&.h\&.
+.SS "#define INTERP_sn   4"
+
+.PP
+Definition at line 52 of file sound\&.h\&.
+.SS "#define INTERP_sni   18"
+
+.PP
+Definition at line 83 of file sound\&.h\&.
+.SS "#define INTERP_snn   16"
+
+.PP
+Definition at line 81 of file sound\&.h\&.
+.SS "#define INTERP_snnn   64"
+
+.PP
+Definition at line 140 of file sound\&.h\&.
+.SS "#define INTERP_snnnnn   1024"
+
+.PP
+Definition at line 186 of file sound\&.h\&.
+.SS "#define INTERP_snnnns   1025"
+
+.PP
+Definition at line 187 of file sound\&.h\&.
+.SS "#define INTERP_snnnsn   1028"
+
+.PP
+Definition at line 188 of file sound\&.h\&.
+.SS "#define INTERP_snnnss   1029"
+
+.PP
+Definition at line 189 of file sound\&.h\&.
+.SS "#define INTERP_snns   65"
+
+.PP
+Definition at line 141 of file sound\&.h\&.
+.SS "#define INTERP_snnsnn   1040"
+
+.PP
+Definition at line 190 of file sound\&.h\&.
+.SS "#define INTERP_snnsns   1041"
+
+.PP
+Definition at line 191 of file sound\&.h\&.
+.SS "#define INTERP_snnssn   1044"
+
+.PP
+Definition at line 192 of file sound\&.h\&.
+.SS "#define INTERP_snnsss   1045"
+
+.PP
+Definition at line 193 of file sound\&.h\&.
+.SS "#define INTERP_snr   19"
+
+.PP
+Definition at line 84 of file sound\&.h\&.
+.SS "#define INTERP_sns   17"
+
+.PP
+Definition at line 82 of file sound\&.h\&.
+.SS "#define INTERP_snsn   68"
+
+.PP
+Definition at line 142 of file sound\&.h\&.
+.SS "#define INTERP_snsnnn   1088"
+
+.PP
+Definition at line 194 of file sound\&.h\&.
+.SS "#define INTERP_snsnns   1089"
+
+.PP
+Definition at line 195 of file sound\&.h\&.
+.SS "#define INTERP_snsnsn   1092"
+
+.PP
+Definition at line 196 of file sound\&.h\&.
+.SS "#define INTERP_snsnss   1093"
+
+.PP
+Definition at line 197 of file sound\&.h\&.
+.SS "#define INTERP_snss   69"
+
+.PP
+Definition at line 143 of file sound\&.h\&.
+.SS "#define INTERP_snssnn   1104"
+
+.PP
+Definition at line 198 of file sound\&.h\&.
+.SS "#define INTERP_snssns   1105"
+
+.PP
+Definition at line 199 of file sound\&.h\&.
+.SS "#define INTERP_snsssn   1108"
+
+.PP
+Definition at line 200 of file sound\&.h\&.
+.SS "#define INTERP_snssss   1109"
+
+.PP
+Definition at line 201 of file sound\&.h\&.
+.SS "#define INTERP_sr   7"
+
+.PP
+Definition at line 55 of file sound\&.h\&.
+.SS "#define INTERP_sri   30"
+
+.PP
+Definition at line 95 of file sound\&.h\&.
+.SS "#define INTERP_srn   28"
+
+.PP
+Definition at line 93 of file sound\&.h\&.
+.SS "#define INTERP_srr   31"
+
+.PP
+Definition at line 96 of file sound\&.h\&.
+.SS "#define INTERP_srrr   127"
+
+.PP
+Definition at line 150 of file sound\&.h\&.
+.SS "#define INTERP_srs   29"
+
+.PP
+Definition at line 94 of file sound\&.h\&.
+.SS "#define INTERP_ss   5"
+
+.PP
+Definition at line 53 of file sound\&.h\&.
+.SS "#define INTERP_ssi   22"
+
+.PP
+Definition at line 87 of file sound\&.h\&.
+.SS "#define INTERP_ssn   20"
+
+.PP
+Definition at line 85 of file sound\&.h\&.
+.SS "#define INTERP_ssnn   80"
+
+.PP
+Definition at line 144 of file sound\&.h\&.
+.SS "#define INTERP_ssnnnn   1280"
+
+.PP
+Definition at line 202 of file sound\&.h\&.
+.SS "#define INTERP_ssnnns   1281"
+
+.PP
+Definition at line 203 of file sound\&.h\&.
+.SS "#define INTERP_ssnnsn   1284"
+
+.PP
+Definition at line 204 of file sound\&.h\&.
+.SS "#define INTERP_ssnnss   1285"
+
+.PP
+Definition at line 205 of file sound\&.h\&.
+.SS "#define INTERP_ssns   81"
+
+.PP
+Definition at line 145 of file sound\&.h\&.
+.SS "#define INTERP_ssnsnn   1296"
+
+.PP
+Definition at line 206 of file sound\&.h\&.
+.SS "#define INTERP_ssnsns   1297"
+
+.PP
+Definition at line 207 of file sound\&.h\&.
+.SS "#define INTERP_ssnssn   1300"
+
+.PP
+Definition at line 208 of file sound\&.h\&.
+.SS "#define INTERP_ssnsss   1301"
+
+.PP
+Definition at line 209 of file sound\&.h\&.
+.SS "#define INTERP_ssr   23"
+
+.PP
+Definition at line 88 of file sound\&.h\&.
+.SS "#define INTERP_sss   21"
+
+.PP
+Definition at line 86 of file sound\&.h\&.
+.SS "#define INTERP_sssn   84"
+
+.PP
+Definition at line 146 of file sound\&.h\&.
+.SS "#define INTERP_sssnnn   1344"
+
+.PP
+Definition at line 210 of file sound\&.h\&.
+.SS "#define INTERP_sssnns   1345"
+
+.PP
+Definition at line 211 of file sound\&.h\&.
+.SS "#define INTERP_sssnsn   1348"
+
+.PP
+Definition at line 212 of file sound\&.h\&.
+.SS "#define INTERP_sssnss   1349"
+
+.PP
+Definition at line 213 of file sound\&.h\&.
+.SS "#define INTERP_ssss   85"
+
+.PP
+Definition at line 147 of file sound\&.h\&.
+.SS "#define INTERP_ssssnn   1360"
+
+.PP
+Definition at line 214 of file sound\&.h\&.
+.SS "#define INTERP_ssssns   1361"
+
+.PP
+Definition at line 215 of file sound\&.h\&.
+.SS "#define INTERP_sssssn   1364"
+
+.PP
+Definition at line 216 of file sound\&.h\&.
+.SS "#define INTERP_ssssss   1365"
+
+.PP
+Definition at line 217 of file sound\&.h\&.
+.SS "#define INTERP_ssssssss   21845"
+
+.PP
+Definition at line 222 of file sound\&.h\&.
+.SS "#define logical_stop_cnt_cvt(sound)"
+\fBValue:\fP
+.PP
+.nf
+(sound->logical_stop_cnt == UNKNOWN ? UNKNOWN : \
+     ROUND((sound->logical_stop_cnt / sound->sr) * susp->susp\&.sr))
+.fi
+.PP
+Definition at line 578 of file sound\&.h\&.
+.SS "#define logical_stop_test(sound, cnt)"
+\fBValue:\fP
+.PP
+.nf
+if (susp->sound->logical_stop_cnt == susp->sound->current - (cnt)) {\
+        min_cnt(&susp->susp\&.log_stop_cnt, susp->sound, (snd_susp_type) susp, cnt); }
+.fi
+.PP
+Definition at line 587 of file sound\&.h\&.
+.SS "#define max_sample_block_len   1020"
+
+.PP
+Definition at line 249 of file sound\&.h\&.
+.SS "#define MAX_SND_CHANNELS   24"
+
+.PP
+Definition at line 242 of file sound\&.h\&.
+.SS "#define MAX_SND_LEN   (\fBMAX_STOP\fP \- \fBmax_sample_block_len\fP * 2)"
+
+.PP
+Definition at line 254 of file sound\&.h\&.
+.SS "#define MAX_STOP   0x7FFFFFFF"
+
+.PP
+Definition at line 26 of file sound\&.h\&.
+.SS "#define MAX_STOP_TIME   10E20"
+
+.PP
+Definition at line 29 of file sound\&.h\&.
+.SS "#define max_table_len   100000"
+
+.PP
+Definition at line 244 of file sound\&.h\&.
+.SS "#define MIN_START_TIME   \-10E20"
+
+.PP
+Definition at line 31 of file sound\&.h\&.
+.SS "#define PERMS   0644           /* \-rw\-r\-\-r\-\- */"
+
+.PP
+Definition at line 23 of file sound\&.h\&.
+.SS "#define SCALE_FACTOR_TO_24BIT   0x7FFFFF"
+
+.PP
+Definition at line 37 of file sound\&.h\&.
+.SS "#define SCALE_FACTOR_TO_BYTE   127"
+
+.PP
+Definition at line 35 of file sound\&.h\&.
+.SS "#define SCALE_FACTOR_TO_LONG   2147483647"
+
+.PP
+Definition at line 38 of file sound\&.h\&.
+.SS "#define SCALE_FACTOR_TO_SHORT   32767"
+
+.PP
+Definition at line 36 of file sound\&.h\&.
+.SS "#define snd_srate(\fBs\fP)   (\fBs\fP)\->sr"
+
+.PP
+Definition at line 396 of file sound\&.h\&.
+.SS "#define snd_t0(\fBs\fP)   (\fBs\fP)\->t0"
+
+.PP
+Definition at line 398 of file sound\&.h\&.
+.SS "#define snd_time(\fBs\fP)   (\fBs\fP)\->time"
+
+.PP
+Definition at line 393 of file sound\&.h\&.
+.SS "#define sound_get_next(\fBs\fP, n)   ((*(\fBs\fP\->get_next))(\fBs\fP, n))"
+
+.PP
+Definition at line 453 of file sound\&.h\&.
+.SS "#define susp_check_log_samples(sound, sample_ptr, sample_cnt)"
+\fBValue:\fP
+.PP
+.nf
+if (susp->sample_cnt == 0) { \
+      susp_get_samples(sound, sample_ptr, sample_cnt); \
+      logical_stop_test(sound, susp->sample_cnt); }
+.fi
+.PP
+Definition at line 603 of file sound\&.h\&.
+.SS "#define susp_check_log_samples_break(sound, sample_ptr, sample_cnt, x2_sample)"
+\fBValue:\fP
+.PP
+.nf
+if (susp->sample_cnt == 0) { \
+      susp_get_samples(sound, sample_ptr, sample_cnt); \
+      x2_sample = susp_current_sample(sound, sample_ptr); \
+      logical_stop_test(sound, susp->sample_cnt); \
+      if (!susp->logically_stopped && susp->susp\&.log_stop_cnt != UNKNOWN && \
+          (susp->susp\&.log_stop_cnt < susp->susp\&.current + cnt + togo)) { \
+          break; }} \
+    else x2_sample = susp_current_sample(sound, sample_ptr);
+.fi
+.PP
+Definition at line 624 of file sound\&.h\&.
+.SS "#define susp_check_samples(sound, sample_ptr, sample_cnt)"
+\fBValue:\fP
+.PP
+.nf
+if (susp->sample_cnt == 0) \
+        susp_get_samples(sound, sample_ptr, sample_cnt)
+.fi
+.PP
+Definition at line 468 of file sound\&.h\&.
+.SS "#define susp_check_samples_break(sound, sample_ptr, sample_cnt, x2_sample)"
+\fBValue:\fP
+.PP
+.nf
+if (susp->sample_cnt == 0) { \
+        susp_get_samples(sound, sample_ptr, sample_cnt); \
+        x2_sample = susp_current_sample(sound, sample_ptr); }
+.fi
+.PP
+Definition at line 477 of file sound\&.h\&.
+.SS "#define susp_check_term_log_block_samples(sound, sample_block_ptr, sample_ptr, sample_cnt, bit, all)"
+\fBValue:\fP
+.PP
+.nf
+if (susp->sample_cnt == 0) { \
+        susp_get_block_samples(sound, sample_block_ptr, sample_ptr, sample_cnt); \
+/*OLD   if (susp->sound->logical_stop_cnt ==                  \
+            susp->sound->current - susp->sample_cnt) { \
+*/ \
+        if (susp->sound->logical_stop_cnt != UNKNOWN && \
+            !(susp->logical_stop_bits & bit)) { \
+            susp->logical_stop_bits |= bit; \
+/*OLD \
+            if (susp->logical_stop_bits == all) { \
+                susp->susp\&.log_stop_cnt = (long) \
+                 ((((susp->sound->current - susp->sample_cnt) / \
+                   susp->sound->sr + susp->sound->t0) - \
+                   susp->susp\&.t0) * susp->susp\&.sr + 0\&.5); \
+                assert(susp->susp\&.log_stop_cnt >= 0); } } \
+*/ \
+            susp->susp\&.log_stop_cnt = max(susp->susp\&.log_stop_cnt, \
+                    (((susp->sound->logical_stop_cnt / \
+                       susp->sound->sr + susp->sound->t0) - \
+                      susp->susp\&.t0) * susp->susp\&.sr + 0\&.5)); } \
+        if (susp->sample_ptr == zero_block->samples) { \
+            susp->terminate_bits |= bit; \
+            if (susp->terminate_bits == all) { \
+                susp->terminate_cnt = (long) \
+                 ((((susp->sound->current - susp->sample_cnt) / \
+                   susp->sound->sr + susp->sound->t0) - \
+                   susp->susp\&.t0) * susp->susp\&.sr + 0\&.5); \
+    } } }
+.fi
+.PP
+Definition at line 539 of file sound\&.h\&.
+.SS "#define susp_check_term_log_samples(sound, sample_ptr, sample_cnt)"
+\fBValue:\fP
+.PP
+.nf
+if (susp->sample_cnt == 0) { \
+        susp_get_samples(sound, sample_ptr, sample_cnt); \
+        logical_stop_test(sound, susp->sample_cnt); \
+        terminate_test(sample_ptr, sound, susp->sample_cnt); }
+.fi
+.PP
+Definition at line 517 of file sound\&.h\&.
+.SS "#define susp_check_term_log_samples_break(sound, sample_ptr, sample_cnt, x2_sample)"
+\fBValue:\fP
+.PP
+.nf
+if (susp->sample_cnt == 0) { \
+      susp_get_samples(sound, sample_ptr, sample_cnt); \
+      x2_sample = susp_current_sample(sound, sample_ptr); \
+      terminate_test(sample_ptr, sound, susp->sample_cnt); \
+      logical_stop_test(sound, susp->sample_cnt); \
+      if ((susp->terminate_cnt != UNKNOWN && \
+           susp->terminate_cnt < susp->susp\&.current + cnt + togo) || \
+          (!susp->logically_stopped && susp->susp\&.log_stop_cnt != UNKNOWN && \
+           susp->susp\&.log_stop_cnt < susp->susp\&.current + cnt + togo)) { \
+          break; }} \
+    else x2_sample = susp_current_sample(sound, sample_ptr);
+.fi
+.PP
+Definition at line 639 of file sound\&.h\&.
+.SS "#define susp_check_term_samples(sound, sample_ptr, sample_cnt)"
+\fBValue:\fP
+.PP
+.nf
+if (susp->sample_cnt == 0) { \
+        susp_get_samples(sound, sample_ptr, sample_cnt); \
+        terminate_test(sample_ptr, sound, susp->sample_cnt); }
+.fi
+.PP
+Definition at line 508 of file sound\&.h\&.
+.SS "#define susp_check_term_samples_break(sound, sample_ptr, sample_cnt, x2_sample)"
+\fBValue:\fP
+.PP
+.nf
+if (susp->sample_cnt == 0) { \
+      susp_get_samples(sound, sample_ptr, sample_cnt); \
+      x2_sample = susp_current_sample(sound, sample_ptr); \
+      terminate_test(sample_ptr, sound, susp->sample_cnt); \
+      if (susp->terminate_cnt < susp->susp\&.current + cnt + togo) { \
+          break; }} \
+    else x2_sample = susp_current_sample(sound, sample_ptr);
+.fi
+.PP
+Definition at line 611 of file sound\&.h\&.
+.SS "#define susp_current_sample(sound, sample_ptr)   (susp\->sound\->\fBscale\fP * (*(susp\->sample_ptr)))"
+
+.PP
+Definition at line 502 of file sound\&.h\&.
+.SS "#define susp_fetch_sample(sound, sample_ptr, sample_cnt)   (susp\->sound\->\fBscale\fP * (susp\->sample_cnt\-\-, *(susp\->sample_ptr++)))"
+
+.PP
+Definition at line 497 of file sound\&.h\&.
+.SS "#define susp_get_block_samples(sound, sample_block_ptr, sample_ptr, sample_cnt)"
+\fBValue:\fP
+.PP
+.nf
+susp->sample_block_ptr = sound_get_next(susp->sound, &susp->sample_cnt); \
+    susp->sample_ptr = susp->sample_block_ptr->samples
+.fi
+.PP
+Definition at line 488 of file sound\&.h\&.
+.SS "#define susp_get_samples(sound, sample_ptr, sample_cnt)   susp\->sample_ptr = \fBsound_get_next\fP(susp\->sound, &(susp\->sample_cnt))\->\fBsamples\fP"
+
+.PP
+Definition at line 484 of file sound\&.h\&.
+.SS "#define susp_print_tree(\fBs\fP, n)   (*((\fBs\fP)\->print_tree))(\fBs\fP, n)"
+
+.PP
+Definition at line 455 of file sound\&.h\&.
+.SS "#define susp_took(sample_cnt, n)   susp\->sample_cnt \-= n"
+
+.PP
+Definition at line 493 of file sound\&.h\&.
+.SS "#define table_size_in_bytes(n)   (sizeof(\fBtable_node\fP) + sizeof(\fBsample_type\fP) * ((n) \- 1))"
+
+.PP
+Definition at line 344 of file sound\&.h\&.
+.SS "#define terminate_test(sample_ptr, sound, cnt)"
+\fBValue:\fP
+.PP
+.nf
+if (susp->sample_ptr == zero_block->samples) { \
+            min_cnt(&susp->terminate_cnt, susp->sound, (snd_susp_type) susp, cnt); }
+.fi
+.PP
+Definition at line 595 of file sound\&.h\&.
+.SS "#define UNKNOWN   (\-10\-\fBmax_sample_block_len\fP)"
+
+.PP
+Definition at line 316 of file sound\&.h\&.
+.SS "#define xlgasound()   (\fBtestarg\fP(\fBtypearg\fP(\fBsoundp\fP)))"
+
+.PP
+Definition at line 259 of file sound\&.h\&.
+.SS "#define xlog(x)   log(x)"
+
+.PP
+Definition at line 380 of file sound\&.h\&.
+.SH "Typedef Documentation"
+.PP 
+.SS "typedef double \fBpromoted_sample_type\fP"
+
+.PP
+Definition at line 234 of file sound\&.h\&.
+.SS "typedef double \fBrate_type\fP"
+
+.PP
+Definition at line 232 of file sound\&.h\&.
+.SS "typedef  struct \fBsample_block_node\fP * \fBsample_block_type\fP"
+
+.SS "typedef \fBsample_type\fP sample_block_values[\fBmax_sample_block_len\fP]"
+
+.PP
+Definition at line 263 of file sound\&.h\&.
+.SS "typedef \fBsample_type\fP * \fBsample_block_values_type\fP"
+
+.PP
+Definition at line 263 of file sound\&.h\&.
+.SS "typedef float \fBsample_type\fP"
+
+.PP
+Definition at line 233 of file sound\&.h\&.
+.SS "typedef short * \fBSFDataPtr\fP"
+
+.PP
+Definition at line 261 of file sound\&.h\&.
+.SS "typedef short \fBSFDataType\fP"
+
+.PP
+Definition at line 261 of file sound\&.h\&.
+.SS "typedef struct \fBsnd_list_struct\fP  \fBsnd_list_node\fP"
+
+.SS "typedef struct \fBsnd_list_struct\fP* \fBsnd_list_type\fP"
+
+.PP
+Definition at line 273 of file sound\&.h\&.
+.SS "typedef struct \fBsnd_susp_struct\fP  \fBsnd_susp_node\fP"
+
+.SS "typedef struct \fBsnd_susp_struct\fP * \fBsnd_susp_type\fP"
+
+.SS "typedef struct \fBsound_struct\fP  \fBsound_node\fP"
+
+.SS "typedef struct \fBsound_struct\fP * \fBsound_type\fP"
+
+.SS "typedef struct \fBtable_struct\fP  \fBtable_node\fP"
+
+.SS "typedef struct \fBtable_struct\fP * \fBtable_type\fP"
+
+.SS "typedef double \fBtime_type\fP"
+
+.PP
+Definition at line 231 of file sound\&.h\&.
+.SH "Function Documentation"
+.PP 
+.SS "\fBvoid\fP block_watch (long sample_block)"
+
+.PP
+Definition at line 140 of file sound\&.c\&.
+.SS "long check_terminate_cnt (long tc)"
+
+.PP
+Definition at line 76 of file sound\&.c\&.
+.SS "double compute_phase (double phase, double key, long n, double srate, double new_srate, double freq, double * incr_ptr)"
+
+.PP
+Definition at line 103 of file sound\&.c\&.
+.SS "\fBLVAL\fP cvsound (\fBsound_type\fP)"
+
+.PP
+Definition at line 1722 of file sound\&.c\&.
+.SS "double hz_to_step (double)"
+
+.PP
+Definition at line 1579 of file sound\&.c\&.
+.SS "\fBvoid\fP indent (\fBint\fP n)"
+
+.PP
+Definition at line 1482 of file sound\&.c\&.
+.SS "\fBint\fP interp_style (\fBsound_type\fP s, \fBrate_type\fP sr)"
+
+.PP
+Definition at line 603 of file sound\&.c\&.
+.SS "\fBvoid\fP mark_audio_time (\fBvoid\fP)"
+
+.PP
+Definition at line 1550 of file sound\&.c\&.
+.SS "\fBvoid\fP min_cnt (long * cnt_ptr, \fBsound_type\fP sound, \fBsnd_susp_type\fP susp, long cnt)"
+
+.PP
+Definition at line 1178 of file sound\&.c\&.
+.SS "\fBvoid\fP set_logical_stop_time (\fBsound_type\fP sound, \fBtime_type\fP when)"
+
+.PP
+Definition at line 1252 of file sound\&.c\&.
+.SS "\fBLVAL\fP snd_badsr (\fBvoid\fP)"
+
+.PP
+Definition at line 87 of file sound\&.c\&.
+.SS "\fBsample_block_type\fP SND_flush (\fBsound_type\fP snd, long * cnt)"
+
+.PP
+Definition at line 870 of file sound\&.c\&.
+.SS "\fBsample_block_type\fP SND_get_first (\fBsound_type\fP snd, long * cnt)"
+
+.PP
+Definition at line 1048 of file sound\&.c\&.
+.SS "\fBsample_block_type\fP SND_get_next (\fBsound_type\fP snd, long * cnt)"
+
+.PP
+Definition at line 1117 of file sound\&.c\&.
+.SS "\fBsample_block_type\fP SND_get_zeros (\fBsound_type\fP snd, long * cnt)"
+
+.PP
+Definition at line 919 of file sound\&.c\&.
+.SS "\fBsnd_list_type\fP snd_list_create (\fBsnd_susp_type\fP susp)"
+
+.PP
+Definition at line 224 of file sound\&.c\&.
+.SS "\fBvoid\fP snd_list_ref (\fBsnd_list_type\fP list)"
+
+.PP
+Definition at line 485 of file sound\&.c\&.
+.SS "\fBvoid\fP snd_list_terminate (\fBsnd_list_type\fP snd_list)"
+
+.PP
+Definition at line 491 of file sound\&.c\&.
+.SS "\fBvoid\fP snd_list_unref (\fBsnd_list_type\fP list)"
+
+.PP
+Definition at line 516 of file sound\&.c\&.
+.SS "double snd_set_latency (double latency)"
+
+.PP
+Definition at line 68 of file sound\&.c\&.
+.SS "\fBvoid\fP snd_sort_2 (\fBsound_type\fP * s1_ptr, \fBsound_type\fP * s2_ptr, \fBrate_type\fP sr)"
+
+.PP
+Definition at line 633 of file sound\&.c\&.
+.SS "double snd_sref (\fBsound_type\fP s, \fBtime_type\fP t)"
+
+.PP
+Definition at line 645 of file sound\&.c\&.
+.SS "double snd_sref_inverse (\fBsound_type\fP s, double val)"
+
+.PP
+Definition at line 689 of file sound\&.c\&.
+.SS "double snd_stop_time (\fBsound_type\fP s)"
+
+.PP
+Definition at line 751 of file sound\&.c\&.
+.SS "\fBsound_type\fP snd_xform (\fBsound_type\fP snd, \fBrate_type\fP sr, \fBtime_type\fP time, \fBtime_type\fP start_time, \fBtime_type\fP stop_time, \fBpromoted_sample_type\fP scale)"
+
+.PP
+Definition at line 785 of file sound\&.c\&.
+.SS "\fBsound_type\fP sound_copy (\fBsound_type\fP snd)"
+
+.PP
+Definition at line 375 of file sound\&.c\&.
+.SS "\fBsound_type\fP sound_create (\fBsnd_susp_type\fP susp, \fBtime_type\fP t0, \fBrate_type\fP sr, \fBpromoted_sample_type\fP scale)"
+
+.PP
+Definition at line 261 of file sound\&.c\&.
+.SS "\fBvoid\fP sound_init (\fBvoid\fP)"
+
+.PP
+Definition at line 1203 of file sound\&.c\&.
+.SS "long sound_nth_block (\fBsound_type\fP snd, long n)"
+
+.PP
+Definition at line 189 of file sound\&.c\&.
+.SS "\fBvoid\fP sound_play (\fBLVAL\fP snd_expr)"
+
+.PP
+Definition at line 1426 of file sound\&.c\&.
+.SS "\fBvoid\fP sound_prepend_zeros (\fBsound_type\fP snd, \fBtime_type\fP t0)"
+
+.PP
+Definition at line 321 of file sound\&.c\&.
+.SS "\fBvoid\fP sound_print (\fBLVAL\fP snd_expr, long n)"
+
+.PP
+Definition at line 1292 of file sound\&.c\&.
+.SS "\fBvoid\fP sound_print_tree (\fBsound_type\fP snd)"
+
+.PP
+Definition at line 1473 of file sound\&.c\&.
+.SS "\fBvoid\fP sound_print_tree_1 (\fBsound_type\fP snd, \fBint\fP n)"
+
+.PP
+Definition at line 1488 of file sound\&.c\&.
+.SS "\fBsound_type\fP sound_scale (double factor, \fBsound_type\fP snd)"
+
+.PP
+Definition at line 1229 of file sound\&.c\&.
+.SS "\fBvoid\fP sound_symbols (\fBvoid\fP)"
+
+.PP
+Definition at line 1683 of file sound\&.c\&.
+.SS "\fBtable_type\fP sound_to_table (\fBsound_type\fP s)"
+
+.PP
+Definition at line 394 of file sound\&.c\&.
+.SS "\fBvoid\fP sound_unref (\fBsound_type\fP snd)"
+
+.PP
+Definition at line 471 of file sound\&.c\&.
+.SS "\fBvoid\fP sound_xlmark (\fBvoid\fP * a_sound)"
+
+.PP
+Definition at line 1638 of file sound\&.c\&.
+.SS "\fBsound_type\fP sound_zero (\fBtime_type\fP t0, \fBrate_type\fP sr)"
+
+.PP
+Definition at line 1703 of file sound\&.c\&.
+.SS "\fBboolean\fP soundp (\fBLVAL\fP)"
+
+.PP
+Definition at line 1694 of file sound\&.c\&.
+.SS "\fBvoid\fP stats (\fBvoid\fP)"
+
+.PP
+Definition at line 15 of file stats\&.c\&.
+.SS "double step_to_hz (double)"
+
+.PP
+Definition at line 1585 of file sound\&.c\&.
+.SS "\fBvoid\fP table_unref (\fBtable_type\fP table)"
+
+.PP
+Definition at line 460 of file sound\&.c\&.
+.SH "Variable Documentation"
+.PP 
+.SS "\fBLVAL\fP a_sound"
+
+.PP
+Definition at line 43 of file sound\&.c\&.
+.SS "\fBsample_block_type\fP blocks_to_watch[\fBblocks_to_watch_max\fP]"
+
+.PP
+Definition at line 138 of file sound\&.c\&.
+.SS "long blocks_to_watch_len"
+
+.PP
+Definition at line 137 of file sound\&.c\&.
+.SS "\fBsample_block_type\fP internal_zero_block"
+
+.PP
+Definition at line 38 of file sound\&.c\&.
+.SS "\fBsnd_list_type\fP list_watch"
+
+.PP
+Definition at line 31 of file sound\&.c\&.
+.SS "\fBsound_type\fP printing_this_sound"
+
+.PP
+Definition at line 1276 of file sound\&.c\&.
+.SS "long sound_frames"
+
+.PP
+Definition at line 66 of file sound\&.c\&.
+.SS "double sound_latency"
+
+.PP
+Definition at line 63 of file sound\&.c\&.
+.SS "double sound_srate"
+
+.PP
+Definition at line 65 of file sound\&.c\&.
+.SS "\fBsample_block_type\fP zero_block"
+
+.PP
+Definition at line 37 of file sound\&.c\&.
+.SS "\fBsnd_list_type\fP zero_snd_list"
+
+.PP
+Definition at line 40 of file sound\&.c\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

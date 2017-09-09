@@ -1,0 +1,677 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/lib-src/expat/lib/xmltok.h" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/lib-src/expat/lib/xmltok.h \- 
+.SH SYNOPSIS
+.br
+.PP
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "struct \fBposition\fP"
+.br
+.ti -1c
+.RI "struct \fBATTRIBUTE\fP"
+.br
+.ti -1c
+.RI "struct \fBencoding\fP"
+.br
+.ti -1c
+.RI "struct \fBINIT_ENCODING\fP"
+.br
+.in -1c
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBXML_TOK_TRAILING_RSQB\fP"
+.br
+.ti -1c
+.RI "#define \fBXML_TOK_NONE\fP   \-4          /* The \fBstring\fP to be scanned is empty */"
+.br
+.ti -1c
+.RI "#define \fBXML_TOK_TRAILING_CR\fP"
+.br
+.ti -1c
+.RI "#define \fBXML_TOK_PARTIAL_CHAR\fP   \-2  /* only part \fBof\fP \fBa\fP multibyte \fBsequence\fP */"
+.br
+.ti -1c
+.RI "#define \fBXML_TOK_PARTIAL\fP   \-1       /* only part \fBof\fP \fBa\fP \fBtoken\fP */"
+.br
+.ti -1c
+.RI "#define \fBXML_TOK_INVALID\fP   0"
+.br
+.ti -1c
+.RI "#define \fBXML_TOK_START_TAG_WITH_ATTS\fP   1"
+.br
+.ti -1c
+.RI "#define \fBXML_TOK_START_TAG_NO_ATTS\fP   2"
+.br
+.ti -1c
+.RI "#define \fBXML_TOK_EMPTY_ELEMENT_WITH_ATTS\fP   3 /* empty element \fBtag\fP <e/> */"
+.br
+.ti -1c
+.RI "#define \fBXML_TOK_EMPTY_ELEMENT_NO_ATTS\fP   4"
+.br
+.ti -1c
+.RI "#define \fBXML_TOK_END_TAG\fP   5"
+.br
+.ti -1c
+.RI "#define \fBXML_TOK_DATA_CHARS\fP   6"
+.br
+.ti -1c
+.RI "#define \fBXML_TOK_DATA_NEWLINE\fP   7"
+.br
+.ti -1c
+.RI "#define \fBXML_TOK_CDATA_SECT_OPEN\fP   8"
+.br
+.ti -1c
+.RI "#define \fBXML_TOK_ENTITY_REF\fP   9"
+.br
+.ti -1c
+.RI "#define \fBXML_TOK_CHAR_REF\fP   10               /* numeric character reference */"
+.br
+.ti -1c
+.RI "#define \fBXML_TOK_PI\fP   11                     /* processing instruction */"
+.br
+.ti -1c
+.RI "#define \fBXML_TOK_XML_DECL\fP   12               /* XML decl or text decl */"
+.br
+.ti -1c
+.RI "#define \fBXML_TOK_COMMENT\fP   13"
+.br
+.ti -1c
+.RI "#define \fBXML_TOK_BOM\fP   14                    /* Byte \fBorder\fP \fBmark\fP */"
+.br
+.ti -1c
+.RI "#define \fBXML_TOK_PROLOG_S\fP   15"
+.br
+.ti -1c
+.RI "#define \fBXML_TOK_DECL_OPEN\fP   16              /* <!foo */"
+.br
+.ti -1c
+.RI "#define \fBXML_TOK_DECL_CLOSE\fP   17             /* > */"
+.br
+.ti -1c
+.RI "#define \fBXML_TOK_NAME\fP   18"
+.br
+.ti -1c
+.RI "#define \fBXML_TOK_NMTOKEN\fP   19"
+.br
+.ti -1c
+.RI "#define \fBXML_TOK_POUND_NAME\fP   20             /* #\fBname\fP */"
+.br
+.ti -1c
+.RI "#define \fBXML_TOK_OR\fP   21                     /* | */"
+.br
+.ti -1c
+.RI "#define \fBXML_TOK_PERCENT\fP   22"
+.br
+.ti -1c
+.RI "#define \fBXML_TOK_OPEN_PAREN\fP   23"
+.br
+.ti -1c
+.RI "#define \fBXML_TOK_CLOSE_PAREN\fP   24"
+.br
+.ti -1c
+.RI "#define \fBXML_TOK_OPEN_BRACKET\fP   25"
+.br
+.ti -1c
+.RI "#define \fBXML_TOK_CLOSE_BRACKET\fP   26"
+.br
+.ti -1c
+.RI "#define \fBXML_TOK_LITERAL\fP   27"
+.br
+.ti -1c
+.RI "#define \fBXML_TOK_PARAM_ENTITY_REF\fP   28"
+.br
+.ti -1c
+.RI "#define \fBXML_TOK_INSTANCE_START\fP   29"
+.br
+.ti -1c
+.RI "#define \fBXML_TOK_NAME_QUESTION\fP   30          /* \fBname\fP? */"
+.br
+.ti -1c
+.RI "#define \fBXML_TOK_NAME_ASTERISK\fP   31          /* \fBname\fP* */"
+.br
+.ti -1c
+.RI "#define \fBXML_TOK_NAME_PLUS\fP   32              /* \fBname\fP+ */"
+.br
+.ti -1c
+.RI "#define \fBXML_TOK_COND_SECT_OPEN\fP   33         /* <![ */"
+.br
+.ti -1c
+.RI "#define \fBXML_TOK_COND_SECT_CLOSE\fP   34        /* ]]> */"
+.br
+.ti -1c
+.RI "#define \fBXML_TOK_CLOSE_PAREN_QUESTION\fP   35   /* )? */"
+.br
+.ti -1c
+.RI "#define \fBXML_TOK_CLOSE_PAREN_ASTERISK\fP   36   /* )* */"
+.br
+.ti -1c
+.RI "#define \fBXML_TOK_CLOSE_PAREN_PLUS\fP   37       /* )+ */"
+.br
+.ti -1c
+.RI "#define \fBXML_TOK_COMMA\fP   38"
+.br
+.ti -1c
+.RI "#define \fBXML_TOK_ATTRIBUTE_VALUE_S\fP   39"
+.br
+.ti -1c
+.RI "#define \fBXML_TOK_CDATA_SECT_CLOSE\fP   40"
+.br
+.ti -1c
+.RI "#define \fBXML_TOK_PREFIXED_NAME\fP   41"
+.br
+.ti -1c
+.RI "#define \fBXML_N_STATES\fP   3"
+.br
+.ti -1c
+.RI "#define \fBXML_PROLOG_STATE\fP   0"
+.br
+.ti -1c
+.RI "#define \fBXML_CONTENT_STATE\fP   1"
+.br
+.ti -1c
+.RI "#define \fBXML_CDATA_SECTION_STATE\fP   2"
+.br
+.ti -1c
+.RI "#define \fBXML_N_LITERAL_TYPES\fP   2"
+.br
+.ti -1c
+.RI "#define \fBXML_ATTRIBUTE_VALUE_LITERAL\fP   0"
+.br
+.ti -1c
+.RI "#define \fBXML_ENTITY_VALUE_LITERAL\fP   1"
+.br
+.ti -1c
+.RI "#define \fBXML_UTF8_ENCODE_MAX\fP   4"
+.br
+.ti -1c
+.RI "#define \fBXML_UTF16_ENCODE_MAX\fP   2"
+.br
+.ti -1c
+.RI "#define \fBXmlTok\fP(enc,  state,  ptr,  \fBend\fP,  nextTokPtr)   (((enc)\->scanners[state])(enc, ptr, \fBend\fP, nextTokPtr))"
+.br
+.ti -1c
+.RI "#define \fBXmlPrologTok\fP(enc,  ptr,  \fBend\fP,  nextTokPtr)   \fBXmlTok\fP(enc, \fBXML_PROLOG_STATE\fP, ptr, \fBend\fP, nextTokPtr)"
+.br
+.ti -1c
+.RI "#define \fBXmlContentTok\fP(enc,  ptr,  \fBend\fP,  nextTokPtr)   \fBXmlTok\fP(enc, \fBXML_CONTENT_STATE\fP, ptr, \fBend\fP, nextTokPtr)"
+.br
+.ti -1c
+.RI "#define \fBXmlCdataSectionTok\fP(enc,  ptr,  \fBend\fP,  nextTokPtr)   \fBXmlTok\fP(enc, \fBXML_CDATA_SECTION_STATE\fP, ptr, \fBend\fP, nextTokPtr)"
+.br
+.ti -1c
+.RI "#define \fBXmlLiteralTok\fP(enc,  literalType,  ptr,  \fBend\fP,  nextTokPtr)   (((enc)\->literalScanners[literalType])(enc, ptr, \fBend\fP, nextTokPtr))"
+.br
+.ti -1c
+.RI "#define \fBXmlAttributeValueTok\fP(enc,  ptr,  \fBend\fP,  nextTokPtr)   \fBXmlLiteralTok\fP(enc, \fBXML_ATTRIBUTE_VALUE_LITERAL\fP, ptr, \fBend\fP, nextTokPtr)"
+.br
+.ti -1c
+.RI "#define \fBXmlEntityValueTok\fP(enc,  ptr,  \fBend\fP,  nextTokPtr)   \fBXmlLiteralTok\fP(enc, \fBXML_ENTITY_VALUE_LITERAL\fP, ptr, \fBend\fP, nextTokPtr)"
+.br
+.ti -1c
+.RI "#define \fBXmlSameName\fP(enc,  ptr1,  ptr2)   (((enc)\->sameName)(enc, ptr1, ptr2))"
+.br
+.ti -1c
+.RI "#define \fBXmlNameMatchesAscii\fP(enc,  ptr1,  end1,  ptr2)   (((enc)\->nameMatchesAscii)(enc, ptr1, end1, ptr2))"
+.br
+.ti -1c
+.RI "#define \fBXmlNameLength\fP(enc,  ptr)   (((enc)\->nameLength)(enc, ptr))"
+.br
+.ti -1c
+.RI "#define \fBXmlSkipS\fP(enc,  ptr)   (((enc)\->skipS)(enc, ptr))"
+.br
+.ti -1c
+.RI "#define \fBXmlGetAttributes\fP(enc,  ptr,  attsMax,  \fBatts\fP)   (((enc)\->getAtts)(enc, ptr, attsMax, \fBatts\fP))"
+.br
+.ti -1c
+.RI "#define \fBXmlCharRefNumber\fP(enc,  ptr)   (((enc)\->charRefNumber)(enc, ptr))"
+.br
+.ti -1c
+.RI "#define \fBXmlPredefinedEntityName\fP(enc,  ptr,  \fBend\fP)   (((enc)\->predefinedEntityName)(enc, ptr, \fBend\fP))"
+.br
+.ti -1c
+.RI "#define \fBXmlUpdatePosition\fP(enc,  ptr,  \fBend\fP,  pos)   (((enc)\->updatePosition)(enc, ptr, \fBend\fP, pos))"
+.br
+.ti -1c
+.RI "#define \fBXmlIsPublicId\fP(enc,  ptr,  \fBend\fP,  badPtr)   (((enc)\->isPublicId)(enc, ptr, \fBend\fP, badPtr))"
+.br
+.ti -1c
+.RI "#define \fBXmlUtf8Convert\fP(enc,  fromP,  fromLim,  toP,  toLim)   (((enc)\->utf8Convert)(enc, fromP, fromLim, toP, toLim))"
+.br
+.ti -1c
+.RI "#define \fBXmlUtf16Convert\fP(enc,  fromP,  fromLim,  toP,  toLim)   (((enc)\->utf16Convert)(enc, fromP, fromLim, toP, toLim))"
+.br
+.in -1c
+.SS "Typedefs"
+
+.in +1c
+.ti -1c
+.RI "typedef struct \fBposition\fP \fBPOSITION\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBencoding\fP \fBENCODING\fP"
+.br
+.ti -1c
+.RI "typedef \fBint\fP(\fBPTRCALL\fP * \fBSCANNER\fP) (\fBconst\fP \fBENCODING\fP *, \fBconst\fP char *, \fBconst\fP char *, \fBconst\fP char **)"
+.br
+.ti -1c
+.RI "typedef \fBconst\fP char * \fBp\fP"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBint\fP \fBXmlParseXmlDecl\fP (\fBint\fP isGeneralTextEntity, \fBconst\fP \fBENCODING\fP *enc, \fBconst\fP char *ptr, \fBconst\fP char *\fBend\fP, \fBconst\fP char **badPtr, \fBconst\fP char **versionPtr, \fBconst\fP char **versionEndPtr, \fBconst\fP char **encodingNamePtr, \fBconst\fP \fBENCODING\fP **namedEncodingPtr, \fBint\fP *standalonePtr)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBXmlInitEncoding\fP (\fBINIT_ENCODING\fP *, \fBconst\fP \fBENCODING\fP **, \fBconst\fP char *\fBname\fP)"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBENCODING\fP * \fBXmlGetUtf8InternalEncoding\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBENCODING\fP * \fBXmlGetUtf16InternalEncoding\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBFASTCALL\fP \fBXmlUtf8Encode\fP (\fBint\fP charNumber, char *\fBbuf\fP)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBFASTCALL\fP \fBXmlUtf16Encode\fP (\fBint\fP charNumber, unsigned short *\fBbuf\fP)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBXmlSizeOfUnknownEncoding\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "typedef \fBint\fP (\fBXMLCALL\fP *CONVERTER)(\fBvoid\fP *\fBuserData\fP"
+.br
+.ti -1c
+.RI "\fBENCODING\fP * \fBXmlInitUnknownEncoding\fP (\fBvoid\fP *mem, \fBint\fP *table, CONVERTER convert, \fBvoid\fP *\fBuserData\fP)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBXmlParseXmlDeclNS\fP (\fBint\fP isGeneralTextEntity, \fBconst\fP \fBENCODING\fP *enc, \fBconst\fP char *ptr, \fBconst\fP char *\fBend\fP, \fBconst\fP char **badPtr, \fBconst\fP char **versionPtr, \fBconst\fP char **versionEndPtr, \fBconst\fP char **encodingNamePtr, \fBconst\fP \fBENCODING\fP **namedEncodingPtr, \fBint\fP *standalonePtr)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBXmlInitEncodingNS\fP (\fBINIT_ENCODING\fP *, \fBconst\fP \fBENCODING\fP **, \fBconst\fP char *\fBname\fP)"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBENCODING\fP * \fBXmlGetUtf8InternalEncodingNS\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBENCODING\fP * \fBXmlGetUtf16InternalEncodingNS\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBENCODING\fP * \fBXmlInitUnknownEncodingNS\fP (\fBvoid\fP *mem, \fBint\fP *table, CONVERTER convert, \fBvoid\fP *\fBuserData\fP)"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define XML_ATTRIBUTE_VALUE_LITERAL   0"
+
+.PP
+Definition at line 104 of file xmltok\&.h\&.
+.SS "#define XML_CDATA_SECTION_STATE   2"
+
+.PP
+Definition at line 98 of file xmltok\&.h\&.
+.SS "#define XML_CONTENT_STATE   1"
+
+.PP
+Definition at line 97 of file xmltok\&.h\&.
+.SS "#define XML_ENTITY_VALUE_LITERAL   1"
+
+.PP
+Definition at line 105 of file xmltok\&.h\&.
+.SS "#define XML_N_LITERAL_TYPES   2"
+
+.PP
+Definition at line 103 of file xmltok\&.h\&.
+.SS "#define XML_N_STATES   3"
+
+.PP
+Definition at line 93 of file xmltok\&.h\&.
+.SS "#define XML_PROLOG_STATE   0"
+
+.PP
+Definition at line 96 of file xmltok\&.h\&.
+.SS "#define XML_TOK_ATTRIBUTE_VALUE_S   39"
+
+.PP
+Definition at line 76 of file xmltok\&.h\&.
+.SS "#define XML_TOK_BOM   14                    /* Byte \fBorder\fP \fBmark\fP */"
+
+.PP
+Definition at line 45 of file xmltok\&.h\&.
+.SS "#define XML_TOK_CDATA_SECT_CLOSE   40"
+
+.PP
+Definition at line 79 of file xmltok\&.h\&.
+.SS "#define XML_TOK_CDATA_SECT_OPEN   8"
+
+.PP
+Definition at line 35 of file xmltok\&.h\&.
+.SS "#define XML_TOK_CHAR_REF   10               /* numeric character reference */"
+
+.PP
+Definition at line 37 of file xmltok\&.h\&.
+.SS "#define XML_TOK_CLOSE_BRACKET   26"
+
+.PP
+Definition at line 59 of file xmltok\&.h\&.
+.SS "#define XML_TOK_CLOSE_PAREN   24"
+
+.PP
+Definition at line 57 of file xmltok\&.h\&.
+.SS "#define XML_TOK_CLOSE_PAREN_ASTERISK   36   /* )* */"
+
+.PP
+Definition at line 71 of file xmltok\&.h\&.
+.SS "#define XML_TOK_CLOSE_PAREN_PLUS   37       /* )+ */"
+
+.PP
+Definition at line 72 of file xmltok\&.h\&.
+.SS "#define XML_TOK_CLOSE_PAREN_QUESTION   35   /* )? */"
+
+.PP
+Definition at line 70 of file xmltok\&.h\&.
+.SS "#define XML_TOK_COMMA   38"
+
+.PP
+Definition at line 73 of file xmltok\&.h\&.
+.SS "#define XML_TOK_COMMENT   13"
+
+.PP
+Definition at line 44 of file xmltok\&.h\&.
+.SS "#define XML_TOK_COND_SECT_CLOSE   34        /* ]]> */"
+
+.PP
+Definition at line 69 of file xmltok\&.h\&.
+.SS "#define XML_TOK_COND_SECT_OPEN   33         /* <![ */"
+
+.PP
+Definition at line 68 of file xmltok\&.h\&.
+.SS "#define XML_TOK_DATA_CHARS   6"
+
+.PP
+Definition at line 33 of file xmltok\&.h\&.
+.SS "#define XML_TOK_DATA_NEWLINE   7"
+
+.PP
+Definition at line 34 of file xmltok\&.h\&.
+.SS "#define XML_TOK_DECL_CLOSE   17             /* > */"
+
+.PP
+Definition at line 50 of file xmltok\&.h\&.
+.SS "#define XML_TOK_DECL_OPEN   16              /* <!foo */"
+
+.PP
+Definition at line 49 of file xmltok\&.h\&.
+.SS "#define XML_TOK_EMPTY_ELEMENT_NO_ATTS   4"
+
+.PP
+Definition at line 31 of file xmltok\&.h\&.
+.SS "#define XML_TOK_EMPTY_ELEMENT_WITH_ATTS   3 /* empty element \fBtag\fP <e/> */"
+
+.PP
+Definition at line 30 of file xmltok\&.h\&.
+.SS "#define XML_TOK_END_TAG   5"
+
+.PP
+Definition at line 32 of file xmltok\&.h\&.
+.SS "#define XML_TOK_ENTITY_REF   9"
+
+.PP
+Definition at line 36 of file xmltok\&.h\&.
+.SS "#define XML_TOK_INSTANCE_START   29"
+
+.PP
+Definition at line 62 of file xmltok\&.h\&.
+.SS "#define XML_TOK_INVALID   0"
+
+.PP
+Definition at line 23 of file xmltok\&.h\&.
+.SS "#define XML_TOK_LITERAL   27"
+
+.PP
+Definition at line 60 of file xmltok\&.h\&.
+.SS "#define XML_TOK_NAME   18"
+
+.PP
+Definition at line 51 of file xmltok\&.h\&.
+.SS "#define XML_TOK_NAME_ASTERISK   31          /* \fBname\fP* */"
+
+.PP
+Definition at line 66 of file xmltok\&.h\&.
+.SS "#define XML_TOK_NAME_PLUS   32              /* \fBname\fP+ */"
+
+.PP
+Definition at line 67 of file xmltok\&.h\&.
+.SS "#define XML_TOK_NAME_QUESTION   30          /* \fBname\fP? */"
+
+.PP
+Definition at line 65 of file xmltok\&.h\&.
+.SS "#define XML_TOK_NMTOKEN   19"
+
+.PP
+Definition at line 52 of file xmltok\&.h\&.
+.SS "#define XML_TOK_NONE   \-4          /* The \fBstring\fP to be scanned is empty */"
+
+.PP
+Definition at line 18 of file xmltok\&.h\&.
+.SS "#define XML_TOK_OPEN_BRACKET   25"
+
+.PP
+Definition at line 58 of file xmltok\&.h\&.
+.SS "#define XML_TOK_OPEN_PAREN   23"
+
+.PP
+Definition at line 56 of file xmltok\&.h\&.
+.SS "#define XML_TOK_OR   21                     /* | */"
+
+.PP
+Definition at line 54 of file xmltok\&.h\&.
+.SS "#define XML_TOK_PARAM_ENTITY_REF   28"
+
+.PP
+Definition at line 61 of file xmltok\&.h\&.
+.SS "#define XML_TOK_PARTIAL   \-1       /* only part \fBof\fP \fBa\fP \fBtoken\fP */"
+
+.PP
+Definition at line 22 of file xmltok\&.h\&.
+.SS "#define XML_TOK_PARTIAL_CHAR   \-2  /* only part \fBof\fP \fBa\fP multibyte \fBsequence\fP */"
+
+.PP
+Definition at line 21 of file xmltok\&.h\&.
+.SS "#define XML_TOK_PERCENT   22"
+
+.PP
+Definition at line 55 of file xmltok\&.h\&.
+.SS "#define XML_TOK_PI   11                     /* processing instruction */"
+
+.PP
+Definition at line 42 of file xmltok\&.h\&.
+.SS "#define XML_TOK_POUND_NAME   20             /* #\fBname\fP */"
+
+.PP
+Definition at line 53 of file xmltok\&.h\&.
+.SS "#define XML_TOK_PREFIXED_NAME   41"
+
+.PP
+Definition at line 84 of file xmltok\&.h\&.
+.SS "#define XML_TOK_PROLOG_S   15"
+
+.PP
+Definition at line 48 of file xmltok\&.h\&.
+.SS "#define XML_TOK_START_TAG_NO_ATTS   2"
+
+.PP
+Definition at line 29 of file xmltok\&.h\&.
+.SS "#define XML_TOK_START_TAG_WITH_ATTS   1"
+
+.PP
+Definition at line 28 of file xmltok\&.h\&.
+.SS "#define XML_TOK_TRAILING_CR"
+\fBValue:\fP
+.PP
+.nf
+-3   /* A CR at the end of the scan;
+                                    might be part of CRLF sequence */
+.fi
+.PP
+Definition at line 19 of file xmltok\&.h\&.
+.SS "#define XML_TOK_TRAILING_RSQB"
+\fBValue:\fP
+.PP
+.nf
+-5 /* ] or ]] at the end of the scan; might be
+                                    start of illegal ]]> sequence */
+.fi
+.PP
+Definition at line 13 of file xmltok\&.h\&.
+.SS "#define XML_TOK_XML_DECL   12               /* XML decl or text decl */"
+
+.PP
+Definition at line 43 of file xmltok\&.h\&.
+.SS "#define XML_UTF16_ENCODE_MAX   2"
+
+.PP
+Definition at line 110 of file xmltok\&.h\&.
+.SS "#define XML_UTF8_ENCODE_MAX   4"
+
+.PP
+Definition at line 108 of file xmltok\&.h\&.
+.SS "#define XmlAttributeValueTok(enc, ptr, \fBend\fP, nextTokPtr)   \fBXmlLiteralTok\fP(enc, \fBXML_ATTRIBUTE_VALUE_LITERAL\fP, ptr, \fBend\fP, nextTokPtr)"
+
+.PP
+Definition at line 223 of file xmltok\&.h\&.
+.SS "#define XmlCdataSectionTok(enc, ptr, \fBend\fP, nextTokPtr)   \fBXmlTok\fP(enc, \fBXML_CDATA_SECTION_STATE\fP, ptr, \fBend\fP, nextTokPtr)"
+
+.PP
+Definition at line 207 of file xmltok\&.h\&.
+.SS "#define XmlCharRefNumber(enc, ptr)   (((enc)\->charRefNumber)(enc, ptr))"
+
+.PP
+Definition at line 243 of file xmltok\&.h\&.
+.SS "#define XmlContentTok(enc, ptr, \fBend\fP, nextTokPtr)   \fBXmlTok\fP(enc, \fBXML_CONTENT_STATE\fP, ptr, \fBend\fP, nextTokPtr)"
+
+.PP
+Definition at line 204 of file xmltok\&.h\&.
+.SS "#define XmlEntityValueTok(enc, ptr, \fBend\fP, nextTokPtr)   \fBXmlLiteralTok\fP(enc, \fBXML_ENTITY_VALUE_LITERAL\fP, ptr, \fBend\fP, nextTokPtr)"
+
+.PP
+Definition at line 226 of file xmltok\&.h\&.
+.SS "#define XmlGetAttributes(enc, ptr, attsMax, \fBatts\fP)   (((enc)\->getAtts)(enc, ptr, attsMax, \fBatts\fP))"
+
+.PP
+Definition at line 240 of file xmltok\&.h\&.
+.SS "#define XmlIsPublicId(enc, ptr, \fBend\fP, badPtr)   (((enc)\->isPublicId)(enc, ptr, \fBend\fP, badPtr))"
+
+.PP
+Definition at line 252 of file xmltok\&.h\&.
+.SS "#define XmlLiteralTok(enc, literalType, ptr, \fBend\fP, nextTokPtr)   (((enc)\->literalScanners[literalType])(enc, ptr, \fBend\fP, nextTokPtr))"
+
+.PP
+Definition at line 220 of file xmltok\&.h\&.
+.SS "#define XmlNameLength(enc, ptr)   (((enc)\->nameLength)(enc, ptr))"
+
+.PP
+Definition at line 234 of file xmltok\&.h\&.
+.SS "#define XmlNameMatchesAscii(enc, ptr1, end1, ptr2)   (((enc)\->nameMatchesAscii)(enc, ptr1, end1, ptr2))"
+
+.PP
+Definition at line 231 of file xmltok\&.h\&.
+.SS "#define XmlPredefinedEntityName(enc, ptr, \fBend\fP)   (((enc)\->predefinedEntityName)(enc, ptr, \fBend\fP))"
+
+.PP
+Definition at line 246 of file xmltok\&.h\&.
+.SS "#define XmlPrologTok(enc, ptr, \fBend\fP, nextTokPtr)   \fBXmlTok\fP(enc, \fBXML_PROLOG_STATE\fP, ptr, \fBend\fP, nextTokPtr)"
+
+.PP
+Definition at line 201 of file xmltok\&.h\&.
+.SS "#define XmlSameName(enc, ptr1, ptr2)   (((enc)\->sameName)(enc, ptr1, ptr2))"
+
+.PP
+Definition at line 229 of file xmltok\&.h\&.
+.SS "#define XmlSkipS(enc, ptr)   (((enc)\->skipS)(enc, ptr))"
+
+.PP
+Definition at line 237 of file xmltok\&.h\&.
+.SS "#define XmlTok(enc, state, ptr, \fBend\fP, nextTokPtr)   (((enc)\->scanners[state])(enc, ptr, \fBend\fP, nextTokPtr))"
+
+.PP
+Definition at line 198 of file xmltok\&.h\&.
+.SS "#define XmlUpdatePosition(enc, ptr, \fBend\fP, pos)   (((enc)\->updatePosition)(enc, ptr, \fBend\fP, pos))"
+
+.PP
+Definition at line 249 of file xmltok\&.h\&.
+.SS "#define XmlUtf16Convert(enc, fromP, fromLim, toP, toLim)   (((enc)\->utf16Convert)(enc, fromP, fromLim, toP, toLim))"
+
+.PP
+Definition at line 258 of file xmltok\&.h\&.
+.SS "#define XmlUtf8Convert(enc, fromP, fromLim, toP, toLim)   (((enc)\->utf8Convert)(enc, fromP, fromLim, toP, toLim))"
+
+.PP
+Definition at line 255 of file xmltok\&.h\&.
+.SH "Typedef Documentation"
+.PP 
+.SS "typedef struct \fBencoding\fP \fBENCODING\fP"
+
+.PP
+Definition at line 126 of file xmltok\&.h\&.
+.SS "typedef \fBconst\fP char* \fBp\fP"
+
+.PP
+Definition at line 285 of file xmltok\&.h\&.
+.SS "typedef struct \fBposition\fP  \fBPOSITION\fP"
+
+.SS "typedef \fBint\fP(\fBPTRCALL\fP * SCANNER) (\fBconst\fP \fBENCODING\fP *, \fBconst\fP char *, \fBconst\fP char *, \fBconst\fP char **)"
+
+.PP
+Definition at line 128 of file xmltok\&.h\&.
+.SH "Function Documentation"
+.PP 
+.SS "typedef int (\fBXMLCALL\fP * CONVERTER)"
+
+.SS "\fBconst\fP \fBENCODING\fP* XmlGetUtf16InternalEncoding (\fBvoid\fP)"
+
+.SS "\fBconst\fP \fBENCODING\fP* XmlGetUtf16InternalEncodingNS (\fBvoid\fP)"
+
+.SS "\fBconst\fP \fBENCODING\fP* XmlGetUtf8InternalEncoding (\fBvoid\fP)"
+
+.SS "\fBconst\fP \fBENCODING\fP* XmlGetUtf8InternalEncodingNS (\fBvoid\fP)"
+
+.SS "\fBint\fP XmlInitEncoding (\fBINIT_ENCODING\fP *, \fBconst\fP \fBENCODING\fP **, \fBconst\fP char * name)"
+
+.SS "\fBint\fP XmlInitEncodingNS (\fBINIT_ENCODING\fP *, \fBconst\fP \fBENCODING\fP **, \fBconst\fP char * name)"
+
+.SS "\fBENCODING\fP* XmlInitUnknownEncoding (\fBvoid\fP * mem, \fBint\fP * table, CONVERTER convert, \fBvoid\fP * userData)"
+
+.PP
+Definition at line 1346 of file xmltok\&.c\&.
+.SS "\fBENCODING\fP* XmlInitUnknownEncodingNS (\fBvoid\fP * mem, \fBint\fP * table, CONVERTER convert, \fBvoid\fP * userData)"
+
+.SS "\fBint\fP XmlParseXmlDecl (\fBint\fP isGeneralTextEntity, \fBconst\fP \fBENCODING\fP * enc, \fBconst\fP char * ptr, \fBconst\fP char * end, \fBconst\fP char ** badPtr, \fBconst\fP char ** versionPtr, \fBconst\fP char ** versionEndPtr, \fBconst\fP char ** encodingNamePtr, \fBconst\fP \fBENCODING\fP ** namedEncodingPtr, \fBint\fP * standalonePtr)"
+
+.SS "\fBint\fP XmlParseXmlDeclNS (\fBint\fP isGeneralTextEntity, \fBconst\fP \fBENCODING\fP * enc, \fBconst\fP char * ptr, \fBconst\fP char * end, \fBconst\fP char ** badPtr, \fBconst\fP char ** versionPtr, \fBconst\fP char ** versionEndPtr, \fBconst\fP char ** encodingNamePtr, \fBconst\fP \fBENCODING\fP ** namedEncodingPtr, \fBint\fP * standalonePtr)"
+
+.SS "\fBint\fP XmlSizeOfUnknownEncoding (\fBvoid\fP)"
+
+.PP
+Definition at line 1258 of file xmltok\&.c\&.
+.SS "\fBint\fP \fBFASTCALL\fP XmlUtf16Encode (\fBint\fP charNumber, unsigned short * buf)"
+
+.PP
+Definition at line 1230 of file xmltok\&.c\&.
+.SS "\fBint\fP \fBFASTCALL\fP XmlUtf8Encode (\fBint\fP charNumber, char * buf)"
+
+.PP
+Definition at line 1193 of file xmltok\&.c\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

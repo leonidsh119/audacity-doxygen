@@ -1,0 +1,172 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/lib-src/lv2/lilv/src/collections.c" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/lib-src/lv2/lilv/src/collections.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include 'lilv_internal\&.h'\fP
+.br
+
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBLILV_COLLECTION_IMPL\fP(\fBprefix\fP,  CT,  ET)"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBint\fP \fBlilv_ptr_cmp\fP (\fBconst\fP \fBvoid\fP *\fBa\fP, \fBconst\fP \fBvoid\fP *\fBb\fP, \fBvoid\fP *user_data)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBlilv_resource_node_cmp\fP (\fBconst\fP \fBvoid\fP *\fBa\fP, \fBconst\fP \fBvoid\fP *\fBb\fP, \fBvoid\fP *user_data)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBlilv_collection_free\fP (\fBLilvCollection\fP *coll)"
+.br
+.ti -1c
+.RI "unsigned \fBlilv_collection_size\fP (\fBconst\fP \fBLilvCollection\fP *coll)"
+.br
+.ti -1c
+.RI "\fBLilvIter\fP * \fBlilv_collection_begin\fP (\fBconst\fP \fBLilvCollection\fP *collection)"
+.br
+.ti -1c
+.RI "\fBvoid\fP * \fBlilv_collection_get\fP (\fBconst\fP \fBLilvCollection\fP *collection, \fBconst\fP \fBLilvIter\fP *\fBi\fP)"
+.br
+.ti -1c
+.RI "\fBLilvScalePoints\fP * \fBlilv_scale_points_new\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLilvNodes\fP * \fBlilv_nodes_new\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLilvUIs\fP * \fBlilv_uis_new\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLilvPluginClasses\fP * \fBlilv_plugin_classes_new\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLILV_API\fP \fBconst\fP \fBLilvPluginClass\fP * \fBlilv_plugin_classes_get_by_uri\fP (\fBconst\fP \fBLilvPluginClasses\fP *coll, \fBconst\fP \fBLilvNode\fP *\fBuri\fP)"
+.br
+.ti -1c
+.RI "\fBLILV_API\fP \fBconst\fP \fBLilvUI\fP * \fBlilv_uis_get_by_uri\fP (\fBconst\fP \fBLilvUIs\fP *coll, \fBconst\fP \fBLilvNode\fP *\fBuri\fP)"
+.br
+.ti -1c
+.RI "\fBLilvPlugins\fP * \fBlilv_plugins_new\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLILV_API\fP \fBconst\fP \fBLilvPlugin\fP * \fBlilv_plugins_get_by_uri\fP (\fBconst\fP \fBLilvPlugins\fP *list, \fBconst\fP \fBLilvNode\fP *\fBuri\fP)"
+.br
+.ti -1c
+.RI "\fBLILV_API\fP \fBbool\fP \fBlilv_nodes_contains\fP (\fBconst\fP \fBLilvNodes\fP *list, \fBconst\fP \fBLilvNode\fP *\fBvalue\fP)"
+.br
+.ti -1c
+.RI "\fBLILV_API\fP \fBLilvNodes\fP * \fBlilv_nodes_merge\fP (\fBconst\fP \fBLilvNodes\fP *\fBa\fP, \fBconst\fP \fBLilvNodes\fP *\fBb\fP)"
+.br
+.ti -1c
+.RI "\fBLILV_API\fP \fBvoid\fP \fBlilv_plugin_classes_free\fP (\fBLilvPluginClasses\fP *collection)"
+.br
+.ti -1c
+.RI "\fBLILV_API\fP \fBvoid\fP \fBlilv_scale_points_free\fP (\fBLilvScalePoints\fP *collection)"
+.br
+.ti -1c
+.RI "\fBLILV_API\fP \fBvoid\fP \fBlilv_uis_free\fP (\fBLilvUIs\fP *collection)"
+.br
+.ti -1c
+.RI "\fBLILV_API\fP \fBvoid\fP \fBlilv_nodes_free\fP (\fBLilvNodes\fP *collection)"
+.br
+.ti -1c
+.RI "\fBLILV_API\fP \fBLilvNode\fP * \fBlilv_nodes_get_first\fP (\fBconst\fP \fBLilvNodes\fP *collection)"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define LILV_COLLECTION_IMPL(\fBprefix\fP, CT, ET)"
+\fBValue:\fP
+.PP
+.nf
+LILV_API \\
+unsigned \\
+prefix##_size(const CT* collection) { \\
+	return lilv_collection_size(collection); \
+} \
+\\
+LILV_API \\
+LilvIter* \\
+prefix##_begin(const CT* collection) { \\
+	return lilv_collection_begin(collection); \
+} \
+\\
+LILV_API \\
+const ET* \\
+prefix##_get(const CT* collection, LilvIter* i) { \\
+	return (ET*)lilv_collection_get(collection, i); \
+} \
+\
+LILV_API \
+LilvIter* \
+prefix##_next(const CT* collection, LilvIter* i) { \
+    return zix_tree_iter_next((ZixTreeIter*)i); \
+} \
+\
+LILV_API \
+bool \
+prefix##_is_end(const CT* collection, LilvIter* i) { \
+    return zix_tree_iter_is_end((ZixTreeIter*)i); \
+}
+.fi
+.PP
+Definition at line 159 of file collections\&.c\&.
+.SH "Function Documentation"
+.PP 
+.SS "\fBLilvIter\fP* lilv_collection_begin (\fBconst\fP \fBLilvCollection\fP * collection)"
+
+.PP
+Definition at line 55 of file collections\&.c\&.
+.SS "\fBvoid\fP lilv_collection_free (\fBLilvCollection\fP * coll)"
+
+.PP
+Definition at line 42 of file collections\&.c\&.
+.SS "\fBvoid\fP* lilv_collection_get (\fBconst\fP \fBLilvCollection\fP * collection, \fBconst\fP \fBLilvIter\fP * i)"
+
+.PP
+Definition at line 61 of file collections\&.c\&.
+.SS "unsigned lilv_collection_size (\fBconst\fP \fBLilvCollection\fP * coll)"
+
+.PP
+Definition at line 49 of file collections\&.c\&.
+.SS "\fBLilvNodes\fP* lilv_nodes_new (\fBvoid\fP)"
+
+.PP
+Definition at line 77 of file collections\&.c\&.
+.SS "\fBLilvPluginClasses\fP* lilv_plugin_classes_new (\fBvoid\fP)"
+
+.PP
+Definition at line 91 of file collections\&.c\&.
+.SS "\fBLilvPlugins\fP* lilv_plugins_new (\fBvoid\fP)"
+
+.PP
+Definition at line 116 of file collections\&.c\&.
+.SS "\fBint\fP lilv_ptr_cmp (\fBconst\fP \fBvoid\fP * a, \fBconst\fP \fBvoid\fP * b, \fBvoid\fP * user_data)"
+
+.PP
+Definition at line 20 of file collections\&.c\&.
+.SS "\fBint\fP lilv_resource_node_cmp (\fBconst\fP \fBvoid\fP * a, \fBconst\fP \fBvoid\fP * b, \fBvoid\fP * user_data)"
+
+.PP
+Definition at line 26 of file collections\&.c\&.
+.SS "\fBLilvScalePoints\fP* lilv_scale_points_new (\fBvoid\fP)"
+
+.PP
+Definition at line 70 of file collections\&.c\&.
+.SS "\fBLilvUIs\fP* lilv_uis_new (\fBvoid\fP)"
+
+.PP
+Definition at line 84 of file collections\&.c\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

@@ -1,0 +1,121 @@
+.TH "opt_set_funcs" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+opt_set_funcs \- Option setting functions
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBav_opt_set_int_list\fP(obj,  \fBname\fP,  val,  term,  flags)"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBint\fP \fBav_opt_set\fP (\fBvoid\fP *obj, \fBconst\fP char *\fBname\fP, \fBconst\fP char *val, \fBint\fP search_flags)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_opt_set_int\fP (\fBvoid\fP *obj, \fBconst\fP char *\fBname\fP, \fBint64_t\fP val, \fBint\fP search_flags)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_opt_set_double\fP (\fBvoid\fP *obj, \fBconst\fP char *\fBname\fP, double val, \fBint\fP search_flags)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_opt_set_q\fP (\fBvoid\fP *obj, \fBconst\fP char *\fBname\fP, \fBAVRational\fP val, \fBint\fP search_flags)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_opt_set_bin\fP (\fBvoid\fP *obj, \fBconst\fP char *\fBname\fP, \fBconst\fP \fBuint8_t\fP *val, \fBint\fP \fBsize\fP, \fBint\fP search_flags)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_opt_set_image_size\fP (\fBvoid\fP *obj, \fBconst\fP char *\fBname\fP, \fBint\fP w, \fBint\fP h, \fBint\fP search_flags)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_opt_set_pixel_fmt\fP (\fBvoid\fP *obj, \fBconst\fP char *\fBname\fP, enum \fBAVPixelFormat\fP fmt, \fBint\fP search_flags)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_opt_set_sample_fmt\fP (\fBvoid\fP *obj, \fBconst\fP char *\fBname\fP, enum \fBAVSampleFormat\fP fmt, \fBint\fP search_flags)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_opt_set_video_rate\fP (\fBvoid\fP *obj, \fBconst\fP char *\fBname\fP, \fBAVRational\fP val, \fBint\fP search_flags)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_opt_set_channel_layout\fP (\fBvoid\fP *obj, \fBconst\fP char *\fBname\fP, \fBint64_t\fP ch_layout, \fBint\fP search_flags)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Those functions set the field of obj with the given name to value\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIobj\fP A struct whose first element is a pointer to an \fBAVClass\fP\&. 
+.br
+\fIname\fP the name of the field to set 
+.br
+\fIval\fP The value to set\&. In case of \fBav_opt_set()\fP if the field is not of a string type, then the given string is parsed\&. SI postfixes and some named scalars are supported\&. If the field is of a numeric type, it has to be a numeric or named scalar\&. Behavior with more than one scalar and +- infix operators is undefined\&. If the field is of a flags type, it has to be a sequence of numeric scalars or named flags separated by '+' or '-'\&. Prefixing a flag with '+' causes it to be set without affecting the other flags; similarly, '-' unsets a flag\&. 
+.br
+\fIsearch_flags\fP flags passed to av_opt_find2\&. I\&.e\&. if AV_OPT_SEARCH_CHILDREN is passed here, then the option may be set on a child of obj\&.
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+0 if the value has been set, or an AVERROR code in case of error: AVERROR_OPTION_NOT_FOUND if no matching option exists \fBAVERROR(ERANGE)\fP if the value is out of range \fBAVERROR(EINVAL)\fP if the value is not valid 
+.RE
+.PP
+
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define av_opt_set_int_list(obj, \fBname\fP, val, term, flags)"
+\fBValue:\fP
+.PP
+.nf
+(av_int_list_length(val, term) > INT_MAX / sizeof(*(val)) ? \
+     AVERROR(EINVAL) : \
+     av_opt_set_bin(obj, name, (const uint8_t *)(val), \
+                    av_int_list_length(val, term) * sizeof(*(val)), flags))
+.fi
+Set a binary option to an integer list\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIobj\fP \fBAVClass\fP object to set options on 
+.br
+\fIname\fP name of the binary option 
+.br
+\fIval\fP pointer to an integer list (must have the correct type with regard to the contents of the list) 
+.br
+\fIterm\fP list terminator (usually 0 or -1) 
+.br
+\fIflags\fP search flags 
+.RE
+.PP
+
+.PP
+Definition at line 685 of file opt\&.h\&.
+.SH "Function Documentation"
+.PP 
+.SS "\fBint\fP av_opt_set (\fBvoid\fP * obj, \fBconst\fP char * name, \fBconst\fP char * val, \fBint\fP search_flags)"
+
+.SS "\fBint\fP av_opt_set_bin (\fBvoid\fP * obj, \fBconst\fP char * name, \fBconst\fP \fBuint8_t\fP * val, \fBint\fP size, \fBint\fP search_flags)"
+
+.SS "\fBint\fP av_opt_set_channel_layout (\fBvoid\fP * obj, \fBconst\fP char * name, \fBint64_t\fP ch_layout, \fBint\fP search_flags)"
+
+.SS "\fBint\fP av_opt_set_double (\fBvoid\fP * obj, \fBconst\fP char * name, double val, \fBint\fP search_flags)"
+
+.SS "\fBint\fP av_opt_set_image_size (\fBvoid\fP * obj, \fBconst\fP char * name, \fBint\fP w, \fBint\fP h, \fBint\fP search_flags)"
+
+.SS "\fBint\fP av_opt_set_int (\fBvoid\fP * obj, \fBconst\fP char * name, \fBint64_t\fP val, \fBint\fP search_flags)"
+
+.SS "\fBint\fP av_opt_set_pixel_fmt (\fBvoid\fP * obj, \fBconst\fP char * name, enum \fBAVPixelFormat\fP fmt, \fBint\fP search_flags)"
+
+.SS "\fBint\fP av_opt_set_q (\fBvoid\fP * obj, \fBconst\fP char * name, \fBAVRational\fP val, \fBint\fP search_flags)"
+
+.SS "\fBint\fP av_opt_set_sample_fmt (\fBvoid\fP * obj, \fBconst\fP char * name, enum \fBAVSampleFormat\fP fmt, \fBint\fP search_flags)"
+
+.SS "\fBint\fP av_opt_set_video_rate (\fBvoid\fP * obj, \fBconst\fP char * name, \fBAVRational\fP val, \fBint\fP search_flags)"
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

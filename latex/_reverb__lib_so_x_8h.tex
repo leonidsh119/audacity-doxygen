@@ -1,0 +1,135 @@
+\hypertarget{_reverb__lib_so_x_8h}{}\section{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/src/effects/\+Reverb\+\_\+lib\+SoX.h File Reference}
+\label{_reverb__lib_so_x_8h}\index{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/src/effects/\+Reverb\+\_\+lib\+So\+X.\+h@{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/src/effects/\+Reverb\+\_\+lib\+So\+X.\+h}}
+{\ttfamily \#include $<$cstring$>$}\\*
+{\ttfamily \#include $<$cstdlib$>$}\\*
+{\ttfamily \#include $<$cmath$>$}\\*
+{\ttfamily \#include $<$algorithm$>$}\\*
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structfifo__t}{fifo\+\_\+t}
+\item 
+struct \hyperlink{structfilter__t}{filter\+\_\+t}
+\item 
+struct \hyperlink{structone__pole__t}{one\+\_\+pole\+\_\+t}
+\item 
+struct \hyperlink{structfilter__array__t}{filter\+\_\+array\+\_\+t}
+\item 
+struct \hyperlink{structreverb__t}{reverb\+\_\+t}
+\end{DoxyCompactItemize}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{_reverb__lib_so_x_8h_a9af157c53b7f125d10e0ff736c0d7d75}{array\+\_\+length}(\hyperlink{rfft2d_test_m_l_8m_a4124bc0a9335c27f086f24ba207a4912}{a})~(sizeof(\hyperlink{rfft2d_test_m_l_8m_a4124bc0a9335c27f086f24ba207a4912}{a})/sizeof(\hyperlink{rfft2d_test_m_l_8m_a4124bc0a9335c27f086f24ba207a4912}{a}\mbox{[}0\mbox{]}))
+\item 
+\#define \hyperlink{_reverb__lib_so_x_8h_a47a190cb5164f8125140de1e521f7dbd}{d\+B\+\_\+to\+\_\+linear}(x)~exp((x) $\ast$ \hyperlink{mathematics_8h_a0a53871497a155afe91424c28a8ec3c4}{M\+\_\+\+L\+N10} $\ast$ 0.\+05)
+\item 
+\#define \hyperlink{_reverb__lib_so_x_8h_a21de4ad356c771fc589fe039117e5c25}{midi\+\_\+to\+\_\+freq}(n)~(440 $\ast$ pow(2,((n)-\/69)/12.))
+\item 
+\#define \hyperlink{_reverb__lib_so_x_8h_ae926807bd6da66f484d097d37ad4f636}{F\+I\+F\+O\+\_\+\+S\+I\+Z\+E\+\_\+T}~size\+\_\+t
+\item 
+\#define \hyperlink{_reverb__lib_so_x_8h_a487d8dd8080f86bb9fbcbe1285fd19f5}{F\+I\+F\+O\+\_\+\+M\+IN}~0x4000
+\item 
+\#define \hyperlink{_reverb__lib_so_x_8h_a1b6d0c490d62effa12f8add51851db0d}{fifo\+\_\+read\+\_\+ptr}(\hyperlink{checksum_8c_ae747d72a1a803f5ff4a4b2602857d93b}{f})~fifo\+\_\+read(\hyperlink{checksum_8c_ae747d72a1a803f5ff4a4b2602857d93b}{f}, (\hyperlink{_reverb__lib_so_x_8h_ae926807bd6da66f484d097d37ad4f636}{F\+I\+F\+O\+\_\+\+S\+I\+Z\+E\+\_\+T})0, \hyperlink{px__mixer_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{N\+U\+LL})
+\item 
+\#define \hyperlink{_reverb__lib_so_x_8h_afd2dd722d1d3281f256bddcc22507459}{lsx\+\_\+zalloc}(var,  n)~var = (float $\ast$)calloc(n, sizeof($\ast$var))
+\item 
+\#define \hyperlink{_reverb__lib_so_x_8h_acc7061b546e0bca74231dff7ddcbbc42}{filter\+\_\+advance}(\hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p})~\hyperlink{sndfile__save_8m_a55944e1fa1bcc1bfc6185bc610b0a930}{if} (-\/-\/(\hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p})-\/$>$ptr $<$ (\hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p})-\/$>$\hyperlink{structbuffer}{buffer}) (\hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p})-\/$>$ptr += (\hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p})-\/$>$\hyperlink{group__lavu__mem_ga854352f53b148adc24983a58a1866d66}{size}
+\item 
+\#define \hyperlink{_reverb__lib_so_x_8h_ab28dbb4bb5497fe8a54c5203923ac343}{filter\+\_\+delete}(\hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p})~free((\hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p})-\/$>$\hyperlink{structbuffer}{buffer})
+\end{DoxyCompactItemize}
+
+
+\subsection{Macro Definition Documentation}
+\index{Reverb\+\_\+lib\+So\+X.\+h@{Reverb\+\_\+lib\+So\+X.\+h}!array\+\_\+length@{array\+\_\+length}}
+\index{array\+\_\+length@{array\+\_\+length}!Reverb\+\_\+lib\+So\+X.\+h@{Reverb\+\_\+lib\+So\+X.\+h}}
+\subsubsection[{\texorpdfstring{array\+\_\+length}{array_length}}]{\setlength{\rightskip}{0pt plus 5cm}\#define array\+\_\+length(
+\begin{DoxyParamCaption}
+\item[{}]{{\bf a}}
+\end{DoxyParamCaption}
+)~(sizeof({\bf a})/sizeof({\bf a}\mbox{[}0\mbox{]}))}\hypertarget{_reverb__lib_so_x_8h_a9af157c53b7f125d10e0ff736c0d7d75}{}\label{_reverb__lib_so_x_8h_a9af157c53b7f125d10e0ff736c0d7d75}
+
+
+Definition at line 26 of file Reverb\+\_\+lib\+So\+X.\+h.
+
+\index{Reverb\+\_\+lib\+So\+X.\+h@{Reverb\+\_\+lib\+So\+X.\+h}!d\+B\+\_\+to\+\_\+linear@{d\+B\+\_\+to\+\_\+linear}}
+\index{d\+B\+\_\+to\+\_\+linear@{d\+B\+\_\+to\+\_\+linear}!Reverb\+\_\+lib\+So\+X.\+h@{Reverb\+\_\+lib\+So\+X.\+h}}
+\subsubsection[{\texorpdfstring{d\+B\+\_\+to\+\_\+linear}{dB_to_linear}}]{\setlength{\rightskip}{0pt plus 5cm}\#define d\+B\+\_\+to\+\_\+linear(
+\begin{DoxyParamCaption}
+\item[{}]{x}
+\end{DoxyParamCaption}
+)~exp((x) $\ast$ {\bf M\+\_\+\+L\+N10} $\ast$ 0.\+05)}\hypertarget{_reverb__lib_so_x_8h_a47a190cb5164f8125140de1e521f7dbd}{}\label{_reverb__lib_so_x_8h_a47a190cb5164f8125140de1e521f7dbd}
+
+
+Definition at line 27 of file Reverb\+\_\+lib\+So\+X.\+h.
+
+\index{Reverb\+\_\+lib\+So\+X.\+h@{Reverb\+\_\+lib\+So\+X.\+h}!F\+I\+F\+O\+\_\+\+M\+IN@{F\+I\+F\+O\+\_\+\+M\+IN}}
+\index{F\+I\+F\+O\+\_\+\+M\+IN@{F\+I\+F\+O\+\_\+\+M\+IN}!Reverb\+\_\+lib\+So\+X.\+h@{Reverb\+\_\+lib\+So\+X.\+h}}
+\subsubsection[{\texorpdfstring{F\+I\+F\+O\+\_\+\+M\+IN}{FIFO_MIN}}]{\setlength{\rightskip}{0pt plus 5cm}\#define F\+I\+F\+O\+\_\+\+M\+IN~0x4000}\hypertarget{_reverb__lib_so_x_8h_a487d8dd8080f86bb9fbcbe1285fd19f5}{}\label{_reverb__lib_so_x_8h_a487d8dd8080f86bb9fbcbe1285fd19f5}
+
+
+Definition at line 30 of file Reverb\+\_\+lib\+So\+X.\+h.
+
+\index{Reverb\+\_\+lib\+So\+X.\+h@{Reverb\+\_\+lib\+So\+X.\+h}!fifo\+\_\+read\+\_\+ptr@{fifo\+\_\+read\+\_\+ptr}}
+\index{fifo\+\_\+read\+\_\+ptr@{fifo\+\_\+read\+\_\+ptr}!Reverb\+\_\+lib\+So\+X.\+h@{Reverb\+\_\+lib\+So\+X.\+h}}
+\subsubsection[{\texorpdfstring{fifo\+\_\+read\+\_\+ptr}{fifo_read_ptr}}]{\setlength{\rightskip}{0pt plus 5cm}\#define fifo\+\_\+read\+\_\+ptr(
+\begin{DoxyParamCaption}
+\item[{}]{{\bf f}}
+\end{DoxyParamCaption}
+)~fifo\+\_\+read({\bf f}, ({\bf F\+I\+F\+O\+\_\+\+S\+I\+Z\+E\+\_\+T})0, {\bf N\+U\+LL})}\hypertarget{_reverb__lib_so_x_8h_a1b6d0c490d62effa12f8add51851db0d}{}\label{_reverb__lib_so_x_8h_a1b6d0c490d62effa12f8add51851db0d}
+
+
+Definition at line 31 of file Reverb\+\_\+lib\+So\+X.\+h.
+
+\index{Reverb\+\_\+lib\+So\+X.\+h@{Reverb\+\_\+lib\+So\+X.\+h}!F\+I\+F\+O\+\_\+\+S\+I\+Z\+E\+\_\+T@{F\+I\+F\+O\+\_\+\+S\+I\+Z\+E\+\_\+T}}
+\index{F\+I\+F\+O\+\_\+\+S\+I\+Z\+E\+\_\+T@{F\+I\+F\+O\+\_\+\+S\+I\+Z\+E\+\_\+T}!Reverb\+\_\+lib\+So\+X.\+h@{Reverb\+\_\+lib\+So\+X.\+h}}
+\subsubsection[{\texorpdfstring{F\+I\+F\+O\+\_\+\+S\+I\+Z\+E\+\_\+T}{FIFO_SIZE_T}}]{\setlength{\rightskip}{0pt plus 5cm}\#define F\+I\+F\+O\+\_\+\+S\+I\+Z\+E\+\_\+T~size\+\_\+t}\hypertarget{_reverb__lib_so_x_8h_ae926807bd6da66f484d097d37ad4f636}{}\label{_reverb__lib_so_x_8h_ae926807bd6da66f484d097d37ad4f636}
+
+
+Definition at line 29 of file Reverb\+\_\+lib\+So\+X.\+h.
+
+\index{Reverb\+\_\+lib\+So\+X.\+h@{Reverb\+\_\+lib\+So\+X.\+h}!filter\+\_\+advance@{filter\+\_\+advance}}
+\index{filter\+\_\+advance@{filter\+\_\+advance}!Reverb\+\_\+lib\+So\+X.\+h@{Reverb\+\_\+lib\+So\+X.\+h}}
+\subsubsection[{\texorpdfstring{filter\+\_\+advance}{filter_advance}}]{\setlength{\rightskip}{0pt plus 5cm}\#define filter\+\_\+advance(
+\begin{DoxyParamCaption}
+\item[{}]{{\bf p}}
+\end{DoxyParamCaption}
+)~{\bf if} (-\/-\/({\bf p})-\/$>$ptr $<$ ({\bf p})-\/$>${\bf buffer}) ({\bf p})-\/$>$ptr += ({\bf p})-\/$>${\bf size}}\hypertarget{_reverb__lib_so_x_8h_acc7061b546e0bca74231dff7ddcbbc42}{}\label{_reverb__lib_so_x_8h_acc7061b546e0bca74231dff7ddcbbc42}
+
+
+Definition at line 33 of file Reverb\+\_\+lib\+So\+X.\+h.
+
+\index{Reverb\+\_\+lib\+So\+X.\+h@{Reverb\+\_\+lib\+So\+X.\+h}!filter\+\_\+delete@{filter\+\_\+delete}}
+\index{filter\+\_\+delete@{filter\+\_\+delete}!Reverb\+\_\+lib\+So\+X.\+h@{Reverb\+\_\+lib\+So\+X.\+h}}
+\subsubsection[{\texorpdfstring{filter\+\_\+delete}{filter_delete}}]{\setlength{\rightskip}{0pt plus 5cm}\#define filter\+\_\+delete(
+\begin{DoxyParamCaption}
+\item[{}]{{\bf p}}
+\end{DoxyParamCaption}
+)~free(({\bf p})-\/$>${\bf buffer})}\hypertarget{_reverb__lib_so_x_8h_ab28dbb4bb5497fe8a54c5203923ac343}{}\label{_reverb__lib_so_x_8h_ab28dbb4bb5497fe8a54c5203923ac343}
+
+
+Definition at line 34 of file Reverb\+\_\+lib\+So\+X.\+h.
+
+\index{Reverb\+\_\+lib\+So\+X.\+h@{Reverb\+\_\+lib\+So\+X.\+h}!lsx\+\_\+zalloc@{lsx\+\_\+zalloc}}
+\index{lsx\+\_\+zalloc@{lsx\+\_\+zalloc}!Reverb\+\_\+lib\+So\+X.\+h@{Reverb\+\_\+lib\+So\+X.\+h}}
+\subsubsection[{\texorpdfstring{lsx\+\_\+zalloc}{lsx_zalloc}}]{\setlength{\rightskip}{0pt plus 5cm}\#define lsx\+\_\+zalloc(
+\begin{DoxyParamCaption}
+\item[{}]{var, }
+\item[{}]{n}
+\end{DoxyParamCaption}
+)~var = (float $\ast$)calloc(n, sizeof($\ast$var))}\hypertarget{_reverb__lib_so_x_8h_afd2dd722d1d3281f256bddcc22507459}{}\label{_reverb__lib_so_x_8h_afd2dd722d1d3281f256bddcc22507459}
+
+
+Definition at line 32 of file Reverb\+\_\+lib\+So\+X.\+h.
+
+\index{Reverb\+\_\+lib\+So\+X.\+h@{Reverb\+\_\+lib\+So\+X.\+h}!midi\+\_\+to\+\_\+freq@{midi\+\_\+to\+\_\+freq}}
+\index{midi\+\_\+to\+\_\+freq@{midi\+\_\+to\+\_\+freq}!Reverb\+\_\+lib\+So\+X.\+h@{Reverb\+\_\+lib\+So\+X.\+h}}
+\subsubsection[{\texorpdfstring{midi\+\_\+to\+\_\+freq}{midi_to_freq}}]{\setlength{\rightskip}{0pt plus 5cm}\#define midi\+\_\+to\+\_\+freq(
+\begin{DoxyParamCaption}
+\item[{}]{n}
+\end{DoxyParamCaption}
+)~(440 $\ast$ pow(2,((n)-\/69)/12.))}\hypertarget{_reverb__lib_so_x_8h_a21de4ad356c771fc589fe039117e5c25}{}\label{_reverb__lib_so_x_8h_a21de4ad356c771fc589fe039117e5c25}
+
+
+Definition at line 28 of file Reverb\+\_\+lib\+So\+X.\+h.
+

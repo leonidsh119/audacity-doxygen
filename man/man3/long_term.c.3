@@ -1,0 +1,174 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/lib-src/libsndfile/src/GSM610/long_term.c" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/lib-src/libsndfile/src/GSM610/long_term.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <stdio\&.h>\fP
+.br
+\fC#include <assert\&.h>\fP
+.br
+\fC#include 'gsm610_priv\&.h'\fP
+.br
+
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBSTEP\fP(K,  \fBa\fP,  \fBb\fP,  \fBc\fP,  \fBd\fP,  e,  \fBf\fP,  g,  h)"
+.br
+.ti -1c
+.RI "#define \fBSTEP_A\fP(K)   \fBSTEP\fP(K, \fBa\fP, \fBb\fP, \fBc\fP, \fBd\fP, e, \fBf\fP, g, h)"
+.br
+.ti -1c
+.RI "#define \fBSTEP_B\fP(K)   \fBSTEP\fP(K, \fBb\fP, \fBc\fP, \fBd\fP, e, \fBf\fP, g, h, \fBa\fP)"
+.br
+.ti -1c
+.RI "#define \fBSTEP_C\fP(K)   \fBSTEP\fP(K, \fBc\fP, \fBd\fP, e, \fBf\fP, g, h, \fBa\fP, \fBb\fP)"
+.br
+.ti -1c
+.RI "#define \fBSTEP_D\fP(K)   \fBSTEP\fP(K, \fBd\fP, e, \fBf\fP, g, h, \fBa\fP, \fBb\fP, \fBc\fP)"
+.br
+.ti -1c
+.RI "#define \fBSTEP_E\fP(K)   \fBSTEP\fP(K, e, \fBf\fP, g, h, \fBa\fP, \fBb\fP, \fBc\fP, \fBd\fP)"
+.br
+.ti -1c
+.RI "#define \fBSTEP_F\fP(K)   \fBSTEP\fP(K, \fBf\fP, g, h, \fBa\fP, \fBb\fP, \fBc\fP, \fBd\fP, e)"
+.br
+.ti -1c
+.RI "#define \fBSTEP_G\fP(K)   \fBSTEP\fP(K, g, h, \fBa\fP, \fBb\fP, \fBc\fP, \fBd\fP, e, \fBf\fP)"
+.br
+.ti -1c
+.RI "#define \fBSTEP_H\fP(K)   \fBSTEP\fP(K, h, \fBa\fP, \fBb\fP, \fBc\fP, \fBd\fP, e, \fBf\fP, g)"
+.br
+.ti -1c
+.RI "#define \fBSTEP\fP(K,  \fBa\fP,  \fBb\fP,  \fBc\fP,  \fBd\fP,  e,  \fBf\fP,  g,  h)"
+.br
+.ti -1c
+.RI "#define \fBSTEP_A\fP(K)   \fBSTEP\fP(K, \fBa\fP, \fBb\fP, \fBc\fP, \fBd\fP, e, \fBf\fP, g, h)"
+.br
+.ti -1c
+.RI "#define \fBSTEP_B\fP(K)   \fBSTEP\fP(K, \fBb\fP, \fBc\fP, \fBd\fP, e, \fBf\fP, g, h, \fBa\fP)"
+.br
+.ti -1c
+.RI "#define \fBSTEP_C\fP(K)   \fBSTEP\fP(K, \fBc\fP, \fBd\fP, e, \fBf\fP, g, h, \fBa\fP, \fBb\fP)"
+.br
+.ti -1c
+.RI "#define \fBSTEP_D\fP(K)   \fBSTEP\fP(K, \fBd\fP, e, \fBf\fP, g, h, \fBa\fP, \fBb\fP, \fBc\fP)"
+.br
+.ti -1c
+.RI "#define \fBSTEP_E\fP(K)   \fBSTEP\fP(K, e, \fBf\fP, g, h, \fBa\fP, \fBb\fP, \fBc\fP, \fBd\fP)"
+.br
+.ti -1c
+.RI "#define \fBSTEP_F\fP(K)   \fBSTEP\fP(K, \fBf\fP, g, h, \fBa\fP, \fBb\fP, \fBc\fP, \fBd\fP, e)"
+.br
+.ti -1c
+.RI "#define \fBSTEP_G\fP(K)   \fBSTEP\fP(K, g, h, \fBa\fP, \fBb\fP, \fBc\fP, \fBd\fP, e, \fBf\fP)"
+.br
+.ti -1c
+.RI "#define \fBSTEP_H\fP(K)   \fBSTEP\fP(K, h, \fBa\fP, \fBb\fP, \fBc\fP, \fBd\fP, e, \fBf\fP, g)"
+.br
+.ti -1c
+.RI "#define \fBSTEP\fP(BP)"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBvoid\fP \fBGsm_Long_Term_Predictor\fP (struct \fBgsm_state\fP *\fBS\fP, \fBword\fP *\fBd\fP, \fBword\fP *dp, \fBword\fP *e, \fBword\fP *dpp, \fBword\fP *Nc, \fBword\fP *bc)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBGsm_Long_Term_Synthesis_Filtering\fP (struct \fBgsm_state\fP *\fBS\fP, \fBword\fP Ncr, \fBword\fP bcr, register \fBword\fP *erp, register \fBword\fP *drp)"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define STEP(K, \fBa\fP, \fBb\fP, \fBc\fP, \fBd\fP, e, \fBf\fP, g, h)"
+\fBValue:\fP
+.PP
+.nf
+W = wt_float[K];       \\
+			E = W * a; S8 += E;      \\
+			E = W * b; S7 += E;      \\
+			E = W * c; S6 += E;      \\
+			E = W * d; S5 += E;      \\
+			E = W * e; S4 += E;      \\
+			E = W * f; S3 += E;      \\
+			E = W * g; S2 += E;      \\
+			E = W * h; S1 += E;      \\
+			a  = lp[K];          \\
+			E = W * a; S0 += E
+.fi
+.SS "#define STEP(K, \fBa\fP, \fBb\fP, \fBc\fP, \fBd\fP, e, \fBf\fP, g, h)"
+\fBValue:\fP
+.PP
+.nf
+W = wt_float[K];     \\
+			E = W * a; S8 += E;      \\
+			E = W * b; S7 += E;      \\
+			E = W * c; S6 += E;      \\
+			E = W * d; S5 += E;      \\
+			E = W * e; S4 += E;      \\
+			E = W * f; S3 += E;      \\
+			E = W * g; S2 += E;      \\
+			E = W * h; S1 += E;      \\
+			a  = lp[K];          \\
+			E = W * a; S0 += E
+.fi
+.SS "#define STEP(BP)"
+\fBValue:\fP
+.PP
+.nf
+for (k = 0; k <= 39; k++) {         \
+        dpp[k]  = GSM_MULT_R( BP, dp[k - Nc]);  \\
+		e[k]  = GSM_SUB( d[k], dpp[k] );  \
+    }
+.fi
+.SS "#define STEP_A(K)   \fBSTEP\fP(K, \fBa\fP, \fBb\fP, \fBc\fP, \fBd\fP, e, \fBf\fP, g, h)"
+
+.SS "#define STEP_A(K)   \fBSTEP\fP(K, \fBa\fP, \fBb\fP, \fBc\fP, \fBd\fP, e, \fBf\fP, g, h)"
+
+.SS "#define STEP_B(K)   \fBSTEP\fP(K, \fBb\fP, \fBc\fP, \fBd\fP, e, \fBf\fP, g, h, \fBa\fP)"
+
+.SS "#define STEP_B(K)   \fBSTEP\fP(K, \fBb\fP, \fBc\fP, \fBd\fP, e, \fBf\fP, g, h, \fBa\fP)"
+
+.SS "#define STEP_C(K)   \fBSTEP\fP(K, \fBc\fP, \fBd\fP, e, \fBf\fP, g, h, \fBa\fP, \fBb\fP)"
+
+.SS "#define STEP_C(K)   \fBSTEP\fP(K, \fBc\fP, \fBd\fP, e, \fBf\fP, g, h, \fBa\fP, \fBb\fP)"
+
+.SS "#define STEP_D(K)   \fBSTEP\fP(K, \fBd\fP, e, \fBf\fP, g, h, \fBa\fP, \fBb\fP, \fBc\fP)"
+
+.SS "#define STEP_D(K)   \fBSTEP\fP(K, \fBd\fP, e, \fBf\fP, g, h, \fBa\fP, \fBb\fP, \fBc\fP)"
+
+.SS "#define STEP_E(K)   \fBSTEP\fP(K, e, \fBf\fP, g, h, \fBa\fP, \fBb\fP, \fBc\fP, \fBd\fP)"
+
+.SS "#define STEP_E(K)   \fBSTEP\fP(K, e, \fBf\fP, g, h, \fBa\fP, \fBb\fP, \fBc\fP, \fBd\fP)"
+
+.SS "#define STEP_F(K)   \fBSTEP\fP(K, \fBf\fP, g, h, \fBa\fP, \fBb\fP, \fBc\fP, \fBd\fP, e)"
+
+.SS "#define STEP_F(K)   \fBSTEP\fP(K, \fBf\fP, g, h, \fBa\fP, \fBb\fP, \fBc\fP, \fBd\fP, e)"
+
+.SS "#define STEP_G(K)   \fBSTEP\fP(K, g, h, \fBa\fP, \fBb\fP, \fBc\fP, \fBd\fP, e, \fBf\fP)"
+
+.SS "#define STEP_G(K)   \fBSTEP\fP(K, g, h, \fBa\fP, \fBb\fP, \fBc\fP, \fBd\fP, e, \fBf\fP)"
+
+.SS "#define STEP_H(K)   \fBSTEP\fP(K, h, \fBa\fP, \fBb\fP, \fBc\fP, \fBd\fP, e, \fBf\fP, g)"
+
+.SS "#define STEP_H(K)   \fBSTEP\fP(K, h, \fBa\fP, \fBb\fP, \fBc\fP, \fBd\fP, e, \fBf\fP, g)"
+
+.SH "Function Documentation"
+.PP 
+.SS "\fBvoid\fP Gsm_Long_Term_Predictor (struct \fBgsm_state\fP * S, \fBword\fP * d, \fBword\fP * dp, \fBword\fP * e, \fBword\fP * dpp, \fBword\fP * Nc, \fBword\fP * bc)"
+
+.PP
+Definition at line 878 of file long_term\&.c\&.
+.SS "\fBvoid\fP Gsm_Long_Term_Synthesis_Filtering (struct \fBgsm_state\fP * S, \fBword\fP Ncr, \fBword\fP bcr, register \fBword\fP * erp, register \fBword\fP * drp)"
+
+.PP
+Definition at line 916 of file long_term\&.c\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

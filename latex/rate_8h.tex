@@ -1,0 +1,368 @@
+\hypertarget{rate_8h}{}\section{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/libsoxr/src/rate.h File Reference}
+\label{rate_8h}\index{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/libsoxr/src/rate.\+h@{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/libsoxr/src/rate.\+h}}
+{\ttfamily \#include $<$math.\+h$>$}\\*
+{\ttfamily \#include $<$assert.\+h$>$}\\*
+{\ttfamily \#include $<$string.\+h$>$}\\*
+{\ttfamily \#include $<$stdlib.\+h$>$}\\*
+{\ttfamily \#include \char`\"{}filter.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}fifo.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}filters.\+h\char`\"{}}\\*
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+union \hyperlink{unionint64p__t}{int64p\+\_\+t}
+\item 
+union \hyperlink{unionuint64p__t}{uint64p\+\_\+t}
+\item 
+struct \hyperlink{structdft__filter__t}{dft\+\_\+filter\+\_\+t}
+\item 
+struct \hyperlink{structrate__shared__t}{rate\+\_\+shared\+\_\+t}
+\item 
+union \hyperlink{unionstep__t}{step\+\_\+t}
+\item 
+struct \hyperlink{structstage}{stage}
+\item 
+struct \hyperlink{structrate__t}{rate\+\_\+t}
+\end{DoxyCompactItemize}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{rate_8h_a756c30a921f9df785aa8b0e7560dedaa}{R\+A\+T\+E\+\_\+\+S\+I\+M\+D\+\_\+\+P\+O\+LY}~0
+\item 
+\#define \hyperlink{rate_8h_a626eff9ecb57891b0710865478efeb37}{num\+\_\+coefs4}~\hyperlink{filters_8h_ac860c50d504206a6d707bc9196f82292}{num\+\_\+coefs}
+\item 
+\#define \hyperlink{rate_8h_a733938c838971f0adf7d1b80159caa96}{coefs4\+\_\+check}(\hyperlink{checksum_8c_ab80e330a3bc9e38c1297fe17381e92b4}{i})~1
+\item 
+\#define \hyperlink{rate_8h_a7178e209b3f7bf3d1bef7f89013503b1}{aligned\+\_\+free}~free
+\item 
+\#define \hyperlink{rate_8h_a8808ffff72ef008bc22d415d7712d3cc}{aligned\+\_\+malloc}~malloc
+\item 
+\#define \hyperlink{rate_8h_a781fc38740450e78381612032b541737}{aligned\+\_\+calloc}~calloc
+\item 
+\#define \hyperlink{rate_8h_ae926807bd6da66f484d097d37ad4f636}{F\+I\+F\+O\+\_\+\+S\+I\+Z\+E\+\_\+T}~\hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int}
+\item 
+\#define \hyperlink{rate_8h_ac539707382e622023cabe216bb7dbbb1}{F\+L\+O\+A\+T\+\_\+\+H\+I\+\_\+\+P\+R\+E\+C\+\_\+\+C\+L\+O\+CK}~0    /$\ast$ Non-\/float hi-\/prec has $\sim$96 bits. $\ast$/
+\item 
+\#define \hyperlink{rate_8h_ab8d52bb00a7a6ade606e9b28c1286665}{float\+\_\+step\+\_\+t}~long double /$\ast$ \+\_\+\+\_\+float128 is also \hyperlink{rfft2d_test_m_l_8m_a4124bc0a9335c27f086f24ba207a4912}{a} (slow) option $\ast$/
+\item 
+\#define \hyperlink{rate_8h_abb25177205d56e90a9770f6b4c57c07f}{coef}(coef\+\_\+p,  interp\+\_\+order,  fir\+\_\+len,  phase\+\_\+num,  coef\+\_\+interp\+\_\+num,  fir\+\_\+coef\+\_\+num)~coef\+\_\+p\mbox{[}(fir\+\_\+len) $\ast$ ((interp\+\_\+order) + 1) $\ast$ (phase\+\_\+num) + ((interp\+\_\+order) + 1) $\ast$ (fir\+\_\+coef\+\_\+num) + (interp\+\_\+order -\/ coef\+\_\+interp\+\_\+num)\mbox{]}
+\item 
+\#define \hyperlink{rate_8h_a49ba5e99187254b03d6710a312197a52}{raw\+\_\+coef\+\_\+t}~double
+\item 
+\#define \hyperlink{rate_8h_a03c37ad80a2c2015c8102588f1be17c0}{coef\+\_\+coef}(x)~\hyperlink{vr32_8c_abb25177205d56e90a9770f6b4c57c07f}{coef}(result, interp\+\_\+order, \hyperlink{rate_8h_a626eff9ecb57891b0710865478efeb37}{num\+\_\+coefs4}, j, x, \hyperlink{rate_8h_a626eff9ecb57891b0710865478efeb37}{num\+\_\+coefs4} -\/ 1 -\/ \hyperlink{checksum_8c_ab80e330a3bc9e38c1297fe17381e92b4}{i})
+\item 
+\#define \hyperlink{rate_8h_a02cca5ade7272f877064fa67c1bbdd48}{M\+U\+L\+T32}~(65536. $\ast$ 65536.)
+\item 
+\#define \hyperlink{rate_8h_a99d1a8c8eef09c8366721929b32aab91}{stage\+\_\+occupancy}(\hyperlink{lib_2expat_8h_a755339d27872b13735c2cab829e47157}{s})~\hyperlink{_t_d_stretch_8cpp_ac39d9cef6a5e030ba8d9e11121054268}{max}(0, fifo\+\_\+occupancy(\&(\hyperlink{lib_2expat_8h_a755339d27872b13735c2cab829e47157}{s})-\/$>$fifo) -\/ (\hyperlink{lib_2expat_8h_a755339d27872b13735c2cab829e47157}{s})-\/$>$pre\+\_\+post)
+\item 
+\#define \hyperlink{rate_8h_a0252bb6d8119002e67e16d9c8be0f4ac}{stage\+\_\+read\+\_\+p}(\hyperlink{lib_2expat_8h_a755339d27872b13735c2cab829e47157}{s})~((\hyperlink{soxr_8c_aeef50d4abead1cb3eef063fda4b721c0}{sample\+\_\+t} $\ast$)\hyperlink{_reverb__lib_so_x_8h_a1b6d0c490d62effa12f8add51851db0d}{fifo\+\_\+read\+\_\+ptr}(\&(\hyperlink{lib_2expat_8h_a755339d27872b13735c2cab829e47157}{s})-\/$>$fifo) + (\hyperlink{lib_2expat_8h_a755339d27872b13735c2cab829e47157}{s})-\/$>$pre)
+\item 
+\#define \hyperlink{rate_8h_a30f7ba481fb6777d119ce55219426be0}{integer}~fix.\+ms.\+parts.\+ms
+\item 
+\#define \hyperlink{rate_8h_a4fe9291634c41107f940e7393fba4603}{fraction}~fix.\+ms.\+parts.\+ls
+\item 
+\#define \hyperlink{rate_8h_a831e6f9707119a92f6ee0a37d35bdd22}{whole}~fix.\+ms.\+all
+\item 
+\#define \hyperlink{rate_8h_a0b2b41c20ec7ad64fcfeb50a28862dbf}{dft\+\_\+out}~\hyperlink{mm_8c_aeb3fcf4ab0f02cc4420e5a97568a07ef}{output}
+\item 
+\#define \hyperlink{rate_8h_aad900ebbfc8ad0e1f8e789d4038fa221}{pre\+\_\+stage}~\hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p}-\/$>$stages\mbox{[}shift\mbox{]}
+\item 
+\#define \hyperlink{rate_8h_a88fd9fadd1083f8da0ce94f1d9146c8b}{arb\+\_\+stage}~\hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p}-\/$>$stages\mbox{[}shift + \hyperlink{rate_8h_a33518132b8eb127d705b0afd6928c284}{have\+\_\+pre\+\_\+stage}\mbox{]}
+\item 
+\#define \hyperlink{rate_8h_aa08687678bc1a8148f0e1d780b020868}{post\+\_\+stage}~\hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p}-\/$>$stages\mbox{[}shift + \hyperlink{rate_8h_a33518132b8eb127d705b0afd6928c284}{have\+\_\+pre\+\_\+stage} + \hyperlink{rate_8h_a79eb384e460ed039cb447efeb1d59660}{have\+\_\+arb\+\_\+stage}\mbox{]}
+\item 
+\#define \hyperlink{rate_8h_a33518132b8eb127d705b0afd6928c284}{have\+\_\+pre\+\_\+stage}~(preM  $\ast$ preL  != 1)
+\item 
+\#define \hyperlink{rate_8h_a79eb384e460ed039cb447efeb1d59660}{have\+\_\+arb\+\_\+stage}~(arbM  $\ast$ arbL  != 1)
+\item 
+\#define \hyperlink{rate_8h_a3eef6da704c304a66ea424cbdd94f74d}{have\+\_\+post\+\_\+stage}~(postM $\ast$ postL != 1)
+\item 
+\#define \hyperlink{rate_8h_aee1b99901113e8fbc4866fc090301a35}{T\+O\+\_\+3dB}(\hyperlink{rfft2d_test_m_l_8m_a4124bc0a9335c27f086f24ba207a4912}{a})          ~((1.\+6e-\/6$\ast$a-\/7.\+5e-\/4)$\ast$a+.\+646)
+\item 
+\#define \hyperlink{rate_8h_a94d12e404c90386f2df999c65b73e447}{L\+O\+W\+\_\+\+Q\+\_\+\+B\+W0}~(1385 / 2048.) /$\ast$ 0.\+67625 rounded to be \hyperlink{rfft2d_test_m_l_8m_a4124bc0a9335c27f086f24ba207a4912}{a} FP exact. $\ast$/
+\end{DoxyCompactItemize}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef \hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void}($\ast$ \hyperlink{rate_8h_a59221c24235975480a4d5f8ff1e781e5}{stage\+\_\+fn\+\_\+t}) (struct \hyperlink{structstage}{stage} $\ast$input, \hyperlink{structfifo__t}{fifo\+\_\+t} $\ast$\hyperlink{mm_8c_aeb3fcf4ab0f02cc4420e5a97568a07ef}{output})
+\item 
+typedef struct \hyperlink{structstage}{stage} \hyperlink{rate_8h_a341f4b58190fd7e463b110b1a1409856}{stage\+\_\+t}
+\end{DoxyCompactItemize}
+\subsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \hyperlink{rate_8h_ad524e72d21e81fd57c0eb91a234d6c64}{stage\+\_\+type\+\_\+t} \{ \\*
+\hyperlink{rate_8h_ad524e72d21e81fd57c0eb91a234d6c64a6f493a157c4bda700850558a0f6575cb}{irrational\+\_\+stage} = 1, 
+\hyperlink{rate_8h_ad524e72d21e81fd57c0eb91a234d6c64af4ede9e68576d8588d6d6a45901cf690}{cubic\+\_\+stage}, 
+\hyperlink{rate_8h_ad524e72d21e81fd57c0eb91a234d6c64a4febf3d8d6eb19e3f8bd1c7de8a6a5fd}{dft\+\_\+stage}, 
+\hyperlink{rate_8h_ad524e72d21e81fd57c0eb91a234d6c64aafe23d29565a1f57e3728c3f2126d5b9}{half\+\_\+stage}, 
+\\*
+\hyperlink{rate_8h_ad524e72d21e81fd57c0eb91a234d6c64aa44f4ac0fce706cb0764518dbce1e722}{rational\+\_\+stage}
+ \}
+\item 
+enum \hyperlink{rate_8h_af2d9c9f4aac239ae1603ae8fd5f2872d}{rolloff\+\_\+t} \{ \hyperlink{rate_8h_af2d9c9f4aac239ae1603ae8fd5f2872da84e7562dddc748f5b46c7f58d61331cd}{rolloff\+\_\+none}, 
+\hyperlink{rate_8h_af2d9c9f4aac239ae1603ae8fd5f2872da11d69c5028c6460ea79c3ba8b1de70b5}{rolloff\+\_\+small}, 
+\hyperlink{rate_8h_af2d9c9f4aac239ae1603ae8fd5f2872da237296bfa9bc245b44b9161d03121d4f}{rolloff\+\_\+medium}
+ \}
+\end{DoxyCompactItemize}
+
+
+\subsection{Macro Definition Documentation}
+\index{rate.\+h@{rate.\+h}!aligned\+\_\+calloc@{aligned\+\_\+calloc}}
+\index{aligned\+\_\+calloc@{aligned\+\_\+calloc}!rate.\+h@{rate.\+h}}
+\subsubsection[{\texorpdfstring{aligned\+\_\+calloc}{aligned_calloc}}]{\setlength{\rightskip}{0pt plus 5cm}\#define aligned\+\_\+calloc~calloc}\hypertarget{rate_8h_a781fc38740450e78381612032b541737}{}\label{rate_8h_a781fc38740450e78381612032b541737}
+
+
+Definition at line 65 of file rate.\+h.
+
+\index{rate.\+h@{rate.\+h}!aligned\+\_\+free@{aligned\+\_\+free}}
+\index{aligned\+\_\+free@{aligned\+\_\+free}!rate.\+h@{rate.\+h}}
+\subsubsection[{\texorpdfstring{aligned\+\_\+free}{aligned_free}}]{\setlength{\rightskip}{0pt plus 5cm}\#define aligned\+\_\+free~free}\hypertarget{rate_8h_a7178e209b3f7bf3d1bef7f89013503b1}{}\label{rate_8h_a7178e209b3f7bf3d1bef7f89013503b1}
+
+
+Definition at line 63 of file rate.\+h.
+
+\index{rate.\+h@{rate.\+h}!aligned\+\_\+malloc@{aligned\+\_\+malloc}}
+\index{aligned\+\_\+malloc@{aligned\+\_\+malloc}!rate.\+h@{rate.\+h}}
+\subsubsection[{\texorpdfstring{aligned\+\_\+malloc}{aligned_malloc}}]{\setlength{\rightskip}{0pt plus 5cm}\#define aligned\+\_\+malloc~malloc}\hypertarget{rate_8h_a8808ffff72ef008bc22d415d7712d3cc}{}\label{rate_8h_a8808ffff72ef008bc22d415d7712d3cc}
+
+
+Definition at line 64 of file rate.\+h.
+
+\index{rate.\+h@{rate.\+h}!arb\+\_\+stage@{arb\+\_\+stage}}
+\index{arb\+\_\+stage@{arb\+\_\+stage}!rate.\+h@{rate.\+h}}
+\subsubsection[{\texorpdfstring{arb\+\_\+stage}{arb_stage}}]{\setlength{\rightskip}{0pt plus 5cm}\#define arb\+\_\+stage~{\bf p}-\/$>$stages\mbox{[}shift + {\bf have\+\_\+pre\+\_\+stage}\mbox{]}}\hypertarget{rate_8h_a88fd9fadd1083f8da0ce94f1d9146c8b}{}\label{rate_8h_a88fd9fadd1083f8da0ce94f1d9146c8b}
+
+
+Definition at line 365 of file rate.\+h.
+
+\index{rate.\+h@{rate.\+h}!coef@{coef}}
+\index{coef@{coef}!rate.\+h@{rate.\+h}}
+\subsubsection[{\texorpdfstring{coef}{coef}}]{\setlength{\rightskip}{0pt plus 5cm}\#define coef(
+\begin{DoxyParamCaption}
+\item[{}]{coef\+\_\+p, }
+\item[{}]{interp\+\_\+order, }
+\item[{}]{fir\+\_\+len, }
+\item[{}]{phase\+\_\+num, }
+\item[{}]{coef\+\_\+interp\+\_\+num, }
+\item[{}]{fir\+\_\+coef\+\_\+num}
+\end{DoxyParamCaption}
+)~coef\+\_\+p\mbox{[}(fir\+\_\+len) $\ast$ ((interp\+\_\+order) + 1) $\ast$ (phase\+\_\+num) + ((interp\+\_\+order) + 1) $\ast$ (fir\+\_\+coef\+\_\+num) + (interp\+\_\+order -\/ coef\+\_\+interp\+\_\+num)\mbox{]}}\hypertarget{rate_8h_abb25177205d56e90a9770f6b4c57c07f}{}\label{rate_8h_abb25177205d56e90a9770f6b4c57c07f}
+
+
+Definition at line 92 of file rate.\+h.
+
+\index{rate.\+h@{rate.\+h}!coef\+\_\+coef@{coef\+\_\+coef}}
+\index{coef\+\_\+coef@{coef\+\_\+coef}!rate.\+h@{rate.\+h}}
+\subsubsection[{\texorpdfstring{coef\+\_\+coef}{coef_coef}}]{\setlength{\rightskip}{0pt plus 5cm}\#define coef\+\_\+coef(
+\begin{DoxyParamCaption}
+\item[{}]{x}
+\end{DoxyParamCaption}
+)~{\bf coef}(result, interp\+\_\+order, {\bf num\+\_\+coefs4}, j, x, {\bf num\+\_\+coefs4} -\/ 1 -\/ {\bf i})}\hypertarget{rate_8h_a03c37ad80a2c2015c8102588f1be17c0}{}\label{rate_8h_a03c37ad80a2c2015c8102588f1be17c0}
+\index{rate.\+h@{rate.\+h}!coefs4\+\_\+check@{coefs4\+\_\+check}}
+\index{coefs4\+\_\+check@{coefs4\+\_\+check}!rate.\+h@{rate.\+h}}
+\subsubsection[{\texorpdfstring{coefs4\+\_\+check}{coefs4_check}}]{\setlength{\rightskip}{0pt plus 5cm}\#define coefs4\+\_\+check(
+\begin{DoxyParamCaption}
+\item[{}]{{\bf i}}
+\end{DoxyParamCaption}
+)~1}\hypertarget{rate_8h_a733938c838971f0adf7d1b80159caa96}{}\label{rate_8h_a733938c838971f0adf7d1b80159caa96}
+
+
+Definition at line 61 of file rate.\+h.
+
+\index{rate.\+h@{rate.\+h}!dft\+\_\+out@{dft\+\_\+out}}
+\index{dft\+\_\+out@{dft\+\_\+out}!rate.\+h@{rate.\+h}}
+\subsubsection[{\texorpdfstring{dft\+\_\+out}{dft_out}}]{\setlength{\rightskip}{0pt plus 5cm}\#define dft\+\_\+out~{\bf output}}\hypertarget{rate_8h_a0b2b41c20ec7ad64fcfeb50a28862dbf}{}\label{rate_8h_a0b2b41c20ec7ad64fcfeb50a28862dbf}
+
+
+Definition at line 205 of file rate.\+h.
+
+\index{rate.\+h@{rate.\+h}!F\+I\+F\+O\+\_\+\+S\+I\+Z\+E\+\_\+T@{F\+I\+F\+O\+\_\+\+S\+I\+Z\+E\+\_\+T}}
+\index{F\+I\+F\+O\+\_\+\+S\+I\+Z\+E\+\_\+T@{F\+I\+F\+O\+\_\+\+S\+I\+Z\+E\+\_\+T}!rate.\+h@{rate.\+h}}
+\subsubsection[{\texorpdfstring{F\+I\+F\+O\+\_\+\+S\+I\+Z\+E\+\_\+T}{FIFO_SIZE_T}}]{\setlength{\rightskip}{0pt plus 5cm}\#define F\+I\+F\+O\+\_\+\+S\+I\+Z\+E\+\_\+T~{\bf int}}\hypertarget{rate_8h_ae926807bd6da66f484d097d37ad4f636}{}\label{rate_8h_ae926807bd6da66f484d097d37ad4f636}
+
+
+Definition at line 68 of file rate.\+h.
+
+\index{rate.\+h@{rate.\+h}!F\+L\+O\+A\+T\+\_\+\+H\+I\+\_\+\+P\+R\+E\+C\+\_\+\+C\+L\+O\+CK@{F\+L\+O\+A\+T\+\_\+\+H\+I\+\_\+\+P\+R\+E\+C\+\_\+\+C\+L\+O\+CK}}
+\index{F\+L\+O\+A\+T\+\_\+\+H\+I\+\_\+\+P\+R\+E\+C\+\_\+\+C\+L\+O\+CK@{F\+L\+O\+A\+T\+\_\+\+H\+I\+\_\+\+P\+R\+E\+C\+\_\+\+C\+L\+O\+CK}!rate.\+h@{rate.\+h}}
+\subsubsection[{\texorpdfstring{F\+L\+O\+A\+T\+\_\+\+H\+I\+\_\+\+P\+R\+E\+C\+\_\+\+C\+L\+O\+CK}{FLOAT_HI_PREC_CLOCK}}]{\setlength{\rightskip}{0pt plus 5cm}\#define F\+L\+O\+A\+T\+\_\+\+H\+I\+\_\+\+P\+R\+E\+C\+\_\+\+C\+L\+O\+CK~0    /$\ast$ Non-\/float hi-\/prec has $\sim$96 bits. $\ast$/}\hypertarget{rate_8h_ac539707382e622023cabe216bb7dbbb1}{}\label{rate_8h_ac539707382e622023cabe216bb7dbbb1}
+
+
+Definition at line 89 of file rate.\+h.
+
+\index{rate.\+h@{rate.\+h}!float\+\_\+step\+\_\+t@{float\+\_\+step\+\_\+t}}
+\index{float\+\_\+step\+\_\+t@{float\+\_\+step\+\_\+t}!rate.\+h@{rate.\+h}}
+\subsubsection[{\texorpdfstring{float\+\_\+step\+\_\+t}{float_step_t}}]{\setlength{\rightskip}{0pt plus 5cm}\#define float\+\_\+step\+\_\+t~long double /$\ast$ \+\_\+\+\_\+float128 is also {\bf a} (slow) option $\ast$/}\hypertarget{rate_8h_ab8d52bb00a7a6ade606e9b28c1286665}{}\label{rate_8h_ab8d52bb00a7a6ade606e9b28c1286665}
+
+
+Definition at line 90 of file rate.\+h.
+
+\index{rate.\+h@{rate.\+h}!fraction@{fraction}}
+\index{fraction@{fraction}!rate.\+h@{rate.\+h}}
+\subsubsection[{\texorpdfstring{fraction}{fraction}}]{\setlength{\rightskip}{0pt plus 5cm}\#define fraction~fix.\+ms.\+parts.\+ls}\hypertarget{rate_8h_a4fe9291634c41107f940e7393fba4603}{}\label{rate_8h_a4fe9291634c41107f940e7393fba4603}
+\index{rate.\+h@{rate.\+h}!have\+\_\+arb\+\_\+stage@{have\+\_\+arb\+\_\+stage}}
+\index{have\+\_\+arb\+\_\+stage@{have\+\_\+arb\+\_\+stage}!rate.\+h@{rate.\+h}}
+\subsubsection[{\texorpdfstring{have\+\_\+arb\+\_\+stage}{have_arb_stage}}]{\setlength{\rightskip}{0pt plus 5cm}\#define have\+\_\+arb\+\_\+stage~(arbM  $\ast$ arbL  != 1)}\hypertarget{rate_8h_a79eb384e460ed039cb447efeb1d59660}{}\label{rate_8h_a79eb384e460ed039cb447efeb1d59660}
+
+
+Definition at line 368 of file rate.\+h.
+
+\index{rate.\+h@{rate.\+h}!have\+\_\+post\+\_\+stage@{have\+\_\+post\+\_\+stage}}
+\index{have\+\_\+post\+\_\+stage@{have\+\_\+post\+\_\+stage}!rate.\+h@{rate.\+h}}
+\subsubsection[{\texorpdfstring{have\+\_\+post\+\_\+stage}{have_post_stage}}]{\setlength{\rightskip}{0pt plus 5cm}\#define have\+\_\+post\+\_\+stage~(postM $\ast$ postL != 1)}\hypertarget{rate_8h_a3eef6da704c304a66ea424cbdd94f74d}{}\label{rate_8h_a3eef6da704c304a66ea424cbdd94f74d}
+
+
+Definition at line 369 of file rate.\+h.
+
+\index{rate.\+h@{rate.\+h}!have\+\_\+pre\+\_\+stage@{have\+\_\+pre\+\_\+stage}}
+\index{have\+\_\+pre\+\_\+stage@{have\+\_\+pre\+\_\+stage}!rate.\+h@{rate.\+h}}
+\subsubsection[{\texorpdfstring{have\+\_\+pre\+\_\+stage}{have_pre_stage}}]{\setlength{\rightskip}{0pt plus 5cm}\#define have\+\_\+pre\+\_\+stage~(preM  $\ast$ preL  != 1)}\hypertarget{rate_8h_a33518132b8eb127d705b0afd6928c284}{}\label{rate_8h_a33518132b8eb127d705b0afd6928c284}
+
+
+Definition at line 367 of file rate.\+h.
+
+\index{rate.\+h@{rate.\+h}!integer@{integer}}
+\index{integer@{integer}!rate.\+h@{rate.\+h}}
+\subsubsection[{\texorpdfstring{integer}{integer}}]{\setlength{\rightskip}{0pt plus 5cm}\#define integer~fix.\+ms.\+parts.\+ms}\hypertarget{rate_8h_a30f7ba481fb6777d119ce55219426be0}{}\label{rate_8h_a30f7ba481fb6777d119ce55219426be0}
+\index{rate.\+h@{rate.\+h}!L\+O\+W\+\_\+\+Q\+\_\+\+B\+W0@{L\+O\+W\+\_\+\+Q\+\_\+\+B\+W0}}
+\index{L\+O\+W\+\_\+\+Q\+\_\+\+B\+W0@{L\+O\+W\+\_\+\+Q\+\_\+\+B\+W0}!rate.\+h@{rate.\+h}}
+\subsubsection[{\texorpdfstring{L\+O\+W\+\_\+\+Q\+\_\+\+B\+W0}{LOW_Q_BW0}}]{\setlength{\rightskip}{0pt plus 5cm}\#define L\+O\+W\+\_\+\+Q\+\_\+\+B\+W0~(1385 / 2048.) /$\ast$ 0.\+67625 rounded to be {\bf a} FP exact. $\ast$/}\hypertarget{rate_8h_a94d12e404c90386f2df999c65b73e447}{}\label{rate_8h_a94d12e404c90386f2df999c65b73e447}
+
+
+Definition at line 372 of file rate.\+h.
+
+\index{rate.\+h@{rate.\+h}!M\+U\+L\+T32@{M\+U\+L\+T32}}
+\index{M\+U\+L\+T32@{M\+U\+L\+T32}!rate.\+h@{rate.\+h}}
+\subsubsection[{\texorpdfstring{M\+U\+L\+T32}{MULT32}}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+U\+L\+T32~(65536. $\ast$ 65536.)}\hypertarget{rate_8h_a02cca5ade7272f877064fa67c1bbdd48}{}\label{rate_8h_a02cca5ade7272f877064fa67c1bbdd48}
+
+
+Definition at line 147 of file rate.\+h.
+
+\index{rate.\+h@{rate.\+h}!num\+\_\+coefs4@{num\+\_\+coefs4}}
+\index{num\+\_\+coefs4@{num\+\_\+coefs4}!rate.\+h@{rate.\+h}}
+\subsubsection[{\texorpdfstring{num\+\_\+coefs4}{num_coefs4}}]{\setlength{\rightskip}{0pt plus 5cm}\#define num\+\_\+coefs4~{\bf num\+\_\+coefs}}\hypertarget{rate_8h_a626eff9ecb57891b0710865478efeb37}{}\label{rate_8h_a626eff9ecb57891b0710865478efeb37}
+
+
+Definition at line 60 of file rate.\+h.
+
+\index{rate.\+h@{rate.\+h}!post\+\_\+stage@{post\+\_\+stage}}
+\index{post\+\_\+stage@{post\+\_\+stage}!rate.\+h@{rate.\+h}}
+\subsubsection[{\texorpdfstring{post\+\_\+stage}{post_stage}}]{\setlength{\rightskip}{0pt plus 5cm}\#define post\+\_\+stage~{\bf p}-\/$>$stages\mbox{[}shift + {\bf have\+\_\+pre\+\_\+stage} + {\bf have\+\_\+arb\+\_\+stage}\mbox{]}}\hypertarget{rate_8h_aa08687678bc1a8148f0e1d780b020868}{}\label{rate_8h_aa08687678bc1a8148f0e1d780b020868}
+
+
+Definition at line 366 of file rate.\+h.
+
+\index{rate.\+h@{rate.\+h}!pre\+\_\+stage@{pre\+\_\+stage}}
+\index{pre\+\_\+stage@{pre\+\_\+stage}!rate.\+h@{rate.\+h}}
+\subsubsection[{\texorpdfstring{pre\+\_\+stage}{pre_stage}}]{\setlength{\rightskip}{0pt plus 5cm}\#define pre\+\_\+stage~{\bf p}-\/$>$stages\mbox{[}shift\mbox{]}}\hypertarget{rate_8h_aad900ebbfc8ad0e1f8e789d4038fa221}{}\label{rate_8h_aad900ebbfc8ad0e1f8e789d4038fa221}
+
+
+Definition at line 364 of file rate.\+h.
+
+\index{rate.\+h@{rate.\+h}!R\+A\+T\+E\+\_\+\+S\+I\+M\+D\+\_\+\+P\+O\+LY@{R\+A\+T\+E\+\_\+\+S\+I\+M\+D\+\_\+\+P\+O\+LY}}
+\index{R\+A\+T\+E\+\_\+\+S\+I\+M\+D\+\_\+\+P\+O\+LY@{R\+A\+T\+E\+\_\+\+S\+I\+M\+D\+\_\+\+P\+O\+LY}!rate.\+h@{rate.\+h}}
+\subsubsection[{\texorpdfstring{R\+A\+T\+E\+\_\+\+S\+I\+M\+D\+\_\+\+P\+O\+LY}{RATE_SIMD_POLY}}]{\setlength{\rightskip}{0pt plus 5cm}\#define R\+A\+T\+E\+\_\+\+S\+I\+M\+D\+\_\+\+P\+O\+LY~0}\hypertarget{rate_8h_a756c30a921f9df785aa8b0e7560dedaa}{}\label{rate_8h_a756c30a921f9df785aa8b0e7560dedaa}
+
+
+Definition at line 59 of file rate.\+h.
+
+\index{rate.\+h@{rate.\+h}!raw\+\_\+coef\+\_\+t@{raw\+\_\+coef\+\_\+t}}
+\index{raw\+\_\+coef\+\_\+t@{raw\+\_\+coef\+\_\+t}!rate.\+h@{rate.\+h}}
+\subsubsection[{\texorpdfstring{raw\+\_\+coef\+\_\+t}{raw_coef_t}}]{\setlength{\rightskip}{0pt plus 5cm}\#define raw\+\_\+coef\+\_\+t~double}\hypertarget{rate_8h_a49ba5e99187254b03d6710a312197a52}{}\label{rate_8h_a49ba5e99187254b03d6710a312197a52}
+
+
+Definition at line 94 of file rate.\+h.
+
+\index{rate.\+h@{rate.\+h}!stage\+\_\+occupancy@{stage\+\_\+occupancy}}
+\index{stage\+\_\+occupancy@{stage\+\_\+occupancy}!rate.\+h@{rate.\+h}}
+\subsubsection[{\texorpdfstring{stage\+\_\+occupancy}{stage_occupancy}}]{\setlength{\rightskip}{0pt plus 5cm}\#define stage\+\_\+occupancy(
+\begin{DoxyParamCaption}
+\item[{}]{{\bf s}}
+\end{DoxyParamCaption}
+)~{\bf max}(0, fifo\+\_\+occupancy(\&({\bf s})-\/$>$fifo) -\/ ({\bf s})-\/$>$pre\+\_\+post)}\hypertarget{rate_8h_a99d1a8c8eef09c8366721929b32aab91}{}\label{rate_8h_a99d1a8c8eef09c8366721929b32aab91}
+
+
+Definition at line 177 of file rate.\+h.
+
+\index{rate.\+h@{rate.\+h}!stage\+\_\+read\+\_\+p@{stage\+\_\+read\+\_\+p}}
+\index{stage\+\_\+read\+\_\+p@{stage\+\_\+read\+\_\+p}!rate.\+h@{rate.\+h}}
+\subsubsection[{\texorpdfstring{stage\+\_\+read\+\_\+p}{stage_read_p}}]{\setlength{\rightskip}{0pt plus 5cm}\#define stage\+\_\+read\+\_\+p(
+\begin{DoxyParamCaption}
+\item[{}]{{\bf s}}
+\end{DoxyParamCaption}
+)~(({\bf sample\+\_\+t} $\ast$){\bf fifo\+\_\+read\+\_\+ptr}(\&({\bf s})-\/$>$fifo) + ({\bf s})-\/$>$pre)}\hypertarget{rate_8h_a0252bb6d8119002e67e16d9c8be0f4ac}{}\label{rate_8h_a0252bb6d8119002e67e16d9c8be0f4ac}
+
+
+Definition at line 178 of file rate.\+h.
+
+\index{rate.\+h@{rate.\+h}!T\+O\+\_\+3dB@{T\+O\+\_\+3dB}}
+\index{T\+O\+\_\+3dB@{T\+O\+\_\+3dB}!rate.\+h@{rate.\+h}}
+\subsubsection[{\texorpdfstring{T\+O\+\_\+3dB}{TO_3dB}}]{\setlength{\rightskip}{0pt plus 5cm}\#define T\+O\+\_\+3dB(
+\begin{DoxyParamCaption}
+\item[{}]{{\bf a}}
+\end{DoxyParamCaption}
+)~((1.\+6e-\/6$\ast$a-\/7.\+5e-\/4)$\ast$a+.\+646)}\hypertarget{rate_8h_aee1b99901113e8fbc4866fc090301a35}{}\label{rate_8h_aee1b99901113e8fbc4866fc090301a35}
+
+
+Definition at line 371 of file rate.\+h.
+
+\index{rate.\+h@{rate.\+h}!whole@{whole}}
+\index{whole@{whole}!rate.\+h@{rate.\+h}}
+\subsubsection[{\texorpdfstring{whole}{whole}}]{\setlength{\rightskip}{0pt plus 5cm}\#define whole~fix.\+ms.\+all}\hypertarget{rate_8h_a831e6f9707119a92f6ee0a37d35bdd22}{}\label{rate_8h_a831e6f9707119a92f6ee0a37d35bdd22}
+
+
+\subsection{Typedef Documentation}
+\index{rate.\+h@{rate.\+h}!stage\+\_\+fn\+\_\+t@{stage\+\_\+fn\+\_\+t}}
+\index{stage\+\_\+fn\+\_\+t@{stage\+\_\+fn\+\_\+t}!rate.\+h@{rate.\+h}}
+\subsubsection[{\texorpdfstring{stage\+\_\+fn\+\_\+t}{stage_fn_t}}]{\setlength{\rightskip}{0pt plus 5cm}typedef {\bf void}($\ast$  stage\+\_\+fn\+\_\+t) (struct {\bf stage} $\ast$input, {\bf fifo\+\_\+t} $\ast${\bf output})}\hypertarget{rate_8h_a59221c24235975480a4d5f8ff1e781e5}{}\label{rate_8h_a59221c24235975480a4d5f8ff1e781e5}
+
+
+Definition at line 146 of file rate.\+h.
+
+\index{rate.\+h@{rate.\+h}!stage\+\_\+t@{stage\+\_\+t}}
+\index{stage\+\_\+t@{stage\+\_\+t}!rate.\+h@{rate.\+h}}
+\subsubsection[{\texorpdfstring{stage\+\_\+t}{stage_t}}]{\setlength{\rightskip}{0pt plus 5cm}typedef struct {\bf stage}  {\bf stage\+\_\+t}}\hypertarget{rate_8h_a341f4b58190fd7e463b110b1a1409856}{}\label{rate_8h_a341f4b58190fd7e463b110b1a1409856}
+
+
+\subsection{Enumeration Type Documentation}
+\index{rate.\+h@{rate.\+h}!rolloff\+\_\+t@{rolloff\+\_\+t}}
+\index{rolloff\+\_\+t@{rolloff\+\_\+t}!rate.\+h@{rate.\+h}}
+\subsubsection[{\texorpdfstring{rolloff\+\_\+t}{rolloff_t}}]{\setlength{\rightskip}{0pt plus 5cm}enum {\bf rolloff\+\_\+t}}\hypertarget{rate_8h_af2d9c9f4aac239ae1603ae8fd5f2872d}{}\label{rate_8h_af2d9c9f4aac239ae1603ae8fd5f2872d}
+\begin{Desc}
+\item[Enumerator]\par
+\begin{description}
+\index{rolloff\+\_\+none@{rolloff\+\_\+none}!rate.\+h@{rate.\+h}}\index{rate.\+h@{rate.\+h}!rolloff\+\_\+none@{rolloff\+\_\+none}}\item[{\em 
+rolloff\+\_\+none\hypertarget{rate_8h_af2d9c9f4aac239ae1603ae8fd5f2872da84e7562dddc748f5b46c7f58d61331cd}{}\label{rate_8h_af2d9c9f4aac239ae1603ae8fd5f2872da84e7562dddc748f5b46c7f58d61331cd}
+}]\index{rolloff\+\_\+small@{rolloff\+\_\+small}!rate.\+h@{rate.\+h}}\index{rate.\+h@{rate.\+h}!rolloff\+\_\+small@{rolloff\+\_\+small}}\item[{\em 
+rolloff\+\_\+small\hypertarget{rate_8h_af2d9c9f4aac239ae1603ae8fd5f2872da11d69c5028c6460ea79c3ba8b1de70b5}{}\label{rate_8h_af2d9c9f4aac239ae1603ae8fd5f2872da11d69c5028c6460ea79c3ba8b1de70b5}
+}]\index{rolloff\+\_\+medium@{rolloff\+\_\+medium}!rate.\+h@{rate.\+h}}\index{rate.\+h@{rate.\+h}!rolloff\+\_\+medium@{rolloff\+\_\+medium}}\item[{\em 
+rolloff\+\_\+medium\hypertarget{rate_8h_af2d9c9f4aac239ae1603ae8fd5f2872da237296bfa9bc245b44b9161d03121d4f}{}\label{rate_8h_af2d9c9f4aac239ae1603ae8fd5f2872da237296bfa9bc245b44b9161d03121d4f}
+}]\end{description}
+\end{Desc}
+
+
+Definition at line 374 of file rate.\+h.
+
+\index{rate.\+h@{rate.\+h}!stage\+\_\+type\+\_\+t@{stage\+\_\+type\+\_\+t}}
+\index{stage\+\_\+type\+\_\+t@{stage\+\_\+type\+\_\+t}!rate.\+h@{rate.\+h}}
+\subsubsection[{\texorpdfstring{stage\+\_\+type\+\_\+t}{stage_type_t}}]{\setlength{\rightskip}{0pt plus 5cm}enum {\bf stage\+\_\+type\+\_\+t}}\hypertarget{rate_8h_ad524e72d21e81fd57c0eb91a234d6c64}{}\label{rate_8h_ad524e72d21e81fd57c0eb91a234d6c64}
+\begin{Desc}
+\item[Enumerator]\par
+\begin{description}
+\index{irrational\+\_\+stage@{irrational\+\_\+stage}!rate.\+h@{rate.\+h}}\index{rate.\+h@{rate.\+h}!irrational\+\_\+stage@{irrational\+\_\+stage}}\item[{\em 
+irrational\+\_\+stage\hypertarget{rate_8h_ad524e72d21e81fd57c0eb91a234d6c64a6f493a157c4bda700850558a0f6575cb}{}\label{rate_8h_ad524e72d21e81fd57c0eb91a234d6c64a6f493a157c4bda700850558a0f6575cb}
+}]\index{cubic\+\_\+stage@{cubic\+\_\+stage}!rate.\+h@{rate.\+h}}\index{rate.\+h@{rate.\+h}!cubic\+\_\+stage@{cubic\+\_\+stage}}\item[{\em 
+cubic\+\_\+stage\hypertarget{rate_8h_ad524e72d21e81fd57c0eb91a234d6c64af4ede9e68576d8588d6d6a45901cf690}{}\label{rate_8h_ad524e72d21e81fd57c0eb91a234d6c64af4ede9e68576d8588d6d6a45901cf690}
+}]\index{dft\+\_\+stage@{dft\+\_\+stage}!rate.\+h@{rate.\+h}}\index{rate.\+h@{rate.\+h}!dft\+\_\+stage@{dft\+\_\+stage}}\item[{\em 
+dft\+\_\+stage\hypertarget{rate_8h_ad524e72d21e81fd57c0eb91a234d6c64a4febf3d8d6eb19e3f8bd1c7de8a6a5fd}{}\label{rate_8h_ad524e72d21e81fd57c0eb91a234d6c64a4febf3d8d6eb19e3f8bd1c7de8a6a5fd}
+}]\index{half\+\_\+stage@{half\+\_\+stage}!rate.\+h@{rate.\+h}}\index{rate.\+h@{rate.\+h}!half\+\_\+stage@{half\+\_\+stage}}\item[{\em 
+half\+\_\+stage\hypertarget{rate_8h_ad524e72d21e81fd57c0eb91a234d6c64aafe23d29565a1f57e3728c3f2126d5b9}{}\label{rate_8h_ad524e72d21e81fd57c0eb91a234d6c64aafe23d29565a1f57e3728c3f2126d5b9}
+}]\index{rational\+\_\+stage@{rational\+\_\+stage}!rate.\+h@{rate.\+h}}\index{rate.\+h@{rate.\+h}!rational\+\_\+stage@{rational\+\_\+stage}}\item[{\em 
+rational\+\_\+stage\hypertarget{rate_8h_ad524e72d21e81fd57c0eb91a234d6c64aa44f4ac0fce706cb0764518dbce1e722}{}\label{rate_8h_ad524e72d21e81fd57c0eb91a234d6c64aa44f4ac0fce706cb0764518dbce1e722}
+}]\end{description}
+\end{Desc}
+
+
+Definition at line 137 of file rate.\+h.
+

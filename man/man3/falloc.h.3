@@ -1,0 +1,482 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/lib-src/libnyquist/nyquist/nyqsrc/falloc.h" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/lib-src/libnyquist/nyquist/nyqsrc/falloc.h \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include 'cque\&.h'\fP
+.br
+\fC#include 'debug\&.h'\fP
+.br
+
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBDEBUG_MEM\fP   0"
+.br
+.ti -1c
+.RI "#define \fBDEBUG_MEM_INFO_SIZE\fP   (sizeof(long) + sizeof(char *))"
+.br
+.ti -1c
+.RI "#define \fBMAXLISTS\fP   128"
+.br
+.ti -1c
+.RI "#define \fBMAXPOOLSIZE\fP   1000000"
+.br
+.ti -1c
+.RI "#define \fBMAXSPOOLSIZE\fP   (256 * \fBround_size\fP(sizeof(\fBsample_block_node\fP)))"
+.br
+.ti -1c
+.RI "#define \fBTRACK_POOLS\fP   1"
+.br
+.ti -1c
+.RI "#define \fBround_size\fP(n)   (((n) + 7) & ~7)"
+.br
+.ti -1c
+.RI "#define \fBcheck_pool\fP(\fBsize\fP)   (\fBpoolp\fP + (\fBsize\fP) <= \fBpoolend\fP)"
+.br
+.ti -1c
+.RI "#define \fBcheck_spool\fP(\fBsize\fP)   (\fBspoolp\fP + (\fBsize\fP) <= \fBspoolend\fP)"
+.br
+.ti -1c
+.RI "#define \fBDBG_MEM_ALLOCATED\fP(\fBp\fP,  who)"
+.br
+.ti -1c
+.RI "#define \fBDBG_MEM_FREED\fP(\fBp\fP,  who)"
+.br
+.ti -1c
+.RI "#define \fBDBG_MEM_RELEASED\fP(\fBp\fP,  who)"
+.br
+.ti -1c
+.RI "#define \fBBLOCKS_PER_GC\fP   100"
+.br
+.ti -1c
+.RI "#define \fBfalloc_sample_block\fP(sp,  who)"
+.br
+.ti -1c
+.RI "#define \fBffree_sample_block\fP(sp,  who)"
+.br
+.ti -1c
+.RI "#define \fBfrelease_sample_block\fP(sp,  who)"
+.br
+.ti -1c
+.RI "#define \fBsnd_list_free\fP   (\fBgeneric_free\fP[\fBround_size\fP(sizeof(\fBsnd_list_node\fP)) >> 3])"
+.br
+.ti -1c
+.RI "#define \fBfalloc_snd_list\fP(sp,  who)"
+.br
+.ti -1c
+.RI "#define \fBffree_snd_list\fP(sp,  who)"
+.br
+.ti -1c
+.RI "#define \fBfrelease_snd_list\fP(sp,  who)"
+.br
+.ti -1c
+.RI "#define \fBsound_free\fP   (\fBgeneric_free\fP[\fBround_size\fP(sizeof(\fBsound_node\fP)) >> 3])"
+.br
+.ti -1c
+.RI "#define \fBNORMALSOUNDALLOC\fP"
+.br
+.ti -1c
+.RI "#define \fBfalloc_sound\fP(sp,  who)"
+.br
+.ti -1c
+.RI "#define \fBffree_sound\fP(sp,  who)"
+.br
+.ti -1c
+.RI "#define \fBfalloc_generic\fP(sp,  sptype,  who)"
+.br
+.ti -1c
+.RI "#define \fBfalloc_generic_n\fP(sp,  sptype,  n,  who)"
+.br
+.ti -1c
+.RI "#define \fBfalloc_generic_bytes\fP(sp,  sptype,  \fBsize\fP,  who)"
+.br
+.ti -1c
+.RI "#define \fBffree_generic\fP(sp,  nn,  who)"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBvoid\fP \fBfalloc_gc\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBfalloc_init\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBnew_pool\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBnew_spool\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBsample_block_type\fP \fBfind_sample_block\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "char * \fBget_from_pool\fP (size_t siz)"
+.br
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "\fBCQUE\fP * \fBsample_block_free\fP"
+.br
+.ti -1c
+.RI "\fBint\fP \fBsample_block_total\fP"
+.br
+.ti -1c
+.RI "\fBint\fP \fBsample_block_used\fP"
+.br
+.ti -1c
+.RI "\fBint\fP \fBsnd_list_used\fP"
+.br
+.ti -1c
+.RI "\fBint\fP \fBsound_used\fP"
+.br
+.ti -1c
+.RI "long \fBtable_memory\fP"
+.br
+.ti -1c
+.RI "\fBCQUE\fP * \fBgeneric_free\fP [\fBMAXLISTS\fP]"
+.br
+.ti -1c
+.RI "char * \fBpoolp\fP"
+.br
+.ti -1c
+.RI "char * \fBpoolend\fP"
+.br
+.ti -1c
+.RI "char * \fBspoolp\fP"
+.br
+.ti -1c
+.RI "char * \fBspoolend\fP"
+.br
+.ti -1c
+.RI "\fBint\fP \fBnpools\fP"
+.br
+.ti -1c
+.RI "\fBint\fP \fBsample_blocks_since_gc\fP"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define BLOCKS_PER_GC   100"
+
+.PP
+Definition at line 122 of file falloc\&.h\&.
+.SS "#define check_pool(\fBsize\fP)   (\fBpoolp\fP + (\fBsize\fP) <= \fBpoolend\fP)"
+
+.PP
+Definition at line 115 of file falloc\&.h\&.
+.SS "#define check_spool(\fBsize\fP)   (\fBspoolp\fP + (\fBsize\fP) <= \fBspoolend\fP)"
+
+.PP
+Definition at line 116 of file falloc\&.h\&.
+.SS "#define DBG_MEM_ALLOCATED(\fBp\fP, who)"
+
+.PP
+Definition at line 117 of file falloc\&.h\&.
+.SS "#define DBG_MEM_FREED(\fBp\fP, who)"
+
+.PP
+Definition at line 118 of file falloc\&.h\&.
+.SS "#define DBG_MEM_RELEASED(\fBp\fP, who)"
+
+.PP
+Definition at line 119 of file falloc\&.h\&.
+.SS "#define DEBUG_MEM   0"
+
+.PP
+Definition at line 59 of file falloc\&.h\&.
+.SS "#define DEBUG_MEM_INFO_SIZE   (sizeof(long) + sizeof(char *))"
+
+.PP
+Definition at line 60 of file falloc\&.h\&.
+.SS "#define falloc_generic(sp, sptype, who)"
+\fBValue:\fP
+.PP
+.nf
+{ \
+    int size = round_size(sizeof(sptype)); \
+    falloc_generic_bytes(sp, sptype, size, who) }
+.fi
+.PP
+Definition at line 214 of file falloc\&.h\&.
+.SS "#define falloc_generic_bytes(sp, sptype, \fBsize\fP, who)"
+\fBValue:\fP
+.PP
+.nf
+if ((size >> 3) >= MAXLISTS) { \
+        stdputstr("falloc_generic problem\n"); \
+        sp = (sptype *) malloc(size); \
+    } else if (!Qempty(generic_free[size >> 3])) { \
+        Qget(generic_free[size >> 3], sptype *, sp); \
+    } else { \
+        sp = (sptype *) get_from_pool(size); \
+    } \
+    DBG_MEM_ALLOCATED(sp, who); \
+/*    printf("GENERIC ALLOC %x\n", sp);  */
+.fi
+.PP
+Definition at line 225 of file falloc\&.h\&.
+.SS "#define falloc_generic_n(sp, sptype, n, who)"
+\fBValue:\fP
+.PP
+.nf
+{ \
+    int min_size = sizeof(sptype) * (n); \
+    int size = round_size(min_size); \
+    falloc_generic_bytes(sp, sptype, size, who) }
+.fi
+.PP
+Definition at line 220 of file falloc\&.h\&.
+.SS "#define falloc_sample_block(sp, who)"
+\fBValue:\fP
+.PP
+.nf
+{  \
+    if (!Qempty(sample_block_free)) \
+        Qget(sample_block_free, sample_block_type, sp) \
+    else sp = find_sample_block(); \
+    /* sample_block_test(sp, "falloc_sample_block"); */ \
+    /* printf("[%x] ", sp); */ \
+    DBG_MEM_ALLOCATED(sp, who); \
+    sp->refcnt = 1; \
+    sample_block_used++; \
+}
+.fi
+.PP
+Definition at line 124 of file falloc\&.h\&.
+.SS "#define falloc_snd_list(sp, who)"
+\fBValue:\fP
+.PP
+.nf
+{  \
+    if (!Qempty(snd_list_free)) \
+        Qget(snd_list_free, snd_list_type, sp) \
+    else \
+        sp = (snd_list_type)get_from_pool(round_size(sizeof(snd_list_node)));\
+    snd_list_used++; \
+    DBG_MEM_ALLOCATED(sp, who); \
+}
+.fi
+.PP
+Definition at line 158 of file falloc\&.h\&.
+.SS "#define falloc_sound(sp, who)"
+\fBValue:\fP
+.PP
+.nf
+{  \
+    if (!Qempty(sound_free)) { \
+        Qget(sound_free, sound_type, sp); \
+    } else { \
+        sp = (sound_type) get_from_pool(round_size(sizeof(sound_node))); \
+    } \
+    sound_used++; \
+    DBG_MEM_ALLOCATED(sp, who); \
+}
+.fi
+.PP
+Definition at line 188 of file falloc\&.h\&.
+.SS "#define ffree_generic(sp, nn, who)"
+\fBValue:\fP
+.PP
+.nf
+{ \
+    int sIzE = round_size(nn) >> 3; \
+    DBG_MEM_FREED(sp, who); \
+    /* printf("GENERIC FREE %x SIZE %d\n", sp, nnn); */ \
+    if ((sIzE) >= MAXLISTS) { \
+        free(sp); \
+    } else { \
+        Qenter(generic_free[sIzE], sp); \
+    } \
+}
+.fi
+.PP
+Definition at line 244 of file falloc\&.h\&.
+.SS "#define ffree_sample_block(sp, who)"
+\fBValue:\fP
+.PP
+.nf
+{ \
+    /* printf("freeing sample_block@%x\n", sp); */ \
+    DBG_MEM_FREED(sp, who); \
+    Qenter(sample_block_free, sp); \
+    sample_block_used--; \
+}
+.fi
+.PP
+Definition at line 136 of file falloc\&.h\&.
+.SS "#define ffree_snd_list(sp, who)"
+\fBValue:\fP
+.PP
+.nf
+{ \
+    DBG_MEM_FREED(sp, who); \
+    Qenter(snd_list_free, sp); \
+    snd_list_used--; \
+}
+.fi
+.PP
+Definition at line 168 of file falloc\&.h\&.
+.SS "#define ffree_sound(sp, who)"
+\fBValue:\fP
+.PP
+.nf
+{ \
+/*    sound_already_free_test(); */ \
+    DBG_MEM_FREED(sp, who); \
+    Qenter(sound_free, sp); \
+    sound_used--; \
+}
+.fi
+.PP
+Definition at line 204 of file falloc\&.h\&.
+.SS "#define frelease_sample_block(sp, who)"
+\fBValue:\fP
+.PP
+.nf
+{ \
+    sp->refcnt--; \
+    DBG_MEM_RELEASED(sp, who); \
+    if (sp->refcnt <= 0) { \
+        ffree_sample_block(sp); \
+    } \
+}
+.fi
+.PP
+Definition at line 143 of file falloc\&.h\&.
+.SS "#define frelease_snd_list(sp, who)"
+\fBValue:\fP
+.PP
+.nf
+{ \
+    sp->refcnt--; \
+    DBG_MEM_RELEASED(sp, who); \
+    if (sp->refcnt <= 0) { \
+        ffree_snd_list(sp, who); \
+    } \
+}
+.fi
+.PP
+Definition at line 175 of file falloc\&.h\&.
+.SS "#define MAXLISTS   128"
+
+.PP
+Definition at line 73 of file falloc\&.h\&.
+.SS "#define MAXPOOLSIZE   1000000"
+
+.PP
+Definition at line 77 of file falloc\&.h\&.
+.SS "#define MAXSPOOLSIZE   (256 * \fBround_size\fP(sizeof(\fBsample_block_node\fP)))"
+
+.PP
+Definition at line 82 of file falloc\&.h\&.
+.SS "#define NORMALSOUNDALLOC"
+
+.PP
+Definition at line 186 of file falloc\&.h\&.
+.SS "#define round_size(n)   (((n) + 7) & ~7)"
+
+.PP
+Definition at line 105 of file falloc\&.h\&.
+.SS "#define snd_list_free   (\fBgeneric_free\fP[\fBround_size\fP(sizeof(\fBsnd_list_node\fP)) >> 3])"
+
+.PP
+Definition at line 156 of file falloc\&.h\&.
+.SS "#define sound_free   (\fBgeneric_free\fP[\fBround_size\fP(sizeof(\fBsound_node\fP)) >> 3])"
+
+.PP
+Definition at line 184 of file falloc\&.h\&.
+.SS "#define TRACK_POOLS   1"
+
+.PP
+Definition at line 90 of file falloc\&.h\&.
+.SH "Function Documentation"
+.PP 
+.SS "\fBvoid\fP falloc_gc ()"
+
+.PP
+Definition at line 175 of file falloc\&.c\&.
+.SS "\fBvoid\fP falloc_init (\fBvoid\fP)"
+
+.PP
+Definition at line 26 of file falloc\&.c\&.
+.SS "\fBsample_block_type\fP find_sample_block (\fBvoid\fP)"
+
+.PP
+Definition at line 116 of file falloc\&.c\&.
+.SS "char* get_from_pool (size_t siz)"
+
+.PP
+Definition at line 155 of file falloc\&.c\&.
+.SS "\fBvoid\fP new_pool (\fBvoid\fP)"
+
+.PP
+Definition at line 64 of file falloc\&.c\&.
+.SS "\fBvoid\fP new_spool (\fBvoid\fP)"
+
+.PP
+Definition at line 81 of file falloc\&.c\&.
+.SH "Variable Documentation"
+.PP 
+.SS "\fBCQUE\fP* generic_free[\fBMAXLISTS\fP]"
+
+.PP
+Definition at line 23 of file falloc\&.c\&.
+.SS "\fBint\fP npools"
+
+.PP
+Definition at line 41 of file falloc\&.c\&.
+.SS "char* poolend"
+
+.PP
+Definition at line 35 of file falloc\&.c\&.
+.SS "char* poolp"
+
+.PP
+Definition at line 34 of file falloc\&.c\&.
+.SS "\fBCQUE\fP* sample_block_free"
+
+.PP
+Definition at line 13 of file falloc\&.c\&.
+.SS "\fBint\fP sample_block_total"
+
+.PP
+Definition at line 18 of file falloc\&.c\&.
+.SS "\fBint\fP sample_block_used"
+
+.PP
+Definition at line 16 of file falloc\&.c\&.
+.SS "\fBint\fP sample_blocks_since_gc"
+
+.SS "\fBint\fP snd_list_used"
+
+.PP
+Definition at line 19 of file falloc\&.c\&.
+.SS "\fBint\fP sound_used"
+
+.PP
+Definition at line 20 of file falloc\&.c\&.
+.SS "char* spoolend"
+
+.PP
+Definition at line 39 of file falloc\&.c\&.
+.SS "char* spoolp"
+
+.PP
+Definition at line 38 of file falloc\&.c\&.
+.SS "long table_memory"
+
+.PP
+Definition at line 35 of file sound\&.c\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

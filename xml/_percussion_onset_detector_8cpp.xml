@@ -1,0 +1,373 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="_percussion_onset_detector_8cpp" kind="file" language="C++">
+    <compoundname>PercussionOnsetDetector.cpp</compoundname>
+    <includes refid="_percussion_onset_detector_8h" local="yes">PercussionOnsetDetector.h</includes>
+    <includes local="no">cmath</includes>
+    <incdepgraph>
+      <node id="21492">
+        <label>vamp-sdk/Plugin.h</label>
+        <link refid="libvamp_2vamp-sdk_2plugin_8h"/>
+        <childnode refid="21493" relation="include">
+        </childnode>
+        <childnode refid="21494" relation="include">
+        </childnode>
+        <childnode refid="21495" relation="include">
+        </childnode>
+        <childnode refid="21496" relation="include">
+        </childnode>
+        <childnode refid="21498" relation="include">
+        </childnode>
+        <childnode refid="21497" relation="include">
+        </childnode>
+      </node>
+      <node id="21500">
+        <label>cmath</label>
+      </node>
+      <node id="21493">
+        <label>string</label>
+      </node>
+      <node id="21495">
+        <label>map</label>
+      </node>
+      <node id="21497">
+        <label>plugguard.h</label>
+        <link refid="plugguard_8h"/>
+      </node>
+      <node id="21496">
+        <label>PluginBase.h</label>
+        <link refid="vamp-sdk_2_plugin_base_8h"/>
+        <childnode refid="21493" relation="include">
+        </childnode>
+        <childnode refid="21494" relation="include">
+        </childnode>
+        <childnode refid="21497" relation="include">
+        </childnode>
+      </node>
+      <node id="21490">
+        <label>C:/_dev/OpenU/Audacity/audacity/lib-src/libvamp/examples/PercussionOnsetDetector.cpp</label>
+        <link refid="PercussionOnsetDetector.cpp"/>
+        <childnode refid="21491" relation="include">
+        </childnode>
+        <childnode refid="21500" relation="include">
+        </childnode>
+      </node>
+      <node id="21494">
+        <label>vector</label>
+      </node>
+      <node id="21498">
+        <label>RealTime.h</label>
+        <link refid="vamp-sdk_2_real_time_8h"/>
+        <childnode refid="21499" relation="include">
+        </childnode>
+        <childnode refid="21493" relation="include">
+        </childnode>
+        <childnode refid="21497" relation="include">
+        </childnode>
+      </node>
+      <node id="21499">
+        <label>iostream</label>
+      </node>
+      <node id="21491">
+        <label>PercussionOnsetDetector.h</label>
+        <link refid="_percussion_onset_detector_8h"/>
+        <childnode refid="21492" relation="include">
+        </childnode>
+      </node>
+    </incdepgraph>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="comment">/*<sp/>-*-<sp/>c-basic-offset:<sp/>4<sp/>indent-tabs-mode:<sp/>nil<sp/>-*-<sp/><sp/>vi:set<sp/>ts=8<sp/>sts=4<sp/>sw=4:<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="comment">/*</highlight></codeline>
+<codeline lineno="4"><highlight class="comment"><sp/><sp/><sp/><sp/>Vamp</highlight></codeline>
+<codeline lineno="5"><highlight class="comment"></highlight></codeline>
+<codeline lineno="6"><highlight class="comment"><sp/><sp/><sp/><sp/>An<sp/>API<sp/>for<sp/>audio<sp/>analysis<sp/>and<sp/>feature<sp/>extraction<sp/>plugins.</highlight></codeline>
+<codeline lineno="7"><highlight class="comment"></highlight></codeline>
+<codeline lineno="8"><highlight class="comment"><sp/><sp/><sp/><sp/>Centre<sp/>for<sp/>Digital<sp/>Music,<sp/>Queen<sp/>Mary,<sp/>University<sp/>of<sp/>London.</highlight></codeline>
+<codeline lineno="9"><highlight class="comment"><sp/><sp/><sp/><sp/>Copyright<sp/>2006<sp/>Chris<sp/>Cannam.</highlight></codeline>
+<codeline lineno="10"><highlight class="comment"><sp/><sp/></highlight></codeline>
+<codeline lineno="11"><highlight class="comment"><sp/><sp/><sp/><sp/>Permission<sp/>is<sp/>hereby<sp/>granted,<sp/>free<sp/>of<sp/>charge,<sp/>to<sp/>any<sp/>person</highlight></codeline>
+<codeline lineno="12"><highlight class="comment"><sp/><sp/><sp/><sp/>obtaining<sp/>a<sp/>copy<sp/>of<sp/>this<sp/>software<sp/>and<sp/>associated<sp/>documentation</highlight></codeline>
+<codeline lineno="13"><highlight class="comment"><sp/><sp/><sp/><sp/>files<sp/>(the<sp/>&quot;Software&quot;),<sp/>to<sp/>deal<sp/>in<sp/>the<sp/>Software<sp/>without</highlight></codeline>
+<codeline lineno="14"><highlight class="comment"><sp/><sp/><sp/><sp/>restriction,<sp/>including<sp/>without<sp/>limitation<sp/>the<sp/>rights<sp/>to<sp/>use,<sp/>copy,</highlight></codeline>
+<codeline lineno="15"><highlight class="comment"><sp/><sp/><sp/><sp/>modify,<sp/>merge,<sp/>publish,<sp/>distribute,<sp/>sublicense,<sp/>and/or<sp/>sell<sp/>copies</highlight></codeline>
+<codeline lineno="16"><highlight class="comment"><sp/><sp/><sp/><sp/>of<sp/>the<sp/>Software,<sp/>and<sp/>to<sp/>permit<sp/>persons<sp/>to<sp/>whom<sp/>the<sp/>Software<sp/>is</highlight></codeline>
+<codeline lineno="17"><highlight class="comment"><sp/><sp/><sp/><sp/>furnished<sp/>to<sp/>do<sp/>so,<sp/>subject<sp/>to<sp/>the<sp/>following<sp/>conditions:</highlight></codeline>
+<codeline lineno="18"><highlight class="comment"></highlight></codeline>
+<codeline lineno="19"><highlight class="comment"><sp/><sp/><sp/><sp/>The<sp/>above<sp/>copyright<sp/>notice<sp/>and<sp/>this<sp/>permission<sp/>notice<sp/>shall<sp/>be</highlight></codeline>
+<codeline lineno="20"><highlight class="comment"><sp/><sp/><sp/><sp/>included<sp/>in<sp/>all<sp/>copies<sp/>or<sp/>substantial<sp/>portions<sp/>of<sp/>the<sp/>Software.</highlight></codeline>
+<codeline lineno="21"><highlight class="comment"></highlight></codeline>
+<codeline lineno="22"><highlight class="comment"><sp/><sp/><sp/><sp/>THE<sp/>SOFTWARE<sp/>IS<sp/>PROVIDED<sp/>&quot;AS<sp/>IS&quot;,<sp/>WITHOUT<sp/>WARRANTY<sp/>OF<sp/>ANY<sp/>KIND,</highlight></codeline>
+<codeline lineno="23"><highlight class="comment"><sp/><sp/><sp/><sp/>EXPRESS<sp/>OR<sp/>IMPLIED,<sp/>INCLUDING<sp/>BUT<sp/>NOT<sp/>LIMITED<sp/>TO<sp/>THE<sp/>WARRANTIES<sp/>OF</highlight></codeline>
+<codeline lineno="24"><highlight class="comment"><sp/><sp/><sp/><sp/>MERCHANTABILITY,<sp/>FITNESS<sp/>FOR<sp/>A<sp/>PARTICULAR<sp/>PURPOSE<sp/>AND</highlight></codeline>
+<codeline lineno="25"><highlight class="comment"><sp/><sp/><sp/><sp/>NONINFRINGEMENT.<sp/>IN<sp/>NO<sp/>EVENT<sp/>SHALL<sp/>THE<sp/>AUTHORS<sp/>BE<sp/>LIABLE<sp/>FOR</highlight></codeline>
+<codeline lineno="26"><highlight class="comment"><sp/><sp/><sp/><sp/>ANY<sp/>CLAIM,<sp/>DAMAGES<sp/>OR<sp/>OTHER<sp/>LIABILITY,<sp/>WHETHER<sp/>IN<sp/>AN<sp/>ACTION<sp/>OF</highlight></codeline>
+<codeline lineno="27"><highlight class="comment"><sp/><sp/><sp/><sp/>CONTRACT,<sp/>TORT<sp/>OR<sp/>OTHERWISE,<sp/>ARISING<sp/>FROM,<sp/>OUT<sp/>OF<sp/>OR<sp/>IN<sp/>CONNECTION</highlight></codeline>
+<codeline lineno="28"><highlight class="comment"><sp/><sp/><sp/><sp/>WITH<sp/>THE<sp/>SOFTWARE<sp/>OR<sp/>THE<sp/>USE<sp/>OR<sp/>OTHER<sp/>DEALINGS<sp/>IN<sp/>THE<sp/>SOFTWARE.</highlight></codeline>
+<codeline lineno="29"><highlight class="comment"></highlight></codeline>
+<codeline lineno="30"><highlight class="comment"><sp/><sp/><sp/><sp/>Except<sp/>as<sp/>contained<sp/>in<sp/>this<sp/>notice,<sp/>the<sp/>names<sp/>of<sp/>the<sp/>Centre<sp/>for</highlight></codeline>
+<codeline lineno="31"><highlight class="comment"><sp/><sp/><sp/><sp/>Digital<sp/>Music;<sp/>Queen<sp/>Mary,<sp/>University<sp/>of<sp/>London;<sp/>and<sp/>Chris<sp/>Cannam</highlight></codeline>
+<codeline lineno="32"><highlight class="comment"><sp/><sp/><sp/><sp/>shall<sp/>not<sp/>be<sp/>used<sp/>in<sp/>advertising<sp/>or<sp/>otherwise<sp/>to<sp/>promote<sp/>the<sp/>sale,</highlight></codeline>
+<codeline lineno="33"><highlight class="comment"><sp/><sp/><sp/><sp/>use<sp/>or<sp/>other<sp/>dealings<sp/>in<sp/>this<sp/>Software<sp/>without<sp/>prior<sp/>written</highlight></codeline>
+<codeline lineno="34"><highlight class="comment"><sp/><sp/><sp/><sp/>authorization.</highlight></codeline>
+<codeline lineno="35"><highlight class="comment">*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="36"><highlight class="normal"></highlight></codeline>
+<codeline lineno="37"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="_percussion_onset_detector_8h" kindref="compound">PercussionOnsetDetector.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="38"><highlight class="normal"></highlight></codeline>
+<codeline lineno="39"><highlight class="normal"></highlight><highlight class="keyword">using</highlight><highlight class="normal"><sp/><ref refid="test__lib_f_l_a_c_2format_8c_1ab02026ad0de9fb6c1b4233deb0a00c75" kindref="member">std::string</ref>;</highlight></codeline>
+<codeline lineno="40"><highlight class="normal"></highlight><highlight class="keyword">using</highlight><highlight class="normal"><sp/>std::vector;</highlight></codeline>
+<codeline lineno="41"><highlight class="normal"></highlight><highlight class="keyword">using</highlight><highlight class="normal"><sp/>std::cerr;</highlight></codeline>
+<codeline lineno="42"><highlight class="normal"></highlight><highlight class="keyword">using</highlight><highlight class="normal"><sp/>std::endl;</highlight></codeline>
+<codeline lineno="43"><highlight class="normal"></highlight></codeline>
+<codeline lineno="44"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;cmath&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="45"><highlight class="normal"></highlight></codeline>
+<codeline lineno="46"><highlight class="normal"></highlight></codeline>
+<codeline lineno="47" refid="class_percussion_onset_detector_1a9f700579805ee5105758d847baab3511" refkind="member"><highlight class="normal"><ref refid="class_percussion_onset_detector_1a9f700579805ee5105758d847baab3511" kindref="member">PercussionOnsetDetector::PercussionOnsetDetector</ref>(</highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>inputSampleRate)<sp/>:</highlight></codeline>
+<codeline lineno="48"><highlight class="normal"><sp/><sp/><sp/><sp/>Plugin(inputSampleRate),</highlight></codeline>
+<codeline lineno="49"><highlight class="normal"><sp/><sp/><sp/><sp/>m_stepSize(0),</highlight></codeline>
+<codeline lineno="50"><highlight class="normal"><sp/><sp/><sp/><sp/>m_blockSize(0),</highlight></codeline>
+<codeline lineno="51"><highlight class="normal"><sp/><sp/><sp/><sp/>m_threshold(3),</highlight></codeline>
+<codeline lineno="52"><highlight class="normal"><sp/><sp/><sp/><sp/>m_sensitivity(40),</highlight></codeline>
+<codeline lineno="53"><highlight class="normal"><sp/><sp/><sp/><sp/>m_priorMagnitudes(0),</highlight></codeline>
+<codeline lineno="54"><highlight class="normal"><sp/><sp/><sp/><sp/>m_dfMinus1(0),</highlight></codeline>
+<codeline lineno="55"><highlight class="normal"><sp/><sp/><sp/><sp/>m_dfMinus2(0)</highlight></codeline>
+<codeline lineno="56"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="57"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="58"><highlight class="normal"></highlight></codeline>
+<codeline lineno="59" refid="class_percussion_onset_detector_1a99f833667cf8185e879d735216c7642b" refkind="member"><highlight class="normal"><ref refid="class_percussion_onset_detector_1a99f833667cf8185e879d735216c7642b" kindref="member">PercussionOnsetDetector::~PercussionOnsetDetector</ref>()</highlight></codeline>
+<codeline lineno="60"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="61"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">delete</highlight><highlight class="normal">[]<sp/><ref refid="class_percussion_onset_detector_1a30daa717267251a9d49afe57c328e989" kindref="member">m_priorMagnitudes</ref>;</highlight></codeline>
+<codeline lineno="62"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="63"><highlight class="normal"></highlight></codeline>
+<codeline lineno="64"><highlight class="normal"></highlight><highlight class="keywordtype">string</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="65" refid="class_percussion_onset_detector_1a267c83a7533146c127e2c3be310e0154" refkind="member"><highlight class="normal"><ref refid="class_percussion_onset_detector_1a267c83a7533146c127e2c3be310e0154" kindref="member">PercussionOnsetDetector::getIdentifier</ref>()</highlight><highlight class="keyword"><sp/>const</highlight></codeline>
+<codeline lineno="66"><highlight class="keyword"></highlight><highlight class="normal">{</highlight></codeline>
+<codeline lineno="67"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/></highlight><highlight class="stringliteral">&quot;percussiononsets&quot;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="68"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="69"><highlight class="normal"></highlight></codeline>
+<codeline lineno="70"><highlight class="normal"></highlight><highlight class="keywordtype">string</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="71" refid="class_percussion_onset_detector_1aa98f1ad061a11af98c054011a8844e6f" refkind="member"><highlight class="normal"><ref refid="class_percussion_onset_detector_1aa98f1ad061a11af98c054011a8844e6f" kindref="member">PercussionOnsetDetector::getName</ref>()</highlight><highlight class="keyword"><sp/>const</highlight></codeline>
+<codeline lineno="72"><highlight class="keyword"></highlight><highlight class="normal">{</highlight></codeline>
+<codeline lineno="73"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/></highlight><highlight class="stringliteral">&quot;Simple<sp/>Percussion<sp/>Onset<sp/>Detector&quot;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="74"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="75"><highlight class="normal"></highlight></codeline>
+<codeline lineno="76"><highlight class="normal"></highlight><highlight class="keywordtype">string</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="77" refid="class_percussion_onset_detector_1a9061d189705802a48973a7ccab6360db" refkind="member"><highlight class="normal"><ref refid="class_percussion_onset_detector_1a9061d189705802a48973a7ccab6360db" kindref="member">PercussionOnsetDetector::getDescription</ref>()</highlight><highlight class="keyword"><sp/>const</highlight></codeline>
+<codeline lineno="78"><highlight class="keyword"></highlight><highlight class="normal">{</highlight></codeline>
+<codeline lineno="79"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/></highlight><highlight class="stringliteral">&quot;Detect<sp/>percussive<sp/>note<sp/>onsets<sp/>by<sp/>identifying<sp/>broadband<sp/>energy<sp/>rises&quot;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="80"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="81"><highlight class="normal"></highlight></codeline>
+<codeline lineno="82"><highlight class="normal"></highlight><highlight class="keywordtype">string</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="83" refid="class_percussion_onset_detector_1a63d63f2cb7ea8d8b09d58cc13b541375" refkind="member"><highlight class="normal"><ref refid="class_percussion_onset_detector_1a63d63f2cb7ea8d8b09d58cc13b541375" kindref="member">PercussionOnsetDetector::getMaker</ref>()</highlight><highlight class="keyword"><sp/>const</highlight></codeline>
+<codeline lineno="84"><highlight class="keyword"></highlight><highlight class="normal">{</highlight></codeline>
+<codeline lineno="85"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/></highlight><highlight class="stringliteral">&quot;Vamp<sp/>SDK<sp/>Example<sp/>Plugins&quot;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="86"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="87"><highlight class="normal"></highlight></codeline>
+<codeline lineno="88"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="89" refid="class_percussion_onset_detector_1ad6b818dbd81867ce7be71c99cae861be" refkind="member"><highlight class="normal"><ref refid="class_percussion_onset_detector_1ad6b818dbd81867ce7be71c99cae861be" kindref="member">PercussionOnsetDetector::getPluginVersion</ref>()</highlight><highlight class="keyword"><sp/>const</highlight></codeline>
+<codeline lineno="90"><highlight class="keyword"></highlight><highlight class="normal">{</highlight></codeline>
+<codeline lineno="91"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>2;</highlight></codeline>
+<codeline lineno="92"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="93"><highlight class="normal"></highlight></codeline>
+<codeline lineno="94"><highlight class="normal"></highlight><highlight class="keywordtype">string</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="95" refid="class_percussion_onset_detector_1a1a22ece271330c94cc08798a77416351" refkind="member"><highlight class="normal"><ref refid="class_percussion_onset_detector_1a1a22ece271330c94cc08798a77416351" kindref="member">PercussionOnsetDetector::getCopyright</ref>()</highlight><highlight class="keyword"><sp/>const</highlight></codeline>
+<codeline lineno="96"><highlight class="keyword"></highlight><highlight class="normal">{</highlight></codeline>
+<codeline lineno="97"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/></highlight><highlight class="stringliteral">&quot;Code<sp/>copyright<sp/>2006<sp/>Queen<sp/>Mary,<sp/>University<sp/>of<sp/>London,<sp/>after<sp/>Dan<sp/>Barry<sp/>et<sp/>al<sp/>2005.<sp/><sp/>Freely<sp/>redistributable<sp/>(BSD<sp/>license)&quot;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="98"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="99"><highlight class="normal"></highlight></codeline>
+<codeline lineno="100"><highlight class="normal"></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="101" refid="class_percussion_onset_detector_1a733824891e11c306a7a678534b89b968" refkind="member"><highlight class="normal"><ref refid="class_percussion_onset_detector_1a733824891e11c306a7a678534b89b968" kindref="member">PercussionOnsetDetector::getPreferredStepSize</ref>()</highlight><highlight class="keyword"><sp/>const</highlight></codeline>
+<codeline lineno="102"><highlight class="keyword"></highlight><highlight class="normal">{</highlight></codeline>
+<codeline lineno="103"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="104"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="105"><highlight class="normal"></highlight></codeline>
+<codeline lineno="106"><highlight class="normal"></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="107" refid="class_percussion_onset_detector_1a410c0b47c6c849d7ed9b726b84402ad0" refkind="member"><highlight class="normal"><ref refid="class_percussion_onset_detector_1a410c0b47c6c849d7ed9b726b84402ad0" kindref="member">PercussionOnsetDetector::getPreferredBlockSize</ref>()</highlight><highlight class="keyword"><sp/>const</highlight></codeline>
+<codeline lineno="108"><highlight class="keyword"></highlight><highlight class="normal">{</highlight></codeline>
+<codeline lineno="109"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>1024;</highlight></codeline>
+<codeline lineno="110"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="111"><highlight class="normal"></highlight></codeline>
+<codeline lineno="112"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="113" refid="class_percussion_onset_detector_1a349c528260622308f3850bcda8a448ab" refkind="member"><highlight class="normal"><ref refid="class_percussion_onset_detector_1a349c528260622308f3850bcda8a448ab" kindref="member">PercussionOnsetDetector::initialise</ref>(</highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>channels,<sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>stepSize,<sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>blockSize)</highlight></codeline>
+<codeline lineno="114"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="115"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(channels<sp/>&lt;<sp/><ref refid="class_vamp_1_1_plugin_1a267b42e866df3cf0d190893e8096f525" kindref="member">getMinChannelCount</ref>()<sp/>||</highlight></codeline>
+<codeline lineno="116"><highlight class="normal"><sp/><sp/><sp/><sp/>channels<sp/>&gt;<sp/><ref refid="class_vamp_1_1_plugin_1a2c5ab12b6fa4847cb244bd1e9cb3ae5e" kindref="member">getMaxChannelCount</ref>())<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="117"><highlight class="normal"></highlight></codeline>
+<codeline lineno="118"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="class_percussion_onset_detector_1aabac0cf7e961482b075777e5f0686e6c" kindref="member">m_stepSize</ref><sp/>=<sp/>stepSize;</highlight></codeline>
+<codeline lineno="119"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="class_percussion_onset_detector_1a920de543dbcf70a2edd80b5b31313285" kindref="member">m_blockSize</ref><sp/>=<sp/>blockSize;</highlight></codeline>
+<codeline lineno="120"><highlight class="normal"></highlight></codeline>
+<codeline lineno="121"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="class_percussion_onset_detector_1a30daa717267251a9d49afe57c328e989" kindref="member">m_priorMagnitudes</ref><sp/>=<sp/></highlight><highlight class="keyword">new</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal">[<ref refid="class_percussion_onset_detector_1a920de543dbcf70a2edd80b5b31313285" kindref="member">m_blockSize</ref>/2];</highlight></codeline>
+<codeline lineno="122"><highlight class="normal"></highlight></codeline>
+<codeline lineno="123"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/><ref refid="checksum_8c_1ab80e330a3bc9e38c1297fe17381e92b4" kindref="member">i</ref><sp/>=<sp/>0;<sp/><ref refid="checksum_8c_1ab80e330a3bc9e38c1297fe17381e92b4" kindref="member">i</ref><sp/>&lt;<sp/><ref refid="class_percussion_onset_detector_1a920de543dbcf70a2edd80b5b31313285" kindref="member">m_blockSize</ref>/2;<sp/>++<ref refid="checksum_8c_1ab80e330a3bc9e38c1297fe17381e92b4" kindref="member">i</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="124"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="class_percussion_onset_detector_1a30daa717267251a9d49afe57c328e989" kindref="member">m_priorMagnitudes</ref>[<ref refid="checksum_8c_1ab80e330a3bc9e38c1297fe17381e92b4" kindref="member">i</ref>]<sp/>=<sp/>0.f;</highlight></codeline>
+<codeline lineno="125"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="126"><highlight class="normal"></highlight></codeline>
+<codeline lineno="127"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="class_percussion_onset_detector_1acd80162c65212be7fa91251263fb9c3d" kindref="member">m_dfMinus1</ref><sp/>=<sp/>0.f;</highlight></codeline>
+<codeline lineno="128"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="class_percussion_onset_detector_1a6ad7d8353cc681ff42a63b127cca5779" kindref="member">m_dfMinus2</ref><sp/>=<sp/>0.f;</highlight></codeline>
+<codeline lineno="129"><highlight class="normal"></highlight></codeline>
+<codeline lineno="130"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="131"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="132"><highlight class="normal"></highlight></codeline>
+<codeline lineno="133"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="134" refid="class_percussion_onset_detector_1a9b1075e992cd9599764ef3881fb91d1a" refkind="member"><highlight class="normal"><ref refid="class_percussion_onset_detector_1a9b1075e992cd9599764ef3881fb91d1a" kindref="member">PercussionOnsetDetector::reset</ref>()</highlight></codeline>
+<codeline lineno="135"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="136"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/><ref refid="checksum_8c_1ab80e330a3bc9e38c1297fe17381e92b4" kindref="member">i</ref><sp/>=<sp/>0;<sp/><ref refid="checksum_8c_1ab80e330a3bc9e38c1297fe17381e92b4" kindref="member">i</ref><sp/>&lt;<sp/><ref refid="class_percussion_onset_detector_1a920de543dbcf70a2edd80b5b31313285" kindref="member">m_blockSize</ref>/2;<sp/>++<ref refid="checksum_8c_1ab80e330a3bc9e38c1297fe17381e92b4" kindref="member">i</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="137"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="class_percussion_onset_detector_1a30daa717267251a9d49afe57c328e989" kindref="member">m_priorMagnitudes</ref>[<ref refid="checksum_8c_1ab80e330a3bc9e38c1297fe17381e92b4" kindref="member">i</ref>]<sp/>=<sp/>0.f;</highlight></codeline>
+<codeline lineno="138"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="139"><highlight class="normal"></highlight></codeline>
+<codeline lineno="140"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="class_percussion_onset_detector_1acd80162c65212be7fa91251263fb9c3d" kindref="member">m_dfMinus1</ref><sp/>=<sp/>0.f;</highlight></codeline>
+<codeline lineno="141"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="class_percussion_onset_detector_1a6ad7d8353cc681ff42a63b127cca5779" kindref="member">m_dfMinus2</ref><sp/>=<sp/>0.f;</highlight></codeline>
+<codeline lineno="142"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="143"><highlight class="normal"></highlight></codeline>
+<codeline lineno="144"><highlight class="normal"><ref refid="class_vamp_1_1_plugin_base_1a3b6bb4bbd86affe1ca9deceea1aad4f8" kindref="member">PercussionOnsetDetector::ParameterList</ref></highlight></codeline>
+<codeline lineno="145" refid="class_percussion_onset_detector_1abceae88cc9762b0ea310d7aad71de815" refkind="member"><highlight class="normal"><ref refid="class_percussion_onset_detector_1abceae88cc9762b0ea310d7aad71de815" kindref="member">PercussionOnsetDetector::getParameterDescriptors</ref>()</highlight><highlight class="keyword"><sp/>const</highlight></codeline>
+<codeline lineno="146"><highlight class="keyword"></highlight><highlight class="normal">{</highlight></codeline>
+<codeline lineno="147"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="class_vamp_1_1_plugin_base_1a3b6bb4bbd86affe1ca9deceea1aad4f8" kindref="member">ParameterList</ref><sp/>list;</highlight></codeline>
+<codeline lineno="148"><highlight class="normal"></highlight></codeline>
+<codeline lineno="149"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="struct_vamp_1_1_plugin_base_1_1_parameter_descriptor" kindref="compound">ParameterDescriptor</ref><sp/><ref refid="poly-fir_8h_1a2530554172d8629149ec56816eeaa947" kindref="member">d</ref>;</highlight></codeline>
+<codeline lineno="150"><highlight class="normal"><sp/><sp/><sp/><sp/>d.<ref refid="struct_vamp_1_1_plugin_base_1_1_parameter_descriptor_1a116fd9f0dc94c2bc4bbc60b5443c598c" kindref="member">identifier</ref><sp/>=<sp/></highlight><highlight class="stringliteral">&quot;threshold&quot;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="151"><highlight class="normal"><sp/><sp/><sp/><sp/>d.<ref refid="struct_vamp_1_1_plugin_base_1_1_parameter_descriptor_1a0ecebb94fb4ada4aad2640e20aa57084" kindref="member">name</ref><sp/>=<sp/></highlight><highlight class="stringliteral">&quot;Energy<sp/>rise<sp/>threshold&quot;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="152"><highlight class="normal"><sp/><sp/><sp/><sp/>d.<ref refid="struct_vamp_1_1_plugin_base_1_1_parameter_descriptor_1a780ddad41e433d85c82f9ea4d959cbaf" kindref="member">description</ref><sp/>=<sp/></highlight><highlight class="stringliteral">&quot;Energy<sp/>rise<sp/>within<sp/>a<sp/>frequency<sp/>bin<sp/>necessary<sp/>to<sp/>count<sp/>toward<sp/>broadband<sp/>total&quot;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="153"><highlight class="normal"><sp/><sp/><sp/><sp/>d.<ref refid="struct_vamp_1_1_plugin_base_1_1_parameter_descriptor_1a3bc3df322e4c02e17e96bc6d44982d7b" kindref="member">unit</ref><sp/>=<sp/></highlight><highlight class="stringliteral">&quot;dB&quot;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="154"><highlight class="normal"><sp/><sp/><sp/><sp/>d.<ref refid="struct_vamp_1_1_plugin_base_1_1_parameter_descriptor_1ab3e4d84f5bc199eea8b642b27e425ec8" kindref="member">minValue</ref><sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="155"><highlight class="normal"><sp/><sp/><sp/><sp/>d.<ref refid="struct_vamp_1_1_plugin_base_1_1_parameter_descriptor_1ab934b20dd708228a0e3c2811a3e2cec4" kindref="member">maxValue</ref><sp/>=<sp/>20;</highlight></codeline>
+<codeline lineno="156"><highlight class="normal"><sp/><sp/><sp/><sp/>d.<ref refid="struct_vamp_1_1_plugin_base_1_1_parameter_descriptor_1aec4ef77451ec02193ecc4a0856673fbc" kindref="member">defaultValue</ref><sp/>=<sp/>3;</highlight></codeline>
+<codeline lineno="157"><highlight class="normal"><sp/><sp/><sp/><sp/>d.<ref refid="struct_vamp_1_1_plugin_base_1_1_parameter_descriptor_1a7c556d58d552f737ee5a34efdf7f9425" kindref="member">isQuantized</ref><sp/>=<sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="158"><highlight class="normal"><sp/><sp/><sp/><sp/>list.push_back(d);</highlight></codeline>
+<codeline lineno="159"><highlight class="normal"></highlight></codeline>
+<codeline lineno="160"><highlight class="normal"><sp/><sp/><sp/><sp/>d.<ref refid="struct_vamp_1_1_plugin_base_1_1_parameter_descriptor_1a116fd9f0dc94c2bc4bbc60b5443c598c" kindref="member">identifier</ref><sp/>=<sp/></highlight><highlight class="stringliteral">&quot;sensitivity&quot;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="161"><highlight class="normal"><sp/><sp/><sp/><sp/>d.<ref refid="struct_vamp_1_1_plugin_base_1_1_parameter_descriptor_1a0ecebb94fb4ada4aad2640e20aa57084" kindref="member">name</ref><sp/>=<sp/></highlight><highlight class="stringliteral">&quot;Sensitivity&quot;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="162"><highlight class="normal"><sp/><sp/><sp/><sp/>d.<ref refid="struct_vamp_1_1_plugin_base_1_1_parameter_descriptor_1a780ddad41e433d85c82f9ea4d959cbaf" kindref="member">description</ref><sp/>=<sp/></highlight><highlight class="stringliteral">&quot;Sensitivity<sp/>of<sp/>peak<sp/>detector<sp/>applied<sp/>to<sp/>broadband<sp/>detection<sp/>function&quot;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="163"><highlight class="normal"><sp/><sp/><sp/><sp/>d.<ref refid="struct_vamp_1_1_plugin_base_1_1_parameter_descriptor_1a3bc3df322e4c02e17e96bc6d44982d7b" kindref="member">unit</ref><sp/>=<sp/></highlight><highlight class="stringliteral">&quot;%&quot;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="164"><highlight class="normal"><sp/><sp/><sp/><sp/>d.<ref refid="struct_vamp_1_1_plugin_base_1_1_parameter_descriptor_1ab3e4d84f5bc199eea8b642b27e425ec8" kindref="member">minValue</ref><sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="165"><highlight class="normal"><sp/><sp/><sp/><sp/>d.<ref refid="struct_vamp_1_1_plugin_base_1_1_parameter_descriptor_1ab934b20dd708228a0e3c2811a3e2cec4" kindref="member">maxValue</ref><sp/>=<sp/>100;</highlight></codeline>
+<codeline lineno="166"><highlight class="normal"><sp/><sp/><sp/><sp/>d.<ref refid="struct_vamp_1_1_plugin_base_1_1_parameter_descriptor_1aec4ef77451ec02193ecc4a0856673fbc" kindref="member">defaultValue</ref><sp/>=<sp/>40;</highlight></codeline>
+<codeline lineno="167"><highlight class="normal"><sp/><sp/><sp/><sp/>d.<ref refid="struct_vamp_1_1_plugin_base_1_1_parameter_descriptor_1a7c556d58d552f737ee5a34efdf7f9425" kindref="member">isQuantized</ref><sp/>=<sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="168"><highlight class="normal"><sp/><sp/><sp/><sp/>list.push_back(d);</highlight></codeline>
+<codeline lineno="169"><highlight class="normal"></highlight></codeline>
+<codeline lineno="170"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>list;</highlight></codeline>
+<codeline lineno="171"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="172"><highlight class="normal"></highlight></codeline>
+<codeline lineno="173"><highlight class="normal"></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="174" refid="class_percussion_onset_detector_1a9b28da8315fcde46ce7644d6592ba527" refkind="member"><highlight class="normal"><ref refid="class_percussion_onset_detector_1a9b28da8315fcde46ce7644d6592ba527" kindref="member">PercussionOnsetDetector::getParameter</ref>(<ref refid="test__lib_f_l_a_c_2format_8c_1ab02026ad0de9fb6c1b4233deb0a00c75" kindref="member">std::string</ref><sp/></highlight><highlight class="keywordtype">id</highlight><highlight class="normal">)</highlight><highlight class="keyword"><sp/>const</highlight></codeline>
+<codeline lineno="175"><highlight class="keyword"></highlight><highlight class="normal">{</highlight></codeline>
+<codeline lineno="176"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keywordtype">id</highlight><highlight class="normal"><sp/>==<sp/></highlight><highlight class="stringliteral">&quot;threshold&quot;</highlight><highlight class="normal">)<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="class_percussion_onset_detector_1ab04119adad56d87f2e633de289aab507" kindref="member">m_threshold</ref>;</highlight></codeline>
+<codeline lineno="177"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keywordtype">id</highlight><highlight class="normal"><sp/>==<sp/></highlight><highlight class="stringliteral">&quot;sensitivity&quot;</highlight><highlight class="normal">)<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="class_percussion_onset_detector_1a4e9770f246ba3bc75e7fc2cb8f9010af" kindref="member">m_sensitivity</ref>;</highlight></codeline>
+<codeline lineno="178"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0.f;</highlight></codeline>
+<codeline lineno="179"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="180"><highlight class="normal"></highlight></codeline>
+<codeline lineno="181"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="182" refid="class_percussion_onset_detector_1aa097d72488e1211f05fc661ff5c6dc01" refkind="member"><highlight class="normal"><ref refid="class_percussion_onset_detector_1aa097d72488e1211f05fc661ff5c6dc01" kindref="member">PercussionOnsetDetector::setParameter</ref>(<ref refid="test__lib_f_l_a_c_2format_8c_1ab02026ad0de9fb6c1b4233deb0a00c75" kindref="member">std::string</ref><sp/></highlight><highlight class="keywordtype">id</highlight><highlight class="normal">,<sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/><ref refid="lib_2expat_8h_1a4a30a13b813682e68c5b689b45c65971" kindref="member">value</ref>)</highlight></codeline>
+<codeline lineno="183"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="184"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keywordtype">id</highlight><highlight class="normal"><sp/>==<sp/></highlight><highlight class="stringliteral">&quot;threshold&quot;</highlight><highlight class="normal">)<sp/>{</highlight></codeline>
+<codeline lineno="185"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(value<sp/>&lt;<sp/>0)<sp/>value<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="186"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(value<sp/>&gt;<sp/>20)<sp/>value<sp/>=<sp/>20;</highlight></codeline>
+<codeline lineno="187"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="class_percussion_onset_detector_1ab04119adad56d87f2e633de289aab507" kindref="member">m_threshold</ref><sp/>=<sp/><ref refid="lib_2expat_8h_1a4a30a13b813682e68c5b689b45c65971" kindref="member">value</ref>;</highlight></codeline>
+<codeline lineno="188"><highlight class="normal"><sp/><sp/><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keywordtype">id</highlight><highlight class="normal"><sp/>==<sp/></highlight><highlight class="stringliteral">&quot;sensitivity&quot;</highlight><highlight class="normal">)<sp/>{</highlight></codeline>
+<codeline lineno="189"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(value<sp/>&lt;<sp/>0)<sp/>value<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="190"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(value<sp/>&gt;<sp/>100)<sp/>value<sp/>=<sp/>100;</highlight></codeline>
+<codeline lineno="191"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="class_percussion_onset_detector_1a4e9770f246ba3bc75e7fc2cb8f9010af" kindref="member">m_sensitivity</ref><sp/>=<sp/><ref refid="lib_2expat_8h_1a4a30a13b813682e68c5b689b45c65971" kindref="member">value</ref>;</highlight></codeline>
+<codeline lineno="192"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="193"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="194"><highlight class="normal"></highlight></codeline>
+<codeline lineno="195"><highlight class="normal"><ref refid="class_vamp_1_1_plugin_1a30f531b8fb69fac41a24e3d2a6a08ed9" kindref="member">PercussionOnsetDetector::OutputList</ref></highlight></codeline>
+<codeline lineno="196" refid="class_percussion_onset_detector_1aa4537aa0eb58a67d6e824d46924cf782" refkind="member"><highlight class="normal"><ref refid="class_percussion_onset_detector_1aa4537aa0eb58a67d6e824d46924cf782" kindref="member">PercussionOnsetDetector::getOutputDescriptors</ref>()</highlight><highlight class="keyword"><sp/>const</highlight></codeline>
+<codeline lineno="197"><highlight class="keyword"></highlight><highlight class="normal">{</highlight></codeline>
+<codeline lineno="198"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="class_vamp_1_1_plugin_1a30f531b8fb69fac41a24e3d2a6a08ed9" kindref="member">OutputList</ref><sp/>list;</highlight></codeline>
+<codeline lineno="199"><highlight class="normal"></highlight></codeline>
+<codeline lineno="200"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="struct_vamp_1_1_plugin_1_1_output_descriptor" kindref="compound">OutputDescriptor</ref><sp/><ref refid="poly-fir_8h_1a2530554172d8629149ec56816eeaa947" kindref="member">d</ref>;</highlight></codeline>
+<codeline lineno="201"><highlight class="normal"><sp/><sp/><sp/><sp/>d.<ref refid="struct_vamp_1_1_plugin_1_1_output_descriptor_1ae2c893ddb1860589517ab7eaa989a18b" kindref="member">identifier</ref><sp/>=<sp/></highlight><highlight class="stringliteral">&quot;onsets&quot;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="202"><highlight class="normal"><sp/><sp/><sp/><sp/>d.<ref refid="struct_vamp_1_1_plugin_1_1_output_descriptor_1ab824b2b34ee50f897a30901c620e8d87" kindref="member">name</ref><sp/>=<sp/></highlight><highlight class="stringliteral">&quot;Onsets&quot;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="203"><highlight class="normal"><sp/><sp/><sp/><sp/>d.<ref refid="struct_vamp_1_1_plugin_1_1_output_descriptor_1af9b4fe8f78e7126ead820ba5dc55efd1" kindref="member">description</ref><sp/>=<sp/></highlight><highlight class="stringliteral">&quot;Percussive<sp/>note<sp/>onset<sp/>locations&quot;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="204"><highlight class="normal"><sp/><sp/><sp/><sp/>d.<ref refid="struct_vamp_1_1_plugin_1_1_output_descriptor_1aa057a8833fa037f06ac9f7b85b85d5e4" kindref="member">unit</ref><sp/>=<sp/></highlight><highlight class="stringliteral">&quot;&quot;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="205"><highlight class="normal"><sp/><sp/><sp/><sp/>d.<ref refid="struct_vamp_1_1_plugin_1_1_output_descriptor_1af0e577e1a256ff6eed6ea42133fec77d" kindref="member">hasFixedBinCount</ref><sp/>=<sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="206"><highlight class="normal"><sp/><sp/><sp/><sp/>d.<ref refid="struct_vamp_1_1_plugin_1_1_output_descriptor_1afdd006959a995e40ef7d565a3a4df6dc" kindref="member">binCount</ref><sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="207"><highlight class="normal"><sp/><sp/><sp/><sp/>d.<ref refid="struct_vamp_1_1_plugin_1_1_output_descriptor_1ae9ccb65f99f477096b65dd031f4c5e31" kindref="member">hasKnownExtents</ref><sp/>=<sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="208"><highlight class="normal"><sp/><sp/><sp/><sp/>d.<ref refid="struct_vamp_1_1_plugin_1_1_output_descriptor_1a1b4858928d23bfd7d5bc557c82a83fb4" kindref="member">isQuantized</ref><sp/>=<sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="209"><highlight class="normal"><sp/><sp/><sp/><sp/>d.<ref refid="struct_vamp_1_1_plugin_1_1_output_descriptor_1a0d1194980d44e31b25ef3b4b070d6b5d" kindref="member">sampleType</ref><sp/>=<sp/><ref refid="struct_vamp_1_1_plugin_1_1_output_descriptor_1abffa9ed50cd756df70fd51f0355f448cadea995a737867f7b22b52f1c43c5432e" kindref="member">OutputDescriptor::VariableSampleRate</ref>;</highlight></codeline>
+<codeline lineno="210"><highlight class="normal"><sp/><sp/><sp/><sp/>d.<ref refid="struct_vamp_1_1_plugin_1_1_output_descriptor_1add0cbbdfa9c91764037c39365b1d42af" kindref="member">sampleRate</ref><sp/>=<sp/><ref refid="class_vamp_1_1_plugin_1a59b9dd82a4f4eb946cd0474cc81abc23" kindref="member">m_inputSampleRate</ref>;</highlight></codeline>
+<codeline lineno="211"><highlight class="normal"><sp/><sp/><sp/><sp/>list.push_back(d);</highlight></codeline>
+<codeline lineno="212"><highlight class="normal"></highlight></codeline>
+<codeline lineno="213"><highlight class="normal"><sp/><sp/><sp/><sp/>d.<ref refid="struct_vamp_1_1_plugin_1_1_output_descriptor_1ae2c893ddb1860589517ab7eaa989a18b" kindref="member">identifier</ref><sp/>=<sp/></highlight><highlight class="stringliteral">&quot;detectionfunction&quot;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="214"><highlight class="normal"><sp/><sp/><sp/><sp/>d.<ref refid="struct_vamp_1_1_plugin_1_1_output_descriptor_1ab824b2b34ee50f897a30901c620e8d87" kindref="member">name</ref><sp/>=<sp/></highlight><highlight class="stringliteral">&quot;Detection<sp/>Function&quot;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="215"><highlight class="normal"><sp/><sp/><sp/><sp/>d.<ref refid="struct_vamp_1_1_plugin_1_1_output_descriptor_1af9b4fe8f78e7126ead820ba5dc55efd1" kindref="member">description</ref><sp/>=<sp/></highlight><highlight class="stringliteral">&quot;Broadband<sp/>energy<sp/>rise<sp/>detection<sp/>function&quot;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="216"><highlight class="normal"><sp/><sp/><sp/><sp/>d.<ref refid="struct_vamp_1_1_plugin_1_1_output_descriptor_1afdd006959a995e40ef7d565a3a4df6dc" kindref="member">binCount</ref><sp/>=<sp/>1;</highlight></codeline>
+<codeline lineno="217"><highlight class="normal"><sp/><sp/><sp/><sp/>d.<ref refid="struct_vamp_1_1_plugin_1_1_output_descriptor_1a1b4858928d23bfd7d5bc557c82a83fb4" kindref="member">isQuantized</ref><sp/>=<sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="218"><highlight class="normal"><sp/><sp/><sp/><sp/>d.<ref refid="struct_vamp_1_1_plugin_1_1_output_descriptor_1a3bed37153067b625b95acb40b60dbf0b" kindref="member">quantizeStep</ref><sp/>=<sp/>1.0;</highlight></codeline>
+<codeline lineno="219"><highlight class="normal"><sp/><sp/><sp/><sp/>d.<ref refid="struct_vamp_1_1_plugin_1_1_output_descriptor_1a0d1194980d44e31b25ef3b4b070d6b5d" kindref="member">sampleType</ref><sp/>=<sp/><ref refid="struct_vamp_1_1_plugin_1_1_output_descriptor_1abffa9ed50cd756df70fd51f0355f448ca0459d5d0d2198d21e8bc90abe4fdccca" kindref="member">OutputDescriptor::OneSamplePerStep</ref>;</highlight></codeline>
+<codeline lineno="220"><highlight class="normal"><sp/><sp/><sp/><sp/>list.push_back(d);</highlight></codeline>
+<codeline lineno="221"><highlight class="normal"></highlight></codeline>
+<codeline lineno="222"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>list;</highlight></codeline>
+<codeline lineno="223"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="224"><highlight class="normal"></highlight></codeline>
+<codeline lineno="225"><highlight class="normal"><ref refid="class_vamp_1_1_plugin_1a448fb57dc245d47923ec9eeaf9856c5f" kindref="member">PercussionOnsetDetector::FeatureSet</ref></highlight></codeline>
+<codeline lineno="226" refid="class_percussion_onset_detector_1adfd989812b3e0cb8f4b498f56a5a9614" refkind="member"><highlight class="normal"><ref refid="class_percussion_onset_detector_1adfd989812b3e0cb8f4b498f56a5a9614" kindref="member">PercussionOnsetDetector::process</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>*</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>*inputBuffers,</highlight></codeline>
+<codeline lineno="227"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="struct_vamp_1_1_real_time" kindref="compound">Vamp::RealTime</ref><sp/>ts)</highlight></codeline>
+<codeline lineno="228"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="229"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<ref refid="class_percussion_onset_detector_1aabac0cf7e961482b075777e5f0686e6c" kindref="member">m_stepSize</ref><sp/>==<sp/>0)<sp/>{</highlight></codeline>
+<codeline lineno="230"><highlight class="normal"><sp/><sp/><sp/><sp/>cerr<sp/>&lt;&lt;<sp/></highlight><highlight class="stringliteral">&quot;ERROR:<sp/>PercussionOnsetDetector::process:<sp/>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="231"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;&lt;<sp/></highlight><highlight class="stringliteral">&quot;PercussionOnsetDetector<sp/>has<sp/>not<sp/>been<sp/>initialised&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="232"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;&lt;<sp/>endl;</highlight></codeline>
+<codeline lineno="233"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="class_vamp_1_1_plugin_1a448fb57dc245d47923ec9eeaf9856c5f" kindref="member">FeatureSet</ref>();</highlight></codeline>
+<codeline lineno="234"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="235"><highlight class="normal"></highlight></codeline>
+<codeline lineno="236"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="cascade_8c_1afea6e77db19a2f8c91419904fe665a3a" kindref="member">count</ref><sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="237"><highlight class="normal"></highlight></codeline>
+<codeline lineno="238"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/><ref refid="checksum_8c_1ab80e330a3bc9e38c1297fe17381e92b4" kindref="member">i</ref><sp/>=<sp/>1;<sp/><ref refid="checksum_8c_1ab80e330a3bc9e38c1297fe17381e92b4" kindref="member">i</ref><sp/>&lt;<sp/><ref refid="class_percussion_onset_detector_1a920de543dbcf70a2edd80b5b31313285" kindref="member">m_blockSize</ref>/2;<sp/>++<ref refid="checksum_8c_1ab80e330a3bc9e38c1297fe17381e92b4" kindref="member">i</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="239"><highlight class="normal"></highlight></codeline>
+<codeline lineno="240"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/><ref refid="vector-gen_8c_1a5f5a64ef503db0fc824df8320929b126" kindref="member">real</ref><sp/>=<sp/>inputBuffers[0][<ref refid="checksum_8c_1ab80e330a3bc9e38c1297fe17381e92b4" kindref="member">i</ref>*2];</highlight></codeline>
+<codeline lineno="241"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>imag<sp/>=<sp/>inputBuffers[0][<ref refid="checksum_8c_1ab80e330a3bc9e38c1297fe17381e92b4" kindref="member">i</ref>*2<sp/>+<sp/>1];</highlight></codeline>
+<codeline lineno="242"><highlight class="normal"></highlight></codeline>
+<codeline lineno="243"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>sqrmag<sp/>=<sp/>real<sp/>*<sp/>real<sp/>+<sp/>imag<sp/>*<sp/>imag;</highlight></codeline>
+<codeline lineno="244"><highlight class="normal"></highlight></codeline>
+<codeline lineno="245"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<ref refid="class_percussion_onset_detector_1a30daa717267251a9d49afe57c328e989" kindref="member">m_priorMagnitudes</ref>[<ref refid="checksum_8c_1ab80e330a3bc9e38c1297fe17381e92b4" kindref="member">i</ref>]<sp/>&gt;<sp/>0.<ref refid="rfft2d_test_m_l_8m_1aacd36fb6ac9ce14cec71f2ca852524d4" kindref="member">f</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="246"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>diff<sp/>=<sp/>10.f<sp/>*<sp/>log10f(sqrmag<sp/>/<sp/><ref refid="class_percussion_onset_detector_1a30daa717267251a9d49afe57c328e989" kindref="member">m_priorMagnitudes</ref>[<ref refid="checksum_8c_1ab80e330a3bc9e38c1297fe17381e92b4" kindref="member">i</ref>]);</highlight></codeline>
+<codeline lineno="247"><highlight class="normal"></highlight></codeline>
+<codeline lineno="248"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::cout<sp/>&lt;&lt;<sp/>&quot;i=&quot;<sp/>&lt;&lt;<sp/>i<sp/>&lt;&lt;<sp/>&quot;,<sp/>sqrmag=&quot;<sp/>&lt;&lt;<sp/>sqrmag<sp/>&lt;&lt;<sp/>&quot;,<sp/>prior=&quot;<sp/>&lt;&lt;<sp/>m_priorMagnitudes[i]<sp/>&lt;&lt;<sp/>&quot;,<sp/>diff=&quot;<sp/>&lt;&lt;<sp/>diff<sp/>&lt;&lt;<sp/>&quot;,<sp/>threshold=&quot;<sp/>&lt;&lt;<sp/>m_threshold<sp/>&lt;&lt;<sp/>&quot;<sp/>&quot;<sp/>&lt;&lt;<sp/>(diff<sp/>&gt;=<sp/>m_threshold<sp/>?<sp/>&quot;[*]&quot;<sp/>:<sp/>&quot;&quot;)<sp/>&lt;&lt;<sp/>std::endl;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="249"><highlight class="normal"></highlight></codeline>
+<codeline lineno="250"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(diff<sp/>&gt;=<sp/><ref refid="class_percussion_onset_detector_1ab04119adad56d87f2e633de289aab507" kindref="member">m_threshold</ref>)<sp/>++<ref refid="cascade_8c_1afea6e77db19a2f8c91419904fe665a3a" kindref="member">count</ref>;</highlight></codeline>
+<codeline lineno="251"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="252"><highlight class="normal"></highlight></codeline>
+<codeline lineno="253"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="class_percussion_onset_detector_1a30daa717267251a9d49afe57c328e989" kindref="member">m_priorMagnitudes</ref>[<ref refid="checksum_8c_1ab80e330a3bc9e38c1297fe17381e92b4" kindref="member">i</ref>]<sp/>=<sp/>sqrmag;</highlight></codeline>
+<codeline lineno="254"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="255"><highlight class="normal"></highlight></codeline>
+<codeline lineno="256"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="class_vamp_1_1_plugin_1a448fb57dc245d47923ec9eeaf9856c5f" kindref="member">FeatureSet</ref><sp/>returnFeatures;</highlight></codeline>
+<codeline lineno="257"><highlight class="normal"></highlight></codeline>
+<codeline lineno="258"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="struct_vamp_1_1_plugin_1_1_feature" kindref="compound">Feature</ref><sp/>detectionFunction;</highlight></codeline>
+<codeline lineno="259"><highlight class="normal"><sp/><sp/><sp/><sp/>detectionFunction.<ref refid="struct_vamp_1_1_plugin_1_1_feature_1a98907091d0b6a589720ae35ae588a82b" kindref="member">hasTimestamp</ref><sp/>=<sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="260"><highlight class="normal"><sp/><sp/><sp/><sp/>detectionFunction.<ref refid="struct_vamp_1_1_plugin_1_1_feature_1a60b9f3057386820dbcaec0eb1189ce71" kindref="member">values</ref>.push_back(count);</highlight></codeline>
+<codeline lineno="261"><highlight class="normal"><sp/><sp/><sp/><sp/>returnFeatures[1].push_back(detectionFunction);</highlight></codeline>
+<codeline lineno="262"><highlight class="normal"></highlight></codeline>
+<codeline lineno="263"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<ref refid="class_percussion_onset_detector_1a6ad7d8353cc681ff42a63b127cca5779" kindref="member">m_dfMinus2</ref><sp/>&lt;<sp/><ref refid="class_percussion_onset_detector_1acd80162c65212be7fa91251263fb9c3d" kindref="member">m_dfMinus1</ref><sp/>&amp;&amp;</highlight></codeline>
+<codeline lineno="264"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="class_percussion_onset_detector_1acd80162c65212be7fa91251263fb9c3d" kindref="member">m_dfMinus1</ref><sp/>&gt;=<sp/>count<sp/>&amp;&amp;</highlight></codeline>
+<codeline lineno="265"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="class_percussion_onset_detector_1acd80162c65212be7fa91251263fb9c3d" kindref="member">m_dfMinus1</ref><sp/>&gt;<sp/>((100<sp/>-<sp/><ref refid="class_percussion_onset_detector_1a4e9770f246ba3bc75e7fc2cb8f9010af" kindref="member">m_sensitivity</ref>)<sp/>*<sp/><ref refid="class_percussion_onset_detector_1a920de543dbcf70a2edd80b5b31313285" kindref="member">m_blockSize</ref>)<sp/>/<sp/>200)<sp/>{</highlight></codeline>
+<codeline lineno="266"><highlight class="normal"></highlight></codeline>
+<codeline lineno="267"><highlight class="normal"></highlight><highlight class="comment">//std::cout<sp/>&lt;&lt;<sp/>&quot;result<sp/>at<sp/>&quot;<sp/>&lt;&lt;<sp/>ts<sp/>&lt;&lt;<sp/>&quot;!<sp/>(count<sp/>==<sp/>&quot;<sp/>&lt;&lt;<sp/>count<sp/>&lt;&lt;<sp/>&quot;,<sp/>prev<sp/>==<sp/>&quot;<sp/>&lt;&lt;<sp/>m_dfMinus1<sp/>&lt;&lt;<sp/>&quot;)&quot;<sp/>&lt;&lt;<sp/>std::endl;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="268"><highlight class="normal"></highlight></codeline>
+<codeline lineno="269"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="struct_vamp_1_1_plugin_1_1_feature" kindref="compound">Feature</ref><sp/>onset;</highlight></codeline>
+<codeline lineno="270"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>onset.<ref refid="struct_vamp_1_1_plugin_1_1_feature_1a98907091d0b6a589720ae35ae588a82b" kindref="member">hasTimestamp</ref><sp/>=<sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="271"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>onset.<ref refid="struct_vamp_1_1_plugin_1_1_feature_1acaa605f36839c07e76f4882f5e22d8d7" kindref="member">timestamp</ref><sp/>=<sp/>ts<sp/>-<sp/><ref refid="struct_vamp_1_1_real_time_1a3a5ecc8888b559aad3b7d96911786b3a" kindref="member">Vamp::RealTime::frame2RealTime</ref></highlight></codeline>
+<codeline lineno="272"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>(<ref refid="class_percussion_onset_detector_1aabac0cf7e961482b075777e5f0686e6c" kindref="member">m_stepSize</ref>,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal">(<ref refid="class_vamp_1_1_plugin_1a59b9dd82a4f4eb946cd0474cc81abc23" kindref="member">m_inputSampleRate</ref><sp/>+<sp/>0.5));</highlight></codeline>
+<codeline lineno="273"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>returnFeatures[0].push_back(onset);</highlight></codeline>
+<codeline lineno="274"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="275"><highlight class="normal"></highlight></codeline>
+<codeline lineno="276"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="class_percussion_onset_detector_1a6ad7d8353cc681ff42a63b127cca5779" kindref="member">m_dfMinus2</ref><sp/>=<sp/><ref refid="class_percussion_onset_detector_1acd80162c65212be7fa91251263fb9c3d" kindref="member">m_dfMinus1</ref>;</highlight></codeline>
+<codeline lineno="277"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="class_percussion_onset_detector_1acd80162c65212be7fa91251263fb9c3d" kindref="member">m_dfMinus1</ref><sp/>=<sp/><ref refid="cascade_8c_1afea6e77db19a2f8c91419904fe665a3a" kindref="member">count</ref>;</highlight></codeline>
+<codeline lineno="278"><highlight class="normal"></highlight></codeline>
+<codeline lineno="279"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>returnFeatures;</highlight></codeline>
+<codeline lineno="280"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="281"><highlight class="normal"></highlight></codeline>
+<codeline lineno="282"><highlight class="normal"><ref refid="class_vamp_1_1_plugin_1a448fb57dc245d47923ec9eeaf9856c5f" kindref="member">PercussionOnsetDetector::FeatureSet</ref></highlight></codeline>
+<codeline lineno="283" refid="class_percussion_onset_detector_1ad3d6767ed137783e84f842b4d4732ffa" refkind="member"><highlight class="normal"><ref refid="class_percussion_onset_detector_1ad3d6767ed137783e84f842b4d4732ffa" kindref="member">PercussionOnsetDetector::getRemainingFeatures</ref>()</highlight></codeline>
+<codeline lineno="284"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="285"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="class_vamp_1_1_plugin_1a448fb57dc245d47923ec9eeaf9856c5f" kindref="member">FeatureSet</ref>();</highlight></codeline>
+<codeline lineno="286"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="287"><highlight class="normal"></highlight></codeline>
+    </programlisting>
+    <location file="C:/_dev/OpenU/Audacity/audacity/lib-src/libvamp/examples/PercussionOnsetDetector.cpp"/>
+  </compounddef>
+</doxygen>

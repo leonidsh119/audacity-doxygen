@@ -1,0 +1,116 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="struct___l_v2___state___interface" kind="struct" language="C++" prot="public">
+    <compoundname>_LV2_State_Interface</compoundname>
+    <includes refid="state_8h" local="no">state.h</includes>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="struct___l_v2___state___interface_1ae564742663a6d908d9745c9eb8bdb347" prot="public" static="no" mutable="no">
+        <type><ref refid="state_8h_1afb5cc1033410d51fdcdbfdd09fc7d808" kindref="member">LV2_State_Status</ref>(*</type>
+        <definition>LV2_State_Status(* _LV2_State_Interface::save) (LV2_Handle instance, LV2_State_Store_Function store, LV2_State_Handle handle, uint32_t flags, const LV2_Feature *const *features)</definition>
+        <argsstring>)(LV2_Handle instance, LV2_State_Store_Function store, LV2_State_Handle handle, uint32_t flags, const LV2_Feature *const *features)</argsstring>
+        <name>save</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Save plugin state using a host-provided <computeroutput>store</computeroutput> callback.</para><para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>instance</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The instance handle of the plugin. </para></parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>store</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The host-provided store callback. </para></parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>handle</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>An opaque pointer to host data which MUST be passed as the handle parameter to <computeroutput>store</computeroutput> if it is called. </para></parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>flags</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Flags describing desired properties of this save. These flags may be used to determine the most appropriate values to store. </para></parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>features</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Extensible parameter for passing any additional features to be used for this save.</para></parameterdescription>
+</parameteritem>
+</parameterlist>
+The plugin is expected to store everything necessary to completely restore its state later. Plugins SHOULD store simple POD data whenever possible, and consider the possibility of state being restored much later on a different machine.</para><para>The <computeroutput>handle</computeroutput> pointer and <computeroutput>store</computeroutput> function MUST NOT be used beyond the scope of <ref refid="struct___l_v2___state___interface_1ae564742663a6d908d9745c9eb8bdb347" kindref="member">save()</ref>.</para><para>This function has its own special threading class: it may not be called concurrently with any &quot;Instantiation&quot; function, but it may be called concurrently with functions in any other class, unless the definition of that class prohibits it (e.g. it may not be called concurrently with a &quot;Discovery&quot; function, but it may be called concurrently with an &quot;Audio&quot; function. The plugin is responsible for any locking or lock-free techniques necessary to make this possible.</para><para>Note that in the simple case where state is only modified by <ref refid="struct___l_v2___state___interface_1af1b48ea50175bfef63d4dd35d09d90b8" kindref="member">restore()</ref>, there are no synchronization issues since <ref refid="struct___l_v2___state___interface_1ae564742663a6d908d9745c9eb8bdb347" kindref="member">save()</ref> is never called concurrently with <ref refid="struct___l_v2___state___interface_1af1b48ea50175bfef63d4dd35d09d90b8" kindref="member">restore()</ref> (though <ref refid="namespacewaflib_1_1_task_1a859c6336afe027ae782f84b9e49a4f0f" kindref="member">run()</ref> may read it during a save).</para><para>Plugins that dynamically modify state while running, however, must take care to do so in such a way that a concurrent call to <ref refid="struct___l_v2___state___interface_1ae564742663a6d908d9745c9eb8bdb347" kindref="member">save()</ref> will save a consistent representation of plugin state for a single instant in time. </para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/_dev/OpenU/Audacity/audacity/lib-src/lv2/lv2/lv2/lv2plug.in/ns/ext/state/state.h" line="226" column="1" bodyfile="C:/_dev/OpenU/Audacity/audacity/lib-src/lv2/lv2/lv2/lv2plug.in/ns/ext/state/state.h" bodystart="226" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct___l_v2___state___interface_1af1b48ea50175bfef63d4dd35d09d90b8" prot="public" static="no" mutable="no">
+        <type><ref refid="state_8h_1afb5cc1033410d51fdcdbfdd09fc7d808" kindref="member">LV2_State_Status</ref>(*</type>
+        <definition>LV2_State_Status(* _LV2_State_Interface::restore) (LV2_Handle instance, LV2_State_Retrieve_Function retrieve, LV2_State_Handle handle, uint32_t flags, const LV2_Feature *const *features)</definition>
+        <argsstring>)(LV2_Handle instance, LV2_State_Retrieve_Function retrieve, LV2_State_Handle handle, uint32_t flags, const LV2_Feature *const *features)</argsstring>
+        <name>restore</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Restore plugin state using a host-provided <computeroutput>retrieve</computeroutput> callback.</para><para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>instance</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The instance handle of the plugin. </para></parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>retrieve</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The host-provided retrieve callback. </para></parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>handle</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>An opaque pointer to host data which MUST be passed as the handle parameter to <computeroutput>retrieve</computeroutput> if it is called. </para></parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>flags</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Currently unused. </para></parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>features</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Extensible parameter for passing any additional features to be used for this restore.</para></parameterdescription>
+</parameteritem>
+</parameterlist>
+The plugin MAY assume a restored value was set by a previous call to <ref refid="struct___l_v2___state___interface_1ae564742663a6d908d9745c9eb8bdb347" kindref="member">LV2_State_Interface.save()</ref> by a plugin with the same URI.</para><para>The plugin MUST gracefully fall back to a default value when a value can not be retrieved. This allows the host to reset the plugin state with an empty map.</para><para>The <computeroutput>handle</computeroutput> pointer and <computeroutput>store</computeroutput> function MUST NOT be used beyond the scope of <ref refid="struct___l_v2___state___interface_1af1b48ea50175bfef63d4dd35d09d90b8" kindref="member">restore()</ref>.</para><para>This function is in the &quot;Instantiation&quot; threading class as defined by LV2. This means it MUST NOT be called concurrently with any other function on the same plugin instance. </para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/_dev/OpenU/Audacity/audacity/lib-src/lv2/lv2/lv2/lv2plug.in/ns/ext/state/state.h" line="257" column="1" bodyfile="C:/_dev/OpenU/Audacity/audacity/lib-src/lv2/lv2/lv2/lv2plug.in/ns/ext/state/state.h" bodystart="257" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para>LV2 Plugin <ref refid="struct_state" kindref="compound">State</ref> Interface.</para><para>When the plugin&apos;s extension_data is called with argument LV2_STATE__interface, the plugin MUST return an LV2_State_Interface structure, which remains valid for the lifetime of the plugin.</para><para>The host can use the contained function pointers to save and restore the state of a plugin instance at any time, provided the threading restrictions of the functions are met.</para><para>Stored data is only guaranteed to be compatible between instances of plugins with the same URI (i.e. if a change to a plugin would cause a fatal error when restoring state saved by a previous version of that plugin, the plugin URI MUST change just as it must when ports change incompatibly). Plugin authors should consider this possibility, and always store sensible data with meaningful types to avoid such problems in the future. </para>    </detaileddescription>
+    <location file="C:/_dev/OpenU/Audacity/audacity/lib-src/lv2/lv2/lv2/lv2plug.in/ns/ext/state/state.h" line="189" column="1" bodyfile="C:/_dev/OpenU/Audacity/audacity/lib-src/lv2/lv2/lv2/lv2plug.in/ns/ext/state/state.h" bodystart="189" bodyend="262"/>
+    <listofallmembers>
+      <member refid="struct___l_v2___state___interface_1af1b48ea50175bfef63d4dd35d09d90b8" prot="public" virt="non-virtual"><scope>_LV2_State_Interface</scope><name>restore</name></member>
+      <member refid="struct___l_v2___state___interface_1ae564742663a6d908d9745c9eb8bdb347" prot="public" virt="non-virtual"><scope>_LV2_State_Interface</scope><name>save</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

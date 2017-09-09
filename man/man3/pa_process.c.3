@@ -1,0 +1,592 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/lib-src/portaudio-v19/src/common/pa_process.c" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/lib-src/portaudio-v19/src/common/pa_process.c \- Buffer Processor implementation\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <assert\&.h>\fP
+.br
+\fC#include <string\&.h>\fP
+.br
+\fC#include 'pa_process\&.h'\fP
+.br
+\fC#include 'pa_util\&.h'\fP
+.br
+
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBPA_FRAMES_PER_TEMP_BUFFER_WHEN_HOST_BUFFER_SIZE_IS_UNKNOWN_\fP   1024"
+.br
+.ti -1c
+.RI "#define \fBPA_MIN_\fP(\fBa\fP,  \fBb\fP)   ( ((\fBa\fP)<(\fBb\fP)) ? (\fBa\fP) : (\fBb\fP) )"
+.br
+.ti -1c
+.RI "#define \fBPA_MAX_\fP(\fBa\fP,  \fBb\fP)   (((\fBa\fP) > (\fBb\fP)) ? (\fBa\fP) : (\fBb\fP))"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBPaError\fP \fBPaUtil_InitializeBufferProcessor\fP (\fBPaUtilBufferProcessor\fP *bp, \fBint\fP inputChannelCount, \fBPaSampleFormat\fP userInputSampleFormat, \fBPaSampleFormat\fP hostInputSampleFormat, \fBint\fP outputChannelCount, \fBPaSampleFormat\fP userOutputSampleFormat, \fBPaSampleFormat\fP hostOutputSampleFormat, double sampleRate, \fBPaStreamFlags\fP streamFlags, unsigned long framesPerUserBuffer, unsigned long framesPerHostBuffer, \fBPaUtilHostBufferSizeMode\fP hostBufferSizeMode, \fBPaStreamCallback\fP *streamCallback, \fBvoid\fP *\fBuserData\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBPaUtil_TerminateBufferProcessor\fP (\fBPaUtilBufferProcessor\fP *bp)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBPaUtil_ResetBufferProcessor\fP (\fBPaUtilBufferProcessor\fP *bp)"
+.br
+.ti -1c
+.RI "unsigned long \fBPaUtil_GetBufferProcessorInputLatencyFrames\fP (\fBPaUtilBufferProcessor\fP *bp)"
+.br
+.ti -1c
+.RI "unsigned long \fBPaUtil_GetBufferProcessorOutputLatencyFrames\fP (\fBPaUtilBufferProcessor\fP *bp)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBPaUtil_SetInputFrameCount\fP (\fBPaUtilBufferProcessor\fP *bp, unsigned long frameCount)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBPaUtil_SetNoInput\fP (\fBPaUtilBufferProcessor\fP *bp)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBPaUtil_SetInputChannel\fP (\fBPaUtilBufferProcessor\fP *bp, unsigned \fBint\fP channel, \fBvoid\fP *\fBdata\fP, unsigned \fBint\fP stride)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBPaUtil_SetInterleavedInputChannels\fP (\fBPaUtilBufferProcessor\fP *bp, unsigned \fBint\fP firstChannel, \fBvoid\fP *\fBdata\fP, unsigned \fBint\fP channelCount)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBPaUtil_SetNonInterleavedInputChannel\fP (\fBPaUtilBufferProcessor\fP *bp, unsigned \fBint\fP channel, \fBvoid\fP *\fBdata\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBPaUtil_Set2ndInputFrameCount\fP (\fBPaUtilBufferProcessor\fP *bp, unsigned long frameCount)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBPaUtil_Set2ndInputChannel\fP (\fBPaUtilBufferProcessor\fP *bp, unsigned \fBint\fP channel, \fBvoid\fP *\fBdata\fP, unsigned \fBint\fP stride)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBPaUtil_Set2ndInterleavedInputChannels\fP (\fBPaUtilBufferProcessor\fP *bp, unsigned \fBint\fP firstChannel, \fBvoid\fP *\fBdata\fP, unsigned \fBint\fP channelCount)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBPaUtil_Set2ndNonInterleavedInputChannel\fP (\fBPaUtilBufferProcessor\fP *bp, unsigned \fBint\fP channel, \fBvoid\fP *\fBdata\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBPaUtil_SetOutputFrameCount\fP (\fBPaUtilBufferProcessor\fP *bp, unsigned long frameCount)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBPaUtil_SetNoOutput\fP (\fBPaUtilBufferProcessor\fP *bp)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBPaUtil_SetOutputChannel\fP (\fBPaUtilBufferProcessor\fP *bp, unsigned \fBint\fP channel, \fBvoid\fP *\fBdata\fP, unsigned \fBint\fP stride)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBPaUtil_SetInterleavedOutputChannels\fP (\fBPaUtilBufferProcessor\fP *bp, unsigned \fBint\fP firstChannel, \fBvoid\fP *\fBdata\fP, unsigned \fBint\fP channelCount)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBPaUtil_SetNonInterleavedOutputChannel\fP (\fBPaUtilBufferProcessor\fP *bp, unsigned \fBint\fP channel, \fBvoid\fP *\fBdata\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBPaUtil_Set2ndOutputFrameCount\fP (\fBPaUtilBufferProcessor\fP *bp, unsigned long frameCount)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBPaUtil_Set2ndOutputChannel\fP (\fBPaUtilBufferProcessor\fP *bp, unsigned \fBint\fP channel, \fBvoid\fP *\fBdata\fP, unsigned \fBint\fP stride)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBPaUtil_Set2ndInterleavedOutputChannels\fP (\fBPaUtilBufferProcessor\fP *bp, unsigned \fBint\fP firstChannel, \fBvoid\fP *\fBdata\fP, unsigned \fBint\fP channelCount)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBPaUtil_Set2ndNonInterleavedOutputChannel\fP (\fBPaUtilBufferProcessor\fP *bp, unsigned \fBint\fP channel, \fBvoid\fP *\fBdata\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBPaUtil_BeginBufferProcessing\fP (\fBPaUtilBufferProcessor\fP *bp, \fBPaStreamCallbackTimeInfo\fP *timeInfo, \fBPaStreamCallbackFlags\fP callbackStatusFlags)"
+.br
+.ti -1c
+.RI "unsigned long \fBPaUtil_EndBufferProcessing\fP (\fBPaUtilBufferProcessor\fP *bp, \fBint\fP *streamCallbackResult)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBPaUtil_IsBufferProcessorOutputEmpty\fP (\fBPaUtilBufferProcessor\fP *bp)"
+.br
+.ti -1c
+.RI "unsigned long \fBPaUtil_CopyInput\fP (\fBPaUtilBufferProcessor\fP *bp, \fBvoid\fP **\fBbuffer\fP, unsigned long frameCount)"
+.br
+.ti -1c
+.RI "unsigned long \fBPaUtil_CopyOutput\fP (\fBPaUtilBufferProcessor\fP *bp, \fBconst\fP \fBvoid\fP **\fBbuffer\fP, unsigned long frameCount)"
+.br
+.ti -1c
+.RI "unsigned long \fBPaUtil_ZeroOutput\fP (\fBPaUtilBufferProcessor\fP *bp, unsigned long frameCount)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Buffer Processor implementation\&. 
+
+
+.PP
+Definition in file \fBpa_process\&.c\fP\&.
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define PA_FRAMES_PER_TEMP_BUFFER_WHEN_HOST_BUFFER_SIZE_IS_UNKNOWN_   1024"
+
+.PP
+Definition at line 54 of file pa_process\&.c\&.
+.SS "#define PA_MAX_(\fBa\fP, \fBb\fP)   (((\fBa\fP) > (\fBb\fP)) ? (\fBa\fP) : (\fBb\fP))"
+
+.PP
+Definition at line 71 of file pa_process\&.c\&.
+.SS "#define PA_MIN_(\fBa\fP, \fBb\fP)   ( ((\fBa\fP)<(\fBb\fP)) ? (\fBa\fP) : (\fBb\fP) )"
+
+.PP
+Definition at line 56 of file pa_process\&.c\&.
+.SH "Function Documentation"
+.PP 
+.SS "\fBvoid\fP PaUtil_BeginBufferProcessing (\fBPaUtilBufferProcessor\fP * bufferProcessor, \fBPaStreamCallbackTimeInfo\fP * timeInfo, \fBPaStreamCallbackFlags\fP callbackStatusFlags)"
+Commence processing a host buffer (or a pair of host buffers in the full-duplex case) for a callback stream\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIbufferProcessor\fP The buffer processor\&.
+.br
+\fItimeInfo\fP Timing information for the first sample of the host \fBbuffer(s)\fP\&. This information may be adjusted when buffer adaption is being performed\&.
+.br
+\fIcallbackStatusFlags\fP Flags indicating whether underruns and overruns have occurred since the last time the buffer processor was called\&. 
+.RE
+.PP
+
+.PP
+Definition at line 669 of file pa_process\&.c\&.
+.SS "unsigned long PaUtil_CopyInput (\fBPaUtilBufferProcessor\fP * bufferProcessor, \fBvoid\fP ** buffer, unsigned long frameCount)"
+Copy samples from host input channels set up by the PaUtil_Set*InputChannels functions to a user supplied buffer\&. This function is intended for use with blocking read/write streams\&. Copies the minimum of the number of user frames (specified by the frameCount parameter) and the number of available host frames (specified in a previous call to SetInputFrameCount())\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIbufferProcessor\fP The buffer processor\&.
+.br
+\fIbuffer\fP A pointer to the user buffer pointer, or a pointer to a pointer to an array of user buffer pointers for a non-interleaved stream\&. It is important that this parameter points to a copy of the user buffer pointers, not to the actual user buffer pointers, because this function updates the pointers before returning\&.
+.br
+\fIframeCount\fP The number of frames of data in the \fBbuffer(s)\fP pointed to by the buffer parameter\&.
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+The number of frames copied\&. The buffer pointer(s) pointed to by the buffer parameter are advanced to point to the frame(s) following the last one filled\&. 
+.RE
+.PP
+
+.PP
+Definition at line 1662 of file pa_process\&.c\&.
+.SS "unsigned long PaUtil_CopyOutput (\fBPaUtilBufferProcessor\fP * bp, \fBconst\fP \fBvoid\fP ** buffer, unsigned long frameCount)"
+
+.PP
+Definition at line 1733 of file pa_process\&.c\&.
+.SS "unsigned long PaUtil_EndBufferProcessing (\fBPaUtilBufferProcessor\fP * bufferProcessor, \fBint\fP * callbackResult)"
+Finish processing a host buffer (or a pair of host buffers in the full-duplex case) for a callback stream\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIbufferProcessor\fP The buffer processor\&.
+.br
+\fIcallbackResult\fP On input, indicates a previous callback result, and on exit, the result of the user stream callback, if it is called\&. On entry callbackResult should contain one of { paContinue, paComplete, or paAbort}\&. If paComplete is passed, the stream callback will not be called but any audio that was generated by previous stream callbacks will be copied to the output \fBbuffer(s)\fP\&. You can check whether the buffer processor's internal buffer is empty by calling PaUtil_IsBufferProcessorOutputEmpty\&.
+.RE
+.PP
+If the stream callback is called its result is stored in *callbackResult\&. If the stream callback returns paComplete or paAbort, all output buffers will be full of valid data - some of which may be zeros to acount for data that wasn't generated by the terminating callback\&.
+.PP
+\fBReturns:\fP
+.RS 4
+The number of frames processed\&. This usually corresponds to the number of frames specified by the PaUtil_Set*FrameCount functions, exept in the paUtilVariableHostBufferSizePartialUsageAllowed buffer size mode when a smaller value may be returned\&. 
+.RE
+.PP
+
+.PP
+Definition at line 1484 of file pa_process\&.c\&.
+.SS "unsigned long PaUtil_GetBufferProcessorInputLatencyFrames (\fBPaUtilBufferProcessor\fP * bufferProcessor)"
+Retrieve the input latency of a buffer processor, in frames\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIbufferProcessor\fP The buffer processor examine\&.
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+The input latency introduced by the buffer processor, in frames\&.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBPaUtil_GetBufferProcessorOutputLatencyFrames\fP 
+.RE
+.PP
+
+.PP
+Definition at line 431 of file pa_process\&.c\&.
+.SS "unsigned long PaUtil_GetBufferProcessorOutputLatencyFrames (\fBPaUtilBufferProcessor\fP * bufferProcessor)"
+Retrieve the output latency of a buffer processor, in frames\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIbufferProcessor\fP The buffer processor examine\&.
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+The output latency introduced by the buffer processor, in frames\&.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBPaUtil_GetBufferProcessorInputLatencyFrames\fP 
+.RE
+.PP
+
+.PP
+Definition at line 437 of file pa_process\&.c\&.
+.SS "\fBPaError\fP PaUtil_InitializeBufferProcessor (\fBPaUtilBufferProcessor\fP * bufferProcessor, \fBint\fP inputChannelCount, \fBPaSampleFormat\fP userInputSampleFormat, \fBPaSampleFormat\fP hostInputSampleFormat, \fBint\fP outputChannelCount, \fBPaSampleFormat\fP userOutputSampleFormat, \fBPaSampleFormat\fP hostOutputSampleFormat, double sampleRate, \fBPaStreamFlags\fP streamFlags, unsigned long framesPerUserBuffer, unsigned long framesPerHostBuffer, \fBPaUtilHostBufferSizeMode\fP hostBufferSizeMode, \fBPaStreamCallback\fP * streamCallback, \fBvoid\fP * userData)"
+Initialize a buffer processor's representation stored in a \fBPaUtilBufferProcessor\fP structure\&. Be sure to call PaUtil_TerminateBufferProcessor after finishing with a buffer processor\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIbufferProcessor\fP The buffer processor structure to initialize\&.
+.br
+\fIinputChannelCount\fP The number of input channels as passed to Pa_OpenStream or 0 for an output-only stream\&.
+.br
+\fIuserInputSampleFormat\fP \fBFormat\fP of user input samples, as passed to Pa_OpenStream\&. This parameter is ignored for ouput-only streams\&.
+.br
+\fIhostInputSampleFormat\fP \fBFormat\fP of host input samples\&. This parameter is ignored for output-only streams\&. See note about host buffer interleave below\&.
+.br
+\fIoutputChannelCount\fP The number of output channels as passed to Pa_OpenStream or 0 for an input-only stream\&.
+.br
+\fIuserOutputSampleFormat\fP \fBFormat\fP of user output samples, as passed to Pa_OpenStream\&. This parameter is ignored for input-only streams\&.
+.br
+\fIhostOutputSampleFormat\fP \fBFormat\fP of host output samples\&. This parameter is ignored for input-only streams\&. See note about host buffer interleave below\&.
+.br
+\fIsampleRate\fP \fBSample\fP rate of the stream\&. The more accurate this is the better - it is used for updating time stamps when adapting buffers\&.
+.br
+\fIstreamFlags\fP Stream flags as passed to Pa_OpenStream, this parameter is used for selecting special sample conversion options such as clipping and dithering\&.
+.br
+\fIframesPerUserBuffer\fP Number of frames per user buffer, as requested by the framesPerBuffer parameter to Pa_OpenStream\&. This parameter may be zero to indicate that the user will accept any (and varying) buffer sizes\&.
+.br
+\fIframesPerHostBuffer\fP Specifies the number of frames per host buffer for the fixed buffer size mode, and the maximum number of frames per host buffer for the bounded host buffer size mode\&. It is ignored for the other modes\&.
+.br
+\fIhostBufferSizeMode\fP A mode flag indicating the size variability of host buffers that will be passed to the buffer processor\&. See PaUtilHostBufferSizeMode for further details\&.
+.br
+\fIstreamCallback\fP The user stream callback passed to Pa_OpenStream\&.
+.br
+\fIuserData\fP The user data field passed to Pa_OpenStream\&.
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+The interleave flag is ignored for host buffer formats\&. Host interleave is determined by the use of different SetInput and SetOutput functions\&.
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+An error code indicating whether the initialization was successful\&. If the error code is not PaNoError, the buffer processor was not initialized and should not be used\&.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBPa_OpenStream\fP, \fBPaUtilHostBufferSizeMode\fP, \fBPaUtil_TerminateBufferProcessor\fP 
+.RE
+.PP
+
+.PP
+Definition at line 90 of file pa_process\&.c\&.
+.SS "\fBint\fP PaUtil_IsBufferProcessorOutputEmpty (\fBPaUtilBufferProcessor\fP * bufferProcessor)"
+Determine whether any callback generated output remains in the bufffer processor's internal buffers\&. This method may be used to determine when to continue calling \fBPaUtil_EndBufferProcessing()\fP after the callback has returned a callbackResult of paComplete\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIbufferProcessor\fP The buffer processor\&.
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+Returns non-zero when callback generated output remains in the internal buffer and zero (0) when there internal buffer contains no callback generated data\&. 
+.RE
+.PP
+
+.PP
+Definition at line 1656 of file pa_process\&.c\&.
+.SS "\fBvoid\fP PaUtil_ResetBufferProcessor (\fBPaUtilBufferProcessor\fP * bufferProcessor)"
+Clear any internally buffered data\&. If you call PaUtil_InitializeBufferProcessor in your OpenStream routine, make sure you call PaUtil_ResetBufferProcessor in your StartStream call\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIbufferProcessor\fP The buffer processor to reset\&. 
+.RE
+.PP
+
+.PP
+Definition at line 408 of file pa_process\&.c\&.
+.SS "\fBvoid\fP PaUtil_Set2ndInputChannel (\fBPaUtilBufferProcessor\fP * bufferProcessor, unsigned \fBint\fP channel, \fBvoid\fP * data, unsigned \fBint\fP stride)"
+Use for the second buffer half when the input buffer is split in two halves\&. 
+.PP
+\fBSee also:\fP
+.RS 4
+\fBPaUtil_SetInputChannel\fP 
+.RE
+.PP
+
+.PP
+Definition at line 512 of file pa_process\&.c\&.
+.SS "\fBvoid\fP PaUtil_Set2ndInputFrameCount (\fBPaUtilBufferProcessor\fP * bufferProcessor, unsigned long frameCount)"
+Use for the second buffer half when the input buffer is split in two halves\&. 
+.PP
+\fBSee also:\fP
+.RS 4
+\fBPaUtil_SetInputFrameCount\fP 
+.RE
+.PP
+
+.PP
+Definition at line 505 of file pa_process\&.c\&.
+.SS "\fBvoid\fP PaUtil_Set2ndInterleavedInputChannels (\fBPaUtilBufferProcessor\fP * bufferProcessor, unsigned \fBint\fP firstChannel, \fBvoid\fP * data, unsigned \fBint\fP channelCount)"
+Use for the second buffer half when the input buffer is split in two halves\&. 
+.PP
+\fBSee also:\fP
+.RS 4
+\fBPaUtil_SetInterleavedInputChannels\fP 
+.RE
+.PP
+
+.PP
+Definition at line 522 of file pa_process\&.c\&.
+.SS "\fBvoid\fP PaUtil_Set2ndInterleavedOutputChannels (\fBPaUtilBufferProcessor\fP * bufferProcessor, unsigned \fBint\fP firstChannel, \fBvoid\fP * data, unsigned \fBint\fP channelCount)"
+Use for the second buffer half when the output buffer is split in two halves\&. 
+.PP
+\fBSee also:\fP
+.RS 4
+\fBPaUtil_SetInterleavedOutputChannels\fP 
+.RE
+.PP
+
+.PP
+Definition at line 637 of file pa_process\&.c\&.
+.SS "\fBvoid\fP PaUtil_Set2ndNonInterleavedInputChannel (\fBPaUtilBufferProcessor\fP * bufferProcessor, unsigned \fBint\fP channel, \fBvoid\fP * data)"
+Use for the second buffer half when the input buffer is split in two halves\&. 
+.PP
+\fBSee also:\fP
+.RS 4
+\fBPaUtil_SetNonInterleavedInputChannel\fP 
+.RE
+.PP
+
+.PP
+Definition at line 545 of file pa_process\&.c\&.
+.SS "\fBvoid\fP PaUtil_Set2ndNonInterleavedOutputChannel (\fBPaUtilBufferProcessor\fP * bufferProcessor, unsigned \fBint\fP channel, \fBvoid\fP * data)"
+Use for the second buffer half when the output buffer is split in two halves\&. 
+.PP
+\fBSee also:\fP
+.RS 4
+\fBPaUtil_SetNonInterleavedOutputChannel\fP 
+.RE
+.PP
+
+.PP
+Definition at line 659 of file pa_process\&.c\&.
+.SS "\fBvoid\fP PaUtil_Set2ndOutputChannel (\fBPaUtilBufferProcessor\fP * bufferProcessor, unsigned \fBint\fP channel, \fBvoid\fP * data, unsigned \fBint\fP stride)"
+Use for the second buffer half when the output buffer is split in two halves\&. 
+.PP
+\fBSee also:\fP
+.RS 4
+\fBPaUtil_SetOutputChannel\fP 
+.RE
+.PP
+
+.PP
+Definition at line 626 of file pa_process\&.c\&.
+.SS "\fBvoid\fP PaUtil_Set2ndOutputFrameCount (\fBPaUtilBufferProcessor\fP * bufferProcessor, unsigned long frameCount)"
+Use for the second buffer half when the output buffer is split in two halves\&. 
+.PP
+\fBSee also:\fP
+.RS 4
+\fBPaUtil_SetOutputFrameCount\fP 
+.RE
+.PP
+
+.PP
+Definition at line 619 of file pa_process\&.c\&.
+.SS "\fBvoid\fP PaUtil_SetInputChannel (\fBPaUtilBufferProcessor\fP * bufferProcessor, unsigned \fBint\fP channel, \fBvoid\fP * data, unsigned \fBint\fP stride)"
+Provide the buffer processor with a pointer to a host input channel\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIbufferProcessor\fP The buffer processor\&. 
+.br
+\fIchannel\fP The channel number\&. 
+.br
+\fIdata\fP The buffer\&. 
+.br
+\fIstride\fP The stride from one sample to the next, in samples\&. For interleaved host buffers, the stride will usually be the same as the number of channels in the buffer\&. 
+.RE
+.PP
+
+.PP
+Definition at line 461 of file pa_process\&.c\&.
+.SS "\fBvoid\fP PaUtil_SetInputFrameCount (\fBPaUtilBufferProcessor\fP * bufferProcessor, unsigned long frameCount)"
+Set the number of frames in the input host \fBbuffer(s)\fP specified by the PaUtil_Set*InputChannel functions\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIbufferProcessor\fP The buffer processor\&.
+.br
+\fIframeCount\fP The number of host input frames\&. A 0 frameCount indicates to use the framesPerHostBuffer value passed to PaUtil_InitializeBufferProcessor\&.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBPaUtil_SetNoInput\fP, \fBPaUtil_SetInputChannel\fP, \fBPaUtil_SetInterleavedInputChannels\fP, \fBPaUtil_SetNonInterleavedInputChannel\fP 
+.RE
+.PP
+
+.PP
+Definition at line 443 of file pa_process\&.c\&.
+.SS "\fBvoid\fP PaUtil_SetInterleavedInputChannels (\fBPaUtilBufferProcessor\fP * bufferProcessor, unsigned \fBint\fP firstChannel, \fBvoid\fP * data, unsigned \fBint\fP channelCount)"
+Provide the buffer processor with a pointer to an number of interleaved host input channels\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIbufferProcessor\fP The buffer processor\&. 
+.br
+\fIfirstChannel\fP The first channel number\&. 
+.br
+\fIdata\fP The buffer\&. 
+.br
+\fIchannelCount\fP The number of interleaved channels in the buffer\&. If channelCount is zero, the number of channels specified to PaUtil_InitializeBufferProcessor will be used\&. 
+.RE
+.PP
+
+.PP
+Definition at line 471 of file pa_process\&.c\&.
+.SS "\fBvoid\fP PaUtil_SetInterleavedOutputChannels (\fBPaUtilBufferProcessor\fP * bufferProcessor, unsigned \fBint\fP firstChannel, \fBvoid\fP * data, unsigned \fBint\fP channelCount)"
+Provide the buffer processor with a pointer to a number of interleaved host output channels\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIbufferProcessor\fP The buffer processor\&. 
+.br
+\fIfirstChannel\fP The first channel number\&. 
+.br
+\fIdata\fP The buffer\&. 
+.br
+\fIchannelCount\fP The number of interleaved channels in the buffer\&. If channelCount is zero, the number of channels specified to PaUtil_InitializeBufferProcessor will be used\&. 
+.RE
+.PP
+
+.PP
+Definition at line 587 of file pa_process\&.c\&.
+.SS "\fBvoid\fP PaUtil_SetNoInput (\fBPaUtilBufferProcessor\fP * bufferProcessor)"
+Indicate that no input is avalable\&. This function should be used when priming the output of a full-duplex stream opened with the paPrimeOutputBuffersUsingStreamCallback flag\&. Note that it is not necessary to call this or any othe PaUtil_Set*Input* functions for ouput-only streams\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIbufferProcessor\fP The buffer processor\&. 
+.RE
+.PP
+
+.PP
+Definition at line 453 of file pa_process\&.c\&.
+.SS "\fBvoid\fP PaUtil_SetNonInterleavedInputChannel (\fBPaUtilBufferProcessor\fP * bufferProcessor, unsigned \fBint\fP channel, \fBvoid\fP * data)"
+Provide the buffer processor with a pointer to one non-interleaved host output channel\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIbufferProcessor\fP The buffer processor\&. 
+.br
+\fIchannel\fP The channel number\&. 
+.br
+\fIdata\fP The buffer\&. 
+.RE
+.PP
+
+.PP
+Definition at line 494 of file pa_process\&.c\&.
+.SS "\fBvoid\fP PaUtil_SetNonInterleavedOutputChannel (\fBPaUtilBufferProcessor\fP * bufferProcessor, unsigned \fBint\fP channel, \fBvoid\fP * data)"
+Provide the buffer processor with a pointer to one non-interleaved host output channel\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIbufferProcessor\fP The buffer processor\&. 
+.br
+\fIchannel\fP The channel number\&. 
+.br
+\fIdata\fP The buffer\&. 
+.RE
+.PP
+
+.PP
+Definition at line 609 of file pa_process\&.c\&.
+.SS "\fBvoid\fP PaUtil_SetNoOutput (\fBPaUtilBufferProcessor\fP * bufferProcessor)"
+Indicate that the output will be discarded\&. This function should be used when implementing the paNeverDropInput mode for full duplex streams\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIbufferProcessor\fP The buffer processor\&. 
+.RE
+.PP
+
+.PP
+Definition at line 566 of file pa_process\&.c\&.
+.SS "\fBvoid\fP PaUtil_SetOutputChannel (\fBPaUtilBufferProcessor\fP * bufferProcessor, unsigned \fBint\fP channel, \fBvoid\fP * data, unsigned \fBint\fP stride)"
+Provide the buffer processor with a pointer to a host output channel\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIbufferProcessor\fP The buffer processor\&. 
+.br
+\fIchannel\fP The channel number\&. 
+.br
+\fIdata\fP The buffer\&. 
+.br
+\fIstride\fP The stride from one sample to the next, in samples\&. For interleaved host buffers, the stride will usually be the same as the number of channels in the buffer\&. 
+.RE
+.PP
+
+.PP
+Definition at line 576 of file pa_process\&.c\&.
+.SS "\fBvoid\fP PaUtil_SetOutputFrameCount (\fBPaUtilBufferProcessor\fP * bufferProcessor, unsigned long frameCount)"
+Set the number of frames in the output host \fBbuffer(s)\fP specified by the PaUtil_Set*OutputChannel functions\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIbufferProcessor\fP The buffer processor\&.
+.br
+\fIframeCount\fP The number of host output frames\&. A 0 frameCount indicates to use the framesPerHostBuffer value passed to PaUtil_InitializeBufferProcessor\&.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBPaUtil_SetOutputChannel\fP, \fBPaUtil_SetInterleavedOutputChannels\fP, \fBPaUtil_SetNonInterleavedOutputChannel\fP 
+.RE
+.PP
+
+.PP
+Definition at line 556 of file pa_process\&.c\&.
+.SS "\fBvoid\fP PaUtil_TerminateBufferProcessor (\fBPaUtilBufferProcessor\fP * bufferProcessor)"
+Terminate a buffer processor's representation\&. Deallocates any temporary buffers allocated by PaUtil_InitializeBufferProcessor\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIbufferProcessor\fP The buffer processor structure to terminate\&.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBPaUtil_InitializeBufferProcessor\fP\&. 
+.RE
+.PP
+
+.PP
+Definition at line 386 of file pa_process\&.c\&.
+.SS "unsigned long PaUtil_ZeroOutput (\fBPaUtilBufferProcessor\fP * bp, unsigned long frameCount)"
+
+.PP
+Definition at line 1807 of file pa_process\&.c\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

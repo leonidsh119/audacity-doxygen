@@ -1,0 +1,415 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="_change_tempo_8cpp" kind="file" language="C++">
+    <compoundname>ChangeTempo.cpp</compoundname>
+    <includes refid="_audacity_8h" local="yes">../Audacity.h</includes>
+    <incdepgraph>
+      <node id="40982">
+        <label>../Audacity.h</label>
+        <link refid="_audacity_8h"/>
+      </node>
+      <node id="40981">
+        <label>C:/_dev/OpenU/Audacity/audacity/src/effects/ChangeTempo.cpp</label>
+        <link refid="ChangeTempo.cpp"/>
+        <childnode refid="40982" relation="include">
+        </childnode>
+      </node>
+    </incdepgraph>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="comment">/**********************************************************************</highlight></codeline>
+<codeline lineno="2"><highlight class="comment"></highlight></codeline>
+<codeline lineno="3"><highlight class="comment"><sp/><sp/>Audacity:<sp/>A<sp/>Digital<sp/>Audio<sp/>Editor</highlight></codeline>
+<codeline lineno="4"><highlight class="comment"></highlight></codeline>
+<codeline lineno="5"><highlight class="comment"><sp/><sp/>ChangeTempo.cpp</highlight></codeline>
+<codeline lineno="6"><highlight class="comment"></highlight></codeline>
+<codeline lineno="7"><highlight class="comment"><sp/><sp/>Vaughan<sp/>Johnson,</highlight></codeline>
+<codeline lineno="8"><highlight class="comment"><sp/><sp/>Dominic<sp/>Mazzoni</highlight></codeline>
+<codeline lineno="9"><highlight class="comment"></highlight></codeline>
+<codeline lineno="10"><highlight class="comment">*******************************************************************/</highlight><highlight class="comment">/*******************************************************************/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="17"><highlight class="normal"></highlight></codeline>
+<codeline lineno="18"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;../Audacity.h&quot;</highlight><highlight class="normal"><sp/></highlight><highlight class="comment">//<sp/>for<sp/>USE_SOUNDTOUCH</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="19"><highlight class="normal"></highlight></codeline>
+<codeline lineno="20"><highlight class="normal"></highlight><highlight class="preprocessor">#if<sp/>USE_SOUNDTOUCH</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="21"><highlight class="normal"></highlight></codeline>
+<codeline lineno="22"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;math.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="23"><highlight class="normal"></highlight></codeline>
+<codeline lineno="24"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;wx/intl.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="25"><highlight class="normal"></highlight></codeline>
+<codeline lineno="26"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;../ShuttleGui.h&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="27"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;../widgets/valnum.h&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="28"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="_time_warper_8h" kindref="compound">TimeWarper.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="29"><highlight class="normal"></highlight></codeline>
+<codeline lineno="30"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="_change_tempo_8h" kindref="compound">ChangeTempo.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="31"><highlight class="normal"></highlight></codeline>
+<codeline lineno="32"><highlight class="normal"></highlight><highlight class="keyword">enum</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="33"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="34"><highlight class="normal"><sp/><sp/><sp/><ref refid="_change_speed_8cpp_1a2ae95ea8e60178fe99580d5142f0ec7eaead42502f1f6ff9e0108c06db4bc9e4a" kindref="member">ID_PercentChange</ref><sp/>=<sp/>10000,</highlight></codeline>
+<codeline lineno="35"><highlight class="normal"><sp/><sp/><sp/>ID_FromBPM,</highlight></codeline>
+<codeline lineno="36"><highlight class="normal"><sp/><sp/><sp/>ID_ToBPM,</highlight></codeline>
+<codeline lineno="37"><highlight class="normal"><sp/><sp/><sp/>ID_FromLength,</highlight></codeline>
+<codeline lineno="38"><highlight class="normal"><sp/><sp/><sp/><ref refid="_change_speed_8cpp_1a2ae95ea8e60178fe99580d5142f0ec7ea084545b78f45fa2cba725ee907e9e3f0" kindref="member">ID_ToLength</ref></highlight></codeline>
+<codeline lineno="39"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="40"><highlight class="normal"></highlight></codeline>
+<codeline lineno="41"><highlight class="normal"></highlight><highlight class="comment">//<sp/>Soundtouch<sp/>is<sp/>not<sp/>reasonable<sp/>below<sp/>-99%<sp/>or<sp/>above<sp/>3000%.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="42"><highlight class="normal"></highlight></codeline>
+<codeline lineno="43"><highlight class="normal"></highlight><highlight class="comment">//<sp/>Define<sp/>keys,<sp/>defaults,<sp/>minimums,<sp/>and<sp/>maximums<sp/>for<sp/>the<sp/>effect<sp/>parameters</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="44"><highlight class="normal"></highlight><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="45"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/>Name<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Type<sp/><sp/><sp/><sp/><sp/>Key<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Def<sp/><sp/><sp/>Min<sp/><sp/><sp/><sp/><sp/><sp/>Max<sp/><sp/><sp/><sp/><sp/><sp/>Scale</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="46"><highlight class="normal"><ref refid="src_2effects_2_effect_8h_1af374fec4f6710a363a624d5e9f72b49b" kindref="member">Param</ref>(<sp/>Percentage,<sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal">,<sp/><sp/><ref refid="_audacity_8h_1ad4baed404c66b57e257af684bdc5ecf2" kindref="member">XO</ref>(</highlight><highlight class="stringliteral">&quot;Percentage&quot;</highlight><highlight class="normal">),<sp/>0.0,<sp/><sp/>-99.0,<sp/><sp/><sp/>3000.0,<sp/><sp/>1<sp/><sp/>);</highlight></codeline>
+<codeline lineno="47"><highlight class="normal"></highlight></codeline>
+<codeline lineno="48"><highlight class="normal"></highlight><highlight class="comment">//<sp/>We<sp/>warp<sp/>the<sp/>slider<sp/>to<sp/>go<sp/>up<sp/>to<sp/>400%,<sp/>but<sp/>user<sp/>can<sp/>enter<sp/>higher<sp/>values.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="49"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>kSliderMax<sp/>=<sp/>100.0;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>warped<sp/>above<sp/>zero<sp/>to<sp/>actually<sp/>go<sp/>up<sp/>to<sp/>400%</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="50"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>kSliderWarp<sp/>=<sp/>1.30105;<sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>warp<sp/>power<sp/>takes<sp/>max<sp/>from<sp/>100<sp/>to<sp/>400.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="51"><highlight class="normal"></highlight></codeline>
+<codeline lineno="52"><highlight class="normal"></highlight><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="53"><highlight class="normal"></highlight><highlight class="comment">//<sp/>EffectChangeTempo</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="54"><highlight class="normal"></highlight><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="55"><highlight class="normal"></highlight></codeline>
+<codeline lineno="56"><highlight class="normal">BEGIN_EVENT_TABLE(<ref refid="class_effect_change_tempo" kindref="compound">EffectChangeTempo</ref>,<sp/>wxEvtHandler)</highlight></codeline>
+<codeline lineno="57"><highlight class="normal"><sp/><sp/><sp/><sp/>EVT_TEXT(<ref refid="_change_speed_8cpp_1a2ae95ea8e60178fe99580d5142f0ec7eaead42502f1f6ff9e0108c06db4bc9e4a" kindref="member">ID_PercentChange</ref>,<sp/><ref refid="class_effect_change_tempo" kindref="compound">EffectChangeTempo</ref>::OnText_PercentChange)</highlight></codeline>
+<codeline lineno="58"><highlight class="normal"><sp/><sp/><sp/><sp/>EVT_SLIDER(ID_PercentChange,<sp/><ref refid="class_effect_change_tempo" kindref="compound">EffectChangeTempo</ref>::OnSlider_PercentChange)</highlight></codeline>
+<codeline lineno="59"><highlight class="normal"><sp/><sp/><sp/><sp/>EVT_TEXT(ID_FromBPM,<sp/><ref refid="class_effect_change_tempo" kindref="compound">EffectChangeTempo</ref>::OnText_FromBPM)</highlight></codeline>
+<codeline lineno="60"><highlight class="normal"><sp/><sp/><sp/><sp/>EVT_TEXT(ID_ToBPM,<sp/><ref refid="class_effect_change_tempo" kindref="compound">EffectChangeTempo</ref>::OnText_ToBPM)</highlight></codeline>
+<codeline lineno="61"><highlight class="normal"><sp/><sp/><sp/><sp/>EVT_TEXT(<ref refid="_change_speed_8cpp_1a2ae95ea8e60178fe99580d5142f0ec7ea084545b78f45fa2cba725ee907e9e3f0" kindref="member">ID_ToLength</ref>,<sp/><ref refid="class_effect_change_tempo" kindref="compound">EffectChangeTempo</ref>::OnText_ToLength)</highlight></codeline>
+<codeline lineno="62"><highlight class="normal"><ref refid="_batch_command_dialog_8cpp_1a8c3469324b3e5d3e6c44c23a418ab937" kindref="member">END_EVENT_TABLE</ref>()</highlight></codeline>
+<codeline lineno="63"><highlight class="normal"></highlight></codeline>
+<codeline lineno="64"><highlight class="normal"><ref refid="class_effect_change_tempo" kindref="compound">EffectChangeTempo</ref>::<ref refid="class_effect_change_tempo" kindref="compound">EffectChangeTempo</ref>()</highlight></codeline>
+<codeline lineno="65"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="66"><highlight class="normal"><sp/><sp/><sp/>m_PercentChange<sp/>=<sp/>DEF_Percentage;</highlight></codeline>
+<codeline lineno="67"><highlight class="normal"><sp/><sp/><sp/>m_FromBPM<sp/>=<sp/>0.0;<sp/></highlight><highlight class="comment">//<sp/>indicates<sp/>not<sp/>yet<sp/>set</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="68"><highlight class="normal"><sp/><sp/><sp/>m_ToBPM<sp/>=<sp/>0.0;<sp/></highlight><highlight class="comment">//<sp/>indicates<sp/>not<sp/>yet<sp/>set</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="69"><highlight class="normal"><sp/><sp/><sp/>m_FromLength<sp/>=<sp/>0.0;</highlight></codeline>
+<codeline lineno="70"><highlight class="normal"><sp/><sp/><sp/>m_ToLength<sp/>=<sp/>0.0;</highlight></codeline>
+<codeline lineno="71"><highlight class="normal"></highlight></codeline>
+<codeline lineno="72"><highlight class="normal"><sp/><sp/><sp/>m_bLoopDetect<sp/>=<sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="73"><highlight class="normal"></highlight></codeline>
+<codeline lineno="74"><highlight class="normal"><sp/><sp/><sp/>SetLinearEffectFlag(</highlight><highlight class="keyword">true</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="75"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="76"><highlight class="normal"></highlight></codeline>
+<codeline lineno="77"><highlight class="normal">EffectChangeTempo::~EffectChangeTempo()</highlight></codeline>
+<codeline lineno="78"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="79"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="80"><highlight class="normal"></highlight></codeline>
+<codeline lineno="81"><highlight class="normal"></highlight><highlight class="comment">//<sp/>IdentInterface<sp/>implementation</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="82"><highlight class="normal"></highlight></codeline>
+<codeline lineno="83"><highlight class="normal">wxString<sp/>EffectChangeTempo::GetSymbol()</highlight></codeline>
+<codeline lineno="84"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="85"><highlight class="normal"><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>CHANGETEMPO_PLUGIN_SYMBOL;</highlight></codeline>
+<codeline lineno="86"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="87"><highlight class="normal"></highlight></codeline>
+<codeline lineno="88"><highlight class="normal">wxString<sp/>EffectChangeTempo::GetDescription()</highlight></codeline>
+<codeline lineno="89"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="90"><highlight class="normal"><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="_audacity_8h_1ad4baed404c66b57e257af684bdc5ecf2" kindref="member">XO</ref>(</highlight><highlight class="stringliteral">&quot;Change<sp/>the<sp/>tempo<sp/>of<sp/>a<sp/>selection<sp/>without<sp/>changing<sp/>its<sp/>pitch&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="91"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="92"><highlight class="normal"></highlight></codeline>
+<codeline lineno="93"><highlight class="normal"></highlight><highlight class="comment">//<sp/>EffectIdentInterface<sp/>implementation</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="94"><highlight class="normal"></highlight></codeline>
+<codeline lineno="95"><highlight class="normal"><ref refid="_effect_interface_8h_1a4809a7bb3fd1a421902a667cc1405d43" kindref="member">EffectType</ref><sp/>EffectChangeTempo::GetType()</highlight></codeline>
+<codeline lineno="96"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="97"><highlight class="normal"><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="_effect_interface_8h_1a4809a7bb3fd1a421902a667cc1405d43afd0f1aa24555662b091206287d30521b" kindref="member">EffectTypeProcess</ref>;</highlight></codeline>
+<codeline lineno="98"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="99"><highlight class="normal"></highlight></codeline>
+<codeline lineno="100"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>EffectChangeTempo::SupportsAutomation()</highlight></codeline>
+<codeline lineno="101"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="102"><highlight class="normal"><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="103"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="104"><highlight class="normal"></highlight></codeline>
+<codeline lineno="105"><highlight class="normal"></highlight><highlight class="comment">//<sp/>EffectClientInterface<sp/>implementation</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="106"><highlight class="normal"></highlight></codeline>
+<codeline lineno="107"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>EffectChangeTempo::GetAutomationParameters(<ref refid="class_effect_automation_parameters" kindref="compound">EffectAutomationParameters</ref><sp/>&amp;<sp/>parms)</highlight></codeline>
+<codeline lineno="108"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="109"><highlight class="normal"><sp/><sp/><sp/>parms.Write(KEY_Percentage,<sp/>m_PercentChange);</highlight></codeline>
+<codeline lineno="110"><highlight class="normal"></highlight></codeline>
+<codeline lineno="111"><highlight class="normal"><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="112"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="113"><highlight class="normal"></highlight></codeline>
+<codeline lineno="114"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>EffectChangeTempo::SetAutomationParameters(<ref refid="class_effect_automation_parameters" kindref="compound">EffectAutomationParameters</ref><sp/>&amp;<sp/>parms)</highlight></codeline>
+<codeline lineno="115"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="116"><highlight class="normal"><sp/><sp/><sp/><ref refid="src_2effects_2_effect_8h_1a0384500117ae1d5b98296bfb7b08d943" kindref="member">ReadAndVerifyDouble</ref>(Percentage);</highlight></codeline>
+<codeline lineno="117"><highlight class="normal"></highlight></codeline>
+<codeline lineno="118"><highlight class="normal"><sp/><sp/><sp/>m_PercentChange<sp/>=<sp/>Percentage;</highlight></codeline>
+<codeline lineno="119"><highlight class="normal"></highlight></codeline>
+<codeline lineno="120"><highlight class="normal"><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="121"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="122"><highlight class="normal"></highlight></codeline>
+<codeline lineno="123"><highlight class="normal"></highlight><highlight class="comment">//<sp/>Effect<sp/>implementation</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="124"><highlight class="normal"></highlight></codeline>
+<codeline lineno="125"><highlight class="normal"></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>EffectChangeTempo::CalcPreviewInputLength(</highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>previewLength)</highlight></codeline>
+<codeline lineno="126"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="127"><highlight class="normal"><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>previewLength<sp/>*<sp/>(100.0<sp/>+<sp/>m_PercentChange)<sp/>/<sp/>100.0;</highlight></codeline>
+<codeline lineno="128"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="129"><highlight class="normal"></highlight></codeline>
+<codeline lineno="130"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>EffectChangeTempo::CheckWhetherSkipEffect()</highlight></codeline>
+<codeline lineno="131"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="132"><highlight class="normal"><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>(m_PercentChange<sp/>==<sp/>0.0);</highlight></codeline>
+<codeline lineno="133"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="134"><highlight class="normal"></highlight></codeline>
+<codeline lineno="135"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>EffectChangeTempo::Init()</highlight></codeline>
+<codeline lineno="136"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="137"><highlight class="normal"><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>The<sp/>selection<sp/>might<sp/>have<sp/>changed<sp/>since<sp/>the<sp/>last<sp/>time<sp/>EffectChangeTempo</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="138"><highlight class="normal"><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>was<sp/>invoked,<sp/>so<sp/>recalculate<sp/>the<sp/>Length<sp/>parameters.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="139"><highlight class="normal"><sp/><sp/><sp/>m_FromLength<sp/>=<sp/>mT1<sp/>-<sp/>mT0;</highlight></codeline>
+<codeline lineno="140"><highlight class="normal"><sp/><sp/><sp/>m_ToLength<sp/>=<sp/>(m_FromLength<sp/>*<sp/>100.0)<sp/>/<sp/>(100.0<sp/>+<sp/>m_PercentChange);</highlight></codeline>
+<codeline lineno="141"><highlight class="normal"></highlight></codeline>
+<codeline lineno="142"><highlight class="normal"><sp/><sp/><sp/>mSoundTouch<sp/>=<sp/><ref refid="getopt1_8c_1a070d2ce7b6bb7e5c05602aa8c308d0c4" kindref="member">NULL</ref>;</highlight></codeline>
+<codeline lineno="143"><highlight class="normal"></highlight></codeline>
+<codeline lineno="144"><highlight class="normal"><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="145"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="146"><highlight class="normal"></highlight></codeline>
+<codeline lineno="147"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>EffectChangeTempo::Process()</highlight></codeline>
+<codeline lineno="148"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="149"><highlight class="normal"><sp/><sp/><sp/>mSoundTouch<sp/>=<sp/></highlight><highlight class="keyword">new</highlight><highlight class="normal"><sp/>SoundTouch();</highlight></codeline>
+<codeline lineno="150"><highlight class="normal"><sp/><sp/><sp/>mSoundTouch-&gt;setTempoChange(m_PercentChange);</highlight></codeline>
+<codeline lineno="151"><highlight class="normal"><sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>mT1Dashed<sp/>=<sp/>mT0<sp/>+<sp/>(mT1<sp/>-<sp/>mT0)/(m_PercentChange/100.0<sp/>+<sp/>1.0);</highlight></codeline>
+<codeline lineno="152"><highlight class="normal"><sp/><sp/><sp/>SetTimeWarper(</highlight><highlight class="keyword">new</highlight><highlight class="normal"><sp/><ref refid="class_region_time_warper" kindref="compound">RegionTimeWarper</ref>(mT0,<sp/>mT1,</highlight></codeline>
+<codeline lineno="153"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">new</highlight><highlight class="normal"><sp/><ref refid="class_linear_time_warper" kindref="compound">LinearTimeWarper</ref>(mT0,<sp/>mT0,<sp/>mT1,<sp/>mT1Dashed<sp/>)));</highlight></codeline>
+<codeline lineno="154"><highlight class="normal"><sp/><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>success<sp/>=<sp/>EffectSoundTouch::Process();</highlight></codeline>
+<codeline lineno="155"><highlight class="normal"><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(<sp/>success<sp/>)</highlight></codeline>
+<codeline lineno="156"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>mT1<sp/>=<sp/>mT0<sp/>+<sp/>(mT1<sp/>-<sp/>mT0)/(m_PercentChange/100<sp/>+<sp/>1.);</highlight></codeline>
+<codeline lineno="157"><highlight class="normal"><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>success;</highlight></codeline>
+<codeline lineno="158"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="159"><highlight class="normal"></highlight></codeline>
+<codeline lineno="160"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>EffectChangeTempo::PopulateOrExchange(<ref refid="class_shuttle_gui" kindref="compound">ShuttleGui</ref><sp/>&amp;<sp/><ref refid="xlftab_8c_1af933676109efed7ab34cea71d748a517" kindref="member">S</ref>)</highlight></codeline>
+<codeline lineno="161"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="162"><highlight class="normal"><sp/><sp/><sp/>S.<ref refid="class_shuttle_gui_base_1a6f8c4113388aa33dbb64204cd5ab1571" kindref="member">StartVerticalLay</ref>(0);</highlight></codeline>
+<codeline lineno="163"><highlight class="normal"><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="164"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>S.<ref refid="class_shuttle_gui_1a3a5b4056473e3a9f240a8e9b173424fe" kindref="member">AddSpace</ref>(0,<sp/>5);</highlight></codeline>
+<codeline lineno="165"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>S.<ref refid="class_shuttle_gui_base_1aee0fd3f1d39ff229d17301f10ca5b837" kindref="member">AddTitle</ref>(<ref refid="locale__hack_8h_1a32a3cf3d9dd914f5aeeca5423c157934" kindref="member">_</ref>(</highlight><highlight class="stringliteral">&quot;Change<sp/>Tempo<sp/>without<sp/>Changing<sp/>Pitch&quot;</highlight><highlight class="normal">));</highlight></codeline>
+<codeline lineno="166"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>S.<ref refid="class_shuttle_gui_base_1a026838575f360f2d1d8414827d18457d" kindref="member">SetBorder</ref>(5);</highlight></codeline>
+<codeline lineno="167"><highlight class="normal"></highlight></codeline>
+<codeline lineno="168"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="169"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>S.<ref refid="class_shuttle_gui_base_1ae71efe4837e02680f854a905b3b27120" kindref="member">StartMultiColumn</ref>(2,<sp/>wxCENTER);</highlight></codeline>
+<codeline lineno="170"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="171"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>FloatingPointValidator&lt;double&gt;<sp/>vldPercentage(3,<sp/>&amp;m_PercentChange,<sp/>NUM_VAL_THREE_TRAILING_ZEROES);</highlight></codeline>
+<codeline lineno="172"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>vldPercentage.SetRange(MIN_Percentage,<sp/>MAX_Percentage);</highlight></codeline>
+<codeline lineno="173"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>m_pTextCtrl_PercentChange<sp/>=<sp/>S.<ref refid="class_shuttle_gui_1a0db2f531b7bd17f72c211883151f5640" kindref="member">Id</ref>(<ref refid="_change_speed_8cpp_1a2ae95ea8e60178fe99580d5142f0ec7eaead42502f1f6ff9e0108c06db4bc9e4a" kindref="member">ID_PercentChange</ref>)</highlight></codeline>
+<codeline lineno="174"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>.<ref refid="class_shuttle_gui_base_1aa9df960a9ed7fdffec419912b995788e" kindref="member">AddTextBox</ref>(<ref refid="locale__hack_8h_1a32a3cf3d9dd914f5aeeca5423c157934" kindref="member">_</ref>(</highlight><highlight class="stringliteral">&quot;Percent<sp/>Change:&quot;</highlight><highlight class="normal">),<sp/>wxT(</highlight><highlight class="stringliteral">&quot;&quot;</highlight><highlight class="normal">),<sp/>12);</highlight></codeline>
+<codeline lineno="175"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>m_pTextCtrl_PercentChange-&gt;SetValidator(vldPercentage);</highlight></codeline>
+<codeline lineno="176"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="177"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>S.<ref refid="class_shuttle_gui_base_1a1a676a57ca191fde04599e4199e3f7f4" kindref="member">EndMultiColumn</ref>();</highlight></codeline>
+<codeline lineno="178"><highlight class="normal"></highlight></codeline>
+<codeline lineno="179"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="180"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>S.<ref refid="class_shuttle_gui_base_1aa456756283f789e26c6841eb3ca55c72" kindref="member">StartHorizontalLay</ref>(wxEXPAND);</highlight></codeline>
+<codeline lineno="181"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="182"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>S.<ref refid="class_shuttle_gui_base_1a3afc5aecba69ad749aac2f740e34a471" kindref="member">SetStyle</ref>(wxSL_HORIZONTAL);</highlight></codeline>
+<codeline lineno="183"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>m_pSlider_PercentChange<sp/>=<sp/>S.<ref refid="class_shuttle_gui_1a0db2f531b7bd17f72c211883151f5640" kindref="member">Id</ref>(<ref refid="_change_speed_8cpp_1a2ae95ea8e60178fe99580d5142f0ec7eaead42502f1f6ff9e0108c06db4bc9e4a" kindref="member">ID_PercentChange</ref>)</highlight></codeline>
+<codeline lineno="184"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>.<ref refid="class_shuttle_gui_base_1ab5483f256392246255a5b5f6c4638c5e" kindref="member">AddSlider</ref>(wxT(</highlight><highlight class="stringliteral">&quot;&quot;</highlight><highlight class="normal">),<sp/>0,<sp/>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal">)kSliderMax,<sp/>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal">)MIN_Percentage);</highlight></codeline>
+<codeline lineno="185"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>m_pSlider_PercentChange-&gt;SetName(<ref refid="locale__hack_8h_1a32a3cf3d9dd914f5aeeca5423c157934" kindref="member">_</ref>(</highlight><highlight class="stringliteral">&quot;Percent<sp/>Change&quot;</highlight><highlight class="normal">));</highlight></codeline>
+<codeline lineno="186"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="187"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>S.<ref refid="class_shuttle_gui_base_1a80917a37e36156f398a24436c1f3dba9" kindref="member">EndHorizontalLay</ref>();</highlight></codeline>
+<codeline lineno="188"><highlight class="normal"></highlight></codeline>
+<codeline lineno="189"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="190"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>S.<ref refid="class_shuttle_gui_base_1ae71efe4837e02680f854a905b3b27120" kindref="member">StartMultiColumn</ref>(5,<sp/>wxCENTER);</highlight></codeline>
+<codeline lineno="191"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="192"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="193"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>S.<ref refid="class_shuttle_gui_base_1a54816a02cbcc4d09b3d40c2b731ba9e5" kindref="member">AddUnits</ref>(<ref refid="locale__hack_8h_1a32a3cf3d9dd914f5aeeca5423c157934" kindref="member">_</ref>(</highlight><highlight class="stringliteral">&quot;Beats<sp/>per<sp/>minute:&quot;</highlight><highlight class="normal">));</highlight></codeline>
+<codeline lineno="194"><highlight class="normal"></highlight></codeline>
+<codeline lineno="195"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>FloatingPointValidator&lt;double&gt;<sp/>vldFromBPM(3,<sp/>&amp;m_FromBPM,<sp/>NUM_VAL_THREE_TRAILING_ZEROES<sp/>|<sp/>NUM_VAL_ZERO_AS_BLANK);</highlight></codeline>
+<codeline lineno="196"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>m_pTextCtrl_FromBPM<sp/>=<sp/>S.<ref refid="class_shuttle_gui_1a0db2f531b7bd17f72c211883151f5640" kindref="member">Id</ref>(ID_FromBPM)</highlight></codeline>
+<codeline lineno="197"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>.<ref refid="class_shuttle_gui_base_1aa9df960a9ed7fdffec419912b995788e" kindref="member">AddTextBox</ref>(<ref refid="locale__hack_8h_1a32a3cf3d9dd914f5aeeca5423c157934" kindref="member">_</ref>(</highlight><highlight class="stringliteral">&quot;from&quot;</highlight><highlight class="normal">),<sp/>wxT(</highlight><highlight class="stringliteral">&quot;&quot;</highlight><highlight class="normal">),<sp/>12);</highlight></codeline>
+<codeline lineno="198"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>m_pTextCtrl_FromBPM-&gt;SetName(<ref refid="locale__hack_8h_1a32a3cf3d9dd914f5aeeca5423c157934" kindref="member">_</ref>(</highlight><highlight class="stringliteral">&quot;From<sp/>beats<sp/>per<sp/>minute&quot;</highlight><highlight class="normal">));</highlight></codeline>
+<codeline lineno="199"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>m_pTextCtrl_FromBPM-&gt;SetValidator(vldFromBPM);</highlight></codeline>
+<codeline lineno="200"><highlight class="normal"></highlight></codeline>
+<codeline lineno="201"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>FloatingPointValidator&lt;double&gt;<sp/>vldToBPM(3,<sp/>&amp;m_ToBPM,<sp/>NUM_VAL_THREE_TRAILING_ZEROES<sp/>|<sp/>NUM_VAL_ZERO_AS_BLANK);</highlight></codeline>
+<codeline lineno="202"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>m_pTextCtrl_ToBPM<sp/>=<sp/>S.<ref refid="class_shuttle_gui_1a0db2f531b7bd17f72c211883151f5640" kindref="member">Id</ref>(ID_ToBPM)</highlight></codeline>
+<codeline lineno="203"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>.<ref refid="class_shuttle_gui_base_1aa9df960a9ed7fdffec419912b995788e" kindref="member">AddTextBox</ref>(<ref refid="locale__hack_8h_1a32a3cf3d9dd914f5aeeca5423c157934" kindref="member">_</ref>(</highlight><highlight class="stringliteral">&quot;to&quot;</highlight><highlight class="normal">),<sp/>wxT(</highlight><highlight class="stringliteral">&quot;&quot;</highlight><highlight class="normal">),<sp/>12);</highlight></codeline>
+<codeline lineno="204"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>m_pTextCtrl_ToBPM-&gt;SetName(<ref refid="locale__hack_8h_1a32a3cf3d9dd914f5aeeca5423c157934" kindref="member">_</ref>(</highlight><highlight class="stringliteral">&quot;To<sp/>beats<sp/>per<sp/>minute&quot;</highlight><highlight class="normal">));</highlight></codeline>
+<codeline lineno="205"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>m_pTextCtrl_ToBPM-&gt;SetValidator(vldToBPM);</highlight></codeline>
+<codeline lineno="206"><highlight class="normal"></highlight></codeline>
+<codeline lineno="207"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="208"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>S.<ref refid="class_shuttle_gui_base_1a54816a02cbcc4d09b3d40c2b731ba9e5" kindref="member">AddUnits</ref>(<ref refid="locale__hack_8h_1a32a3cf3d9dd914f5aeeca5423c157934" kindref="member">_</ref>(</highlight><highlight class="stringliteral">&quot;Length<sp/>(seconds):&quot;</highlight><highlight class="normal">));</highlight></codeline>
+<codeline lineno="209"><highlight class="normal"></highlight></codeline>
+<codeline lineno="210"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>precission<sp/>=<sp/>2;</highlight></codeline>
+<codeline lineno="211"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>FloatingPointValidator&lt;double&gt;<sp/>vldFromLength(precission,<sp/>&amp;m_FromLength,<sp/>NUM_VAL_TWO_TRAILING_ZEROES);</highlight></codeline>
+<codeline lineno="212"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>m_pTextCtrl_FromLength<sp/>=<sp/>S.<ref refid="class_shuttle_gui_1a0db2f531b7bd17f72c211883151f5640" kindref="member">Id</ref>(ID_FromLength)</highlight></codeline>
+<codeline lineno="213"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>.<ref refid="class_shuttle_gui_base_1aa9df960a9ed7fdffec419912b995788e" kindref="member">AddTextBox</ref>(<ref refid="locale__hack_8h_1a32a3cf3d9dd914f5aeeca5423c157934" kindref="member">_</ref>(</highlight><highlight class="stringliteral">&quot;from&quot;</highlight><highlight class="normal">),<sp/>wxT(</highlight><highlight class="stringliteral">&quot;&quot;</highlight><highlight class="normal">),<sp/>12);</highlight></codeline>
+<codeline lineno="214"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>m_pTextCtrl_FromLength-&gt;SetName(<ref refid="locale__hack_8h_1a32a3cf3d9dd914f5aeeca5423c157934" kindref="member">_</ref>(</highlight><highlight class="stringliteral">&quot;From<sp/>length<sp/>in<sp/>seconds&quot;</highlight><highlight class="normal">));</highlight></codeline>
+<codeline lineno="215"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>m_pTextCtrl_FromLength-&gt;SetValidator(vldFromLength);</highlight></codeline>
+<codeline lineno="216"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>m_pTextCtrl_FromLength-&gt;Enable(</highlight><highlight class="keyword">false</highlight><highlight class="normal">);<sp/></highlight><highlight class="comment">//<sp/>Disable<sp/>because<sp/>the<sp/>value<sp/>comes<sp/>from<sp/>the<sp/>user<sp/>selection.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="217"><highlight class="normal"></highlight></codeline>
+<codeline lineno="218"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>FloatingPointValidator&lt;double&gt;<sp/>vldToLength(2,<sp/>&amp;m_ToLength,<sp/>NUM_VAL_TWO_TRAILING_ZEROES);</highlight></codeline>
+<codeline lineno="219"><highlight class="normal"></highlight></codeline>
+<codeline lineno="220"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>min<sp/>and<sp/>max<sp/>need<sp/>same<sp/>precision<sp/>as<sp/>what<sp/>we&apos;re<sp/>validating<sp/>(bug<sp/>963)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="221"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>minLength<sp/>=<sp/>(m_FromLength<sp/>*<sp/>100.0)<sp/>/<sp/>(100.0<sp/>+<sp/>MAX_Percentage);</highlight></codeline>
+<codeline lineno="222"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>maxLength<sp/>=<sp/>(m_FromLength<sp/>*<sp/>100.0)<sp/>/<sp/>(100.0<sp/>+<sp/>MIN_Percentage);</highlight></codeline>
+<codeline lineno="223"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>minLength<sp/>=<sp/><ref refid="class_internat_1ab79e779c79e9ddf82270cb78e78d638d" kindref="member">Internat::CompatibleToDouble</ref>(<ref refid="class_internat_1a333f7a2e572730a3b4d46d41f4cd0bb1" kindref="member">Internat::ToString</ref>(minLength,<sp/>precission));</highlight></codeline>
+<codeline lineno="224"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>maxLength<sp/>=<sp/><ref refid="class_internat_1ab79e779c79e9ddf82270cb78e78d638d" kindref="member">Internat::CompatibleToDouble</ref>(<ref refid="class_internat_1a333f7a2e572730a3b4d46d41f4cd0bb1" kindref="member">Internat::ToString</ref>(maxLength,<sp/>precission));</highlight></codeline>
+<codeline lineno="225"><highlight class="normal"></highlight></codeline>
+<codeline lineno="226"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>vldToLength.SetRange(minLength,<sp/>maxLength);</highlight></codeline>
+<codeline lineno="227"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>m_pTextCtrl_ToLength<sp/>=<sp/>S.<ref refid="class_shuttle_gui_1a0db2f531b7bd17f72c211883151f5640" kindref="member">Id</ref>(<ref refid="_change_speed_8cpp_1a2ae95ea8e60178fe99580d5142f0ec7ea084545b78f45fa2cba725ee907e9e3f0" kindref="member">ID_ToLength</ref>)</highlight></codeline>
+<codeline lineno="228"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>.<ref refid="class_shuttle_gui_base_1aa9df960a9ed7fdffec419912b995788e" kindref="member">AddTextBox</ref>(<ref refid="locale__hack_8h_1a32a3cf3d9dd914f5aeeca5423c157934" kindref="member">_</ref>(</highlight><highlight class="stringliteral">&quot;to&quot;</highlight><highlight class="normal">),<sp/>wxT(</highlight><highlight class="stringliteral">&quot;&quot;</highlight><highlight class="normal">),<sp/>12);</highlight></codeline>
+<codeline lineno="229"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>m_pTextCtrl_ToLength-&gt;SetName(<ref refid="locale__hack_8h_1a32a3cf3d9dd914f5aeeca5423c157934" kindref="member">_</ref>(</highlight><highlight class="stringliteral">&quot;To<sp/>length<sp/>in<sp/>seconds&quot;</highlight><highlight class="normal">));</highlight></codeline>
+<codeline lineno="230"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>m_pTextCtrl_ToLength-&gt;SetValidator(vldToLength);</highlight></codeline>
+<codeline lineno="231"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="232"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>S.<ref refid="class_shuttle_gui_base_1a1a676a57ca191fde04599e4199e3f7f4" kindref="member">EndMultiColumn</ref>();</highlight></codeline>
+<codeline lineno="233"><highlight class="normal"><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="234"><highlight class="normal"><sp/><sp/><sp/>S.<ref refid="class_shuttle_gui_base_1a0286cb0ae146afcf8c589ceb16b37144" kindref="member">EndVerticalLay</ref>();</highlight></codeline>
+<codeline lineno="235"><highlight class="normal"></highlight></codeline>
+<codeline lineno="236"><highlight class="normal"><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="237"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="238"><highlight class="normal"></highlight></codeline>
+<codeline lineno="239"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>EffectChangeTempo::TransferDataToWindow()</highlight></codeline>
+<codeline lineno="240"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="241"><highlight class="normal"><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Reset<sp/>from<sp/>length<sp/>because<sp/>it<sp/>can<sp/>be<sp/>changed<sp/>by<sp/>Preview</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="242"><highlight class="normal"><sp/><sp/><sp/>m_FromLength<sp/>=<sp/>mT1<sp/>-<sp/>mT0;</highlight></codeline>
+<codeline lineno="243"><highlight class="normal"></highlight></codeline>
+<codeline lineno="244"><highlight class="normal"><sp/><sp/><sp/>m_bLoopDetect<sp/>=<sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="245"><highlight class="normal"></highlight></codeline>
+<codeline lineno="246"><highlight class="normal"><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(!mUIParent-&gt;TransferDataToWindow())</highlight></codeline>
+<codeline lineno="247"><highlight class="normal"><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="248"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="249"><highlight class="normal"><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="250"><highlight class="normal"></highlight></codeline>
+<codeline lineno="251"><highlight class="normal"><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>percent<sp/>change<sp/>controls</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="252"><highlight class="normal"><sp/><sp/><sp/>Update_Slider_PercentChange();</highlight></codeline>
+<codeline lineno="253"><highlight class="normal"><sp/><sp/><sp/>Update_Text_ToBPM();</highlight></codeline>
+<codeline lineno="254"><highlight class="normal"><sp/><sp/><sp/>Update_Text_ToLength();</highlight></codeline>
+<codeline lineno="255"><highlight class="normal"></highlight></codeline>
+<codeline lineno="256"><highlight class="normal"><sp/><sp/><sp/>m_bLoopDetect<sp/>=<sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="257"><highlight class="normal"></highlight></codeline>
+<codeline lineno="258"><highlight class="normal"><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="259"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="260"><highlight class="normal"></highlight></codeline>
+<codeline lineno="261"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>EffectChangeTempo::TransferDataFromWindow()</highlight></codeline>
+<codeline lineno="262"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="263"><highlight class="normal"><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(!mUIParent-&gt;Validate()<sp/>||<sp/>!mUIParent-&gt;TransferDataFromWindow())</highlight></codeline>
+<codeline lineno="264"><highlight class="normal"><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="265"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="266"><highlight class="normal"><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="267"><highlight class="normal"></highlight></codeline>
+<codeline lineno="268"><highlight class="normal"><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="269"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="270"><highlight class="normal"></highlight></codeline>
+<codeline lineno="271"><highlight class="normal"></highlight><highlight class="comment">//<sp/>handler<sp/>implementations<sp/>for<sp/>EffectChangeTempo</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="272"><highlight class="normal"></highlight></codeline>
+<codeline lineno="273"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>EffectChangeTempo::OnText_PercentChange(wxCommandEvent<sp/>&amp;<sp/>WXUNUSED(evt))</highlight></codeline>
+<codeline lineno="274"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="275"><highlight class="normal"><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(m_bLoopDetect)</highlight></codeline>
+<codeline lineno="276"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="277"><highlight class="normal"></highlight></codeline>
+<codeline lineno="278"><highlight class="normal"><sp/><sp/><sp/>m_pTextCtrl_PercentChange-&gt;GetValidator()-&gt;TransferFromWindow();</highlight></codeline>
+<codeline lineno="279"><highlight class="normal"></highlight></codeline>
+<codeline lineno="280"><highlight class="normal"><sp/><sp/><sp/>m_bLoopDetect<sp/>=<sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="281"><highlight class="normal"><sp/><sp/><sp/>Update_Slider_PercentChange();</highlight></codeline>
+<codeline lineno="282"><highlight class="normal"><sp/><sp/><sp/>Update_Text_ToBPM();</highlight></codeline>
+<codeline lineno="283"><highlight class="normal"><sp/><sp/><sp/>Update_Text_ToLength();</highlight></codeline>
+<codeline lineno="284"><highlight class="normal"><sp/><sp/><sp/>m_bLoopDetect<sp/>=<sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="285"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="286"><highlight class="normal"></highlight></codeline>
+<codeline lineno="287"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>EffectChangeTempo::OnSlider_PercentChange(wxCommandEvent<sp/>&amp;<sp/>WXUNUSED(evt))</highlight></codeline>
+<codeline lineno="288"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="289"><highlight class="normal"><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(m_bLoopDetect)</highlight></codeline>
+<codeline lineno="290"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="291"><highlight class="normal"></highlight></codeline>
+<codeline lineno="292"><highlight class="normal"><sp/><sp/><sp/>m_PercentChange<sp/>=<sp/>(double)(m_pSlider_PercentChange-&gt;GetValue());</highlight></codeline>
+<codeline lineno="293"><highlight class="normal"><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Warp<sp/>positive<sp/>values<sp/>to<sp/>actually<sp/>go<sp/>up<sp/>faster<sp/>&amp;<sp/>further<sp/>than<sp/>negatives.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="294"><highlight class="normal"><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(m_PercentChange<sp/>&gt;<sp/>0.0)</highlight></codeline>
+<codeline lineno="295"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>m_PercentChange<sp/>=<sp/>pow(m_PercentChange,<sp/>kSliderWarp);</highlight></codeline>
+<codeline lineno="296"><highlight class="normal"></highlight></codeline>
+<codeline lineno="297"><highlight class="normal"><sp/><sp/><sp/>m_bLoopDetect<sp/>=<sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="298"><highlight class="normal"><sp/><sp/><sp/>Update_Text_PercentChange();</highlight></codeline>
+<codeline lineno="299"><highlight class="normal"><sp/><sp/><sp/>Update_Text_ToBPM();</highlight></codeline>
+<codeline lineno="300"><highlight class="normal"><sp/><sp/><sp/>Update_Text_ToLength();</highlight></codeline>
+<codeline lineno="301"><highlight class="normal"><sp/><sp/><sp/>m_bLoopDetect<sp/>=<sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="302"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="303"><highlight class="normal"></highlight></codeline>
+<codeline lineno="304"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>EffectChangeTempo::OnText_FromBPM(wxCommandEvent<sp/>&amp;<sp/>WXUNUSED(evt))</highlight></codeline>
+<codeline lineno="305"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="306"><highlight class="normal"><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(m_bLoopDetect)</highlight></codeline>
+<codeline lineno="307"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="308"><highlight class="normal"></highlight></codeline>
+<codeline lineno="309"><highlight class="normal"><sp/><sp/><sp/>m_pTextCtrl_FromBPM-&gt;GetValidator()-&gt;TransferFromWindow();</highlight></codeline>
+<codeline lineno="310"><highlight class="normal"></highlight></codeline>
+<codeline lineno="311"><highlight class="normal"><sp/><sp/><sp/>m_bLoopDetect<sp/>=<sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="312"><highlight class="normal"></highlight></codeline>
+<codeline lineno="313"><highlight class="normal"><sp/><sp/><sp/>Update_Text_ToBPM();</highlight></codeline>
+<codeline lineno="314"><highlight class="normal"></highlight></codeline>
+<codeline lineno="315"><highlight class="normal"><sp/><sp/><sp/>m_bLoopDetect<sp/>=<sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="316"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="317"><highlight class="normal"></highlight></codeline>
+<codeline lineno="318"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>EffectChangeTempo::OnText_ToBPM(wxCommandEvent<sp/>&amp;<sp/>WXUNUSED(evt))</highlight></codeline>
+<codeline lineno="319"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="320"><highlight class="normal"><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(m_bLoopDetect)</highlight></codeline>
+<codeline lineno="321"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="322"><highlight class="normal"></highlight></codeline>
+<codeline lineno="323"><highlight class="normal"><sp/><sp/><sp/>m_pTextCtrl_ToBPM-&gt;GetValidator()-&gt;TransferFromWindow();</highlight></codeline>
+<codeline lineno="324"><highlight class="normal"></highlight></codeline>
+<codeline lineno="325"><highlight class="normal"><sp/><sp/><sp/>m_bLoopDetect<sp/>=<sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="326"><highlight class="normal"></highlight></codeline>
+<codeline lineno="327"><highlight class="normal"><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>If<sp/>FromBPM<sp/>has<sp/>already<sp/>been<sp/>set,<sp/>then<sp/>there&apos;s<sp/>a<sp/>NEW<sp/>percent<sp/>change.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="328"><highlight class="normal"><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(m_FromBPM<sp/>!=<sp/>0.0<sp/>&amp;&amp;<sp/>m_ToBPM<sp/>!=<sp/>0.0)</highlight></codeline>
+<codeline lineno="329"><highlight class="normal"><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="330"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>m_PercentChange<sp/>=<sp/>((m_ToBPM<sp/>*<sp/>100.0)<sp/>/<sp/>m_FromBPM)<sp/>-<sp/>100.0;</highlight></codeline>
+<codeline lineno="331"><highlight class="normal"></highlight></codeline>
+<codeline lineno="332"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>Update_Text_PercentChange();</highlight></codeline>
+<codeline lineno="333"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>Update_Slider_PercentChange();</highlight></codeline>
+<codeline lineno="334"><highlight class="normal"></highlight></codeline>
+<codeline lineno="335"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>Update_Text_ToLength();</highlight></codeline>
+<codeline lineno="336"><highlight class="normal"><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="337"><highlight class="normal"></highlight></codeline>
+<codeline lineno="338"><highlight class="normal"><sp/><sp/><sp/>m_bLoopDetect<sp/>=<sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="339"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="340"><highlight class="normal"></highlight></codeline>
+<codeline lineno="341"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>EffectChangeTempo::OnText_ToLength(wxCommandEvent<sp/>&amp;<sp/>WXUNUSED(evt))</highlight></codeline>
+<codeline lineno="342"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="343"><highlight class="normal"><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(m_bLoopDetect)</highlight></codeline>
+<codeline lineno="344"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="345"><highlight class="normal"></highlight></codeline>
+<codeline lineno="346"><highlight class="normal"><sp/><sp/><sp/>m_pTextCtrl_ToLength-&gt;GetValidator()-&gt;TransferFromWindow();</highlight></codeline>
+<codeline lineno="347"><highlight class="normal"></highlight></codeline>
+<codeline lineno="348"><highlight class="normal"><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(m_ToLength<sp/>!=<sp/>0.0)</highlight></codeline>
+<codeline lineno="349"><highlight class="normal"><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="350"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>m_PercentChange<sp/>=<sp/>((m_FromLength<sp/>*<sp/>100.0)<sp/>/<sp/>m_ToLength)<sp/>-<sp/>100.0;</highlight></codeline>
+<codeline lineno="351"><highlight class="normal"><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="352"><highlight class="normal"></highlight></codeline>
+<codeline lineno="353"><highlight class="normal"><sp/><sp/><sp/>m_bLoopDetect<sp/>=<sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="354"><highlight class="normal"></highlight></codeline>
+<codeline lineno="355"><highlight class="normal"><sp/><sp/><sp/>Update_Text_PercentChange();</highlight></codeline>
+<codeline lineno="356"><highlight class="normal"><sp/><sp/><sp/>Update_Slider_PercentChange();</highlight></codeline>
+<codeline lineno="357"><highlight class="normal"></highlight></codeline>
+<codeline lineno="358"><highlight class="normal"><sp/><sp/><sp/>Update_Text_ToBPM();</highlight></codeline>
+<codeline lineno="359"><highlight class="normal"></highlight></codeline>
+<codeline lineno="360"><highlight class="normal"><sp/><sp/><sp/>m_bLoopDetect<sp/>=<sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="361"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="362"><highlight class="normal"></highlight></codeline>
+<codeline lineno="363"><highlight class="normal"></highlight><highlight class="comment">//<sp/>helper<sp/>fns</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="364"><highlight class="normal"></highlight></codeline>
+<codeline lineno="365"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>EffectChangeTempo::Update_Text_PercentChange()</highlight></codeline>
+<codeline lineno="366"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="367"><highlight class="normal"><sp/><sp/><sp/>m_pTextCtrl_PercentChange-&gt;GetValidator()-&gt;TransferToWindow();</highlight></codeline>
+<codeline lineno="368"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="369"><highlight class="normal"></highlight></codeline>
+<codeline lineno="370"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>EffectChangeTempo::Update_Slider_PercentChange()</highlight></codeline>
+<codeline lineno="371"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="372"><highlight class="normal"><sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>unwarped<sp/>=<sp/>m_PercentChange;</highlight></codeline>
+<codeline lineno="373"><highlight class="normal"><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(unwarped<sp/>&gt;<sp/>0.0)</highlight></codeline>
+<codeline lineno="374"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Un-warp<sp/>values<sp/>above<sp/>zero<sp/>to<sp/>actually<sp/>go<sp/>up<sp/>to<sp/>kSliderMax.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="375"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>unwarped<sp/>=<sp/>pow(m_PercentChange,<sp/>(1.0<sp/>/<sp/>kSliderWarp));</highlight></codeline>
+<codeline lineno="376"><highlight class="normal"></highlight></codeline>
+<codeline lineno="377"><highlight class="normal"><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Add<sp/>0.5<sp/>to<sp/>unwarped<sp/>so<sp/>trunc<sp/>-&gt;<sp/>round.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="378"><highlight class="normal"><sp/><sp/><sp/>m_pSlider_PercentChange-&gt;SetValue((</highlight><highlight class="keywordtype">int</highlight><highlight class="normal">)(unwarped<sp/>+<sp/>0.5));</highlight></codeline>
+<codeline lineno="379"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="380"><highlight class="normal"></highlight></codeline>
+<codeline lineno="381"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>EffectChangeTempo::Update_Text_ToBPM()</highlight></codeline>
+<codeline lineno="382"><highlight class="normal"></highlight><highlight class="comment">//<sp/>Use<sp/>m_FromBPM<sp/>&amp;<sp/>m_PercentChange<sp/>to<sp/>set<sp/>NEW<sp/>m_ToBPM<sp/>&amp;<sp/>control.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="383"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="384"><highlight class="normal"><sp/><sp/><sp/>m_ToBPM<sp/>=<sp/>(((m_FromBPM<sp/>*<sp/>(100.0<sp/>+<sp/>m_PercentChange))<sp/>/<sp/>100.0));</highlight></codeline>
+<codeline lineno="385"><highlight class="normal"><sp/><sp/><sp/>m_pTextCtrl_ToBPM-&gt;GetValidator()-&gt;TransferToWindow();</highlight></codeline>
+<codeline lineno="386"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="387"><highlight class="normal"></highlight></codeline>
+<codeline lineno="388"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>EffectChangeTempo::Update_Text_ToLength()</highlight></codeline>
+<codeline lineno="389"><highlight class="normal"></highlight><highlight class="comment">//<sp/>Use<sp/>m_FromLength<sp/>&amp;<sp/>m_PercentChange<sp/>to<sp/>set<sp/>NEW<sp/>m_ToLength<sp/>&amp;<sp/>control.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="390"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="391"><highlight class="normal"><sp/><sp/><sp/>m_ToLength<sp/>=<sp/>(m_FromLength<sp/>*<sp/>100.0)<sp/>/<sp/>(100.0<sp/>+<sp/>m_PercentChange);</highlight></codeline>
+<codeline lineno="392"><highlight class="normal"><sp/><sp/><sp/>m_pTextCtrl_ToLength-&gt;GetValidator()-&gt;TransferToWindow();</highlight></codeline>
+<codeline lineno="393"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="394"><highlight class="normal"></highlight></codeline>
+<codeline lineno="395"><highlight class="normal"></highlight><highlight class="preprocessor">#endif<sp/>//<sp/>USE_SOUNDTOUCH</highlight></codeline>
+    </programlisting>
+    <location file="C:/_dev/OpenU/Audacity/audacity/src/effects/ChangeTempo.cpp"/>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,481 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/lib-src/libsndfile/src/aiff.c" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/lib-src/libsndfile/src/aiff.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include 'sfconfig\&.h'\fP
+.br
+\fC#include <stdio\&.h>\fP
+.br
+\fC#include <stdlib\&.h>\fP
+.br
+\fC#include <string\&.h>\fP
+.br
+\fC#include <time\&.h>\fP
+.br
+\fC#include <ctype\&.h>\fP
+.br
+\fC#include <inttypes\&.h>\fP
+.br
+\fC#include 'sndfile\&.h'\fP
+.br
+\fC#include 'sfendian\&.h'\fP
+.br
+\fC#include 'common\&.h'\fP
+.br
+\fC#include 'chanmap\&.h'\fP
+.br
+
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "struct \fBCOMM_CHUNK\fP"
+.br
+.ti -1c
+.RI "struct \fBSSND_CHUNK\fP"
+.br
+.ti -1c
+.RI "struct \fBINST_LOOP\fP"
+.br
+.ti -1c
+.RI "struct \fBINST_CHUNK\fP"
+.br
+.ti -1c
+.RI "struct \fBbasc_CHUNK\fP"
+.br
+.ti -1c
+.RI "struct \fBMARK_ID_POS\fP"
+.br
+.ti -1c
+.RI "struct \fBAIFF_PRIVATE\fP"
+.br
+.in -1c
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBFORM_MARKER\fP   (MAKE_MARKER ('\fBF\fP', 'O', 'R', '\fBM\fP'))"
+.br
+.ti -1c
+.RI "#define \fBAIFF_MARKER\fP   (MAKE_MARKER ('\fBA\fP', 'I', '\fBF\fP', '\fBF\fP'))"
+.br
+.ti -1c
+.RI "#define \fBAIFC_MARKER\fP   (MAKE_MARKER ('\fBA\fP', 'I', '\fBF\fP', 'C'))"
+.br
+.ti -1c
+.RI "#define \fBCOMM_MARKER\fP   (MAKE_MARKER ('C', 'O', '\fBM\fP', '\fBM\fP'))"
+.br
+.ti -1c
+.RI "#define \fBSSND_MARKER\fP   (MAKE_MARKER ('\fBS\fP', '\fBS\fP', '\fBN\fP', '\fBD\fP'))"
+.br
+.ti -1c
+.RI "#define \fBMARK_MARKER\fP   (MAKE_MARKER ('\fBM\fP', '\fBA\fP', 'R', 'K'))"
+.br
+.ti -1c
+.RI "#define \fBINST_MARKER\fP   (MAKE_MARKER ('I', '\fBN\fP', '\fBS\fP', '\fBT\fP'))"
+.br
+.ti -1c
+.RI "#define \fBAPPL_MARKER\fP   (MAKE_MARKER ('\fBA\fP', 'P', 'P', 'L'))"
+.br
+.ti -1c
+.RI "#define \fBCHAN_MARKER\fP   (MAKE_MARKER ('C', 'H', '\fBA\fP', '\fBN\fP'))"
+.br
+.ti -1c
+.RI "#define \fBc_MARKER\fP   (MAKE_MARKER ('(', '\fBc\fP', ')', ' '))"
+.br
+.ti -1c
+.RI "#define \fBNAME_MARKER\fP   (MAKE_MARKER ('\fBN\fP', '\fBA\fP', '\fBM\fP', '\fBE\fP'))"
+.br
+.ti -1c
+.RI "#define \fBAUTH_MARKER\fP   (MAKE_MARKER ('\fBA\fP', 'U', '\fBT\fP', 'H'))"
+.br
+.ti -1c
+.RI "#define \fBANNO_MARKER\fP   (MAKE_MARKER ('\fBA\fP', '\fBN\fP', '\fBN\fP', 'O'))"
+.br
+.ti -1c
+.RI "#define \fBCOMT_MARKER\fP   (MAKE_MARKER ('C', 'O', '\fBM\fP', '\fBT\fP'))"
+.br
+.ti -1c
+.RI "#define \fBFVER_MARKER\fP   (MAKE_MARKER ('\fBF\fP', '\fBV\fP', '\fBE\fP', 'R'))"
+.br
+.ti -1c
+.RI "#define \fBSFX_MARKER\fP   (MAKE_MARKER ('\fBS\fP', '\fBF\fP', 'X', '!'))"
+.br
+.ti -1c
+.RI "#define \fBPEAK_MARKER\fP   (MAKE_MARKER ('P', '\fBE\fP', '\fBA\fP', 'K'))"
+.br
+.ti -1c
+.RI "#define \fBbasc_MARKER\fP   (MAKE_MARKER ('\fBb\fP', '\fBa\fP', '\fBs\fP', '\fBc\fP'))"
+.br
+.ti -1c
+.RI "#define \fBNONE_MARKER\fP   (MAKE_MARKER ('\fBN\fP', 'O', '\fBN\fP', '\fBE\fP'))"
+.br
+.ti -1c
+.RI "#define \fBsowt_MARKER\fP   (MAKE_MARKER ('\fBs\fP', 'o', 'w', '\fBt\fP'))"
+.br
+.ti -1c
+.RI "#define \fBtwos_MARKER\fP   (MAKE_MARKER ('\fBt\fP', 'w', 'o', '\fBs\fP'))"
+.br
+.ti -1c
+.RI "#define \fBraw_MARKER\fP   (MAKE_MARKER ('r', '\fBa\fP', 'w', ' '))"
+.br
+.ti -1c
+.RI "#define \fBin24_MARKER\fP   (MAKE_MARKER ('\fBi\fP', 'n', '2', '4'))"
+.br
+.ti -1c
+.RI "#define \fBni24_MARKER\fP   (MAKE_MARKER ('4', '2', 'n', '1'))"
+.br
+.ti -1c
+.RI "#define \fBin32_MARKER\fP   (MAKE_MARKER ('\fBi\fP', 'n', '3', '2'))"
+.br
+.ti -1c
+.RI "#define \fBni32_MARKER\fP   (MAKE_MARKER ('2', '3', 'n', '\fBi\fP'))"
+.br
+.ti -1c
+.RI "#define \fBfl32_MARKER\fP   (MAKE_MARKER ('\fBf\fP', '\fBl\fP', '3', '2'))"
+.br
+.ti -1c
+.RI "#define \fBFL32_MARKER\fP   (MAKE_MARKER ('\fBF\fP', 'L', '3', '2'))"
+.br
+.ti -1c
+.RI "#define \fBfl64_MARKER\fP   (MAKE_MARKER ('\fBf\fP', '\fBl\fP', '6', '4'))"
+.br
+.ti -1c
+.RI "#define \fBFL64_MARKER\fP   (MAKE_MARKER ('\fBF\fP', 'L', '6', '4'))"
+.br
+.ti -1c
+.RI "#define \fBulaw_MARKER\fP   (MAKE_MARKER ('u', '\fBl\fP', '\fBa\fP', 'w'))"
+.br
+.ti -1c
+.RI "#define \fBULAW_MARKER\fP   (MAKE_MARKER ('U', 'L', '\fBA\fP', 'W'))"
+.br
+.ti -1c
+.RI "#define \fBalaw_MARKER\fP   (MAKE_MARKER ('\fBa\fP', '\fBl\fP', '\fBa\fP', 'w'))"
+.br
+.ti -1c
+.RI "#define \fBALAW_MARKER\fP   (MAKE_MARKER ('\fBA\fP', 'L', '\fBA\fP', 'W'))"
+.br
+.ti -1c
+.RI "#define \fBDWVW_MARKER\fP   (MAKE_MARKER ('\fBD\fP', 'W', '\fBV\fP', 'W'))"
+.br
+.ti -1c
+.RI "#define \fBGSM_MARKER\fP   (MAKE_MARKER ('G', '\fBS\fP', '\fBM\fP', ' '))"
+.br
+.ti -1c
+.RI "#define \fBima4_MARKER\fP   (MAKE_MARKER ('\fBi\fP', '\fBm\fP', '\fBa\fP', '4'))"
+.br
+.ti -1c
+.RI "#define \fBm3ga_MARKER\fP   (MAKE_MARKER ('\fBm\fP', '3', 'g', '\fBa\fP'))"
+.br
+.ti -1c
+.RI "#define \fBMAC3_MARKER\fP   (MAKE_MARKER ('\fBM\fP', '\fBA\fP', 'C', '3'))"
+.br
+.ti -1c
+.RI "#define \fBMAC6_MARKER\fP   (MAKE_MARKER ('\fBM\fP', '\fBA\fP', 'C', '6'))"
+.br
+.ti -1c
+.RI "#define \fBADP4_MARKER\fP   (MAKE_MARKER ('\fBA\fP', '\fBD\fP', 'P', '4'))"
+.br
+.ti -1c
+.RI "#define \fBSIZEOF_AIFF_COMM\fP   18"
+.br
+.ti -1c
+.RI "#define \fBSIZEOF_AIFC_COMM_MIN\fP   22"
+.br
+.ti -1c
+.RI "#define \fBSIZEOF_AIFC_COMM\fP   24"
+.br
+.ti -1c
+.RI "#define \fBSIZEOF_SSND_CHUNK\fP   8"
+.br
+.ti -1c
+.RI "#define \fBSIZEOF_INST_CHUNK\fP   20"
+.br
+.ti -1c
+.RI "#define \fBAIFC_IMA4_BLOCK_LEN\fP   34"
+.br
+.ti -1c
+.RI "#define \fBAIFC_IMA4_SAMPLES_PER_BLOCK\fP   64"
+.br
+.ti -1c
+.RI "#define \fBAIFF_PEAK_CHUNK_SIZE\fP(ch)   (2 * sizeof (\fBint\fP) + ch * (sizeof (float) + sizeof (\fBint\fP)))"
+.br
+.in -1c
+.SS "Enumerations"
+
+.in +1c
+.ti -1c
+.RI "enum { \fBHAVE_FORM\fP = 0x01, \fBHAVE_AIFF\fP = 0x02, \fBHAVE_AIFC\fP = 0x04, \fBHAVE_FVER\fP = 0x08, \fBHAVE_COMM\fP = 0x10, \fBHAVE_SSND\fP = 0x20 }"
+.br
+.ti -1c
+.RI "enum { \fBbasc_SCALE_MINOR\fP = 1, \fBbasc_SCALE_MAJOR\fP, \fBbasc_SCALE_NEITHER\fP, \fBbasc_SCALE_BOTH\fP }"
+.br
+.ti -1c
+.RI "enum { \fBbasc_TYPE_LOOP\fP = 0, \fBbasc_TYPE_ONE_SHOT\fP }"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBint\fP \fBaiff_open\fP (\fBSF_PRIVATE\fP *psf)"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define ADP4_MARKER   (MAKE_MARKER ('\fBA\fP', '\fBD\fP', 'P', '4'))"
+
+.PP
+Definition at line 95 of file aiff\&.c\&.
+.SS "#define AIFC_IMA4_BLOCK_LEN   34"
+
+.PP
+Definition at line 107 of file aiff\&.c\&.
+.SS "#define AIFC_IMA4_SAMPLES_PER_BLOCK   64"
+
+.PP
+Definition at line 108 of file aiff\&.c\&.
+.SS "#define AIFC_MARKER   (MAKE_MARKER ('\fBA\fP', 'I', '\fBF\fP', 'C'))"
+
+.PP
+Definition at line 40 of file aiff\&.c\&.
+.SS "#define AIFF_MARKER   (MAKE_MARKER ('\fBA\fP', 'I', '\fBF\fP', '\fBF\fP'))"
+
+.PP
+Definition at line 39 of file aiff\&.c\&.
+.SS "#define AIFF_PEAK_CHUNK_SIZE(ch)   (2 * sizeof (\fBint\fP) + ch * (sizeof (float) + sizeof (\fBint\fP)))"
+
+.PP
+Definition at line 110 of file aiff\&.c\&.
+.SS "#define alaw_MARKER   (MAKE_MARKER ('\fBa\fP', '\fBl\fP', '\fBa\fP', 'w'))"
+
+.PP
+Definition at line 76 of file aiff\&.c\&.
+.SS "#define ALAW_MARKER   (MAKE_MARKER ('\fBA\fP', 'L', '\fBA\fP', 'W'))"
+
+.PP
+Definition at line 77 of file aiff\&.c\&.
+.SS "#define ANNO_MARKER   (MAKE_MARKER ('\fBA\fP', '\fBN\fP', '\fBN\fP', 'O'))"
+
+.PP
+Definition at line 51 of file aiff\&.c\&.
+.SS "#define APPL_MARKER   (MAKE_MARKER ('\fBA\fP', 'P', 'P', 'L'))"
+
+.PP
+Definition at line 45 of file aiff\&.c\&.
+.SS "#define AUTH_MARKER   (MAKE_MARKER ('\fBA\fP', 'U', '\fBT\fP', 'H'))"
+
+.PP
+Definition at line 50 of file aiff\&.c\&.
+.SS "#define basc_MARKER   (MAKE_MARKER ('\fBb\fP', '\fBa\fP', '\fBs\fP', '\fBc\fP'))"
+
+.PP
+Definition at line 57 of file aiff\&.c\&.
+.SS "#define c_MARKER   (MAKE_MARKER ('(', '\fBc\fP', ')', ' '))"
+
+.PP
+Definition at line 48 of file aiff\&.c\&.
+.SS "#define CHAN_MARKER   (MAKE_MARKER ('C', 'H', '\fBA\fP', '\fBN\fP'))"
+
+.PP
+Definition at line 46 of file aiff\&.c\&.
+.SS "#define COMM_MARKER   (MAKE_MARKER ('C', 'O', '\fBM\fP', '\fBM\fP'))"
+
+.PP
+Definition at line 41 of file aiff\&.c\&.
+.SS "#define COMT_MARKER   (MAKE_MARKER ('C', 'O', '\fBM\fP', '\fBT\fP'))"
+
+.PP
+Definition at line 52 of file aiff\&.c\&.
+.SS "#define DWVW_MARKER   (MAKE_MARKER ('\fBD\fP', 'W', '\fBV\fP', 'W'))"
+
+.PP
+Definition at line 79 of file aiff\&.c\&.
+.SS "#define fl32_MARKER   (MAKE_MARKER ('\fBf\fP', '\fBl\fP', '3', '2'))"
+
+.PP
+Definition at line 69 of file aiff\&.c\&.
+.SS "#define FL32_MARKER   (MAKE_MARKER ('\fBF\fP', 'L', '3', '2'))"
+
+.PP
+Definition at line 70 of file aiff\&.c\&.
+.SS "#define fl64_MARKER   (MAKE_MARKER ('\fBf\fP', '\fBl\fP', '6', '4'))"
+
+.PP
+Definition at line 71 of file aiff\&.c\&.
+.SS "#define FL64_MARKER   (MAKE_MARKER ('\fBF\fP', 'L', '6', '4'))"
+
+.PP
+Definition at line 72 of file aiff\&.c\&.
+.SS "#define FORM_MARKER   (MAKE_MARKER ('\fBF\fP', 'O', 'R', '\fBM\fP'))"
+
+.PP
+Definition at line 38 of file aiff\&.c\&.
+.SS "#define FVER_MARKER   (MAKE_MARKER ('\fBF\fP', '\fBV\fP', '\fBE\fP', 'R'))"
+
+.PP
+Definition at line 53 of file aiff\&.c\&.
+.SS "#define GSM_MARKER   (MAKE_MARKER ('G', '\fBS\fP', '\fBM\fP', ' '))"
+
+.PP
+Definition at line 80 of file aiff\&.c\&.
+.SS "#define ima4_MARKER   (MAKE_MARKER ('\fBi\fP', '\fBm\fP', '\fBa\fP', '4'))"
+
+.PP
+Definition at line 81 of file aiff\&.c\&.
+.SS "#define in24_MARKER   (MAKE_MARKER ('\fBi\fP', 'n', '2', '4'))"
+
+.PP
+Definition at line 64 of file aiff\&.c\&.
+.SS "#define in32_MARKER   (MAKE_MARKER ('\fBi\fP', 'n', '3', '2'))"
+
+.PP
+Definition at line 66 of file aiff\&.c\&.
+.SS "#define INST_MARKER   (MAKE_MARKER ('I', '\fBN\fP', '\fBS\fP', '\fBT\fP'))"
+
+.PP
+Definition at line 44 of file aiff\&.c\&.
+.SS "#define m3ga_MARKER   (MAKE_MARKER ('\fBm\fP', '3', 'g', '\fBa\fP'))"
+
+.PP
+Definition at line 89 of file aiff\&.c\&.
+.SS "#define MAC3_MARKER   (MAKE_MARKER ('\fBM\fP', '\fBA\fP', 'C', '3'))"
+
+.PP
+Definition at line 93 of file aiff\&.c\&.
+.SS "#define MAC6_MARKER   (MAKE_MARKER ('\fBM\fP', '\fBA\fP', 'C', '6'))"
+
+.PP
+Definition at line 94 of file aiff\&.c\&.
+.SS "#define MARK_MARKER   (MAKE_MARKER ('\fBM\fP', '\fBA\fP', 'R', 'K'))"
+
+.PP
+Definition at line 43 of file aiff\&.c\&.
+.SS "#define NAME_MARKER   (MAKE_MARKER ('\fBN\fP', '\fBA\fP', '\fBM\fP', '\fBE\fP'))"
+
+.PP
+Definition at line 49 of file aiff\&.c\&.
+.SS "#define ni24_MARKER   (MAKE_MARKER ('4', '2', 'n', '1'))"
+
+.PP
+Definition at line 65 of file aiff\&.c\&.
+.SS "#define ni32_MARKER   (MAKE_MARKER ('2', '3', 'n', '\fBi\fP'))"
+
+.PP
+Definition at line 67 of file aiff\&.c\&.
+.SS "#define NONE_MARKER   (MAKE_MARKER ('\fBN\fP', 'O', '\fBN\fP', '\fBE\fP'))"
+
+.PP
+Definition at line 60 of file aiff\&.c\&.
+.SS "#define PEAK_MARKER   (MAKE_MARKER ('P', '\fBE\fP', '\fBA\fP', 'K'))"
+
+.PP
+Definition at line 56 of file aiff\&.c\&.
+.SS "#define raw_MARKER   (MAKE_MARKER ('r', '\fBa\fP', 'w', ' '))"
+
+.PP
+Definition at line 63 of file aiff\&.c\&.
+.SS "#define SFX_MARKER   (MAKE_MARKER ('\fBS\fP', '\fBF\fP', 'X', '!'))"
+
+.PP
+Definition at line 54 of file aiff\&.c\&.
+.SS "#define SIZEOF_AIFC_COMM   24"
+
+.PP
+Definition at line 100 of file aiff\&.c\&.
+.SS "#define SIZEOF_AIFC_COMM_MIN   22"
+
+.PP
+Definition at line 99 of file aiff\&.c\&.
+.SS "#define SIZEOF_AIFF_COMM   18"
+
+.PP
+Definition at line 98 of file aiff\&.c\&.
+.SS "#define SIZEOF_INST_CHUNK   20"
+
+.PP
+Definition at line 102 of file aiff\&.c\&.
+.SS "#define SIZEOF_SSND_CHUNK   8"
+
+.PP
+Definition at line 101 of file aiff\&.c\&.
+.SS "#define sowt_MARKER   (MAKE_MARKER ('\fBs\fP', 'o', 'w', '\fBt\fP'))"
+
+.PP
+Definition at line 61 of file aiff\&.c\&.
+.SS "#define SSND_MARKER   (MAKE_MARKER ('\fBS\fP', '\fBS\fP', '\fBN\fP', '\fBD\fP'))"
+
+.PP
+Definition at line 42 of file aiff\&.c\&.
+.SS "#define twos_MARKER   (MAKE_MARKER ('\fBt\fP', 'w', 'o', '\fBs\fP'))"
+
+.PP
+Definition at line 62 of file aiff\&.c\&.
+.SS "#define ulaw_MARKER   (MAKE_MARKER ('u', '\fBl\fP', '\fBa\fP', 'w'))"
+
+.PP
+Definition at line 74 of file aiff\&.c\&.
+.SS "#define ULAW_MARKER   (MAKE_MARKER ('U', 'L', '\fBA\fP', 'W'))"
+
+.PP
+Definition at line 75 of file aiff\&.c\&.
+.SH "Enumeration Type Documentation"
+.PP 
+.SS "anonymous enum"
+
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fIHAVE_FORM \fP\fP
+.TP
+\fB\fIHAVE_AIFF \fP\fP
+.TP
+\fB\fIHAVE_AIFC \fP\fP
+.TP
+\fB\fIHAVE_FVER \fP\fP
+.TP
+\fB\fIHAVE_COMM \fP\fP
+.TP
+\fB\fIHAVE_SSND \fP\fP
+.PP
+Definition at line 116 of file aiff\&.c\&.
+.SS "anonymous enum"
+
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fIbasc_SCALE_MINOR \fP\fP
+.TP
+\fB\fIbasc_SCALE_MAJOR \fP\fP
+.TP
+\fB\fIbasc_SCALE_NEITHER \fP\fP
+.TP
+\fB\fIbasc_SCALE_BOTH \fP\fP
+.PP
+Definition at line 159 of file aiff\&.c\&.
+.SS "anonymous enum"
+
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fIbasc_TYPE_LOOP \fP\fP
+.TP
+\fB\fIbasc_TYPE_ONE_SHOT \fP\fP
+.PP
+Definition at line 166 of file aiff\&.c\&.
+.SH "Function Documentation"
+.PP 
+.SS "\fBint\fP aiff_open (\fBSF_PRIVATE\fP * psf)"
+
+.PP
+Definition at line 232 of file aiff\&.c\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

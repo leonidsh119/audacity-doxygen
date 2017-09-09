@@ -1,0 +1,189 @@
+\hypertarget{_trunc_silence_8cpp}{}\section{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/src/effects/\+Trunc\+Silence.cpp File Reference}
+\label{_trunc_silence_8cpp}\index{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/src/effects/\+Trunc\+Silence.\+cpp@{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/src/effects/\+Trunc\+Silence.\+cpp}}
+{\ttfamily \#include \char`\"{}../\+Audacity.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Trunc\+Silence.\+h\char`\"{}}\\*
+{\ttfamily \#include $<$algorithm$>$}\\*
+{\ttfamily \#include $<$list$>$}\\*
+{\ttfamily \#include $<$limits$>$}\\*
+{\ttfamily \#include $<$math.\+h$>$}\\*
+{\ttfamily \#include $<$wx/checkbox.\+h$>$}\\*
+{\ttfamily \#include $<$wx/choice.\+h$>$}\\*
+{\ttfamily \#include $<$wx/valgen.\+h$>$}\\*
+{\ttfamily \#include \char`\"{}../\+Prefs.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../\+Project.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../\+Shuttle\+Gui.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../\+Wave\+Track.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../widgets/valnum.\+h\char`\"{}}\\*
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \hyperlink{class_region_list}{Region\+List}
+\end{DoxyCompactItemize}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{_trunc_silence_8cpp_a4ff3aff0c24826cc436063f26548c34a}{Default\+And\+Limits}(\hyperlink{lib_2expat_8h_a1b49b495b59f9e73205b69ad1a2965b0}{name},  def,  \hyperlink{_compare_audio_command_8cpp_abd8bbcfabb3ddef2ccaafb9928a37b95}{min},  \hyperlink{_t_d_stretch_8cpp_ac39d9cef6a5e030ba8d9e11121054268}{max})
+\end{DoxyCompactItemize}
+\subsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \hyperlink{_trunc_silence_8cpp_aba373eb25dc2f3d2995492627e951b4e}{k\+Actions} \{ \hyperlink{_trunc_silence_8cpp_aba373eb25dc2f3d2995492627e951b4ea9794e443f5dbbd8a0690aeb4bd82a0ef}{k\+Truncate}, 
+\hyperlink{_trunc_silence_8cpp_aba373eb25dc2f3d2995492627e951b4ea5ad36f76f762805d173cd453928743fb}{k\+Compress}, 
+\hyperlink{_trunc_silence_8cpp_aba373eb25dc2f3d2995492627e951b4ea348c9fc2ed7c3e3ed49f5bee497cabb3}{k\+Num\+Actions}
+ \}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{_trunc_silence_8cpp_a45eee0d2b508552af5e238059741b76f}{Param} (Db\+Index, \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int}, \hyperlink{_theme_8cpp_ad4baed404c66b57e257af684bdc5ecf2}{XO}(\char`\"{}Db\char`\"{}), 0, 0, Enums\+::\+Num\+Db\+Choices-\/1, 1)
+\item 
+\hyperlink{_trunc_silence_8cpp_aee5e688ec9e6d22d546dce90bac3e208}{Param} (Act\+Index, \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int}, \hyperlink{_theme_8cpp_ad4baed404c66b57e257af684bdc5ecf2}{XO}(\char`\"{}Action\char`\"{}), k\+Truncate, 0, \hyperlink{_trunc_silence_8cpp_aba373eb25dc2f3d2995492627e951b4ea348c9fc2ed7c3e3ed49f5bee497cabb3}{k\+Num\+Actions}-\/1, 1)
+\item 
+\hyperlink{_trunc_silence_8cpp_ad332d9b139425fc8080038caef1ce050}{Param} (Minimum, double, \hyperlink{_theme_8cpp_ad4baed404c66b57e257af684bdc5ecf2}{XO}(\char`\"{}Minimum\char`\"{}), 0.\+5, 0.\+001, 10000.\+0, 1)
+\item 
+\hyperlink{_trunc_silence_8cpp_a9a0925a8f242c7119f602f6f263f207f}{Param} (Truncate, double, \hyperlink{_theme_8cpp_ad4baed404c66b57e257af684bdc5ecf2}{XO}(\char`\"{}Truncate\char`\"{}), 0.\+5, 0.\+0, 10000.\+0, 1)
+\item 
+\hyperlink{_trunc_silence_8cpp_af94d2a386273c75178870fefc380f0c2}{Param} (Compress, double, \hyperlink{_theme_8cpp_ad4baed404c66b57e257af684bdc5ecf2}{XO}(\char`\"{}Compress\char`\"{}), 50.\+0, 0.\+0, 99.\+9, 1)
+\item 
+\hyperlink{_trunc_silence_8cpp_a1f3999d19a966dd922d68cd4116c8aad}{Param} (Independent, \hyperlink{mac_2config_2i386_2lib-src_2libsoxr_2soxr-config_8h_abb452686968e48b67397da5f97445f5b}{bool}, \hyperlink{_theme_8cpp_ad4baed404c66b57e257af684bdc5ecf2}{XO}(\char`\"{}Independent\char`\"{}), false, \hyperlink{mac_2config_2i386_2lib-src_2libsoxr_2soxr-config_8h_a65e9886d74aaee76545e83dd09011727}{false}, \hyperlink{mac_2config_2i386_2lib-src_2libsoxr_2soxr-config_8h_a41f9c5fb8b08eb5dc3edce4dcb37fee7}{true}, 1)
+\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} double \hyperlink{_trunc_silence_8cpp_acead85899b97311047a5aeda15fa612d}{detect\+Frac} = 0.\+4
+\end{DoxyCompactItemize}
+
+
+\subsection{Macro Definition Documentation}
+\index{Trunc\+Silence.\+cpp@{Trunc\+Silence.\+cpp}!Default\+And\+Limits@{Default\+And\+Limits}}
+\index{Default\+And\+Limits@{Default\+And\+Limits}!Trunc\+Silence.\+cpp@{Trunc\+Silence.\+cpp}}
+\subsubsection[{\texorpdfstring{Default\+And\+Limits}{DefaultAndLimits}}]{\setlength{\rightskip}{0pt plus 5cm}\#define Default\+And\+Limits(
+\begin{DoxyParamCaption}
+\item[{}]{{\bf name}, }
+\item[{}]{def, }
+\item[{}]{{\bf min}, }
+\item[{}]{{\bf max}}
+\end{DoxyParamCaption}
+)}\hypertarget{_trunc_silence_8cpp_a4ff3aff0c24826cc436063f26548c34a}{}\label{_trunc_silence_8cpp_a4ff3aff0c24826cc436063f26548c34a}
+{\bfseries Value\+:}
+\begin{DoxyCode}
+\textcolor{keyword}{static} \textcolor{keyword}{const} \textcolor{keywordtype}{double} DEF\_ ## \hyperlink{lib_2expat_8h_a1b49b495b59f9e73205b69ad1a2965b0}{name} = (def); \(\backslash\)
+   static \textcolor{keyword}{const} \textcolor{keywordtype}{double} MIN\_ ## \hyperlink{lib_2expat_8h_a1b49b495b59f9e73205b69ad1a2965b0}{name} = (\hyperlink{_compare_audio_command_8cpp_abd8bbcfabb3ddef2ccaafb9928a37b95}{min}); \(\backslash\)
+   static \textcolor{keyword}{const} \textcolor{keywordtype}{double} MAX\_ ## \hyperlink{lib_2expat_8h_a1b49b495b59f9e73205b69ad1a2965b0}{name} = (\hyperlink{libflac_2src_2flac_2encode_8c_ac39d9cef6a5e030ba8d9e11121054268}{max});
+\end{DoxyCode}
+
+
+Definition at line 53 of file Trunc\+Silence.\+cpp.
+
+
+
+\subsection{Enumeration Type Documentation}
+\index{Trunc\+Silence.\+cpp@{Trunc\+Silence.\+cpp}!k\+Actions@{k\+Actions}}
+\index{k\+Actions@{k\+Actions}!Trunc\+Silence.\+cpp@{Trunc\+Silence.\+cpp}}
+\subsubsection[{\texorpdfstring{k\+Actions}{kActions}}]{\setlength{\rightskip}{0pt plus 5cm}enum {\bf k\+Actions}}\hypertarget{_trunc_silence_8cpp_aba373eb25dc2f3d2995492627e951b4e}{}\label{_trunc_silence_8cpp_aba373eb25dc2f3d2995492627e951b4e}
+\begin{Desc}
+\item[Enumerator]\par
+\begin{description}
+\index{k\+Truncate@{k\+Truncate}!Trunc\+Silence.\+cpp@{Trunc\+Silence.\+cpp}}\index{Trunc\+Silence.\+cpp@{Trunc\+Silence.\+cpp}!k\+Truncate@{k\+Truncate}}\item[{\em 
+k\+Truncate\hypertarget{_trunc_silence_8cpp_aba373eb25dc2f3d2995492627e951b4ea9794e443f5dbbd8a0690aeb4bd82a0ef}{}\label{_trunc_silence_8cpp_aba373eb25dc2f3d2995492627e951b4ea9794e443f5dbbd8a0690aeb4bd82a0ef}
+}]\index{k\+Compress@{k\+Compress}!Trunc\+Silence.\+cpp@{Trunc\+Silence.\+cpp}}\index{Trunc\+Silence.\+cpp@{Trunc\+Silence.\+cpp}!k\+Compress@{k\+Compress}}\item[{\em 
+k\+Compress\hypertarget{_trunc_silence_8cpp_aba373eb25dc2f3d2995492627e951b4ea5ad36f76f762805d173cd453928743fb}{}\label{_trunc_silence_8cpp_aba373eb25dc2f3d2995492627e951b4ea5ad36f76f762805d173cd453928743fb}
+}]\index{k\+Num\+Actions@{k\+Num\+Actions}!Trunc\+Silence.\+cpp@{Trunc\+Silence.\+cpp}}\index{Trunc\+Silence.\+cpp@{Trunc\+Silence.\+cpp}!k\+Num\+Actions@{k\+Num\+Actions}}\item[{\em 
+k\+Num\+Actions\hypertarget{_trunc_silence_8cpp_aba373eb25dc2f3d2995492627e951b4ea348c9fc2ed7c3e3ed49f5bee497cabb3}{}\label{_trunc_silence_8cpp_aba373eb25dc2f3d2995492627e951b4ea348c9fc2ed7c3e3ed49f5bee497cabb3}
+}]\end{description}
+\end{Desc}
+
+
+Definition at line 39 of file Trunc\+Silence.\+cpp.
+
+
+
+\subsection{Function Documentation}
+\index{Trunc\+Silence.\+cpp@{Trunc\+Silence.\+cpp}!Param@{Param}}
+\index{Param@{Param}!Trunc\+Silence.\+cpp@{Trunc\+Silence.\+cpp}}
+\subsubsection[{\texorpdfstring{Param(\+Db\+Index, int, X\+O(""Db""), 0, 0, Enums\+::\+Num\+Db\+Choices-\/1, 1)}{Param(DbIndex, int, XO("Db"), 0, 0, Enums::NumDbChoices-1, 1)}}]{\setlength{\rightskip}{0pt plus 5cm}Param (
+\begin{DoxyParamCaption}
+\item[{Db\+Index}]{, }
+\item[{{\bf int}}]{, }
+\item[{{\bf XO}(\char`\"{}Db\char`\"{})}]{, }
+\item[{0}]{, }
+\item[{0}]{, }
+\item[{{\bf Enums\+::\+Num\+Db\+Choices}-\/}]{1, }
+\item[{1}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{_trunc_silence_8cpp_a45eee0d2b508552af5e238059741b76f}{}\label{_trunc_silence_8cpp_a45eee0d2b508552af5e238059741b76f}
+\index{Trunc\+Silence.\+cpp@{Trunc\+Silence.\+cpp}!Param@{Param}}
+\index{Param@{Param}!Trunc\+Silence.\+cpp@{Trunc\+Silence.\+cpp}}
+\subsubsection[{\texorpdfstring{Param(\+Act\+Index, int, X\+O(""Action""), k\+Truncate, 0, k\+Num\+Actions-\/1, 1)}{Param(ActIndex, int, XO("Action"), kTruncate, 0, kNumActions-1, 1)}}]{\setlength{\rightskip}{0pt plus 5cm}Param (
+\begin{DoxyParamCaption}
+\item[{Act\+Index}]{, }
+\item[{{\bf int}}]{, }
+\item[{{\bf XO}(\char`\"{}Action\char`\"{})}]{, }
+\item[{{\bf k\+Truncate}}]{, }
+\item[{0}]{, }
+\item[{{\bf k\+Num\+Actions}-\/}]{1, }
+\item[{1}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{_trunc_silence_8cpp_aee5e688ec9e6d22d546dce90bac3e208}{}\label{_trunc_silence_8cpp_aee5e688ec9e6d22d546dce90bac3e208}
+\index{Trunc\+Silence.\+cpp@{Trunc\+Silence.\+cpp}!Param@{Param}}
+\index{Param@{Param}!Trunc\+Silence.\+cpp@{Trunc\+Silence.\+cpp}}
+\subsubsection[{\texorpdfstring{Param(\+Minimum, double, X\+O(""Minimum""), 0.\+5, 0.\+001, 10000.\+0, 1)}{Param(Minimum, double, XO("Minimum"), 0.5, 0.001, 10000.0, 1)}}]{\setlength{\rightskip}{0pt plus 5cm}Param (
+\begin{DoxyParamCaption}
+\item[{Minimum}]{, }
+\item[{double}]{, }
+\item[{{\bf XO}(\char`\"{}Minimum\char`\"{})}]{, }
+\item[{0.}]{5, }
+\item[{0.}]{001, }
+\item[{10000.}]{0, }
+\item[{1}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{_trunc_silence_8cpp_ad332d9b139425fc8080038caef1ce050}{}\label{_trunc_silence_8cpp_ad332d9b139425fc8080038caef1ce050}
+\index{Trunc\+Silence.\+cpp@{Trunc\+Silence.\+cpp}!Param@{Param}}
+\index{Param@{Param}!Trunc\+Silence.\+cpp@{Trunc\+Silence.\+cpp}}
+\subsubsection[{\texorpdfstring{Param(\+Truncate, double, X\+O(""Truncate""), 0.\+5, 0.\+0, 10000.\+0, 1)}{Param(Truncate, double, XO("Truncate"), 0.5, 0.0, 10000.0, 1)}}]{\setlength{\rightskip}{0pt plus 5cm}Param (
+\begin{DoxyParamCaption}
+\item[{Truncate}]{, }
+\item[{double}]{, }
+\item[{{\bf XO}(\char`\"{}Truncate\char`\"{})}]{, }
+\item[{0.}]{5, }
+\item[{0.}]{0, }
+\item[{10000.}]{0, }
+\item[{1}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{_trunc_silence_8cpp_a9a0925a8f242c7119f602f6f263f207f}{}\label{_trunc_silence_8cpp_a9a0925a8f242c7119f602f6f263f207f}
+\index{Trunc\+Silence.\+cpp@{Trunc\+Silence.\+cpp}!Param@{Param}}
+\index{Param@{Param}!Trunc\+Silence.\+cpp@{Trunc\+Silence.\+cpp}}
+\subsubsection[{\texorpdfstring{Param(\+Compress, double, X\+O(""Compress""), 50.\+0, 0.\+0, 99.\+9, 1)}{Param(Compress, double, XO("Compress"), 50.0, 0.0, 99.9, 1)}}]{\setlength{\rightskip}{0pt plus 5cm}Param (
+\begin{DoxyParamCaption}
+\item[{Compress}]{, }
+\item[{double}]{, }
+\item[{{\bf XO}(\char`\"{}Compress\char`\"{})}]{, }
+\item[{50.}]{0, }
+\item[{0.}]{0, }
+\item[{99.}]{9, }
+\item[{1}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{_trunc_silence_8cpp_af94d2a386273c75178870fefc380f0c2}{}\label{_trunc_silence_8cpp_af94d2a386273c75178870fefc380f0c2}
+\index{Trunc\+Silence.\+cpp@{Trunc\+Silence.\+cpp}!Param@{Param}}
+\index{Param@{Param}!Trunc\+Silence.\+cpp@{Trunc\+Silence.\+cpp}}
+\subsubsection[{\texorpdfstring{Param(\+Independent, bool, X\+O(""Independent""), false, false, true, 1)}{Param(Independent, bool, XO("Independent"), false, false, true, 1)}}]{\setlength{\rightskip}{0pt plus 5cm}Param (
+\begin{DoxyParamCaption}
+\item[{Independent}]{, }
+\item[{{\bf bool}}]{, }
+\item[{{\bf XO}(\char`\"{}Independent\char`\"{})}]{, }
+\item[{{\bf false}}]{, }
+\item[{{\bf false}}]{, }
+\item[{{\bf true}}]{, }
+\item[{1}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{_trunc_silence_8cpp_a1f3999d19a966dd922d68cd4116c8aad}{}\label{_trunc_silence_8cpp_a1f3999d19a966dd922d68cd4116c8aad}
+
+
+\subsection{Variable Documentation}
+\index{Trunc\+Silence.\+cpp@{Trunc\+Silence.\+cpp}!detect\+Frac@{detect\+Frac}}
+\index{detect\+Frac@{detect\+Frac}!Trunc\+Silence.\+cpp@{Trunc\+Silence.\+cpp}}
+\subsubsection[{\texorpdfstring{detect\+Frac}{detectFrac}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf const} double detect\+Frac = 0.\+4}\hypertarget{_trunc_silence_8cpp_acead85899b97311047a5aeda15fa612d}{}\label{_trunc_silence_8cpp_acead85899b97311047a5aeda15fa612d}
+
+
+Definition at line 75 of file Trunc\+Silence.\+cpp.
+

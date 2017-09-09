@@ -1,0 +1,179 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="lv2__apply_8py" kind="file" language="Python">
+    <compoundname>lv2_apply.py</compoundname>
+    <innerclass refid="classlv2__apply_1_1_wav_file" prot="public">lv2_apply::WavFile</innerclass>
+    <innernamespace refid="namespacelv2__apply">lv2_apply</innernamespace>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1" refid="namespacelv2__apply" refkind="compound"><highlight class="comment">#!/usr/bin/env<sp/>python</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="comment">#<sp/>-*-<sp/>coding:<sp/>utf-8<sp/>-*-</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="keyword">import</highlight><highlight class="normal"><sp/>math</highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="keyword">import</highlight><highlight class="normal"><sp/>lilv</highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="keyword">import</highlight><highlight class="normal"><sp/>sys</highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="keyword">import</highlight><highlight class="normal"><sp/>wave</highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight><highlight class="keyword">import</highlight><highlight class="normal"><sp/>numpy</highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight></codeline>
+<codeline lineno="10" refid="classlv2__apply_1_1_wav_file" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal"><ref refid="classlv2__apply_1_1_wav_file" kindref="compound">WavFile</ref>(object):</highlight></codeline>
+<codeline lineno="11"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;&quot;&quot;Helper<sp/>class<sp/>for<sp/>accessing<sp/>wav<sp/>file<sp/>data.<sp/>Should<sp/>work<sp/>on<sp/>the<sp/>most<sp/>common</highlight></codeline>
+<codeline lineno="12"><highlight class="stringliteral"><sp/><sp/><sp/><sp/>formats<sp/>(8<sp/>bit<sp/>unsigned,<sp/>16<sp/>bit<sp/>signed,<sp/>32<sp/>bit<sp/>signed).<sp/>Audio<sp/>data<sp/>is</highlight></codeline>
+<codeline lineno="13"><highlight class="stringliteral"><sp/><sp/><sp/><sp/>converted<sp/>to<sp/>float32.&quot;&quot;&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight></codeline>
+<codeline lineno="15"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>(struct<sp/>format<sp/>code,<sp/>is_signedtype)<sp/>for<sp/>each<sp/>sample<sp/>width:</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="16" refid="classlv2__apply_1_1_wav_file_1af87261f02216eedeb398d83f4344a0ca" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>WAV_SPECS<sp/>=<sp/>{</highlight></codeline>
+<codeline lineno="17"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>1:<sp/>(</highlight><highlight class="stringliteral">&quot;B&quot;</highlight><highlight class="normal">,<sp/></highlight><highlight class="keyword">False</highlight><highlight class="normal">),</highlight></codeline>
+<codeline lineno="18"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>2:<sp/>(</highlight><highlight class="stringliteral">&quot;h&quot;</highlight><highlight class="normal">,<sp/></highlight><highlight class="keyword">True</highlight><highlight class="normal">),</highlight></codeline>
+<codeline lineno="19"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>4:<sp/>(</highlight><highlight class="stringliteral">&quot;l&quot;</highlight><highlight class="normal">,<sp/></highlight><highlight class="keyword">True</highlight><highlight class="normal">),</highlight></codeline>
+<codeline lineno="20"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="21"><highlight class="normal"></highlight></codeline>
+<codeline lineno="22" refid="classlv2__apply_1_1_wav_file_1a48dab150eebea949e33aa1dc85aa3e1b" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal"><ref refid="classlv2__apply_1_1_wav_file_1a48dab150eebea949e33aa1dc85aa3e1b" kindref="member">__init__</ref>(self,<sp/>wav_in_path):</highlight></codeline>
+<codeline lineno="23" refid="classlv2__apply_1_1_wav_file_1afbb6a186dc6834e3db200b3ff2da5658" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>self.<ref refid="classlv2__apply_1_1_wav_file_1afbb6a186dc6834e3db200b3ff2da5658" kindref="member">wav_in</ref><sp/>=<sp/>wave.open(wav_in_path,<sp/></highlight><highlight class="stringliteral">&apos;r&apos;)</highlight></codeline>
+<codeline lineno="24" refid="classlv2__apply_1_1_wav_file_1afcb1bf405d16cbd6c50aa5f534e63ead" refkind="member"><highlight class="stringliteral"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>self.<ref refid="classlv2__apply_1_1_wav_file_1afcb1bf405d16cbd6c50aa5f534e63ead" kindref="member">framerate</ref><sp/>=<sp/>self.wav_in.getframerate()</highlight></codeline>
+<codeline lineno="25" refid="classlv2__apply_1_1_wav_file_1a1c437029a8ef9652691008f4d6dee064" refkind="member"><highlight class="stringliteral"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>self.<ref refid="classlv2__apply_1_1_wav_file_1a1c437029a8ef9652691008f4d6dee064" kindref="member">nframes</ref><sp/>=<sp/>self.wav_in.getnframes()</highlight></codeline>
+<codeline lineno="26" refid="classlv2__apply_1_1_wav_file_1aa87c952fd08bc0412202ce389b5c5c96" refkind="member"><highlight class="stringliteral"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>self.<ref refid="classlv2__apply_1_1_wav_file_1aa87c952fd08bc0412202ce389b5c5c96" kindref="member">nchannels</ref><sp/>=<sp/>self.wav_in.getnchannels()</highlight></codeline>
+<codeline lineno="27" refid="classlv2__apply_1_1_wav_file_1ad0ceb2241db29885bb204756c6f5a31e" refkind="member"><highlight class="stringliteral"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>self.<ref refid="classlv2__apply_1_1_wav_file_1ad0ceb2241db29885bb204756c6f5a31e" kindref="member">sampwidth</ref><sp/>=<sp/>self.wav_in.getsampwidth()</highlight></codeline>
+<codeline lineno="28"><highlight class="stringliteral"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>wav_spec<sp/>=<sp/>self.<ref refid="classlv2__apply_1_1_wav_file_1af87261f02216eedeb398d83f4344a0ca" kindref="member">WAV_SPECS</ref>[self.<ref refid="classlv2__apply_1_1_wav_file_1ad0ceb2241db29885bb204756c6f5a31e" kindref="member">sampwidth</ref>]</highlight></codeline>
+<codeline lineno="29" refid="classlv2__apply_1_1_wav_file_1a1968c0fb6621707d571bc0dafc3efe18" refkind="member"><highlight class="stringliteral"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>self.struct_fmt_code,<sp/>self.<ref refid="classlv2__apply_1_1_wav_file_1a1968c0fb6621707d571bc0dafc3efe18" kindref="member">signed</ref><sp/>=<sp/>wav_spec</highlight></codeline>
+<codeline lineno="30" refid="classlv2__apply_1_1_wav_file_1a4cc4a606a1d8bfdf6aa236dee7cb3eb7" refkind="member"><highlight class="stringliteral"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>self.<ref refid="classlv2__apply_1_1_wav_file_1a4cc4a606a1d8bfdf6aa236dee7cb3eb7" kindref="member">range</ref><sp/>=<sp/>2<sp/>**<sp/>(8*self.<ref refid="classlv2__apply_1_1_wav_file_1ad0ceb2241db29885bb204756c6f5a31e" kindref="member">sampwidth</ref>)</highlight></codeline>
+<codeline lineno="31"><highlight class="stringliteral"></highlight></codeline>
+<codeline lineno="32" refid="classlv2__apply_1_1_wav_file_1a5d28c95de14fc631c923cf6889f60b21" refkind="member"><highlight class="stringliteral"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal"><ref refid="classlv2__apply_1_1_wav_file_1a5d28c95de14fc631c923cf6889f60b21" kindref="member">read</ref>(self):</highlight></codeline>
+<codeline lineno="33"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;&quot;&quot;Read<sp/>data<sp/>from<sp/>an<sp/>open<sp/>wav<sp/>file.<sp/>Return<sp/>a<sp/>list<sp/>of<sp/>channels,<sp/>where<sp/>each</highlight></codeline>
+<codeline lineno="34"><highlight class="stringliteral"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>channel<sp/>is<sp/>a<sp/>list<sp/>of<sp/>floats.&quot;&quot;&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="35"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>raw_bytes<sp/>=<sp/>self.wav_in.readframes(self.<ref refid="classlv2__apply_1_1_wav_file_1a1c437029a8ef9652691008f4d6dee064" kindref="member">nframes</ref>)</highlight></codeline>
+<codeline lineno="36"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>struct_fmt<sp/>=<sp/></highlight><highlight class="stringliteral">&quot;%u%s&quot;</highlight><highlight class="normal"><sp/>%<sp/>(len(raw_bytes)<sp/>/<sp/>self.<ref refid="classlv2__apply_1_1_wav_file_1ad0ceb2241db29885bb204756c6f5a31e" kindref="member">sampwidth</ref>,<sp/>self.struct_fmt_code)</highlight></codeline>
+<codeline lineno="37"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>data<sp/>=<sp/>wave.struct.unpack(struct_fmt,<sp/>raw_bytes)</highlight></codeline>
+<codeline lineno="38"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>self.<ref refid="classlv2__apply_1_1_wav_file_1a1968c0fb6621707d571bc0dafc3efe18" kindref="member">signed</ref>:</highlight></codeline>
+<codeline lineno="39"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>data<sp/>=<sp/>[i<sp/>/<sp/>float(self.<ref refid="classlv2__apply_1_1_wav_file_1a4cc4a606a1d8bfdf6aa236dee7cb3eb7" kindref="member">range</ref>/2)<sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>i<sp/></highlight><highlight class="keywordflow">in</highlight><highlight class="normal"><sp/>data]</highlight></codeline>
+<codeline lineno="40"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="41"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>data<sp/>=<sp/>[(i<sp/>-<sp/>float(range/2))<sp/>/<sp/>float(range/2)<sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>i<sp/></highlight><highlight class="keywordflow">in</highlight><highlight class="normal"><sp/>data]</highlight></codeline>
+<codeline lineno="42"><highlight class="normal"></highlight></codeline>
+<codeline lineno="43"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>channels<sp/>=<sp/>[]</highlight></codeline>
+<codeline lineno="44"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>i<sp/></highlight><highlight class="keywordflow">in</highlight><highlight class="normal"><sp/>xrange(self.<ref refid="classlv2__apply_1_1_wav_file_1aa87c952fd08bc0412202ce389b5c5c96" kindref="member">nchannels</ref>):</highlight></codeline>
+<codeline lineno="45"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>channels.append([data[j]<sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>j<sp/></highlight><highlight class="keywordflow">in</highlight><highlight class="normal"><sp/>xrange(0,<sp/>len(data),<sp/>self.<ref refid="classlv2__apply_1_1_wav_file_1aa87c952fd08bc0412202ce389b5c5c96" kindref="member">nchannels</ref>)<sp/>])</highlight></codeline>
+<codeline lineno="46"><highlight class="normal"></highlight></codeline>
+<codeline lineno="47"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>channels</highlight></codeline>
+<codeline lineno="48"><highlight class="normal"></highlight></codeline>
+<codeline lineno="49" refid="classlv2__apply_1_1_wav_file_1a7cdbe58a9eef42b1fd26f31ebd783edd" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal"><ref refid="classlv2__apply_1_1_wav_file_1a7cdbe58a9eef42b1fd26f31ebd783edd" kindref="member">close</ref>(self):</highlight></codeline>
+<codeline lineno="50"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>self.wav_in.close()</highlight></codeline>
+<codeline lineno="51"><highlight class="normal"></highlight></codeline>
+<codeline lineno="52" refid="namespacelv2__apply_1ab568c733dc18b381a5f4a7eaba08238d" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal"><ref refid="namespacelv2__apply_1ab568c733dc18b381a5f4a7eaba08238d" kindref="member">main</ref>():</highlight></codeline>
+<codeline lineno="53"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>Read<sp/>command<sp/>line<sp/>arguments</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="54"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>len(sys.argv)<sp/>!=<sp/>4:</highlight></codeline>
+<codeline lineno="55"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>print(</highlight><highlight class="stringliteral">&apos;USAGE:<sp/>lv2_apply.py<sp/>PLUGIN_URI<sp/>INPUT_WAV<sp/>OUTPUT_WAV&apos;</highlight><highlight class="normal">)</highlight></codeline>
+<codeline lineno="56"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>sys.exit(1)</highlight></codeline>
+<codeline lineno="57"><highlight class="normal"></highlight></codeline>
+<codeline lineno="58"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>Initialise<sp/>Lilv</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="59"><highlight class="normal"><sp/><sp/><sp/><sp/>world<sp/>=<sp/>lilv.World()</highlight></codeline>
+<codeline lineno="60"><highlight class="normal"><sp/><sp/><sp/><sp/>world.load_all()</highlight></codeline>
+<codeline lineno="61"><highlight class="normal"></highlight></codeline>
+<codeline lineno="62"><highlight class="normal"><sp/><sp/><sp/><sp/>plugin_uri<sp/><sp/><sp/>=<sp/>sys.argv[1]</highlight></codeline>
+<codeline lineno="63"><highlight class="normal"><sp/><sp/><sp/><sp/>wav_in_path<sp/><sp/>=<sp/>sys.argv[2]</highlight></codeline>
+<codeline lineno="64"><highlight class="normal"><sp/><sp/><sp/><sp/>wav_out_path<sp/>=<sp/>sys.argv[3]</highlight></codeline>
+<codeline lineno="65"><highlight class="normal"></highlight></codeline>
+<codeline lineno="66"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>Find<sp/>plugin</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="67"><highlight class="normal"><sp/><sp/><sp/><sp/>plugin_uri_node<sp/>=<sp/>world.new_uri(plugin_uri)</highlight></codeline>
+<codeline lineno="68"><highlight class="normal"><sp/><sp/><sp/><sp/>plugin<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>=<sp/>world.get_all_plugins().get_by_uri(plugin_uri_node)</highlight></codeline>
+<codeline lineno="69"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordflow">not</highlight><highlight class="normal"><sp/>plugin:</highlight></codeline>
+<codeline lineno="70"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>print(</highlight><highlight class="stringliteral">&quot;Unknown<sp/>plugin<sp/>`%s&apos;\n&quot;</highlight><highlight class="normal"><sp/>%<sp/>plugin_uri)</highlight></codeline>
+<codeline lineno="71"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>sys.exit(1)</highlight></codeline>
+<codeline lineno="72"><highlight class="normal"></highlight></codeline>
+<codeline lineno="73"><highlight class="normal"><sp/><sp/><sp/><sp/>lv2_InputPort<sp/><sp/><sp/>=<sp/>world.new_uri(lilv.LILV_URI_INPUT_PORT)</highlight></codeline>
+<codeline lineno="74"><highlight class="normal"><sp/><sp/><sp/><sp/>lv2_OutputPort<sp/><sp/>=<sp/>world.new_uri(lilv.LILV_URI_OUTPUT_PORT)</highlight></codeline>
+<codeline lineno="75"><highlight class="normal"><sp/><sp/><sp/><sp/>lv2_AudioPort<sp/><sp/><sp/>=<sp/>world.new_uri(lilv.LILV_URI_AUDIO_PORT)</highlight></codeline>
+<codeline lineno="76"><highlight class="normal"><sp/><sp/><sp/><sp/>lv2_ControlPort<sp/>=<sp/>world.new_uri(lilv.LILV_URI_CONTROL_PORT)</highlight></codeline>
+<codeline lineno="77"><highlight class="normal"><sp/><sp/><sp/><sp/>lv2_default<sp/><sp/><sp/><sp/><sp/>=<sp/>world.new_uri(</highlight><highlight class="stringliteral">&quot;http://lv2plug.in/ns/lv2core#default&quot;</highlight><highlight class="normal">)</highlight></codeline>
+<codeline lineno="78"><highlight class="normal"></highlight></codeline>
+<codeline lineno="79"><highlight class="normal"><sp/><sp/><sp/><sp/>n_audio_in<sp/><sp/>=<sp/>plugin.get_num_ports_of_class(lv2_InputPort,<sp/><sp/>lv2_AudioPort)</highlight></codeline>
+<codeline lineno="80"><highlight class="normal"><sp/><sp/><sp/><sp/>n_audio_out<sp/>=<sp/>plugin.get_num_ports_of_class(lv2_OutputPort,<sp/>lv2_AudioPort)</highlight></codeline>
+<codeline lineno="81"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>n_audio_out<sp/>==<sp/>0:</highlight></codeline>
+<codeline lineno="82"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>print(</highlight><highlight class="stringliteral">&quot;Plugin<sp/>has<sp/>no<sp/>audio<sp/>outputs\n&quot;</highlight><highlight class="normal">)</highlight></codeline>
+<codeline lineno="83"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>sys.exit(1)</highlight></codeline>
+<codeline lineno="84"><highlight class="normal"></highlight></codeline>
+<codeline lineno="85"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>Open<sp/>input<sp/>file</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="86"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">try</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="87"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>wav_in<sp/>=<sp/><ref refid="classlv2__apply_1_1_wav_file" kindref="compound">WavFile</ref>(wav_in_path)</highlight></codeline>
+<codeline lineno="88"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">except</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="89"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>print(</highlight><highlight class="stringliteral">&quot;Failed<sp/>to<sp/>open<sp/>input<sp/>`%s&apos;\n&quot;</highlight><highlight class="normal"><sp/>%<sp/>wav_in_path)</highlight></codeline>
+<codeline lineno="90"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>sys.exit(1)</highlight></codeline>
+<codeline lineno="91"><highlight class="normal"></highlight></codeline>
+<codeline lineno="92"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>wav_in.nchannels<sp/>!=<sp/>n_audio_in:</highlight></codeline>
+<codeline lineno="93"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>print(</highlight><highlight class="stringliteral">&quot;Input<sp/>has<sp/>%d<sp/>channels,<sp/>but<sp/>plugin<sp/>has<sp/>%d<sp/>audio<sp/>inputs\n&quot;</highlight><highlight class="normal"><sp/>%<sp/>(</highlight></codeline>
+<codeline lineno="94"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>wav_in.nchannels,<sp/>n_audio_in))</highlight></codeline>
+<codeline lineno="95"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>sys.exit(1)</highlight></codeline>
+<codeline lineno="96"><highlight class="normal"></highlight></codeline>
+<codeline lineno="97"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>Open<sp/>output<sp/>file</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="98"><highlight class="normal"><sp/><sp/><sp/><sp/>wav_out<sp/>=<sp/>wave.open(wav_out_path,<sp/></highlight><highlight class="stringliteral">&apos;w&apos;</highlight><highlight class="normal">)</highlight></codeline>
+<codeline lineno="99"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordflow">not</highlight><highlight class="normal"><sp/>wav_out:</highlight></codeline>
+<codeline lineno="100"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>print(</highlight><highlight class="stringliteral">&quot;Failed<sp/>to<sp/>open<sp/>output<sp/>`%s&apos;\n&quot;</highlight><highlight class="normal"><sp/>%<sp/>wav_out_path)</highlight></codeline>
+<codeline lineno="101"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>sys.exit(1)</highlight></codeline>
+<codeline lineno="102"><highlight class="normal"></highlight></codeline>
+<codeline lineno="103"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>Set<sp/>output<sp/>file<sp/>to<sp/>same<sp/>format<sp/>as<sp/>input<sp/>(except<sp/>possibly<sp/>nchannels)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="104"><highlight class="normal"><sp/><sp/><sp/><sp/>wav_out.setparams(wav_in.wav_in.getparams())</highlight></codeline>
+<codeline lineno="105"><highlight class="normal"><sp/><sp/><sp/><sp/>wav_out.setnchannels(n_audio_out)</highlight></codeline>
+<codeline lineno="106"><highlight class="normal"></highlight></codeline>
+<codeline lineno="107"><highlight class="normal"><sp/><sp/><sp/><sp/>print(</highlight><highlight class="stringliteral">&apos;%s<sp/>=&gt;<sp/>%s<sp/>=&gt;<sp/>%s<sp/>@<sp/>%d<sp/>Hz&apos;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="108"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>%<sp/>(wav_in_path,<sp/>plugin.get_name(),<sp/>wav_out_path,<sp/>wav_in.framerate))</highlight></codeline>
+<codeline lineno="109"><highlight class="normal"></highlight></codeline>
+<codeline lineno="110"><highlight class="normal"><sp/><sp/><sp/><sp/>instance<sp/>=<sp/>lilv.Instance(plugin,<sp/>wav_in.framerate)</highlight></codeline>
+<codeline lineno="111"><highlight class="normal"></highlight></codeline>
+<codeline lineno="112"><highlight class="normal"><sp/><sp/><sp/><sp/>channels<sp/>=<sp/>wav_in.read()</highlight></codeline>
+<codeline lineno="113"><highlight class="normal"><sp/><sp/><sp/><sp/>wav_in.close()</highlight></codeline>
+<codeline lineno="114"><highlight class="normal"></highlight></codeline>
+<codeline lineno="115"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>Connect<sp/>all<sp/>ports<sp/>to<sp/>buffers.<sp/>NB<sp/>if<sp/>we<sp/>fail<sp/>to<sp/>connect<sp/>any<sp/>buffer,<sp/>lilv</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="116"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>will<sp/>segfault.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="117"><highlight class="normal"><sp/><sp/><sp/><sp/>audio_input_buffers<sp/><sp/><sp/><sp/>=<sp/>[]</highlight></codeline>
+<codeline lineno="118"><highlight class="normal"><sp/><sp/><sp/><sp/>audio_output_buffers<sp/><sp/><sp/>=<sp/>[]</highlight></codeline>
+<codeline lineno="119"><highlight class="normal"><sp/><sp/><sp/><sp/>control_input_buffers<sp/><sp/>=<sp/>[]</highlight></codeline>
+<codeline lineno="120"><highlight class="normal"><sp/><sp/><sp/><sp/>control_output_buffers<sp/>=<sp/>[]</highlight></codeline>
+<codeline lineno="121"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>index<sp/></highlight><highlight class="keywordflow">in</highlight><highlight class="normal"><sp/>range(plugin.get_num_ports()):</highlight></codeline>
+<codeline lineno="122"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>port<sp/>=<sp/>plugin.get_port_by_index(index)</highlight></codeline>
+<codeline lineno="123"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>port.is_a(lv2_InputPort):</highlight></codeline>
+<codeline lineno="124"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>port.is_a(lv2_AudioPort):</highlight></codeline>
+<codeline lineno="125"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>audio_input_buffers.append(numpy.array(channels[len(audio_input_buffers)],<sp/>numpy.float32))</highlight></codeline>
+<codeline lineno="126"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>instance.connect_port(index,<sp/>audio_input_buffers[-1])</highlight></codeline>
+<codeline lineno="127"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">elif</highlight><highlight class="normal"><sp/>port.is_a(lv2_ControlPort):</highlight></codeline>
+<codeline lineno="128"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#if<sp/>port.has_property(lv2_default):<sp/><sp/>#<sp/>Doesn&apos;t<sp/>seem<sp/>to<sp/>work</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="129"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>default<sp/>=<sp/>lilv.lilv_node_as_float(lilv.lilv_nodes_get_first(port.get_value(lv2_default)))</highlight></codeline>
+<codeline lineno="130"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>control_input_buffers.append(numpy.array([default],<sp/>numpy.float32))</highlight></codeline>
+<codeline lineno="131"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>instance.connect_port(index,<sp/>control_input_buffers[-1])</highlight></codeline>
+<codeline lineno="132"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="133"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">raise</highlight><highlight class="normal"><sp/>ValueError(</highlight><highlight class="stringliteral">&quot;Unhandled<sp/>port<sp/>type&quot;</highlight><highlight class="normal">)</highlight></codeline>
+<codeline lineno="134"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">elif</highlight><highlight class="normal"><sp/>port.is_a(lv2_OutputPort):</highlight></codeline>
+<codeline lineno="135"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>port.is_a(lv2_AudioPort):</highlight></codeline>
+<codeline lineno="136"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>audio_output_buffers.append(numpy.array([0]<sp/>*<sp/>wav_in.nframes,<sp/>numpy.float32))</highlight></codeline>
+<codeline lineno="137"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>instance.connect_port(index,<sp/>audio_output_buffers[-1])</highlight></codeline>
+<codeline lineno="138"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">elif</highlight><highlight class="normal"><sp/>port.is_a(lv2_ControlPort):</highlight></codeline>
+<codeline lineno="139"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>control_output_buffers.append(numpy.array([0],<sp/>numpy.float32))</highlight></codeline>
+<codeline lineno="140"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>instance.connect_port(index,<sp/>control_output_buffers[-1])</highlight></codeline>
+<codeline lineno="141"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="142"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">raise</highlight><highlight class="normal"><sp/>ValueError(</highlight><highlight class="stringliteral">&quot;Unhandled<sp/>port<sp/>type&quot;</highlight><highlight class="normal">)</highlight></codeline>
+<codeline lineno="143"><highlight class="normal"></highlight></codeline>
+<codeline lineno="144"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>Run<sp/>the<sp/>plugin:</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="145"><highlight class="normal"><sp/><sp/><sp/><sp/>instance.run(wav_in.nframes)</highlight></codeline>
+<codeline lineno="146"><highlight class="normal"></highlight></codeline>
+<codeline lineno="147"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>Interleave<sp/>output<sp/>buffers:</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="148"><highlight class="normal"><sp/><sp/><sp/><sp/>data<sp/>=<sp/>numpy.dstack(audio_output_buffers).flatten()</highlight></codeline>
+<codeline lineno="149"><highlight class="normal"></highlight></codeline>
+<codeline lineno="150"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>Return<sp/>to<sp/>original<sp/>int<sp/>range:</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="151"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>wav_in.signed:</highlight></codeline>
+<codeline lineno="152"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>data<sp/>=<sp/>data<sp/>*<sp/>float(wav_in.range<sp/>/<sp/>2)</highlight></codeline>
+<codeline lineno="153"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="154"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>data<sp/>=<sp/>(data<sp/>+<sp/>1)<sp/>*<sp/>float(wav_in.range/2)</highlight></codeline>
+<codeline lineno="155"><highlight class="normal"></highlight></codeline>
+<codeline lineno="156"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>Write<sp/>output<sp/>file<sp/>in<sp/>chunks<sp/>to<sp/>stop<sp/>memory<sp/>usage<sp/>getting<sp/>out<sp/>of<sp/>hand:</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="157"><highlight class="normal"><sp/><sp/><sp/><sp/>CHUNK_SIZE<sp/>=<sp/>8192</highlight></codeline>
+<codeline lineno="158"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>chunk<sp/></highlight><highlight class="keywordflow">in</highlight><highlight class="normal"><sp/>numpy.array_split(data,<sp/>CHUNK_SIZE):</highlight></codeline>
+<codeline lineno="159"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>wav_out.writeframes(wave.struct.pack(</highlight><highlight class="stringliteral">&quot;%u%s&quot;</highlight><highlight class="normal"><sp/>%<sp/>(len(chunk),<sp/>wav_in.struct_fmt_code),<sp/>*chunk))</highlight></codeline>
+<codeline lineno="160"><highlight class="normal"><sp/><sp/><sp/><sp/>wav_out.close()</highlight></codeline>
+<codeline lineno="161"><highlight class="normal"></highlight></codeline>
+<codeline lineno="162"><highlight class="normal"></highlight></codeline>
+<codeline lineno="163"><highlight class="normal"></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>__name__<sp/>==<sp/></highlight><highlight class="stringliteral">&quot;__main__&quot;</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="164"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="namespacelv2__apply_1ab568c733dc18b381a5f4a7eaba08238d" kindref="member">main</ref>()</highlight></codeline>
+    </programlisting>
+    <location file="C:/_dev/OpenU/Audacity/audacity/lib-src/lv2/lilv/bindings/python/lv2_apply.py"/>
+  </compounddef>
+</doxygen>

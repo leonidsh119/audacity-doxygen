@@ -1,0 +1,604 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/lib-src/lv2/lilv/src/lilv_internal.h" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/lib-src/lv2/lilv/src/lilv_internal.h \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <stddef\&.h>\fP
+.br
+\fC#include <stdint\&.h>\fP
+.br
+\fC#include <stdlib\&.h>\fP
+.br
+\fC#include <float\&.h>\fP
+.br
+\fC#include <dlfcn\&.h>\fP
+.br
+\fC#include 'serd/serd\&.h'\fP
+.br
+\fC#include 'sord/sord\&.h'\fP
+.br
+\fC#include 'zix/tree\&.h'\fP
+.br
+\fC#include 'lilv_config\&.h'\fP
+.br
+\fC#include 'lilv/lilv\&.h'\fP
+.br
+
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "struct \fBLilvPortImpl\fP"
+.br
+.ti -1c
+.RI "struct \fBLilvSpecImpl\fP"
+.br
+.ti -1c
+.RI "struct \fBLilvHeader\fP"
+.br
+.ti -1c
+.RI "struct \fBLilvLib\fP"
+.br
+.ti -1c
+.RI "struct \fBLilvPluginImpl\fP"
+.br
+.ti -1c
+.RI "struct \fBLilvPluginClassImpl\fP"
+.br
+.ti -1c
+.RI "struct \fBLilvInstancePimpl\fP"
+.br
+.ti -1c
+.RI "struct \fBLilvOptions\fP"
+.br
+.ti -1c
+.RI "struct \fBLilvWorldImpl\fP"
+.br
+.ti -1c
+.RI "struct \fBLilvNodeImpl\fP"
+.br
+.ti -1c
+.RI "struct \fBLilvScalePointImpl\fP"
+.br
+.ti -1c
+.RI "struct \fBLilvUIImpl\fP"
+.br
+.in -1c
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBFOREACH_MATCH\fP(iter)   \fBfor\fP (; !\fBsord_iter_end\fP(iter); \fBsord_iter_next\fP(iter))"
+.br
+.ti -1c
+.RI "#define \fBLILV_ERROR\fP(\fBstr\fP)          "
+.br
+.ti -1c
+.RI "#define \fBLILV_ERRORF\fP(fmt, \&.\&.\&.)"
+.br
+.ti -1c
+.RI "#define \fBLILV_WARN\fP(\fBstr\fP)            "
+.br
+.ti -1c
+.RI "#define \fBLILV_WARNF\fP(fmt, \&.\&.\&.)"
+.br
+.in -1c
+.SS "Typedefs"
+
+.in +1c
+.ti -1c
+.RI "typedef struct \fBLilvSpecImpl\fP \fBLilvSpec\fP"
+.br
+.ti -1c
+.RI "typedef \fBvoid\fP \fBLilvCollection\fP"
+.br
+.ti -1c
+.RI "typedef \fBvoid\fP(* \fBLilvVoidFunc\fP) (\fBvoid\fP)"
+.br
+.in -1c
+.SS "Enumerations"
+
+.in +1c
+.ti -1c
+.RI "enum \fBLilvNodeType\fP { \fBLILV_VALUE_URI\fP, \fBLILV_VALUE_STRING\fP, \fBLILV_VALUE_INT\fP, \fBLILV_VALUE_FLOAT\fP, \fBLILV_VALUE_BOOL\fP, \fBLILV_VALUE_BLANK\fP, \fBLILV_VALUE_BLOB\fP }"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBLilvPort\fP * \fBlilv_port_new\fP (\fBLilvWorld\fP *world, \fBconst\fP \fBSordNode\fP *\fBnode\fP, \fBuint32_t\fP index, \fBconst\fP char *symbol)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBlilv_port_free\fP (\fBconst\fP \fBLilvPlugin\fP *plugin, \fBLilvPort\fP *port)"
+.br
+.ti -1c
+.RI "\fBLilvPlugin\fP * \fBlilv_plugin_new\fP (\fBLilvWorld\fP *world, \fBLilvNode\fP *\fBuri\fP, \fBLilvNode\fP *bundle_uri)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBlilv_plugin_load_if_necessary\fP (\fBconst\fP \fBLilvPlugin\fP *\fBp\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBlilv_plugin_free\fP (\fBLilvPlugin\fP *plugin)"
+.br
+.ti -1c
+.RI "\fBLilvNode\fP * \fBlilv_plugin_get_unique\fP (\fBconst\fP \fBLilvPlugin\fP *\fBp\fP, \fBconst\fP \fBSordNode\fP *subject, \fBconst\fP \fBSordNode\fP *\fBpredicate\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBlilv_collection_free\fP (\fBLilvCollection\fP *collection)"
+.br
+.ti -1c
+.RI "unsigned \fBlilv_collection_size\fP (\fBconst\fP \fBLilvCollection\fP *collection)"
+.br
+.ti -1c
+.RI "\fBLilvIter\fP * \fBlilv_collection_begin\fP (\fBconst\fP \fBLilvCollection\fP *collection)"
+.br
+.ti -1c
+.RI "\fBvoid\fP * \fBlilv_collection_get\fP (\fBconst\fP \fBLilvCollection\fP *collection, \fBconst\fP \fBLilvIter\fP *\fBi\fP)"
+.br
+.ti -1c
+.RI "\fBLilvPluginClass\fP * \fBlilv_plugin_class_new\fP (\fBLilvWorld\fP *world, \fBconst\fP \fBSordNode\fP *parent_uri, \fBconst\fP \fBSordNode\fP *\fBuri\fP, \fBconst\fP char *\fBlabel\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBlilv_plugin_class_free\fP (\fBLilvPluginClass\fP *plugin_class)"
+.br
+.ti -1c
+.RI "\fBLilvLib\fP * \fBlilv_lib_open\fP (\fBLilvWorld\fP *world, \fBconst\fP \fBLilvNode\fP *\fBuri\fP, \fBconst\fP char *bundle_path, \fBconst\fP \fBLV2_Feature\fP *\fBconst\fP *features)"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBLV2_Descriptor\fP * \fBlilv_lib_get_plugin\fP (\fBLilvLib\fP *lib, \fBuint32_t\fP index)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBlilv_lib_close\fP (\fBLilvLib\fP *lib)"
+.br
+.ti -1c
+.RI "\fBLilvNodes\fP * \fBlilv_nodes_new\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLilvPlugins\fP * \fBlilv_plugins_new\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLilvScalePoints\fP * \fBlilv_scale_points_new\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLilvPluginClasses\fP * \fBlilv_plugin_classes_new\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLilvUIs\fP * \fBlilv_uis_new\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBuint8_t\fP * \fBlilv_world_blank_node_prefix\fP (\fBLilvWorld\fP *world)"
+.br
+.ti -1c
+.RI "\fBSerdStatus\fP \fBlilv_world_load_file\fP (\fBLilvWorld\fP *world, \fBSerdReader\fP *reader, \fBconst\fP \fBLilvNode\fP *\fBuri\fP)"
+.br
+.ti -1c
+.RI "\fBSerdStatus\fP \fBlilv_world_load_graph\fP (\fBLilvWorld\fP *world, \fBSordNode\fP *graph, \fBconst\fP \fBLilvNode\fP *\fBuri\fP)"
+.br
+.ti -1c
+.RI "\fBLilvUI\fP * \fBlilv_ui_new\fP (\fBLilvWorld\fP *world, \fBLilvNode\fP *\fBuri\fP, \fBLilvNode\fP *type_uri, \fBLilvNode\fP *binary_uri)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBlilv_ui_free\fP (\fBLilvUI\fP *ui)"
+.br
+.ti -1c
+.RI "\fBLilvNode\fP * \fBlilv_node_new\fP (\fBLilvWorld\fP *world, \fBLilvNodeType\fP type, \fBconst\fP char *val)"
+.br
+.ti -1c
+.RI "\fBLilvNode\fP * \fBlilv_node_new_from_node\fP (\fBLilvWorld\fP *world, \fBconst\fP \fBSordNode\fP *\fBnode\fP)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBlilv_header_compare_by_uri\fP (\fBconst\fP \fBvoid\fP *\fBa\fP, \fBconst\fP \fBvoid\fP *\fBb\fP, \fBvoid\fP *user_data)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBlilv_lib_compare\fP (\fBconst\fP \fBvoid\fP *\fBa\fP, \fBconst\fP \fBvoid\fP *\fBb\fP, \fBvoid\fP *user_data)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBlilv_ptr_cmp\fP (\fBconst\fP \fBvoid\fP *\fBa\fP, \fBconst\fP \fBvoid\fP *\fBb\fP, \fBvoid\fP *user_data)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBlilv_resource_node_cmp\fP (\fBconst\fP \fBvoid\fP *\fBa\fP, \fBconst\fP \fBvoid\fP *\fBb\fP, \fBvoid\fP *user_data)"
+.br
+.ti -1c
+.RI "struct \fBLilvHeader\fP * \fBlilv_collection_get_by_uri\fP (\fBconst\fP \fBZixTree\fP *seq, \fBconst\fP \fBLilvNode\fP *\fBuri\fP)"
+.br
+.ti -1c
+.RI "\fBLilvScalePoint\fP * \fBlilv_scale_point_new\fP (\fBLilvNode\fP *\fBvalue\fP, \fBLilvNode\fP *\fBlabel\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBlilv_scale_point_free\fP (\fBLilvScalePoint\fP *point)"
+.br
+.ti -1c
+.RI "\fBSordIter\fP * \fBlilv_world_query_internal\fP (\fBLilvWorld\fP *world, \fBconst\fP \fBSordNode\fP *subject, \fBconst\fP \fBSordNode\fP *\fBpredicate\fP, \fBconst\fP \fBSordNode\fP *object)"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBlilv_world_ask_internal\fP (\fBLilvWorld\fP *world, \fBconst\fP \fBSordNode\fP *subject, \fBconst\fP \fBSordNode\fP *\fBpredicate\fP, \fBconst\fP \fBSordNode\fP *object)"
+.br
+.ti -1c
+.RI "\fBLilvNodes\fP * \fBlilv_world_find_nodes_internal\fP (\fBLilvWorld\fP *world, \fBconst\fP \fBSordNode\fP *subject, \fBconst\fP \fBSordNode\fP *\fBpredicate\fP, \fBconst\fP \fBSordNode\fP *object)"
+.br
+.ti -1c
+.RI "\fBLilvNodes\fP * \fBlilv_nodes_from_stream_objects\fP (\fBLilvWorld\fP *w, \fBSordIter\fP *stream, \fBSordQuadIndex\fP field)"
+.br
+.ti -1c
+.RI "char * \fBlilv_strjoin\fP (\fBconst\fP char *first,\&.\&.\&.)"
+.br
+.ti -1c
+.RI "char * \fBlilv_strdup\fP (\fBconst\fP char *\fBstr\fP)"
+.br
+.ti -1c
+.RI "char * \fBlilv_get_lang\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "char * \fBlilv_expand\fP (\fBconst\fP char *path)"
+.br
+.ti -1c
+.RI "char * \fBlilv_dirname\fP (\fBconst\fP char *path)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBlilv_copy_file\fP (\fBconst\fP char *src, \fBconst\fP char *dst)"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBlilv_path_exists\fP (\fBconst\fP char *path, \fBvoid\fP *ignored)"
+.br
+.ti -1c
+.RI "char * \fBlilv_path_absolute\fP (\fBconst\fP char *path)"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBlilv_path_is_absolute\fP (\fBconst\fP char *path)"
+.br
+.ti -1c
+.RI "char * \fBlilv_get_latest_copy\fP (\fBconst\fP char *path, \fBconst\fP char *copy_path)"
+.br
+.ti -1c
+.RI "char * \fBlilv_path_relative_to\fP (\fBconst\fP char *path, \fBconst\fP char *\fBbase\fP)"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBlilv_path_is_child\fP (\fBconst\fP char *path, \fBconst\fP char *dir)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBlilv_flock\fP (FILE *file, \fBbool\fP lock)"
+.br
+.ti -1c
+.RI "char * \fBlilv_realpath\fP (\fBconst\fP char *path)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBlilv_symlink\fP (\fBconst\fP char *oldpath, \fBconst\fP char *newpath)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBlilv_mkdir_p\fP (\fBconst\fP char *path)"
+.br
+.ti -1c
+.RI "char * \fBlilv_path_join\fP (\fBconst\fP char *\fBa\fP, \fBconst\fP char *\fBb\fP)"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBlilv_file_equals\fP (\fBconst\fP char *a_path, \fBconst\fP char *b_path)"
+.br
+.ti -1c
+.RI "char * \fBlilv_find_free_path\fP (\fBconst\fP char *in_path, \fBbool\fP(*exists)(\fBconst\fP char *, \fBvoid\fP *), \fBvoid\fP *user_data)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBlilv_dir_for_each\fP (\fBconst\fP char *path, \fBvoid\fP *\fBdata\fP, \fBvoid\fP(*\fBf\fP)(\fBconst\fP char *path, \fBconst\fP char *\fBname\fP, \fBvoid\fP *\fBdata\fP))"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define FOREACH_MATCH(iter)   \fBfor\fP (; !\fBsord_iter_end\fP(iter); \fBsord_iter_next\fP(iter))"
+
+.PP
+Definition at line 329 of file lilv_internal\&.h\&.
+.SS "#define LILV_ERROR(\fBstr\fP)"
+\fBValue:\fP
+.PP
+.nf
+fprintf(stderr, "%s(): error: " str, \
+                                      __func__)
+.fi
+.PP
+Definition at line 383 of file lilv_internal\&.h\&.
+.SS "#define LILV_ERRORF(fmt,  \&.\&.\&.)"
+\fBValue:\fP
+.PP
+.nf
+fprintf(stderr, "%s(): error: " fmt, \
+                                      __func__, __VA_ARGS__)
+.fi
+.PP
+Definition at line 385 of file lilv_internal\&.h\&.
+.SS "#define LILV_WARN(\fBstr\fP)"
+\fBValue:\fP
+.PP
+.nf
+fprintf(stderr, "%s(): warning: " str, \
+                                      __func__)
+.fi
+.PP
+Definition at line 387 of file lilv_internal\&.h\&.
+.SS "#define LILV_WARNF(fmt,  \&.\&.\&.)"
+\fBValue:\fP
+.PP
+.nf
+fprintf(stderr, "%s(): warning: " fmt, \
+                                      __func__, __VA_ARGS__)
+.fi
+.PP
+Definition at line 389 of file lilv_internal\&.h\&.
+.SH "Typedef Documentation"
+.PP 
+.SS "typedef \fBvoid\fP \fBLilvCollection\fP"
+
+.PP
+Definition at line 64 of file lilv_internal\&.h\&.
+.SS "typedef struct \fBLilvSpecImpl\fP \fBLilvSpec\fP"
+
+.PP
+Definition at line 62 of file lilv_internal\&.h\&.
+.SS "typedef \fBvoid\fP(* LilvVoidFunc) (\fBvoid\fP)"
+
+.PP
+Definition at line 364 of file lilv_internal\&.h\&.
+.SH "Enumeration Type Documentation"
+.PP 
+.SS "enum \fBLilvNodeType\fP"
+
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fILILV_VALUE_URI \fP\fP
+.TP
+\fB\fILILV_VALUE_STRING \fP\fP
+.TP
+\fB\fILILV_VALUE_INT \fP\fP
+.TP
+\fB\fILILV_VALUE_FLOAT \fP\fP
+.TP
+\fB\fILILV_VALUE_BOOL \fP\fP
+.TP
+\fB\fILILV_VALUE_BLANK \fP\fP
+.TP
+\fB\fILILV_VALUE_BLOB \fP\fP
+.PP
+Definition at line 195 of file lilv_internal\&.h\&.
+.SH "Function Documentation"
+.PP 
+.SS "\fBLilvIter\fP* lilv_collection_begin (\fBconst\fP \fBLilvCollection\fP * collection)"
+
+.PP
+Definition at line 55 of file collections\&.c\&.
+.SS "\fBvoid\fP lilv_collection_free (\fBLilvCollection\fP * collection)"
+
+.PP
+Definition at line 42 of file collections\&.c\&.
+.SS "\fBvoid\fP* lilv_collection_get (\fBconst\fP \fBLilvCollection\fP * collection, \fBconst\fP \fBLilvIter\fP * i)"
+
+.PP
+Definition at line 61 of file collections\&.c\&.
+.SS "struct \fBLilvHeader\fP* lilv_collection_get_by_uri (\fBconst\fP \fBZixTree\fP * const_seq, \fBconst\fP \fBLilvNode\fP * uri)"
+Get an element of a collection of any object with an \fBLilvHeader\fP by URI\&. 
+.PP
+Definition at line 306 of file world\&.c\&.
+.SS "unsigned lilv_collection_size (\fBconst\fP \fBLilvCollection\fP * collection)"
+
+.PP
+Definition at line 49 of file collections\&.c\&.
+.SS "\fBint\fP lilv_copy_file (\fBconst\fP char * src, \fBconst\fP char * dst)"
+
+.PP
+Definition at line 266 of file util\&.c\&.
+.SS "\fBvoid\fP lilv_dir_for_each (\fBconst\fP char * path, \fBvoid\fP * data, \fBvoid\fP(*)(\fBconst\fP char *path, \fBconst\fP char *\fBname\fP, \fBvoid\fP *\fBdata\fP) f)"
+
+.PP
+Definition at line 503 of file util\&.c\&.
+.SS "char* lilv_dirname (\fBconst\fP char * path)"
+
+.PP
+Definition at line 224 of file util\&.c\&.
+.SS "char* lilv_expand (\fBconst\fP char * path)"
+Expand variables (e\&.g\&. POSIX ~ or $FOO, Windows FOO%) in \fCpath\fP\&. 
+.PP
+Definition at line 170 of file util\&.c\&.
+.SS "\fBbool\fP lilv_file_equals (\fBconst\fP char * a_path, \fBconst\fP char * b_path)"
+
+.PP
+Definition at line 564 of file util\&.c\&.
+.SS "char* lilv_find_free_path (\fBconst\fP char * in_path, \fBbool\fP(*)(\fBconst\fP char *, \fBvoid\fP *) exists, \fBvoid\fP * user_data)"
+
+.PP
+Definition at line 248 of file util\&.c\&.
+.SS "\fBint\fP lilv_flock (FILE * file, \fBbool\fP lock)"
+
+.PP
+Definition at line 493 of file util\&.c\&.
+.SS "char* lilv_get_lang (\fBvoid\fP)"
+Return the current LANG converted to Turtle (i\&.e\&. RFC3066) style\&. For example, if LANG is set to 'en_CA\&.utf-8', this returns 'en-ca'\&. 
+.PP
+Definition at line 111 of file util\&.c\&.
+.SS "char* lilv_get_latest_copy (\fBconst\fP char * path, \fBconst\fP char * copy_path)"
+Return the latest copy of the file at \fCpath\fP that is newer\&. 
+.PP
+Definition at line 397 of file util\&.c\&.
+.SS "\fBint\fP lilv_header_compare_by_uri (\fBconst\fP \fBvoid\fP * a, \fBconst\fP \fBvoid\fP * b, \fBvoid\fP * user_data)"
+Comparator for sequences (e\&.g\&. world->plugins)\&. 
+.PP
+Definition at line 279 of file world\&.c\&.
+.SS "\fBvoid\fP lilv_lib_close (\fBLilvLib\fP * lib)"
+
+.PP
+Definition at line 101 of file lib\&.c\&.
+.SS "\fBint\fP lilv_lib_compare (\fBconst\fP \fBvoid\fP * a, \fBconst\fP \fBvoid\fP * b, \fBvoid\fP * user_data)"
+Comparator for libraries (world->libs)\&.
+.PP
+Libraries do have a \fBLilvHeader\fP, but we must also compare the bundle to handle the case where the same library is loaded with different bundles, and consequently different contents (mainly plugins)\&. 
+.PP
+Definition at line 295 of file world\&.c\&.
+.SS "\fBconst\fP \fBLV2_Descriptor\fP* lilv_lib_get_plugin (\fBLilvLib\fP * lib, \fBuint32_t\fP index)"
+
+.PP
+Definition at line 87 of file lib\&.c\&.
+.SS "\fBLilvLib\fP* lilv_lib_open (\fBLilvWorld\fP * world, \fBconst\fP \fBLilvNode\fP * uri, \fBconst\fP char * bundle_path, \fBconst\fP \fBLV2_Feature\fP *\fBconst\fP * features)"
+
+.PP
+Definition at line 20 of file lib\&.c\&.
+.SS "\fBint\fP lilv_mkdir_p (\fBconst\fP char * path)"
+
+.PP
+Definition at line 531 of file util\&.c\&.
+.SS "\fBLilvNode\fP* lilv_node_new (\fBLilvWorld\fP * world, \fBLilvNodeType\fP type, \fBconst\fP char * str)"
+Note that if \fCtype\fP is numeric or boolean, the returned value is corrupt until lilv_node_set_numerics_from_string is called\&. It is not automatically called from here to avoid overhead and imprecision when the exact string value is known\&. 
+.PP
+Definition at line 53 of file node\&.c\&.
+.SS "\fBLilvNode\fP* lilv_node_new_from_node (\fBLilvWorld\fP * world, \fBconst\fP \fBSordNode\fP * node)"
+Create a new LilvNode from \fCnode\fP, or return NULL if impossible 
+.PP
+Definition at line 98 of file node\&.c\&.
+.SS "\fBLilvNodes\fP* lilv_nodes_from_stream_objects (\fBLilvWorld\fP * w, \fBSordIter\fP * stream, \fBSordQuadIndex\fP field)"
+
+.PP
+Definition at line 119 of file query\&.c\&.
+.SS "\fBLilvNodes\fP* lilv_nodes_new (\fBvoid\fP)"
+
+.PP
+Definition at line 77 of file collections\&.c\&.
+.SS "char* lilv_path_absolute (\fBconst\fP char * path)"
+
+.PP
+Definition at line 319 of file util\&.c\&.
+.SS "\fBbool\fP lilv_path_exists (\fBconst\fP char * path, \fBvoid\fP * ignored)"
+
+.PP
+Definition at line 242 of file util\&.c\&.
+.SS "\fBbool\fP lilv_path_is_absolute (\fBconst\fP char * path)"
+
+.PP
+Definition at line 303 of file util\&.c\&.
+.SS "\fBbool\fP lilv_path_is_child (\fBconst\fP char * path, \fBconst\fP char * dir)"
+
+.PP
+Definition at line 482 of file util\&.c\&.
+.SS "char* lilv_path_join (\fBconst\fP char * a, \fBconst\fP char * b)"
+
+.PP
+Definition at line 332 of file util\&.c\&.
+.SS "char* lilv_path_relative_to (\fBconst\fP char * path, \fBconst\fP char * base)"
+
+.PP
+Definition at line 442 of file util\&.c\&.
+.SS "\fBvoid\fP lilv_plugin_class_free (\fBLilvPluginClass\fP * plugin_class)"
+
+.PP
+Definition at line 43 of file pluginclass\&.c\&.
+.SS "\fBLilvPluginClass\fP* lilv_plugin_class_new (\fBLilvWorld\fP * world, \fBconst\fP \fBSordNode\fP * parent_uri, \fBconst\fP \fBSordNode\fP * uri, \fBconst\fP char * label)"
+
+.PP
+Definition at line 24 of file pluginclass\&.c\&.
+.SS "\fBLilvPluginClasses\fP* lilv_plugin_classes_new (\fBvoid\fP)"
+
+.PP
+Definition at line 91 of file collections\&.c\&.
+.SS "\fBvoid\fP lilv_plugin_free (\fBLilvPlugin\fP * plugin)"
+
+.PP
+Definition at line 72 of file plugin\&.c\&.
+.SS "\fBLilvNode\fP* lilv_plugin_get_unique (\fBconst\fP \fBLilvPlugin\fP * p, \fBconst\fP \fBSordNode\fP * subject, \fBconst\fP \fBSordNode\fP * predicate)"
+
+.PP
+Definition at line 122 of file plugin\&.c\&.
+.SS "\fBvoid\fP lilv_plugin_load_if_necessary (\fBconst\fP \fBLilvPlugin\fP * p)"
+
+.PP
+Definition at line 321 of file plugin\&.c\&.
+.SS "\fBLilvPlugin\fP* lilv_plugin_new (\fBLilvWorld\fP * world, \fBLilvNode\fP * uri, \fBLilvNode\fP * bundle_uri)"
+Ownership of \fCuri\fP is taken 
+.PP
+Definition at line 37 of file plugin\&.c\&.
+.SS "\fBLilvPlugins\fP* lilv_plugins_new (\fBvoid\fP)"
+
+.PP
+Definition at line 116 of file collections\&.c\&.
+.SS "\fBvoid\fP lilv_port_free (\fBconst\fP \fBLilvPlugin\fP * plugin, \fBLilvPort\fP * port)"
+
+.PP
+Definition at line 43 of file port\&.c\&.
+.SS "\fBLilvPort\fP* lilv_port_new (\fBLilvWorld\fP * world, \fBconst\fP \fBSordNode\fP * node, \fBuint32_t\fP index, \fBconst\fP char * symbol)"
+
+.PP
+Definition at line 29 of file port\&.c\&.
+.SS "\fBint\fP lilv_ptr_cmp (\fBconst\fP \fBvoid\fP * a, \fBconst\fP \fBvoid\fP * b, \fBvoid\fP * user_data)"
+
+.PP
+Definition at line 20 of file collections\&.c\&.
+.SS "char* lilv_realpath (\fBconst\fP char * path)"
+
+.PP
+Definition at line 411 of file util\&.c\&.
+.SS "\fBint\fP lilv_resource_node_cmp (\fBconst\fP \fBvoid\fP * a, \fBconst\fP \fBvoid\fP * b, \fBvoid\fP * user_data)"
+
+.PP
+Definition at line 26 of file collections\&.c\&.
+.SS "\fBvoid\fP lilv_scale_point_free (\fBLilvScalePoint\fP * point)"
+
+.PP
+Definition at line 30 of file scalepoint\&.c\&.
+.SS "\fBLilvScalePoint\fP* lilv_scale_point_new (\fBLilvNode\fP * value, \fBLilvNode\fP * label)"
+Ownership of value and label is taken 
+.PP
+Definition at line 21 of file scalepoint\&.c\&.
+.SS "\fBLilvScalePoints\fP* lilv_scale_points_new (\fBvoid\fP)"
+
+.PP
+Definition at line 70 of file collections\&.c\&.
+.SS "char* lilv_strdup (\fBconst\fP char * str)"
+
+.PP
+Definition at line 89 of file util\&.c\&.
+.SS "char* lilv_strjoin (\fBconst\fP char * first,  \&.\&.\&.)"
+
+.PP
+Definition at line 57 of file util\&.c\&.
+.SS "\fBint\fP lilv_symlink (\fBconst\fP char * oldpath, \fBconst\fP char * newpath)"
+
+.PP
+Definition at line 424 of file util\&.c\&.
+.SS "\fBvoid\fP lilv_ui_free (\fBLilvUI\fP * ui)"
+
+.PP
+Definition at line 52 of file ui\&.c\&.
+.SS "\fBLilvUI\fP* lilv_ui_new (\fBLilvWorld\fP * world, \fBLilvNode\fP * uri, \fBLilvNode\fP * type_uri, \fBLilvNode\fP * binary_uri)"
+
+.PP
+Definition at line 24 of file ui\&.c\&.
+.SS "\fBLilvUIs\fP* lilv_uis_new (\fBvoid\fP)"
+
+.PP
+Definition at line 84 of file collections\&.c\&.
+.SS "\fBbool\fP lilv_world_ask_internal (\fBLilvWorld\fP * world, \fBconst\fP \fBSordNode\fP * subject, \fBconst\fP \fBSordNode\fP * predicate, \fBconst\fP \fBSordNode\fP * object)"
+
+.PP
+Definition at line 226 of file world\&.c\&.
+.SS "\fBconst\fP \fBuint8_t\fP* lilv_world_blank_node_prefix (\fBLilvWorld\fP * world)"
+
+.PP
+Definition at line 270 of file world\&.c\&.
+.SS "\fBLilvNodes\fP* lilv_world_find_nodes_internal (\fBLilvWorld\fP * world, \fBconst\fP \fBSordNode\fP * subject, \fBconst\fP \fBSordNode\fP * predicate, \fBconst\fP \fBSordNode\fP * object)"
+
+.PP
+Definition at line 245 of file world\&.c\&.
+.SS "\fBSerdStatus\fP lilv_world_load_file (\fBLilvWorld\fP * world, \fBSerdReader\fP * reader, \fBconst\fP \fBLilvNode\fP * uri)"
+
+.PP
+Definition at line 797 of file world\&.c\&.
+.SS "\fBSerdStatus\fP lilv_world_load_graph (\fBLilvWorld\fP * world, \fBSordNode\fP * graph, \fBconst\fP \fBLilvNode\fP * uri)"
+
+.PP
+Definition at line 409 of file world\&.c\&.
+.SS "\fBSordIter\fP* lilv_world_query_internal (\fBLilvWorld\fP * world, \fBconst\fP \fBSordNode\fP * subject, \fBconst\fP \fBSordNode\fP * predicate, \fBconst\fP \fBSordNode\fP * object)"
+
+.PP
+Definition at line 217 of file world\&.c\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

@@ -1,0 +1,213 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="lookup_8c" kind="file" language="C++">
+    <compoundname>lookup.c</compoundname>
+    <includes local="no">math.h</includes>
+    <includes refid="lookup_8h" local="yes">lookup.h</includes>
+    <includes refid="lookup__data_8h" local="yes">lookup_data.h</includes>
+    <includes refid="os_8h" local="yes">os.h</includes>
+    <includes refid="misc_8h" local="yes">misc.h</includes>
+    <incdepgraph>
+      <node id="22961">
+        <label>sys/types.h</label>
+        <link refid="lib-src_2libvorbis_2macos_2compat_2sys_2_types_8h"/>
+        <childnode refid="22962" relation="include">
+        </childnode>
+        <childnode refid="22963" relation="include">
+        </childnode>
+        <childnode refid="22964" relation="include">
+        </childnode>
+      </node>
+      <node id="22960">
+        <label>stdint.h</label>
+      </node>
+      <node id="22965">
+        <label>misc.h</label>
+        <link refid="misc_8h"/>
+        <childnode refid="22966" relation="include">
+        </childnode>
+      </node>
+      <node id="22966">
+        <label>vorbis/codec.h</label>
+        <link refid="codec_8h"/>
+        <childnode refid="22967" relation="include">
+        </childnode>
+      </node>
+      <node id="22968">
+        <label>stddef.h</label>
+      </node>
+      <node id="22963">
+        <label>alloca.h</label>
+      </node>
+      <node id="22957">
+        <label>ogg/os_types.h</label>
+        <link refid="os__types_8h"/>
+        <childnode refid="22958" relation="include">
+        </childnode>
+      </node>
+      <node id="22962">
+        <label>MacTypes.h</label>
+      </node>
+      <node id="22964">
+        <label>string.h</label>
+      </node>
+      <node id="22967">
+        <label>ogg/ogg.h</label>
+        <link refid="ogg_8h"/>
+        <childnode refid="22968" relation="include">
+        </childnode>
+        <childnode refid="22957" relation="include">
+        </childnode>
+      </node>
+      <node id="22953">
+        <label>math.h</label>
+      </node>
+      <node id="22955">
+        <label>lookup_data.h</label>
+        <link refid="lookup__data_8h"/>
+      </node>
+      <node id="22956">
+        <label>os.h</label>
+        <link refid="os_8h"/>
+        <childnode refid="22953" relation="include">
+        </childnode>
+        <childnode refid="22957" relation="include">
+        </childnode>
+        <childnode refid="22965" relation="include">
+        </childnode>
+      </node>
+      <node id="22952">
+        <label>C:/_dev/OpenU/Audacity/audacity/lib-src/libvorbis/lib/lookup.c</label>
+        <link refid="lookup.c"/>
+        <childnode refid="22953" relation="include">
+        </childnode>
+        <childnode refid="22954" relation="include">
+        </childnode>
+        <childnode refid="22955" relation="include">
+        </childnode>
+        <childnode refid="22956" relation="include">
+        </childnode>
+        <childnode refid="22965" relation="include">
+        </childnode>
+      </node>
+      <node id="22954">
+        <label>lookup.h</label>
+        <link refid="lookup_8h"/>
+      </node>
+      <node id="22958">
+        <label>ogg/config_types.h</label>
+        <link refid="config__types_8h"/>
+        <childnode refid="22959" relation="include">
+        </childnode>
+        <childnode refid="22960" relation="include">
+        </childnode>
+        <childnode refid="22961" relation="include">
+        </childnode>
+      </node>
+      <node id="22959">
+        <label>inttypes.h</label>
+      </node>
+    </incdepgraph>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="comment">/********************************************************************</highlight></codeline>
+<codeline lineno="2"><highlight class="comment"><sp/>*<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>*</highlight></codeline>
+<codeline lineno="3"><highlight class="comment"><sp/>*<sp/>THIS<sp/>FILE<sp/>IS<sp/>PART<sp/>OF<sp/>THE<sp/>OggVorbis<sp/>SOFTWARE<sp/>CODEC<sp/>SOURCE<sp/>CODE.<sp/><sp/><sp/>*</highlight></codeline>
+<codeline lineno="4"><highlight class="comment"><sp/>*<sp/>USE,<sp/>DISTRIBUTION<sp/>AND<sp/>REPRODUCTION<sp/>OF<sp/>THIS<sp/>LIBRARY<sp/>SOURCE<sp/>IS<sp/><sp/><sp/><sp/><sp/>*</highlight></codeline>
+<codeline lineno="5"><highlight class="comment"><sp/>*<sp/>GOVERNED<sp/>BY<sp/>A<sp/>BSD-STYLE<sp/>SOURCE<sp/>LICENSE<sp/>INCLUDED<sp/>WITH<sp/>THIS<sp/>SOURCE<sp/>*</highlight></codeline>
+<codeline lineno="6"><highlight class="comment"><sp/>*<sp/>IN<sp/>&apos;COPYING&apos;.<sp/>PLEASE<sp/>READ<sp/>THESE<sp/>TERMS<sp/>BEFORE<sp/>DISTRIBUTING.<sp/><sp/><sp/><sp/><sp/><sp/><sp/>*</highlight></codeline>
+<codeline lineno="7"><highlight class="comment"><sp/>*<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>*</highlight></codeline>
+<codeline lineno="8"><highlight class="comment"><sp/>*<sp/>THE<sp/>OggVorbis<sp/>SOURCE<sp/>CODE<sp/>IS<sp/>(C)<sp/>COPYRIGHT<sp/>1994-2009<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>*</highlight></codeline>
+<codeline lineno="9"><highlight class="comment"><sp/>*<sp/>by<sp/>the<sp/>Xiph.Org<sp/>Foundation<sp/>http://www.xiph.org/<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>*</highlight></codeline>
+<codeline lineno="10"><highlight class="comment"><sp/>*<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>*</highlight></codeline>
+<codeline lineno="11"><highlight class="comment"><sp/>********************************************************************</highlight></codeline>
+<codeline lineno="12"><highlight class="comment"></highlight></codeline>
+<codeline lineno="13"><highlight class="comment"><sp/><sp/>function:<sp/>lookup<sp/>based<sp/>functions</highlight></codeline>
+<codeline lineno="14"><highlight class="comment"><sp/><sp/>last<sp/>mod:<sp/>$Id:<sp/>lookup.c<sp/>16227<sp/>2009-07-08<sp/>06:58:46Z<sp/>xiphmont<sp/>$</highlight></codeline>
+<codeline lineno="15"><highlight class="comment"></highlight></codeline>
+<codeline lineno="16"><highlight class="comment"><sp/>********************************************************************/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="17"><highlight class="normal"></highlight></codeline>
+<codeline lineno="18"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;math.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="19"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="lookup_8h" kindref="compound">lookup.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="20"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="lookup__data_8h" kindref="compound">lookup_data.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="21"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="os_8h" kindref="compound">os.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="22"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="misc_8h" kindref="compound">misc.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="23"><highlight class="normal"></highlight></codeline>
+<codeline lineno="24"><highlight class="normal"></highlight><highlight class="preprocessor">#ifdef<sp/>FLOAT_LOOKUP</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="25"><highlight class="normal"></highlight></codeline>
+<codeline lineno="26"><highlight class="normal"></highlight><highlight class="comment">/*<sp/>interpolated<sp/>lookup<sp/>based<sp/>cos<sp/>function,<sp/>domain<sp/>0<sp/>to<sp/>PI<sp/>only<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="27"><highlight class="normal"></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>vorbis_coslook(</highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/><ref refid="poly-fir_8h_1a8d3c3518d793541417a4845125da1ae1" kindref="member">a</ref>){</highlight></codeline>
+<codeline lineno="28"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/><ref refid="poly-fir_8h_1a2530554172d8629149ec56816eeaa947" kindref="member">d</ref>=a*(.31830989*(float)COS_LOOKUP_SZ);</highlight></codeline>
+<codeline lineno="29"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="checksum_8c_1ab80e330a3bc9e38c1297fe17381e92b4" kindref="member">i</ref>=vorbis_ftoi(<ref refid="poly-fir_8h_1a2530554172d8629149ec56816eeaa947" kindref="member">d</ref>-.5);</highlight></codeline>
+<codeline lineno="30"><highlight class="normal"></highlight></codeline>
+<codeline lineno="31"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>COS_LOOKUP[<ref refid="checksum_8c_1ab80e330a3bc9e38c1297fe17381e92b4" kindref="member">i</ref>]+<sp/>(<ref refid="poly-fir_8h_1a2530554172d8629149ec56816eeaa947" kindref="member">d</ref>-<ref refid="checksum_8c_1ab80e330a3bc9e38c1297fe17381e92b4" kindref="member">i</ref>)*(COS_LOOKUP[<ref refid="checksum_8c_1ab80e330a3bc9e38c1297fe17381e92b4" kindref="member">i</ref>+1]-COS_LOOKUP[<ref refid="checksum_8c_1ab80e330a3bc9e38c1297fe17381e92b4" kindref="member">i</ref>]);</highlight></codeline>
+<codeline lineno="32"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="33"><highlight class="normal"></highlight></codeline>
+<codeline lineno="34"><highlight class="normal"></highlight><highlight class="comment">/*<sp/>interpolated<sp/>1./sqrt(p)<sp/>where<sp/>.5<sp/>&lt;=<sp/>p<sp/>&lt;<sp/>1.<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="35"><highlight class="normal"></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>vorbis_invsqlook(</highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/><ref refid="poly-fir_8h_1a8d3c3518d793541417a4845125da1ae1" kindref="member">a</ref>){</highlight></codeline>
+<codeline lineno="36"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/><ref refid="poly-fir_8h_1a2530554172d8629149ec56816eeaa947" kindref="member">d</ref>=a*(2.f*(float)INVSQ_LOOKUP_SZ)-(float)INVSQ_LOOKUP_SZ;</highlight></codeline>
+<codeline lineno="37"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="checksum_8c_1ab80e330a3bc9e38c1297fe17381e92b4" kindref="member">i</ref>=vorbis_ftoi(<ref refid="poly-fir_8h_1a2530554172d8629149ec56816eeaa947" kindref="member">d</ref>-.5<ref refid="rfft2d_test_m_l_8m_1aacd36fb6ac9ce14cec71f2ca852524d4" kindref="member">f</ref>);</highlight></codeline>
+<codeline lineno="38"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>INVSQ_LOOKUP[<ref refid="checksum_8c_1ab80e330a3bc9e38c1297fe17381e92b4" kindref="member">i</ref>]+<sp/>(<ref refid="poly-fir_8h_1a2530554172d8629149ec56816eeaa947" kindref="member">d</ref>-<ref refid="checksum_8c_1ab80e330a3bc9e38c1297fe17381e92b4" kindref="member">i</ref>)*(INVSQ_LOOKUP[<ref refid="checksum_8c_1ab80e330a3bc9e38c1297fe17381e92b4" kindref="member">i</ref>+1]-INVSQ_LOOKUP[<ref refid="checksum_8c_1ab80e330a3bc9e38c1297fe17381e92b4" kindref="member">i</ref>]);</highlight></codeline>
+<codeline lineno="39"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="40"><highlight class="normal"></highlight></codeline>
+<codeline lineno="41"><highlight class="normal"></highlight><highlight class="comment">/*<sp/>interpolated<sp/>1./sqrt(p)<sp/>where<sp/>.5<sp/>&lt;=<sp/>p<sp/>&lt;<sp/>1.<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="42"><highlight class="normal"></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>vorbis_invsq2explook(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="poly-fir_8h_1a8d3c3518d793541417a4845125da1ae1" kindref="member">a</ref>){</highlight></codeline>
+<codeline lineno="43"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>INVSQ2EXP_LOOKUP[a-INVSQ2EXP_LOOKUP_MIN];</highlight></codeline>
+<codeline lineno="44"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="45"><highlight class="normal"></highlight></codeline>
+<codeline lineno="46"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;stdio.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="47"><highlight class="normal"></highlight><highlight class="comment">/*<sp/>interpolated<sp/>lookup<sp/>based<sp/>fromdB<sp/>function,<sp/>domain<sp/>-140dB<sp/>to<sp/>0dB<sp/>only<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="48"><highlight class="normal"></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>vorbis_fromdBlook(</highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/><ref refid="poly-fir_8h_1a8d3c3518d793541417a4845125da1ae1" kindref="member">a</ref>){</highlight></codeline>
+<codeline lineno="49"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="checksum_8c_1ab80e330a3bc9e38c1297fe17381e92b4" kindref="member">i</ref>=vorbis_ftoi(a*((</highlight><highlight class="keywordtype">float</highlight><highlight class="normal">)(-(1&lt;&lt;<ref refid="lookup__data_8h_1a36d66b329cf8f318678d7016e567adc4" kindref="member">FROMdB2_SHIFT</ref>)))-.5<ref refid="rfft2d_test_m_l_8m_1aacd36fb6ac9ce14cec71f2ca852524d4" kindref="member">f</ref>);</highlight></codeline>
+<codeline lineno="50"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>(i&lt;0)?1.f:</highlight></codeline>
+<codeline lineno="51"><highlight class="normal"><sp/><sp/><sp/><sp/>((i&gt;=(<ref refid="lookup__data_8h_1af69ffbdbef928ba1a28b07879371fea1" kindref="member">FROMdB_LOOKUP_SZ</ref>&lt;&lt;<ref refid="lookup__data_8h_1a620ddbe3f1d7764e776ead22ae359e9f" kindref="member">FROMdB_SHIFT</ref>))?0.f:</highlight></codeline>
+<codeline lineno="52"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/>FROMdB_LOOKUP[i&gt;&gt;<ref refid="lookup__data_8h_1a620ddbe3f1d7764e776ead22ae359e9f" kindref="member">FROMdB_SHIFT</ref>]*FROMdB2_LOOKUP[i&amp;<ref refid="lookup__data_8h_1a742969cb11527469da5a5475113ab36e" kindref="member">FROMdB2_MASK</ref>]);</highlight></codeline>
+<codeline lineno="53"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="54"><highlight class="normal"></highlight></codeline>
+<codeline lineno="55"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="56"><highlight class="normal"></highlight></codeline>
+<codeline lineno="57"><highlight class="normal"></highlight><highlight class="preprocessor">#ifdef<sp/>INT_LOOKUP</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="58"><highlight class="normal"></highlight><highlight class="comment">/*<sp/>interpolated<sp/>1./sqrt(p)<sp/>where<sp/>.5<sp/>&lt;=<sp/>a<sp/>&lt;<sp/>1.<sp/>(.100000...<sp/>to<sp/>.111111...)<sp/>in</highlight></codeline>
+<codeline lineno="59"><highlight class="comment"><sp/><sp/><sp/>16.16<sp/>format</highlight></codeline>
+<codeline lineno="60"><highlight class="comment"></highlight></codeline>
+<codeline lineno="61"><highlight class="comment"><sp/><sp/><sp/>returns<sp/>in<sp/>m.8<sp/>format<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="62"><highlight class="normal"></highlight><highlight class="keywordtype">long</highlight><highlight class="normal"><sp/>vorbis_invsqlook_i(</highlight><highlight class="keywordtype">long</highlight><highlight class="normal"><sp/>a,</highlight><highlight class="keywordtype">long</highlight><highlight class="normal"><sp/><ref refid="namespacelv2docgen_1a4405dc5a2509537b9ff3b4de10bc28d6" kindref="member">e</ref>){</highlight></codeline>
+<codeline lineno="63"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">long</highlight><highlight class="normal"><sp/>i=(a&amp;0x7fff)&gt;&gt;(INVSQ_LOOKUP_I_SHIFT-1);</highlight></codeline>
+<codeline lineno="64"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">long</highlight><highlight class="normal"><sp/><ref refid="poly-fir_8h_1a2530554172d8629149ec56816eeaa947" kindref="member">d</ref>=(a&amp;INVSQ_LOOKUP_I_MASK)&lt;&lt;(16-INVSQ_LOOKUP_I_SHIFT);<sp/></highlight><highlight class="comment">/*<sp/><sp/>0.16<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="65"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">long</highlight><highlight class="normal"><sp/>val=INVSQ_LOOKUP_I[<ref refid="checksum_8c_1ab80e330a3bc9e38c1297fe17381e92b4" kindref="member">i</ref>]-<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">/*<sp/><sp/>1.16<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="66"><highlight class="normal"><sp/><sp/><sp/><sp/>(((INVSQ_LOOKUP_I[<ref refid="checksum_8c_1ab80e330a3bc9e38c1297fe17381e92b4" kindref="member">i</ref>]-INVSQ_LOOKUP_I[i+1])*<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">/*<sp/><sp/>0.16<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="67"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>d)&gt;&gt;16);<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">/*<sp/>result<sp/>1.16<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="68"><highlight class="normal"></highlight></codeline>
+<codeline lineno="69"><highlight class="normal"><sp/><sp/>e+=32;</highlight></codeline>
+<codeline lineno="70"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(e&amp;1)val=(val*5792)&gt;&gt;13;<sp/></highlight><highlight class="comment">/*<sp/>multiply<sp/>val<sp/>by<sp/>1/sqrt(2)<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="71"><highlight class="normal"><sp/><sp/>e=(e&gt;&gt;1)-8;</highlight></codeline>
+<codeline lineno="72"><highlight class="normal"></highlight></codeline>
+<codeline lineno="73"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal">(val&gt;&gt;e);</highlight></codeline>
+<codeline lineno="74"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="75"><highlight class="normal"></highlight></codeline>
+<codeline lineno="76"><highlight class="normal"></highlight><highlight class="comment">/*<sp/>interpolated<sp/>lookup<sp/>based<sp/>fromdB<sp/>function,<sp/>domain<sp/>-140dB<sp/>to<sp/>0dB<sp/>only<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="77"><highlight class="normal"></highlight><highlight class="comment">/*<sp/>a<sp/>is<sp/>in<sp/>n.12<sp/>format<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="78"><highlight class="normal"></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>vorbis_fromdBlook_i(</highlight><highlight class="keywordtype">long</highlight><highlight class="normal"><sp/>a){</highlight></codeline>
+<codeline lineno="79"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>i=(-<ref refid="poly-fir_8h_1a8d3c3518d793541417a4845125da1ae1" kindref="member">a</ref>)&gt;&gt;(12-<ref refid="lookup__data_8h_1a36d66b329cf8f318678d7016e567adc4" kindref="member">FROMdB2_SHIFT</ref>);</highlight></codeline>
+<codeline lineno="80"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>(i&lt;0)?1.f:</highlight></codeline>
+<codeline lineno="81"><highlight class="normal"><sp/><sp/><sp/><sp/>((i&gt;=(<ref refid="lookup__data_8h_1af69ffbdbef928ba1a28b07879371fea1" kindref="member">FROMdB_LOOKUP_SZ</ref>&lt;&lt;<ref refid="lookup__data_8h_1a620ddbe3f1d7764e776ead22ae359e9f" kindref="member">FROMdB_SHIFT</ref>))?0.f:</highlight></codeline>
+<codeline lineno="82"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/>FROMdB_LOOKUP[i&gt;&gt;<ref refid="lookup__data_8h_1a620ddbe3f1d7764e776ead22ae359e9f" kindref="member">FROMdB_SHIFT</ref>]*FROMdB2_LOOKUP[i&amp;<ref refid="lookup__data_8h_1a742969cb11527469da5a5475113ab36e" kindref="member">FROMdB2_MASK</ref>]);</highlight></codeline>
+<codeline lineno="83"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="84"><highlight class="normal"></highlight></codeline>
+<codeline lineno="85"><highlight class="normal"></highlight><highlight class="comment">/*<sp/>interpolated<sp/>lookup<sp/>based<sp/>cos<sp/>function,<sp/>domain<sp/>0<sp/>to<sp/>PI<sp/>only<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="86"><highlight class="normal"></highlight><highlight class="comment">/*<sp/>a<sp/>is<sp/>in<sp/>0.16<sp/>format,<sp/>where<sp/>0==0,<sp/>2^^16-1==PI,<sp/>return<sp/>0.14<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="87"><highlight class="normal"></highlight><highlight class="keywordtype">long</highlight><highlight class="normal"><sp/>vorbis_coslook_i(</highlight><highlight class="keywordtype">long</highlight><highlight class="normal"><sp/>a){</highlight></codeline>
+<codeline lineno="88"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>i=a&gt;&gt;COS_LOOKUP_I_SHIFT;</highlight></codeline>
+<codeline lineno="89"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>d=a&amp;COS_LOOKUP_I_MASK;</highlight></codeline>
+<codeline lineno="90"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>COS_LOOKUP_I[<ref refid="checksum_8c_1ab80e330a3bc9e38c1297fe17381e92b4" kindref="member">i</ref>]-<sp/>((d*(COS_LOOKUP_I[<ref refid="checksum_8c_1ab80e330a3bc9e38c1297fe17381e92b4" kindref="member">i</ref>]-COS_LOOKUP_I[i+1]))&gt;&gt;</highlight></codeline>
+<codeline lineno="91"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>COS_LOOKUP_I_SHIFT);</highlight></codeline>
+<codeline lineno="92"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="93"><highlight class="normal"></highlight></codeline>
+<codeline lineno="94"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight></codeline>
+    </programlisting>
+    <location file="C:/_dev/OpenU/Audacity/audacity/lib-src/libvorbis/lib/lookup.c"/>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,717 @@
+\hypertarget{class_o_d_manager}{}\section{O\+D\+Manager Class Reference}
+\label{class_o_d_manager}\index{O\+D\+Manager@{O\+D\+Manager}}
+
+
+A singleton that manages currently running Tasks on an arbitrary number of threads.  
+
+
+
+
+{\ttfamily \#include $<$O\+D\+Manager.\+h$>$}
+
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \hyperlink{class_o_d_manager_1_1_o_d_manager_helper_thread}{O\+D\+Manager\+Helper\+Thread}
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{class_o_d_manager_ae41ea7d62f686735fffdda90d55d50fd}{Demand\+Track\+Update} (\hyperlink{class_wave_track}{Wave\+Track} $\ast$track, double seconds)
+\begin{DoxyCompactList}\small\item\em changes the tasks associated with this Waveform to process the task from a different point in the track \end{DoxyCompactList}\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{class_o_d_manager_a31d6075d78f9ccd59fbbd3abdc4c2f33}{Decrement\+Current\+Threads} ()
+\begin{DoxyCompactList}\small\item\em Reduces the count of current threads running. Meant to be called when O\+D\+Task\+Threads end in their own threads. Thread-\/safe. \end{DoxyCompactList}\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{class_o_d_manager_ab635811e9a08a5e4b14a6736ad83c885}{Add\+New\+Task} (\hyperlink{class_o_d_task}{O\+D\+Task} $\ast$task, \hyperlink{mac_2config_2i386_2lib-src_2libsoxr_2soxr-config_8h_abb452686968e48b67397da5f97445f5b}{bool} lock\+Mutex=\hyperlink{mac_2config_2i386_2lib-src_2libsoxr_2soxr-config_8h_a41f9c5fb8b08eb5dc3edce4dcb37fee7}{true})
+\begin{DoxyCompactList}\small\item\em Adds a wavetrack, creates a queue member. \end{DoxyCompactList}\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{class_o_d_manager_a32c0166c84f2b50792d96ab36ea02401}{Signal\+Task\+Queue\+Loop} ()
+\begin{DoxyCompactList}\small\item\em Wakes the queue loop up by signalling its condition variable. \end{DoxyCompactList}\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{class_o_d_manager_a9f273cddbbf88ab5f10d83ef71412260}{Remove\+Wave\+Track} (\hyperlink{class_wave_track}{Wave\+Track} $\ast$track)
+\begin{DoxyCompactList}\small\item\em removes a wavetrack and notifies its associated tasks to stop using its reference. \end{DoxyCompactList}\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{class_o_d_manager_ab3dd83fd9c3e4c82f25375e38c7088d5}{Make\+Wave\+Track\+Independent} (\hyperlink{class_wave_track}{Wave\+Track} $\ast$track)
+\begin{DoxyCompactList}\small\item\em if it shares a queue/task, creates a N\+EW queue/task for the track, and removes it from any previously existing tasks. \end{DoxyCompactList}\item 
+\hyperlink{mac_2config_2i386_2lib-src_2libsoxr_2soxr-config_8h_abb452686968e48b67397da5f97445f5b}{bool} \hyperlink{class_o_d_manager_a97998606b0ea08aa946d7b407ffd015e}{Make\+Wave\+Track\+Dependent} (\hyperlink{class_wave_track}{Wave\+Track} $\ast$dependent\+Track, \hyperlink{class_wave_track}{Wave\+Track} $\ast$master\+Track)
+\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{class_o_d_manager_a203a4219308dd19912edb5aa6084cf55}{Replace\+Wave\+Track} (\hyperlink{class_wave_track}{Wave\+Track} $\ast$old\+Track, \hyperlink{class_wave_track}{Wave\+Track} $\ast$new\+Track)
+\begin{DoxyCompactList}\small\item\em replace the wavetrack whose wavecache the gui watches for updates \end{DoxyCompactList}\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{class_o_d_manager_a83ff55a20825529c681bede89cd1da8e}{Add\+Task} (\hyperlink{class_o_d_task}{O\+D\+Task} $\ast$task)
+\begin{DoxyCompactList}\small\item\em Adds a task to the running queue. Threas-\/safe. \end{DoxyCompactList}\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{class_o_d_manager_af8842cb56eaca1e61383e9e6f6d86aaa}{Remove\+Task\+If\+In\+Queue} (\hyperlink{class_o_d_task}{O\+D\+Task} $\ast$task)
+\begin{DoxyCompactList}\small\item\em removes a task from the active task queue \end{DoxyCompactList}\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{class_o_d_manager_a76c4c9a6b2b98e3a4f7256667d15b61a}{Fill\+Tip\+For\+Wave\+Track} (\hyperlink{class_wave_track}{Wave\+Track} $\ast$\hyperlink{octave__test_8m_aaccc9105df5383111407fd5b41255e23}{t}, wx\+String \&tip)
+\begin{DoxyCompactList}\small\item\em fills in the status bar message for a given track \end{DoxyCompactList}\item 
+float \hyperlink{class_o_d_manager_aa71310affea63dba0f3575d6149cd944}{Get\+Overall\+Percent\+Complete} ()
+\begin{DoxyCompactList}\small\item\em Gets the total percent complete for all tasks combined. \end{DoxyCompactList}\item 
+\hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{class_o_d_manager_abbeccc9391d24f84f1a2bbd14beba2af}{Get\+Total\+Num\+Tasks} ()
+\begin{DoxyCompactList}\small\item\em Get Total Number of Tasks. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static \hyperlink{class_o_d_manager}{O\+D\+Manager} $\ast$ \hyperlink{class_o_d_manager_a52c00180c54d079fa0bda3da113aa2b2}{Instance\+First\+Time} ()
+\begin{DoxyCompactList}\small\item\em Gets the singleton instance. \end{DoxyCompactList}\item 
+static \hyperlink{class_o_d_manager}{O\+D\+Manager} $\ast$ \hyperlink{class_o_d_manager_a6355bff561d142b4aba170b1df640fc0}{Instance\+Normal} ()
+\begin{DoxyCompactList}\small\item\em Gets the singleton instance. \end{DoxyCompactList}\item 
+static \hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{class_o_d_manager_a2f69d81832f89781eee588f411c6e15a}{Quit} ()
+\begin{DoxyCompactList}\small\item\em Kills the O\+D\+Mananger Thread. \end{DoxyCompactList}\item 
+static \hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{class_o_d_manager_a7518b9382a822cb20ba70a920da14784}{Mark\+Loaded\+O\+D\+Flag} ()
+\begin{DoxyCompactList}\small\item\em sets a flag that is set if we have loaded some OD blockfiles from P\+CM. \end{DoxyCompactList}\item 
+static \hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{class_o_d_manager_ab808eba4b4f987253df06557a5f48846}{Unmark\+Loaded\+O\+D\+Flag} ()
+\begin{DoxyCompactList}\small\item\em resets a flag that is set if we have loaded some OD blockfiles from P\+CM. \end{DoxyCompactList}\item 
+static \hyperlink{mac_2config_2i386_2lib-src_2libsoxr_2soxr-config_8h_abb452686968e48b67397da5f97445f5b}{bool} \hyperlink{class_o_d_manager_ab316ded3fbf00046c9d57ae2a5a0b891}{Has\+Loaded\+O\+D\+Flag} ()
+\begin{DoxyCompactList}\small\item\em returns a flag that is set if we have loaded some OD blockfiles from P\+CM. \end{DoxyCompactList}\item 
+static \hyperlink{mac_2config_2i386_2lib-src_2libsoxr_2soxr-config_8h_abb452686968e48b67397da5f97445f5b}{bool} \hyperlink{class_o_d_manager_a6647fc26402ceed611a794b7224063a5}{Is\+Instance\+Created} ()
+\begin{DoxyCompactList}\small\item\em returns whether or not the singleton instance was created yet \end{DoxyCompactList}\item 
+static \hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{class_o_d_manager_a396dd3991addcafba105966dbe00e163}{Pause} (\hyperlink{mac_2config_2i386_2lib-src_2libsoxr_2soxr-config_8h_abb452686968e48b67397da5f97445f5b}{bool} \hyperlink{winmain2_8h_aef3a6553bfd1b1958085c0ea353c0fa8}{pause}=\hyperlink{mac_2config_2i386_2lib-src_2libsoxr_2soxr-config_8h_a41f9c5fb8b08eb5dc3edce4dcb37fee7}{true})
+\item 
+static \hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{class_o_d_manager_acb332656b440294d52b48bbf6bf1b2fc}{Resume} ()
+\item 
+static \hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{class_o_d_manager_a9229bb31acd18ddc7c3e75dd78e4d263}{Lock\+Lib\+Snd\+File\+Mutex} ()
+\item 
+static \hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{class_o_d_manager_a046fb8a887ed44e9a6a2497b21ddd8fc}{Unlock\+Lib\+Snd\+File\+Mutex} ()
+\end{DoxyCompactItemize}
+\subsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+static \hyperlink{class_o_d_manager}{O\+D\+Manager} $\ast$($\ast$ \hyperlink{class_o_d_manager_aef1bcdded223f015b22a0d1d439c23ad}{Instance} )() = \&(\hyperlink{class_o_d_manager_a52c00180c54d079fa0bda3da113aa2b2}{O\+D\+Manager\+::\+Instance\+First\+Time})
+\end{DoxyCompactItemize}
+\subsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{class_o_d_manager_a569b8321db46a87f1c58cfd8c13815b2}{O\+D\+Manager} ()
+\item 
+virtual \hyperlink{class_o_d_manager_a2de62c7730945c4fcc4f62c164c442d8}{$\sim$\+O\+D\+Manager} ()
+\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{class_o_d_manager_a2347e6e64f43bae20e12ce2f467a2ce0}{Init} ()
+\begin{DoxyCompactList}\small\item\em Launches a thread for the manager and starts accepting Tasks. \end{DoxyCompactList}\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{class_o_d_manager_a4709915d78781ebba4489e74b7d30170}{Start} ()
+\begin{DoxyCompactList}\small\item\em Start the main loop for the manager. \end{DoxyCompactList}\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{class_o_d_manager_a6d8e8b5263068d7c19f3be1a4fa2d6e9}{Update\+Queues} ()
+\begin{DoxyCompactList}\small\item\em Remove references in our array to Tasks that have been completed/\+Schedule N\+EW ones. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+std\+::vector$<$ \hyperlink{class_o_d_wave_track_task_queue}{O\+D\+Wave\+Track\+Task\+Queue} $\ast$ $>$ \hyperlink{class_o_d_manager_ad6b9a0871a6624fa11b9deee2f23dd98}{m\+Queues}
+\item 
+\hyperlink{class_o_d_lock}{O\+D\+Lock} \hyperlink{class_o_d_manager_a8bac5038bf5f5180de202e37e94258f4}{m\+Queues\+Mutex}
+\item 
+std\+::vector$<$ \hyperlink{class_o_d_task}{O\+D\+Task} $\ast$ $>$ \hyperlink{class_o_d_manager_ae8285de40c66dd8dd1ef3d9f9f2f69ae}{m\+Tasks}
+\item 
+\hyperlink{class_o_d_lock}{O\+D\+Lock} \hyperlink{class_o_d_manager_a9d307a10f6c2f48655c84ecc21b94ac2}{m\+Tasks\+Mutex}
+\item 
+volatile \hyperlink{mac_2config_2i386_2lib-src_2libsoxr_2soxr-config_8h_abb452686968e48b67397da5f97445f5b}{bool} \hyperlink{class_o_d_manager_aebe05c8e1092dcca2db0a69236316dcd}{m\+Pause}
+\item 
+\hyperlink{class_o_d_lock}{O\+D\+Lock} \hyperlink{class_o_d_manager_a59f76b74b2ee0e6ffb44e954fef857e8}{m\+Pause\+Lock}
+\item 
+volatile \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{class_o_d_manager_ac03e55bb072bc1e81e73a7d86523b6f4}{m\+Needs\+Draw}
+\item 
+volatile \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{class_o_d_manager_a06856d83f378f240132c1520405f5040}{m\+Current\+Threads}
+\begin{DoxyCompactList}\small\item\em Number of threads currently running. Accessed thru multiple threads. \end{DoxyCompactList}\item 
+\hyperlink{class_o_d_lock}{O\+D\+Lock} \hyperlink{class_o_d_manager_abed3761c5ea4877de3d9ec263b3da865}{m\+Current\+Threads\+Mutex}
+\item 
+\hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{class_o_d_manager_ac85438f32145747ba36ebf7087860a35}{m\+Max\+Threads}
+\begin{DoxyCompactList}\small\item\em Maximum number of threads allowed out. \end{DoxyCompactList}\item 
+volatile \hyperlink{mac_2config_2i386_2lib-src_2libsoxr_2soxr-config_8h_abb452686968e48b67397da5f97445f5b}{bool} \hyperlink{class_o_d_manager_affc1004f5826b83f3bfd258f59b31f02}{m\+Terminate}
+\item 
+\hyperlink{class_o_d_lock}{O\+D\+Lock} \hyperlink{class_o_d_manager_a7690b70eb196abd7e7953e552735f501}{m\+Terminate\+Mutex}
+\item 
+volatile \hyperlink{mac_2config_2i386_2lib-src_2libsoxr_2soxr-config_8h_abb452686968e48b67397da5f97445f5b}{bool} \hyperlink{class_o_d_manager_af90ef020c68adcd0c9f9e0b7bcf799bb}{m\+Terminated}
+\item 
+\hyperlink{class_o_d_lock}{O\+D\+Lock} \hyperlink{class_o_d_manager_ad85b08f29c24368568b063a6822eebd2}{m\+Terminated\+Mutex}
+\item 
+\hyperlink{class_o_d_lock}{O\+D\+Lock} \hyperlink{class_o_d_manager_a85a3669d8bba22645b47ff06b4164ac4}{m\+Queue\+Not\+Empty\+Cond\+Lock}
+\item 
+\hyperlink{class_o_d_condition}{O\+D\+Condition} $\ast$ \hyperlink{class_o_d_manager_aba42a99deec038f307a29971320f8416}{m\+Queue\+Not\+Empty\+Cond}
+\end{DoxyCompactItemize}
+\subsection*{Static Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+static \hyperlink{class_o_d_manager}{O\+D\+Manager} $\ast$ \hyperlink{class_o_d_manager_a35f30c3429c263f3d2d05206942bd036}{p\+Man} =\hyperlink{px__mixer_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{N\+U\+LL}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+A singleton that manages currently running Tasks on an arbitrary number of threads. 
+
+Definition at line 43 of file O\+D\+Manager.\+h.
+
+
+
+\subsection{Constructor \& Destructor Documentation}
+\index{O\+D\+Manager@{O\+D\+Manager}!O\+D\+Manager@{O\+D\+Manager}}
+\index{O\+D\+Manager@{O\+D\+Manager}!O\+D\+Manager@{O\+D\+Manager}}
+\subsubsection[{\texorpdfstring{O\+D\+Manager()}{ODManager()}}]{\setlength{\rightskip}{0pt plus 5cm}O\+D\+Manager\+::\+O\+D\+Manager (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [protected]}}\hypertarget{class_o_d_manager_a569b8321db46a87f1c58cfd8c13815b2}{}\label{class_o_d_manager_a569b8321db46a87f1c58cfd8c13815b2}
+
+
+Definition at line 65 of file O\+D\+Manager.\+cpp.
+
+\index{O\+D\+Manager@{O\+D\+Manager}!````~O\+D\+Manager@{$\sim$\+O\+D\+Manager}}
+\index{````~O\+D\+Manager@{$\sim$\+O\+D\+Manager}!O\+D\+Manager@{O\+D\+Manager}}
+\subsubsection[{\texorpdfstring{$\sim$\+O\+D\+Manager()}{~ODManager()}}]{\setlength{\rightskip}{0pt plus 5cm}O\+D\+Manager\+::$\sim$\+O\+D\+Manager (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [virtual]}}\hypertarget{class_o_d_manager_a2de62c7730945c4fcc4f62c164c442d8}{}\label{class_o_d_manager_a2de62c7730945c4fcc4f62c164c442d8}
+
+
+Definition at line 76 of file O\+D\+Manager.\+cpp.
+
+
+
+\subsection{Member Function Documentation}
+\index{O\+D\+Manager@{O\+D\+Manager}!Add\+New\+Task@{Add\+New\+Task}}
+\index{Add\+New\+Task@{Add\+New\+Task}!O\+D\+Manager@{O\+D\+Manager}}
+\subsubsection[{\texorpdfstring{Add\+New\+Task(\+O\+D\+Task $\ast$task, bool lock\+Mutex=true)}{AddNewTask(ODTask *task, bool lockMutex=true)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} O\+D\+Manager\+::\+Add\+New\+Task (
+\begin{DoxyParamCaption}
+\item[{{\bf O\+D\+Task} $\ast$}]{task, }
+\item[{{\bf bool}}]{lock\+Mutex = {\ttfamily {\bf true}}}
+\end{DoxyParamCaption}
+)}\hypertarget{class_o_d_manager_ab635811e9a08a5e4b14a6736ad83c885}{}\label{class_o_d_manager_ab635811e9a08a5e4b14a6736ad83c885}
+
+
+Adds a wavetrack, creates a queue member. 
+
+Adds a N\+EW task to the queue. Creates a queue if the tracks associated with the task is not in the list
+
+
+\begin{DoxyParams}{Parameters}
+{\em task} & the task to add \\
+\hline
+{\em lock\+Mutex} & locks the mutexes if true (default). This function is used within other \hyperlink{class_o_d_manager}{O\+D\+Manager} calls, which many need to set this to false. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 141 of file O\+D\+Manager.\+cpp.
+
+\index{O\+D\+Manager@{O\+D\+Manager}!Add\+Task@{Add\+Task}}
+\index{Add\+Task@{Add\+Task}!O\+D\+Manager@{O\+D\+Manager}}
+\subsubsection[{\texorpdfstring{Add\+Task(\+O\+D\+Task $\ast$task)}{AddTask(ODTask *task)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} O\+D\+Manager\+::\+Add\+Task (
+\begin{DoxyParamCaption}
+\item[{{\bf O\+D\+Task} $\ast$}]{task}
+\end{DoxyParamCaption}
+)}\hypertarget{class_o_d_manager_a83ff55a20825529c681bede89cd1da8e}{}\label{class_o_d_manager_a83ff55a20825529c681bede89cd1da8e}
+
+
+Adds a task to the running queue. Threas-\/safe. 
+
+Adds a task to running queue. Thread-\/safe. 
+
+Definition at line 87 of file O\+D\+Manager.\+cpp.
+
+\index{O\+D\+Manager@{O\+D\+Manager}!Decrement\+Current\+Threads@{Decrement\+Current\+Threads}}
+\index{Decrement\+Current\+Threads@{Decrement\+Current\+Threads}!O\+D\+Manager@{O\+D\+Manager}}
+\subsubsection[{\texorpdfstring{Decrement\+Current\+Threads()}{DecrementCurrentThreads()}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} O\+D\+Manager\+::\+Decrement\+Current\+Threads (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{class_o_d_manager_a31d6075d78f9ccd59fbbd3abdc4c2f33}{}\label{class_o_d_manager_a31d6075d78f9ccd59fbbd3abdc4c2f33}
+
+
+Reduces the count of current threads running. Meant to be called when O\+D\+Task\+Threads end in their own threads. Thread-\/safe. 
+
+
+
+Definition at line 227 of file O\+D\+Manager.\+cpp.
+
+\index{O\+D\+Manager@{O\+D\+Manager}!Demand\+Track\+Update@{Demand\+Track\+Update}}
+\index{Demand\+Track\+Update@{Demand\+Track\+Update}!O\+D\+Manager@{O\+D\+Manager}}
+\subsubsection[{\texorpdfstring{Demand\+Track\+Update(\+Wave\+Track $\ast$track, double seconds)}{DemandTrackUpdate(WaveTrack *track, double seconds)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} O\+D\+Manager\+::\+Demand\+Track\+Update (
+\begin{DoxyParamCaption}
+\item[{{\bf Wave\+Track} $\ast$}]{track, }
+\item[{double}]{seconds}
+\end{DoxyParamCaption}
+)}\hypertarget{class_o_d_manager_ae41ea7d62f686735fffdda90d55d50fd}{}\label{class_o_d_manager_ae41ea7d62f686735fffdda90d55d50fd}
+
+
+changes the tasks associated with this Waveform to process the task from a different point in the track 
+
+changes the tasks associated with this Waveform to process the task from a different point in the track 
+\begin{DoxyParams}{Parameters}
+{\em track} & the track to update \\
+\hline
+{\em seconds} & the point in the track from which the tasks associated with track should begin processing from. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 478 of file O\+D\+Manager.\+cpp.
+
+\index{O\+D\+Manager@{O\+D\+Manager}!Fill\+Tip\+For\+Wave\+Track@{Fill\+Tip\+For\+Wave\+Track}}
+\index{Fill\+Tip\+For\+Wave\+Track@{Fill\+Tip\+For\+Wave\+Track}!O\+D\+Manager@{O\+D\+Manager}}
+\subsubsection[{\texorpdfstring{Fill\+Tip\+For\+Wave\+Track(\+Wave\+Track $\ast$t, wx\+String \&tip)}{FillTipForWaveTrack(WaveTrack *t, wxString &tip)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} O\+D\+Manager\+::\+Fill\+Tip\+For\+Wave\+Track (
+\begin{DoxyParamCaption}
+\item[{{\bf Wave\+Track} $\ast$}]{t, }
+\item[{wx\+String \&}]{tip}
+\end{DoxyParamCaption}
+)}\hypertarget{class_o_d_manager_a76c4c9a6b2b98e3a4f7256667d15b61a}{}\label{class_o_d_manager_a76c4c9a6b2b98e3a4f7256667d15b61a}
+
+
+fills in the status bar message for a given track 
+
+
+
+Definition at line 544 of file O\+D\+Manager.\+cpp.
+
+\index{O\+D\+Manager@{O\+D\+Manager}!Get\+Overall\+Percent\+Complete@{Get\+Overall\+Percent\+Complete}}
+\index{Get\+Overall\+Percent\+Complete@{Get\+Overall\+Percent\+Complete}!O\+D\+Manager@{O\+D\+Manager}}
+\subsubsection[{\texorpdfstring{Get\+Overall\+Percent\+Complete()}{GetOverallPercentComplete()}}]{\setlength{\rightskip}{0pt plus 5cm}float O\+D\+Manager\+::\+Get\+Overall\+Percent\+Complete (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{class_o_d_manager_aa71310affea63dba0f3575d6149cd944}{}\label{class_o_d_manager_aa71310affea63dba0f3575d6149cd944}
+
+
+Gets the total percent complete for all tasks combined. 
+
+
+
+Definition at line 555 of file O\+D\+Manager.\+cpp.
+
+\index{O\+D\+Manager@{O\+D\+Manager}!Get\+Total\+Num\+Tasks@{Get\+Total\+Num\+Tasks}}
+\index{Get\+Total\+Num\+Tasks@{Get\+Total\+Num\+Tasks}!O\+D\+Manager@{O\+D\+Manager}}
+\subsubsection[{\texorpdfstring{Get\+Total\+Num\+Tasks()}{GetTotalNumTasks()}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf int} O\+D\+Manager\+::\+Get\+Total\+Num\+Tasks (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{class_o_d_manager_abbeccc9391d24f84f1a2bbd14beba2af}{}\label{class_o_d_manager_abbeccc9391d24f84f1a2bbd14beba2af}
+
+
+Get Total Number of Tasks. 
+
+
+
+Definition at line 571 of file O\+D\+Manager.\+cpp.
+
+\index{O\+D\+Manager@{O\+D\+Manager}!Has\+Loaded\+O\+D\+Flag@{Has\+Loaded\+O\+D\+Flag}}
+\index{Has\+Loaded\+O\+D\+Flag@{Has\+Loaded\+O\+D\+Flag}!O\+D\+Manager@{O\+D\+Manager}}
+\subsubsection[{\texorpdfstring{Has\+Loaded\+O\+D\+Flag()}{HasLoadedODFlag()}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf bool} O\+D\+Manager\+::\+Has\+Loaded\+O\+D\+Flag (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [static]}}\hypertarget{class_o_d_manager_ab316ded3fbf00046c9d57ae2a5a0b891}{}\label{class_o_d_manager_ab316ded3fbf00046c9d57ae2a5a0b891}
+
+
+returns a flag that is set if we have loaded some OD blockfiles from P\+CM. 
+
+
+
+Definition at line 538 of file O\+D\+Manager.\+cpp.
+
+\index{O\+D\+Manager@{O\+D\+Manager}!Init@{Init}}
+\index{Init@{Init}!O\+D\+Manager@{O\+D\+Manager}}
+\subsubsection[{\texorpdfstring{Init()}{Init()}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} O\+D\+Manager\+::\+Init (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [protected]}}\hypertarget{class_o_d_manager_a2347e6e64f43bae20e12ce2f467a2ce0}{}\label{class_o_d_manager_a2347e6e64f43bae20e12ce2f467a2ce0}
+
+
+Launches a thread for the manager and starts accepting Tasks. 
+
+
+
+Definition at line 210 of file O\+D\+Manager.\+cpp.
+
+\index{O\+D\+Manager@{O\+D\+Manager}!Instance\+First\+Time@{Instance\+First\+Time}}
+\index{Instance\+First\+Time@{Instance\+First\+Time}!O\+D\+Manager@{O\+D\+Manager}}
+\subsubsection[{\texorpdfstring{Instance\+First\+Time()}{InstanceFirstTime()}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf O\+D\+Manager} $\ast$ O\+D\+Manager\+::\+Instance\+First\+Time (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [static]}}\hypertarget{class_o_d_manager_a52c00180c54d079fa0bda3da113aa2b2}{}\label{class_o_d_manager_a52c00180c54d079fa0bda3da113aa2b2}
+
+
+Gets the singleton instance. 
+
+
+
+Definition at line 177 of file O\+D\+Manager.\+cpp.
+
+\index{O\+D\+Manager@{O\+D\+Manager}!Instance\+Normal@{Instance\+Normal}}
+\index{Instance\+Normal@{Instance\+Normal}!O\+D\+Manager@{O\+D\+Manager}}
+\subsubsection[{\texorpdfstring{Instance\+Normal()}{InstanceNormal()}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf O\+D\+Manager} $\ast$ O\+D\+Manager\+::\+Instance\+Normal (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [static]}}\hypertarget{class_o_d_manager_a6355bff561d142b4aba170b1df640fc0}{}\label{class_o_d_manager_a6355bff561d142b4aba170b1df640fc0}
+
+
+Gets the singleton instance. 
+
+
+
+Definition at line 195 of file O\+D\+Manager.\+cpp.
+
+\index{O\+D\+Manager@{O\+D\+Manager}!Is\+Instance\+Created@{Is\+Instance\+Created}}
+\index{Is\+Instance\+Created@{Is\+Instance\+Created}!O\+D\+Manager@{O\+D\+Manager}}
+\subsubsection[{\texorpdfstring{Is\+Instance\+Created()}{IsInstanceCreated()}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf bool} O\+D\+Manager\+::\+Is\+Instance\+Created (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [static]}}\hypertarget{class_o_d_manager_a6647fc26402ceed611a794b7224063a5}{}\label{class_o_d_manager_a6647fc26402ceed611a794b7224063a5}
+
+
+returns whether or not the singleton instance was created yet 
+
+
+
+Definition at line 200 of file O\+D\+Manager.\+cpp.
+
+\index{O\+D\+Manager@{O\+D\+Manager}!Lock\+Lib\+Snd\+File\+Mutex@{Lock\+Lib\+Snd\+File\+Mutex}}
+\index{Lock\+Lib\+Snd\+File\+Mutex@{Lock\+Lib\+Snd\+File\+Mutex}!O\+D\+Manager@{O\+D\+Manager}}
+\subsubsection[{\texorpdfstring{Lock\+Lib\+Snd\+File\+Mutex()}{LockLibSndFileMutex()}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} O\+D\+Manager\+::\+Lock\+Lib\+Snd\+File\+Mutex (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [static]}}\hypertarget{class_o_d_manager_a9229bb31acd18ddc7c3e75dd78e4d263}{}\label{class_o_d_manager_a9229bb31acd18ddc7c3e75dd78e4d263}
+
+
+Definition at line 53 of file O\+D\+Manager.\+cpp.
+
+\index{O\+D\+Manager@{O\+D\+Manager}!Make\+Wave\+Track\+Dependent@{Make\+Wave\+Track\+Dependent}}
+\index{Make\+Wave\+Track\+Dependent@{Make\+Wave\+Track\+Dependent}!O\+D\+Manager@{O\+D\+Manager}}
+\subsubsection[{\texorpdfstring{Make\+Wave\+Track\+Dependent(\+Wave\+Track $\ast$dependent\+Track, Wave\+Track $\ast$master\+Track)}{MakeWaveTrackDependent(WaveTrack *dependentTrack, WaveTrack *masterTrack)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf bool} O\+D\+Manager\+::\+Make\+Wave\+Track\+Dependent (
+\begin{DoxyParamCaption}
+\item[{{\bf Wave\+Track} $\ast$}]{dependent\+Track, }
+\item[{{\bf Wave\+Track} $\ast$}]{master\+Track}
+\end{DoxyParamCaption}
+)}\hypertarget{class_o_d_manager_a97998606b0ea08aa946d7b407ffd015e}{}\label{class_o_d_manager_a97998606b0ea08aa946d7b407ffd015e}
+attach the track in question to another, already existing track\textquotesingle{}s queues and tasks. Remove the task/tracks. Returns success if it was possible.. Some \hyperlink{class_o_d_task}{O\+D\+Task} conditions make it impossible until the Tasks finish.
+
+attach the track in question to another, already existing track\textquotesingle{}s queues and tasks. Remove the task/tracks. only works if both tracks exist. Sets need\+O\+D\+Update flag for the task. This is complicated and will probably need better design in the future. \begin{DoxyReturn}{Returns}
+returns success. Some \hyperlink{class_o_d_task}{O\+D\+Task} conditions require that the tasks finish before merging. e.\+g. they have different effects being processed at the same time. 
+\end{DoxyReturn}
+
+
+Definition at line 431 of file O\+D\+Manager.\+cpp.
+
+\index{O\+D\+Manager@{O\+D\+Manager}!Make\+Wave\+Track\+Independent@{Make\+Wave\+Track\+Independent}}
+\index{Make\+Wave\+Track\+Independent@{Make\+Wave\+Track\+Independent}!O\+D\+Manager@{O\+D\+Manager}}
+\subsubsection[{\texorpdfstring{Make\+Wave\+Track\+Independent(\+Wave\+Track $\ast$track)}{MakeWaveTrackIndependent(WaveTrack *track)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} O\+D\+Manager\+::\+Make\+Wave\+Track\+Independent (
+\begin{DoxyParamCaption}
+\item[{{\bf Wave\+Track} $\ast$}]{track}
+\end{DoxyParamCaption}
+)}\hypertarget{class_o_d_manager_ab3dd83fd9c3e4c82f25375e38c7088d5}{}\label{class_o_d_manager_ab3dd83fd9c3e4c82f25375e38c7088d5}
+
+
+if it shares a queue/task, creates a N\+EW queue/task for the track, and removes it from any previously existing tasks. 
+
+
+
+Definition at line 408 of file O\+D\+Manager.\+cpp.
+
+\index{O\+D\+Manager@{O\+D\+Manager}!Mark\+Loaded\+O\+D\+Flag@{Mark\+Loaded\+O\+D\+Flag}}
+\index{Mark\+Loaded\+O\+D\+Flag@{Mark\+Loaded\+O\+D\+Flag}!O\+D\+Manager@{O\+D\+Manager}}
+\subsubsection[{\texorpdfstring{Mark\+Loaded\+O\+D\+Flag()}{MarkLoadedODFlag()}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} O\+D\+Manager\+::\+Mark\+Loaded\+O\+D\+Flag (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [static]}}\hypertarget{class_o_d_manager_a7518b9382a822cb20ba70a920da14784}{}\label{class_o_d_manager_a7518b9382a822cb20ba70a920da14784}
+
+
+sets a flag that is set if we have loaded some OD blockfiles from P\+CM. 
+
+
+
+Definition at line 524 of file O\+D\+Manager.\+cpp.
+
+\index{O\+D\+Manager@{O\+D\+Manager}!Pause@{Pause}}
+\index{Pause@{Pause}!O\+D\+Manager@{O\+D\+Manager}}
+\subsubsection[{\texorpdfstring{Pause(bool pause=true)}{Pause(bool pause=true)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} O\+D\+Manager\+::\+Pause (
+\begin{DoxyParamCaption}
+\item[{{\bf bool}}]{pause = {\ttfamily {\bf true}}}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [static]}}\hypertarget{class_o_d_manager_a396dd3991addcafba105966dbe00e163}{}\label{class_o_d_manager_a396dd3991addcafba105966dbe00e163}
+
+
+Definition at line 332 of file O\+D\+Manager.\+cpp.
+
+\index{O\+D\+Manager@{O\+D\+Manager}!Quit@{Quit}}
+\index{Quit@{Quit}!O\+D\+Manager@{O\+D\+Manager}}
+\subsubsection[{\texorpdfstring{Quit()}{Quit()}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} O\+D\+Manager\+::\+Quit (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [static]}}\hypertarget{class_o_d_manager_a2f69d81832f89781eee588f411c6e15a}{}\label{class_o_d_manager_a2f69d81832f89781eee588f411c6e15a}
+
+
+Kills the O\+D\+Mananger Thread. 
+
+
+
+Definition at line 356 of file O\+D\+Manager.\+cpp.
+
+\index{O\+D\+Manager@{O\+D\+Manager}!Remove\+Task\+If\+In\+Queue@{Remove\+Task\+If\+In\+Queue}}
+\index{Remove\+Task\+If\+In\+Queue@{Remove\+Task\+If\+In\+Queue}!O\+D\+Manager@{O\+D\+Manager}}
+\subsubsection[{\texorpdfstring{Remove\+Task\+If\+In\+Queue(\+O\+D\+Task $\ast$task)}{RemoveTaskIfInQueue(ODTask *task)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} O\+D\+Manager\+::\+Remove\+Task\+If\+In\+Queue (
+\begin{DoxyParamCaption}
+\item[{{\bf O\+D\+Task} $\ast$}]{task}
+\end{DoxyParamCaption}
+)}\hypertarget{class_o_d_manager_af8842cb56eaca1e61383e9e6f6d86aaa}{}\label{class_o_d_manager_af8842cb56eaca1e61383e9e6f6d86aaa}
+
+
+removes a task from the active task queue 
+
+
+
+Definition at line 121 of file O\+D\+Manager.\+cpp.
+
+\index{O\+D\+Manager@{O\+D\+Manager}!Remove\+Wave\+Track@{Remove\+Wave\+Track}}
+\index{Remove\+Wave\+Track@{Remove\+Wave\+Track}!O\+D\+Manager@{O\+D\+Manager}}
+\subsubsection[{\texorpdfstring{Remove\+Wave\+Track(\+Wave\+Track $\ast$track)}{RemoveWaveTrack(WaveTrack *track)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} O\+D\+Manager\+::\+Remove\+Wave\+Track (
+\begin{DoxyParamCaption}
+\item[{{\bf Wave\+Track} $\ast$}]{track}
+\end{DoxyParamCaption}
+)}\hypertarget{class_o_d_manager_a9f273cddbbf88ab5f10d83ef71412260}{}\label{class_o_d_manager_a9f273cddbbf88ab5f10d83ef71412260}
+
+
+removes a wavetrack and notifies its associated tasks to stop using its reference. 
+
+
+
+Definition at line 385 of file O\+D\+Manager.\+cpp.
+
+\index{O\+D\+Manager@{O\+D\+Manager}!Replace\+Wave\+Track@{Replace\+Wave\+Track}}
+\index{Replace\+Wave\+Track@{Replace\+Wave\+Track}!O\+D\+Manager@{O\+D\+Manager}}
+\subsubsection[{\texorpdfstring{Replace\+Wave\+Track(\+Wave\+Track $\ast$old\+Track, Wave\+Track $\ast$new\+Track)}{ReplaceWaveTrack(WaveTrack *oldTrack, WaveTrack *newTrack)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} O\+D\+Manager\+::\+Replace\+Wave\+Track (
+\begin{DoxyParamCaption}
+\item[{{\bf Wave\+Track} $\ast$}]{old\+Track, }
+\item[{{\bf Wave\+Track} $\ast$}]{new\+Track}
+\end{DoxyParamCaption}
+)}\hypertarget{class_o_d_manager_a203a4219308dd19912edb5aa6084cf55}{}\label{class_o_d_manager_a203a4219308dd19912edb5aa6084cf55}
+
+
+replace the wavetrack whose wavecache the gui watches for updates 
+
+
+
+Definition at line 397 of file O\+D\+Manager.\+cpp.
+
+\index{O\+D\+Manager@{O\+D\+Manager}!Resume@{Resume}}
+\index{Resume@{Resume}!O\+D\+Manager@{O\+D\+Manager}}
+\subsubsection[{\texorpdfstring{Resume()}{Resume()}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} O\+D\+Manager\+::\+Resume (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [static]}}\hypertarget{class_o_d_manager_acb332656b440294d52b48bbf6bf1b2fc}{}\label{class_o_d_manager_acb332656b440294d52b48bbf6bf1b2fc}
+
+
+Definition at line 351 of file O\+D\+Manager.\+cpp.
+
+\index{O\+D\+Manager@{O\+D\+Manager}!Signal\+Task\+Queue\+Loop@{Signal\+Task\+Queue\+Loop}}
+\index{Signal\+Task\+Queue\+Loop@{Signal\+Task\+Queue\+Loop}!O\+D\+Manager@{O\+D\+Manager}}
+\subsubsection[{\texorpdfstring{Signal\+Task\+Queue\+Loop()}{SignalTaskQueueLoop()}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} O\+D\+Manager\+::\+Signal\+Task\+Queue\+Loop (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{class_o_d_manager_a32c0166c84f2b50792d96ab36ea02401}{}\label{class_o_d_manager_a32c0166c84f2b50792d96ab36ea02401}
+
+
+Wakes the queue loop up by signalling its condition variable. 
+
+
+
+Definition at line 106 of file O\+D\+Manager.\+cpp.
+
+\index{O\+D\+Manager@{O\+D\+Manager}!Start@{Start}}
+\index{Start@{Start}!O\+D\+Manager@{O\+D\+Manager}}
+\subsubsection[{\texorpdfstring{Start()}{Start()}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} O\+D\+Manager\+::\+Start (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [protected]}}\hypertarget{class_o_d_manager_a4709915d78781ebba4489e74b7d30170}{}\label{class_o_d_manager_a4709915d78781ebba4489e74b7d30170}
+
+
+Start the main loop for the manager. 
+
+Main loop for managing threads and tasks. 
+
+Definition at line 235 of file O\+D\+Manager.\+cpp.
+
+\index{O\+D\+Manager@{O\+D\+Manager}!Unlock\+Lib\+Snd\+File\+Mutex@{Unlock\+Lib\+Snd\+File\+Mutex}}
+\index{Unlock\+Lib\+Snd\+File\+Mutex@{Unlock\+Lib\+Snd\+File\+Mutex}!O\+D\+Manager@{O\+D\+Manager}}
+\subsubsection[{\texorpdfstring{Unlock\+Lib\+Snd\+File\+Mutex()}{UnlockLibSndFileMutex()}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} O\+D\+Manager\+::\+Unlock\+Lib\+Snd\+File\+Mutex (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [static]}}\hypertarget{class_o_d_manager_a046fb8a887ed44e9a6a2497b21ddd8fc}{}\label{class_o_d_manager_a046fb8a887ed44e9a6a2497b21ddd8fc}
+
+
+Definition at line 58 of file O\+D\+Manager.\+cpp.
+
+\index{O\+D\+Manager@{O\+D\+Manager}!Unmark\+Loaded\+O\+D\+Flag@{Unmark\+Loaded\+O\+D\+Flag}}
+\index{Unmark\+Loaded\+O\+D\+Flag@{Unmark\+Loaded\+O\+D\+Flag}!O\+D\+Manager@{O\+D\+Manager}}
+\subsubsection[{\texorpdfstring{Unmark\+Loaded\+O\+D\+Flag()}{UnmarkLoadedODFlag()}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} O\+D\+Manager\+::\+Unmark\+Loaded\+O\+D\+Flag (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [static]}}\hypertarget{class_o_d_manager_ab808eba4b4f987253df06557a5f48846}{}\label{class_o_d_manager_ab808eba4b4f987253df06557a5f48846}
+
+
+resets a flag that is set if we have loaded some OD blockfiles from P\+CM. 
+
+
+
+Definition at line 531 of file O\+D\+Manager.\+cpp.
+
+\index{O\+D\+Manager@{O\+D\+Manager}!Update\+Queues@{Update\+Queues}}
+\index{Update\+Queues@{Update\+Queues}!O\+D\+Manager@{O\+D\+Manager}}
+\subsubsection[{\texorpdfstring{Update\+Queues()}{UpdateQueues()}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} O\+D\+Manager\+::\+Update\+Queues (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [protected]}}\hypertarget{class_o_d_manager_a6d8e8b5263068d7c19f3be1a4fa2d6e9}{}\label{class_o_d_manager_a6d8e8b5263068d7c19f3be1a4fa2d6e9}
+
+
+Remove references in our array to Tasks that have been completed/\+Schedule N\+EW ones. 
+
+remove tasks from O\+D\+Wave\+Track\+Task\+Queues that have been done. Schedules N\+EW ones if they exist Also remove queues that have become empty. 
+
+Definition at line 490 of file O\+D\+Manager.\+cpp.
+
+
+
+\subsection{Member Data Documentation}
+\index{O\+D\+Manager@{O\+D\+Manager}!Instance@{Instance}}
+\index{Instance@{Instance}!O\+D\+Manager@{O\+D\+Manager}}
+\subsubsection[{\texorpdfstring{Instance}{Instance}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf pfodman} O\+D\+Manager\+::\+Instance = \&({\bf O\+D\+Manager\+::\+Instance\+First\+Time})\hspace{0.3cm}{\ttfamily [static]}}\hypertarget{class_o_d_manager_aef1bcdded223f015b22a0d1d439c23ad}{}\label{class_o_d_manager_aef1bcdded223f015b22a0d1d439c23ad}
+Gets the singleton instance -\/ this is a function pointer that points to one of the below two instance calls. Note that it is not a member function pointer since it is a static function. the function pointer swapping is valid as long as the initial calls only happen from the main thread. 
+
+Definition at line 49 of file O\+D\+Manager.\+h.
+
+\index{O\+D\+Manager@{O\+D\+Manager}!m\+Current\+Threads@{m\+Current\+Threads}}
+\index{m\+Current\+Threads@{m\+Current\+Threads}!O\+D\+Manager@{O\+D\+Manager}}
+\subsubsection[{\texorpdfstring{m\+Current\+Threads}{mCurrentThreads}}]{\setlength{\rightskip}{0pt plus 5cm}volatile {\bf int} O\+D\+Manager\+::m\+Current\+Threads\hspace{0.3cm}{\ttfamily [protected]}}\hypertarget{class_o_d_manager_a06856d83f378f240132c1520405f5040}{}\label{class_o_d_manager_a06856d83f378f240132c1520405f5040}
+
+
+Number of threads currently running. Accessed thru multiple threads. 
+
+
+
+Definition at line 151 of file O\+D\+Manager.\+h.
+
+\index{O\+D\+Manager@{O\+D\+Manager}!m\+Current\+Threads\+Mutex@{m\+Current\+Threads\+Mutex}}
+\index{m\+Current\+Threads\+Mutex@{m\+Current\+Threads\+Mutex}!O\+D\+Manager@{O\+D\+Manager}}
+\subsubsection[{\texorpdfstring{m\+Current\+Threads\+Mutex}{mCurrentThreadsMutex}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf O\+D\+Lock} O\+D\+Manager\+::m\+Current\+Threads\+Mutex\hspace{0.3cm}{\ttfamily [protected]}}\hypertarget{class_o_d_manager_abed3761c5ea4877de3d9ec263b3da865}{}\label{class_o_d_manager_abed3761c5ea4877de3d9ec263b3da865}
+
+
+Definition at line 153 of file O\+D\+Manager.\+h.
+
+\index{O\+D\+Manager@{O\+D\+Manager}!m\+Max\+Threads@{m\+Max\+Threads}}
+\index{m\+Max\+Threads@{m\+Max\+Threads}!O\+D\+Manager@{O\+D\+Manager}}
+\subsubsection[{\texorpdfstring{m\+Max\+Threads}{mMaxThreads}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf int} O\+D\+Manager\+::m\+Max\+Threads\hspace{0.3cm}{\ttfamily [protected]}}\hypertarget{class_o_d_manager_ac85438f32145747ba36ebf7087860a35}{}\label{class_o_d_manager_ac85438f32145747ba36ebf7087860a35}
+
+
+Maximum number of threads allowed out. 
+
+
+
+Definition at line 156 of file O\+D\+Manager.\+h.
+
+\index{O\+D\+Manager@{O\+D\+Manager}!m\+Needs\+Draw@{m\+Needs\+Draw}}
+\index{m\+Needs\+Draw@{m\+Needs\+Draw}!O\+D\+Manager@{O\+D\+Manager}}
+\subsubsection[{\texorpdfstring{m\+Needs\+Draw}{mNeedsDraw}}]{\setlength{\rightskip}{0pt plus 5cm}volatile {\bf int} O\+D\+Manager\+::m\+Needs\+Draw\hspace{0.3cm}{\ttfamily [protected]}}\hypertarget{class_o_d_manager_ac03e55bb072bc1e81e73a7d86523b6f4}{}\label{class_o_d_manager_ac03e55bb072bc1e81e73a7d86523b6f4}
+
+
+Definition at line 148 of file O\+D\+Manager.\+h.
+
+\index{O\+D\+Manager@{O\+D\+Manager}!m\+Pause@{m\+Pause}}
+\index{m\+Pause@{m\+Pause}!O\+D\+Manager@{O\+D\+Manager}}
+\subsubsection[{\texorpdfstring{m\+Pause}{mPause}}]{\setlength{\rightskip}{0pt plus 5cm}volatile {\bf bool} O\+D\+Manager\+::m\+Pause\hspace{0.3cm}{\ttfamily [protected]}}\hypertarget{class_o_d_manager_aebe05c8e1092dcca2db0a69236316dcd}{}\label{class_o_d_manager_aebe05c8e1092dcca2db0a69236316dcd}
+
+
+Definition at line 145 of file O\+D\+Manager.\+h.
+
+\index{O\+D\+Manager@{O\+D\+Manager}!m\+Pause\+Lock@{m\+Pause\+Lock}}
+\index{m\+Pause\+Lock@{m\+Pause\+Lock}!O\+D\+Manager@{O\+D\+Manager}}
+\subsubsection[{\texorpdfstring{m\+Pause\+Lock}{mPauseLock}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf O\+D\+Lock} O\+D\+Manager\+::m\+Pause\+Lock\hspace{0.3cm}{\ttfamily [protected]}}\hypertarget{class_o_d_manager_a59f76b74b2ee0e6ffb44e954fef857e8}{}\label{class_o_d_manager_a59f76b74b2ee0e6ffb44e954fef857e8}
+
+
+Definition at line 146 of file O\+D\+Manager.\+h.
+
+\index{O\+D\+Manager@{O\+D\+Manager}!m\+Queue\+Not\+Empty\+Cond@{m\+Queue\+Not\+Empty\+Cond}}
+\index{m\+Queue\+Not\+Empty\+Cond@{m\+Queue\+Not\+Empty\+Cond}!O\+D\+Manager@{O\+D\+Manager}}
+\subsubsection[{\texorpdfstring{m\+Queue\+Not\+Empty\+Cond}{mQueueNotEmptyCond}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf O\+D\+Condition}$\ast$ O\+D\+Manager\+::m\+Queue\+Not\+Empty\+Cond\hspace{0.3cm}{\ttfamily [protected]}}\hypertarget{class_o_d_manager_aba42a99deec038f307a29971320f8416}{}\label{class_o_d_manager_aba42a99deec038f307a29971320f8416}
+
+
+Definition at line 166 of file O\+D\+Manager.\+h.
+
+\index{O\+D\+Manager@{O\+D\+Manager}!m\+Queue\+Not\+Empty\+Cond\+Lock@{m\+Queue\+Not\+Empty\+Cond\+Lock}}
+\index{m\+Queue\+Not\+Empty\+Cond\+Lock@{m\+Queue\+Not\+Empty\+Cond\+Lock}!O\+D\+Manager@{O\+D\+Manager}}
+\subsubsection[{\texorpdfstring{m\+Queue\+Not\+Empty\+Cond\+Lock}{mQueueNotEmptyCondLock}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf O\+D\+Lock} O\+D\+Manager\+::m\+Queue\+Not\+Empty\+Cond\+Lock\hspace{0.3cm}{\ttfamily [protected]}}\hypertarget{class_o_d_manager_a85a3669d8bba22645b47ff06b4164ac4}{}\label{class_o_d_manager_a85a3669d8bba22645b47ff06b4164ac4}
+
+
+Definition at line 165 of file O\+D\+Manager.\+h.
+
+\index{O\+D\+Manager@{O\+D\+Manager}!m\+Queues@{m\+Queues}}
+\index{m\+Queues@{m\+Queues}!O\+D\+Manager@{O\+D\+Manager}}
+\subsubsection[{\texorpdfstring{m\+Queues}{mQueues}}]{\setlength{\rightskip}{0pt plus 5cm}std\+::vector$<${\bf O\+D\+Wave\+Track\+Task\+Queue}$\ast$$>$ O\+D\+Manager\+::m\+Queues\hspace{0.3cm}{\ttfamily [protected]}}\hypertarget{class_o_d_manager_ad6b9a0871a6624fa11b9deee2f23dd98}{}\label{class_o_d_manager_ad6b9a0871a6624fa11b9deee2f23dd98}
+
+
+Definition at line 136 of file O\+D\+Manager.\+h.
+
+\index{O\+D\+Manager@{O\+D\+Manager}!m\+Queues\+Mutex@{m\+Queues\+Mutex}}
+\index{m\+Queues\+Mutex@{m\+Queues\+Mutex}!O\+D\+Manager@{O\+D\+Manager}}
+\subsubsection[{\texorpdfstring{m\+Queues\+Mutex}{mQueuesMutex}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf O\+D\+Lock} O\+D\+Manager\+::m\+Queues\+Mutex\hspace{0.3cm}{\ttfamily [protected]}}\hypertarget{class_o_d_manager_a8bac5038bf5f5180de202e37e94258f4}{}\label{class_o_d_manager_a8bac5038bf5f5180de202e37e94258f4}
+
+
+Definition at line 137 of file O\+D\+Manager.\+h.
+
+\index{O\+D\+Manager@{O\+D\+Manager}!m\+Tasks@{m\+Tasks}}
+\index{m\+Tasks@{m\+Tasks}!O\+D\+Manager@{O\+D\+Manager}}
+\subsubsection[{\texorpdfstring{m\+Tasks}{mTasks}}]{\setlength{\rightskip}{0pt plus 5cm}std\+::vector$<${\bf O\+D\+Task}$\ast$$>$ O\+D\+Manager\+::m\+Tasks\hspace{0.3cm}{\ttfamily [protected]}}\hypertarget{class_o_d_manager_ae8285de40c66dd8dd1ef3d9f9f2f69ae}{}\label{class_o_d_manager_ae8285de40c66dd8dd1ef3d9f9f2f69ae}
+
+
+Definition at line 140 of file O\+D\+Manager.\+h.
+
+\index{O\+D\+Manager@{O\+D\+Manager}!m\+Tasks\+Mutex@{m\+Tasks\+Mutex}}
+\index{m\+Tasks\+Mutex@{m\+Tasks\+Mutex}!O\+D\+Manager@{O\+D\+Manager}}
+\subsubsection[{\texorpdfstring{m\+Tasks\+Mutex}{mTasksMutex}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf O\+D\+Lock} O\+D\+Manager\+::m\+Tasks\+Mutex\hspace{0.3cm}{\ttfamily [protected]}}\hypertarget{class_o_d_manager_a9d307a10f6c2f48655c84ecc21b94ac2}{}\label{class_o_d_manager_a9d307a10f6c2f48655c84ecc21b94ac2}
+
+
+Definition at line 142 of file O\+D\+Manager.\+h.
+
+\index{O\+D\+Manager@{O\+D\+Manager}!m\+Terminate@{m\+Terminate}}
+\index{m\+Terminate@{m\+Terminate}!O\+D\+Manager@{O\+D\+Manager}}
+\subsubsection[{\texorpdfstring{m\+Terminate}{mTerminate}}]{\setlength{\rightskip}{0pt plus 5cm}volatile {\bf bool} O\+D\+Manager\+::m\+Terminate\hspace{0.3cm}{\ttfamily [protected]}}\hypertarget{class_o_d_manager_affc1004f5826b83f3bfd258f59b31f02}{}\label{class_o_d_manager_affc1004f5826b83f3bfd258f59b31f02}
+
+
+Definition at line 158 of file O\+D\+Manager.\+h.
+
+\index{O\+D\+Manager@{O\+D\+Manager}!m\+Terminated@{m\+Terminated}}
+\index{m\+Terminated@{m\+Terminated}!O\+D\+Manager@{O\+D\+Manager}}
+\subsubsection[{\texorpdfstring{m\+Terminated}{mTerminated}}]{\setlength{\rightskip}{0pt plus 5cm}volatile {\bf bool} O\+D\+Manager\+::m\+Terminated\hspace{0.3cm}{\ttfamily [protected]}}\hypertarget{class_o_d_manager_af90ef020c68adcd0c9f9e0b7bcf799bb}{}\label{class_o_d_manager_af90ef020c68adcd0c9f9e0b7bcf799bb}
+
+
+Definition at line 161 of file O\+D\+Manager.\+h.
+
+\index{O\+D\+Manager@{O\+D\+Manager}!m\+Terminated\+Mutex@{m\+Terminated\+Mutex}}
+\index{m\+Terminated\+Mutex@{m\+Terminated\+Mutex}!O\+D\+Manager@{O\+D\+Manager}}
+\subsubsection[{\texorpdfstring{m\+Terminated\+Mutex}{mTerminatedMutex}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf O\+D\+Lock} O\+D\+Manager\+::m\+Terminated\+Mutex\hspace{0.3cm}{\ttfamily [protected]}}\hypertarget{class_o_d_manager_ad85b08f29c24368568b063a6822eebd2}{}\label{class_o_d_manager_ad85b08f29c24368568b063a6822eebd2}
+
+
+Definition at line 162 of file O\+D\+Manager.\+h.
+
+\index{O\+D\+Manager@{O\+D\+Manager}!m\+Terminate\+Mutex@{m\+Terminate\+Mutex}}
+\index{m\+Terminate\+Mutex@{m\+Terminate\+Mutex}!O\+D\+Manager@{O\+D\+Manager}}
+\subsubsection[{\texorpdfstring{m\+Terminate\+Mutex}{mTerminateMutex}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf O\+D\+Lock} O\+D\+Manager\+::m\+Terminate\+Mutex\hspace{0.3cm}{\ttfamily [protected]}}\hypertarget{class_o_d_manager_a7690b70eb196abd7e7953e552735f501}{}\label{class_o_d_manager_a7690b70eb196abd7e7953e552735f501}
+
+
+Definition at line 159 of file O\+D\+Manager.\+h.
+
+\index{O\+D\+Manager@{O\+D\+Manager}!p\+Man@{p\+Man}}
+\index{p\+Man@{p\+Man}!O\+D\+Manager@{O\+D\+Manager}}
+\subsubsection[{\texorpdfstring{p\+Man}{pMan}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf O\+D\+Manager} $\ast$ O\+D\+Manager\+::p\+Man ={\bf N\+U\+LL}\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [protected]}}\hypertarget{class_o_d_manager_a35f30c3429c263f3d2d05206942bd036}{}\label{class_o_d_manager_a35f30c3429c263f3d2d05206942bd036}
+
+
+Definition at line 133 of file O\+D\+Manager.\+h.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/src/ondemand/\hyperlink{_o_d_manager_8h}{O\+D\+Manager.\+h}\item 
+C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/src/ondemand/\hyperlink{_o_d_manager_8cpp}{O\+D\+Manager.\+cpp}\end{DoxyCompactItemize}

@@ -1,0 +1,787 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/lib-src/libnyquist/nyquist/xlisp/xldmem.h" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/lib-src/libnyquist/nyquist/xlisp/xldmem.h \- 
+.SH SYNOPSIS
+.br
+.PP
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "struct \fBxtype_desc_struct\fP"
+.br
+.ti -1c
+.RI "struct \fBnode\fP"
+.br
+.ti -1c
+.RI "union \fBnode::ninfo\fP"
+.br
+.ti -1c
+.RI "struct \fBnode::ninfo::xsubr\fP"
+.br
+.ti -1c
+.RI "struct \fBnode::ninfo::xcons\fP"
+.br
+.ti -1c
+.RI "struct \fBnode::ninfo::xfixnum\fP"
+.br
+.ti -1c
+.RI "struct \fBnode::ninfo::xflonum\fP"
+.br
+.ti -1c
+.RI "struct \fBnode::ninfo::xchar\fP"
+.br
+.ti -1c
+.RI "struct \fBnode::ninfo::xstring\fP"
+.br
+.ti -1c
+.RI "struct \fBnode::ninfo::xstream\fP"
+.br
+.ti -1c
+.RI "struct \fBnode::ninfo::xvector\fP"
+.br
+.ti -1c
+.RI "struct \fBnode::ninfo::xextern\fP"
+.br
+.ti -1c
+.RI "struct \fBsegment\fP"
+.br
+.in -1c
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBSFIXMIN\fP   (\-128)"
+.br
+.ti -1c
+.RI "#define \fBSFIXMAX\fP   255"
+.br
+.ti -1c
+.RI "#define \fBSFIXSIZE\fP   384"
+.br
+.ti -1c
+.RI "#define \fBCHARMIN\fP   0"
+.br
+.ti -1c
+.RI "#define \fBCHARMAX\fP   255"
+.br
+.ti -1c
+.RI "#define \fBCHARSIZE\fP   256"
+.br
+.ti -1c
+.RI "#define \fBntype\fP(x)   ((x)\->n_type)"
+.br
+.ti -1c
+.RI "#define \fBcar\fP(x)   ((x)\->\fBn_car\fP)"
+.br
+.ti -1c
+.RI "#define \fBcdr\fP(x)   ((x)\->\fBn_cdr\fP)"
+.br
+.ti -1c
+.RI "#define \fBrplaca\fP(x,  y)   ((x)\->\fBn_car\fP = (y))"
+.br
+.ti -1c
+.RI "#define \fBrplacd\fP(x,  y)   ((x)\->\fBn_cdr\fP = (y))"
+.br
+.ti -1c
+.RI "#define \fBgetvalue\fP(x)   ((x)\->\fBn_vdata\fP[0])"
+.br
+.ti -1c
+.RI "#define \fBsetvalue\fP(x,  v)   ((x)\->\fBn_vdata\fP[0] = (v))"
+.br
+.ti -1c
+.RI "#define \fBgetfunction\fP(x)   ((x)\->\fBn_vdata\fP[1])"
+.br
+.ti -1c
+.RI "#define \fBsetfunction\fP(x,  v)   ((x)\->\fBn_vdata\fP[1] = (v))"
+.br
+.ti -1c
+.RI "#define \fBgetplist\fP(x)   ((x)\->\fBn_vdata\fP[2])"
+.br
+.ti -1c
+.RI "#define \fBsetplist\fP(x,  v)   ((x)\->\fBn_vdata\fP[2] = (v))"
+.br
+.ti -1c
+.RI "#define \fBgetpname\fP(x)   ((x)\->\fBn_vdata\fP[3])"
+.br
+.ti -1c
+.RI "#define \fBsetpname\fP(x,  v)   ((x)\->\fBn_vdata\fP[3] = (v))"
+.br
+.ti -1c
+.RI "#define \fBSYMSIZE\fP   4"
+.br
+.ti -1c
+.RI "#define \fBgetname\fP(x)       	   ((x)\->\fBn_vdata\fP[0])"
+.br
+.ti -1c
+.RI "#define \fBsetname\fP(x,  v)   	   ((x)\->\fBn_vdata\fP[0] = (v))"
+.br
+.ti -1c
+.RI "#define \fBgettype\fP(x)     	   ((x)\->\fBn_vdata\fP[1])"
+.br
+.ti -1c
+.RI "#define \fBsettype\fP(x,  v) 	   ((x)\->\fBn_vdata\fP[1] = (v))"
+.br
+.ti -1c
+.RI "#define \fBgetargs\fP(x)       	   ((x)\->\fBn_vdata\fP[2])"
+.br
+.ti -1c
+.RI "#define \fBsetargs\fP(x,  v)   	   ((x)\->\fBn_vdata\fP[2] = (v))"
+.br
+.ti -1c
+.RI "#define \fBgetoargs\fP(x)     	   ((x)\->\fBn_vdata\fP[3])"
+.br
+.ti -1c
+.RI "#define \fBsetoargs\fP(x,  v) 	   ((x)\->\fBn_vdata\fP[3] = (v))"
+.br
+.ti -1c
+.RI "#define \fBgetrest\fP(x)       	   ((x)\->\fBn_vdata\fP[4])"
+.br
+.ti -1c
+.RI "#define \fBsetrest\fP(x,  v)   	   ((x)\->\fBn_vdata\fP[4] = (v))"
+.br
+.ti -1c
+.RI "#define \fBgetkargs\fP(x)     	   ((x)\->\fBn_vdata\fP[5])"
+.br
+.ti -1c
+.RI "#define \fBsetkargs\fP(x,  v) 	   ((x)\->\fBn_vdata\fP[5] = (v))"
+.br
+.ti -1c
+.RI "#define \fBgetaargs\fP(x)     	   ((x)\->\fBn_vdata\fP[6])"
+.br
+.ti -1c
+.RI "#define \fBsetaargs\fP(x,  v) 	   ((x)\->\fBn_vdata\fP[6] = (v))"
+.br
+.ti -1c
+.RI "#define \fBgetbody\fP(x)       	   ((x)\->\fBn_vdata\fP[7])"
+.br
+.ti -1c
+.RI "#define \fBsetbody\fP(x,  v)   	   ((x)\->\fBn_vdata\fP[7] = (v))"
+.br
+.ti -1c
+.RI "#define \fBclosure_getenv\fP(x)   ((x)\->\fBn_vdata\fP[8])"
+.br
+.ti -1c
+.RI "#define \fBsetenv\fP(x,  v)   ((x)\->\fBn_vdata\fP[8] = (v))"
+.br
+.ti -1c
+.RI "#define \fBgetfenv\fP(x)   ((x)\->\fBn_vdata\fP[9])"
+.br
+.ti -1c
+.RI "#define \fBsetfenv\fP(x,  v)   ((x)\->\fBn_vdata\fP[9] = (v))"
+.br
+.ti -1c
+.RI "#define \fBgetlambda\fP(x)   ((x)\->\fBn_vdata\fP[10])"
+.br
+.ti -1c
+.RI "#define \fBsetlambda\fP(x,  v)   ((x)\->\fBn_vdata\fP[10] = (v))"
+.br
+.ti -1c
+.RI "#define \fBCLOSIZE\fP   11"
+.br
+.ti -1c
+.RI "#define \fBgetsize\fP(x)   ((x)\->\fBn_vsize\fP)"
+.br
+.ti -1c
+.RI "#define \fBgetelement\fP(x,  \fBi\fP)   ((x)\->\fBn_vdata\fP[\fBi\fP])"
+.br
+.ti -1c
+.RI "#define \fBsetelement\fP(x,  \fBi\fP,  v)   ((x)\->\fBn_vdata\fP[\fBi\fP] = (v))"
+.br
+.ti -1c
+.RI "#define \fBgetclass\fP(x)   ((x)\->\fBn_vdata\fP[0])"
+.br
+.ti -1c
+.RI "#define \fBgetivar\fP(x,  \fBi\fP)   ((x)\->\fBn_vdata\fP[\fBi\fP+1])"
+.br
+.ti -1c
+.RI "#define \fBsetivar\fP(x,  \fBi\fP,  v)   ((x)\->\fBn_vdata\fP[\fBi\fP+1] = (v))"
+.br
+.ti -1c
+.RI "#define \fBgetsubr\fP(x)   ((x)\->\fBn_subr\fP)"
+.br
+.ti -1c
+.RI "#define \fBgetoffset\fP(x)   ((x)\->\fBn_offset\fP)"
+.br
+.ti -1c
+.RI "#define \fBgetfixnum\fP(x)       ((x)\->\fBn_fixnum\fP)"
+.br
+.ti -1c
+.RI "#define \fBgetflonum\fP(x)   ((x)\->\fBn_flonum\fP)"
+.br
+.ti -1c
+.RI "#define \fBgetchcode\fP(x)   ((x)\->\fBn_chcode\fP)"
+.br
+.ti -1c
+.RI "#define \fBgetstring\fP(x)   ((x)\->\fBn_string\fP)"
+.br
+.ti -1c
+.RI "#define \fBgetslength\fP(x)   ((x)\->\fBn_strlen\fP)"
+.br
+.ti -1c
+.RI "#define \fBgetfile\fP(x)   ((x)\->\fBn_fp\fP)"
+.br
+.ti -1c
+.RI "#define \fBsetfile\fP(x,  v)   ((x)\->\fBn_fp\fP = (v))"
+.br
+.ti -1c
+.RI "#define \fBgetsavech\fP(x)   ((x)\->\fBn_savech\fP)"
+.br
+.ti -1c
+.RI "#define \fBsetsavech\fP(x,  v)   ((x)\->\fBn_savech\fP = (v))"
+.br
+.ti -1c
+.RI "#define \fBgethead\fP(x)   ((x)\->\fBn_car\fP)"
+.br
+.ti -1c
+.RI "#define \fBsethead\fP(x,  v)   ((x)\->\fBn_car\fP = (v))"
+.br
+.ti -1c
+.RI "#define \fBgettail\fP(x)   ((x)\->\fBn_cdr\fP)"
+.br
+.ti -1c
+.RI "#define \fBsettail\fP(x,  v)   ((x)\->\fBn_cdr\fP = (v))"
+.br
+.ti -1c
+.RI "#define \fBgetdesc\fP(x)   ((x)\->\fBn_desc\fP)"
+.br
+.ti -1c
+.RI "#define \fBsetdesc\fP(x,  \fBd\fP)   ((x)\->\fBn_desc\fP = (\fBd\fP))"
+.br
+.ti -1c
+.RI "#define \fBgetinst\fP(x)   ((x)\->\fBn_inst\fP)"
+.br
+.ti -1c
+.RI "#define \fBsetinst\fP(x,  \fBi\fP)   ((x)\->\fBn_inst\fP = (\fBi\fP))"
+.br
+.ti -1c
+.RI "#define \fBFREE_NODE\fP   0"
+.br
+.ti -1c
+.RI "#define \fBSUBR\fP   1"
+.br
+.ti -1c
+.RI "#define \fBFSUBR\fP   2"
+.br
+.ti -1c
+.RI "#define \fBCONS\fP   3"
+.br
+.ti -1c
+.RI "#define \fBSYMBOL\fP   4"
+.br
+.ti -1c
+.RI "#define \fBFIXNUM\fP   5"
+.br
+.ti -1c
+.RI "#define \fBFLONUM\fP   6"
+.br
+.ti -1c
+.RI "#define \fBSTRING\fP   7"
+.br
+.ti -1c
+.RI "#define \fBOBJECT\fP   8"
+.br
+.ti -1c
+.RI "#define \fBSTREAM\fP   9"
+.br
+.ti -1c
+.RI "#define \fBVECTOR\fP   10"
+.br
+.ti -1c
+.RI "#define \fBCLOSURE\fP   11"
+.br
+.ti -1c
+.RI "#define \fBCHAR\fP   12"
+.br
+.ti -1c
+.RI "#define \fBUSTREAM\fP   13"
+.br
+.ti -1c
+.RI "#define \fBEXTERN\fP   14"
+.br
+.ti -1c
+.RI "#define \fBWATCH\fP   4"
+.br
+.ti -1c
+.RI "#define \fBn_subr\fP   n_info\&.n_xsubr\&.xs_subr"
+.br
+.ti -1c
+.RI "#define \fBn_offset\fP   n_info\&.n_xsubr\&.xs_offset"
+.br
+.ti -1c
+.RI "#define \fBn_car\fP   n_info\&.n_xcons\&.xc_car"
+.br
+.ti -1c
+.RI "#define \fBn_cdr\fP   n_info\&.n_xcons\&.xc_cdr"
+.br
+.ti -1c
+.RI "#define \fBn_fixnum\fP   n_info\&.n_xfixnum\&.xf_fixnum"
+.br
+.ti -1c
+.RI "#define \fBn_flonum\fP   n_info\&.n_xflonum\&.xf_flonum"
+.br
+.ti -1c
+.RI "#define \fBn_chcode\fP   n_info\&.n_xchar\&.xc_chcode"
+.br
+.ti -1c
+.RI "#define \fBn_string\fP   n_info\&.n_xstring\&.xs_string"
+.br
+.ti -1c
+.RI "#define \fBn_strlen\fP   n_info\&.n_xstring\&.xs_length"
+.br
+.ti -1c
+.RI "#define \fBn_fp\fP   n_info\&.n_xstream\&.xs_fp"
+.br
+.ti -1c
+.RI "#define \fBn_savech\fP   n_info\&.n_xstream\&.xs_savech"
+.br
+.ti -1c
+.RI "#define \fBn_vsize\fP   n_info\&.n_xvector\&.xv_size"
+.br
+.ti -1c
+.RI "#define \fBn_vdata\fP   n_info\&.n_xvector\&.xv_data"
+.br
+.ti -1c
+.RI "#define \fBn_desc\fP   n_info\&.n_xextern\&.xe_desc"
+.br
+.ti -1c
+.RI "#define \fBn_inst\fP   n_info\&.n_xextern\&.xe_inst"
+.br
+.in -1c
+.SS "Typedefs"
+
+.in +1c
+.ti -1c
+.RI "typedef struct \fBxtype_desc_struct\fP * \fBxtype_desc\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBnode\fP * \fBLVAL\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBsegment\fP \fBSEGMENT\fP"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBxtype_desc\fP \fBcreate_desc\fP (char *type_name, \fBvoid\fP(*fm)(\fBvoid\fP *), \fBvoid\fP(*pm)(\fBvoid\fP *, \fBvoid\fP *), \fBvoid\fP(*sm)(FILE *, \fBvoid\fP *), unsigned char *(*rm)(FILE *), \fBvoid\fP(*mm)(\fBvoid\fP *))"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define car(x)   ((x)\->\fBn_car\fP)"
+
+.PP
+Definition at line 20 of file xldmem\&.h\&.
+.SS "#define cdr(x)   ((x)\->\fBn_cdr\fP)"
+
+.PP
+Definition at line 21 of file xldmem\&.h\&.
+.SS "#define \fBCHAR\fP   12"
+
+.PP
+Definition at line 116 of file xldmem\&.h\&.
+.SS "#define CHARMAX   255"
+
+.PP
+Definition at line 13 of file xldmem\&.h\&.
+.SS "#define CHARMIN   0"
+
+.PP
+Definition at line 12 of file xldmem\&.h\&.
+.SS "#define CHARSIZE   256"
+
+.PP
+Definition at line 14 of file xldmem\&.h\&.
+.SS "#define CLOSIZE   11"
+
+.PP
+Definition at line 60 of file xldmem\&.h\&.
+.SS "#define CLOSURE   11"
+
+.PP
+Definition at line 115 of file xldmem\&.h\&.
+.SS "#define closure_getenv(x)   ((x)\->\fBn_vdata\fP[8])"
+
+.PP
+Definition at line 54 of file xldmem\&.h\&.
+.SS "#define CONS   3"
+
+.PP
+Definition at line 107 of file xldmem\&.h\&.
+.SS "#define EXTERN   14"
+
+.PP
+Definition at line 118 of file xldmem\&.h\&.
+.SS "#define FIXNUM   5"
+
+.PP
+Definition at line 109 of file xldmem\&.h\&.
+.SS "#define FLONUM   6"
+
+.PP
+Definition at line 110 of file xldmem\&.h\&.
+.SS "#define FREE_NODE   0"
+
+.PP
+Definition at line 104 of file xldmem\&.h\&.
+.SS "#define FSUBR   2"
+
+.PP
+Definition at line 106 of file xldmem\&.h\&.
+.SS "#define getaargs(x)   ((x)\->\fBn_vdata\fP[6])"
+
+.PP
+Definition at line 49 of file xldmem\&.h\&.
+.SS "#define getargs(x)   ((x)\->\fBn_vdata\fP[2])"
+
+.PP
+Definition at line 41 of file xldmem\&.h\&.
+.SS "#define getbody(x)   ((x)\->\fBn_vdata\fP[7])"
+
+.PP
+Definition at line 51 of file xldmem\&.h\&.
+.SS "#define getchcode(x)   ((x)\->\fBn_chcode\fP)"
+
+.PP
+Definition at line 79 of file xldmem\&.h\&.
+.SS "#define getclass(x)   ((x)\->\fBn_vdata\fP[0])"
+
+.PP
+Definition at line 68 of file xldmem\&.h\&.
+.SS "#define getdesc(x)   ((x)\->\fBn_desc\fP)"
+
+.PP
+Definition at line 98 of file xldmem\&.h\&.
+.SS "#define getelement(x, \fBi\fP)   ((x)\->\fBn_vdata\fP[\fBi\fP])"
+
+.PP
+Definition at line 64 of file xldmem\&.h\&.
+.SS "#define getfenv(x)   ((x)\->\fBn_vdata\fP[9])"
+
+.PP
+Definition at line 56 of file xldmem\&.h\&.
+.SS "#define getfile(x)   ((x)\->\fBn_fp\fP)"
+
+.PP
+Definition at line 86 of file xldmem\&.h\&.
+.SS "#define getfixnum(x)   ((x)\->\fBn_fixnum\fP)"
+
+.PP
+Definition at line 77 of file xldmem\&.h\&.
+.SS "#define getflonum(x)   ((x)\->\fBn_flonum\fP)"
+
+.PP
+Definition at line 78 of file xldmem\&.h\&.
+.SS "#define getfunction(x)   ((x)\->\fBn_vdata\fP[1])"
+
+.PP
+Definition at line 28 of file xldmem\&.h\&.
+.SS "#define gethead(x)   ((x)\->\fBn_car\fP)"
+
+.PP
+Definition at line 92 of file xldmem\&.h\&.
+.SS "#define getinst(x)   ((x)\->\fBn_inst\fP)"
+
+.PP
+Definition at line 100 of file xldmem\&.h\&.
+.SS "#define getivar(x, \fBi\fP)   ((x)\->\fBn_vdata\fP[\fBi\fP+1])"
+
+.PP
+Definition at line 69 of file xldmem\&.h\&.
+.SS "#define getkargs(x)   ((x)\->\fBn_vdata\fP[5])"
+
+.PP
+Definition at line 47 of file xldmem\&.h\&.
+.SS "#define getlambda(x)   ((x)\->\fBn_vdata\fP[10])"
+
+.PP
+Definition at line 58 of file xldmem\&.h\&.
+.SS "#define getname(x)   ((x)\->\fBn_vdata\fP[0])"
+
+.PP
+Definition at line 37 of file xldmem\&.h\&.
+.SS "#define getoargs(x)   ((x)\->\fBn_vdata\fP[3])"
+
+.PP
+Definition at line 43 of file xldmem\&.h\&.
+.SS "#define getoffset(x)   ((x)\->\fBn_offset\fP)"
+
+.PP
+Definition at line 74 of file xldmem\&.h\&.
+.SS "#define getplist(x)   ((x)\->\fBn_vdata\fP[2])"
+
+.PP
+Definition at line 30 of file xldmem\&.h\&.
+.SS "#define getpname(x)   ((x)\->\fBn_vdata\fP[3])"
+
+.PP
+Definition at line 32 of file xldmem\&.h\&.
+.SS "#define getrest(x)   ((x)\->\fBn_vdata\fP[4])"
+
+.PP
+Definition at line 45 of file xldmem\&.h\&.
+.SS "#define getsavech(x)   ((x)\->\fBn_savech\fP)"
+
+.PP
+Definition at line 88 of file xldmem\&.h\&.
+.SS "#define getsize(x)   ((x)\->\fBn_vsize\fP)"
+
+.PP
+Definition at line 63 of file xldmem\&.h\&.
+.SS "#define getslength(x)   ((x)\->\fBn_strlen\fP)"
+
+.PP
+Definition at line 83 of file xldmem\&.h\&.
+.SS "#define getstring(x)   ((x)\->\fBn_string\fP)"
+
+.PP
+Definition at line 82 of file xldmem\&.h\&.
+.SS "#define getsubr(x)   ((x)\->\fBn_subr\fP)"
+
+.PP
+Definition at line 73 of file xldmem\&.h\&.
+.SS "#define gettail(x)   ((x)\->\fBn_cdr\fP)"
+
+.PP
+Definition at line 94 of file xldmem\&.h\&.
+.SS "#define gettype(x)   ((x)\->\fBn_vdata\fP[1])"
+
+.PP
+Definition at line 39 of file xldmem\&.h\&.
+.SS "#define getvalue(x)   ((x)\->\fBn_vdata\fP[0])"
+
+.PP
+Definition at line 26 of file xldmem\&.h\&.
+.SS "#define n_car   n_info\&.n_xcons\&.xc_car"
+
+.PP
+Definition at line 128 of file xldmem\&.h\&.
+.SS "#define n_cdr   n_info\&.n_xcons\&.xc_cdr"
+
+.PP
+Definition at line 129 of file xldmem\&.h\&.
+.SS "#define n_chcode   n_info\&.n_xchar\&.xc_chcode"
+
+.PP
+Definition at line 137 of file xldmem\&.h\&.
+.SS "#define n_desc   n_info\&.n_xextern\&.xe_desc"
+
+.PP
+Definition at line 152 of file xldmem\&.h\&.
+.SS "#define n_fixnum   n_info\&.n_xfixnum\&.xf_fixnum"
+
+.PP
+Definition at line 132 of file xldmem\&.h\&.
+.SS "#define n_flonum   n_info\&.n_xflonum\&.xf_flonum"
+
+.PP
+Definition at line 135 of file xldmem\&.h\&.
+.SS "#define n_fp   n_info\&.n_xstream\&.xs_fp"
+
+.PP
+Definition at line 144 of file xldmem\&.h\&.
+.SS "#define n_inst   n_info\&.n_xextern\&.xe_inst"
+
+.PP
+Definition at line 153 of file xldmem\&.h\&.
+.SS "#define n_offset   n_info\&.n_xsubr\&.xs_offset"
+
+.PP
+Definition at line 125 of file xldmem\&.h\&.
+.SS "#define n_savech   n_info\&.n_xstream\&.xs_savech"
+
+.PP
+Definition at line 145 of file xldmem\&.h\&.
+.SS "#define n_string   n_info\&.n_xstring\&.xs_string"
+
+.PP
+Definition at line 140 of file xldmem\&.h\&.
+.SS "#define n_strlen   n_info\&.n_xstring\&.xs_length"
+
+.PP
+Definition at line 141 of file xldmem\&.h\&.
+.SS "#define n_subr   n_info\&.n_xsubr\&.xs_subr"
+
+.PP
+Definition at line 124 of file xldmem\&.h\&.
+.SS "#define n_vdata   n_info\&.n_xvector\&.xv_data"
+
+.PP
+Definition at line 149 of file xldmem\&.h\&.
+.SS "#define n_vsize   n_info\&.n_xvector\&.xv_size"
+
+.PP
+Definition at line 148 of file xldmem\&.h\&.
+.SS "#define ntype(x)   ((x)\->n_type)"
+
+.PP
+Definition at line 17 of file xldmem\&.h\&.
+.SS "#define OBJECT   8"
+
+.PP
+Definition at line 112 of file xldmem\&.h\&.
+.SS "#define rplaca(x, y)   ((x)\->\fBn_car\fP = (y))"
+
+.PP
+Definition at line 22 of file xldmem\&.h\&.
+.SS "#define rplacd(x, y)   ((x)\->\fBn_cdr\fP = (y))"
+
+.PP
+Definition at line 23 of file xldmem\&.h\&.
+.SS "#define setaargs(x, v)   ((x)\->\fBn_vdata\fP[6] = (v))"
+
+.PP
+Definition at line 50 of file xldmem\&.h\&.
+.SS "#define setargs(x, v)   ((x)\->\fBn_vdata\fP[2] = (v))"
+
+.PP
+Definition at line 42 of file xldmem\&.h\&.
+.SS "#define setbody(x, v)   ((x)\->\fBn_vdata\fP[7] = (v))"
+
+.PP
+Definition at line 52 of file xldmem\&.h\&.
+.SS "#define setdesc(x, \fBd\fP)   ((x)\->\fBn_desc\fP = (\fBd\fP))"
+
+.PP
+Definition at line 99 of file xldmem\&.h\&.
+.SS "#define setelement(x, \fBi\fP, v)   ((x)\->\fBn_vdata\fP[\fBi\fP] = (v))"
+
+.PP
+Definition at line 65 of file xldmem\&.h\&.
+.SS "#define setenv(x, v)   ((x)\->\fBn_vdata\fP[8] = (v))"
+
+.PP
+Definition at line 55 of file xldmem\&.h\&.
+.SS "#define setfenv(x, v)   ((x)\->\fBn_vdata\fP[9] = (v))"
+
+.PP
+Definition at line 57 of file xldmem\&.h\&.
+.SS "#define setfile(x, v)   ((x)\->\fBn_fp\fP = (v))"
+
+.PP
+Definition at line 87 of file xldmem\&.h\&.
+.SS "#define setfunction(x, v)   ((x)\->\fBn_vdata\fP[1] = (v))"
+
+.PP
+Definition at line 29 of file xldmem\&.h\&.
+.SS "#define sethead(x, v)   ((x)\->\fBn_car\fP = (v))"
+
+.PP
+Definition at line 93 of file xldmem\&.h\&.
+.SS "#define setinst(x, \fBi\fP)   ((x)\->\fBn_inst\fP = (\fBi\fP))"
+
+.PP
+Definition at line 101 of file xldmem\&.h\&.
+.SS "#define setivar(x, \fBi\fP, v)   ((x)\->\fBn_vdata\fP[\fBi\fP+1] = (v))"
+
+.PP
+Definition at line 70 of file xldmem\&.h\&.
+.SS "#define setkargs(x, v)   ((x)\->\fBn_vdata\fP[5] = (v))"
+
+.PP
+Definition at line 48 of file xldmem\&.h\&.
+.SS "#define setlambda(x, v)   ((x)\->\fBn_vdata\fP[10] = (v))"
+
+.PP
+Definition at line 59 of file xldmem\&.h\&.
+.SS "#define setname(x, v)   ((x)\->\fBn_vdata\fP[0] = (v))"
+
+.PP
+Definition at line 38 of file xldmem\&.h\&.
+.SS "#define setoargs(x, v)   ((x)\->\fBn_vdata\fP[3] = (v))"
+
+.PP
+Definition at line 44 of file xldmem\&.h\&.
+.SS "#define setplist(x, v)   ((x)\->\fBn_vdata\fP[2] = (v))"
+
+.PP
+Definition at line 31 of file xldmem\&.h\&.
+.SS "#define setpname(x, v)   ((x)\->\fBn_vdata\fP[3] = (v))"
+
+.PP
+Definition at line 33 of file xldmem\&.h\&.
+.SS "#define setrest(x, v)   ((x)\->\fBn_vdata\fP[4] = (v))"
+
+.PP
+Definition at line 46 of file xldmem\&.h\&.
+.SS "#define setsavech(x, v)   ((x)\->\fBn_savech\fP = (v))"
+
+.PP
+Definition at line 89 of file xldmem\&.h\&.
+.SS "#define settail(x, v)   ((x)\->\fBn_cdr\fP = (v))"
+
+.PP
+Definition at line 95 of file xldmem\&.h\&.
+.SS "#define settype(x, v)   ((x)\->\fBn_vdata\fP[1] = (v))"
+
+.PP
+Definition at line 40 of file xldmem\&.h\&.
+.SS "#define setvalue(x, v)   ((x)\->\fBn_vdata\fP[0] = (v))"
+
+.PP
+Definition at line 27 of file xldmem\&.h\&.
+.SS "#define SFIXMAX   255"
+
+.PP
+Definition at line 8 of file xldmem\&.h\&.
+.SS "#define SFIXMIN   (\-128)"
+
+.PP
+Definition at line 7 of file xldmem\&.h\&.
+.SS "#define SFIXSIZE   384"
+
+.PP
+Definition at line 9 of file xldmem\&.h\&.
+.SS "#define STREAM   9"
+
+.PP
+Definition at line 113 of file xldmem\&.h\&.
+.SS "#define STRING   7"
+
+.PP
+Definition at line 111 of file xldmem\&.h\&.
+.SS "#define SUBR   1"
+
+.PP
+Definition at line 105 of file xldmem\&.h\&.
+.SS "#define SYMBOL   4"
+
+.PP
+Definition at line 108 of file xldmem\&.h\&.
+.SS "#define SYMSIZE   4"
+
+.PP
+Definition at line 34 of file xldmem\&.h\&.
+.SS "#define USTREAM   13"
+
+.PP
+Definition at line 117 of file xldmem\&.h\&.
+.SS "#define VECTOR   10"
+
+.PP
+Definition at line 114 of file xldmem\&.h\&.
+.SS "#define WATCH   4"
+
+.PP
+Definition at line 121 of file xldmem\&.h\&.
+.SH "Typedef Documentation"
+.PP 
+.SS "typedef struct \fBnode\fP * \fBLVAL\fP"
+
+.SS "typedef struct \fBsegment\fP  \fBSEGMENT\fP"
+
+.SS "typedef struct \fBxtype_desc_struct\fP * \fBxtype_desc\fP"
+
+.SH "Function Documentation"
+.PP 
+.SS "\fBxtype_desc\fP create_desc (char * type_name, \fBvoid\fP(*)(\fBvoid\fP *) fm, \fBvoid\fP(*)(\fBvoid\fP *, \fBvoid\fP *) pm, \fBvoid\fP(*)(FILE *, \fBvoid\fP *) sm, unsigned char *(*)(FILE *) rm, \fBvoid\fP(*)(\fBvoid\fP *) mm)"
+
+.PP
+Definition at line 57 of file extern\&.c\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

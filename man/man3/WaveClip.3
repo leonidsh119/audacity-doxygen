@@ -1,0 +1,605 @@
+.TH "WaveClip" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+WaveClip \- This allows multiple clips to be a part of one \fBWaveTrack\fP\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <WaveClip\&.h>\fP
+.PP
+Inherits \fBXMLTagHandler\fP\&.
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBWaveClip\fP (\fBDirManager\fP *projDirManager, \fBsampleFormat\fP \fBformat\fP, \fBint\fP \fBrate\fP)"
+.br
+.ti -1c
+.RI "\fBWaveClip\fP (\fBconst\fP \fBWaveClip\fP &orig, \fBDirManager\fP *projDirManager)"
+.br
+.ti -1c
+.RI "virtual \fB~WaveClip\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBConvertToSampleFormat\fP (\fBsampleFormat\fP \fBformat\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBTimeToSamplesClip\fP (double t0, \fBsampleCount\fP *s0) \fBconst\fP "
+.br
+.ti -1c
+.RI "\fBint\fP \fBGetRate\fP () \fBconst\fP "
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBSetRate\fP (\fBint\fP \fBrate\fP)"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBResample\fP (\fBint\fP \fBrate\fP, \fBProgressDialog\fP *progress=\fBNULL\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBSetOffset\fP (double \fBoffset\fP)"
+.br
+.ti -1c
+.RI "double \fBGetOffset\fP () \fBconst\fP "
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOffset\fP (double delta)"
+.br
+.ti -1c
+.RI "double \fBGetStartTime\fP () \fBconst\fP "
+.br
+.ti -1c
+.RI "double \fBGetEndTime\fP () \fBconst\fP "
+.br
+.ti -1c
+.RI "\fBsampleCount\fP \fBGetStartSample\fP () \fBconst\fP "
+.br
+.ti -1c
+.RI "\fBsampleCount\fP \fBGetEndSample\fP () \fBconst\fP "
+.br
+.ti -1c
+.RI "\fBsampleCount\fP \fBGetNumSamples\fP () \fBconst\fP "
+.br
+.ti -1c
+.RI "\fBbool\fP \fBWithinClip\fP (double \fBt\fP) \fBconst\fP "
+.br
+.ti -1c
+.RI "\fBbool\fP \fBBeforeClip\fP (double \fBt\fP) \fBconst\fP "
+.br
+.ti -1c
+.RI "\fBbool\fP \fBAfterClip\fP (double \fBt\fP) \fBconst\fP "
+.br
+.ti -1c
+.RI "\fBbool\fP \fBGetSamples\fP (\fBsamplePtr\fP \fBbuffer\fP, \fBsampleFormat\fP \fBformat\fP, \fBsampleCount\fP \fBstart\fP, \fBsampleCount\fP \fBlen\fP) \fBconst\fP "
+.br
+.ti -1c
+.RI "\fBbool\fP \fBSetSamples\fP (\fBsamplePtr\fP \fBbuffer\fP, \fBsampleFormat\fP \fBformat\fP, \fBsampleCount\fP \fBstart\fP, \fBsampleCount\fP \fBlen\fP)"
+.br
+.ti -1c
+.RI "\fBEnvelope\fP * \fBGetEnvelope\fP ()"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBEnvelope\fP * \fBGetEnvelope\fP () \fBconst\fP "
+.br
+.ti -1c
+.RI "\fBBlockArray\fP * \fBGetSequenceBlockArray\fP ()"
+.br
+.ti -1c
+.RI "\fBSequence\fP * \fBGetSequence\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBMarkChanged\fP ()"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBCreateFromCopy\fP (double t0, double t1, \fBconst\fP \fBWaveClip\fP *other)"
+.br
+.RI "\fICreate clip from copy, discarding previous information in the clip\&. \fP"
+.ti -1c
+.RI "\fBbool\fP \fBGetWaveDisplay\fP (\fBWaveDisplay\fP &display, double t0, double pixelsPerSecond, \fBbool\fP &isLoadingOD) \fBconst\fP "
+.br
+.ti -1c
+.RI "\fBbool\fP \fBGetSpectrogram\fP (\fBWaveTrackCache\fP &cache, \fBconst\fP float *&spectrogram, \fBconst\fP \fBsampleCount\fP *&where, \fBint\fP numPixels, double t0, double pixelsPerSecond) \fBconst\fP "
+.br
+.ti -1c
+.RI "\fBbool\fP \fBGetMinMax\fP (float *\fBmin\fP, float *\fBmax\fP, double t0, double t1)"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBGetRMS\fP (float *rms, double t0, double t1)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBClearDisplayRect\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBSetDisplayRect\fP (\fBconst\fP wxRect &r) \fBconst\fP "
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBGetDisplayRect\fP (wxRect *r)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBUpdateEnvelopeTrackLen\fP ()"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBAppend\fP (\fBsamplePtr\fP \fBbuffer\fP, \fBsampleFormat\fP \fBformat\fP, \fBsampleCount\fP \fBlen\fP, unsigned \fBint\fP stride=1, \fBXMLWriter\fP *blockFileLog=\fBNULL\fP)"
+.br
+.RI "\fIYou must call Flush after the last Append\&. \fP"
+.ti -1c
+.RI "\fBbool\fP \fBFlush\fP ()"
+.br
+.RI "\fIFlush must be called after last Append\&. \fP"
+.ti -1c
+.RI "\fBbool\fP \fBAppendAlias\fP (\fBconst\fP wxString &fName, \fBsampleCount\fP \fBstart\fP, \fBsampleCount\fP \fBlen\fP, \fBint\fP channel, \fBbool\fP useOD)"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBAppendCoded\fP (\fBconst\fP wxString &fName, \fBsampleCount\fP \fBstart\fP, \fBsampleCount\fP \fBlen\fP, \fBint\fP channel, \fBint\fP decodeType)"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBClear\fP (double t0, double t1)"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBClearAndAddCutLine\fP (double t0, double t1)"
+.br
+.RI "\fIClear, and add cut line that starts at t0 and contains everything until t1\&. \fP"
+.ti -1c
+.RI "\fBbool\fP \fBPaste\fP (double t0, \fBconst\fP \fBWaveClip\fP *other)"
+.br
+.RI "\fIPaste data from other clip, resampling it if not equal rate\&. \fP"
+.ti -1c
+.RI "\fBbool\fP \fBInsertSilence\fP (double \fBt\fP, double \fBlen\fP)"
+.br
+.ti -1c
+.RI "WaveClipList * \fBGetCutLines\fP ()"
+.br
+.RI "\fIGet access to cut lines list\&. \fP"
+.ti -1c
+.RI "\fBbool\fP \fBFindCutLine\fP (double cutLinePosition, double *cutLineStart=\fBNULL\fP, double *cutLineEnd=\fBNULL\fP)"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBExpandCutLine\fP (double cutLinePosition)"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBRemoveCutLine\fP (double cutLinePosition)"
+.br
+.RI "\fIRemove cut line, without expanding the audio in it\&. \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBRemoveAllCutLines\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOffsetCutLines\fP (double t0, double \fBlen\fP)"
+.br
+.RI "\fIOffset cutlines right to time 't0' by time amount 'len'\&. \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBLock\fP ()"
+.br
+.RI "\fILock all blockfiles\&. \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBCloseLock\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBUnlock\fP ()"
+.br
+.RI "\fIUnlock all blockfiles\&. \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBDeleteWaveCache\fP ()"
+.br
+.RI "\fIDelete the wave cache - force redraw\&. Thread-safe\&. \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBAddInvalidRegion\fP (long startSample, long endSample)"
+.br
+.RI "\fIAdds an invalid region to the wavecache so it redraws that portion only\&. \fP"
+.ti -1c
+.RI "\fBbool\fP \fBHandleXMLTag\fP (\fBconst\fP wxChar *\fBtag\fP, \fBconst\fP wxChar **attrs) override"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBHandleXMLEndTag\fP (\fBconst\fP wxChar *\fBtag\fP) override"
+.br
+.ti -1c
+.RI "\fBXMLTagHandler\fP * \fBHandleXMLChild\fP (\fBconst\fP wxChar *\fBtag\fP) override"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBWriteXML\fP (\fBXMLWriter\fP &xmlFile)"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBGetIsPlaceholder\fP () \fBconst\fP "
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBSetIsPlaceholder\fP (\fBbool\fP val)"
+.br
+.in -1c
+.SS "Public Attributes"
+
+.in +1c
+.ti -1c
+.RI "\fBSpecPxCache\fP * \fBmSpecPxCache\fP"
+.br
+.in -1c
+.SS "Protected Attributes"
+
+.in +1c
+.ti -1c
+.RI "wxRect \fBmDisplayRect\fP"
+.br
+.ti -1c
+.RI "double \fBmOffset\fP"
+.br
+.ti -1c
+.RI "\fBint\fP \fBmRate\fP"
+.br
+.ti -1c
+.RI "\fBint\fP \fBmDirty\fP"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBmIsCutLine\fP"
+.br
+.ti -1c
+.RI "\fBSequence\fP * \fBmSequence\fP"
+.br
+.ti -1c
+.RI "\fBEnvelope\fP * \fBmEnvelope\fP"
+.br
+.ti -1c
+.RI "\fBWaveCache\fP * \fBmWaveCache\fP"
+.br
+.ti -1c
+.RI "\fBODLock\fP \fBmWaveCacheMutex\fP"
+.br
+.ti -1c
+.RI "\fBSpecCache\fP * \fBmSpecCache\fP"
+.br
+.ti -1c
+.RI "\fBSampleBuffer\fP \fBmAppendBuffer\fP"
+.br
+.ti -1c
+.RI "\fBsampleCount\fP \fBmAppendBufferLen\fP"
+.br
+.ti -1c
+.RI "WaveClipList \fBmCutLines\fP"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBmIsPlaceholder\fP"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+This allows multiple clips to be a part of one \fBWaveTrack\fP\&. 
+.PP
+Definition at line 204 of file WaveClip\&.h\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "WaveClip::WaveClip (\fBDirManager\fP * projDirManager, \fBsampleFormat\fP format, \fBint\fP rate)"
+
+.PP
+Definition at line 293 of file WaveClip\&.cpp\&.
+.SS "WaveClip::WaveClip (\fBconst\fP \fBWaveClip\fP & orig, \fBDirManager\fP * projDirManager)"
+
+.PP
+Definition at line 307 of file WaveClip\&.cpp\&.
+.SS "WaveClip::~WaveClip ()\fC [virtual]\fP"
+
+.PP
+Definition at line 332 of file WaveClip\&.cpp\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "\fBvoid\fP WaveClip::AddInvalidRegion (long startSample, long endSample)"
+
+.PP
+Adds an invalid region to the wavecache so it redraws that portion only\&. 
+.PP
+Definition at line 432 of file WaveClip\&.cpp\&.
+.SS "\fBbool\fP WaveClip::AfterClip (double t) const"
+
+.PP
+Definition at line 416 of file WaveClip\&.cpp\&.
+.SS "\fBbool\fP WaveClip::Append (\fBsamplePtr\fP buffer, \fBsampleFormat\fP format, \fBsampleCount\fP len, unsigned \fBint\fP stride = \fC1\fP, \fBXMLWriter\fP * blockFileLog = \fC\fBNULL\fP\fP)"
+
+.PP
+You must call Flush after the last Append\&. 
+.PP
+Definition at line 1248 of file WaveClip\&.cpp\&.
+.SS "\fBbool\fP WaveClip::AppendAlias (\fBconst\fP wxString & fName, \fBsampleCount\fP start, \fBsampleCount\fP len, \fBint\fP channel, \fBbool\fP useOD)"
+
+.PP
+Definition at line 1300 of file WaveClip\&.cpp\&.
+.SS "\fBbool\fP WaveClip::AppendCoded (\fBconst\fP wxString & fName, \fBsampleCount\fP start, \fBsampleCount\fP len, \fBint\fP channel, \fBint\fP decodeType)"
+
+.PP
+Definition at line 1312 of file WaveClip\&.cpp\&.
+.SS "\fBbool\fP WaveClip::BeforeClip (double t) const"
+
+.PP
+Definition at line 410 of file WaveClip\&.cpp\&.
+.SS "\fBbool\fP WaveClip::Clear (double t0, double t1)"
+This name is consistent with \fBWaveTrack::Clear\fP\&. It performs a 'Cut' operation (but without putting the cutted audio to the clipboard) 
+.PP
+Definition at line 1505 of file WaveClip\&.cpp\&.
+.SS "\fBbool\fP WaveClip::ClearAndAddCutLine (double t0, double t1)"
+
+.PP
+Clear, and add cut line that starts at t0 and contains everything until t1\&. 
+.PP
+Definition at line 1564 of file WaveClip\&.cpp\&.
+.SS "\fBvoid\fP WaveClip::ClearDisplayRect ()"
+
+.PP
+Definition at line 1232 of file WaveClip\&.cpp\&.
+.SS "\fBvoid\fP WaveClip::CloseLock ()"
+
+.PP
+Definition at line 1707 of file WaveClip\&.cpp\&.
+.SS "\fBvoid\fP WaveClip::ConvertToSampleFormat (\fBsampleFormat\fP format)"
+
+.PP
+Definition at line 1208 of file WaveClip\&.cpp\&.
+.SS "\fBbool\fP WaveClip::CreateFromCopy (double t0, double t1, \fBconst\fP \fBWaveClip\fP * other)"
+
+.PP
+Create clip from copy, discarding previous information in the clip\&. 
+.PP
+Definition at line 1410 of file WaveClip\&.cpp\&.
+.SS "\fBvoid\fP WaveClip::DeleteWaveCache ()"
+
+.PP
+Delete the wave cache - force redraw\&. Thread-safe\&. 
+.PP
+Definition at line 423 of file WaveClip\&.cpp\&.
+.SS "\fBbool\fP WaveClip::ExpandCutLine (double cutLinePosition)"
+Expand cut line (that is, re-insert audio, then DELETE audio saved in cut line)\&. Returns true if a cut line could be found and sucessfully expanded, false otherwise 
+.PP
+Definition at line 1647 of file WaveClip\&.cpp\&.
+.SS "\fBbool\fP WaveClip::FindCutLine (double cutLinePosition, double * cutLineStart = \fC\fBNULL\fP\fP, double * cutLineEnd = \fC\fBNULL\fP\fP)"
+Find cut line at (approximately) this position\&. Returns true and fills in cutLineStart and cutLineEnd (if specified) if a cut line at this position could be found\&. Return false otherwise\&. 
+.PP
+Definition at line 1627 of file WaveClip\&.cpp\&.
+.SS "\fBbool\fP WaveClip::Flush ()"
+
+.PP
+Flush must be called after last Append\&. 
+.PP
+Definition at line 1324 of file WaveClip\&.cpp\&.
+.SS "WaveClipList* WaveClip::GetCutLines ()\fC [inline]\fP"
+
+.PP
+Get access to cut lines list\&. 
+.PP
+Definition at line 334 of file WaveClip\&.h\&.
+.SS "\fBvoid\fP WaveClip::GetDisplayRect (wxRect * r)"
+
+.PP
+Definition at line 1243 of file WaveClip\&.cpp\&.
+.SS "\fBsampleCount\fP WaveClip::GetEndSample () const"
+
+.PP
+Definition at line 394 of file WaveClip\&.cpp\&.
+.SS "double WaveClip::GetEndTime () const"
+
+.PP
+Definition at line 378 of file WaveClip\&.cpp\&.
+.SS "\fBEnvelope\fP* WaveClip::GetEnvelope ()\fC [inline]\fP"
+
+.PP
+Definition at line 267 of file WaveClip\&.h\&.
+.SS "\fBconst\fP \fBEnvelope\fP* WaveClip::GetEnvelope () const\fC [inline]\fP"
+
+.PP
+Definition at line 268 of file WaveClip\&.h\&.
+.SS "\fBbool\fP WaveClip::GetIsPlaceholder () const\fC [inline]\fP"
+
+.PP
+Definition at line 380 of file WaveClip\&.h\&.
+.SS "\fBbool\fP WaveClip::GetMinMax (float * min, float * max, double t0, double t1)"
+
+.PP
+Definition at line 1169 of file WaveClip\&.cpp\&.
+.SS "\fBsampleCount\fP WaveClip::GetNumSamples () const"
+
+.PP
+Definition at line 399 of file WaveClip\&.cpp\&.
+.SS "double WaveClip::GetOffset () const\fC [inline]\fP"
+
+.PP
+Definition at line 247 of file WaveClip\&.h\&.
+.SS "\fBint\fP WaveClip::GetRate () const\fC [inline]\fP"
+
+.PP
+Definition at line 237 of file WaveClip\&.h\&.
+.SS "\fBbool\fP WaveClip::GetRMS (float * rms, double t0, double t1)"
+
+.PP
+Definition at line 1189 of file WaveClip\&.cpp\&.
+.SS "\fBbool\fP WaveClip::GetSamples (\fBsamplePtr\fP buffer, \fBsampleFormat\fP format, \fBsampleCount\fP start, \fBsampleCount\fP len) const"
+
+.PP
+Definition at line 353 of file WaveClip\&.cpp\&.
+.SS "\fBSequence\fP* WaveClip::GetSequence ()\fC [inline]\fP"
+
+.PP
+Definition at line 274 of file WaveClip\&.h\&.
+.SS "\fBBlockArray\fP * WaveClip::GetSequenceBlockArray ()"
+
+.PP
+Definition at line 367 of file WaveClip\&.cpp\&.
+.SS "\fBbool\fP WaveClip::GetSpectrogram (\fBWaveTrackCache\fP & cache, \fBconst\fP float *& spectrogram, \fBconst\fP \fBsampleCount\fP *& where, \fBint\fP numPixels, double t0, double pixelsPerSecond) const"
+
+.PP
+Definition at line 1072 of file WaveClip\&.cpp\&.
+.SS "\fBsampleCount\fP WaveClip::GetStartSample () const"
+
+.PP
+Definition at line 389 of file WaveClip\&.cpp\&.
+.SS "double WaveClip::GetStartTime () const"
+
+.PP
+Definition at line 372 of file WaveClip\&.cpp\&.
+.SS "\fBbool\fP WaveClip::GetWaveDisplay (\fBWaveDisplay\fP & display, double t0, double pixelsPerSecond, \fBbool\fP & isLoadingOD) const"
+Getting high-level data from the for screen display and clipping calculations and Contrast 
+.PP
+Definition at line 504 of file WaveClip\&.cpp\&.
+.SS "\fBXMLTagHandler\fP * WaveClip::HandleXMLChild (\fBconst\fP wxChar * tag)\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Implements \fBXMLTagHandler\fP\&.
+.PP
+Definition at line 1379 of file WaveClip\&.cpp\&.
+.SS "\fBvoid\fP WaveClip::HandleXMLEndTag (\fBconst\fP wxChar * tag)\fC [override]\fP"
+
+.PP
+Definition at line 1373 of file WaveClip\&.cpp\&.
+.SS "\fBbool\fP WaveClip::HandleXMLTag (\fBconst\fP wxChar * tag, \fBconst\fP wxChar ** attrs)\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Implements \fBXMLTagHandler\fP\&.
+.PP
+Definition at line 1345 of file WaveClip\&.cpp\&.
+.SS "\fBbool\fP WaveClip::InsertSilence (double t, double len)"
+Insert silence - note that this is an efficient operation for large amounts of silence 
+.PP
+Definition at line 1487 of file WaveClip\&.cpp\&.
+.SS "\fBvoid\fP WaveClip::Lock ()"
+
+.PP
+Lock all blockfiles\&. 
+.PP
+Definition at line 1700 of file WaveClip\&.cpp\&.
+.SS "\fBvoid\fP WaveClip::MarkChanged ()\fC [inline]\fP"
+\fBWaveTrack\fP calls this whenever data in the wave clip changes\&. It is called automatically when \fBWaveClip\fP has a chance to know that something has changed, like when member functions \fBSetSamples()\fP etc\&. are called\&. 
+.PP
+Definition at line 279 of file WaveClip\&.h\&.
+.SS "\fBvoid\fP WaveClip::Offset (double delta)\fC [inline]\fP"
+
+.PP
+Definition at line 248 of file WaveClip\&.h\&.
+.SS "\fBvoid\fP WaveClip::OffsetCutLines (double t0, double len)"
+
+.PP
+Offset cutlines right to time 't0' by time amount 'len'\&. 
+.PP
+Definition at line 1690 of file WaveClip\&.cpp\&.
+.SS "\fBbool\fP WaveClip::Paste (double t0, \fBconst\fP \fBWaveClip\fP * other)"
+
+.PP
+Paste data from other clip, resampling it if not equal rate\&. 
+.PP
+Definition at line 1435 of file WaveClip\&.cpp\&.
+.SS "\fBvoid\fP WaveClip::RemoveAllCutLines ()"
+
+.PP
+Definition at line 1680 of file WaveClip\&.cpp\&.
+.SS "\fBbool\fP WaveClip::RemoveCutLine (double cutLinePosition)"
+
+.PP
+Remove cut line, without expanding the audio in it\&. 
+.PP
+Definition at line 1665 of file WaveClip\&.cpp\&.
+.SS "\fBbool\fP WaveClip::Resample (\fBint\fP rate, \fBProgressDialog\fP * progress = \fC\fBNULL\fP\fP)"
+We want to keep going as long as we have something to feed the resampler with OR as long as the resampler spews out samples (which could continue for a few iterations after we stop feeding it)
+.PP
+Definition at line 1728 of file WaveClip\&.cpp\&.
+.SS "\fBvoid\fP WaveClip::SetDisplayRect (\fBconst\fP wxRect & r) const"
+
+.PP
+Definition at line 1238 of file WaveClip\&.cpp\&.
+.SS "\fBvoid\fP WaveClip::SetIsPlaceholder (\fBbool\fP val)\fC [inline]\fP"
+
+.PP
+Definition at line 381 of file WaveClip\&.h\&.
+.SS "\fBvoid\fP WaveClip::SetOffset (double offset)"
+
+.PP
+Definition at line 347 of file WaveClip\&.cpp\&.
+.SS "\fBvoid\fP WaveClip::SetRate (\fBint\fP rate)"
+
+.PP
+Definition at line 1721 of file WaveClip\&.cpp\&.
+.SS "\fBbool\fP WaveClip::SetSamples (\fBsamplePtr\fP buffer, \fBsampleFormat\fP format, \fBsampleCount\fP start, \fBsampleCount\fP len)"
+
+.PP
+Definition at line 359 of file WaveClip\&.cpp\&.
+.SS "\fBvoid\fP WaveClip::TimeToSamplesClip (double t0, \fBsampleCount\fP * s0) const"
+
+.PP
+Definition at line 1222 of file WaveClip\&.cpp\&.
+.SS "\fBvoid\fP WaveClip::Unlock ()"
+
+.PP
+Unlock all blockfiles\&. 
+.PP
+Definition at line 1714 of file WaveClip\&.cpp\&.
+.SS "\fBvoid\fP WaveClip::UpdateEnvelopeTrackLen ()"
+Whenever you do an operation to the sequence that will change the number of samples (that is, the length of the clip), you will want to call this function to tell the envelope about it\&. 
+.PP
+Definition at line 1217 of file WaveClip\&.cpp\&.
+.SS "\fBbool\fP WaveClip::WithinClip (double t) const"
+
+.PP
+Definition at line 404 of file WaveClip\&.cpp\&.
+.SS "\fBvoid\fP WaveClip::WriteXML (\fBXMLWriter\fP & xmlFile)"
+
+.PP
+Definition at line 1396 of file WaveClip\&.cpp\&.
+.SH "Member Data Documentation"
+.PP 
+.SS "\fBSampleBuffer\fP WaveClip::mAppendBuffer\fC [protected]\fP"
+
+.PP
+Definition at line 396 of file WaveClip\&.h\&.
+.SS "\fBsampleCount\fP WaveClip::mAppendBufferLen\fC [protected]\fP"
+
+.PP
+Definition at line 397 of file WaveClip\&.h\&.
+.SS "WaveClipList WaveClip::mCutLines\fC [protected]\fP"
+
+.PP
+Definition at line 401 of file WaveClip\&.h\&.
+.SS "\fBint\fP WaveClip::mDirty\fC [protected]\fP"
+
+.PP
+Definition at line 388 of file WaveClip\&.h\&.
+.SS "wxRect WaveClip::mDisplayRect\fC [mutable]\fP, \fC [protected]\fP"
+
+.PP
+Definition at line 384 of file WaveClip\&.h\&.
+.SS "\fBEnvelope\fP* WaveClip::mEnvelope\fC [protected]\fP"
+
+.PP
+Definition at line 391 of file WaveClip\&.h\&.
+.SS "\fBbool\fP WaveClip::mIsCutLine\fC [protected]\fP"
+
+.PP
+Definition at line 389 of file WaveClip\&.h\&.
+.SS "\fBbool\fP WaveClip::mIsPlaceholder\fC [protected]\fP"
+
+.PP
+Definition at line 404 of file WaveClip\&.h\&.
+.SS "double WaveClip::mOffset\fC [protected]\fP"
+
+.PP
+Definition at line 386 of file WaveClip\&.h\&.
+.SS "\fBint\fP WaveClip::mRate\fC [protected]\fP"
+
+.PP
+Definition at line 387 of file WaveClip\&.h\&.
+.SS "\fBSequence\fP* WaveClip::mSequence\fC [protected]\fP"
+
+.PP
+Definition at line 390 of file WaveClip\&.h\&.
+.SS "\fBSpecCache\fP* WaveClip::mSpecCache\fC [mutable]\fP, \fC [protected]\fP"
+
+.PP
+Definition at line 395 of file WaveClip\&.h\&.
+.SS "\fBSpecPxCache\fP* WaveClip::mSpecPxCache\fC [mutable]\fP"
+
+.PP
+Definition at line 377 of file WaveClip\&.h\&.
+.SS "\fBWaveCache\fP* WaveClip::mWaveCache\fC [mutable]\fP, \fC [protected]\fP"
+
+.PP
+Definition at line 393 of file WaveClip\&.h\&.
+.SS "\fBODLock\fP WaveClip::mWaveCacheMutex\fC [mutable]\fP, \fC [protected]\fP"
+
+.PP
+Definition at line 394 of file WaveClip\&.h\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

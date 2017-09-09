@@ -1,0 +1,370 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/lib-src/portmidi/pm_mac/readbinaryplist.c" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/lib-src/portmidi/pm_mac/readbinaryplist.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <sys/types\&.h>\fP
+.br
+\fC#include <stdlib\&.h>\fP
+.br
+\fC#include <string\&.h>\fP
+.br
+\fC#include <assert\&.h>\fP
+.br
+\fC#include <stdio\&.h>\fP
+.br
+\fC#include <sys/stat\&.h>\fP
+.br
+\fC#include 'readbinaryplist\&.h'\fP
+.br
+\fC#include <Carbon/Carbon\&.h>\fP
+.br
+
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "struct \fBcache_struct\fP"
+.br
+.ti -1c
+.RI "struct \fBbplist_info\fP"
+.br
+.in -1c
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBNO\fP   0"
+.br
+.ti -1c
+.RI "#define \fBYES\fP   1"
+.br
+.ti -1c
+.RI "#define \fBBOOL\fP   \fBint\fP"
+.br
+.ti -1c
+.RI "#define \fBMAXPATHLEN\fP   256"
+.br
+.ti -1c
+.RI "#define \fBbplist_log\fP(\&.\&.\&.)"
+.br
+.ti -1c
+.RI "#define \fBbplist_log_verbose\fP(\&.\&.\&.)"
+.br
+.ti -1c
+.RI "#define \fBBLOCK_SIZE\fP   1024"
+.br
+.ti -1c
+.RI "#define \fBALIGNMENT\fP   8"
+.br
+.in -1c
+.SS "Typedefs"
+
+.in +1c
+.ti -1c
+.RI "typedef struct \fBcache_struct\fP \fBcache_node\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBcache_struct\fP * \fBcache_ptr\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBbplist_info\fP \fBbplist_info_node\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBbplist_info\fP * \fBbplist_info_ptr\fP"
+.br
+.in -1c
+.SS "Enumerations"
+
+.in +1c
+.ti -1c
+.RI "enum { \fBkHEADER_SIZE\fP = 8, \fBkTRAILER_SIZE\fP = 32, \fBkMINIMUM_SANE_SIZE\fP = kHEADER_SIZE + kTRAILER_SIZE }"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBvoid\fP \fBbplist_free_data\fP ()"
+.br
+.ti -1c
+.RI "\fBvalue_ptr\fP \fBvalue_create\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBvalue_set_integer\fP (\fBvalue_ptr\fP v, \fBint64_t\fP \fBi\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBvalue_set_real\fP (\fBvalue_ptr\fP v, double \fBd\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBvalue_set_date\fP (\fBvalue_ptr\fP v, double \fBd\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBvalue_set_ascii_string\fP (\fBvalue_ptr\fP v, \fBconst\fP \fBuint8_t\fP *\fBs\fP, size_t \fBlen\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBvalue_set_unicode_string\fP (\fBvalue_ptr\fP v, \fBconst\fP \fBuint8_t\fP *\fBs\fP, size_t \fBlen\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBvalue_set_uid\fP (\fBvalue_ptr\fP v, \fBuint64_t\fP uid)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBvalue_set_data\fP (\fBvalue_ptr\fP v, \fBconst\fP \fBuint8_t\fP *\fBdata\fP, size_t \fBlen\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBvalue_set_array\fP (\fBvalue_ptr\fP v, \fBvalue_ptr\fP *array, size_t \fBlength\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBvalue_set_dict\fP (\fBvalue_ptr\fP v, \fBdict_ptr\fP dict)"
+.br
+.ti -1c
+.RI "\fBvalue_ptr\fP \fBcache_lookup\fP (\fBcache_ptr\fP cache, \fBuint64_t\fP ref)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBcache_insert\fP (\fBcache_ptr\fP *cache, \fBuint64_t\fP ref, \fBvalue_ptr\fP \fBvalue\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBdict_insert\fP (\fBdict_ptr\fP *dict, \fBvalue_ptr\fP key, \fBvalue_ptr\fP \fBvalue\fP)"
+.br
+.ti -1c
+.RI "\fBBOOL\fP \fBis_binary_plist\fP (\fBpldata_ptr\fP \fBdata\fP)"
+.br
+.ti -1c
+.RI "\fBvalue_ptr\fP \fBbplist_read_file\fP (char *\fBfilename\fP)"
+.br
+.ti -1c
+.RI "\fBvalue_ptr\fP \fBbplist_read_system_pref\fP (char *\fBfilename\fP)"
+.br
+.ti -1c
+.RI "\fBvalue_ptr\fP \fBbplist_read_user_pref\fP (char *\fBfilename\fP)"
+.br
+.ti -1c
+.RI "\fBuint64_t\fP \fBconvert_uint64\fP (\fBuint8_t\fP *ptr)"
+.br
+.ti -1c
+.RI "\fBuint64_t\fP \fBbplist_get_a_size\fP (\fBbplist_info_ptr\fP bplist, \fBuint64_t\fP *offset_ptr, char *msg)"
+.br
+.ti -1c
+.RI "char * \fBvalue_get_asciistring\fP (\fBvalue_ptr\fP v)"
+.br
+.ti -1c
+.RI "\fBvalue_ptr\fP \fBvalue_dict_lookup_using_string\fP (\fBvalue_ptr\fP v, char *key)"
+.br
+.ti -1c
+.RI "\fBvalue_ptr\fP \fBvalue_dict_lookup_using_path\fP (\fBvalue_ptr\fP v, char *path)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBplist_print\fP (\fBvalue_ptr\fP v)"
+.br
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "\fBuint8_t\fP \fBunused\fP [6]"
+.br
+.ti -1c
+.RI "\fBuint8_t\fP \fBoffset_int_size\fP"
+.br
+.ti -1c
+.RI "\fBuint8_t\fP \fBobject_ref_size\fP"
+.br
+.ti -1c
+.RI "\fBuint64_t\fP \fBobject_count\fP"
+.br
+.ti -1c
+.RI "\fBuint64_t\fP \fBtop_level_object\fP"
+.br
+.ti -1c
+.RI "\fBuint64_t\fP \fBoffset_table_offset\fP"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define ALIGNMENT   8"
+
+.PP
+Definition at line 125 of file readbinaryplist\&.c\&.
+.SS "#define BLOCK_SIZE   1024"
+
+.PP
+Definition at line 122 of file readbinaryplist\&.c\&.
+.SS "#define \fBBOOL\fP   \fBint\fP"
+
+.PP
+Definition at line 85 of file readbinaryplist\&.c\&.
+.SS "#define bplist_log( \&.\&.\&.)"
+
+.PP
+Definition at line 111 of file readbinaryplist\&.c\&.
+.SS "#define bplist_log_verbose( \&.\&.\&.)"
+
+.PP
+Definition at line 117 of file readbinaryplist\&.c\&.
+.SS "#define MAXPATHLEN   256"
+
+.PP
+Definition at line 87 of file readbinaryplist\&.c\&.
+.SS "#define NO   0"
+
+.PP
+Definition at line 83 of file readbinaryplist\&.c\&.
+.SS "#define YES   1"
+
+.PP
+Definition at line 84 of file readbinaryplist\&.c\&.
+.SH "Typedef Documentation"
+.PP 
+.SS "typedef struct \fBbplist_info\fP  \fBbplist_info_node\fP"
+
+.SS "typedef struct \fBbplist_info\fP * \fBbplist_info_ptr\fP"
+
+.SS "typedef struct \fBcache_struct\fP  \fBcache_node\fP"
+
+.SS "typedef struct \fBcache_struct\fP * \fBcache_ptr\fP"
+
+.SH "Enumeration Type Documentation"
+.PP 
+.SS "anonymous enum"
+
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fIkHEADER_SIZE \fP\fP
+.TP
+\fB\fIkTRAILER_SIZE \fP\fP
+.TP
+\fB\fIkMINIMUM_SANE_SIZE \fP\fP
+.PP
+Definition at line 176 of file readbinaryplist\&.c\&.
+.SH "Function Documentation"
+.PP 
+.SS "\fBvoid\fP bplist_free_data ()"
+
+.PP
+Definition at line 156 of file readbinaryplist\&.c\&.
+.SS "\fBuint64_t\fP bplist_get_a_size (\fBbplist_info_ptr\fP bplist, \fBuint64_t\fP * offset_ptr, char * msg)"
+
+.PP
+Definition at line 738 of file readbinaryplist\&.c\&.
+.SS "\fBvalue_ptr\fP bplist_read_file (char * filename)"
+
+.PP
+Definition at line 334 of file readbinaryplist\&.c\&.
+.SS "\fBvalue_ptr\fP bplist_read_system_pref (char * filename)"
+
+.PP
+Definition at line 403 of file readbinaryplist\&.c\&.
+.SS "\fBvalue_ptr\fP bplist_read_user_pref (char * filename)"
+
+.PP
+Definition at line 408 of file readbinaryplist\&.c\&.
+.SS "\fBvoid\fP cache_insert (\fBcache_ptr\fP * cache, \fBuint64_t\fP ref, \fBvalue_ptr\fP value)"
+
+.PP
+Definition at line 306 of file readbinaryplist\&.c\&.
+.SS "\fBvalue_ptr\fP cache_lookup (\fBcache_ptr\fP cache, \fBuint64_t\fP ref)"
+
+.PP
+Definition at line 293 of file readbinaryplist\&.c\&.
+.SS "\fBuint64_t\fP convert_uint64 (\fBuint8_t\fP * ptr)"
+
+.PP
+Definition at line 416 of file readbinaryplist\&.c\&.
+.SS "\fBvoid\fP dict_insert (\fBdict_ptr\fP * dict, \fBvalue_ptr\fP key, \fBvalue_ptr\fP value)"
+
+.PP
+Definition at line 317 of file readbinaryplist\&.c\&.
+.SS "\fBBOOL\fP is_binary_plist (\fBpldata_ptr\fP data)"
+
+.PP
+Definition at line 327 of file readbinaryplist\&.c\&.
+.SS "\fBvoid\fP plist_print (\fBvalue_ptr\fP v)"
+
+.PP
+Definition at line 1046 of file readbinaryplist\&.c\&.
+.SS "\fBvalue_ptr\fP value_create ()"
+
+.PP
+Definition at line 225 of file readbinaryplist\&.c\&.
+.SS "\fBvalue_ptr\fP value_dict_lookup_using_path (\fBvalue_ptr\fP v, char * path)"
+
+.PP
+Definition at line 1018 of file readbinaryplist\&.c\&.
+.SS "\fBvalue_ptr\fP value_dict_lookup_using_string (\fBvalue_ptr\fP v, char * key)"
+
+.PP
+Definition at line 1002 of file readbinaryplist\&.c\&.
+.SS "char* value_get_asciistring (\fBvalue_ptr\fP v)"
+
+.PP
+Definition at line 995 of file readbinaryplist\&.c\&.
+.SS "\fBvoid\fP value_set_array (\fBvalue_ptr\fP v, \fBvalue_ptr\fP * array, size_t length)"
+
+.PP
+Definition at line 277 of file readbinaryplist\&.c\&.
+.SS "\fBvoid\fP value_set_ascii_string (\fBvalue_ptr\fP v, \fBconst\fP \fBuint8_t\fP * s, size_t len)"
+
+.PP
+Definition at line 245 of file readbinaryplist\&.c\&.
+.SS "\fBvoid\fP value_set_data (\fBvalue_ptr\fP v, \fBconst\fP \fBuint8_t\fP * data, size_t len)"
+
+.PP
+Definition at line 266 of file readbinaryplist\&.c\&.
+.SS "\fBvoid\fP value_set_date (\fBvalue_ptr\fP v, double d)"
+
+.PP
+Definition at line 241 of file readbinaryplist\&.c\&.
+.SS "\fBvoid\fP value_set_dict (\fBvalue_ptr\fP v, \fBdict_ptr\fP dict)"
+
+.PP
+Definition at line 286 of file readbinaryplist\&.c\&.
+.SS "\fBvoid\fP value_set_integer (\fBvalue_ptr\fP v, \fBint64_t\fP i)"
+
+.PP
+Definition at line 232 of file readbinaryplist\&.c\&.
+.SS "\fBvoid\fP value_set_real (\fBvalue_ptr\fP v, double d)"
+
+.PP
+Definition at line 236 of file readbinaryplist\&.c\&.
+.SS "\fBvoid\fP value_set_uid (\fBvalue_ptr\fP v, \fBuint64_t\fP uid)"
+
+.PP
+Definition at line 259 of file readbinaryplist\&.c\&.
+.SS "\fBvoid\fP value_set_unicode_string (\fBvalue_ptr\fP v, \fBconst\fP \fBuint8_t\fP * s, size_t len)"
+
+.PP
+Definition at line 252 of file readbinaryplist\&.c\&.
+.SH "Variable Documentation"
+.PP 
+.SS "\fBuint64_t\fP object_count"
+
+.PP
+Definition at line 171 of file readbinaryplist\&.c\&.
+.SS "\fBuint8_t\fP object_ref_size"
+
+.PP
+Definition at line 170 of file readbinaryplist\&.c\&.
+.SS "\fBuint8_t\fP offset_int_size"
+
+.PP
+Definition at line 169 of file readbinaryplist\&.c\&.
+.SS "\fBuint64_t\fP offset_table_offset"
+
+.PP
+Definition at line 173 of file readbinaryplist\&.c\&.
+.SS "\fBuint64_t\fP top_level_object"
+
+.PP
+Definition at line 172 of file readbinaryplist\&.c\&.
+.SS "\fBuint8_t\fP unused[6]"
+
+.PP
+Definition at line 168 of file readbinaryplist\&.c\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

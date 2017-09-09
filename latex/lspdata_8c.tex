@@ -1,0 +1,163 @@
+\hypertarget{lspdata_8c}{}\section{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/libvorbis/vq/lspdata.c File Reference}
+\label{lspdata_8c}\index{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/libvorbis/vq/lspdata.\+c@{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/libvorbis/vq/lspdata.\+c}}
+{\ttfamily \#include $<$stdlib.\+h$>$}\\*
+{\ttfamily \#include $<$math.\+h$>$}\\*
+{\ttfamily \#include $<$stdio.\+h$>$}\\*
+{\ttfamily \#include \char`\"{}vqgen.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}vqext.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}codebook.\+h\char`\"{}}\\*
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{lspdata_8c_ac7352a7dfd2613809689914aa876b868}{F\+U\+D\+GE}~1.\hyperlink{checksum_8c_ae747d72a1a803f5ff4a4b2602857d93b}{f}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{lspdata_8c_ab02622a882d94b454daac75f02cb31ef}{vqext\+\_\+quantize} (\hyperlink{structvqgen}{vqgen} $\ast$v, \hyperlink{structquant__meta}{quant\+\_\+meta} $\ast$\hyperlink{vqext_8h_aed566b4fd5f50587a3ee550f7cd010ae}{q})
+\item 
+float $\ast$ \hyperlink{lspdata_8c_a81ad49bed8ca0fb82874e15fd0605410}{vqext\+\_\+weight} (\hyperlink{structvqgen}{vqgen} $\ast$v, float $\ast$\hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p})
+\item 
+float \hyperlink{lspdata_8c_a782e334154df41b321d2130becc66481}{vqext\+\_\+metric} (\hyperlink{structvqgen}{vqgen} $\ast$v, float $\ast$e, float $\ast$\hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p})
+\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{lspdata_8c_a42449324950d7a9d21906e7581695ede}{vqext\+\_\+addpoint\+\_\+adj} (\hyperlink{structvqgen}{vqgen} $\ast$v, float $\ast$\hyperlink{convtest_8m_a21ad0bd836b90d08f4cf640b4c298e7c}{b}, \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{seqread_8c_ac503262ae470564980711da4f78b1181}{start}, \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} dim, \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} cols, \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} num)
+\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{lspdata_8c_ae47cdf7e9bfab97696c950b6338a3165}{vqext\+\_\+preprocess} (\hyperlink{structvqgen}{vqgen} $\ast$v)
+\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+char $\ast$ \hyperlink{lspdata_8c_a8d4990893142a55d1107363a46b3e6b7}{vqext\+\_\+booktype} =\char`\"{}L\+S\+Pdata\char`\"{}
+\item 
+\hyperlink{structquant__meta}{quant\+\_\+meta} \hyperlink{lspdata_8c_aed566b4fd5f50587a3ee550f7cd010ae}{q} =\{0,0,0,1\}
+\item 
+\hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{lspdata_8c_a3812044c98180800648b276298c6fb2b}{vqext\+\_\+aux} =1
+\item 
+float \hyperlink{lspdata_8c_a76eac6c4642c95fa083e4d0388f6d079}{global\+\_\+maxdel} =\hyperlink{_voice_key_8h_ae71449b1cc6e6250b91f539153a7a0d3}{M\+\_\+\+PI}
+\item 
+float \hyperlink{lspdata_8c_af77036c3a95171a82548406c04c95a79}{global\+\_\+mindel} =\hyperlink{_voice_key_8h_ae71449b1cc6e6250b91f539153a7a0d3}{M\+\_\+\+PI}
+\item 
+float $\ast$ \hyperlink{lspdata_8c_a188f5f4011d6169f76ee43763c198076}{weight} =\hyperlink{px__mixer_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{N\+U\+LL}
+\end{DoxyCompactItemize}
+
+
+\subsection{Macro Definition Documentation}
+\index{lspdata.\+c@{lspdata.\+c}!F\+U\+D\+GE@{F\+U\+D\+GE}}
+\index{F\+U\+D\+GE@{F\+U\+D\+GE}!lspdata.\+c@{lspdata.\+c}}
+\subsubsection[{\texorpdfstring{F\+U\+D\+GE}{FUDGE}}]{\setlength{\rightskip}{0pt plus 5cm}\#define F\+U\+D\+GE~1.{\bf f}}\hypertarget{lspdata_8c_ac7352a7dfd2613809689914aa876b868}{}\label{lspdata_8c_ac7352a7dfd2613809689914aa876b868}
+
+
+Definition at line 101 of file lspdata.\+c.
+
+
+
+\subsection{Function Documentation}
+\index{lspdata.\+c@{lspdata.\+c}!vqext\+\_\+addpoint\+\_\+adj@{vqext\+\_\+addpoint\+\_\+adj}}
+\index{vqext\+\_\+addpoint\+\_\+adj@{vqext\+\_\+addpoint\+\_\+adj}!lspdata.\+c@{lspdata.\+c}}
+\subsubsection[{\texorpdfstring{vqext\+\_\+addpoint\+\_\+adj(vqgen $\ast$v, float $\ast$b, int start, int dim, int cols, int num)}{vqext_addpoint_adj(vqgen *v, float *b, int start, int dim, int cols, int num)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} vqext\+\_\+addpoint\+\_\+adj (
+\begin{DoxyParamCaption}
+\item[{{\bf vqgen} $\ast$}]{v, }
+\item[{float $\ast$}]{b, }
+\item[{{\bf int}}]{start, }
+\item[{{\bf int}}]{dim, }
+\item[{{\bf int}}]{cols, }
+\item[{{\bf int}}]{num}
+\end{DoxyParamCaption}
+)}\hypertarget{lspdata_8c_a42449324950d7a9d21906e7581695ede}{}\label{lspdata_8c_a42449324950d7a9d21906e7581695ede}
+
+
+Definition at line 123 of file lspdata.\+c.
+
+\index{lspdata.\+c@{lspdata.\+c}!vqext\+\_\+metric@{vqext\+\_\+metric}}
+\index{vqext\+\_\+metric@{vqext\+\_\+metric}!lspdata.\+c@{lspdata.\+c}}
+\subsubsection[{\texorpdfstring{vqext\+\_\+metric(vqgen $\ast$v, float $\ast$e, float $\ast$p)}{vqext_metric(vqgen *v, float *e, float *p)}}]{\setlength{\rightskip}{0pt plus 5cm}float vqext\+\_\+metric (
+\begin{DoxyParamCaption}
+\item[{{\bf vqgen} $\ast$}]{v, }
+\item[{float $\ast$}]{e, }
+\item[{float $\ast$}]{p}
+\end{DoxyParamCaption}
+)}\hypertarget{lspdata_8c_a782e334154df41b321d2130becc66481}{}\label{lspdata_8c_a782e334154df41b321d2130becc66481}
+
+
+Definition at line 108 of file lspdata.\+c.
+
+\index{lspdata.\+c@{lspdata.\+c}!vqext\+\_\+preprocess@{vqext\+\_\+preprocess}}
+\index{vqext\+\_\+preprocess@{vqext\+\_\+preprocess}!lspdata.\+c@{lspdata.\+c}}
+\subsubsection[{\texorpdfstring{vqext\+\_\+preprocess(vqgen $\ast$v)}{vqext_preprocess(vqgen *v)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} vqext\+\_\+preprocess (
+\begin{DoxyParamCaption}
+\item[{{\bf vqgen} $\ast$}]{v}
+\end{DoxyParamCaption}
+)}\hypertarget{lspdata_8c_ae47cdf7e9bfab97696c950b6338a3165}{}\label{lspdata_8c_ae47cdf7e9bfab97696c950b6338a3165}
+
+
+Definition at line 140 of file lspdata.\+c.
+
+\index{lspdata.\+c@{lspdata.\+c}!vqext\+\_\+quantize@{vqext\+\_\+quantize}}
+\index{vqext\+\_\+quantize@{vqext\+\_\+quantize}!lspdata.\+c@{lspdata.\+c}}
+\subsubsection[{\texorpdfstring{vqext\+\_\+quantize(vqgen $\ast$v, quant\+\_\+meta $\ast$q)}{vqext_quantize(vqgen *v, quant_meta *q)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} vqext\+\_\+quantize (
+\begin{DoxyParamCaption}
+\item[{{\bf vqgen} $\ast$}]{v, }
+\item[{{\bf quant\+\_\+meta} $\ast$}]{q}
+\end{DoxyParamCaption}
+)}\hypertarget{lspdata_8c_ab02622a882d94b454daac75f02cb31ef}{}\label{lspdata_8c_ab02622a882d94b454daac75f02cb31ef}
+
+
+Definition at line 73 of file lspdata.\+c.
+
+\index{lspdata.\+c@{lspdata.\+c}!vqext\+\_\+weight@{vqext\+\_\+weight}}
+\index{vqext\+\_\+weight@{vqext\+\_\+weight}!lspdata.\+c@{lspdata.\+c}}
+\subsubsection[{\texorpdfstring{vqext\+\_\+weight(vqgen $\ast$v, float $\ast$p)}{vqext_weight(vqgen *v, float *p)}}]{\setlength{\rightskip}{0pt plus 5cm}float$\ast$ vqext\+\_\+weight (
+\begin{DoxyParamCaption}
+\item[{{\bf vqgen} $\ast$}]{v, }
+\item[{float $\ast$}]{p}
+\end{DoxyParamCaption}
+)}\hypertarget{lspdata_8c_a81ad49bed8ca0fb82874e15fd0605410}{}\label{lspdata_8c_a81ad49bed8ca0fb82874e15fd0605410}
+
+
+Definition at line 102 of file lspdata.\+c.
+
+
+
+\subsection{Variable Documentation}
+\index{lspdata.\+c@{lspdata.\+c}!global\+\_\+maxdel@{global\+\_\+maxdel}}
+\index{global\+\_\+maxdel@{global\+\_\+maxdel}!lspdata.\+c@{lspdata.\+c}}
+\subsubsection[{\texorpdfstring{global\+\_\+maxdel}{global_maxdel}}]{\setlength{\rightskip}{0pt plus 5cm}float global\+\_\+maxdel ={\bf M\+\_\+\+PI}}\hypertarget{lspdata_8c_a76eac6c4642c95fa083e4d0388f6d079}{}\label{lspdata_8c_a76eac6c4642c95fa083e4d0388f6d079}
+
+
+Definition at line 29 of file lspdata.\+c.
+
+\index{lspdata.\+c@{lspdata.\+c}!global\+\_\+mindel@{global\+\_\+mindel}}
+\index{global\+\_\+mindel@{global\+\_\+mindel}!lspdata.\+c@{lspdata.\+c}}
+\subsubsection[{\texorpdfstring{global\+\_\+mindel}{global_mindel}}]{\setlength{\rightskip}{0pt plus 5cm}float global\+\_\+mindel ={\bf M\+\_\+\+PI}}\hypertarget{lspdata_8c_af77036c3a95171a82548406c04c95a79}{}\label{lspdata_8c_af77036c3a95171a82548406c04c95a79}
+
+
+Definition at line 30 of file lspdata.\+c.
+
+\index{lspdata.\+c@{lspdata.\+c}!q@{q}}
+\index{q@{q}!lspdata.\+c@{lspdata.\+c}}
+\subsubsection[{\texorpdfstring{q}{q}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf quant\+\_\+meta} q =\{0,0,0,1\}}\hypertarget{lspdata_8c_aed566b4fd5f50587a3ee550f7cd010ae}{}\label{lspdata_8c_aed566b4fd5f50587a3ee550f7cd010ae}
+
+
+Definition at line 26 of file lspdata.\+c.
+
+\index{lspdata.\+c@{lspdata.\+c}!vqext\+\_\+aux@{vqext\+\_\+aux}}
+\index{vqext\+\_\+aux@{vqext\+\_\+aux}!lspdata.\+c@{lspdata.\+c}}
+\subsubsection[{\texorpdfstring{vqext\+\_\+aux}{vqext_aux}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf int} vqext\+\_\+aux =1}\hypertarget{lspdata_8c_a3812044c98180800648b276298c6fb2b}{}\label{lspdata_8c_a3812044c98180800648b276298c6fb2b}
+
+
+Definition at line 27 of file lspdata.\+c.
+
+\index{lspdata.\+c@{lspdata.\+c}!vqext\+\_\+booktype@{vqext\+\_\+booktype}}
+\index{vqext\+\_\+booktype@{vqext\+\_\+booktype}!lspdata.\+c@{lspdata.\+c}}
+\subsubsection[{\texorpdfstring{vqext\+\_\+booktype}{vqext_booktype}}]{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ vqext\+\_\+booktype =\char`\"{}L\+S\+Pdata\char`\"{}}\hypertarget{lspdata_8c_a8d4990893142a55d1107363a46b3e6b7}{}\label{lspdata_8c_a8d4990893142a55d1107363a46b3e6b7}
+
+
+Definition at line 25 of file lspdata.\+c.
+
+\index{lspdata.\+c@{lspdata.\+c}!weight@{weight}}
+\index{weight@{weight}!lspdata.\+c@{lspdata.\+c}}
+\subsubsection[{\texorpdfstring{weight}{weight}}]{\setlength{\rightskip}{0pt plus 5cm}float$\ast$ weight ={\bf N\+U\+LL}}\hypertarget{lspdata_8c_a188f5f4011d6169f76ee43763c198076}{}\label{lspdata_8c_a188f5f4011d6169f76ee43763c198076}
+
+
+Definition at line 78 of file lspdata.\+c.
+

@@ -1,0 +1,19 @@
+var searchData=
+[
+  ['_5f_5fmidl_5f_5f_5fmidl_5fitf_5fdevicetopology_5f0000_5f0000_5f0011',['__MIDL___MIDL_itf_devicetopology_0000_0000_0011',['../devicetopology_8h.html#aab6c7474a070d22bf61ccf21b532412f',1,'devicetopology.h']]],
+  ['_5f_5fmidl_5f_5f_5fmidl_5fitf_5fdevicetopology_5f0000_5f0000_5f0012',['__MIDL___MIDL_itf_devicetopology_0000_0000_0012',['../devicetopology_8h.html#ad01704421e18fb1745eb6f7049f4c625',1,'devicetopology.h']]],
+  ['_5f_5fmidl_5f_5f_5fmidl_5fitf_5fdevicetopology_5f0000_5f0000_5f0013',['__MIDL___MIDL_itf_devicetopology_0000_0000_0013',['../devicetopology_8h.html#a1ac1de0f2dde78cddcec4d28acf283c7',1,'devicetopology.h']]],
+  ['_5f_5fmidl_5f_5f_5fmidl_5fitf_5fmmdeviceapi_5f0000_5f0000_5f0001',['__MIDL___MIDL_itf_mmdeviceapi_0000_0000_0001',['../mmdeviceapi_8h.html#a03f30e2e3a8ec4b8cc901c1ff40daac1',1,'mmdeviceapi.h']]],
+  ['_5f_5fmidl_5f_5f_5fmidl_5fitf_5fmmdeviceapi_5f0000_5f0000_5f0002',['__MIDL___MIDL_itf_mmdeviceapi_0000_0000_0002',['../mmdeviceapi_8h.html#ac407eff72c266e22ef2baef359f92aa8',1,'mmdeviceapi.h']]],
+  ['_5f_5fmidl_5f_5f_5fmidl_5fitf_5fmmdeviceapi_5f0000_5f0000_5f0003',['__MIDL___MIDL_itf_mmdeviceapi_0000_0000_0003',['../mmdeviceapi_8h.html#a43c78fbcca3f256fde62648acc1eeec2',1,'mmdeviceapi.h']]],
+  ['_5f_5fmidl_5f_5f_5fmidl_5fitf_5fstructuredquery_5f0000_5f0013_5f0001',['__MIDL___MIDL_itf_structuredquery_0000_0013_0001',['../structuredquery_8h.html#a9ca174995224a886ec759e75c3eff1ba',1,'structuredquery.h']]],
+  ['_5f_5fpastreamstartenum',['__PaStreamStartEnum',['../pa__win__wdmks_8c.html#abf83566c082ff992efb67a6a533c7ec5',1,'pa_win_wdmks.c']]],
+  ['_5faudclnt_5fbufferflags',['_AUDCLNT_BUFFERFLAGS',['../audioclient_8h.html#aaada7b4873c5ea8e7cde061c348b589a',1,'audioclient.h']]],
+  ['_5faudclnt_5fsharemode',['_AUDCLNT_SHAREMODE',['../_audio_session_types_8h.html#a548638eefd5def05af7b7c778bcba95b',1,'AudioSessionTypes.h']]],
+  ['_5faudiosessionstate',['_AudioSessionState',['../_audio_session_types_8h.html#a4daf3e1282040a354c3798d77d3a3a09',1,'AudioSessionTypes.h']]],
+  ['_5favrt_5fpriority',['_AVRT_PRIORITY',['../pa__win__wasapi_8c.html#add7d79439251a024ba77c19ad515b8f6',1,'pa_win_wasapi.c']]],
+  ['_5fdevicesharemode',['_DeviceShareMode',['../_audio_session_types_8h.html#a47e1c98da23733c8fa5f797581a4a855',1,'AudioSessionTypes.h']]],
+  ['_5fpa_5favrt_5fpriority',['_PA_AVRT_PRIORITY',['../pa__win__wdmks_8c.html#a2ed6fe22cba98e98dc797f66315d3884',1,'pa_win_wdmks.c']]],
+  ['_5fpsc_5fstate',['_PSC_STATE',['../propsys_8h.html#a009b4aa21982dbf46d717ab00c37f067',1,'propsys.h']]],
+  ['_5ftag_5fealias',['_tag_EAlias',['../pa__win__wdmks_8c.html#a05a5c67ee1c75fcecd2e93c969ac3fcb',1,'pa_win_wdmks.c']]]
+];

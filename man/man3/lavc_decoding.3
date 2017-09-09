@@ -1,0 +1,331 @@
+.TH "lavc_decoding" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+lavc_decoding \- Decoding
+.SS "Modules"
+
+.in +1c
+.ti -1c
+.RI "\fBFrame parsing\fP"
+.br
+.in -1c
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBFF_INPUT_BUFFER_PADDING_SIZE\fP   16"
+.br
+.in -1c
+.SS "Enumerations"
+
+.in +1c
+.ti -1c
+.RI "enum \fBAVDiscard\fP { \fBAVDISCARD_NONE\fP =-16, \fBAVDISCARD_DEFAULT\fP = 0, \fBAVDISCARD_NONREF\fP = 8, \fBAVDISCARD_BIDIR\fP = 16, \fBAVDISCARD_NONKEY\fP = 32, \fBAVDISCARD_ALL\fP = 48 }"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBAVCodec\fP * \fBavcodec_find_decoder\fP (enum \fBAVCodecID\fP id)"
+.br
+.ti -1c
+.RI "\fBAVCodec\fP * \fBavcodec_find_decoder_by_name\fP (\fBconst\fP char *\fBname\fP)"
+.br
+.ti -1c
+.RI "\fBattribute_deprecated\fP \fBint\fP \fBavcodec_default_get_buffer\fP (\fBAVCodecContext\fP *\fBs\fP, \fBAVFrame\fP *pic)"
+.br
+.ti -1c
+.RI "\fBattribute_deprecated\fP \fBvoid\fP \fBavcodec_default_release_buffer\fP (\fBAVCodecContext\fP *\fBs\fP, \fBAVFrame\fP *pic)"
+.br
+.ti -1c
+.RI "\fBattribute_deprecated\fP \fBint\fP \fBavcodec_default_reget_buffer\fP (\fBAVCodecContext\fP *\fBs\fP, \fBAVFrame\fP *pic)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBavcodec_default_get_buffer2\fP (\fBAVCodecContext\fP *\fBs\fP, \fBAVFrame\fP *frame, \fBint\fP flags)"
+.br
+.ti -1c
+.RI "\fBattribute_deprecated\fP unsigned \fBavcodec_get_edge_width\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBavcodec_align_dimensions\fP (\fBAVCodecContext\fP *\fBs\fP, \fBint\fP *width, \fBint\fP *height)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBavcodec_align_dimensions2\fP (\fBAVCodecContext\fP *\fBs\fP, \fBint\fP *width, \fBint\fP *height, \fBint\fP linesize_align[\fBAV_NUM_DATA_POINTERS\fP])"
+.br
+.ti -1c
+.RI "\fBint\fP \fBavcodec_enum_to_chroma_pos\fP (\fBint\fP *xpos, \fBint\fP *ypos, enum \fBAVChromaLocation\fP pos)"
+.br
+.ti -1c
+.RI "enum \fBAVChromaLocation\fP \fBavcodec_chroma_pos_to_enum\fP (\fBint\fP xpos, \fBint\fP ypos)"
+.br
+.ti -1c
+.RI "\fBattribute_deprecated\fP \fBint\fP \fBavcodec_decode_audio3\fP (\fBAVCodecContext\fP *avctx, \fBint16_t\fP *\fBsamples\fP, \fBint\fP *frame_size_ptr, \fBAVPacket\fP *avpkt)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBavcodec_decode_audio4\fP (\fBAVCodecContext\fP *avctx, \fBAVFrame\fP *frame, \fBint\fP *got_frame_ptr, \fBconst\fP \fBAVPacket\fP *avpkt)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBavcodec_decode_video2\fP (\fBAVCodecContext\fP *avctx, \fBAVFrame\fP *picture, \fBint\fP *got_picture_ptr, \fBconst\fP \fBAVPacket\fP *avpkt)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBavcodec_decode_subtitle2\fP (\fBAVCodecContext\fP *avctx, \fBAVSubtitle\fP *sub, \fBint\fP *got_sub_ptr, \fBAVPacket\fP *avpkt)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define FF_INPUT_BUFFER_PADDING_SIZE   16"
+Required number of additionally allocated bytes at the end of the input bitstream for decoding\&. This is mainly needed because some optimized bitstream readers read 32 or 64 bit at once and could read over the end\&.
+.br
+ Note: If the first 23 bits of the additional bytes are not 0, then damaged MPEG bitstreams could cause overread and segfault\&. 
+.PP
+Definition at line 591 of file avcodec\&.h\&.
+.SH "Enumeration Type Documentation"
+.PP 
+.SS "enum \fBAVDiscard\fP"
+
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fIAVDISCARD_NONE \fP\fP
+discard nothing 
+.TP
+\fB\fIAVDISCARD_DEFAULT \fP\fP
+discard useless packets like 0 size packets in avi 
+.TP
+\fB\fIAVDISCARD_NONREF \fP\fP
+discard all non reference 
+.TP
+\fB\fIAVDISCARD_BIDIR \fP\fP
+discard all bidirectional frames 
+.TP
+\fB\fIAVDISCARD_NONKEY \fP\fP
+discard all frames except keyframes 
+.TP
+\fB\fIAVDISCARD_ALL \fP\fP
+discard all 
+.PP
+Definition at line 621 of file avcodec\&.h\&.
+.SH "Function Documentation"
+.PP 
+.SS "\fBvoid\fP avcodec_align_dimensions (\fBAVCodecContext\fP * s, \fBint\fP * width, \fBint\fP * height)"
+Modify width and height values so that they will result in a memory buffer that is acceptable for the codec if you do not use any horizontal padding\&.
+.PP
+May only be used if a codec with CODEC_CAP_DR1 has been opened\&. 
+.SS "\fBvoid\fP avcodec_align_dimensions2 (\fBAVCodecContext\fP * s, \fBint\fP * width, \fBint\fP * height, \fBint\fP linesize_align[AV_NUM_DATA_POINTERS])"
+Modify width and height values so that they will result in a memory buffer that is acceptable for the codec if you also ensure that all line sizes are a multiple of the respective linesize_align[i]\&.
+.PP
+May only be used if a codec with CODEC_CAP_DR1 has been opened\&. 
+.SS "enum \fBAVChromaLocation\fP avcodec_chroma_pos_to_enum (\fBint\fP xpos, \fBint\fP ypos)"
+Converts swscale x/y chroma position to AVChromaLocation\&.
+.PP
+The positions represent the chroma (0,0) position in a coordinates system with luma (0,0) representing the origin and luma(1,1) representing 256,256
+.PP
+\fBParameters:\fP
+.RS 4
+\fIxpos\fP horizontal chroma sample position 
+.br
+\fIypos\fP vertical chroma sample position 
+.RE
+.PP
+
+.SS "\fBattribute_deprecated\fP \fBint\fP avcodec_decode_audio3 (\fBAVCodecContext\fP * avctx, \fBint16_t\fP * samples, \fBint\fP * frame_size_ptr, \fBAVPacket\fP * avpkt)"
+Wrapper function which calls avcodec_decode_audio4\&.
+.PP
+\fBDeprecated\fP
+.RS 4
+Use avcodec_decode_audio4 instead\&.
+.RE
+.PP
+.PP
+Decode the audio frame of size avpkt->size from avpkt->data into samples\&. Some decoders may support multiple frames in a single \fBAVPacket\fP, such decoders would then just decode the first frame\&. In this case, avcodec_decode_audio3 has to be called again with an \fBAVPacket\fP that contains the remaining data in order to decode the second frame etc\&. If no frame could be outputted, frame_size_ptr is zero\&. Otherwise, it is the decompressed frame size in bytes\&.
+.PP
+\fBWarning:\fP
+.RS 4
+You must set frame_size_ptr to the allocated size of the output buffer before calling \fBavcodec_decode_audio3()\fP\&.
+.PP
+The input buffer must be FF_INPUT_BUFFER_PADDING_SIZE larger than the actual read bytes because some optimized bitstream readers read 32 or 64 bits at once and could read over the end\&.
+.PP
+The end of the input buffer avpkt->data should be set to 0 to ensure that no overreading happens for damaged MPEG streams\&.
+.PP
+You must not provide a custom get_buffer() when using \fBavcodec_decode_audio3()\fP\&. Doing so will override it with avcodec_default_get_buffer\&. Use \fBavcodec_decode_audio4()\fP instead, which does allow the application to provide a custom get_buffer()\&.
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+You might have to align the input buffer avpkt->data and output buffer samples\&. The alignment requirements depend on the CPU: On some CPUs it isn't necessary at all, on others it won't work at all if not aligned and on others it will work but it will have an impact on performance\&.
+.RE
+.PP
+In practice, avpkt->data should have 4 byte alignment at minimum and samples should be 16 byte aligned unless the CPU doesn't need it (AltiVec and SSE do)\&.
+.PP
+\fBNote:\fP
+.RS 4
+Codecs which have the CODEC_CAP_DELAY capability set have a delay between input and output, these need to be fed with avpkt->data=NULL, avpkt->size=0 at the end to return the remaining frames\&.
+.RE
+.PP
+\fBParameters:\fP
+.RS 4
+\fIavctx\fP the codec context 
+.br
+\fIsamples\fP the output buffer, sample type in avctx->sample_fmt If the sample format is planar, each channel plane will be the same size, with no padding between channels\&. 
+.br
+\fIframe_size_ptr\fP the output buffer size in bytes 
+.br
+\fIavpkt\fP The input \fBAVPacket\fP containing the input buffer\&. You can create such packet with \fBav_init_packet()\fP and by then setting data and size, some decoders might in addition need other fields\&. All decoders are designed to use the least fields possible though\&. 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+On error a negative value is returned, otherwise the number of bytes used or zero if no frame data was decompressed (used) from the input \fBAVPacket\fP\&. 
+.RE
+.PP
+
+.SS "\fBint\fP avcodec_decode_audio4 (\fBAVCodecContext\fP * avctx, \fBAVFrame\fP * frame, \fBint\fP * got_frame_ptr, \fBconst\fP \fBAVPacket\fP * avpkt)"
+Decode the audio frame of size avpkt->size from avpkt->data into frame\&.
+.PP
+Some decoders may support multiple frames in a single \fBAVPacket\fP\&. Such decoders would then just decode the first frame and the return value would be less than the packet size\&. In this case, avcodec_decode_audio4 has to be called again with an \fBAVPacket\fP containing the remaining data in order to decode the second frame, etc\&.\&.\&. Even if no frames are returned, the packet needs to be fed to the decoder with remaining data until it is completely consumed or an error occurs\&.
+.PP
+Some decoders (those marked with CODEC_CAP_DELAY) have a delay between input and output\&. This means that for some packets they will not immediately produce decoded output and need to be flushed at the end of decoding to get all the decoded data\&. Flushing is done by calling this function with packets with avpkt->data set to NULL and avpkt->size set to 0 until it stops returning samples\&. It is safe to flush even those decoders that are not marked with CODEC_CAP_DELAY, then no samples will be returned\&.
+.PP
+\fBWarning:\fP
+.RS 4
+The input buffer, avpkt->data must be FF_INPUT_BUFFER_PADDING_SIZE larger than the actual read bytes because some optimized bitstream readers read 32 or 64 bits at once and could read over the end\&.
+.RE
+.PP
+\fBParameters:\fP
+.RS 4
+\fIavctx\fP the codec context 
+.br
+\fIframe\fP The \fBAVFrame\fP in which to store decoded audio samples\&. The decoder will allocate a buffer for the decoded frame by calling the \fBAVCodecContext\&.get_buffer2()\fP callback\&. When \fBAVCodecContext\&.refcounted_frames\fP is set to 1, the frame is reference counted and the returned reference belongs to the caller\&. The caller must release the frame using \fBav_frame_unref()\fP when the frame is no longer needed\&. The caller may safely write to the frame if \fBav_frame_is_writable()\fP returns 1\&. When \fBAVCodecContext\&.refcounted_frames\fP is set to 0, the returned reference belongs to the decoder and is valid only until the next call to this function or until closing or flushing the decoder\&. The caller may not write to it\&. 
+.br
+\fIgot_frame_ptr\fP Zero if no frame could be decoded, otherwise it is non-zero\&. Note that this field being set to zero does not mean that an error has occurred\&. For decoders with CODEC_CAP_DELAY set, no given decode call is guaranteed to produce a frame\&. 
+.br
+\fIavpkt\fP The input \fBAVPacket\fP containing the input buffer\&. At least avpkt->data and avpkt->size should be set\&. Some decoders might also require additional fields to be set\&. 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+A negative error code is returned if an error occurred during decoding, otherwise the number of bytes consumed from the input \fBAVPacket\fP is returned\&. 
+.RE
+.PP
+
+.SS "\fBint\fP avcodec_decode_subtitle2 (\fBAVCodecContext\fP * avctx, \fBAVSubtitle\fP * sub, \fBint\fP * got_sub_ptr, \fBAVPacket\fP * avpkt)"
+Decode a subtitle message\&. Return a negative value on error, otherwise return the number of bytes used\&. If no subtitle could be decompressed, got_sub_ptr is zero\&. Otherwise, the subtitle is stored in *sub\&. Note that CODEC_CAP_DR1 is not available for subtitle codecs\&. This is for simplicity, because the performance difference is expect to be negligible and reusing a get_buffer written for video codecs would probably perform badly due to a potentially very different allocation pattern\&.
+.PP
+Some decoders (those marked with CODEC_CAP_DELAY) have a delay between input and output\&. This means that for some packets they will not immediately produce decoded output and need to be flushed at the end of decoding to get all the decoded data\&. Flushing is done by calling this function with packets with avpkt->data set to NULL and avpkt->size set to 0 until it stops returning subtitles\&. It is safe to flush even those decoders that are not marked with CODEC_CAP_DELAY, then no subtitles will be returned\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIavctx\fP the codec context 
+.br
+\fIsub\fP The \fBAVSubtitle\fP in which the decoded subtitle will be stored, must be freed with avsubtitle_free if *got_sub_ptr is set\&. 
+.br
+\fIgot_sub_ptr\fP Zero if no subtitle could be decompressed, otherwise, it is nonzero\&. 
+.br
+\fIavpkt\fP The input \fBAVPacket\fP containing the input buffer\&. 
+.RE
+.PP
+
+.SS "\fBint\fP avcodec_decode_video2 (\fBAVCodecContext\fP * avctx, \fBAVFrame\fP * picture, \fBint\fP * got_picture_ptr, \fBconst\fP \fBAVPacket\fP * avpkt)"
+Decode the video frame of size avpkt->size from avpkt->data into picture\&. Some decoders may support multiple frames in a single \fBAVPacket\fP, such decoders would then just decode the first frame\&.
+.PP
+\fBWarning:\fP
+.RS 4
+The input buffer must be FF_INPUT_BUFFER_PADDING_SIZE larger than the actual read bytes because some optimized bitstream readers read 32 or 64 bits at once and could read over the end\&.
+.PP
+The end of the input buffer buf should be set to 0 to ensure that no overreading happens for damaged MPEG streams\&.
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Codecs which have the CODEC_CAP_DELAY capability set have a delay between input and output, these need to be fed with avpkt->data=NULL, avpkt->size=0 at the end to return the remaining frames\&.
+.RE
+.PP
+\fBParameters:\fP
+.RS 4
+\fIavctx\fP the codec context 
+.br
+\fIpicture\fP The \fBAVFrame\fP in which the decoded video frame will be stored\&. Use \fBav_frame_alloc()\fP to get an \fBAVFrame\fP\&. The codec will allocate memory for the actual bitmap by calling the \fBAVCodecContext\&.get_buffer2()\fP callback\&. When \fBAVCodecContext\&.refcounted_frames\fP is set to 1, the frame is reference counted and the returned reference belongs to the caller\&. The caller must release the frame using \fBav_frame_unref()\fP when the frame is no longer needed\&. The caller may safely write to the frame if \fBav_frame_is_writable()\fP returns 1\&. When \fBAVCodecContext\&.refcounted_frames\fP is set to 0, the returned reference belongs to the decoder and is valid only until the next call to this function or until closing or flushing the decoder\&. The caller may not write to it\&.
+.br
+\fIavpkt\fP The input \fBAVPacket\fP containing the input buffer\&. You can create such packet with \fBav_init_packet()\fP and by then setting data and size, some decoders might in addition need other fields like flags&AV_PKT_FLAG_KEY\&. All decoders are designed to use the least fields possible\&. 
+.br
+\fIgot_picture_ptr\fP Zero if no frame could be decompressed, otherwise, it is nonzero\&. 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+On error a negative value is returned, otherwise the number of bytes used or zero if no frame could be decompressed\&. 
+.RE
+.PP
+
+.SS "\fBattribute_deprecated\fP \fBint\fP avcodec_default_get_buffer (\fBAVCodecContext\fP * s, \fBAVFrame\fP * pic)"
+
+.SS "\fBint\fP avcodec_default_get_buffer2 (\fBAVCodecContext\fP * s, \fBAVFrame\fP * frame, \fBint\fP flags)"
+The default callback for \fBAVCodecContext\&.get_buffer2()\fP\&. It is made public so it can be called by custom get_buffer2() implementations for decoders without CODEC_CAP_DR1 set\&. 
+.SS "\fBattribute_deprecated\fP \fBint\fP avcodec_default_reget_buffer (\fBAVCodecContext\fP * s, \fBAVFrame\fP * pic)"
+
+.SS "\fBattribute_deprecated\fP \fBvoid\fP avcodec_default_release_buffer (\fBAVCodecContext\fP * s, \fBAVFrame\fP * pic)"
+
+.SS "\fBint\fP avcodec_enum_to_chroma_pos (\fBint\fP * xpos, \fBint\fP * ypos, enum \fBAVChromaLocation\fP pos)"
+Converts AVChromaLocation to swscale x/y chroma position\&.
+.PP
+The positions represent the chroma (0,0) position in a coordinates system with luma (0,0) representing the origin and luma(1,1) representing 256,256
+.PP
+\fBParameters:\fP
+.RS 4
+\fIxpos\fP horizontal chroma sample position 
+.br
+\fIypos\fP vertical chroma sample position 
+.RE
+.PP
+
+.SS "\fBAVCodec\fP* avcodec_find_decoder (enum \fBAVCodecID\fP id)"
+Find a registered decoder with a matching codec ID\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIid\fP AVCodecID of the requested decoder 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+A decoder if one was found, NULL otherwise\&. 
+.RE
+.PP
+
+.SS "\fBAVCodec\fP* avcodec_find_decoder_by_name (\fBconst\fP char * name)"
+Find a registered decoder with the specified name\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIname\fP name of the requested decoder 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+A decoder if one was found, NULL otherwise\&. 
+.RE
+.PP
+
+.SS "\fBattribute_deprecated\fP unsigned avcodec_get_edge_width (\fBvoid\fP)"
+Return the amount of padding in pixels which the get_buffer callback must provide around the edge of the image for codecs which do not have the CODEC_FLAG_EMU_EDGE flag\&.
+.PP
+\fBReturns:\fP
+.RS 4
+Required padding in pixels\&.
+.RE
+.PP
+\fBDeprecated\fP
+.RS 4
+CODEC_FLAG_EMU_EDGE is deprecated, so this function is no longer needed 
+.RE
+.PP
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

@@ -1,0 +1,93 @@
+Below is a list of steps to build Port\+Audio into a dll and lib file. The resulting dll file may contain all five current win32 Port\+Audio A\+P\+Is\+: M\+ME, Direct\+Sound, W\+A\+S\+A\+PI, W\+D\+M/\+KS and A\+S\+IO, depending on the preprocessor definitions set in step 9 below.
+
+Port\+Audio can be compiled using Visual C++ Express Edition which is available free from Microsoft. If you do not already have a C++ development environment, simply download and install. These instructions have been observed to succeed using Visual Studio 2010 as well.
+
+1) Building Port\+Audio with Direct\+Sound support requires the files {\itshape dsound.\+h} and {\itshape dsconf.\+h}. Download and install the DirectX S\+DK from \href{http://www.microsoft.com/downloads/details.aspx?displaylang=en&FamilyID=3021d52b-514e-41d3-ad02-438a3ba730ba}{\tt http\+://www.\+microsoft.\+com/downloads/details.\+aspx?displaylang=en\&\+Family\+I\+D=3021d52b-\/514e-\/41d3-\/ad02-\/438a3ba730ba} to obtain these files. If you installed the DirectX S\+DK then the Direct\+Sound libraries and header files should be found automatically by Visual Studio/\+Visual C++. If you get an error saying dsound.\+h or dsconf.\+h is missing, you will need to add an extra include path to the Visual Studio project file referencing the DirectX includes directory.
+
+2) For A\+S\+IO support, download the A\+S\+IO S\+DK from Steinberg at \href{http://www.steinberg.net/en/company/developer.html}{\tt http\+://www.\+steinberg.\+net/en/company/developer.\+html} . The S\+DK is free, but you will need to set up a developer account with Steinberg. To use the Visual Studio projects mentioned below, copy the entire A\+S\+I\+O\+S\+D\+K2 folder into src\textbackslash{}hostapi\textbackslash{}asio\textbackslash{}. Rename it from A\+S\+I\+O\+S\+D\+K2 to A\+S\+I\+O\+S\+DK. To build without A\+S\+IO (or other host A\+PI) see the \char`\"{}\+Building without A\+S\+I\+O support\char`\"{} section below.
+
+3) If you have Visual Studio 6.\+0, 7.\+0(V\+C.\+N\+ET/2001) or 7.\+1(V\+C.\+2003), open portaudio.\+dsp and convert if needed.
+
+4) If you have Visual Studio 2005, Visual C++ 2008 Express Edition or Visual Studio 2010, open the portaudio.\+sln file located in build\textbackslash{}msvc\textbackslash{}. Doing so will open Visual Studio or Visual C++. Click \char`\"{}\+Finish\char`\"{} if a conversion wizard appears. The sln file contains four configurations\+: Win32 and Win64 in both Release and Debug variants.\hypertarget{compile_windows_comp_win1}{}\section{For Visual Studio 2005, Visual C++ 2008 Express Edition or Visual Studio 2010}\label{compile_windows_comp_win1}
+The steps below describe settings for recent versions of Visual Studio. Similar settings can be set in earlier versions of Visual Studio.
+
+5) Open Project -\/$>$ portaudio Properties and select \char`\"{}\+Configuration Properties\char`\"{} in the tree view.
+
+6) Select \char`\"{}all configurations\char`\"{} in the \char`\"{}\+Configurations\char`\"{} combo box above. Select \char`\"{}\+All Platforms\char`\"{} in the \char`\"{}\+Platforms\char`\"{} combo box.
+
+7) Now set a few options\+:
+
+Required\+:
+
+C/\+C++ -\/$>$ Code Generation -\/$>$ Runtime library = /\+MT
+
+Optional\+:
+
+C/\+C++ -\/$>$ Optimization -\/$>$ Omit frame pointers = Yes
+
+Optional\+: C/\+C++ -\/$>$ Code Generation -\/$>$ Floating point model = fast
+
+N\+O\+TE\+: When using Port\+Audio from C/\+C++ it is not usually necessary to explicitly set the structure member alignment; the default should work fine. However some languages require, for example, 4-\/byte alignment. If you are having problems with \hyperlink{portaudio_8h}{portaudio.\+h} structure members not being properly read or written to, it may be necessary to explicitly set this value by going to C/\+C++ -\/$>$ Code Generation -\/$>$ Struct member alignment and setting it to an appropriate value (four is a common value). If your compiler is configurable, you should ensure that it is set to use the same structure member alignment value as used for the Port\+Audio build.
+
+Click \char`\"{}\+Ok\char`\"{} when you have finished setting these parameters.\hypertarget{compile_windows_comp_win2}{}\section{Preprocessor Definitions}\label{compile_windows_comp_win2}
+Since the preprocessor definitions are different for each configuration and platform, you\textquotesingle{}ll need to edit these individually for each configuration/platform combination that you want to modify using the \char`\"{}\+Configurations\char`\"{} and \char`\"{}\+Platforms\char`\"{} combo boxes.
+
+8) To suppress Port\+Audio runtime debug console output, go to Project -\/$>$ Properties -\/$>$ Configuration Properties -\/$>$ C/\+C++ -\/$>$ Preprocessor. In the field \textquotesingle{}Preprocessor Definitions\textquotesingle{}, find P\+A\+\_\+\+E\+N\+A\+B\+L\+E\+\_\+\+D\+E\+B\+U\+G\+\_\+\+O\+U\+T\+P\+UT and remove it. The console will not output debug messages.
+
+9) Also in the preprocessor definitions you need to explicitly define the native audio A\+P\+Is you wish to use. For Windows the available A\+PI definitions are\+:
+
+P\+A\+\_\+\+U\+S\+E\+\_\+\+A\+S\+IO~\newline
+ P\+A\+\_\+\+U\+S\+E\+\_\+\+DS (Direct\+Sound)~\newline
+ P\+A\+\_\+\+U\+S\+E\+\_\+\+W\+M\+ME (M\+ME)~\newline
+ P\+A\+\_\+\+U\+S\+E\+\_\+\+W\+A\+S\+A\+PI~\newline
+ P\+A\+\_\+\+U\+S\+E\+\_\+\+W\+D\+M\+KS~\newline
+ P\+A\+\_\+\+U\+S\+E\+\_\+\+S\+K\+E\+L\+E\+T\+ON
+
+For each of these, the value of 0 indicates that support for this A\+PI should not be included. The value 1 indicates that support for this A\+PI should be included. (P\+A\+\_\+\+U\+S\+E\+\_\+\+S\+K\+E\+L\+E\+T\+ON is not usually used, it is a code sample for developers wanting to support a new A\+PI).\hypertarget{compile_windows_comp_win3}{}\section{Building}\label{compile_windows_comp_win3}
+As when setting Preprocessor definitions, building is a per-\/configuration per-\/platform process. Follow these instructions for each configuration/platform combination that you\textquotesingle{}re interested in.
+
+10) From the Build menu click Build -\/$>$ Build solution. For 32-\/bit compilations, the dll file created by this process (portaudio\+\_\+x86.\+dll) can be found in the directory build\textbackslash{}msvc\textbackslash{}Win32\textbackslash{}Release. For 64-\/bit compilations, the dll file is called portaudio\+\_\+x64.\+dll, and is found in the directory build\textbackslash{}msvc\textbackslash{}x64\textbackslash{}Release.
+
+11) Now, any project that requires portaudio can be linked with portaudio\+\_\+x86.\+lib (or \+\_\+x64) and include the relevant headers (\hyperlink{portaudio_8h}{portaudio.\+h}, and/or \hyperlink{pa__asio_8h}{pa\+\_\+asio.\+h} , \hyperlink{pa__x86__plain__converters_8h}{pa\+\_\+x86\+\_\+plain\+\_\+converters.\+h}) You may want to add/remove some D\+LL entry points. At the time of writing the following 6 entries are not part of the official Port\+Audio A\+PI defined in \hyperlink{portaudio_8h}{portaudio.\+h}\+:
+
+(from portaudio.\+def) 
+\begin{DoxyCode}
+...
+PaAsio\_GetAvailableLatencyValues    @50
+\hyperlink{pa__asio_8h_ac9449ca8f0aedaa7b93027cdca3d6ba3}{PaAsio\_ShowControlPanel}             @51
+\hyperlink{pa__x86__plain__converters_8c_ad8175335f0e2c18b66ae970ed52fdf59}{PaUtil\_InitializeX86PlainConverters} @52
+\hyperlink{pa__asio_8h_abaafacb711225e7c6158fff3b3e8b87a}{PaAsio\_GetInputChannelName}          @53
+\hyperlink{pa__asio_8h_a97bd5b2192c1321a492ba24d7ef843fa}{PaAsio\_GetOutputChannelName}         @54
+PaUtil\_SetLogPrintFunction          @55
+\end{DoxyCode}
+\hypertarget{compile_windows_comp_win4}{}\section{Building without A\+S\+I\+O support}\label{compile_windows_comp_win4}
+To build Port\+Audio without A\+S\+IO support you need to\+:
+
+1) Make sure your project doesn\textquotesingle{}t try to build any A\+S\+IO S\+DK files. If you\textquotesingle{}re using one of the shipped projects, remove the A\+S\+IO related files from the project. In the shipped projects you can find them in the project tree under portaudio $>$ Source Files $>$ hostapi $>$ A\+S\+IO $>$ A\+S\+I\+O\+S\+DK
+
+2) Make sure your project doesn\textquotesingle{}t try to build the Port\+Audio A\+S\+IO implementation files\+:
+
+
+\begin{DoxyCode}
+src\(\backslash\)\(\backslash\)hostapi\(\backslash\)\(\backslash\)pa\_asio.cpp
+src\(\backslash\)\(\backslash\)hostapi\(\backslash\)\(\backslash\)iasiothiscallresolver.cpp
+\end{DoxyCode}
+
+
+If you\textquotesingle{}re using one of the shipped projects, remove them from the project. In the shipped projects you can find them in the project tree under portaudio $>$ Source Files $>$ hostapi $>$ A\+S\+IO
+
+3) Define the preprocessor symbols in the project properties as described in step 9 above. In V\+S2005 this can be accomplished by selecting Project Properties -\/$>$ Configuration Properties -\/$>$ C/\+C++ -\/$>$ Preprocessor -\/$>$ Preprocessor Definitions. Omitting P\+A\+\_\+\+U\+S\+E\+\_\+\+A\+S\+IO or setting it to 0 stops src\textbackslash{}os\textbackslash{}win\textbackslash{}pa\+\_\+win\+\_\+hostapis.\+c from trying to initialize the Port\+Audio A\+S\+IO implementation.
+
+4) Remove Pa\+Asio\+\_\+$\ast$ entry points from portaudio.\+def
+
+
+
+ David Viens, \href{mailto:davidv@plogue.com}{\tt davidv@plogue.\+com}
+
+Updated by Chris on 5/26/2011
+
+Improvements by John Clements on 12/15/2011
+
+Edits by Ross on 1/20/2014
+
+Back to the Tutorial\+: \hyperlink{tutorial_start}{Port\+Audio Tutorials} 

@@ -1,0 +1,67 @@
+.TH "_LV2UI_Show_Interface" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+_LV2UI_Show_Interface \- 
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <ui\&.h>\fP
+.SS "Public Attributes"
+
+.in +1c
+.ti -1c
+.RI "\fBint\fP(* \fBshow\fP )(\fBLV2UI_Handle\fP ui)"
+.br
+.ti -1c
+.RI "\fBint\fP(* \fBhide\fP )(\fBLV2UI_Handle\fP ui)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+UI Show Interface (LV2_UI__showInterface)
+.PP
+UIs can provide this interface to show and hide a window, which allows them to function in hosts unable to embed their widget\&. This allows any UI to provide a fallback for embedding that works in any host\&.
+.PP
+If used:
+.IP "\(bu" 2
+The host MUST use LV2UI_Idle_Interface to drive the UI\&.
+.IP "\(bu" 2
+The UI MUST return non-zero from \fBLV2UI_Idle_Interface::idle()\fP when it has been closed\&.
+.IP "\(bu" 2
+If idle() returns non-zero, the host MUST call \fBhide()\fP and stop calling idle()\&. It MAY later call \fBshow()\fP then resume calling idle()\&. 
+.PP
+
+.PP
+Definition at line 372 of file ui\&.h\&.
+.SH "Member Data Documentation"
+.PP 
+.SS "\fBint\fP(* _LV2UI_Show_Interface::hide) (\fBLV2UI_Handle\fP ui)"
+Hide the window for this UI\&.
+.PP
+\fBReturns:\fP
+.RS 4
+0 on success, or anything else to stop being called\&. 
+.RE
+.PP
+
+.PP
+Definition at line 389 of file ui\&.h\&.
+.SS "\fBint\fP(* _LV2UI_Show_Interface::show) (\fBLV2UI_Handle\fP ui)"
+Show a window for this UI\&.
+.PP
+The window title MAY have been passed by the host to \fBLV2UI_Descriptor::instantiate()\fP as an LV2_Options_Option with key LV2_UI__windowTitle\&.
+.PP
+\fBReturns:\fP
+.RS 4
+0 on success, or anything else to stop being called\&. 
+.RE
+.PP
+
+.PP
+Definition at line 382 of file ui\&.h\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

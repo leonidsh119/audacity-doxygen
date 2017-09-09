@@ -1,0 +1,158 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/lib-src/lv2/lv2/lv2/lv2plug.in/ns/ext/options/options.h" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/lib-src/lv2/lv2/lv2/lv2plug.in/ns/ext/options/options.h \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <stdint\&.h>\fP
+.br
+\fC#include 'lv2/lv2plug\&.in/ns/ext/urid/urid\&.h'\fP
+.br
+\fC#include 'lv2/lv2plug\&.in/ns/lv2core/lv2\&.h'\fP
+.br
+
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "struct \fB_LV2_Options_Option\fP"
+.br
+.ti -1c
+.RI "struct \fB_LV2_Options_Interface\fP"
+.br
+.in -1c
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBLV2_OPTIONS_URI\fP   'http://\fBlv2plug\&.in\fP/\fBns\fP/ext/options'"
+.br
+.ti -1c
+.RI "#define \fBLV2_OPTIONS_PREFIX\fP   \fBLV2_OPTIONS_URI\fP '#'"
+.br
+.ti -1c
+.RI "#define \fBLV2_OPTIONS__Option\fP   \fBLV2_OPTIONS_PREFIX\fP 'Option'"
+.br
+.ti -1c
+.RI "#define \fBLV2_OPTIONS__interface\fP   \fBLV2_OPTIONS_PREFIX\fP 'interface'"
+.br
+.ti -1c
+.RI "#define \fBLV2_OPTIONS__options\fP   \fBLV2_OPTIONS_PREFIX\fP 'options'"
+.br
+.ti -1c
+.RI "#define \fBLV2_OPTIONS__requiredOption\fP   \fBLV2_OPTIONS_PREFIX\fP 'requiredOption'"
+.br
+.ti -1c
+.RI "#define \fBLV2_OPTIONS__supportedOption\fP   \fBLV2_OPTIONS_PREFIX\fP 'supportedOption'"
+.br
+.in -1c
+.SS "Typedefs"
+
+.in +1c
+.ti -1c
+.RI "typedef struct \fB_LV2_Options_Option\fP \fBLV2_Options_Option\fP"
+.br
+.ti -1c
+.RI "typedef struct \fB_LV2_Options_Interface\fP \fBLV2_Options_Interface\fP"
+.br
+.in -1c
+.SS "Enumerations"
+
+.in +1c
+.ti -1c
+.RI "enum \fBLV2_Options_Context\fP { \fBLV2_OPTIONS_INSTANCE\fP, \fBLV2_OPTIONS_RESOURCE\fP, \fBLV2_OPTIONS_BLANK\fP, \fBLV2_OPTIONS_PORT\fP }"
+.br
+.ti -1c
+.RI "enum \fBLV2_Options_Status\fP { \fBLV2_OPTIONS_SUCCESS\fP = 0, \fBLV2_OPTIONS_ERR_UNKNOWN\fP = 1, \fBLV2_OPTIONS_ERR_BAD_SUBJECT\fP = 1 << 1, \fBLV2_OPTIONS_ERR_BAD_KEY\fP = 1 << 2, \fBLV2_OPTIONS_ERR_BAD_VALUE\fP = 1 << 3 }"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define LV2_OPTIONS__interface   \fBLV2_OPTIONS_PREFIX\fP 'interface'"
+
+.PP
+Definition at line 29 of file options\&.h\&.
+.SS "#define LV2_OPTIONS__Option   \fBLV2_OPTIONS_PREFIX\fP 'Option'"
+
+.PP
+Definition at line 28 of file options\&.h\&.
+.SS "#define LV2_OPTIONS__options   \fBLV2_OPTIONS_PREFIX\fP 'options'"
+
+.PP
+Definition at line 30 of file options\&.h\&.
+.SS "#define LV2_OPTIONS__requiredOption   \fBLV2_OPTIONS_PREFIX\fP 'requiredOption'"
+
+.PP
+Definition at line 31 of file options\&.h\&.
+.SS "#define LV2_OPTIONS__supportedOption   \fBLV2_OPTIONS_PREFIX\fP 'supportedOption'"
+
+.PP
+Definition at line 32 of file options\&.h\&.
+.SS "#define LV2_OPTIONS_PREFIX   \fBLV2_OPTIONS_URI\fP '#'"
+
+.PP
+Definition at line 26 of file options\&.h\&.
+.SS "#define LV2_OPTIONS_URI   'http://\fBlv2plug\&.in\fP/\fBns\fP/ext/options'"
+
+.PP
+Definition at line 25 of file options\&.h\&.
+.SH "Typedef Documentation"
+.PP 
+.SS "typedef struct \fB_LV2_Options_Interface\fP  \fBLV2_Options_Interface\fP"
+Interface for dynamically setting options (LV2_OPTIONS__interface)\&. 
+.SS "typedef struct \fB_LV2_Options_Option\fP  \fBLV2_Options_Option\fP"
+An option\&.
+.PP
+This is a property with a subject, also known as a triple or statement\&.
+.PP
+This struct is useful anywhere a statement needs to be passed where no memory ownership issues are present (since the value is a const pointer)\&.
+.PP
+Options can be passed to an instance via the feature LV2_OPTIONS__options with data pointed to an array of options terminated by a zeroed option, or accessed/manipulated using LV2_Options_Interface\&. 
+.SH "Enumeration Type Documentation"
+.PP 
+.SS "enum \fBLV2_Options_Context\fP"
+The context of an Option, which defines the subject it applies to\&. 
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fILV2_OPTIONS_INSTANCE \fP\fP
+This option applies to the instance itself\&. The subject must be ignored\&. 
+.TP
+\fB\fILV2_OPTIONS_RESOURCE \fP\fP
+This option applies to some named resource\&. The subject is a URI mapped to an integer (a LV2_URID, like the key) 
+.TP
+\fB\fILV2_OPTIONS_BLANK \fP\fP
+This option applies to some blank node\&. The subject is a blank node identifier, which is valid only within the current local scope\&. 
+.TP
+\fB\fILV2_OPTIONS_PORT \fP\fP
+This option applies to a port on the instance\&. The subject is the port's index\&. 
+.PP
+Definition at line 41 of file options\&.h\&.
+.SS "enum \fBLV2_Options_Status\fP"
+A status code for option functions\&. 
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fILV2_OPTIONS_SUCCESS \fP\fP
+Completed successfully\&. 
+.TP
+\fB\fILV2_OPTIONS_ERR_UNKNOWN \fP\fP
+Unknown error\&. 
+.TP
+\fB\fILV2_OPTIONS_ERR_BAD_SUBJECT \fP\fP
+Invalid/unsupported subject\&. 
+.TP
+\fB\fILV2_OPTIONS_ERR_BAD_KEY \fP\fP
+Invalid/unsupported key\&. 
+.TP
+\fB\fILV2_OPTIONS_ERR_BAD_VALUE \fP\fP
+Invalid/unsupported value\&. 
+.PP
+Definition at line 89 of file options\&.h\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

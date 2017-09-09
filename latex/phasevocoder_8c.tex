@@ -1,0 +1,97 @@
+\hypertarget{phasevocoder_8c}{}\section{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/libnyquist/nyquist/nyqsrc/phasevocoder.c File Reference}
+\label{phasevocoder_8c}\index{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/libnyquist/nyquist/nyqsrc/phasevocoder.\+c@{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/libnyquist/nyquist/nyqsrc/phasevocoder.\+c}}
+{\ttfamily \#include \char`\"{}stdio.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}stdlib.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}xlisp.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}sound.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}falloc.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}cext.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}pvshell.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}phasevocoder.\+h\char`\"{}}\\*
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{phasevocoder_8c_a47a168bafa183fb5d1d303541e360600}{X\+\_\+\+V\+A\+L\+UE}~state\mbox{[}0\mbox{]} /$\ast$ \hyperlink{rfft2d_test_m_l_8m_a4124bc0a9335c27f086f24ba207a4912}{a} parameter \hyperlink{lib_2expat_8h_a4a30a13b813682e68c5b689b45c65971}{value} $\ast$/
+\item 
+\#define \hyperlink{phasevocoder_8c_aba62d94641a70fcc76e8e454a549a147}{F\+\_\+\+C\+O\+U\+NT}~state\mbox{[}1\mbox{]} /$\ast$ counts \hyperlink{test__w__saw8_8c_a54185623a5a093f671a73e5fba6197a1}{samples} \hyperlink{rfft2d_test_m_l_8m_ad1fb8d92192e22cbe6298e4a2c65a711}{of} \hyperlink{checksum_8c_ae747d72a1a803f5ff4a4b2602857d93b}{f} $\ast$/
+\item 
+\#define \hyperlink{phasevocoder_8c_a555111e6a90961d8957aa3a74b4fbd66}{G\+\_\+\+C\+O\+U\+NT}~state\mbox{[}2\mbox{]} /$\ast$ counts \hyperlink{test__w__saw8_8c_a54185623a5a093f671a73e5fba6197a1}{samples} \hyperlink{rfft2d_test_m_l_8m_ad1fb8d92192e22cbe6298e4a2c65a711}{of} g $\ast$/
+\item 
+\#define \hyperlink{phasevocoder_8c_a3c92103dfe1dd8b54525a92cb373adc0}{G\+\_\+\+P\+R\+EV}~state\mbox{[}3\mbox{]} /$\ast$ previous \hyperlink{lib_2expat_8h_a4a30a13b813682e68c5b689b45c65971}{value} \hyperlink{nasm_8h_a5f350118b553429484632e5603292389}{from} g $\ast$/
+\item 
+\#define \hyperlink{phasevocoder_8c_a196a01e81bc2e4c01b7f25158cd70ef1}{G\+\_\+\+N\+E\+XT}~state\mbox{[}4\mbox{]} /$\ast$ \hyperlink{record_8c_a9b790a854eb0e06cd42c8d28a30db97d}{next} (current?) \hyperlink{lib_2expat_8h_a4a30a13b813682e68c5b689b45c65971}{value} \hyperlink{nasm_8h_a5f350118b553429484632e5603292389}{from} g $\ast$/
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+long \hyperlink{phasevocoder_8c_ada9a110ad69b68bd73d8071145c803fb}{pv\+\_\+fetch} (\hyperlink{pvshell_8h_a2abbe679bcf7d1af7475c74dc44c9d35}{pvshell\+\_\+type} susp, \hyperlink{sound_8h_a83d17f7b465d1591f27cd28fc5eb8a03}{sample\+\_\+block\+\_\+values\+\_\+type} \hyperlink{latency_8c_a71fd1c281affec034757279e4f91c50b}{out}, long $\ast$n)
+\item 
+\hyperlink{sound_8h_a792cec4ed9d6d636d342d9365ba265ea}{sound\+\_\+type} \hyperlink{phasevocoder_8c_a0e4e0f10a8db0d59355649e22ab604b4}{snd\+\_\+phasevocoder} (\hyperlink{sound_8h_a792cec4ed9d6d636d342d9365ba265ea}{sound\+\_\+type} \hyperlink{checksum_8c_ae747d72a1a803f5ff4a4b2602857d93b}{f}, \hyperlink{sound_8h_a792cec4ed9d6d636d342d9365ba265ea}{sound\+\_\+type} g, double x)
+\end{DoxyCompactItemize}
+
+
+\subsection{Macro Definition Documentation}
+\index{phasevocoder.\+c@{phasevocoder.\+c}!F\+\_\+\+C\+O\+U\+NT@{F\+\_\+\+C\+O\+U\+NT}}
+\index{F\+\_\+\+C\+O\+U\+NT@{F\+\_\+\+C\+O\+U\+NT}!phasevocoder.\+c@{phasevocoder.\+c}}
+\subsubsection[{\texorpdfstring{F\+\_\+\+C\+O\+U\+NT}{F_COUNT}}]{\setlength{\rightskip}{0pt plus 5cm}\#define F\+\_\+\+C\+O\+U\+NT~state\mbox{[}1\mbox{]} /$\ast$ counts {\bf samples} {\bf of} {\bf f} $\ast$/}\hypertarget{phasevocoder_8c_aba62d94641a70fcc76e8e454a549a147}{}\label{phasevocoder_8c_aba62d94641a70fcc76e8e454a549a147}
+
+
+Definition at line 20 of file phasevocoder.\+c.
+
+\index{phasevocoder.\+c@{phasevocoder.\+c}!G\+\_\+\+C\+O\+U\+NT@{G\+\_\+\+C\+O\+U\+NT}}
+\index{G\+\_\+\+C\+O\+U\+NT@{G\+\_\+\+C\+O\+U\+NT}!phasevocoder.\+c@{phasevocoder.\+c}}
+\subsubsection[{\texorpdfstring{G\+\_\+\+C\+O\+U\+NT}{G_COUNT}}]{\setlength{\rightskip}{0pt plus 5cm}\#define G\+\_\+\+C\+O\+U\+NT~state\mbox{[}2\mbox{]} /$\ast$ counts {\bf samples} {\bf of} g $\ast$/}\hypertarget{phasevocoder_8c_a555111e6a90961d8957aa3a74b4fbd66}{}\label{phasevocoder_8c_a555111e6a90961d8957aa3a74b4fbd66}
+
+
+Definition at line 21 of file phasevocoder.\+c.
+
+\index{phasevocoder.\+c@{phasevocoder.\+c}!G\+\_\+\+N\+E\+XT@{G\+\_\+\+N\+E\+XT}}
+\index{G\+\_\+\+N\+E\+XT@{G\+\_\+\+N\+E\+XT}!phasevocoder.\+c@{phasevocoder.\+c}}
+\subsubsection[{\texorpdfstring{G\+\_\+\+N\+E\+XT}{G_NEXT}}]{\setlength{\rightskip}{0pt plus 5cm}\#define G\+\_\+\+N\+E\+XT~state\mbox{[}4\mbox{]} /$\ast$ {\bf next} (current?) {\bf value} {\bf from} g $\ast$/}\hypertarget{phasevocoder_8c_a196a01e81bc2e4c01b7f25158cd70ef1}{}\label{phasevocoder_8c_a196a01e81bc2e4c01b7f25158cd70ef1}
+
+
+Definition at line 23 of file phasevocoder.\+c.
+
+\index{phasevocoder.\+c@{phasevocoder.\+c}!G\+\_\+\+P\+R\+EV@{G\+\_\+\+P\+R\+EV}}
+\index{G\+\_\+\+P\+R\+EV@{G\+\_\+\+P\+R\+EV}!phasevocoder.\+c@{phasevocoder.\+c}}
+\subsubsection[{\texorpdfstring{G\+\_\+\+P\+R\+EV}{G_PREV}}]{\setlength{\rightskip}{0pt plus 5cm}\#define G\+\_\+\+P\+R\+EV~state\mbox{[}3\mbox{]} /$\ast$ previous {\bf value} {\bf from} g $\ast$/}\hypertarget{phasevocoder_8c_a3c92103dfe1dd8b54525a92cb373adc0}{}\label{phasevocoder_8c_a3c92103dfe1dd8b54525a92cb373adc0}
+
+
+Definition at line 22 of file phasevocoder.\+c.
+
+\index{phasevocoder.\+c@{phasevocoder.\+c}!X\+\_\+\+V\+A\+L\+UE@{X\+\_\+\+V\+A\+L\+UE}}
+\index{X\+\_\+\+V\+A\+L\+UE@{X\+\_\+\+V\+A\+L\+UE}!phasevocoder.\+c@{phasevocoder.\+c}}
+\subsubsection[{\texorpdfstring{X\+\_\+\+V\+A\+L\+UE}{X_VALUE}}]{\setlength{\rightskip}{0pt plus 5cm}\#define X\+\_\+\+V\+A\+L\+UE~state\mbox{[}0\mbox{]} /$\ast$ {\bf a} parameter {\bf value} $\ast$/}\hypertarget{phasevocoder_8c_a47a168bafa183fb5d1d303541e360600}{}\label{phasevocoder_8c_a47a168bafa183fb5d1d303541e360600}
+
+
+Definition at line 19 of file phasevocoder.\+c.
+
+
+
+\subsection{Function Documentation}
+\index{phasevocoder.\+c@{phasevocoder.\+c}!pv\+\_\+fetch@{pv\+\_\+fetch}}
+\index{pv\+\_\+fetch@{pv\+\_\+fetch}!phasevocoder.\+c@{phasevocoder.\+c}}
+\subsubsection[{\texorpdfstring{pv\+\_\+fetch(pvshell\+\_\+type susp, sample\+\_\+block\+\_\+values\+\_\+type out, long $\ast$n)}{pv_fetch(pvshell_type susp, sample_block_values_type out, long *n)}}]{\setlength{\rightskip}{0pt plus 5cm}long pv\+\_\+fetch (
+\begin{DoxyParamCaption}
+\item[{{\bf pvshell\+\_\+type}}]{susp, }
+\item[{{\bf sample\+\_\+block\+\_\+values\+\_\+type}}]{out, }
+\item[{long $\ast$}]{n}
+\end{DoxyParamCaption}
+)}\hypertarget{phasevocoder_8c_ada9a110ad69b68bd73d8071145c803fb}{}\label{phasevocoder_8c_ada9a110ad69b68bd73d8071145c803fb}
+
+
+Definition at line 33 of file phasevocoder.\+c.
+
+\index{phasevocoder.\+c@{phasevocoder.\+c}!snd\+\_\+phasevocoder@{snd\+\_\+phasevocoder}}
+\index{snd\+\_\+phasevocoder@{snd\+\_\+phasevocoder}!phasevocoder.\+c@{phasevocoder.\+c}}
+\subsubsection[{\texorpdfstring{snd\+\_\+phasevocoder(sound\+\_\+type f, sound\+\_\+type g, double x)}{snd_phasevocoder(sound_type f, sound_type g, double x)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf sound\+\_\+type} snd\+\_\+phasevocoder (
+\begin{DoxyParamCaption}
+\item[{{\bf sound\+\_\+type}}]{f, }
+\item[{{\bf sound\+\_\+type}}]{g, }
+\item[{double}]{x}
+\end{DoxyParamCaption}
+)}\hypertarget{phasevocoder_8c_a0e4e0f10a8db0d59355649e22ab604b4}{}\label{phasevocoder_8c_a0e4e0f10a8db0d59355649e22ab604b4}
+
+
+Definition at line 78 of file phasevocoder.\+c.
+

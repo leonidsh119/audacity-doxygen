@@ -1,0 +1,96 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="curvefit_8h" kind="file" language="C++">
+    <compoundname>curvefit.h</compoundname>
+    <includedby refid="curvefit_8cpp" local="yes">C:/_dev/OpenU/Audacity/audacity/lib-src/libscorealign/curvefit.cpp</includedby>
+    <includedby refid="scorealign_8cpp" local="yes">C:/_dev/OpenU/Audacity/audacity/lib-src/libscorealign/scorealign.cpp</includedby>
+    <invincdepgraph>
+      <node id="19113">
+        <label>C:/_dev/OpenU/Audacity/audacity/lib-src/libscorealign/scorealign.cpp</label>
+        <link refid="scorealign_8cpp"/>
+      </node>
+      <node id="19111">
+        <label>C:/_dev/OpenU/Audacity/audacity/lib-src/libscorealign/curvefit.h</label>
+        <link refid="curvefit.h"/>
+        <childnode refid="19112" relation="include">
+        </childnode>
+        <childnode refid="19113" relation="include">
+        </childnode>
+      </node>
+      <node id="19112">
+        <label>C:/_dev/OpenU/Audacity/audacity/lib-src/libscorealign/curvefit.cpp</label>
+        <link refid="curvefit_8cpp"/>
+      </node>
+    </invincdepgraph>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="curvefit_8h_1a2e68c02d8cc3d3a48a1867a3a8c05254" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="sound_8c_1ae35f5844602719cf66324f4de2a658b3" kindref="member">void</ref></type>
+        <definition>void curve_fitting</definition>
+        <argsstring>(Scorealign *sa, bool verbose)</argsstring>
+        <name>curve_fitting</name>
+        <param>
+          <type><ref refid="class_scorealign" kindref="compound">Scorealign</ref> *</type>
+          <declname>sa</declname>
+        </param>
+        <param>
+          <type><ref refid="mac_2config_2i386_2lib-src_2libsoxr_2soxr-config_8h_1abb452686968e48b67397da5f97445f5b" kindref="member">bool</ref></type>
+          <declname>verbose</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/_dev/OpenU/Audacity/audacity/lib-src/libscorealign/curvefit.h" line="39" column="1" bodyfile="C:/_dev/OpenU/Audacity/audacity/lib-src/libscorealign/curvefit.cpp" bodystart="272" bodyend="326"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="comment">/*</highlight></codeline>
+<codeline lineno="2"><highlight class="comment"><sp/>*<sp/><sp/>curvefit.h</highlight></codeline>
+<codeline lineno="3"><highlight class="comment"><sp/>*<sp/><sp/>scorealign</highlight></codeline>
+<codeline lineno="4"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="5"><highlight class="comment"><sp/>*<sp/><sp/>Created<sp/>by<sp/>Roger<sp/>B.<sp/>Dannenberg<sp/>on<sp/>10/20/07.</highlight></codeline>
+<codeline lineno="6"><highlight class="comment"><sp/>*<sp/><sp/>Copyright<sp/>2007<sp/>by<sp/>Roger<sp/>B.<sp/>Dannenberg.<sp/>All<sp/>rights<sp/>reserved.</highlight></codeline>
+<codeline lineno="7"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="8"><highlight class="comment"><sp/>*<sp/>Dynamic<sp/>programming<sp/>does<sp/>a<sp/>good<sp/>job<sp/>of<sp/>getting<sp/>a<sp/>rough<sp/>alignment</highlight></codeline>
+<codeline lineno="9"><highlight class="comment"><sp/>*<sp/>that<sp/>is<sp/>very<sp/>good<sp/>in<sp/>a<sp/>global<sp/>sense,<sp/>but<sp/>there<sp/>are<sp/>often<sp/>short-term</highlight></codeline>
+<codeline lineno="10"><highlight class="comment"><sp/>*<sp/>&quot;digressions&quot;<sp/>where<sp/>the<sp/>optimal<sp/>path<sp/>wanders<sp/>off<sp/>the<sp/>&quot;true&quot;<sp/>path.</highlight></codeline>
+<codeline lineno="11"><highlight class="comment"><sp/>*<sp/>These<sp/>digressions<sp/>are<sp/>hard<sp/>to<sp/>correct<sp/>with<sp/>simple<sp/>smoothing.<sp/>This</highlight></codeline>
+<codeline lineno="12"><highlight class="comment"><sp/>*<sp/>module<sp/>is<sp/>intended<sp/>to<sp/>assert<sp/>a<sp/>&quot;steady<sp/>tempo&quot;<sp/>constraint<sp/>to<sp/>improve</highlight></codeline>
+<codeline lineno="13"><highlight class="comment"><sp/>*<sp/>the<sp/>path.<sp/>It<sp/>starts<sp/>with<sp/>the<sp/>dynamic<sp/>programming<sp/>path,<sp/>which<sp/>is<sp/>likely</highlight></codeline>
+<codeline lineno="14"><highlight class="comment"><sp/>*<sp/>to<sp/>be<sp/>close<sp/>to<sp/>the<sp/>correct<sp/>path.<sp/>The<sp/>DP<sp/>path<sp/>(in<sp/>pathx[]<sp/>and<sp/>pathy[])</highlight></codeline>
+<codeline lineno="15"><highlight class="comment"><sp/>*<sp/>is<sp/>divided<sp/>evenly<sp/>into<sp/>segments<sp/>of<sp/>approximately<sp/>line_time<sp/>seconds</highlight></codeline>
+<codeline lineno="16"><highlight class="comment"><sp/>*<sp/>along<sp/>the<sp/>x<sp/>axis.<sp/>For<sp/>a<sp/>segment<sp/>from<sp/>x1<sp/>to<sp/>x2,<sp/>linear<sp/>regression<sp/>is<sp/></highlight></codeline>
+<codeline lineno="17"><highlight class="comment"><sp/>*<sp/>performed<sp/>on<sp/>the<sp/>DP<sp/>path<sp/>from<sp/>x1<sp/>to<sp/>x2.<sp/>This<sp/>specifies<sp/>an<sp/>initial</highlight></codeline>
+<codeline lineno="18"><highlight class="comment"><sp/>*<sp/>line<sp/>segment.<sp/>Next,<sp/>the<sp/>end-points<sp/>are<sp/>joined<sp/>by<sp/>averaging:<sp/>if</highlight></codeline>
+<codeline lineno="19"><highlight class="comment"><sp/>*<sp/>the<sp/>segment<sp/>from<sp/>x1<sp/>to<sp/>x2<sp/>ends<sp/>at<sp/>y-end<sp/>and<sp/>the<sp/>segment<sp/>from<sp/>x2<sp/>to<sp/>x3</highlight></codeline>
+<codeline lineno="20"><highlight class="comment"><sp/>*<sp/>starts<sp/>at<sp/>y-start,<sp/>then<sp/>the<sp/>end<sp/>of<sp/>line<sp/>x1--x2<sp/>and<sp/>the<sp/>beginning<sp/>of</highlight></codeline>
+<codeline lineno="21"><highlight class="comment"><sp/>*<sp/>line<sp/>x2--x3<sp/>are<sp/>adjusted<sp/>to<sp/>(y-end<sp/>+<sp/>y-start)/2.<sp/>Now<sp/>the<sp/>fun<sp/>starts:</highlight></codeline>
+<codeline lineno="22"><highlight class="comment"><sp/>*<sp/>the<sp/>endpoints<sp/>of<sp/>all<sp/>the<sp/>lines<sp/>are<sp/>adjusted<sp/>up<sp/>and<sp/>down<sp/>in<sp/>order<sp/>to<sp/></highlight></codeline>
+<codeline lineno="23"><highlight class="comment"><sp/>*<sp/>minimize<sp/>a<sp/>distance<sp/>function.<sp/>The<sp/>distance<sp/>function<sp/>estimates<sp/>the</highlight></codeline>
+<codeline lineno="24"><highlight class="comment"><sp/>*<sp/>integral<sp/>of<sp/>the<sp/>distance<sp/>matrix<sp/>value<sp/>along<sp/>the<sp/>line.<sp/>Since<sp/>the<sp/>line</highlight></codeline>
+<codeline lineno="25"><highlight class="comment"><sp/>*<sp/>falls<sp/>between<sp/>discrete<sp/>points<sp/>in<sp/>the<sp/>matrix,<sp/>interpolation<sp/>is<sp/>used.</highlight></codeline>
+<codeline lineno="26"><highlight class="comment"><sp/>*<sp/>The<sp/>end<sp/>result<sp/>is<sp/>converted<sp/>back<sp/>into<sp/>a<sp/>discrete<sp/>path.<sp/>(Maybe<sp/>in<sp/>the<sp/></highlight></codeline>
+<codeline lineno="27"><highlight class="comment"><sp/>*<sp/>future,<sp/>the<sp/>pathx[]/pathy[]<sp/>representation<sp/>should<sp/>be<sp/>generalized<sp/>to</highlight></codeline>
+<codeline lineno="28"><highlight class="comment"><sp/>*<sp/>allow<sp/>for<sp/>non-integer<sp/>path<sp/>coordinates.)<sp/>The<sp/>resulting<sp/>path<sp/>will</highlight></codeline>
+<codeline lineno="29"><highlight class="comment"><sp/>*<sp/>have<sp/>steady<sp/>tempo<sp/>at<sp/>least<sp/>within<sp/>each<sp/>segment.<sp/>What<sp/>I<sp/>hope<sp/>will</highlight></codeline>
+<codeline lineno="30"><highlight class="comment"><sp/>*<sp/>happen<sp/>is<sp/>that<sp/>when<sp/>there<sp/>are<sp/>chord<sp/>changes<sp/>or<sp/>melody<sp/>changes,<sp/>there</highlight></codeline>
+<codeline lineno="31"><highlight class="comment"><sp/>*<sp/>will<sp/>be<sp/>&quot;narrow&quot;<sp/>pathways<sp/>in<sp/>the<sp/>distance<sp/>matrix.<sp/>Getting<sp/>the<sp/></highlight></codeline>
+<codeline lineno="32"><highlight class="comment"><sp/>*<sp/>alignment<sp/>wrong<sp/>at<sp/>these<sp/>transitions<sp/>will<sp/>cost<sp/>a<sp/>lot.<sp/>Other<sp/>places</highlight></codeline>
+<codeline lineno="33"><highlight class="comment"><sp/>*<sp/>are<sp/>not<sp/>so<sp/>critical,<sp/>which<sp/>is<sp/>why<sp/>I<sp/>think<sp/>DP<sp/>wanders<sp/>off<sp/>the<sp/>true</highlight></codeline>
+<codeline lineno="34"><highlight class="comment"><sp/>*<sp/>path.<sp/>The<sp/>straight-line<sp/>path<sp/>will<sp/>ensure<sp/>that<sp/>for<sp/>the<sp/>most<sp/>part,<sp/>the</highlight></codeline>
+<codeline lineno="35"><highlight class="comment"><sp/>*<sp/>score<sp/>alignment<sp/>is<sp/>determined<sp/>by<sp/>the<sp/>transitions,<sp/>and<sp/>where<sp/>alignment</highlight></codeline>
+<codeline lineno="36"><highlight class="comment"><sp/>*<sp/>is<sp/>not<sp/>critical,<sp/>the<sp/>alignment<sp/>will<sp/>avoid<sp/>any<sp/>rubato<sp/>or<sp/>over-fitting.</highlight></codeline>
+<codeline lineno="37"><highlight class="comment"><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="38"><highlight class="normal"></highlight></codeline>
+<codeline lineno="39"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="curvefit_8h_1a2e68c02d8cc3d3a48a1867a3a8c05254" kindref="member">curve_fitting</ref>(<ref refid="class_scorealign" kindref="compound">Scorealign</ref><sp/>*<ref refid="lib-src_2libscorealign_2main_8cpp_1a1aa9083626d69f94349750d974f0359a" kindref="member">sa</ref>,<sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="mm_8c_1ab421ea2a103f8a57c338dc30e3cf4f6b" kindref="member">verbose</ref>);</highlight></codeline>
+<codeline lineno="40"><highlight class="normal"></highlight></codeline>
+    </programlisting>
+    <location file="C:/_dev/OpenU/Audacity/audacity/lib-src/libscorealign/curvefit.h"/>
+  </compounddef>
+</doxygen>

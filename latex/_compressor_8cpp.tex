@@ -1,0 +1,162 @@
+\hypertarget{_compressor_8cpp}{}\section{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/src/effects/\+Compressor.cpp File Reference}
+\label{_compressor_8cpp}\index{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/src/effects/\+Compressor.\+cpp@{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/src/effects/\+Compressor.\+cpp}}
+{\ttfamily \#include \char`\"{}../\+Audacity.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Compressor.\+h\char`\"{}}\\*
+{\ttfamily \#include $<$math.\+h$>$}\\*
+{\ttfamily \#include $<$wx/brush.\+h$>$}\\*
+{\ttfamily \#include $<$wx/dcclient.\+h$>$}\\*
+{\ttfamily \#include $<$wx/dcmemory.\+h$>$}\\*
+{\ttfamily \#include $<$wx/intl.\+h$>$}\\*
+{\ttfamily \#include $<$wx/msgdlg.\+h$>$}\\*
+{\ttfamily \#include \char`\"{}../\+A\+Color.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../\+Prefs.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../\+Shuttle\+Gui.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../float\+\_\+cast.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../widgets/\+Ruler.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../\+Wave\+Track.\+h\char`\"{}}\\*
+\subsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \{ \\*
+\hyperlink{_compressor_8cpp_a7b1472d57861c1c16e0394cd0f614182aad154bd65623194276f574fdbd7e8077}{I\+D\+\_\+\+Threshold} = 10000, 
+\hyperlink{_compressor_8cpp_a7b1472d57861c1c16e0394cd0f614182af0a4a75945de385fa8f0a06f6bcd0b88}{I\+D\+\_\+\+Noise\+Floor}, 
+\hyperlink{_compressor_8cpp_a7b1472d57861c1c16e0394cd0f614182a7190a7d42d4b9ce30d09bc7dbf3830ae}{I\+D\+\_\+\+Ratio}, 
+\hyperlink{_compressor_8cpp_a7b1472d57861c1c16e0394cd0f614182ab6d209e67cadf61ba835e8d975967fd1}{I\+D\+\_\+\+Attack}, 
+\\*
+\hyperlink{_compressor_8cpp_a7b1472d57861c1c16e0394cd0f614182af5e7d34225a3c8fbab24b91edc7252ec}{I\+D\+\_\+\+Decay}
+ \}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{_compressor_8cpp_ac54b324a165a8cb19b7b736b85c975a8}{Param} (Threshold, double, \hyperlink{_theme_8cpp_ad4baed404c66b57e257af684bdc5ecf2}{XO}(\char`\"{}Threshold\char`\"{}),-\/12.\+0,-\/60.\+0,-\/1.\+0, 1)
+\item 
+\hyperlink{_compressor_8cpp_ae23cd0a88f2b8076677ca2b7543993e4}{Param} (Noise\+Floor, double, \hyperlink{_theme_8cpp_ad4baed404c66b57e257af684bdc5ecf2}{XO}(\char`\"{}Noise\+Floor\char`\"{}),-\/40.\+0,-\/80.\+0,-\/20.\+0, 5)
+\item 
+\hyperlink{_compressor_8cpp_a1b43cb300efe211a4b1e7b9ce6730e61}{Param} (Ratio, double, \hyperlink{_theme_8cpp_ad4baed404c66b57e257af684bdc5ecf2}{XO}(\char`\"{}Ratio\char`\"{}), 2.\+0, 1.\+5, 10.\+0, 2)
+\item 
+\hyperlink{_compressor_8cpp_a354c0dc78673c0b605bdafa25df5f9ac}{Param} (Attack\+Time, double, \hyperlink{_theme_8cpp_ad4baed404c66b57e257af684bdc5ecf2}{XO}(\char`\"{}Attack\+Time\char`\"{}), 0.\+2, 0.\+1, 5.\+0, 100)
+\item 
+\hyperlink{_compressor_8cpp_ab796dbc07bdafae399d3b0271eb8e9ec}{Param} (Release\+Time, double, \hyperlink{_theme_8cpp_ad4baed404c66b57e257af684bdc5ecf2}{XO}(\char`\"{}Release\+Time\char`\"{}), 1.\+0, 1.\+0, 30.\+0, 10)
+\item 
+\hyperlink{_compressor_8cpp_a0688f74898ea02b28c5a5d2ffb6a8fd2}{Param} (Normalize, \hyperlink{mac_2config_2i386_2lib-src_2libsoxr_2soxr-config_8h_abb452686968e48b67397da5f97445f5b}{bool}, \hyperlink{_theme_8cpp_ad4baed404c66b57e257af684bdc5ecf2}{XO}(\char`\"{}Normalize\char`\"{}), true, \hyperlink{mac_2config_2i386_2lib-src_2libsoxr_2soxr-config_8h_a65e9886d74aaee76545e83dd09011727}{false}, \hyperlink{mac_2config_2i386_2lib-src_2libsoxr_2soxr-config_8h_a41f9c5fb8b08eb5dc3edce4dcb37fee7}{true}, 1)
+\item 
+\hyperlink{_compressor_8cpp_a381b79823923e7678f7c061e7ebc9040}{Param} (Use\+Peak, \hyperlink{mac_2config_2i386_2lib-src_2libsoxr_2soxr-config_8h_abb452686968e48b67397da5f97445f5b}{bool}, \hyperlink{_theme_8cpp_ad4baed404c66b57e257af684bdc5ecf2}{XO}(\char`\"{}Use\+Peak\char`\"{}), false, \hyperlink{mac_2config_2i386_2lib-src_2libsoxr_2soxr-config_8h_a65e9886d74aaee76545e83dd09011727}{false}, \hyperlink{mac_2config_2i386_2lib-src_2libsoxr_2soxr-config_8h_a41f9c5fb8b08eb5dc3edce4dcb37fee7}{true}, 1)
+\end{DoxyCompactItemize}
+
+
+\subsection{Enumeration Type Documentation}
+\subsubsection[{\texorpdfstring{anonymous enum}{anonymous enum}}]{\setlength{\rightskip}{0pt plus 5cm}anonymous enum}\hypertarget{_compressor_8cpp_a7b1472d57861c1c16e0394cd0f614182}{}\label{_compressor_8cpp_a7b1472d57861c1c16e0394cd0f614182}
+\begin{Desc}
+\item[Enumerator]\par
+\begin{description}
+\index{I\+D\+\_\+\+Threshold@{I\+D\+\_\+\+Threshold}!Compressor.\+cpp@{Compressor.\+cpp}}\index{Compressor.\+cpp@{Compressor.\+cpp}!I\+D\+\_\+\+Threshold@{I\+D\+\_\+\+Threshold}}\item[{\em 
+I\+D\+\_\+\+Threshold\hypertarget{_compressor_8cpp_a7b1472d57861c1c16e0394cd0f614182aad154bd65623194276f574fdbd7e8077}{}\label{_compressor_8cpp_a7b1472d57861c1c16e0394cd0f614182aad154bd65623194276f574fdbd7e8077}
+}]\index{I\+D\+\_\+\+Noise\+Floor@{I\+D\+\_\+\+Noise\+Floor}!Compressor.\+cpp@{Compressor.\+cpp}}\index{Compressor.\+cpp@{Compressor.\+cpp}!I\+D\+\_\+\+Noise\+Floor@{I\+D\+\_\+\+Noise\+Floor}}\item[{\em 
+I\+D\+\_\+\+Noise\+Floor\hypertarget{_compressor_8cpp_a7b1472d57861c1c16e0394cd0f614182af0a4a75945de385fa8f0a06f6bcd0b88}{}\label{_compressor_8cpp_a7b1472d57861c1c16e0394cd0f614182af0a4a75945de385fa8f0a06f6bcd0b88}
+}]\index{I\+D\+\_\+\+Ratio@{I\+D\+\_\+\+Ratio}!Compressor.\+cpp@{Compressor.\+cpp}}\index{Compressor.\+cpp@{Compressor.\+cpp}!I\+D\+\_\+\+Ratio@{I\+D\+\_\+\+Ratio}}\item[{\em 
+I\+D\+\_\+\+Ratio\hypertarget{_compressor_8cpp_a7b1472d57861c1c16e0394cd0f614182a7190a7d42d4b9ce30d09bc7dbf3830ae}{}\label{_compressor_8cpp_a7b1472d57861c1c16e0394cd0f614182a7190a7d42d4b9ce30d09bc7dbf3830ae}
+}]\index{I\+D\+\_\+\+Attack@{I\+D\+\_\+\+Attack}!Compressor.\+cpp@{Compressor.\+cpp}}\index{Compressor.\+cpp@{Compressor.\+cpp}!I\+D\+\_\+\+Attack@{I\+D\+\_\+\+Attack}}\item[{\em 
+I\+D\+\_\+\+Attack\hypertarget{_compressor_8cpp_a7b1472d57861c1c16e0394cd0f614182ab6d209e67cadf61ba835e8d975967fd1}{}\label{_compressor_8cpp_a7b1472d57861c1c16e0394cd0f614182ab6d209e67cadf61ba835e8d975967fd1}
+}]\index{I\+D\+\_\+\+Decay@{I\+D\+\_\+\+Decay}!Compressor.\+cpp@{Compressor.\+cpp}}\index{Compressor.\+cpp@{Compressor.\+cpp}!I\+D\+\_\+\+Decay@{I\+D\+\_\+\+Decay}}\item[{\em 
+I\+D\+\_\+\+Decay\hypertarget{_compressor_8cpp_a7b1472d57861c1c16e0394cd0f614182af5e7d34225a3c8fbab24b91edc7252ec}{}\label{_compressor_8cpp_a7b1472d57861c1c16e0394cd0f614182af5e7d34225a3c8fbab24b91edc7252ec}
+}]\end{description}
+\end{Desc}
+
+
+Definition at line 46 of file Compressor.\+cpp.
+
+
+
+\subsection{Function Documentation}
+\index{Compressor.\+cpp@{Compressor.\+cpp}!Param@{Param}}
+\index{Param@{Param}!Compressor.\+cpp@{Compressor.\+cpp}}
+\subsubsection[{\texorpdfstring{Param(\+Threshold, double, X\+O(""Threshold""),-\/12.\+0,-\/60.\+0,-\/1.\+0, 1)}{Param(Threshold, double, XO("Threshold"),-12.0,-60.0,-1.0, 1)}}]{\setlength{\rightskip}{0pt plus 5cm}Param (
+\begin{DoxyParamCaption}
+\item[{Threshold}]{, }
+\item[{double}]{, }
+\item[{{\bf XO}(\char`\"{}Threshold\char`\"{})}]{, }
+\item[{-\/12.}]{0, }
+\item[{-\/60.}]{0, }
+\item[{-\/1.}]{0, }
+\item[{1}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{_compressor_8cpp_ac54b324a165a8cb19b7b736b85c975a8}{}\label{_compressor_8cpp_ac54b324a165a8cb19b7b736b85c975a8}
+\index{Compressor.\+cpp@{Compressor.\+cpp}!Param@{Param}}
+\index{Param@{Param}!Compressor.\+cpp@{Compressor.\+cpp}}
+\subsubsection[{\texorpdfstring{Param(\+Noise\+Floor, double, X\+O(""Noise\+Floor""),-\/40.\+0,-\/80.\+0,-\/20.\+0, 5)}{Param(NoiseFloor, double, XO("NoiseFloor"),-40.0,-80.0,-20.0, 5)}}]{\setlength{\rightskip}{0pt plus 5cm}Param (
+\begin{DoxyParamCaption}
+\item[{Noise\+Floor}]{, }
+\item[{double}]{, }
+\item[{{\bf XO}(\char`\"{}Noise\+Floor\char`\"{})}]{, }
+\item[{-\/40.}]{0, }
+\item[{-\/80.}]{0, }
+\item[{-\/20.}]{0, }
+\item[{5}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{_compressor_8cpp_ae23cd0a88f2b8076677ca2b7543993e4}{}\label{_compressor_8cpp_ae23cd0a88f2b8076677ca2b7543993e4}
+\index{Compressor.\+cpp@{Compressor.\+cpp}!Param@{Param}}
+\index{Param@{Param}!Compressor.\+cpp@{Compressor.\+cpp}}
+\subsubsection[{\texorpdfstring{Param(\+Ratio, double, X\+O(""Ratio""), 2.\+0, 1.\+5, 10.\+0, 2)}{Param(Ratio, double, XO("Ratio"), 2.0, 1.5, 10.0, 2)}}]{\setlength{\rightskip}{0pt plus 5cm}Param (
+\begin{DoxyParamCaption}
+\item[{Ratio}]{, }
+\item[{double}]{, }
+\item[{{\bf XO}(\char`\"{}Ratio\char`\"{})}]{, }
+\item[{2.}]{0, }
+\item[{1.}]{5, }
+\item[{10.}]{0, }
+\item[{2}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{_compressor_8cpp_a1b43cb300efe211a4b1e7b9ce6730e61}{}\label{_compressor_8cpp_a1b43cb300efe211a4b1e7b9ce6730e61}
+\index{Compressor.\+cpp@{Compressor.\+cpp}!Param@{Param}}
+\index{Param@{Param}!Compressor.\+cpp@{Compressor.\+cpp}}
+\subsubsection[{\texorpdfstring{Param(\+Attack\+Time, double, X\+O(""Attack\+Time""), 0.\+2, 0.\+1, 5.\+0, 100)}{Param(AttackTime, double, XO("AttackTime"), 0.2, 0.1, 5.0, 100)}}]{\setlength{\rightskip}{0pt plus 5cm}Param (
+\begin{DoxyParamCaption}
+\item[{Attack\+Time}]{, }
+\item[{double}]{, }
+\item[{{\bf XO}(\char`\"{}Attack\+Time\char`\"{})}]{, }
+\item[{0.}]{2, }
+\item[{0.}]{1, }
+\item[{5.}]{0, }
+\item[{100}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{_compressor_8cpp_a354c0dc78673c0b605bdafa25df5f9ac}{}\label{_compressor_8cpp_a354c0dc78673c0b605bdafa25df5f9ac}
+\index{Compressor.\+cpp@{Compressor.\+cpp}!Param@{Param}}
+\index{Param@{Param}!Compressor.\+cpp@{Compressor.\+cpp}}
+\subsubsection[{\texorpdfstring{Param(\+Release\+Time, double, X\+O(""Release\+Time""), 1.\+0, 1.\+0, 30.\+0, 10)}{Param(ReleaseTime, double, XO("ReleaseTime"), 1.0, 1.0, 30.0, 10)}}]{\setlength{\rightskip}{0pt plus 5cm}Param (
+\begin{DoxyParamCaption}
+\item[{Release\+Time}]{, }
+\item[{double}]{, }
+\item[{{\bf XO}(\char`\"{}Release\+Time\char`\"{})}]{, }
+\item[{1.}]{0, }
+\item[{1.}]{0, }
+\item[{30.}]{0, }
+\item[{10}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{_compressor_8cpp_ab796dbc07bdafae399d3b0271eb8e9ec}{}\label{_compressor_8cpp_ab796dbc07bdafae399d3b0271eb8e9ec}
+\index{Compressor.\+cpp@{Compressor.\+cpp}!Param@{Param}}
+\index{Param@{Param}!Compressor.\+cpp@{Compressor.\+cpp}}
+\subsubsection[{\texorpdfstring{Param(\+Normalize, bool, X\+O(""Normalize""), true, false, true, 1)}{Param(Normalize, bool, XO("Normalize"), true, false, true, 1)}}]{\setlength{\rightskip}{0pt plus 5cm}Param (
+\begin{DoxyParamCaption}
+\item[{Normalize}]{, }
+\item[{{\bf bool}}]{, }
+\item[{{\bf XO}(\char`\"{}Normalize\char`\"{})}]{, }
+\item[{{\bf true}}]{, }
+\item[{{\bf false}}]{, }
+\item[{{\bf true}}]{, }
+\item[{1}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{_compressor_8cpp_a0688f74898ea02b28c5a5d2ffb6a8fd2}{}\label{_compressor_8cpp_a0688f74898ea02b28c5a5d2ffb6a8fd2}
+\index{Compressor.\+cpp@{Compressor.\+cpp}!Param@{Param}}
+\index{Param@{Param}!Compressor.\+cpp@{Compressor.\+cpp}}
+\subsubsection[{\texorpdfstring{Param(\+Use\+Peak, bool, X\+O(""Use\+Peak""), false, false, true, 1)}{Param(UsePeak, bool, XO("UsePeak"), false, false, true, 1)}}]{\setlength{\rightskip}{0pt plus 5cm}Param (
+\begin{DoxyParamCaption}
+\item[{Use\+Peak}]{, }
+\item[{{\bf bool}}]{, }
+\item[{{\bf XO}(\char`\"{}Use\+Peak\char`\"{})}]{, }
+\item[{{\bf false}}]{, }
+\item[{{\bf false}}]{, }
+\item[{{\bf true}}]{, }
+\item[{1}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{_compressor_8cpp_a381b79823923e7678f7c061e7ebc9040}{}\label{_compressor_8cpp_a381b79823923e7678f7c061e7ebc9040}

@@ -1,0 +1,296 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/lib-src/libnyquist/nyquist/sys/win/wingui/winmain.cpp" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/lib-src/libnyquist/nyquist/sys/win/wingui/winmain.cpp \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include 'windows\&.h'\fP
+.br
+\fC#include 'cppext\&.h'\fP
+.br
+\fC#include 'longque\&.h'\fP
+.br
+\fC#include 'button\&.h'\fP
+.br
+\fC#include 'slider\&.h'\fP
+.br
+\fC#include 'winmain\&.h'\fP
+.br
+\fC#include 'stdlib\&.h'\fP
+.br
+\fC#include 'string\&.h'\fP
+.br
+\fC#include 'stdio\&.h'\fP
+.br
+\fC#include 'textio\&.h'\fP
+.br
+\fC#include 'mmsystem\&.h'\fP
+.br
+\fC#include <crtdbg\&.h>\fP
+.br
+\fC#include <mapiwin\&.h>\fP
+.br
+\fC#include 'resource\&.h'\fP
+.br
+\fC#include 'typein\&.h'\fP
+.br
+\fC#include 'xlispfns\&.h'\fP
+.br
+\fC#include 'winfun\&.h'\fP
+.br
+
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBEDIT_HIGH_WATER\fP   10000"
+.br
+.ti -1c
+.RI "#define \fBEDIT_LOW_WATER\fP   9000"
+.br
+.ti -1c
+.RI "#define \fBEABUFFMAX\fP   110"
+.br
+.ti -1c
+.RI "#define \fBENTER_KEY\fP   0x0d"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "char \fBwait_ascii\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBprocess_win_events\fP (\fBint\fP method)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBlf2crlf\fP (char *dest, char *src)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBedit_append\fP (char *txt)"
+.br
+.ti -1c
+.RI "long CALLBACK \fBEditWndProc\fP (HWND hWnd, \fBUINT\fP message, WPARAM wParam, LPARAM lParam)"
+.br
+.ti -1c
+.RI "\fBBOOL\fP \fBInitApplication\fP (HINSTANCE hInstance)"
+.br
+.ti -1c
+.RI "\fBBOOL\fP \fBInitInstance\fP (HINSTANCE hInstance, \fBint\fP nCmdShow)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBWINAPI\fP \fBWinMain\fP (HINSTANCE hInstance, HINSTANCE hPrevInstance, \fBLPSTR\fP lpCmdLine, \fBint\fP nCmdShow)"
+.br
+.ti -1c
+.RI "long CALLBACK \fBMainWndProc\fP (HWND hWnd, \fBUINT\fP message, WPARAM wParam, LPARAM lParam)"
+.br
+.ti -1c
+.RI "\fBBOOL\fP CALLBACK \fBAbout\fP (HWND hDlg, unsigned message, \fBWORD\fP wParam, LONG lParam)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBRegisterWindow\fP (HWND w, WNDPROC \fBp\fP)"
+.br
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "HWND \fBbuttons\fP [\fBNUMBUTTONS\fP]"
+.br
+.ti -1c
+.RI "HWND \fBsliders\fP [\fBNUMSLIDERS\fP]"
+.br
+.ti -1c
+.RI "HWND \fBtextinput\fP"
+.br
+.ti -1c
+.RI "HWND \fBtextoutput\fP"
+.br
+.ti -1c
+.RI "HFONT \fBhfont\fP"
+.br
+.ti -1c
+.RI "HWND \fBalt_win\fP"
+.br
+.ti -1c
+.RI "WNDPROC \fBalt_proc\fP"
+.br
+.ti -1c
+.RI "HINSTANCE \fBhInst\fP"
+.br
+.ti -1c
+.RI "HWND \fBhMainWindow\fP"
+.br
+.ti -1c
+.RI "\fBint\fP \fBquit_value\fP"
+.br
+.ti -1c
+.RI "\fBint\fP \fBabort_flag\fP = 0"
+.br
+.ti -1c
+.RI "char * \fBget_ascii_string\fP = \fBNULL\fP"
+.br
+.ti -1c
+.RI "char * \fBnext_ascii\fP = \fBNULL\fP"
+.br
+.ti -1c
+.RI "WNDPROC \fBDefaultEditWndProc\fP = \fBNULL\fP"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBenter_flag\fP = \fBfalse\fP"
+.br
+.ti -1c
+.RI "char * \fBbutton_msgs\fP []"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define EABUFFMAX   110"
+
+.PP
+Definition at line 137 of file winmain\&.cpp\&.
+.SS "#define EDIT_HIGH_WATER   10000"
+
+.PP
+Definition at line 134 of file winmain\&.cpp\&.
+.SS "#define EDIT_LOW_WATER   9000"
+
+.PP
+Definition at line 135 of file winmain\&.cpp\&.
+.SS "#define ENTER_KEY   0x0d"
+
+.PP
+Definition at line 221 of file winmain\&.cpp\&.
+.SH "Function Documentation"
+.PP 
+.SS "\fBBOOL\fP CALLBACK About (HWND hDlg, unsigned message, \fBWORD\fP wParam, LONG lParam)"
+
+.PP
+Definition at line 626 of file winmain\&.cpp\&.
+.SS "\fBvoid\fP edit_append (char * txt)"
+
+.PP
+Definition at line 147 of file winmain\&.cpp\&.
+.SS "long CALLBACK EditWndProc (HWND hWnd, \fBUINT\fP message, WPARAM wParam, LPARAM lParam)"
+
+.PP
+Definition at line 225 of file winmain\&.cpp\&.
+.SS "\fBBOOL\fP InitApplication (HINSTANCE hInstance)"
+
+.PP
+Definition at line 237 of file winmain\&.cpp\&.
+.SS "\fBBOOL\fP InitInstance (HINSTANCE hInstance, \fBint\fP nCmdShow)"
+
+.PP
+Definition at line 266 of file winmain\&.cpp\&.
+.SS "\fBint\fP lf2crlf (char * dest, char * src)"
+
+.PP
+Definition at line 121 of file winmain\&.cpp\&.
+.SS "long CALLBACK MainWndProc (HWND hWnd, \fBUINT\fP message, WPARAM wParam, LPARAM lParam)"
+
+.PP
+Definition at line 453 of file winmain\&.cpp\&.
+.SS "\fBvoid\fP process_win_events (\fBint\fP method)"
+
+.PP
+Definition at line 90 of file winmain\&.cpp\&.
+.SS "\fBvoid\fP RegisterWindow (HWND w, WNDPROC p)"
+
+.PP
+Definition at line 654 of file winmain\&.cpp\&.
+.SS "char wait_ascii (\fBvoid\fP)"
+
+.PP
+Definition at line 58 of file winmain\&.cpp\&.
+.SS "\fBint\fP \fBWINAPI\fP WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, \fBLPSTR\fP lpCmdLine, \fBint\fP nCmdShow)"
+
+.PP
+Definition at line 395 of file winmain\&.cpp\&.
+.SH "Variable Documentation"
+.PP 
+.SS "\fBint\fP abort_flag = 0"
+
+.PP
+Definition at line 47 of file winmain\&.cpp\&.
+.SS "WNDPROC alt_proc"
+
+.PP
+Definition at line 35 of file winmain\&.cpp\&.
+.SS "HWND alt_win"
+
+.PP
+Definition at line 34 of file winmain\&.cpp\&.
+.SS "char* button_msgs[]"
+\fBInitial value:\fP
+.PP
+.nf
+= {
+    "(ny:load-file)\n",
+    "(ny:reload-file)\n",
+    "(r)\n",
+    "\002",
+    "\003",
+    "\007",
+    "\024",
+    "(F1)\n",
+    "(F2)\n",
+    "(F3)\n",
+    "(F4)\n" }
+.fi
+.PP
+Definition at line 428 of file winmain\&.cpp\&.
+.SS "HWND buttons[\fBNUMBUTTONS\fP]"
+
+.PP
+Definition at line 27 of file winmain\&.cpp\&.
+.SS "WNDPROC DefaultEditWndProc = \fBNULL\fP"
+
+.PP
+Definition at line 220 of file winmain\&.cpp\&.
+.SS "\fBbool\fP enter_flag = \fBfalse\fP"
+
+.PP
+Definition at line 222 of file winmain\&.cpp\&.
+.SS "char* get_ascii_string = \fBNULL\fP"
+
+.PP
+Definition at line 54 of file winmain\&.cpp\&.
+.SS "HFONT hfont"
+
+.PP
+Definition at line 32 of file winmain\&.cpp\&.
+.SS "HINSTANCE hInst"
+
+.PP
+Definition at line 39 of file winmain\&.cpp\&.
+.SS "HWND hMainWindow"
+
+.PP
+Definition at line 40 of file winmain\&.cpp\&.
+.SS "char* next_ascii = \fBNULL\fP"
+
+.PP
+Definition at line 55 of file winmain\&.cpp\&.
+.SS "\fBint\fP quit_value"
+
+.PP
+Definition at line 46 of file winmain\&.cpp\&.
+.SS "HWND sliders[\fBNUMSLIDERS\fP]"
+
+.PP
+Definition at line 28 of file winmain\&.cpp\&.
+.SS "HWND textinput"
+
+.PP
+Definition at line 30 of file winmain\&.cpp\&.
+.SS "HWND textoutput"
+
+.PP
+Definition at line 31 of file winmain\&.cpp\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

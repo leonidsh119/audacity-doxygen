@@ -1,0 +1,1183 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/lib-src/libnyquist/nyquist/nyqsrc/sndfnint.c" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/lib-src/libnyquist/nyquist/nyqsrc/sndfnint.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include 'stdlib\&.h'\fP
+.br
+\fC#include 'xlisp\&.h'\fP
+.br
+\fC#include 'sndfmt\&.h'\fP
+.br
+\fC#include 'sndfile\&.h'\fP
+.br
+\fC#include 'sound\&.h'\fP
+.br
+\fC#include 'add\&.h'\fP
+.br
+\fC#include 'avg\&.h'\fP
+.br
+\fC#include 'compose\&.h'\fP
+.br
+\fC#include 'convolve\&.h'\fP
+.br
+\fC#include 'downsample\&.h'\fP
+.br
+\fC#include 'fft\&.h'\fP
+.br
+\fC#include 'inverse\&.h'\fP
+.br
+\fC#include 'multiseq\&.h'\fP
+.br
+\fC#include 'resamp\&.h'\fP
+.br
+\fC#include 'resampv\&.h'\fP
+.br
+\fC#include 'samples\&.h'\fP
+.br
+\fC#include 'sndmax\&.h'\fP
+.br
+\fC#include 'sndread\&.h'\fP
+.br
+\fC#include 'sndseq\&.h'\fP
+.br
+\fC#include 'sndsliders\&.h'\fP
+.br
+\fC#include 'sliderdata\&.h'\fP
+.br
+\fC#include 'sndwritepa\&.h'\fP
+.br
+\fC#include 'yin\&.h'\fP
+.br
+\fC#include 'nyq\-osc\-server\&.h'\fP
+.br
+\fC#include 'trigger\&.h'\fP
+.br
+\fC#include 'lpanal\&.h'\fP
+.br
+\fC#include 'phasevocoder\&.h'\fP
+.br
+\fC#include 'pvshell\&.h'\fP
+.br
+\fC#include 'abs\&.h'\fP
+.br
+\fC#include 'allpoles\&.h'\fP
+.br
+\fC#include 'alpass\&.h'\fP
+.br
+\fC#include 'alpasscv\&.h'\fP
+.br
+\fC#include 'alpassvv\&.h'\fP
+.br
+\fC#include 'amosc\&.h'\fP
+.br
+\fC#include 'areson\&.h'\fP
+.br
+\fC#include 'aresonvc\&.h'\fP
+.br
+\fC#include 'aresoncv\&.h'\fP
+.br
+\fC#include 'aresonvv\&.h'\fP
+.br
+\fC#include 'atone\&.h'\fP
+.br
+\fC#include 'atonev\&.h'\fP
+.br
+\fC#include 'biquadfilt\&.h'\fP
+.br
+\fC#include 'buzz\&.h'\fP
+.br
+\fC#include 'chase\&.h'\fP
+.br
+\fC#include 'clip\&.h'\fP
+.br
+\fC#include 'congen\&.h'\fP
+.br
+\fC#include 'const\&.h'\fP
+.br
+\fC#include 'coterm\&.h'\fP
+.br
+\fC#include 'delaycc\&.h'\fP
+.br
+\fC#include 'delaycv\&.h'\fP
+.br
+\fC#include 'eqbandvvv\&.h'\fP
+.br
+\fC#include 'exp\&.h'\fP
+.br
+\fC#include 'follow\&.h'\fP
+.br
+\fC#include 'fmosc\&.h'\fP
+.br
+\fC#include 'fromobject\&.h'\fP
+.br
+\fC#include 'fromarraystream\&.h'\fP
+.br
+\fC#include 'gate\&.h'\fP
+.br
+\fC#include 'ifft\&.h'\fP
+.br
+\fC#include 'instrclar\&.h'\fP
+.br
+\fC#include 'instrclarall\&.h'\fP
+.br
+\fC#include 'instrclarfreq\&.h'\fP
+.br
+\fC#include 'instrsax\&.h'\fP
+.br
+\fC#include 'instrsaxall\&.h'\fP
+.br
+\fC#include 'instrsaxfreq\&.h'\fP
+.br
+\fC#include 'integrate\&.h'\fP
+.br
+\fC#include 'log\&.h'\fP
+.br
+\fC#include 'lpreson\&.h'\fP
+.br
+\fC#include 'maxv\&.h'\fP
+.br
+\fC#include 'offset\&.h'\fP
+.br
+\fC#include 'oneshot\&.h'\fP
+.br
+\fC#include 'osc\&.h'\fP
+.br
+\fC#include 'partial\&.h'\fP
+.br
+\fC#include 'pluck\&.h'\fP
+.br
+\fC#include 'prod\&.h'\fP
+.br
+\fC#include 'pwl\&.h'\fP
+.br
+\fC#include 'quantize\&.h'\fP
+.br
+\fC#include 'recip\&.h'\fP
+.br
+\fC#include 'reson\&.h'\fP
+.br
+\fC#include 'resonvc\&.h'\fP
+.br
+\fC#include 'resoncv\&.h'\fP
+.br
+\fC#include 'resonvv\&.h'\fP
+.br
+\fC#include 'sampler\&.h'\fP
+.br
+\fC#include 'scale\&.h'\fP
+.br
+\fC#include 'shape\&.h'\fP
+.br
+\fC#include 'sine\&.h'\fP
+.br
+\fC#include 'siosc\&.h'\fP
+.br
+\fC#include 'slope\&.h'\fP
+.br
+\fC#include 'sqrt\&.h'\fP
+.br
+\fC#include 'tapf\&.h'\fP
+.br
+\fC#include 'tapv\&.h'\fP
+.br
+\fC#include 'tone\&.h'\fP
+.br
+\fC#include 'tonev\&.h'\fP
+.br
+\fC#include 'upsample\&.h'\fP
+.br
+\fC#include 'white\&.h'\fP
+.br
+\fC#include 'stkrev\&.h'\fP
+.br
+\fC#include 'stkpitshift\&.h'\fP
+.br
+\fC#include 'stkchorus\&.h'\fP
+.br
+\fC#include 'instrbow\&.h'\fP
+.br
+\fC#include 'instrbowedfreq\&.h'\fP
+.br
+\fC#include 'instrbanded\&.h'\fP
+.br
+\fC#include 'instrmandolin\&.h'\fP
+.br
+\fC#include 'instrsitar\&.h'\fP
+.br
+\fC#include 'instrmodalbar\&.h'\fP
+.br
+\fC#include 'instrflute\&.h'\fP
+.br
+\fC#include 'instrflutefreq\&.h'\fP
+.br
+\fC#include 'instrfluteall\&.h'\fP
+.br
+\fC#include 'fmfb\&.h'\fP
+.br
+\fC#include 'fmfbv\&.h'\fP
+.br
+\fC#include 'sndwrite\&.h'\fP
+.br
+
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBcvboolean\fP(\fBi\fP)   ((\fBi\fP) ? \fBs_true\fP : \fBNIL\fP)"
+.br
+.ti -1c
+.RI "#define \fBtestarg2\fP(e)   (\fBmoreargs\fP() ? (e) : (\fBgetflonum\fP(\fBxltoofew\fP())))"
+.br
+.ti -1c
+.RI "#define \fBxlgaanynum\fP()"
+.br
+.ti -1c
+.RI "#define \fBgetboolean\fP(lval)   ((lval) != \fBNIL\fP)"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_set_latency\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_soundp\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_hz_to_step\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_set_logical_stop\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_log\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_sref\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_sref_inverse\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_stop_time\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_time\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_srate\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_t0\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_xform\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_block_watch\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_sound_nth_block\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_copy\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_print\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_play\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_stats\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_print_tree\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_scale\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_zero\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_step_to_hz\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_add\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_avg\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_compose\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_convolve\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_down\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_fft\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_inverse\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_multiseq\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_resample\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_resamplev\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_from_array\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_samples\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_length\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_maxsamp\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_fetch\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_fetch_array\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_max\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_read\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_seq\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_slider\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_yin\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_trigger\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_lpanal\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_phasevocoder\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_abs\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_allpoles\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_alpass\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_alpasscv\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_alpassvv\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_amosc\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_areson\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_aresonvc\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_aresoncv\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_aresonvv\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_atone\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_atonev\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_biquad\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_buzz\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_chase\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_clip\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_congen\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_const\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_coterm\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_delay\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_delaycv\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_eqbandvvv\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_exp\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_follow\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_fmosc\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_fromobject\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_fromarraystream\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_gate\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_ifft\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_clarinet\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_clarinet_all\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_clarinet_freq\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_sax\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_sax_all\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_sax_freq\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_integrate\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_log\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_lpreson\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_maxv\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_offset\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_oneshot\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_osc\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_partial\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_pluck\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_prod\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_pwl\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_quantize\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_recip\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_reson\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_resonvc\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_resoncv\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_resonvv\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_sampler\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_normalize\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_shape\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_sine\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_siosc\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_slope\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_sqrt\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_tapf\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_tapv\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_tone\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_tonev\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_up\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_white\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_stkrev\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_stkpitshift\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_stkchorus\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_bowed\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_bowed_freq\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_bandedwg\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_mandolin\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_sitar\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_modalbar\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_flute\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_flute_freq\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_flute_all\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_fmfb\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_fmfbv\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_save\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlc_snd_overwrite\fP (\fBvoid\fP)"
+.br
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "\fBLVAL\fP \fBs_true\fP"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBRSLT_sym\fP"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define cvboolean(\fBi\fP)   ((\fBi\fP) ? \fBs_true\fP : \fBNIL\fP)"
+
+.PP
+Definition at line 47 of file sndfnint\&.c\&.
+.SS "#define getboolean(lval)   ((lval) != \fBNIL\fP)"
+
+.PP
+Definition at line 52 of file sndfnint\&.c\&.
+.SS "#define testarg2(e)   (\fBmoreargs\fP() ? (e) : (\fBgetflonum\fP(\fBxltoofew\fP())))"
+
+.PP
+Definition at line 48 of file sndfnint\&.c\&.
+.SS "#define xlgaanynum()"
+\fBValue:\fP
+.PP
+.nf
+(floatp(*xlargv) ? getflonum(nextarg()) : \
+    (fixp(*xlargv) ? (double) getfixnum(nextarg()) : \
+        getflonum(xlbadtype(*xlargv))))
+.fi
+.PP
+Definition at line 49 of file sndfnint\&.c\&.
+.SH "Function Documentation"
+.PP 
+.SS "\fBLVAL\fP xlc_block_watch (\fBvoid\fP)"
+
+.PP
+Definition at line 228 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_hz_to_step (\fBvoid\fP)"
+
+.PP
+Definition at line 91 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_log (\fBvoid\fP)"
+
+.PP
+Definition at line 117 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_abs (\fBvoid\fP)"
+
+.PP
+Definition at line 783 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_add (\fBvoid\fP)"
+
+.PP
+Definition at line 358 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_allpoles (\fBvoid\fP)"
+
+.PP
+Definition at line 798 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_alpass (\fBvoid\fP)"
+
+.PP
+Definition at line 815 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_alpasscv (\fBvoid\fP)"
+
+.PP
+Definition at line 832 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_alpassvv (\fBvoid\fP)"
+
+.PP
+Definition at line 849 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_amosc (\fBvoid\fP)"
+
+.PP
+Definition at line 867 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_areson (\fBvoid\fP)"
+
+.PP
+Definition at line 888 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_aresoncv (\fBvoid\fP)"
+
+.PP
+Definition at line 924 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_aresonvc (\fBvoid\fP)"
+
+.PP
+Definition at line 906 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_aresonvv (\fBvoid\fP)"
+
+.PP
+Definition at line 942 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_atone (\fBvoid\fP)"
+
+.PP
+Definition at line 960 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_atonev (\fBvoid\fP)"
+
+.PP
+Definition at line 976 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_avg (\fBvoid\fP)"
+
+.PP
+Definition at line 374 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_bandedwg (\fBvoid\fP)"
+
+.PP
+Definition at line 2013 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_biquad (\fBvoid\fP)"
+
+.PP
+Definition at line 992 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_bowed (\fBvoid\fP)"
+
+.PP
+Definition at line 1978 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_bowed_freq (\fBvoid\fP)"
+
+.PP
+Definition at line 1995 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_buzz (\fBvoid\fP)"
+
+.PP
+Definition at line 1014 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_chase (\fBvoid\fP)"
+
+.PP
+Definition at line 1033 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_clarinet (\fBvoid\fP)"
+
+.PP
+Definition at line 1297 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_clarinet_all (\fBvoid\fP)"
+
+.PP
+Definition at line 1314 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_clarinet_freq (\fBvoid\fP)"
+
+.PP
+Definition at line 1336 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_clip (\fBvoid\fP)"
+
+.PP
+Definition at line 1050 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_compose (\fBvoid\fP)"
+
+.PP
+Definition at line 392 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_congen (\fBvoid\fP)"
+
+.PP
+Definition at line 1066 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_const (\fBvoid\fP)"
+
+.PP
+Definition at line 1083 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_convolve (\fBvoid\fP)"
+
+.PP
+Definition at line 408 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_copy (\fBvoid\fP)"
+
+.PP
+Definition at line 254 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_coterm (\fBvoid\fP)"
+
+.PP
+Definition at line 1101 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_delay (\fBvoid\fP)"
+
+.PP
+Definition at line 1117 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_delaycv (\fBvoid\fP)"
+
+.PP
+Definition at line 1134 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_down (\fBvoid\fP)"
+
+.PP
+Definition at line 424 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_eqbandvvv (\fBvoid\fP)"
+
+.PP
+Definition at line 1151 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_exp (\fBvoid\fP)"
+
+.PP
+Definition at line 1169 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_fetch (\fBvoid\fP)"
+
+.PP
+Definition at line 580 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_fetch_array (\fBvoid\fP)"
+
+.PP
+Definition at line 593 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_fft (\fBvoid\fP)"
+
+.PP
+Definition at line 440 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_flute (\fBvoid\fP)"
+
+.PP
+Definition at line 2088 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_flute_all (\fBvoid\fP)"
+
+.PP
+Definition at line 2123 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_flute_freq (\fBvoid\fP)"
+
+.PP
+Definition at line 2105 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_fmfb (\fBvoid\fP)"
+
+.PP
+Definition at line 2145 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_fmfbv (\fBvoid\fP)"
+
+.PP
+Definition at line 2164 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_fmosc (\fBvoid\fP)"
+
+.PP
+Definition at line 1203 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_follow (\fBvoid\fP)"
+
+.PP
+Definition at line 1184 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_from_array (\fBvoid\fP)"
+
+.PP
+Definition at line 524 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_fromarraystream (\fBvoid\fP)"
+
+.PP
+Definition at line 1241 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_fromobject (\fBvoid\fP)"
+
+.PP
+Definition at line 1224 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_gate (\fBvoid\fP)"
+
+.PP
+Definition at line 1258 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_ifft (\fBvoid\fP)"
+
+.PP
+Definition at line 1278 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_integrate (\fBvoid\fP)"
+
+.PP
+Definition at line 1413 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_inverse (\fBvoid\fP)"
+
+.PP
+Definition at line 458 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_length (\fBvoid\fP)"
+
+.PP
+Definition at line 553 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_log (\fBvoid\fP)"
+
+.PP
+Definition at line 1428 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_lpanal (\fBvoid\fP)"
+
+.PP
+Definition at line 748 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_lpreson (\fBvoid\fP)"
+
+.PP
+Definition at line 1443 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_mandolin (\fBvoid\fP)"
+
+.PP
+Definition at line 2031 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_max (\fBvoid\fP)"
+
+.PP
+Definition at line 610 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_maxsamp (\fBvoid\fP)"
+
+.PP
+Definition at line 567 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_maxv (\fBvoid\fP)"
+
+.PP
+Definition at line 1460 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_modalbar (\fBvoid\fP)"
+
+.PP
+Definition at line 2069 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_multiseq (\fBvoid\fP)"
+
+.PP
+Definition at line 475 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_normalize (\fBvoid\fP)"
+
+.PP
+Definition at line 1724 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_offset (\fBvoid\fP)"
+
+.PP
+Definition at line 1476 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_oneshot (\fBvoid\fP)"
+
+.PP
+Definition at line 1492 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_osc (\fBvoid\fP)"
+
+.PP
+Definition at line 1509 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_overwrite (\fBvoid\fP)"
+
+.PP
+Definition at line 2213 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_partial (\fBvoid\fP)"
+
+.PP
+Definition at line 1530 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_phasevocoder (\fBvoid\fP)"
+
+.PP
+Definition at line 764 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_play (\fBvoid\fP)"
+
+.PP
+Definition at line 280 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_pluck (\fBvoid\fP)"
+
+.PP
+Definition at line 1547 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_print (\fBvoid\fP)"
+
+.PP
+Definition at line 267 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_print_tree (\fBvoid\fP)"
+
+.PP
+Definition at line 303 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_prod (\fBvoid\fP)"
+
+.PP
+Definition at line 1566 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_pwl (\fBvoid\fP)"
+
+.PP
+Definition at line 1582 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_quantize (\fBvoid\fP)"
+
+.PP
+Definition at line 1599 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_read (\fBvoid\fP)"
+
+.PP
+Definition at line 626 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_recip (\fBvoid\fP)"
+
+.PP
+Definition at line 1615 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_resample (\fBvoid\fP)"
+
+.PP
+Definition at line 491 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_resamplev (\fBvoid\fP)"
+
+.PP
+Definition at line 507 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_reson (\fBvoid\fP)"
+
+.PP
+Definition at line 1630 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_resoncv (\fBvoid\fP)"
+
+.PP
+Definition at line 1666 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_resonvc (\fBvoid\fP)"
+
+.PP
+Definition at line 1648 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_resonvv (\fBvoid\fP)"
+
+.PP
+Definition at line 1684 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_sampler (\fBvoid\fP)"
+
+.PP
+Definition at line 1702 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_samples (\fBvoid\fP)"
+
+.PP
+Definition at line 539 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_save (\fBvoid\fP)"
+
+.PP
+Definition at line 2182 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_sax (\fBvoid\fP)"
+
+.PP
+Definition at line 1354 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_sax_all (\fBvoid\fP)"
+
+.PP
+Definition at line 1371 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_sax_freq (\fBvoid\fP)"
+
+.PP
+Definition at line 1395 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_scale (\fBvoid\fP)"
+
+.PP
+Definition at line 315 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_seq (\fBvoid\fP)"
+
+.PP
+Definition at line 674 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_set_latency (\fBvoid\fP)"
+
+.PP
+Definition at line 65 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_set_logical_stop (\fBvoid\fP)"
+
+.PP
+Definition at line 104 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_shape (\fBvoid\fP)"
+
+.PP
+Definition at line 1739 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_sine (\fBvoid\fP)"
+
+.PP
+Definition at line 1756 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_siosc (\fBvoid\fP)"
+
+.PP
+Definition at line 1774 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_sitar (\fBvoid\fP)"
+
+.PP
+Definition at line 2051 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_slider (\fBvoid\fP)"
+
+.PP
+Definition at line 690 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_slope (\fBvoid\fP)"
+
+.PP
+Definition at line 1793 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_sqrt (\fBvoid\fP)"
+
+.PP
+Definition at line 1808 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_srate (\fBvoid\fP)"
+
+.PP
+Definition at line 184 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_sref (\fBvoid\fP)"
+
+.PP
+Definition at line 130 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_stkchorus (\fBvoid\fP)"
+
+.PP
+Definition at line 1959 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_stkpitshift (\fBvoid\fP)"
+
+.PP
+Definition at line 1942 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_stkrev (\fBvoid\fP)"
+
+.PP
+Definition at line 1924 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_stop_time (\fBvoid\fP)"
+
+.PP
+Definition at line 158 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_t0 (\fBvoid\fP)"
+
+.PP
+Definition at line 197 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_tapf (\fBvoid\fP)"
+
+.PP
+Definition at line 1823 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_tapv (\fBvoid\fP)"
+
+.PP
+Definition at line 1841 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_time (\fBvoid\fP)"
+
+.PP
+Definition at line 171 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_tone (\fBvoid\fP)"
+
+.PP
+Definition at line 1859 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_tonev (\fBvoid\fP)"
+
+.PP
+Definition at line 1875 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_trigger (\fBvoid\fP)"
+
+.PP
+Definition at line 732 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_up (\fBvoid\fP)"
+
+.PP
+Definition at line 1891 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_white (\fBvoid\fP)"
+
+.PP
+Definition at line 1907 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_xform (\fBvoid\fP)"
+
+.PP
+Definition at line 210 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_yin (\fBvoid\fP)"
+
+.PP
+Definition at line 712 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_snd_zero (\fBvoid\fP)"
+
+.PP
+Definition at line 329 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_sound_nth_block (\fBvoid\fP)"
+
+.PP
+Definition at line 240 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_soundp (\fBvoid\fP)"
+
+.PP
+Definition at line 78 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_sref_inverse (\fBvoid\fP)"
+
+.PP
+Definition at line 144 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_stats (\fBvoid\fP)"
+
+.PP
+Definition at line 292 of file sndfnint\&.c\&.
+.SS "\fBLVAL\fP xlc_step_to_hz (\fBvoid\fP)"
+
+.PP
+Definition at line 343 of file sndfnint\&.c\&.
+.SH "Variable Documentation"
+.PP 
+.SS "\fBLVAL\fP RSLT_sym"
+
+.PP
+Definition at line 18 of file local\&.c\&.
+.SS "\fBLVAL\fP s_true"
+
+.PP
+Definition at line 20 of file xlglob\&.c\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

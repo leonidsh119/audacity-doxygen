@@ -1,0 +1,222 @@
+.TH "lavu_buffer" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+lavu_buffer \- AVBuffer
+.SS "Files"
+
+.in +1c
+.ti -1c
+.RI "file \fBbuffer\&.h\fP"
+.br
+.in -1c
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "struct \fBAVBufferRef\fP"
+.br
+.in -1c
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBAV_BUFFER_FLAG_READONLY\fP   (1 << 0)"
+.br
+.in -1c
+.SS "Typedefs"
+
+.in +1c
+.ti -1c
+.RI "typedef struct \fBAVBuffer\fP \fBAVBuffer\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBAVBufferRef\fP \fBAVBufferRef\fP"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBAVBufferRef\fP * \fBav_buffer_alloc\fP (\fBint\fP \fBsize\fP)"
+.br
+.ti -1c
+.RI "\fBAVBufferRef\fP * \fBav_buffer_allocz\fP (\fBint\fP \fBsize\fP)"
+.br
+.ti -1c
+.RI "\fBAVBufferRef\fP * \fBav_buffer_create\fP (\fBuint8_t\fP *\fBdata\fP, \fBint\fP \fBsize\fP, \fBvoid\fP(*free)(\fBvoid\fP *opaque, \fBuint8_t\fP *\fBdata\fP), \fBvoid\fP *opaque, \fBint\fP flags)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBav_buffer_default_free\fP (\fBvoid\fP *opaque, \fBuint8_t\fP *\fBdata\fP)"
+.br
+.ti -1c
+.RI "\fBAVBufferRef\fP * \fBav_buffer_ref\fP (\fBAVBufferRef\fP *\fBbuf\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBav_buffer_unref\fP (\fBAVBufferRef\fP **\fBbuf\fP)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_buffer_is_writable\fP (\fBconst\fP \fBAVBufferRef\fP *\fBbuf\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP * \fBav_buffer_get_opaque\fP (\fBconst\fP \fBAVBufferRef\fP *\fBbuf\fP)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_buffer_get_ref_count\fP (\fBconst\fP \fBAVBufferRef\fP *\fBbuf\fP)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_buffer_make_writable\fP (\fBAVBufferRef\fP **\fBbuf\fP)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_buffer_realloc\fP (\fBAVBufferRef\fP **\fBbuf\fP, \fBint\fP \fBsize\fP)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+AVBuffer is an API for reference-counted data buffers\&.
+.PP
+There are two core objects in this API -- AVBuffer and \fBAVBufferRef\fP\&. AVBuffer represents the data buffer itself; it is opaque and not meant to be accessed by the caller directly, but only through \fBAVBufferRef\fP\&. However, the caller may e\&.g\&. compare two AVBuffer pointers to check whether two different references are describing the same data buffer\&. \fBAVBufferRef\fP represents a single reference to an AVBuffer and it is the object that may be manipulated by the caller directly\&.
+.PP
+There are two functions provided for creating a new AVBuffer with a single reference -- \fBav_buffer_alloc()\fP to just allocate a new buffer, and \fBav_buffer_create()\fP to wrap an existing array in an AVBuffer\&. From an existing reference, additional references may be created with \fBav_buffer_ref()\fP\&. Use \fBav_buffer_unref()\fP to free a reference (this will automatically free the data once all the references are freed)\&.
+.PP
+The convention throughout this API and the rest of FFmpeg is such that the buffer is considered writable if there exists only one reference to it (and it has not been marked as read-only)\&. The \fBav_buffer_is_writable()\fP function is provided to check whether this is true and \fBav_buffer_make_writable()\fP will automatically create a new writable buffer when necessary\&. Of course nothing prevents the calling code from violating this convention, however that is safe only when all the existing references are under its control\&.
+.PP
+\fBNote:\fP
+.RS 4
+Referencing and unreferencing the buffers is thread-safe and thus may be done from multiple threads simultaneously without any need for additional locking\&.
+.PP
+Two different references to the same buffer can point to different parts of the buffer (i\&.e\&. their \fBAVBufferRef\&.data\fP will not be equal)\&. 
+.RE
+.PP
+
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define AV_BUFFER_FLAG_READONLY   (1 << 0)"
+Always treat the buffer as read-only, even when it has only one reference\&. 
+.PP
+Definition at line 113 of file buffer\&.h\&.
+.SH "Typedef Documentation"
+.PP 
+.SS "typedef struct \fBAVBuffer\fP \fBAVBuffer\fP"
+A reference counted buffer type\&. It is opaque and is meant to be used through references (\fBAVBufferRef\fP)\&. 
+.PP
+Definition at line 73 of file buffer\&.h\&.
+.SS "typedef struct \fBAVBufferRef\fP  \fBAVBufferRef\fP"
+A reference to a data buffer\&.
+.PP
+The size of this struct is not a part of the public ABI and it is not meant to be allocated directly\&. 
+.SH "Function Documentation"
+.PP 
+.SS "\fBAVBufferRef\fP* av_buffer_alloc (\fBint\fP size)"
+Allocate an AVBuffer of the given size using \fBav_malloc()\fP\&.
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBAVBufferRef\fP of given size or NULL when out of memory 
+.RE
+.PP
+
+.SS "\fBAVBufferRef\fP* av_buffer_allocz (\fBint\fP size)"
+Same as \fBav_buffer_alloc()\fP, except the returned buffer will be initialized to zero\&. 
+.SS "\fBAVBufferRef\fP* av_buffer_create (\fBuint8_t\fP * data, \fBint\fP size, \fBvoid\fP(*)(\fBvoid\fP *opaque, \fBuint8_t\fP *\fBdata\fP) free, \fBvoid\fP * opaque, \fBint\fP flags)"
+Create an AVBuffer from an existing array\&.
+.PP
+If this function is successful, data is owned by the AVBuffer\&. The caller may only access data through the returned \fBAVBufferRef\fP and references derived from it\&. If this function fails, data is left untouched\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdata\fP data array 
+.br
+\fIsize\fP size of data in bytes 
+.br
+\fIfree\fP a callback for freeing this buffer's data 
+.br
+\fIopaque\fP parameter to be got for processing or passed to free 
+.br
+\fIflags\fP a combination of AV_BUFFER_FLAG_*
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBAVBufferRef\fP referring to data on success, NULL on failure\&. 
+.RE
+.PP
+
+.SS "\fBvoid\fP av_buffer_default_free (\fBvoid\fP * opaque, \fBuint8_t\fP * data)"
+Default free callback, which calls \fBav_free()\fP on the buffer data\&. This function is meant to be passed to \fBav_buffer_create()\fP, not called directly\&. 
+.SS "\fBvoid\fP* av_buffer_get_opaque (\fBconst\fP \fBAVBufferRef\fP * buf)"
+
+.PP
+\fBReturns:\fP
+.RS 4
+the opaque parameter set by av_buffer_create\&. 
+.RE
+.PP
+
+.SS "\fBint\fP av_buffer_get_ref_count (\fBconst\fP \fBAVBufferRef\fP * buf)"
+
+.SS "\fBint\fP av_buffer_is_writable (\fBconst\fP \fBAVBufferRef\fP * buf)"
+
+.PP
+\fBReturns:\fP
+.RS 4
+1 if the caller may write to the data referred to by buf (which is true if and only if buf is the only reference to the underlying AVBuffer)\&. Return 0 otherwise\&. A positive answer is valid until \fBav_buffer_ref()\fP is called on buf\&. 
+.RE
+.PP
+
+.SS "\fBint\fP av_buffer_make_writable (\fBAVBufferRef\fP ** buf)"
+Create a writable reference from a given buffer reference, avoiding data copy if possible\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIbuf\fP buffer reference to make writable\&. On success, buf is either left untouched, or it is unreferenced and a new writable \fBAVBufferRef\fP is written in its place\&. On failure, buf is left untouched\&. 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+0 on success, a negative AVERROR on failure\&. 
+.RE
+.PP
+
+.SS "\fBint\fP av_buffer_realloc (\fBAVBufferRef\fP ** buf, \fBint\fP size)"
+Reallocate a given buffer\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIbuf\fP a buffer reference to reallocate\&. On success, buf will be unreferenced and a new reference with the required size will be written in its place\&. On failure buf will be left untouched\&. *buf may be NULL, then a new buffer is allocated\&. 
+.br
+\fIsize\fP required new buffer size\&. 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+0 on success, a negative AVERROR on failure\&.
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+the buffer is actually reallocated with \fBav_realloc()\fP only if it was initially allocated through av_buffer_realloc(NULL) and there is only one reference to it (i\&.e\&. the one passed to this function)\&. In all other cases a new buffer is allocated and the data is copied\&. 
+.RE
+.PP
+
+.SS "\fBAVBufferRef\fP* av_buffer_ref (\fBAVBufferRef\fP * buf)"
+Create a new reference to an AVBuffer\&.
+.PP
+\fBReturns:\fP
+.RS 4
+a new \fBAVBufferRef\fP referring to the same AVBuffer as buf or NULL on failure\&. 
+.RE
+.PP
+
+.SS "\fBvoid\fP av_buffer_unref (\fBAVBufferRef\fP ** buf)"
+Free a given reference and automatically free the buffer if there are no more references to it\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIbuf\fP the reference to be freed\&. The pointer is set to NULL on return\&. 
+.RE
+.PP
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

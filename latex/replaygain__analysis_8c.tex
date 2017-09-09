@@ -1,0 +1,180 @@
+\hypertarget{replaygain__analysis_8c}{}\section{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/libflac/src/share/replaygain\+\_\+analysis/replaygain\+\_\+analysis.c File Reference}
+\label{replaygain__analysis_8c}\index{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/libflac/src/share/replaygain\+\_\+analysis/replaygain\+\_\+analysis.\+c@{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/libflac/src/share/replaygain\+\_\+analysis/replaygain\+\_\+analysis.\+c}}
+{\ttfamily \#include $<$stdio.\+h$>$}\\*
+{\ttfamily \#include $<$stdlib.\+h$>$}\\*
+{\ttfamily \#include $<$string.\+h$>$}\\*
+{\ttfamily \#include $<$math.\+h$>$}\\*
+{\ttfamily \#include \char`\"{}share/compat.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}share/replaygain\+\_\+analysis.\+h\char`\"{}}\\*
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{struct_replay_gain_filter}{Replay\+Gain\+Filter}
+\end{DoxyCompactItemize}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{replaygain__analysis_8c_a6e48d077096a381796cf730813c4e7b6}{Y\+U\+L\+E\+\_\+\+O\+R\+D\+ER}~10
+\item 
+\#define \hyperlink{replaygain__analysis_8c_a19f16d9b2216a352d4f53718f23e1b1a}{B\+U\+T\+T\+E\+R\+\_\+\+O\+R\+D\+ER}~2
+\item 
+\#define \hyperlink{replaygain__analysis_8c_ad786d09a1da01cd49af00eae1bca52b0}{R\+M\+S\+\_\+\+P\+E\+R\+C\+E\+N\+T\+I\+LE}~0.\+95        /$\ast$ percentile which is louder than \hyperlink{nasm_8h_aaf57ffcfef0bee04f46c6ada2a905a8c}{the} proposed level $\ast$/
+\item 
+\#define \hyperlink{replaygain__analysis_8c_abc84eacd7a842332bec7483f7cd1f1c4}{R\+M\+S\+\_\+\+W\+I\+N\+D\+O\+W\+\_\+\+T\+I\+ME}~50           /$\ast$ Time slice \hyperlink{group__lavu__mem_ga854352f53b148adc24983a58a1866d66}{size} \mbox{[}ms\mbox{]} $\ast$/
+\item 
+\#define \hyperlink{replaygain__analysis_8c_abe2fb6295aab9e83f4289d2130e72285}{S\+T\+E\+P\+S\+\_\+per\+\_\+dB}~100.          /$\ast$ Table entries per dB $\ast$/
+\item 
+\#define \hyperlink{replaygain__analysis_8c_a79b96d027b3e38ca3231c6736b10ccca}{M\+A\+X\+\_\+dB}~120.          /$\ast$ Table entries \hyperlink{hashrout_8h_a63bdfbdfaa50cfc85afcbff4ce2c16a6}{for} 0...M\+A\+X\+\_\+dB (normal max. values are 70...\+80 dB) $\ast$/
+\item 
+\#define \hyperlink{replaygain__analysis_8c_ab08dffec08ac450d78d4c062b571939e}{M\+A\+X\+\_\+\+O\+R\+D\+ER}~(\hyperlink{replaygain__analysis_8c_a19f16d9b2216a352d4f53718f23e1b1a}{B\+U\+T\+T\+E\+R\+\_\+\+O\+R\+D\+ER} $>$ \hyperlink{replaygain__analysis_8c_a6e48d077096a381796cf730813c4e7b6}{Y\+U\+L\+E\+\_\+\+O\+R\+D\+ER} ? \hyperlink{replaygain__analysis_8c_a19f16d9b2216a352d4f53718f23e1b1a}{B\+U\+T\+T\+E\+R\+\_\+\+O\+R\+D\+ER} \+: \hyperlink{replaygain__analysis_8c_a6e48d077096a381796cf730813c4e7b6}{Y\+U\+L\+E\+\_\+\+O\+R\+D\+ER})
+\item 
+\#define \hyperlink{replaygain__analysis_8c_a905b376e4b2c8ed0c7db07f376044524}{P\+I\+N\+K\+\_\+\+R\+EF}~64.\+82 /$\ast$ 298640883795 $\ast$/                          /$\ast$ calibration \hyperlink{lib_2expat_8h_a4a30a13b813682e68c5b689b45c65971}{value} $\ast$/
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{replaygain__analysis_8c_ac181bc1172ad87376baaa7bcb2f6cfeb}{Valid\+Gain\+Frequency} (long samplefreq)
+\item 
+\hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{replaygain__analysis_8c_a085bbbbfe4f7266e9f4b9180da006417}{Init\+Gain\+Analysis} (long samplefreq)
+\item 
+\hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{replaygain__analysis_8c_ad85a75d74c9050aea1e441b386e5b3f0}{Analyze\+Samples} (\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{replaygain__analysis_8h_abc8087d43b5423b38699f7ea959ee32f}{flac\+\_\+float\+\_\+t} $\ast$left\+\_\+samples, \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{replaygain__analysis_8h_abc8087d43b5423b38699f7ea959ee32f}{flac\+\_\+float\+\_\+t} $\ast$right\+\_\+samples, size\+\_\+t num\+\_\+samples, \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} num\+\_\+channels)
+\item 
+\hyperlink{replaygain__analysis_8h_abc8087d43b5423b38699f7ea959ee32f}{flac\+\_\+float\+\_\+t} \hyperlink{replaygain__analysis_8c_a1f99ccdd8d6f787da3fcfb14da92d54d}{Get\+Title\+Gain} (\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void})
+\item 
+\hyperlink{replaygain__analysis_8h_abc8087d43b5423b38699f7ea959ee32f}{flac\+\_\+float\+\_\+t} \hyperlink{replaygain__analysis_8c_ac905fea7f33238cea563607378e783ac}{Get\+Album\+Gain} (\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void})
+\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{replaygain__analysis_8h_abc8087d43b5423b38699f7ea959ee32f}{flac\+\_\+float\+\_\+t} \hyperlink{replaygain__analysis_8c_aabc8862017299453f82ced09bf6b7785}{Replay\+Gain\+Reference\+Loudness} = 89.\+0
+\end{DoxyCompactItemize}
+
+
+\subsection{Macro Definition Documentation}
+\index{replaygain\+\_\+analysis.\+c@{replaygain\+\_\+analysis.\+c}!B\+U\+T\+T\+E\+R\+\_\+\+O\+R\+D\+ER@{B\+U\+T\+T\+E\+R\+\_\+\+O\+R\+D\+ER}}
+\index{B\+U\+T\+T\+E\+R\+\_\+\+O\+R\+D\+ER@{B\+U\+T\+T\+E\+R\+\_\+\+O\+R\+D\+ER}!replaygain\+\_\+analysis.\+c@{replaygain\+\_\+analysis.\+c}}
+\subsubsection[{\texorpdfstring{B\+U\+T\+T\+E\+R\+\_\+\+O\+R\+D\+ER}{BUTTER_ORDER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define B\+U\+T\+T\+E\+R\+\_\+\+O\+R\+D\+ER~2}\hypertarget{replaygain__analysis_8c_a19f16d9b2216a352d4f53718f23e1b1a}{}\label{replaygain__analysis_8c_a19f16d9b2216a352d4f53718f23e1b1a}
+
+
+Definition at line 106 of file replaygain\+\_\+analysis.\+c.
+
+\index{replaygain\+\_\+analysis.\+c@{replaygain\+\_\+analysis.\+c}!M\+A\+X\+\_\+dB@{M\+A\+X\+\_\+dB}}
+\index{M\+A\+X\+\_\+dB@{M\+A\+X\+\_\+dB}!replaygain\+\_\+analysis.\+c@{replaygain\+\_\+analysis.\+c}}
+\subsubsection[{\texorpdfstring{M\+A\+X\+\_\+dB}{MAX_dB}}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+A\+X\+\_\+dB~120.          /$\ast$ Table entries {\bf for} 0...M\+A\+X\+\_\+dB (normal max. values are 70...\+80 dB) $\ast$/}\hypertarget{replaygain__analysis_8c_a79b96d027b3e38ca3231c6736b10ccca}{}\label{replaygain__analysis_8c_a79b96d027b3e38ca3231c6736b10ccca}
+
+
+Definition at line 110 of file replaygain\+\_\+analysis.\+c.
+
+\index{replaygain\+\_\+analysis.\+c@{replaygain\+\_\+analysis.\+c}!M\+A\+X\+\_\+\+O\+R\+D\+ER@{M\+A\+X\+\_\+\+O\+R\+D\+ER}}
+\index{M\+A\+X\+\_\+\+O\+R\+D\+ER@{M\+A\+X\+\_\+\+O\+R\+D\+ER}!replaygain\+\_\+analysis.\+c@{replaygain\+\_\+analysis.\+c}}
+\subsubsection[{\texorpdfstring{M\+A\+X\+\_\+\+O\+R\+D\+ER}{MAX_ORDER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+A\+X\+\_\+\+O\+R\+D\+ER~({\bf B\+U\+T\+T\+E\+R\+\_\+\+O\+R\+D\+ER} $>$ {\bf Y\+U\+L\+E\+\_\+\+O\+R\+D\+ER} ? {\bf B\+U\+T\+T\+E\+R\+\_\+\+O\+R\+D\+ER} \+: {\bf Y\+U\+L\+E\+\_\+\+O\+R\+D\+ER})}\hypertarget{replaygain__analysis_8c_ab08dffec08ac450d78d4c062b571939e}{}\label{replaygain__analysis_8c_ab08dffec08ac450d78d4c062b571939e}
+
+
+Definition at line 112 of file replaygain\+\_\+analysis.\+c.
+
+\index{replaygain\+\_\+analysis.\+c@{replaygain\+\_\+analysis.\+c}!P\+I\+N\+K\+\_\+\+R\+EF@{P\+I\+N\+K\+\_\+\+R\+EF}}
+\index{P\+I\+N\+K\+\_\+\+R\+EF@{P\+I\+N\+K\+\_\+\+R\+EF}!replaygain\+\_\+analysis.\+c@{replaygain\+\_\+analysis.\+c}}
+\subsubsection[{\texorpdfstring{P\+I\+N\+K\+\_\+\+R\+EF}{PINK_REF}}]{\setlength{\rightskip}{0pt plus 5cm}\#define P\+I\+N\+K\+\_\+\+R\+EF~64.\+82 /$\ast$ 298640883795 $\ast$/                          /$\ast$ calibration {\bf value} $\ast$/}\hypertarget{replaygain__analysis_8c_a905b376e4b2c8ed0c7db07f376044524}{}\label{replaygain__analysis_8c_a905b376e4b2c8ed0c7db07f376044524}
+
+
+Definition at line 113 of file replaygain\+\_\+analysis.\+c.
+
+\index{replaygain\+\_\+analysis.\+c@{replaygain\+\_\+analysis.\+c}!R\+M\+S\+\_\+\+P\+E\+R\+C\+E\+N\+T\+I\+LE@{R\+M\+S\+\_\+\+P\+E\+R\+C\+E\+N\+T\+I\+LE}}
+\index{R\+M\+S\+\_\+\+P\+E\+R\+C\+E\+N\+T\+I\+LE@{R\+M\+S\+\_\+\+P\+E\+R\+C\+E\+N\+T\+I\+LE}!replaygain\+\_\+analysis.\+c@{replaygain\+\_\+analysis.\+c}}
+\subsubsection[{\texorpdfstring{R\+M\+S\+\_\+\+P\+E\+R\+C\+E\+N\+T\+I\+LE}{RMS_PERCENTILE}}]{\setlength{\rightskip}{0pt plus 5cm}\#define R\+M\+S\+\_\+\+P\+E\+R\+C\+E\+N\+T\+I\+LE~0.\+95        /$\ast$ percentile which is louder than {\bf the} proposed level $\ast$/}\hypertarget{replaygain__analysis_8c_ad786d09a1da01cd49af00eae1bca52b0}{}\label{replaygain__analysis_8c_ad786d09a1da01cd49af00eae1bca52b0}
+
+
+Definition at line 107 of file replaygain\+\_\+analysis.\+c.
+
+\index{replaygain\+\_\+analysis.\+c@{replaygain\+\_\+analysis.\+c}!R\+M\+S\+\_\+\+W\+I\+N\+D\+O\+W\+\_\+\+T\+I\+ME@{R\+M\+S\+\_\+\+W\+I\+N\+D\+O\+W\+\_\+\+T\+I\+ME}}
+\index{R\+M\+S\+\_\+\+W\+I\+N\+D\+O\+W\+\_\+\+T\+I\+ME@{R\+M\+S\+\_\+\+W\+I\+N\+D\+O\+W\+\_\+\+T\+I\+ME}!replaygain\+\_\+analysis.\+c@{replaygain\+\_\+analysis.\+c}}
+\subsubsection[{\texorpdfstring{R\+M\+S\+\_\+\+W\+I\+N\+D\+O\+W\+\_\+\+T\+I\+ME}{RMS_WINDOW_TIME}}]{\setlength{\rightskip}{0pt plus 5cm}\#define R\+M\+S\+\_\+\+W\+I\+N\+D\+O\+W\+\_\+\+T\+I\+ME~50           /$\ast$ Time slice {\bf size} \mbox{[}ms\mbox{]} $\ast$/}\hypertarget{replaygain__analysis_8c_abc84eacd7a842332bec7483f7cd1f1c4}{}\label{replaygain__analysis_8c_abc84eacd7a842332bec7483f7cd1f1c4}
+
+
+Definition at line 108 of file replaygain\+\_\+analysis.\+c.
+
+\index{replaygain\+\_\+analysis.\+c@{replaygain\+\_\+analysis.\+c}!S\+T\+E\+P\+S\+\_\+per\+\_\+dB@{S\+T\+E\+P\+S\+\_\+per\+\_\+dB}}
+\index{S\+T\+E\+P\+S\+\_\+per\+\_\+dB@{S\+T\+E\+P\+S\+\_\+per\+\_\+dB}!replaygain\+\_\+analysis.\+c@{replaygain\+\_\+analysis.\+c}}
+\subsubsection[{\texorpdfstring{S\+T\+E\+P\+S\+\_\+per\+\_\+dB}{STEPS_per_dB}}]{\setlength{\rightskip}{0pt plus 5cm}\#define S\+T\+E\+P\+S\+\_\+per\+\_\+dB~100.          /$\ast$ Table entries per dB $\ast$/}\hypertarget{replaygain__analysis_8c_abe2fb6295aab9e83f4289d2130e72285}{}\label{replaygain__analysis_8c_abe2fb6295aab9e83f4289d2130e72285}
+
+
+Definition at line 109 of file replaygain\+\_\+analysis.\+c.
+
+\index{replaygain\+\_\+analysis.\+c@{replaygain\+\_\+analysis.\+c}!Y\+U\+L\+E\+\_\+\+O\+R\+D\+ER@{Y\+U\+L\+E\+\_\+\+O\+R\+D\+ER}}
+\index{Y\+U\+L\+E\+\_\+\+O\+R\+D\+ER@{Y\+U\+L\+E\+\_\+\+O\+R\+D\+ER}!replaygain\+\_\+analysis.\+c@{replaygain\+\_\+analysis.\+c}}
+\subsubsection[{\texorpdfstring{Y\+U\+L\+E\+\_\+\+O\+R\+D\+ER}{YULE_ORDER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define Y\+U\+L\+E\+\_\+\+O\+R\+D\+ER~10}\hypertarget{replaygain__analysis_8c_a6e48d077096a381796cf730813c4e7b6}{}\label{replaygain__analysis_8c_a6e48d077096a381796cf730813c4e7b6}
+
+
+Definition at line 105 of file replaygain\+\_\+analysis.\+c.
+
+
+
+\subsection{Function Documentation}
+\index{replaygain\+\_\+analysis.\+c@{replaygain\+\_\+analysis.\+c}!Analyze\+Samples@{Analyze\+Samples}}
+\index{Analyze\+Samples@{Analyze\+Samples}!replaygain\+\_\+analysis.\+c@{replaygain\+\_\+analysis.\+c}}
+\subsubsection[{\texorpdfstring{Analyze\+Samples(const flac\+\_\+float\+\_\+t $\ast$left\+\_\+samples, const flac\+\_\+float\+\_\+t $\ast$right\+\_\+samples, size\+\_\+t num\+\_\+samples, int num\+\_\+channels)}{AnalyzeSamples(const flac_float_t *left_samples, const flac_float_t *right_samples, size_t num_samples, int num_channels)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf int} Analyze\+Samples (
+\begin{DoxyParamCaption}
+\item[{{\bf const} {\bf flac\+\_\+float\+\_\+t} $\ast$}]{left\+\_\+samples, }
+\item[{{\bf const} {\bf flac\+\_\+float\+\_\+t} $\ast$}]{right\+\_\+samples, }
+\item[{size\+\_\+t}]{num\+\_\+samples, }
+\item[{{\bf int}}]{num\+\_\+channels}
+\end{DoxyParamCaption}
+)}\hypertarget{replaygain__analysis_8c_ad85a75d74c9050aea1e441b386e5b3f0}{}\label{replaygain__analysis_8c_ad85a75d74c9050aea1e441b386e5b3f0}
+
+
+Definition at line 419 of file replaygain\+\_\+analysis.\+c.
+
+\index{replaygain\+\_\+analysis.\+c@{replaygain\+\_\+analysis.\+c}!Get\+Album\+Gain@{Get\+Album\+Gain}}
+\index{Get\+Album\+Gain@{Get\+Album\+Gain}!replaygain\+\_\+analysis.\+c@{replaygain\+\_\+analysis.\+c}}
+\subsubsection[{\texorpdfstring{Get\+Album\+Gain(void)}{GetAlbumGain(void)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf flac\+\_\+float\+\_\+t} Get\+Album\+Gain (
+\begin{DoxyParamCaption}
+\item[{{\bf void}}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{replaygain__analysis_8c_ac905fea7f33238cea563607378e783ac}{}\label{replaygain__analysis_8c_ac905fea7f33238cea563607378e783ac}
+
+
+Definition at line 572 of file replaygain\+\_\+analysis.\+c.
+
+\index{replaygain\+\_\+analysis.\+c@{replaygain\+\_\+analysis.\+c}!Get\+Title\+Gain@{Get\+Title\+Gain}}
+\index{Get\+Title\+Gain@{Get\+Title\+Gain}!replaygain\+\_\+analysis.\+c@{replaygain\+\_\+analysis.\+c}}
+\subsubsection[{\texorpdfstring{Get\+Title\+Gain(void)}{GetTitleGain(void)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf flac\+\_\+float\+\_\+t} Get\+Title\+Gain (
+\begin{DoxyParamCaption}
+\item[{{\bf void}}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{replaygain__analysis_8c_a1f99ccdd8d6f787da3fcfb14da92d54d}{}\label{replaygain__analysis_8c_a1f99ccdd8d6f787da3fcfb14da92d54d}
+
+
+Definition at line 550 of file replaygain\+\_\+analysis.\+c.
+
+\index{replaygain\+\_\+analysis.\+c@{replaygain\+\_\+analysis.\+c}!Init\+Gain\+Analysis@{Init\+Gain\+Analysis}}
+\index{Init\+Gain\+Analysis@{Init\+Gain\+Analysis}!replaygain\+\_\+analysis.\+c@{replaygain\+\_\+analysis.\+c}}
+\subsubsection[{\texorpdfstring{Init\+Gain\+Analysis(long samplefreq)}{InitGainAnalysis(long samplefreq)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf int} Init\+Gain\+Analysis (
+\begin{DoxyParamCaption}
+\item[{long}]{samplefreq}
+\end{DoxyParamCaption}
+)}\hypertarget{replaygain__analysis_8c_a085bbbbfe4f7266e9f4b9180da006417}{}\label{replaygain__analysis_8c_a085bbbbfe4f7266e9f4b9180da006417}
+
+
+Definition at line 398 of file replaygain\+\_\+analysis.\+c.
+
+\index{replaygain\+\_\+analysis.\+c@{replaygain\+\_\+analysis.\+c}!Valid\+Gain\+Frequency@{Valid\+Gain\+Frequency}}
+\index{Valid\+Gain\+Frequency@{Valid\+Gain\+Frequency}!replaygain\+\_\+analysis.\+c@{replaygain\+\_\+analysis.\+c}}
+\subsubsection[{\texorpdfstring{Valid\+Gain\+Frequency(long samplefreq)}{ValidGainFrequency(long samplefreq)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf int} Valid\+Gain\+Frequency (
+\begin{DoxyParamCaption}
+\item[{long}]{samplefreq}
+\end{DoxyParamCaption}
+)}\hypertarget{replaygain__analysis_8c_ac181bc1172ad87376baaa7bcb2f6cfeb}{}\label{replaygain__analysis_8c_ac181bc1172ad87376baaa7bcb2f6cfeb}
+
+
+Definition at line 388 of file replaygain\+\_\+analysis.\+c.
+
+
+
+\subsection{Variable Documentation}
+\index{replaygain\+\_\+analysis.\+c@{replaygain\+\_\+analysis.\+c}!Replay\+Gain\+Reference\+Loudness@{Replay\+Gain\+Reference\+Loudness}}
+\index{Replay\+Gain\+Reference\+Loudness@{Replay\+Gain\+Reference\+Loudness}!replaygain\+\_\+analysis.\+c@{replaygain\+\_\+analysis.\+c}}
+\subsubsection[{\texorpdfstring{Replay\+Gain\+Reference\+Loudness}{ReplayGainReferenceLoudness}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf flac\+\_\+float\+\_\+t} Replay\+Gain\+Reference\+Loudness = 89.\+0}\hypertarget{replaygain__analysis_8c_aabc8862017299453f82ced09bf6b7785}{}\label{replaygain__analysis_8c_aabc8862017299453f82ced09bf6b7785}
+
+
+Definition at line 103 of file replaygain\+\_\+analysis.\+c.
+

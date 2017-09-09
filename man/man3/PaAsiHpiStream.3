@@ -1,0 +1,128 @@
+.TH "PaAsiHpiStream" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+PaAsiHpiStream \- 
+.SH SYNOPSIS
+.br
+.PP
+.SS "Public Attributes"
+
+.in +1c
+.ti -1c
+.RI "\fBPaUtilStreamRepresentation\fP \fBbaseStreamRep\fP"
+.br
+.ti -1c
+.RI "\fBPaUtilCpuLoadMeasurer\fP \fBcpuLoadMeasurer\fP"
+.br
+.ti -1c
+.RI "\fBPaUtilBufferProcessor\fP \fBbufferProcessor\fP"
+.br
+.ti -1c
+.RI "\fBPaUtilAllocationGroup\fP * \fBallocations\fP"
+.br
+.ti -1c
+.RI "\fBPaAsiHpiStreamComponent\fP * \fBinput\fP"
+.br
+.ti -1c
+.RI "\fBPaAsiHpiStreamComponent\fP * \fBoutput\fP"
+.br
+.ti -1c
+.RI "\fBuint32_t\fP \fBpollingInterval\fP"
+.br
+.ti -1c
+.RI "\fBint\fP \fBcallbackMode\fP"
+.br
+.ti -1c
+.RI "unsigned long \fBmaxFramesPerHostBuffer\fP"
+.br
+.ti -1c
+.RI "\fBint\fP \fBneverDropInput\fP"
+.br
+.ti -1c
+.RI "\fBvoid\fP ** \fBblockingUserBufferCopy\fP"
+.br
+.ti -1c
+.RI "\fBPaUnixThread\fP \fBthread\fP"
+.br
+.ti -1c
+.RI "volatile sig_atomic_t \fBstate\fP"
+.br
+.ti -1c
+.RI "volatile sig_atomic_t \fBcallbackAbort\fP"
+.br
+.ti -1c
+.RI "volatile sig_atomic_t \fBcallbackFinished\fP"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Stream data 
+.PP
+Definition at line 353 of file pa_linux_asihpi\&.c\&.
+.SH "Member Data Documentation"
+.PP 
+.SS "\fBPaUtilAllocationGroup\fP* PaAsiHpiStream::allocations"
+
+.PP
+Definition at line 360 of file pa_linux_asihpi\&.c\&.
+.SS "\fBPaUtilStreamRepresentation\fP PaAsiHpiStream::baseStreamRep"
+
+.PP
+Definition at line 356 of file pa_linux_asihpi\&.c\&.
+.SS "\fBvoid\fP** PaAsiHpiStream::blockingUserBufferCopy"
+Contains copy of user buffers, used by blocking interface to transfer non-interleaved data\&. It went here instead of to each stream component, as the stream component buffer setup in PaAsiHpi_SetupBuffers doesn't know the stream details such as callbackMode\&. (\fBMaybe\fP a problem later if ReadStream and WriteStream happens concurrently on same stream\&.) 
+.PP
+Definition at line 379 of file pa_linux_asihpi\&.c\&.
+.SS "\fBPaUtilBufferProcessor\fP PaAsiHpiStream::bufferProcessor"
+
+.PP
+Definition at line 358 of file pa_linux_asihpi\&.c\&.
+.SS "volatile sig_atomic_t PaAsiHpiStream::callbackAbort"
+Hard abort, i\&.e\&. drop frames? 
+.PP
+Definition at line 388 of file pa_linux_asihpi\&.c\&.
+.SS "volatile sig_atomic_t PaAsiHpiStream::callbackFinished"
+True if stream stopped via exiting callback with paComplete/paAbort flag (as opposed to explicit call to StopStream/AbortStream) 
+.PP
+Definition at line 391 of file pa_linux_asihpi\&.c\&.
+.SS "\fBint\fP PaAsiHpiStream::callbackMode"
+Are we running in callback mode? 
+.PP
+Definition at line 370 of file pa_linux_asihpi\&.c\&.
+.SS "\fBPaUtilCpuLoadMeasurer\fP PaAsiHpiStream::cpuLoadMeasurer"
+
+.PP
+Definition at line 357 of file pa_linux_asihpi\&.c\&.
+.SS "\fBPaAsiHpiStreamComponent\fP* PaAsiHpiStream::input"
+Separate structs for input and output sides of stream 
+.PP
+Definition at line 365 of file pa_linux_asihpi\&.c\&.
+.SS "unsigned long PaAsiHpiStream::maxFramesPerHostBuffer"
+Number of frames to transfer at a time to/from HPI 
+.PP
+Definition at line 372 of file pa_linux_asihpi\&.c\&.
+.SS "\fBint\fP PaAsiHpiStream::neverDropInput"
+Indicates that the stream is in the paNeverDropInput mode 
+.PP
+Definition at line 374 of file pa_linux_asihpi\&.c\&.
+.SS "\fBPaAsiHpiStreamComponent\fP * PaAsiHpiStream::output"
+
+.PP
+Definition at line 365 of file pa_linux_asihpi\&.c\&.
+.SS "\fBuint32_t\fP PaAsiHpiStream::pollingInterval"
+Polling interval (in milliseconds) 
+.PP
+Definition at line 368 of file pa_linux_asihpi\&.c\&.
+.SS "volatile sig_atomic_t PaAsiHpiStream::state"
+PortAudio stream state (Active/Stopped/CallbackFinished) 
+.PP
+Definition at line 386 of file pa_linux_asihpi\&.c\&.
+.SS "\fBPaUnixThread\fP PaAsiHpiStream::thread"
+Helper thread which will deliver data to user callback 
+.PP
+Definition at line 384 of file pa_linux_asihpi\&.c\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

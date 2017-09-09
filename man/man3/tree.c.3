@@ -1,0 +1,210 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/lib-src/lv2/sord/src/zix/tree.c" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/lib-src/lv2/sord/src/zix/tree.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <assert\&.h>\fP
+.br
+\fC#include <stdint\&.h>\fP
+.br
+\fC#include <stdio\&.h>\fP
+.br
+\fC#include <stdlib\&.h>\fP
+.br
+\fC#include <string\&.h>\fP
+.br
+\fC#include 'zix/common\&.h'\fP
+.br
+\fC#include 'zix/tree\&.h'\fP
+.br
+
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "struct \fBZixTreeImpl\fP"
+.br
+.ti -1c
+.RI "struct \fBZixTreeNodeImpl\fP"
+.br
+.in -1c
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBMIN\fP(\fBa\fP,  \fBb\fP)   (((\fBa\fP) < (\fBb\fP)) ? (\fBa\fP) : (\fBb\fP))"
+.br
+.ti -1c
+.RI "#define \fBMAX\fP(\fBa\fP,  \fBb\fP)   (((\fBa\fP) > (\fBb\fP)) ? (\fBa\fP) : (\fBb\fP))"
+.br
+.ti -1c
+.RI "#define \fBASSERT_BALANCE\fP(n)"
+.br
+.ti -1c
+.RI "#define \fBDUMP\fP(\fBt\fP)"
+.br
+.ti -1c
+.RI "#define \fBDEBUG_PRINTF\fP(fmt, \&.\&.\&.)"
+.br
+.in -1c
+.SS "Typedefs"
+
+.in +1c
+.ti -1c
+.RI "typedef struct \fBZixTreeNodeImpl\fP \fBZixTreeNode\fP"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "ZIX_API \fBZixTree\fP * \fBzix_tree_new\fP (\fBbool\fP allow_duplicates, \fBZixComparator\fP cmp, \fBvoid\fP *cmp_data, \fBZixDestroyFunc\fP destroy)"
+.br
+.ti -1c
+.RI "ZIX_PRIVATE \fBvoid\fP \fBzix_tree_free_rec\fP (\fBZixTree\fP *\fBt\fP, \fBZixTreeNode\fP *n)"
+.br
+.ti -1c
+.RI "ZIX_API \fBvoid\fP \fBzix_tree_free\fP (\fBZixTree\fP *\fBt\fP)"
+.br
+.ti -1c
+.RI "ZIX_API size_t \fBzix_tree_size\fP (\fBconst\fP \fBZixTree\fP *\fBt\fP)"
+.br
+.ti -1c
+.RI "ZIX_PRIVATE \fBvoid\fP \fBrotate\fP (\fBZixTreeNode\fP *\fBp\fP, \fBZixTreeNode\fP *\fBq\fP)"
+.br
+.ti -1c
+.RI "ZIX_PRIVATE \fBZixTreeNode\fP * \fBrotate_left\fP (\fBZixTreeNode\fP *\fBp\fP, \fBint\fP *height_change)"
+.br
+.ti -1c
+.RI "ZIX_PRIVATE \fBZixTreeNode\fP * \fBrotate_right\fP (\fBZixTreeNode\fP *\fBp\fP, \fBint\fP *height_change)"
+.br
+.ti -1c
+.RI "ZIX_PRIVATE \fBZixTreeNode\fP * \fBrotate_left_right\fP (\fBZixTreeNode\fP *\fBp\fP, \fBint\fP *height_change)"
+.br
+.ti -1c
+.RI "ZIX_PRIVATE \fBZixTreeNode\fP * \fBrotate_right_left\fP (\fBZixTreeNode\fP *\fBp\fP, \fBint\fP *height_change)"
+.br
+.ti -1c
+.RI "ZIX_PRIVATE \fBZixTreeNode\fP * \fBzix_tree_rebalance\fP (\fBZixTree\fP *\fBt\fP, \fBZixTreeNode\fP *\fBnode\fP, \fBint\fP *height_change)"
+.br
+.ti -1c
+.RI "ZIX_API \fBZixStatus\fP \fBzix_tree_insert\fP (\fBZixTree\fP *\fBt\fP, \fBvoid\fP *e, \fBZixTreeIter\fP **ti)"
+.br
+.ti -1c
+.RI "ZIX_API \fBZixStatus\fP \fBzix_tree_remove\fP (\fBZixTree\fP *\fBt\fP, \fBZixTreeIter\fP *ti)"
+.br
+.ti -1c
+.RI "ZIX_API \fBZixStatus\fP \fBzix_tree_find\fP (\fBconst\fP \fBZixTree\fP *\fBt\fP, \fBconst\fP \fBvoid\fP *e, \fBZixTreeIter\fP **ti)"
+.br
+.ti -1c
+.RI "ZIX_API \fBvoid\fP * \fBzix_tree_get\fP (\fBZixTreeIter\fP *ti)"
+.br
+.ti -1c
+.RI "ZIX_API \fBZixTreeIter\fP * \fBzix_tree_begin\fP (\fBZixTree\fP *\fBt\fP)"
+.br
+.ti -1c
+.RI "ZIX_API \fBZixTreeIter\fP * \fBzix_tree_end\fP (\fBZixTree\fP *\fBt\fP)"
+.br
+.ti -1c
+.RI "ZIX_API \fBZixTreeIter\fP * \fBzix_tree_rbegin\fP (\fBZixTree\fP *\fBt\fP)"
+.br
+.ti -1c
+.RI "ZIX_API \fBZixTreeIter\fP * \fBzix_tree_rend\fP (\fBZixTree\fP *\fBt\fP)"
+.br
+.ti -1c
+.RI "ZIX_API \fBbool\fP \fBzix_tree_iter_is_end\fP (\fBZixTreeIter\fP *\fBi\fP)"
+.br
+.ti -1c
+.RI "ZIX_API \fBbool\fP \fBzix_tree_iter_is_rend\fP (\fBZixTreeIter\fP *\fBi\fP)"
+.br
+.ti -1c
+.RI "ZIX_API \fBZixTreeIter\fP * \fBzix_tree_iter_next\fP (\fBZixTreeIter\fP *\fBi\fP)"
+.br
+.ti -1c
+.RI "ZIX_API \fBZixTreeIter\fP * \fBzix_tree_iter_prev\fP (\fBZixTreeIter\fP *\fBi\fP)"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define ASSERT_BALANCE(n)"
+
+.PP
+Definition at line 57 of file tree\&.c\&.
+.SS "#define DEBUG_PRINTF(fmt,  \&.\&.\&.)"
+
+.PP
+Definition at line 66 of file tree\&.c\&.
+.SS "#define DUMP(\fBt\fP)"
+
+.PP
+Definition at line 65 of file tree\&.c\&.
+.SS "#define MAX(\fBa\fP, \fBb\fP)   (((\fBa\fP) > (\fBb\fP)) ? (\fBa\fP) : (\fBb\fP))"
+
+.PP
+Definition at line 46 of file tree\&.c\&.
+.SS "#define MIN(\fBa\fP, \fBb\fP)   (((\fBa\fP) < (\fBb\fP)) ? (\fBa\fP) : (\fBb\fP))"
+
+.PP
+Definition at line 45 of file tree\&.c\&.
+.SH "Typedef Documentation"
+.PP 
+.SS "typedef struct \fBZixTreeNodeImpl\fP \fBZixTreeNode\fP"
+
+.PP
+Definition at line 26 of file tree\&.c\&.
+.SH "Function Documentation"
+.PP 
+.SS "ZIX_PRIVATE \fBvoid\fP rotate (\fBZixTreeNode\fP * p, \fBZixTreeNode\fP * q)"
+
+.PP
+Definition at line 114 of file tree\&.c\&.
+.SS "ZIX_PRIVATE \fBZixTreeNode\fP* rotate_left (\fBZixTreeNode\fP * p, \fBint\fP * height_change)"
+Rotate left about \fCp\fP\&.
+.PP
+p q / \\ / \\ A q => p C / \\ / \\ B C A B 
+.PP
+Definition at line 158 of file tree\&.c\&.
+.SS "ZIX_PRIVATE \fBZixTreeNode\fP* rotate_left_right (\fBZixTreeNode\fP * p, \fBint\fP * height_change)"
+Rotate left about \fCp->left\fP then right about \fCp\fP\&. 
+.PP
+.nf
+ p             r
+/ \           / \
+
+.fi
+.PP
+ q D => q p / \\ / \\ / \\ A r A B C D / \\ B C 
+.PP
+Definition at line 226 of file tree\&.c\&.
+.SS "ZIX_PRIVATE \fBZixTreeNode\fP* rotate_right (\fBZixTreeNode\fP * p, \fBint\fP * height_change)"
+Rotate right about \fCp\fP\&. 
+.PP
+.nf
+ p          q
+/ \        / \
+
+.fi
+.PP
+ q C => A p / \\ / \\ A B B C 
+.PP
+Definition at line 191 of file tree\&.c\&.
+.SS "ZIX_PRIVATE \fBZixTreeNode\fP* rotate_right_left (\fBZixTreeNode\fP * p, \fBint\fP * height_change)"
+Rotate right about \fCp->right\fP then right about \fCp\fP\&.
+.PP
+p r / \\ / \\ A q => p q / \\ / \\ / \\ r D A B C D / \\ B C 
+.PP
+Definition at line 270 of file tree\&.c\&.
+.SS "ZIX_PRIVATE \fBvoid\fP zix_tree_free_rec (\fBZixTree\fP * t, \fBZixTreeNode\fP * n)"
+
+.PP
+Definition at line 86 of file tree\&.c\&.
+.SS "ZIX_PRIVATE \fBZixTreeNode\fP* zix_tree_rebalance (\fBZixTree\fP * t, \fBZixTreeNode\fP * node, \fBint\fP * height_change)"
+
+.PP
+Definition at line 303 of file tree\&.c\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

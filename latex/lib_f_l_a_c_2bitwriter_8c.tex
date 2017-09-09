@@ -1,0 +1,443 @@
+\hypertarget{lib_f_l_a_c_2bitwriter_8c}{}\section{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/libflac/src/lib\+F\+L\+A\+C/bitwriter.c File Reference}
+\label{lib_f_l_a_c_2bitwriter_8c}\index{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/libflac/src/lib\+F\+L\+A\+C/bitwriter.\+c@{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/libflac/src/lib\+F\+L\+A\+C/bitwriter.\+c}}
+{\ttfamily \#include $<$stdlib.\+h$>$}\\*
+{\ttfamily \#include $<$string.\+h$>$}\\*
+{\ttfamily \#include \char`\"{}private/bitwriter.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}private/crc.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}private/macros.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}F\+L\+A\+C/assert.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}share/alloc.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}share/compat.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}share/endswap.\+h\char`\"{}}\\*
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{struct_f_l_a_c_____bit_writer}{F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Writer}
+\end{DoxyCompactItemize}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{lib_f_l_a_c_2bitwriter_8c_a7fef7566120d2dee49ee62c239ad7e7e}{F\+L\+A\+C\+\_\+\+\_\+\+B\+Y\+T\+E\+S\+\_\+\+P\+E\+R\+\_\+\+W\+O\+RD}~4
+\item 
+\#define \hyperlink{lib_f_l_a_c_2bitwriter_8c_aea11f2954ff740c8de5039d89ad89999}{F\+L\+A\+C\+\_\+\+\_\+\+B\+I\+T\+S\+\_\+\+P\+E\+R\+\_\+\+W\+O\+RD}~32
+\item 
+\#define \hyperlink{lib_f_l_a_c_2bitwriter_8c_a2bb3f532a0f74bb43b56557eb2ce2d95}{F\+L\+A\+C\+\_\+\+\_\+\+W\+O\+R\+D\+\_\+\+A\+L\+L\+\_\+\+O\+N\+ES}~((\hyperlink{ordinals_8h_a9c4005ea7ef8d564b0cc993cdd0e4e5e}{F\+L\+A\+C\+\_\+\+\_\+uint32})0xffffffff)
+\item 
+\#define \hyperlink{lib_f_l_a_c_2bitwriter_8c_a3f56349a14908953c8006f33d1df6674}{S\+W\+A\+P\+\_\+\+B\+E\+\_\+\+W\+O\+R\+D\+\_\+\+T\+O\+\_\+\+H\+O\+ST}(x)~\hyperlink{include_2share_2endswap_8h_a54e3d0aec5f31f61d06cdfbc4e900b34}{E\+N\+D\+S\+W\+A\+P\+\_\+32}(x)
+\item 
+\#define \hyperlink{lib_f_l_a_c_2bitwriter_8c_a089f7f12cbe92626d103e5138b1f5950}{F\+L\+A\+C\+\_\+\+\_\+\+W\+O\+R\+D\+S\+\_\+\+T\+O\+\_\+\+B\+I\+TS}(words)~((words) $\ast$ \hyperlink{lib_f_l_a_c_2bitwriter_8c_aea11f2954ff740c8de5039d89ad89999}{F\+L\+A\+C\+\_\+\+\_\+\+B\+I\+T\+S\+\_\+\+P\+E\+R\+\_\+\+W\+O\+RD})
+\item 
+\#define \hyperlink{lib_f_l_a_c_2bitwriter_8c_a629f9f3ae8cfc4486af0c19f5a454c50}{F\+L\+A\+C\+\_\+\+\_\+\+T\+O\+T\+A\+L\+\_\+\+B\+I\+TS}(bw)~(\hyperlink{lib_f_l_a_c_2bitwriter_8c_a089f7f12cbe92626d103e5138b1f5950}{F\+L\+A\+C\+\_\+\+\_\+\+W\+O\+R\+D\+S\+\_\+\+T\+O\+\_\+\+B\+I\+TS}((bw)-\/$>$words) + (bw)-\/$>$\hyperlink{metrics_8c_a1eb8fc809d37cc6176f7f27374b063d0}{bits})
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{struct_f_l_a_c_____bit_writer}{F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Writer} $\ast$ \hyperlink{lib_f_l_a_c_2bitwriter_8c_a5fc61c80dcebd2952f82a85c60aee991}{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+new} (\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void})
+\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{lib_f_l_a_c_2bitwriter_8c_ad85e484a6ff0d1b2574d4b0aee8ed901}{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+delete} (\hyperlink{struct_f_l_a_c_____bit_writer}{F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Writer} $\ast$bw)
+\item 
+\hyperlink{ordinals_8h_a95103469f1cbd78b8cf250194985b34e}{F\+L\+A\+C\+\_\+\+\_\+bool} \hyperlink{lib_f_l_a_c_2bitwriter_8c_a4dc781481918d9d0c56a37af3dfcef03}{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+init} (\hyperlink{struct_f_l_a_c_____bit_writer}{F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Writer} $\ast$bw)
+\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{lib_f_l_a_c_2bitwriter_8c_aaeb12fad07c064e44a14351a01f3833f}{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+free} (\hyperlink{struct_f_l_a_c_____bit_writer}{F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Writer} $\ast$bw)
+\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{lib_f_l_a_c_2bitwriter_8c_a656d5ee37bb5f3554e686b04cb475568}{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+clear} (\hyperlink{struct_f_l_a_c_____bit_writer}{F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Writer} $\ast$bw)
+\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{lib_f_l_a_c_2bitwriter_8c_a460924ef86cc0a6b8122997ddf71c9b1}{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+dump} (\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{struct_f_l_a_c_____bit_writer}{F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Writer} $\ast$bw, F\+I\+LE $\ast$\hyperlink{latency_8c_a71fd1c281affec034757279e4f91c50b}{out})
+\item 
+\hyperlink{ordinals_8h_a95103469f1cbd78b8cf250194985b34e}{F\+L\+A\+C\+\_\+\+\_\+bool} \hyperlink{lib_f_l_a_c_2bitwriter_8c_ad99980277a8483f0fede948b37a1eb30}{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+get\+\_\+write\+\_\+crc16} (\hyperlink{struct_f_l_a_c_____bit_writer}{F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Writer} $\ast$bw, \hyperlink{ordinals_8h_a0fbaee65d056a075245dcd0c903fb94c}{F\+L\+A\+C\+\_\+\+\_\+uint16} $\ast$crc)
+\item 
+\hyperlink{ordinals_8h_a95103469f1cbd78b8cf250194985b34e}{F\+L\+A\+C\+\_\+\+\_\+bool} \hyperlink{lib_f_l_a_c_2bitwriter_8c_af8bd66581d80d350d1c93519fef9ea88}{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+get\+\_\+write\+\_\+crc8} (\hyperlink{struct_f_l_a_c_____bit_writer}{F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Writer} $\ast$bw, \hyperlink{ordinals_8h_a5eb569b12d5b047cdacada4d57924ee3}{F\+L\+A\+C\+\_\+\+\_\+byte} $\ast$crc)
+\item 
+\hyperlink{ordinals_8h_a95103469f1cbd78b8cf250194985b34e}{F\+L\+A\+C\+\_\+\+\_\+bool} \hyperlink{lib_f_l_a_c_2bitwriter_8c_a851f7741f456446fa2e6819f94767a2b}{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+is\+\_\+byte\+\_\+aligned} (\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{struct_f_l_a_c_____bit_writer}{F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Writer} $\ast$bw)
+\item 
+unsigned \hyperlink{lib_f_l_a_c_2bitwriter_8c_a8ace42b3b1b27ae3bbaa1c6a8b7fa8b9}{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+get\+\_\+input\+\_\+bits\+\_\+unconsumed} (\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{struct_f_l_a_c_____bit_writer}{F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Writer} $\ast$bw)
+\item 
+\hyperlink{ordinals_8h_a95103469f1cbd78b8cf250194985b34e}{F\+L\+A\+C\+\_\+\+\_\+bool} \hyperlink{lib_f_l_a_c_2bitwriter_8c_a0852b436da2d39699a54a40b0fc6835c}{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+get\+\_\+buffer} (\hyperlink{struct_f_l_a_c_____bit_writer}{F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Writer} $\ast$bw, \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{ordinals_8h_a5eb569b12d5b047cdacada4d57924ee3}{F\+L\+A\+C\+\_\+\+\_\+byte} $\ast$$\ast$\hyperlink{structbuffer}{buffer}, size\+\_\+t $\ast$bytes)
+\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{lib_f_l_a_c_2bitwriter_8c_a9c2545c28e17227bcf6385fa7b496e64}{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+release\+\_\+buffer} (\hyperlink{struct_f_l_a_c_____bit_writer}{F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Writer} $\ast$bw)
+\item 
+\hyperlink{ordinals_8h_a95103469f1cbd78b8cf250194985b34e}{F\+L\+A\+C\+\_\+\+\_\+bool} \hyperlink{lib_f_l_a_c_2bitwriter_8c_a289a5fd39585a6f75c9e0480553dac20}{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+write\+\_\+zeroes} (\hyperlink{struct_f_l_a_c_____bit_writer}{F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Writer} $\ast$bw, unsigned \hyperlink{metrics_8c_a1eb8fc809d37cc6176f7f27374b063d0}{bits})
+\item 
+\hyperlink{ordinals_8h_a95103469f1cbd78b8cf250194985b34e}{F\+L\+A\+C\+\_\+\+\_\+bool} \hyperlink{lib_f_l_a_c_2bitwriter_8c_a539dc154c61b6524c6fc68fdcbdc28a3}{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+write\+\_\+raw\+\_\+uint32} (\hyperlink{struct_f_l_a_c_____bit_writer}{F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Writer} $\ast$bw, \hyperlink{ordinals_8h_a9c4005ea7ef8d564b0cc993cdd0e4e5e}{F\+L\+A\+C\+\_\+\+\_\+uint32} val, unsigned \hyperlink{metrics_8c_a1eb8fc809d37cc6176f7f27374b063d0}{bits})
+\item 
+\hyperlink{ordinals_8h_a95103469f1cbd78b8cf250194985b34e}{F\+L\+A\+C\+\_\+\+\_\+bool} \hyperlink{lib_f_l_a_c_2bitwriter_8c_a8f4c590e6465920a256600ae62843dfa}{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+write\+\_\+raw\+\_\+int32} (\hyperlink{struct_f_l_a_c_____bit_writer}{F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Writer} $\ast$bw, \hyperlink{ordinals_8h_a33fd77bfe6d685541a0c034a75deccdc}{F\+L\+A\+C\+\_\+\+\_\+int32} val, unsigned \hyperlink{metrics_8c_a1eb8fc809d37cc6176f7f27374b063d0}{bits})
+\item 
+\hyperlink{ordinals_8h_a95103469f1cbd78b8cf250194985b34e}{F\+L\+A\+C\+\_\+\+\_\+bool} \hyperlink{lib_f_l_a_c_2bitwriter_8c_aa14cf60a67862de38f8e8299099a5b6a}{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+write\+\_\+raw\+\_\+uint64} (\hyperlink{struct_f_l_a_c_____bit_writer}{F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Writer} $\ast$bw, \hyperlink{ordinals_8h_aa78c8c70a3eb8a58af7436f278acde8e}{F\+L\+A\+C\+\_\+\+\_\+uint64} val, unsigned \hyperlink{metrics_8c_a1eb8fc809d37cc6176f7f27374b063d0}{bits})
+\item 
+\hyperlink{ordinals_8h_a95103469f1cbd78b8cf250194985b34e}{F\+L\+A\+C\+\_\+\+\_\+bool} \hyperlink{lib_f_l_a_c_2bitwriter_8c_a55b1078146573cf88fada185233e0105}{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+write\+\_\+raw\+\_\+uint32\+\_\+little\+\_\+endian} (\hyperlink{struct_f_l_a_c_____bit_writer}{F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Writer} $\ast$bw, \hyperlink{ordinals_8h_a9c4005ea7ef8d564b0cc993cdd0e4e5e}{F\+L\+A\+C\+\_\+\+\_\+uint32} val)
+\item 
+\hyperlink{ordinals_8h_a95103469f1cbd78b8cf250194985b34e}{F\+L\+A\+C\+\_\+\+\_\+bool} \hyperlink{lib_f_l_a_c_2bitwriter_8c_aa12bc7844abb59dd5842eb96c5cbd7e4}{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+write\+\_\+byte\+\_\+block} (\hyperlink{struct_f_l_a_c_____bit_writer}{F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Writer} $\ast$bw, \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{ordinals_8h_a5eb569b12d5b047cdacada4d57924ee3}{F\+L\+A\+C\+\_\+\+\_\+byte} vals\mbox{[}$\,$\mbox{]}, unsigned nvals)
+\item 
+\hyperlink{ordinals_8h_a95103469f1cbd78b8cf250194985b34e}{F\+L\+A\+C\+\_\+\+\_\+bool} \hyperlink{lib_f_l_a_c_2bitwriter_8c_aabfd19bdf430b36ffc2e6f2902b97d89}{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+write\+\_\+unary\+\_\+unsigned} (\hyperlink{struct_f_l_a_c_____bit_writer}{F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Writer} $\ast$bw, unsigned val)
+\item 
+unsigned \hyperlink{lib_f_l_a_c_2bitwriter_8c_a32335202ee18a7c960066bf1aff458e3}{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+rice\+\_\+bits} (\hyperlink{ordinals_8h_a33fd77bfe6d685541a0c034a75deccdc}{F\+L\+A\+C\+\_\+\+\_\+int32} val, unsigned parameter)
+\item 
+\hyperlink{ordinals_8h_a95103469f1cbd78b8cf250194985b34e}{F\+L\+A\+C\+\_\+\+\_\+bool} \hyperlink{lib_f_l_a_c_2bitwriter_8c_a5b528462ff1f9b21833d93b43612ca82}{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+write\+\_\+rice\+\_\+signed} (\hyperlink{struct_f_l_a_c_____bit_writer}{F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Writer} $\ast$bw, \hyperlink{ordinals_8h_a33fd77bfe6d685541a0c034a75deccdc}{F\+L\+A\+C\+\_\+\+\_\+int32} val, unsigned parameter)
+\item 
+\hyperlink{ordinals_8h_a95103469f1cbd78b8cf250194985b34e}{F\+L\+A\+C\+\_\+\+\_\+bool} \hyperlink{lib_f_l_a_c_2bitwriter_8c_a1affdfdfdbaf243b7426cc2d04eaf2e3}{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+write\+\_\+rice\+\_\+signed\+\_\+block} (\hyperlink{struct_f_l_a_c_____bit_writer}{F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Writer} $\ast$bw, \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{ordinals_8h_a33fd77bfe6d685541a0c034a75deccdc}{F\+L\+A\+C\+\_\+\+\_\+int32} $\ast$vals, unsigned nvals, unsigned parameter)
+\item 
+\hyperlink{ordinals_8h_a95103469f1cbd78b8cf250194985b34e}{F\+L\+A\+C\+\_\+\+\_\+bool} \hyperlink{lib_f_l_a_c_2bitwriter_8c_ade687d0d2f1c0617bce678cd652a44e6}{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+write\+\_\+utf8\+\_\+uint32} (\hyperlink{struct_f_l_a_c_____bit_writer}{F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Writer} $\ast$bw, \hyperlink{ordinals_8h_a9c4005ea7ef8d564b0cc993cdd0e4e5e}{F\+L\+A\+C\+\_\+\+\_\+uint32} val)
+\item 
+\hyperlink{ordinals_8h_a95103469f1cbd78b8cf250194985b34e}{F\+L\+A\+C\+\_\+\+\_\+bool} \hyperlink{lib_f_l_a_c_2bitwriter_8c_a21e089ece69e48b647214e30b0435b06}{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+write\+\_\+utf8\+\_\+uint64} (\hyperlink{struct_f_l_a_c_____bit_writer}{F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Writer} $\ast$bw, \hyperlink{ordinals_8h_aa78c8c70a3eb8a58af7436f278acde8e}{F\+L\+A\+C\+\_\+\+\_\+uint64} val)
+\item 
+\hyperlink{ordinals_8h_a95103469f1cbd78b8cf250194985b34e}{F\+L\+A\+C\+\_\+\+\_\+bool} \hyperlink{lib_f_l_a_c_2bitwriter_8c_a0d6e3fded44c6f4d172692be31c13de9}{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+zero\+\_\+pad\+\_\+to\+\_\+byte\+\_\+boundary} (\hyperlink{struct_f_l_a_c_____bit_writer}{F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Writer} $\ast$bw)
+\end{DoxyCompactItemize}
+
+
+\subsection{Macro Definition Documentation}
+\index{lib\+F\+L\+A\+C/bitwriter.\+c@{lib\+F\+L\+A\+C/bitwriter.\+c}!F\+L\+A\+C\+\_\+\+\_\+\+B\+I\+T\+S\+\_\+\+P\+E\+R\+\_\+\+W\+O\+RD@{F\+L\+A\+C\+\_\+\+\_\+\+B\+I\+T\+S\+\_\+\+P\+E\+R\+\_\+\+W\+O\+RD}}
+\index{F\+L\+A\+C\+\_\+\+\_\+\+B\+I\+T\+S\+\_\+\+P\+E\+R\+\_\+\+W\+O\+RD@{F\+L\+A\+C\+\_\+\+\_\+\+B\+I\+T\+S\+\_\+\+P\+E\+R\+\_\+\+W\+O\+RD}!lib\+F\+L\+A\+C/bitwriter.\+c@{lib\+F\+L\+A\+C/bitwriter.\+c}}
+\subsubsection[{\texorpdfstring{F\+L\+A\+C\+\_\+\+\_\+\+B\+I\+T\+S\+\_\+\+P\+E\+R\+\_\+\+W\+O\+RD}{FLAC__BITS_PER_WORD}}]{\setlength{\rightskip}{0pt plus 5cm}\#define F\+L\+A\+C\+\_\+\+\_\+\+B\+I\+T\+S\+\_\+\+P\+E\+R\+\_\+\+W\+O\+RD~32}\hypertarget{lib_f_l_a_c_2bitwriter_8c_aea11f2954ff740c8de5039d89ad89999}{}\label{lib_f_l_a_c_2bitwriter_8c_aea11f2954ff740c8de5039d89ad89999}
+
+
+Definition at line 51 of file bitwriter.\+c.
+
+\index{lib\+F\+L\+A\+C/bitwriter.\+c@{lib\+F\+L\+A\+C/bitwriter.\+c}!F\+L\+A\+C\+\_\+\+\_\+\+B\+Y\+T\+E\+S\+\_\+\+P\+E\+R\+\_\+\+W\+O\+RD@{F\+L\+A\+C\+\_\+\+\_\+\+B\+Y\+T\+E\+S\+\_\+\+P\+E\+R\+\_\+\+W\+O\+RD}}
+\index{F\+L\+A\+C\+\_\+\+\_\+\+B\+Y\+T\+E\+S\+\_\+\+P\+E\+R\+\_\+\+W\+O\+RD@{F\+L\+A\+C\+\_\+\+\_\+\+B\+Y\+T\+E\+S\+\_\+\+P\+E\+R\+\_\+\+W\+O\+RD}!lib\+F\+L\+A\+C/bitwriter.\+c@{lib\+F\+L\+A\+C/bitwriter.\+c}}
+\subsubsection[{\texorpdfstring{F\+L\+A\+C\+\_\+\+\_\+\+B\+Y\+T\+E\+S\+\_\+\+P\+E\+R\+\_\+\+W\+O\+RD}{FLAC__BYTES_PER_WORD}}]{\setlength{\rightskip}{0pt plus 5cm}\#define F\+L\+A\+C\+\_\+\+\_\+\+B\+Y\+T\+E\+S\+\_\+\+P\+E\+R\+\_\+\+W\+O\+RD~4}\hypertarget{lib_f_l_a_c_2bitwriter_8c_a7fef7566120d2dee49ee62c239ad7e7e}{}\label{lib_f_l_a_c_2bitwriter_8c_a7fef7566120d2dee49ee62c239ad7e7e}
+
+
+Definition at line 50 of file bitwriter.\+c.
+
+\index{lib\+F\+L\+A\+C/bitwriter.\+c@{lib\+F\+L\+A\+C/bitwriter.\+c}!F\+L\+A\+C\+\_\+\+\_\+\+T\+O\+T\+A\+L\+\_\+\+B\+I\+TS@{F\+L\+A\+C\+\_\+\+\_\+\+T\+O\+T\+A\+L\+\_\+\+B\+I\+TS}}
+\index{F\+L\+A\+C\+\_\+\+\_\+\+T\+O\+T\+A\+L\+\_\+\+B\+I\+TS@{F\+L\+A\+C\+\_\+\+\_\+\+T\+O\+T\+A\+L\+\_\+\+B\+I\+TS}!lib\+F\+L\+A\+C/bitwriter.\+c@{lib\+F\+L\+A\+C/bitwriter.\+c}}
+\subsubsection[{\texorpdfstring{F\+L\+A\+C\+\_\+\+\_\+\+T\+O\+T\+A\+L\+\_\+\+B\+I\+TS}{FLAC__TOTAL_BITS}}]{\setlength{\rightskip}{0pt plus 5cm}\#define F\+L\+A\+C\+\_\+\+\_\+\+T\+O\+T\+A\+L\+\_\+\+B\+I\+TS(
+\begin{DoxyParamCaption}
+\item[{}]{bw}
+\end{DoxyParamCaption}
+)~({\bf F\+L\+A\+C\+\_\+\+\_\+\+W\+O\+R\+D\+S\+\_\+\+T\+O\+\_\+\+B\+I\+TS}((bw)-\/$>$words) + (bw)-\/$>${\bf bits})}\hypertarget{lib_f_l_a_c_2bitwriter_8c_a629f9f3ae8cfc4486af0c19f5a454c50}{}\label{lib_f_l_a_c_2bitwriter_8c_a629f9f3ae8cfc4486af0c19f5a454c50}
+
+
+Definition at line 71 of file bitwriter.\+c.
+
+\index{lib\+F\+L\+A\+C/bitwriter.\+c@{lib\+F\+L\+A\+C/bitwriter.\+c}!F\+L\+A\+C\+\_\+\+\_\+\+W\+O\+R\+D\+\_\+\+A\+L\+L\+\_\+\+O\+N\+ES@{F\+L\+A\+C\+\_\+\+\_\+\+W\+O\+R\+D\+\_\+\+A\+L\+L\+\_\+\+O\+N\+ES}}
+\index{F\+L\+A\+C\+\_\+\+\_\+\+W\+O\+R\+D\+\_\+\+A\+L\+L\+\_\+\+O\+N\+ES@{F\+L\+A\+C\+\_\+\+\_\+\+W\+O\+R\+D\+\_\+\+A\+L\+L\+\_\+\+O\+N\+ES}!lib\+F\+L\+A\+C/bitwriter.\+c@{lib\+F\+L\+A\+C/bitwriter.\+c}}
+\subsubsection[{\texorpdfstring{F\+L\+A\+C\+\_\+\+\_\+\+W\+O\+R\+D\+\_\+\+A\+L\+L\+\_\+\+O\+N\+ES}{FLAC__WORD_ALL_ONES}}]{\setlength{\rightskip}{0pt plus 5cm}\#define F\+L\+A\+C\+\_\+\+\_\+\+W\+O\+R\+D\+\_\+\+A\+L\+L\+\_\+\+O\+N\+ES~(({\bf F\+L\+A\+C\+\_\+\+\_\+uint32})0xffffffff)}\hypertarget{lib_f_l_a_c_2bitwriter_8c_a2bb3f532a0f74bb43b56557eb2ce2d95}{}\label{lib_f_l_a_c_2bitwriter_8c_a2bb3f532a0f74bb43b56557eb2ce2d95}
+
+
+Definition at line 52 of file bitwriter.\+c.
+
+\index{lib\+F\+L\+A\+C/bitwriter.\+c@{lib\+F\+L\+A\+C/bitwriter.\+c}!F\+L\+A\+C\+\_\+\+\_\+\+W\+O\+R\+D\+S\+\_\+\+T\+O\+\_\+\+B\+I\+TS@{F\+L\+A\+C\+\_\+\+\_\+\+W\+O\+R\+D\+S\+\_\+\+T\+O\+\_\+\+B\+I\+TS}}
+\index{F\+L\+A\+C\+\_\+\+\_\+\+W\+O\+R\+D\+S\+\_\+\+T\+O\+\_\+\+B\+I\+TS@{F\+L\+A\+C\+\_\+\+\_\+\+W\+O\+R\+D\+S\+\_\+\+T\+O\+\_\+\+B\+I\+TS}!lib\+F\+L\+A\+C/bitwriter.\+c@{lib\+F\+L\+A\+C/bitwriter.\+c}}
+\subsubsection[{\texorpdfstring{F\+L\+A\+C\+\_\+\+\_\+\+W\+O\+R\+D\+S\+\_\+\+T\+O\+\_\+\+B\+I\+TS}{FLAC__WORDS_TO_BITS}}]{\setlength{\rightskip}{0pt plus 5cm}\#define F\+L\+A\+C\+\_\+\+\_\+\+W\+O\+R\+D\+S\+\_\+\+T\+O\+\_\+\+B\+I\+TS(
+\begin{DoxyParamCaption}
+\item[{}]{words}
+\end{DoxyParamCaption}
+)~((words) $\ast$ {\bf F\+L\+A\+C\+\_\+\+\_\+\+B\+I\+T\+S\+\_\+\+P\+E\+R\+\_\+\+W\+O\+RD})}\hypertarget{lib_f_l_a_c_2bitwriter_8c_a089f7f12cbe92626d103e5138b1f5950}{}\label{lib_f_l_a_c_2bitwriter_8c_a089f7f12cbe92626d103e5138b1f5950}
+
+
+Definition at line 70 of file bitwriter.\+c.
+
+\index{lib\+F\+L\+A\+C/bitwriter.\+c@{lib\+F\+L\+A\+C/bitwriter.\+c}!S\+W\+A\+P\+\_\+\+B\+E\+\_\+\+W\+O\+R\+D\+\_\+\+T\+O\+\_\+\+H\+O\+ST@{S\+W\+A\+P\+\_\+\+B\+E\+\_\+\+W\+O\+R\+D\+\_\+\+T\+O\+\_\+\+H\+O\+ST}}
+\index{S\+W\+A\+P\+\_\+\+B\+E\+\_\+\+W\+O\+R\+D\+\_\+\+T\+O\+\_\+\+H\+O\+ST@{S\+W\+A\+P\+\_\+\+B\+E\+\_\+\+W\+O\+R\+D\+\_\+\+T\+O\+\_\+\+H\+O\+ST}!lib\+F\+L\+A\+C/bitwriter.\+c@{lib\+F\+L\+A\+C/bitwriter.\+c}}
+\subsubsection[{\texorpdfstring{S\+W\+A\+P\+\_\+\+B\+E\+\_\+\+W\+O\+R\+D\+\_\+\+T\+O\+\_\+\+H\+O\+ST}{SWAP_BE_WORD_TO_HOST}}]{\setlength{\rightskip}{0pt plus 5cm}\#define S\+W\+A\+P\+\_\+\+B\+E\+\_\+\+W\+O\+R\+D\+\_\+\+T\+O\+\_\+\+H\+O\+ST(
+\begin{DoxyParamCaption}
+\item[{}]{x}
+\end{DoxyParamCaption}
+)~{\bf E\+N\+D\+S\+W\+A\+P\+\_\+32}(x)}\hypertarget{lib_f_l_a_c_2bitwriter_8c_a3f56349a14908953c8006f33d1df6674}{}\label{lib_f_l_a_c_2bitwriter_8c_a3f56349a14908953c8006f33d1df6674}
+
+
+Definition at line 57 of file bitwriter.\+c.
+
+
+
+\subsection{Function Documentation}
+\index{lib\+F\+L\+A\+C/bitwriter.\+c@{lib\+F\+L\+A\+C/bitwriter.\+c}!F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+clear@{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+clear}}
+\index{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+clear@{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+clear}!lib\+F\+L\+A\+C/bitwriter.\+c@{lib\+F\+L\+A\+C/bitwriter.\+c}}
+\subsubsection[{\texorpdfstring{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+clear(\+F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Writer $\ast$bw)}{FLAC__bitwriter_clear(FLAC__BitWriter *bw)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+clear (
+\begin{DoxyParamCaption}
+\item[{{\bf F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Writer} $\ast$}]{bw}
+\end{DoxyParamCaption}
+)}\hypertarget{lib_f_l_a_c_2bitwriter_8c_a656d5ee37bb5f3554e686b04cb475568}{}\label{lib_f_l_a_c_2bitwriter_8c_a656d5ee37bb5f3554e686b04cb475568}
+
+
+Definition at line 170 of file bitwriter.\+c.
+
+\index{lib\+F\+L\+A\+C/bitwriter.\+c@{lib\+F\+L\+A\+C/bitwriter.\+c}!F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+delete@{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+delete}}
+\index{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+delete@{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+delete}!lib\+F\+L\+A\+C/bitwriter.\+c@{lib\+F\+L\+A\+C/bitwriter.\+c}}
+\subsubsection[{\texorpdfstring{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+delete(\+F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Writer $\ast$bw)}{FLAC__bitwriter_delete(FLAC__BitWriter *bw)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+delete (
+\begin{DoxyParamCaption}
+\item[{{\bf F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Writer} $\ast$}]{bw}
+\end{DoxyParamCaption}
+)}\hypertarget{lib_f_l_a_c_2bitwriter_8c_ad85e484a6ff0d1b2574d4b0aee8ed901}{}\label{lib_f_l_a_c_2bitwriter_8c_ad85e484a6ff0d1b2574d4b0aee8ed901}
+
+
+Definition at line 132 of file bitwriter.\+c.
+
+\index{lib\+F\+L\+A\+C/bitwriter.\+c@{lib\+F\+L\+A\+C/bitwriter.\+c}!F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+dump@{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+dump}}
+\index{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+dump@{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+dump}!lib\+F\+L\+A\+C/bitwriter.\+c@{lib\+F\+L\+A\+C/bitwriter.\+c}}
+\subsubsection[{\texorpdfstring{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+dump(const F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Writer $\ast$bw, F\+I\+L\+E $\ast$out)}{FLAC__bitwriter_dump(const FLAC__BitWriter *bw, FILE *out)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+dump (
+\begin{DoxyParamCaption}
+\item[{{\bf const} {\bf F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Writer} $\ast$}]{bw, }
+\item[{F\+I\+LE $\ast$}]{out}
+\end{DoxyParamCaption}
+)}\hypertarget{lib_f_l_a_c_2bitwriter_8c_a460924ef86cc0a6b8122997ddf71c9b1}{}\label{lib_f_l_a_c_2bitwriter_8c_a460924ef86cc0a6b8122997ddf71c9b1}
+
+
+Definition at line 175 of file bitwriter.\+c.
+
+\index{lib\+F\+L\+A\+C/bitwriter.\+c@{lib\+F\+L\+A\+C/bitwriter.\+c}!F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+free@{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+free}}
+\index{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+free@{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+free}!lib\+F\+L\+A\+C/bitwriter.\+c@{lib\+F\+L\+A\+C/bitwriter.\+c}}
+\subsubsection[{\texorpdfstring{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+free(\+F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Writer $\ast$bw)}{FLAC__bitwriter_free(FLAC__BitWriter *bw)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+free (
+\begin{DoxyParamCaption}
+\item[{{\bf F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Writer} $\ast$}]{bw}
+\end{DoxyParamCaption}
+)}\hypertarget{lib_f_l_a_c_2bitwriter_8c_aaeb12fad07c064e44a14351a01f3833f}{}\label{lib_f_l_a_c_2bitwriter_8c_aaeb12fad07c064e44a14351a01f3833f}
+
+
+Definition at line 159 of file bitwriter.\+c.
+
+\index{lib\+F\+L\+A\+C/bitwriter.\+c@{lib\+F\+L\+A\+C/bitwriter.\+c}!F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+get\+\_\+buffer@{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+get\+\_\+buffer}}
+\index{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+get\+\_\+buffer@{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+get\+\_\+buffer}!lib\+F\+L\+A\+C/bitwriter.\+c@{lib\+F\+L\+A\+C/bitwriter.\+c}}
+\subsubsection[{\texorpdfstring{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+get\+\_\+buffer(\+F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Writer $\ast$bw, const F\+L\+A\+C\+\_\+\+\_\+byte $\ast$$\ast$buffer, size\+\_\+t $\ast$bytes)}{FLAC__bitwriter_get_buffer(FLAC__BitWriter *bw, const FLAC__byte **buffer, size_t *bytes)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf F\+L\+A\+C\+\_\+\+\_\+bool} F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+get\+\_\+buffer (
+\begin{DoxyParamCaption}
+\item[{{\bf F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Writer} $\ast$}]{bw, }
+\item[{{\bf const} {\bf F\+L\+A\+C\+\_\+\+\_\+byte} $\ast$$\ast$}]{buffer, }
+\item[{size\+\_\+t $\ast$}]{bytes}
+\end{DoxyParamCaption}
+)}\hypertarget{lib_f_l_a_c_2bitwriter_8c_a0852b436da2d39699a54a40b0fc6835c}{}\label{lib_f_l_a_c_2bitwriter_8c_a0852b436da2d39699a54a40b0fc6835c}
+
+
+Definition at line 239 of file bitwriter.\+c.
+
+\index{lib\+F\+L\+A\+C/bitwriter.\+c@{lib\+F\+L\+A\+C/bitwriter.\+c}!F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+get\+\_\+input\+\_\+bits\+\_\+unconsumed@{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+get\+\_\+input\+\_\+bits\+\_\+unconsumed}}
+\index{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+get\+\_\+input\+\_\+bits\+\_\+unconsumed@{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+get\+\_\+input\+\_\+bits\+\_\+unconsumed}!lib\+F\+L\+A\+C/bitwriter.\+c@{lib\+F\+L\+A\+C/bitwriter.\+c}}
+\subsubsection[{\texorpdfstring{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+get\+\_\+input\+\_\+bits\+\_\+unconsumed(const F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Writer $\ast$bw)}{FLAC__bitwriter_get_input_bits_unconsumed(const FLAC__BitWriter *bw)}}]{\setlength{\rightskip}{0pt plus 5cm}unsigned F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+get\+\_\+input\+\_\+bits\+\_\+unconsumed (
+\begin{DoxyParamCaption}
+\item[{{\bf const} {\bf F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Writer} $\ast$}]{bw}
+\end{DoxyParamCaption}
+)}\hypertarget{lib_f_l_a_c_2bitwriter_8c_a8ace42b3b1b27ae3bbaa1c6a8b7fa8b9}{}\label{lib_f_l_a_c_2bitwriter_8c_a8ace42b3b1b27ae3bbaa1c6a8b7fa8b9}
+
+
+Definition at line 234 of file bitwriter.\+c.
+
+\index{lib\+F\+L\+A\+C/bitwriter.\+c@{lib\+F\+L\+A\+C/bitwriter.\+c}!F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+get\+\_\+write\+\_\+crc16@{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+get\+\_\+write\+\_\+crc16}}
+\index{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+get\+\_\+write\+\_\+crc16@{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+get\+\_\+write\+\_\+crc16}!lib\+F\+L\+A\+C/bitwriter.\+c@{lib\+F\+L\+A\+C/bitwriter.\+c}}
+\subsubsection[{\texorpdfstring{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+get\+\_\+write\+\_\+crc16(\+F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Writer $\ast$bw, F\+L\+A\+C\+\_\+\+\_\+uint16 $\ast$crc)}{FLAC__bitwriter_get_write_crc16(FLAC__BitWriter *bw, FLAC__uint16 *crc)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf F\+L\+A\+C\+\_\+\+\_\+bool} F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+get\+\_\+write\+\_\+crc16 (
+\begin{DoxyParamCaption}
+\item[{{\bf F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Writer} $\ast$}]{bw, }
+\item[{{\bf F\+L\+A\+C\+\_\+\+\_\+uint16} $\ast$}]{crc}
+\end{DoxyParamCaption}
+)}\hypertarget{lib_f_l_a_c_2bitwriter_8c_ad99980277a8483f0fede948b37a1eb30}{}\label{lib_f_l_a_c_2bitwriter_8c_ad99980277a8483f0fede948b37a1eb30}
+
+
+Definition at line 199 of file bitwriter.\+c.
+
+\index{lib\+F\+L\+A\+C/bitwriter.\+c@{lib\+F\+L\+A\+C/bitwriter.\+c}!F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+get\+\_\+write\+\_\+crc8@{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+get\+\_\+write\+\_\+crc8}}
+\index{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+get\+\_\+write\+\_\+crc8@{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+get\+\_\+write\+\_\+crc8}!lib\+F\+L\+A\+C/bitwriter.\+c@{lib\+F\+L\+A\+C/bitwriter.\+c}}
+\subsubsection[{\texorpdfstring{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+get\+\_\+write\+\_\+crc8(\+F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Writer $\ast$bw, F\+L\+A\+C\+\_\+\+\_\+byte $\ast$crc)}{FLAC__bitwriter_get_write_crc8(FLAC__BitWriter *bw, FLAC__byte *crc)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf F\+L\+A\+C\+\_\+\+\_\+bool} F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+get\+\_\+write\+\_\+crc8 (
+\begin{DoxyParamCaption}
+\item[{{\bf F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Writer} $\ast$}]{bw, }
+\item[{{\bf F\+L\+A\+C\+\_\+\+\_\+byte} $\ast$}]{crc}
+\end{DoxyParamCaption}
+)}\hypertarget{lib_f_l_a_c_2bitwriter_8c_af8bd66581d80d350d1c93519fef9ea88}{}\label{lib_f_l_a_c_2bitwriter_8c_af8bd66581d80d350d1c93519fef9ea88}
+
+
+Definition at line 214 of file bitwriter.\+c.
+
+\index{lib\+F\+L\+A\+C/bitwriter.\+c@{lib\+F\+L\+A\+C/bitwriter.\+c}!F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+init@{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+init}}
+\index{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+init@{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+init}!lib\+F\+L\+A\+C/bitwriter.\+c@{lib\+F\+L\+A\+C/bitwriter.\+c}}
+\subsubsection[{\texorpdfstring{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+init(\+F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Writer $\ast$bw)}{FLAC__bitwriter_init(FLAC__BitWriter *bw)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf F\+L\+A\+C\+\_\+\+\_\+bool} F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+init (
+\begin{DoxyParamCaption}
+\item[{{\bf F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Writer} $\ast$}]{bw}
+\end{DoxyParamCaption}
+)}\hypertarget{lib_f_l_a_c_2bitwriter_8c_a4dc781481918d9d0c56a37af3dfcef03}{}\label{lib_f_l_a_c_2bitwriter_8c_a4dc781481918d9d0c56a37af3dfcef03}
+
+
+Definition at line 146 of file bitwriter.\+c.
+
+\index{lib\+F\+L\+A\+C/bitwriter.\+c@{lib\+F\+L\+A\+C/bitwriter.\+c}!F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+is\+\_\+byte\+\_\+aligned@{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+is\+\_\+byte\+\_\+aligned}}
+\index{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+is\+\_\+byte\+\_\+aligned@{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+is\+\_\+byte\+\_\+aligned}!lib\+F\+L\+A\+C/bitwriter.\+c@{lib\+F\+L\+A\+C/bitwriter.\+c}}
+\subsubsection[{\texorpdfstring{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+is\+\_\+byte\+\_\+aligned(const F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Writer $\ast$bw)}{FLAC__bitwriter_is_byte_aligned(const FLAC__BitWriter *bw)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf F\+L\+A\+C\+\_\+\+\_\+bool} F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+is\+\_\+byte\+\_\+aligned (
+\begin{DoxyParamCaption}
+\item[{{\bf const} {\bf F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Writer} $\ast$}]{bw}
+\end{DoxyParamCaption}
+)}\hypertarget{lib_f_l_a_c_2bitwriter_8c_a851f7741f456446fa2e6819f94767a2b}{}\label{lib_f_l_a_c_2bitwriter_8c_a851f7741f456446fa2e6819f94767a2b}
+
+
+Definition at line 229 of file bitwriter.\+c.
+
+\index{lib\+F\+L\+A\+C/bitwriter.\+c@{lib\+F\+L\+A\+C/bitwriter.\+c}!F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+new@{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+new}}
+\index{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+new@{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+new}!lib\+F\+L\+A\+C/bitwriter.\+c@{lib\+F\+L\+A\+C/bitwriter.\+c}}
+\subsubsection[{\texorpdfstring{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+new(void)}{FLAC__bitwriter_new(void)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Writer}$\ast$ F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+new (
+\begin{DoxyParamCaption}
+\item[{{\bf void}}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{lib_f_l_a_c_2bitwriter_8c_a5fc61c80dcebd2952f82a85c60aee991}{}\label{lib_f_l_a_c_2bitwriter_8c_a5fc61c80dcebd2952f82a85c60aee991}
+
+
+Definition at line 125 of file bitwriter.\+c.
+
+\index{lib\+F\+L\+A\+C/bitwriter.\+c@{lib\+F\+L\+A\+C/bitwriter.\+c}!F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+release\+\_\+buffer@{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+release\+\_\+buffer}}
+\index{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+release\+\_\+buffer@{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+release\+\_\+buffer}!lib\+F\+L\+A\+C/bitwriter.\+c@{lib\+F\+L\+A\+C/bitwriter.\+c}}
+\subsubsection[{\texorpdfstring{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+release\+\_\+buffer(\+F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Writer $\ast$bw)}{FLAC__bitwriter_release_buffer(FLAC__BitWriter *bw)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+release\+\_\+buffer (
+\begin{DoxyParamCaption}
+\item[{{\bf F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Writer} $\ast$}]{bw}
+\end{DoxyParamCaption}
+)}\hypertarget{lib_f_l_a_c_2bitwriter_8c_a9c2545c28e17227bcf6385fa7b496e64}{}\label{lib_f_l_a_c_2bitwriter_8c_a9c2545c28e17227bcf6385fa7b496e64}
+
+
+Definition at line 259 of file bitwriter.\+c.
+
+\index{lib\+F\+L\+A\+C/bitwriter.\+c@{lib\+F\+L\+A\+C/bitwriter.\+c}!F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+rice\+\_\+bits@{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+rice\+\_\+bits}}
+\index{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+rice\+\_\+bits@{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+rice\+\_\+bits}!lib\+F\+L\+A\+C/bitwriter.\+c@{lib\+F\+L\+A\+C/bitwriter.\+c}}
+\subsubsection[{\texorpdfstring{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+rice\+\_\+bits(\+F\+L\+A\+C\+\_\+\+\_\+int32 val, unsigned parameter)}{FLAC__bitwriter_rice_bits(FLAC__int32 val, unsigned parameter)}}]{\setlength{\rightskip}{0pt plus 5cm}unsigned F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+rice\+\_\+bits (
+\begin{DoxyParamCaption}
+\item[{{\bf F\+L\+A\+C\+\_\+\+\_\+int32}}]{val, }
+\item[{unsigned}]{parameter}
+\end{DoxyParamCaption}
+)}\hypertarget{lib_f_l_a_c_2bitwriter_8c_a32335202ee18a7c960066bf1aff458e3}{}\label{lib_f_l_a_c_2bitwriter_8c_a32335202ee18a7c960066bf1aff458e3}
+
+
+Definition at line 404 of file bitwriter.\+c.
+
+\index{lib\+F\+L\+A\+C/bitwriter.\+c@{lib\+F\+L\+A\+C/bitwriter.\+c}!F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+write\+\_\+byte\+\_\+block@{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+write\+\_\+byte\+\_\+block}}
+\index{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+write\+\_\+byte\+\_\+block@{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+write\+\_\+byte\+\_\+block}!lib\+F\+L\+A\+C/bitwriter.\+c@{lib\+F\+L\+A\+C/bitwriter.\+c}}
+\subsubsection[{\texorpdfstring{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+write\+\_\+byte\+\_\+block(\+F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Writer $\ast$bw, const F\+L\+A\+C\+\_\+\+\_\+byte vals[], unsigned nvals)}{FLAC__bitwriter_write_byte_block(FLAC__BitWriter *bw, const FLAC__byte vals[], unsigned nvals)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf F\+L\+A\+C\+\_\+\+\_\+bool} F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+write\+\_\+byte\+\_\+block (
+\begin{DoxyParamCaption}
+\item[{{\bf F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Writer} $\ast$}]{bw, }
+\item[{{\bf const} {\bf F\+L\+A\+C\+\_\+\+\_\+byte}}]{vals\mbox{[}$\,$\mbox{]}, }
+\item[{unsigned}]{nvals}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{lib_f_l_a_c_2bitwriter_8c_aa12bc7844abb59dd5842eb96c5cbd7e4}{}\label{lib_f_l_a_c_2bitwriter_8c_aa12bc7844abb59dd5842eb96c5cbd7e4}
+
+
+Definition at line 381 of file bitwriter.\+c.
+
+\index{lib\+F\+L\+A\+C/bitwriter.\+c@{lib\+F\+L\+A\+C/bitwriter.\+c}!F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+write\+\_\+raw\+\_\+int32@{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+write\+\_\+raw\+\_\+int32}}
+\index{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+write\+\_\+raw\+\_\+int32@{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+write\+\_\+raw\+\_\+int32}!lib\+F\+L\+A\+C/bitwriter.\+c@{lib\+F\+L\+A\+C/bitwriter.\+c}}
+\subsubsection[{\texorpdfstring{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+write\+\_\+raw\+\_\+int32(\+F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Writer $\ast$bw, F\+L\+A\+C\+\_\+\+\_\+int32 val, unsigned bits)}{FLAC__bitwriter_write_raw_int32(FLAC__BitWriter *bw, FLAC__int32 val, unsigned bits)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf F\+L\+A\+C\+\_\+\+\_\+bool} F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+write\+\_\+raw\+\_\+int32 (
+\begin{DoxyParamCaption}
+\item[{{\bf F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Writer} $\ast$}]{bw, }
+\item[{{\bf F\+L\+A\+C\+\_\+\+\_\+int32}}]{val, }
+\item[{unsigned}]{bits}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{lib_f_l_a_c_2bitwriter_8c_a8f4c590e6465920a256600ae62843dfa}{}\label{lib_f_l_a_c_2bitwriter_8c_a8f4c590e6465920a256600ae62843dfa}
+
+
+Definition at line 344 of file bitwriter.\+c.
+
+\index{lib\+F\+L\+A\+C/bitwriter.\+c@{lib\+F\+L\+A\+C/bitwriter.\+c}!F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+write\+\_\+raw\+\_\+uint32@{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+write\+\_\+raw\+\_\+uint32}}
+\index{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+write\+\_\+raw\+\_\+uint32@{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+write\+\_\+raw\+\_\+uint32}!lib\+F\+L\+A\+C/bitwriter.\+c@{lib\+F\+L\+A\+C/bitwriter.\+c}}
+\subsubsection[{\texorpdfstring{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+write\+\_\+raw\+\_\+uint32(\+F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Writer $\ast$bw, F\+L\+A\+C\+\_\+\+\_\+uint32 val, unsigned bits)}{FLAC__bitwriter_write_raw_uint32(FLAC__BitWriter *bw, FLAC__uint32 val, unsigned bits)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf F\+L\+A\+C\+\_\+\+\_\+bool} F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+write\+\_\+raw\+\_\+uint32 (
+\begin{DoxyParamCaption}
+\item[{{\bf F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Writer} $\ast$}]{bw, }
+\item[{{\bf F\+L\+A\+C\+\_\+\+\_\+uint32}}]{val, }
+\item[{unsigned}]{bits}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{lib_f_l_a_c_2bitwriter_8c_a539dc154c61b6524c6fc68fdcbdc28a3}{}\label{lib_f_l_a_c_2bitwriter_8c_a539dc154c61b6524c6fc68fdcbdc28a3}
+
+
+Definition at line 305 of file bitwriter.\+c.
+
+\index{lib\+F\+L\+A\+C/bitwriter.\+c@{lib\+F\+L\+A\+C/bitwriter.\+c}!F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+write\+\_\+raw\+\_\+uint32\+\_\+little\+\_\+endian@{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+write\+\_\+raw\+\_\+uint32\+\_\+little\+\_\+endian}}
+\index{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+write\+\_\+raw\+\_\+uint32\+\_\+little\+\_\+endian@{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+write\+\_\+raw\+\_\+uint32\+\_\+little\+\_\+endian}!lib\+F\+L\+A\+C/bitwriter.\+c@{lib\+F\+L\+A\+C/bitwriter.\+c}}
+\subsubsection[{\texorpdfstring{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+write\+\_\+raw\+\_\+uint32\+\_\+little\+\_\+endian(\+F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Writer $\ast$bw, F\+L\+A\+C\+\_\+\+\_\+uint32 val)}{FLAC__bitwriter_write_raw_uint32_little_endian(FLAC__BitWriter *bw, FLAC__uint32 val)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf F\+L\+A\+C\+\_\+\+\_\+bool} F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+write\+\_\+raw\+\_\+uint32\+\_\+little\+\_\+endian (
+\begin{DoxyParamCaption}
+\item[{{\bf F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Writer} $\ast$}]{bw, }
+\item[{{\bf F\+L\+A\+C\+\_\+\+\_\+uint32}}]{val}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{lib_f_l_a_c_2bitwriter_8c_a55b1078146573cf88fada185233e0105}{}\label{lib_f_l_a_c_2bitwriter_8c_a55b1078146573cf88fada185233e0105}
+
+
+Definition at line 365 of file bitwriter.\+c.
+
+\index{lib\+F\+L\+A\+C/bitwriter.\+c@{lib\+F\+L\+A\+C/bitwriter.\+c}!F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+write\+\_\+raw\+\_\+uint64@{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+write\+\_\+raw\+\_\+uint64}}
+\index{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+write\+\_\+raw\+\_\+uint64@{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+write\+\_\+raw\+\_\+uint64}!lib\+F\+L\+A\+C/bitwriter.\+c@{lib\+F\+L\+A\+C/bitwriter.\+c}}
+\subsubsection[{\texorpdfstring{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+write\+\_\+raw\+\_\+uint64(\+F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Writer $\ast$bw, F\+L\+A\+C\+\_\+\+\_\+uint64 val, unsigned bits)}{FLAC__bitwriter_write_raw_uint64(FLAC__BitWriter *bw, FLAC__uint64 val, unsigned bits)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf F\+L\+A\+C\+\_\+\+\_\+bool} F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+write\+\_\+raw\+\_\+uint64 (
+\begin{DoxyParamCaption}
+\item[{{\bf F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Writer} $\ast$}]{bw, }
+\item[{{\bf F\+L\+A\+C\+\_\+\+\_\+uint64}}]{val, }
+\item[{unsigned}]{bits}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{lib_f_l_a_c_2bitwriter_8c_aa14cf60a67862de38f8e8299099a5b6a}{}\label{lib_f_l_a_c_2bitwriter_8c_aa14cf60a67862de38f8e8299099a5b6a}
+
+
+Definition at line 353 of file bitwriter.\+c.
+
+\index{lib\+F\+L\+A\+C/bitwriter.\+c@{lib\+F\+L\+A\+C/bitwriter.\+c}!F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+write\+\_\+rice\+\_\+signed@{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+write\+\_\+rice\+\_\+signed}}
+\index{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+write\+\_\+rice\+\_\+signed@{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+write\+\_\+rice\+\_\+signed}!lib\+F\+L\+A\+C/bitwriter.\+c@{lib\+F\+L\+A\+C/bitwriter.\+c}}
+\subsubsection[{\texorpdfstring{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+write\+\_\+rice\+\_\+signed(\+F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Writer $\ast$bw, F\+L\+A\+C\+\_\+\+\_\+int32 val, unsigned parameter)}{FLAC__bitwriter_write_rice_signed(FLAC__BitWriter *bw, FLAC__int32 val, unsigned parameter)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf F\+L\+A\+C\+\_\+\+\_\+bool} F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+write\+\_\+rice\+\_\+signed (
+\begin{DoxyParamCaption}
+\item[{{\bf F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Writer} $\ast$}]{bw, }
+\item[{{\bf F\+L\+A\+C\+\_\+\+\_\+int32}}]{val, }
+\item[{unsigned}]{parameter}
+\end{DoxyParamCaption}
+)}\hypertarget{lib_f_l_a_c_2bitwriter_8c_a5b528462ff1f9b21833d93b43612ca82}{}\label{lib_f_l_a_c_2bitwriter_8c_a5b528462ff1f9b21833d93b43612ca82}
+
+
+Definition at line 480 of file bitwriter.\+c.
+
+\index{lib\+F\+L\+A\+C/bitwriter.\+c@{lib\+F\+L\+A\+C/bitwriter.\+c}!F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+write\+\_\+rice\+\_\+signed\+\_\+block@{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+write\+\_\+rice\+\_\+signed\+\_\+block}}
+\index{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+write\+\_\+rice\+\_\+signed\+\_\+block@{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+write\+\_\+rice\+\_\+signed\+\_\+block}!lib\+F\+L\+A\+C/bitwriter.\+c@{lib\+F\+L\+A\+C/bitwriter.\+c}}
+\subsubsection[{\texorpdfstring{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+write\+\_\+rice\+\_\+signed\+\_\+block(\+F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Writer $\ast$bw, const F\+L\+A\+C\+\_\+\+\_\+int32 $\ast$vals, unsigned nvals, unsigned parameter)}{FLAC__bitwriter_write_rice_signed_block(FLAC__BitWriter *bw, const FLAC__int32 *vals, unsigned nvals, unsigned parameter)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf F\+L\+A\+C\+\_\+\+\_\+bool} F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+write\+\_\+rice\+\_\+signed\+\_\+block (
+\begin{DoxyParamCaption}
+\item[{{\bf F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Writer} $\ast$}]{bw, }
+\item[{{\bf const} {\bf F\+L\+A\+C\+\_\+\+\_\+int32} $\ast$}]{vals, }
+\item[{unsigned}]{nvals, }
+\item[{unsigned}]{parameter}
+\end{DoxyParamCaption}
+)}\hypertarget{lib_f_l_a_c_2bitwriter_8c_a1affdfdfdbaf243b7426cc2d04eaf2e3}{}\label{lib_f_l_a_c_2bitwriter_8c_a1affdfdfdbaf243b7426cc2d04eaf2e3}
+
+
+Definition at line 506 of file bitwriter.\+c.
+
+\index{lib\+F\+L\+A\+C/bitwriter.\+c@{lib\+F\+L\+A\+C/bitwriter.\+c}!F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+write\+\_\+unary\+\_\+unsigned@{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+write\+\_\+unary\+\_\+unsigned}}
+\index{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+write\+\_\+unary\+\_\+unsigned@{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+write\+\_\+unary\+\_\+unsigned}!lib\+F\+L\+A\+C/bitwriter.\+c@{lib\+F\+L\+A\+C/bitwriter.\+c}}
+\subsubsection[{\texorpdfstring{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+write\+\_\+unary\+\_\+unsigned(\+F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Writer $\ast$bw, unsigned val)}{FLAC__bitwriter_write_unary_unsigned(FLAC__BitWriter *bw, unsigned val)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf F\+L\+A\+C\+\_\+\+\_\+bool} F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+write\+\_\+unary\+\_\+unsigned (
+\begin{DoxyParamCaption}
+\item[{{\bf F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Writer} $\ast$}]{bw, }
+\item[{unsigned}]{val}
+\end{DoxyParamCaption}
+)}\hypertarget{lib_f_l_a_c_2bitwriter_8c_aabfd19bdf430b36ffc2e6f2902b97d89}{}\label{lib_f_l_a_c_2bitwriter_8c_aabfd19bdf430b36ffc2e6f2902b97d89}
+
+
+Definition at line 394 of file bitwriter.\+c.
+
+\index{lib\+F\+L\+A\+C/bitwriter.\+c@{lib\+F\+L\+A\+C/bitwriter.\+c}!F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+write\+\_\+utf8\+\_\+uint32@{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+write\+\_\+utf8\+\_\+uint32}}
+\index{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+write\+\_\+utf8\+\_\+uint32@{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+write\+\_\+utf8\+\_\+uint32}!lib\+F\+L\+A\+C/bitwriter.\+c@{lib\+F\+L\+A\+C/bitwriter.\+c}}
+\subsubsection[{\texorpdfstring{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+write\+\_\+utf8\+\_\+uint32(\+F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Writer $\ast$bw, F\+L\+A\+C\+\_\+\+\_\+uint32 val)}{FLAC__bitwriter_write_utf8_uint32(FLAC__BitWriter *bw, FLAC__uint32 val)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf F\+L\+A\+C\+\_\+\+\_\+bool} F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+write\+\_\+utf8\+\_\+uint32 (
+\begin{DoxyParamCaption}
+\item[{{\bf F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Writer} $\ast$}]{bw, }
+\item[{{\bf F\+L\+A\+C\+\_\+\+\_\+uint32}}]{val}
+\end{DoxyParamCaption}
+)}\hypertarget{lib_f_l_a_c_2bitwriter_8c_ade687d0d2f1c0617bce678cd652a44e6}{}\label{lib_f_l_a_c_2bitwriter_8c_ade687d0d2f1c0617bce678cd652a44e6}
+
+
+Definition at line 721 of file bitwriter.\+c.
+
+\index{lib\+F\+L\+A\+C/bitwriter.\+c@{lib\+F\+L\+A\+C/bitwriter.\+c}!F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+write\+\_\+utf8\+\_\+uint64@{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+write\+\_\+utf8\+\_\+uint64}}
+\index{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+write\+\_\+utf8\+\_\+uint64@{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+write\+\_\+utf8\+\_\+uint64}!lib\+F\+L\+A\+C/bitwriter.\+c@{lib\+F\+L\+A\+C/bitwriter.\+c}}
+\subsubsection[{\texorpdfstring{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+write\+\_\+utf8\+\_\+uint64(\+F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Writer $\ast$bw, F\+L\+A\+C\+\_\+\+\_\+uint64 val)}{FLAC__bitwriter_write_utf8_uint64(FLAC__BitWriter *bw, FLAC__uint64 val)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf F\+L\+A\+C\+\_\+\+\_\+bool} F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+write\+\_\+utf8\+\_\+uint64 (
+\begin{DoxyParamCaption}
+\item[{{\bf F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Writer} $\ast$}]{bw, }
+\item[{{\bf F\+L\+A\+C\+\_\+\+\_\+uint64}}]{val}
+\end{DoxyParamCaption}
+)}\hypertarget{lib_f_l_a_c_2bitwriter_8c_a21e089ece69e48b647214e30b0435b06}{}\label{lib_f_l_a_c_2bitwriter_8c_a21e089ece69e48b647214e30b0435b06}
+
+
+Definition at line 767 of file bitwriter.\+c.
+
+\index{lib\+F\+L\+A\+C/bitwriter.\+c@{lib\+F\+L\+A\+C/bitwriter.\+c}!F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+write\+\_\+zeroes@{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+write\+\_\+zeroes}}
+\index{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+write\+\_\+zeroes@{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+write\+\_\+zeroes}!lib\+F\+L\+A\+C/bitwriter.\+c@{lib\+F\+L\+A\+C/bitwriter.\+c}}
+\subsubsection[{\texorpdfstring{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+write\+\_\+zeroes(\+F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Writer $\ast$bw, unsigned bits)}{FLAC__bitwriter_write_zeroes(FLAC__BitWriter *bw, unsigned bits)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf F\+L\+A\+C\+\_\+\+\_\+bool} F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+write\+\_\+zeroes (
+\begin{DoxyParamCaption}
+\item[{{\bf F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Writer} $\ast$}]{bw, }
+\item[{unsigned}]{bits}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{lib_f_l_a_c_2bitwriter_8c_a289a5fd39585a6f75c9e0480553dac20}{}\label{lib_f_l_a_c_2bitwriter_8c_a289a5fd39585a6f75c9e0480553dac20}
+
+
+Definition at line 267 of file bitwriter.\+c.
+
+\index{lib\+F\+L\+A\+C/bitwriter.\+c@{lib\+F\+L\+A\+C/bitwriter.\+c}!F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+zero\+\_\+pad\+\_\+to\+\_\+byte\+\_\+boundary@{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+zero\+\_\+pad\+\_\+to\+\_\+byte\+\_\+boundary}}
+\index{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+zero\+\_\+pad\+\_\+to\+\_\+byte\+\_\+boundary@{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+zero\+\_\+pad\+\_\+to\+\_\+byte\+\_\+boundary}!lib\+F\+L\+A\+C/bitwriter.\+c@{lib\+F\+L\+A\+C/bitwriter.\+c}}
+\subsubsection[{\texorpdfstring{F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+zero\+\_\+pad\+\_\+to\+\_\+byte\+\_\+boundary(\+F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Writer $\ast$bw)}{FLAC__bitwriter_zero_pad_to_byte_boundary(FLAC__BitWriter *bw)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf F\+L\+A\+C\+\_\+\+\_\+bool} F\+L\+A\+C\+\_\+\+\_\+bitwriter\+\_\+zero\+\_\+pad\+\_\+to\+\_\+byte\+\_\+boundary (
+\begin{DoxyParamCaption}
+\item[{{\bf F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Writer} $\ast$}]{bw}
+\end{DoxyParamCaption}
+)}\hypertarget{lib_f_l_a_c_2bitwriter_8c_a0d6e3fded44c6f4d172692be31c13de9}{}\label{lib_f_l_a_c_2bitwriter_8c_a0d6e3fded44c6f4d172692be31c13de9}
+
+
+Definition at line 822 of file bitwriter.\+c.
+

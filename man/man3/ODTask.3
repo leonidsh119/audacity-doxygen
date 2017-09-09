@@ -1,0 +1,492 @@
+.TH "ODTask" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+ODTask \- A class representing a modular task to be used with the On-Demand structures\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <ODTask\&.h>\fP
+.PP
+Inherited by \fBODComputeSummaryTask\fP, and \fBODDecodeTask\fP\&.
+.SS "Public Types"
+
+.in +1c
+.ti -1c
+.RI "enum { \fBeODNone\fP = 0x00000000, \fBeODFLAC\fP = 0x00000001, \fBeODMP3\fP = 0x00000002, \fBeODFFMPEG\fP = 0x00000004, \fBeODPCMSummary\fP = 0x00001000, \fBeODOTHER\fP = 0x10000000 }"
+.br
+.in -1c
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBODTask\fP ()"
+.br
+.RI "\fIConstructs an \fBODTask\fP\&. \fP"
+.ti -1c
+.RI "virtual \fB~ODTask\fP ()"
+.br
+.ti -1c
+.RI "virtual \fBODTask\fP * \fBClone\fP ()=0"
+.br
+.ti -1c
+.RI "virtual unsigned \fBint\fP \fBGetODType\fP ()"
+.br
+.RI "\fISubclasses should override to return respective type\&. \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBDoSome\fP (float amountWork=0\&.0)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBDoAll\fP ()"
+.br
+.RI "\fICall DoSome until PercentComplete >= 1\&.0\&. \fP"
+.ti -1c
+.RI "virtual float \fBPercentComplete\fP ()"
+.br
+.RI "\fIreturn the amount of the task that has been completed\&. 0\&.0 to 1\&.0 \fP"
+.ti -1c
+.RI "virtual \fBbool\fP \fBUsesCustomWorkUntilPercentage\fP ()"
+.br
+.ti -1c
+.RI "virtual float \fBComputeNextWorkUntilPercentageComplete\fP ()"
+.br
+.ti -1c
+.RI "virtual \fBbool\fP \fBCanMergeWith\fP (\fBODTask\fP *otherTask)"
+.br
+.ti -1c
+.RI "virtual \fBvoid\fP \fBStopUsingWaveTrack\fP (\fBWaveTrack\fP *track)"
+.br
+.ti -1c
+.RI "virtual \fBvoid\fP \fBReplaceWaveTrack\fP (\fBWaveTrack\fP *oldTrack, \fBWaveTrack\fP *newTrack)"
+.br
+.RI "\fIReplaces all instances to a wavetrack with a NEW one, effectively transferring the task\&. \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBAddWaveTrack\fP (\fBWaveTrack\fP *track)"
+.br
+.RI "\fIAdds a \fBWaveTrack\fP to do the task for\&. \fP"
+.ti -1c
+.RI "virtual \fBint\fP \fBGetNumWaveTracks\fP ()"
+.br
+.ti -1c
+.RI "virtual \fBWaveTrack\fP * \fBGetWaveTrack\fP (\fBint\fP \fBi\fP)"
+.br
+.ti -1c
+.RI "virtual \fBvoid\fP \fBDemandTrackUpdate\fP (\fBWaveTrack\fP *track, double seconds)"
+.br
+.RI "\fIchanges the tasks associated with this Waveform to process the task from a different point in the track \fP"
+.ti -1c
+.RI "\fBbool\fP \fBIsComplete\fP ()"
+.br
+.RI "\fIreturn \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBTerminateAndBlock\fP ()"
+.br
+.ti -1c
+.RI "virtual \fBvoid\fP \fBTerminate\fP ()"
+.br
+.RI "\fIreleases memory that the \fBODTask\fP owns\&. Subclasses should override\&. \fP"
+.ti -1c
+.RI "virtual \fBconst\fP char * \fBGetTaskName\fP ()"
+.br
+.ti -1c
+.RI "virtual \fBsampleCount\fP \fBGetDemandSample\fP ()"
+.br
+.ti -1c
+.RI "virtual \fBvoid\fP \fBSetDemandSample\fP (\fBsampleCount\fP sample)"
+.br
+.ti -1c
+.RI "virtual \fBvoid\fP \fBRecalculatePercentComplete\fP ()"
+.br
+.RI "\fIdoes an od update and then recalculates the data\&. \fP"
+.ti -1c
+.RI "\fBint\fP \fBGetTaskNumber\fP ()"
+.br
+.RI "\fIreturns the number of tasks created before this instance\&. \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBSetNeedsODUpdate\fP ()"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBGetNeedsODUpdate\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBResetNeedsODUpdate\fP ()"
+.br
+.ti -1c
+.RI "virtual \fBconst\fP wxChar * \fBGetTip\fP ()=0"
+.br
+.ti -1c
+.RI "virtual \fBbool\fP \fBIsTaskAssociatedWithProject\fP (\fBAudacityProject\fP *proj)"
+.br
+.RI "\fIreturns true if the task is associated with the project\&. \fP"
+.ti -1c
+.RI "\fBbool\fP \fBIsRunning\fP ()"
+.br
+.in -1c
+.SS "Public Attributes"
+
+.in +1c
+.ti -1c
+.RI "enum ODTask:: { \&.\&.\&. }  \fBODTypeEnum\fP"
+.br
+.in -1c
+.SS "Protected Member Functions"
+
+.in +1c
+.ti -1c
+.RI "virtual \fBvoid\fP \fBCalculatePercentComplete\fP ()=0"
+.br
+.RI "\fIcalculates the percentage complete from existing data\&. \fP"
+.ti -1c
+.RI "virtual \fBvoid\fP \fBDoSomeInternal\fP ()=0"
+.br
+.ti -1c
+.RI "virtual \fBvoid\fP \fBUpdate\fP ()"
+.br
+.RI "\fIvirtual method called before DoSomeInternal is used from DoSome\&. \fP"
+.ti -1c
+.RI "virtual \fBvoid\fP \fBODUpdate\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBSetIsRunning\fP (\fBbool\fP \fBvalue\fP)"
+.br
+.in -1c
+.SS "Protected Attributes"
+
+.in +1c
+.ti -1c
+.RI "\fBint\fP \fBmTaskNumber\fP"
+.br
+.ti -1c
+.RI "volatile float \fBmPercentComplete\fP"
+.br
+.ti -1c
+.RI "\fBODLock\fP \fBmPercentCompleteMutex\fP"
+.br
+.ti -1c
+.RI "volatile \fBbool\fP \fBmDoingTask\fP"
+.br
+.ti -1c
+.RI "volatile \fBbool\fP \fBmTaskStarted\fP"
+.br
+.ti -1c
+.RI "volatile \fBbool\fP \fBmTerminate\fP"
+.br
+.ti -1c
+.RI "\fBODLock\fP \fBmTerminateMutex\fP"
+.br
+.ti -1c
+.RI "\fBODLock\fP \fBmBlockUntilTerminateMutex\fP"
+.br
+.ti -1c
+.RI "std::vector< \fBWaveTrack\fP * > \fBmWaveTracks\fP"
+.br
+.ti -1c
+.RI "\fBODLock\fP \fBmWaveTrackMutex\fP"
+.br
+.ti -1c
+.RI "volatile \fBsampleCount\fP \fBmDemandSample\fP"
+.br
+.ti -1c
+.RI "\fBODLock\fP \fBmDemandSampleMutex\fP"
+.br
+.ti -1c
+.RI "volatile \fBbool\fP \fBmIsRunning\fP"
+.br
+.ti -1c
+.RI "\fBODLock\fP \fBmIsRunningMutex\fP"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+A class representing a modular task to be used with the On-Demand structures\&. 
+
+\fBODTask\fP is an abstract class that outlines the methods that will be used to support On-Demand background loading of files\&. These ODTasks are generally meant to be run in a background thread\&. 
+.PP
+Definition at line 38 of file ODTask\&.h\&.
+.SH "Member Enumeration Documentation"
+.PP 
+.SS "anonymous enum"
+
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fIeODNone \fP\fP
+.TP
+\fB\fIeODFLAC \fP\fP
+.TP
+\fB\fIeODMP3 \fP\fP
+.TP
+\fB\fIeODFFMPEG \fP\fP
+.TP
+\fB\fIeODPCMSummary \fP\fP
+.TP
+\fB\fIeODOTHER \fP\fP
+.PP
+Definition at line 41 of file ODTask\&.h\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "ODTask::ODTask ()"
+
+.PP
+Constructs an \fBODTask\fP\&. 
+.PP
+Definition at line 33 of file ODTask\&.cpp\&.
+.SS "virtual ODTask::~ODTask ()\fC [inline]\fP, \fC [virtual]\fP"
+
+.PP
+Definition at line 54 of file ODTask\&.h\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "\fBvoid\fP ODTask::AddWaveTrack (\fBWaveTrack\fP * track)"
+
+.PP
+Adds a \fBWaveTrack\fP to do the task for\&. Sets the wavetrack that will be analyzed for ODPCMAliasBlockFiles that will have their summaries computed and written to disk\&. 
+.PP
+Definition at line 276 of file ODTask\&.cpp\&.
+.SS "virtual \fBvoid\fP ODTask::CalculatePercentComplete ()\fC [protected]\fP, \fC [pure virtual]\fP"
+
+.PP
+calculates the percentage complete from existing data\&. 
+.PP
+Implemented in \fBODDecodeTask\fP, and \fBODComputeSummaryTask\fP\&.
+.SS "virtual \fBbool\fP ODTask::CanMergeWith (\fBODTask\fP * otherTask)\fC [inline]\fP, \fC [virtual]\fP"
+returns whether or not this task and another task can merge together, as when we make two mono tracks stereo\&. for Loading/Summarizing, this is not an issue because the entire track is processed Effects that affect portions of a track will need to check this\&. 
+.PP
+Definition at line 80 of file ODTask\&.h\&.
+.SS "virtual \fBODTask\fP* ODTask::Clone ()\fC [pure virtual]\fP"
+
+.PP
+Implemented in \fBODDecodeFlacTask\fP, \fBODDecodeTask\fP, and \fBODComputeSummaryTask\fP\&.
+.SS "virtual float ODTask::ComputeNextWorkUntilPercentageComplete ()\fC [inline]\fP, \fC [virtual]\fP"
+
+.PP
+Reimplemented in \fBODComputeSummaryTask\fP\&.
+.PP
+Definition at line 75 of file ODTask\&.h\&.
+.SS "\fBvoid\fP ODTask::DemandTrackUpdate (\fBWaveTrack\fP * track, double seconds)\fC [virtual]\fP"
+
+.PP
+changes the tasks associated with this Waveform to process the task from a different point in the track changes the tasks associated with this Waveform to process the task from a different point in the track 
+.PP
+\fBParameters:\fP
+.RS 4
+\fItrack\fP the track to update 
+.br
+\fIseconds\fP the point in the track from which the tasks associated with track should begin processing from\&. 
+.RE
+.PP
+
+.PP
+Reimplemented in \fBODDecodeTask\fP\&.
+.PP
+Definition at line 327 of file ODTask\&.cpp\&.
+.SS "\fBvoid\fP ODTask::DoAll ()"
+
+.PP
+Call DoSome until PercentComplete >= 1\&.0\&. 
+.SS "\fBvoid\fP ODTask::DoSome (float amountWork = \fC0\&.0\fP)"
+Do a modular part of the task\&. For example, if the task is to load the entire file, load one \fBBlockFile\fP\&. Relies on \fBDoSomeInternal()\fP, which is the subclasses must implement\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIamountWork\fP the percent amount of the total job to do\&. 1\&.0 represents the entire job\&. the default of 0\&.0 will do the smallest unit of work possible 
+.RE
+.PP
+
+.PP
+Definition at line 70 of file ODTask\&.cpp\&.
+.SS "virtual \fBvoid\fP ODTask::DoSomeInternal ()\fC [protected]\fP, \fC [pure virtual]\fP"
+pure virtual function that does some part of the task this object represents\&. this function is meant to be called repeatedly until the IsComplete is true\&. Does the smallest unit of work for this task\&. 
+.PP
+Implemented in \fBODDecodeTask\fP, and \fBODComputeSummaryTask\fP\&.
+.SS "\fBsampleCount\fP ODTask::GetDemandSample ()\fC [virtual]\fP"
+
+.PP
+Definition at line 230 of file ODTask\&.cpp\&.
+.SS "\fBbool\fP ODTask::GetNeedsODUpdate ()"
+
+.PP
+Definition at line 298 of file ODTask\&.cpp\&.
+.SS "\fBint\fP ODTask::GetNumWaveTracks ()\fC [virtual]\fP"
+
+.PP
+Definition at line 282 of file ODTask\&.cpp\&.
+.SS "virtual unsigned \fBint\fP ODTask::GetODType ()\fC [inline]\fP, \fC [virtual]\fP"
+
+.PP
+Subclasses should override to return respective type\&. 
+.PP
+Reimplemented in \fBODDecodeTask\fP, \fBODDecodeFlacTask\fP, and \fBODComputeSummaryTask\fP\&.
+.PP
+Definition at line 60 of file ODTask\&.h\&.
+.SS "virtual \fBconst\fP char* ODTask::GetTaskName ()\fC [inline]\fP, \fC [virtual]\fP"
+
+.PP
+Reimplemented in \fBODDecodeTask\fP, and \fBODComputeSummaryTask\fP\&.
+.PP
+Definition at line 102 of file ODTask\&.h\&.
+.SS "\fBint\fP ODTask::GetTaskNumber ()\fC [inline]\fP"
+
+.PP
+returns the number of tasks created before this instance\&. 
+.PP
+Definition at line 112 of file ODTask\&.h\&.
+.SS "virtual \fBconst\fP wxChar* ODTask::GetTip ()\fC [pure virtual]\fP"
+
+.PP
+Implemented in \fBODDecodeTask\fP, and \fBODComputeSummaryTask\fP\&.
+.SS "\fBWaveTrack\fP * ODTask::GetWaveTrack (\fBint\fP i)\fC [virtual]\fP"
+
+.PP
+Definition at line 264 of file ODTask\&.cpp\&.
+.SS "\fBbool\fP ODTask::IsComplete ()"
+
+.PP
+return 
+.PP
+Definition at line 258 of file ODTask\&.cpp\&.
+.SS "\fBbool\fP ODTask::IsRunning ()"
+
+.PP
+Definition at line 221 of file ODTask\&.cpp\&.
+.SS "\fBbool\fP ODTask::IsTaskAssociatedWithProject (\fBAudacityProject\fP * proj)\fC [virtual]\fP"
+
+.PP
+returns true if the task is associated with the project\&. 
+.PP
+Definition at line 177 of file ODTask\&.cpp\&.
+.SS "\fBvoid\fP ODTask::ODUpdate ()\fC [protected]\fP, \fC [virtual]\fP"
+virtual method called in DoSome everytime the user has demanded some OD function so that the \fBODTask\fP can readjust its computation order\&. By default just calls \fBUpdate()\fP, but subclasses with special needs can override this 
+.PP
+Definition at line 208 of file ODTask\&.cpp\&.
+.SS "float ODTask::PercentComplete ()\fC [virtual]\fP"
+
+.PP
+return the amount of the task that has been completed\&. 0\&.0 to 1\&.0 
+.PP
+Definition at line 249 of file ODTask\&.cpp\&.
+.SS "\fBvoid\fP ODTask::RecalculatePercentComplete ()\fC [virtual]\fP"
+
+.PP
+does an od update and then recalculates the data\&. 
+.PP
+Definition at line 315 of file ODTask\&.cpp\&.
+.SS "\fBvoid\fP ODTask::ReplaceWaveTrack (\fBWaveTrack\fP * oldTrack, \fBWaveTrack\fP * newTrack)\fC [virtual]\fP"
+
+.PP
+Replaces all instances to a wavetrack with a NEW one, effectively transferring the task\&. Replaces all instances to a wavetrack with a NEW one, effectively transferring the task\&. \fBODTask\fP has no wavetrack, so it does nothing\&. But subclasses that do should override this\&. 
+.PP
+Definition at line 361 of file ODTask\&.cpp\&.
+.SS "\fBvoid\fP ODTask::ResetNeedsODUpdate ()"
+
+.PP
+Definition at line 307 of file ODTask\&.cpp\&.
+.SS "\fBvoid\fP ODTask::SetDemandSample (\fBsampleCount\fP sample)\fC [virtual]\fP"
+
+.PP
+Definition at line 239 of file ODTask\&.cpp\&.
+.SS "\fBvoid\fP ODTask::SetIsRunning (\fBbool\fP value)\fC [protected]\fP"
+
+.PP
+Definition at line 214 of file ODTask\&.cpp\&.
+.SS "\fBvoid\fP ODTask::SetNeedsODUpdate ()"
+
+.PP
+Definition at line 292 of file ODTask\&.cpp\&.
+.SS "\fBvoid\fP ODTask::StopUsingWaveTrack (\fBWaveTrack\fP * track)\fC [virtual]\fP"
+
+.PP
+Definition at line 349 of file ODTask\&.cpp\&.
+.SS "virtual \fBvoid\fP ODTask::Terminate ()\fC [inline]\fP, \fC [virtual]\fP"
+
+.PP
+releases memory that the \fBODTask\fP owns\&. Subclasses should override\&. 
+.PP
+Reimplemented in \fBODComputeSummaryTask\fP\&.
+.PP
+Definition at line 100 of file ODTask\&.h\&.
+.SS "\fBvoid\fP ODTask::TerminateAndBlock ()"
+
+.PP
+Definition at line 49 of file ODTask\&.cpp\&.
+.SS "virtual \fBvoid\fP ODTask::Update ()\fC [inline]\fP, \fC [protected]\fP, \fC [virtual]\fP"
+
+.PP
+virtual method called before DoSomeInternal is used from DoSome\&. 
+.PP
+Reimplemented in \fBODDecodeTask\fP, and \fBODComputeSummaryTask\fP\&.
+.PP
+Definition at line 137 of file ODTask\&.h\&.
+.SS "virtual \fBbool\fP ODTask::UsesCustomWorkUntilPercentage ()\fC [inline]\fP, \fC [virtual]\fP"
+
+.PP
+Reimplemented in \fBODComputeSummaryTask\fP\&.
+.PP
+Definition at line 74 of file ODTask\&.h\&.
+.SH "Member Data Documentation"
+.PP 
+.SS "\fBODLock\fP ODTask::mBlockUntilTerminateMutex\fC [protected]\fP"
+
+.PP
+Definition at line 156 of file ODTask\&.h\&.
+.SS "volatile \fBsampleCount\fP ODTask::mDemandSample\fC [protected]\fP"
+
+.PP
+Definition at line 161 of file ODTask\&.h\&.
+.SS "\fBODLock\fP ODTask::mDemandSampleMutex\fC [protected]\fP"
+
+.PP
+Definition at line 162 of file ODTask\&.h\&.
+.SS "volatile \fBbool\fP ODTask::mDoingTask\fC [protected]\fP"
+
+.PP
+Definition at line 151 of file ODTask\&.h\&.
+.SS "volatile \fBbool\fP ODTask::mIsRunning\fC [protected]\fP"
+
+.PP
+Definition at line 164 of file ODTask\&.h\&.
+.SS "\fBODLock\fP ODTask::mIsRunningMutex\fC [protected]\fP"
+
+.PP
+Definition at line 165 of file ODTask\&.h\&.
+.SS "volatile float ODTask::mPercentComplete\fC [protected]\fP"
+
+.PP
+Definition at line 149 of file ODTask\&.h\&.
+.SS "\fBODLock\fP ODTask::mPercentCompleteMutex\fC [protected]\fP"
+
+.PP
+Definition at line 150 of file ODTask\&.h\&.
+.SS "\fBint\fP ODTask::mTaskNumber\fC [protected]\fP"
+
+.PP
+Definition at line 148 of file ODTask\&.h\&.
+.SS "volatile \fBbool\fP ODTask::mTaskStarted\fC [protected]\fP"
+
+.PP
+Definition at line 152 of file ODTask\&.h\&.
+.SS "volatile \fBbool\fP ODTask::mTerminate\fC [protected]\fP"
+
+.PP
+Definition at line 153 of file ODTask\&.h\&.
+.SS "\fBODLock\fP ODTask::mTerminateMutex\fC [protected]\fP"
+
+.PP
+Definition at line 154 of file ODTask\&.h\&.
+.SS "\fBODLock\fP ODTask::mWaveTrackMutex\fC [protected]\fP"
+
+.PP
+Definition at line 159 of file ODTask\&.h\&.
+.SS "std::vector<\fBWaveTrack\fP*> ODTask::mWaveTracks\fC [protected]\fP"
+
+.PP
+Definition at line 158 of file ODTask\&.h\&.
+.SS "enum { \&.\&.\&. }   ODTask::ODTypeEnum"
+
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

@@ -1,0 +1,76 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/lib-src/portaudio-v19/src/common/pa_allocation.h" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/lib-src/portaudio-v19/src/common/pa_allocation.h \- Allocation Group prototypes\&. An Allocation Group makes it easy to allocate multiple blocks of memory and free them all at once\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "struct \fBPaUtilAllocationGroup\fP"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBPaUtilAllocationGroup\fP * \fBPaUtil_CreateAllocationGroup\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBPaUtil_DestroyAllocationGroup\fP (\fBPaUtilAllocationGroup\fP *group)"
+.br
+.ti -1c
+.RI "\fBvoid\fP * \fBPaUtil_GroupAllocateMemory\fP (\fBPaUtilAllocationGroup\fP *group, long \fBsize\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBPaUtil_GroupFreeMemory\fP (\fBPaUtilAllocationGroup\fP *group, \fBvoid\fP *\fBbuffer\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBPaUtil_FreeAllAllocations\fP (\fBPaUtilAllocationGroup\fP *group)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Allocation Group prototypes\&. An Allocation Group makes it easy to allocate multiple blocks of memory and free them all at once\&. 
+
+An allocation group is useful for keeping track of multiple blocks of memory which are allocated at the same time (such as during initialization) and need to be deallocated at the same time\&. The allocation group maintains a list of allocated blocks, and can free all allocations at once\&. This can be usefull for cleaning up after a partially initialized object fails\&.
+.PP
+The allocation group implementation is built on top of the lower level allocation functions defined in \fBpa_util\&.h\fP 
+.PP
+Definition in file \fBpa_allocation\&.h\fP\&.
+.SH "Function Documentation"
+.PP 
+.SS "\fBPaUtilAllocationGroup\fP* PaUtil_CreateAllocationGroup (\fBvoid\fP)"
+Create an allocation group\&. 
+.PP
+Definition at line 103 of file pa_allocation\&.c\&.
+.SS "\fBvoid\fP PaUtil_DestroyAllocationGroup (\fBPaUtilAllocationGroup\fP * group)"
+Destroy an allocation group, but not the memory allocated through the group\&. 
+.PP
+Definition at line 130 of file pa_allocation\&.c\&.
+.SS "\fBvoid\fP PaUtil_FreeAllAllocations (\fBPaUtilAllocationGroup\fP * group)"
+Free all blocks of memory which have been allocated through the allocation group\&. This function doesn't destroy the group itself\&. 
+.PP
+Definition at line 220 of file pa_allocation\&.c\&.
+.SS "\fBvoid\fP* PaUtil_GroupAllocateMemory (\fBPaUtilAllocationGroup\fP * group, long size)"
+Allocate a block of memory though an allocation group\&. 
+.PP
+Definition at line 146 of file pa_allocation\&.c\&.
+.SS "\fBvoid\fP PaUtil_GroupFreeMemory (\fBPaUtilAllocationGroup\fP * group, \fBvoid\fP * buffer)"
+Free a block of memory that was previously allocated though an allocation group\&. Calling this function is a relatively time consuming operation\&. Under normal circumstances clients should call PaUtil_FreeAllAllocations to free all allocated blocks simultaneously\&. 
+.PP
+\fBSee also:\fP
+.RS 4
+\fBPaUtil_FreeAllAllocations\fP 
+.RE
+.PP
+
+.PP
+Definition at line 183 of file pa_allocation\&.c\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

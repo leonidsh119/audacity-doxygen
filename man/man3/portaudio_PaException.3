@@ -1,0 +1,116 @@
+.TH "portaudio::PaException" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+portaudio::PaException \- Wrapper for PortAudio error codes to C++ exceptions\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <Exception\&.hxx>\fP
+.PP
+Inherits \fBportaudio::Exception\fP\&.
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBPaException\fP (\fBPaError\fP \fBerror\fP)"
+.br
+.RI "\fIWraps a PortAudio error into a PortAudioCpp \fBPaException\fP\&. ///\&. \fP"
+.ti -1c
+.RI "\fBconst\fP char * \fBwhat\fP () \fBconst\fP   throw ()"
+.br
+.RI "\fIAlias for \fBpaErrorText()\fP, to have std::exception compliance\&. ///\&. \fP"
+.ti -1c
+.RI "\fBPaError\fP \fBpaError\fP () \fBconst\fP "
+.br
+.RI "\fIReturns the PortAudio error code (PaError)\&. ///\&. \fP"
+.ti -1c
+.RI "\fBconst\fP char * \fBpaErrorText\fP () \fBconst\fP "
+.br
+.RI "\fIReturns the error as a (zero-terminated) text string\&. ///\&. \fP"
+.ti -1c
+.RI "\fBbool\fP \fBisHostApiError\fP () \fBconst\fP "
+.br
+.RI "\fIReturns true is the error is a \fBHostApi\fP error\&. ///\&. \fP"
+.ti -1c
+.RI "long \fBlastHostApiError\fP () \fBconst\fP "
+.br
+.ti -1c
+.RI "\fBconst\fP char * \fBlastHostApiErrorText\fP () \fBconst\fP "
+.br
+.ti -1c
+.RI "\fBbool\fP \fBoperator==\fP (\fBconst\fP \fBPaException\fP &rhs) \fBconst\fP "
+.br
+.ti -1c
+.RI "\fBbool\fP \fBoperator!=\fP (\fBconst\fP \fBPaException\fP &rhs) \fBconst\fP "
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Wrapper for PortAudio error codes to C++ exceptions\&. 
+
+It wraps up PortAudio's error handling mechanism using C++ exceptions and is derived from std::exception for easy exception handling and to ease integration with other code\&.
+.PP
+To know what exceptions each function may throw, look up the errors that can occure in the PortAudio documentation for the equivalent functions\&.
+.PP
+Some functions are likely to throw an exception (such as Stream::open(), etc) and these should always be called in try{} catch{} blocks and the thrown exceptions should be handled properly (ie\&. the application shouldn't just abort, but merely display a warning dialog to the user or something)\&. However nearly all functions in PortAudioCpp are capable of throwing exceptions\&. When a function like \fBStream::isStopped()\fP throws an exception, it's such an exceptional state that it's not likely that it can be recovered\&. PaExceptions such as these can ``safely'' be left to be handled by some outer catch-all-like mechanism for unrecoverable errors\&. 
+.PP
+Definition at line 54 of file Exception\&.hxx\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "portaudio::PaException::PaException (\fBPaError\fP error)\fC [explicit]\fP"
+
+.PP
+Wraps a PortAudio error into a PortAudioCpp \fBPaException\fP\&. ///\&. 
+.PP
+Definition at line 12 of file Exception\&.cxx\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "\fBbool\fP portaudio::PaException::isHostApiError () const"
+
+.PP
+Returns true is the error is a \fBHostApi\fP error\&. ///\&. 
+.PP
+Definition at line 47 of file Exception\&.cxx\&.
+.SS "long portaudio::PaException::lastHostApiError () const"
+Returns the last \fBHostApi\fP error (which is the current one if \fBisHostApiError()\fP returns true) as an error code\&. 
+.PP
+Definition at line 56 of file Exception\&.cxx\&.
+.SS "\fBconst\fP char * portaudio::PaException::lastHostApiErrorText () const"
+Returns the last \fBHostApi\fP error (which is the current one if \fBisHostApiError()\fP returns true) as a (zero-terminated) text string, if it's available\&. 
+.PP
+Definition at line 66 of file Exception\&.cxx\&.
+.SS "\fBbool\fP portaudio::PaException::operator!= (\fBconst\fP \fBPaException\fP & rhs) const"
+
+.PP
+Definition at line 78 of file Exception\&.cxx\&.
+.SS "\fBbool\fP portaudio::PaException::operator== (\fBconst\fP \fBPaException\fP & rhs) const"
+
+.PP
+Definition at line 73 of file Exception\&.cxx\&.
+.SS "\fBPaError\fP portaudio::PaException::paError () const"
+
+.PP
+Returns the PortAudio error code (PaError)\&. ///\&. 
+.PP
+Definition at line 31 of file Exception\&.cxx\&.
+.SS "\fBconst\fP char * portaudio::PaException::paErrorText () const"
+
+.PP
+Returns the error as a (zero-terminated) text string\&. ///\&. 
+.PP
+Definition at line 39 of file Exception\&.cxx\&.
+.SS "\fBconst\fP char * portaudio::PaException::what () const\fC [virtual]\fP"
+
+.PP
+Alias for \fBpaErrorText()\fP, to have std::exception compliance\&. ///\&. 
+.PP
+Implements \fBportaudio::Exception\fP\&.
+.PP
+Definition at line 21 of file Exception\&.cxx\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

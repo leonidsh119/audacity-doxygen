@@ -1,0 +1,43 @@
+.TH "porting" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+porting \- Porting Guide for New Versions
+.SS "Modules"
+
+.in +1c
+.ti -1c
+.RI "\fBPorting from FLAC 1\&.1\&.2 to 1\&.1\&.3\fP"
+.br
+.RI "\fIThis module describes porting from \fBFLAC\fP 1\&.1\&.2 to \fBFLAC\fP 1\&.1\&.3\&. \fP"
+.ti -1c
+.RI "\fBPorting from FLAC 1\&.1\&.3 to 1\&.1\&.4\fP"
+.br
+.RI "\fIThis module describes porting from \fBFLAC\fP 1\&.1\&.3 to \fBFLAC\fP 1\&.1\&.4\&. \fP"
+.ti -1c
+.RI "\fBPorting from FLAC 1\&.1\&.4 to 1\&.2\&.0\fP"
+.br
+.RI "\fIThis module describes porting from \fBFLAC\fP 1\&.1\&.4 to \fBFLAC\fP 1\&.2\&.0\&. \fP"
+.in -1c
+.SH "Detailed Description"
+.PP 
+This module describes differences in the library interfaces from version to version\&. It assists in the porting of code that uses the libraries to newer versions of \fBFLAC\fP\&.
+.PP
+One simple facility for making porting easier that has been added in \fBFLAC\fP 1\&.1\&.3 is a set of \fC#defines\fP in \fCexport\&.h\fP of each library's includes (e\&.g\&. \fC\fBinclude/FLAC/export\&.h\fP\fP)\&. The \fC#defines\fP mirror the libraries' \fClibtool version numbers\fP, e\&.g\&. in libFLAC there are \fCFLAC_API_VERSION_CURRENT\fP, \fCFLAC_API_VERSION_REVISION\fP, and \fCFLAC_API_VERSION_AGE\fP\&. These can be used to support multiple versions of an API during the transition phase, e\&.g\&.
+.PP
+.PP
+.nf
+#if !defined(FLAC_API_VERSION_CURRENT) || FLAC_API_VERSION_CURRENT <= 7
+  legacy code
+#else
+  new code
+#endif
+.fi
+.PP
+.PP
+The the source will work for multiple versions and the legacy code can easily be removed when the transition is complete\&.
+.PP
+Another available symbol is FLAC_API_SUPPORTS_OGG_FLAC (defined in \fBinclude/FLAC/export\&.h\fP), which can be used to determine whether or not the library has been compiled with support for Ogg \fBFLAC\fP\&. This is simpler than trying to call an Ogg init function and catching the error\&. 
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

@@ -1,0 +1,61 @@
+\hypertarget{struct___l_v2___worker___schedule}{}\section{\+\_\+\+L\+V2\+\_\+\+Worker\+\_\+\+Schedule Struct Reference}
+\label{struct___l_v2___worker___schedule}\index{\+\_\+\+L\+V2\+\_\+\+Worker\+\_\+\+Schedule@{\+\_\+\+L\+V2\+\_\+\+Worker\+\_\+\+Schedule}}
+
+
+{\ttfamily \#include $<$worker.\+h$>$}
+
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{worker_8h_a9efb80379346b1f939af6d69eb2e08ad}{L\+V2\+\_\+\+Worker\+\_\+\+Schedule\+\_\+\+Handle} \hyperlink{struct___l_v2___worker___schedule_a2ab941993d8d5d0376f079b88a46619c}{handle}
+\item 
+\hyperlink{worker_8h_a5f3f4a39cc339d42f0823524940aee9f}{L\+V2\+\_\+\+Worker\+\_\+\+Status}($\ast$ \hyperlink{struct___l_v2___worker___schedule_a04216002a3a30b5ccdaeb91a58554d26}{schedule\+\_\+work} )(\hyperlink{worker_8h_a9efb80379346b1f939af6d69eb2e08ad}{L\+V2\+\_\+\+Worker\+\_\+\+Schedule\+\_\+\+Handle} \hyperlink{struct___l_v2___worker___schedule_a2ab941993d8d5d0376f079b88a46619c}{handle}, \hyperlink{lib-src_2ffmpeg_2win32_2stdint_8h_a6eb1e68cc391dd753bc8ce896dbb8315}{uint32\+\_\+t} \hyperlink{group__lavu__mem_ga854352f53b148adc24983a58a1866d66}{size}, \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} $\ast$\hyperlink{lib_2expat_8h_ac39e72a1de1cb50dbdc54b08d0432a24}{data})
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+
+
+Definition at line 117 of file worker.\+h.
+
+
+
+\subsection{Member Data Documentation}
+\index{\+\_\+\+L\+V2\+\_\+\+Worker\+\_\+\+Schedule@{\+\_\+\+L\+V2\+\_\+\+Worker\+\_\+\+Schedule}!handle@{handle}}
+\index{handle@{handle}!\+\_\+\+L\+V2\+\_\+\+Worker\+\_\+\+Schedule@{\+\_\+\+L\+V2\+\_\+\+Worker\+\_\+\+Schedule}}
+\subsubsection[{\texorpdfstring{handle}{handle}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf L\+V2\+\_\+\+Worker\+\_\+\+Schedule\+\_\+\+Handle} \+\_\+\+L\+V2\+\_\+\+Worker\+\_\+\+Schedule\+::handle}\hypertarget{struct___l_v2___worker___schedule_a2ab941993d8d5d0376f079b88a46619c}{}\label{struct___l_v2___worker___schedule_a2ab941993d8d5d0376f079b88a46619c}
+Opaque host data. 
+
+Definition at line 121 of file worker.\+h.
+
+\index{\+\_\+\+L\+V2\+\_\+\+Worker\+\_\+\+Schedule@{\+\_\+\+L\+V2\+\_\+\+Worker\+\_\+\+Schedule}!schedule\+\_\+work@{schedule\+\_\+work}}
+\index{schedule\+\_\+work@{schedule\+\_\+work}!\+\_\+\+L\+V2\+\_\+\+Worker\+\_\+\+Schedule@{\+\_\+\+L\+V2\+\_\+\+Worker\+\_\+\+Schedule}}
+\subsubsection[{\texorpdfstring{schedule\+\_\+work}{schedule_work}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf L\+V2\+\_\+\+Worker\+\_\+\+Status}($\ast$ \+\_\+\+L\+V2\+\_\+\+Worker\+\_\+\+Schedule\+::schedule\+\_\+work) ({\bf L\+V2\+\_\+\+Worker\+\_\+\+Schedule\+\_\+\+Handle} {\bf handle}, {\bf uint32\+\_\+t} {\bf size}, {\bf const} {\bf void} $\ast${\bf data})}\hypertarget{struct___l_v2___worker___schedule_a04216002a3a30b5ccdaeb91a58554d26}{}\label{struct___l_v2___worker___schedule_a04216002a3a30b5ccdaeb91a58554d26}
+Request from \hyperlink{namespacewaflib_1_1_task_a859c6336afe027ae782f84b9e49a4f0f}{run()} that the host call the worker.
+
+This function is in the audio threading class. It should be called from \hyperlink{namespacewaflib_1_1_task_a859c6336afe027ae782f84b9e49a4f0f}{run()} to request that the host call the work() method in a non-\/realtime context with the given arguments.
+
+This function is always safe to call from \hyperlink{namespacewaflib_1_1_task_a859c6336afe027ae782f84b9e49a4f0f}{run()}, but it is not guaranteed that the worker is actually called from a different thread. In particular, when free-\/wheeling (e.\+g. for offline rendering), the worker may be executed immediately. This allows single-\/threaded processing with sample accuracy and avoids timing problems when \hyperlink{namespacewaflib_1_1_task_a859c6336afe027ae782f84b9e49a4f0f}{run()} is executing much faster or slower than real-\/time.
+
+Plugins S\+H\+O\+U\+LD be written in such a way that if the worker runs immediately, and responses from the worker are delivered immediately, the effect of the work takes place immediately with sample accuracy.
+
+The {\ttfamily data} M\+U\+ST be safe for the host to copy and later pass to work(), and the host M\+U\+ST guarantee that it will be eventually passed to work() if this function returns L\+V2\+\_\+\+W\+O\+R\+K\+E\+R\+\_\+\+S\+U\+C\+C\+E\+SS.
+
+
+\begin{DoxyParams}{Parameters}
+{\em handle} & The handle field of this struct. \\
+\hline
+{\em size} & The size of {\ttfamily data}. \\
+\hline
+{\em data} & Message to pass to work(), or N\+U\+LL. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 149 of file worker.\+h.
+
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/lv2/lv2/lv2/lv2plug.\+in/ns/ext/worker/\hyperlink{worker_8h}{worker.\+h}\end{DoxyCompactItemize}

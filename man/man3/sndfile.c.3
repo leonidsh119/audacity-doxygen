@@ -1,0 +1,336 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/lib-src/libsndfile/src/sndfile.c" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/lib-src/libsndfile/src/sndfile.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include 'sfconfig\&.h'\fP
+.br
+\fC#include <stdlib\&.h>\fP
+.br
+\fC#include <string\&.h>\fP
+.br
+\fC#include <ctype\&.h>\fP
+.br
+\fC#include 'sndfile\&.h'\fP
+.br
+\fC#include 'sfendian\&.h'\fP
+.br
+\fC#include 'common\&.h'\fP
+.br
+
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "struct \fBErrorStruct\fP"
+.br
+.in -1c
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBSNDFILE_MAGICK\fP   0x1234C0DE"
+.br
+.ti -1c
+.RI "#define \fBVALIDATE_SNDFILE_AND_ASSIGN_PSF\fP(\fBa\fP,  \fBb\fP,  \fBc\fP)"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBSNDFILE\fP * \fBsf_open\fP (\fBconst\fP char *path, \fBint\fP mode, \fBSF_INFO\fP *\fBsfinfo\fP)"
+.br
+.ti -1c
+.RI "\fBSNDFILE\fP * \fBsf_open_fd\fP (\fBint\fP fd, \fBint\fP mode, \fBSF_INFO\fP *\fBsfinfo\fP, \fBint\fP close_desc)"
+.br
+.ti -1c
+.RI "\fBSNDFILE\fP * \fBsf_open_virtual\fP (\fBSF_VIRTUAL_IO\fP *sfvirtual, \fBint\fP mode, \fBSF_INFO\fP *\fBsfinfo\fP, \fBvoid\fP *user_data)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBsf_close\fP (\fBSNDFILE\fP *sndfile)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBsf_write_sync\fP (\fBSNDFILE\fP *sndfile)"
+.br
+.ti -1c
+.RI "\fBconst\fP char * \fBsf_error_number\fP (\fBint\fP errnum)"
+.br
+.ti -1c
+.RI "\fBconst\fP char * \fBsf_strerror\fP (\fBSNDFILE\fP *sndfile)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBsf_error\fP (\fBSNDFILE\fP *sndfile)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBsf_perror\fP (\fBSNDFILE\fP *sndfile)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBsf_error_str\fP (\fBSNDFILE\fP *sndfile, char *\fBstr\fP, size_t maxlen)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBsf_format_check\fP (\fBconst\fP \fBSF_INFO\fP *\fBinfo\fP)"
+.br
+.ti -1c
+.RI "\fBconst\fP char * \fBsf_version_string\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBsf_command\fP (\fBSNDFILE\fP *sndfile, \fBint\fP command, \fBvoid\fP *\fBdata\fP, \fBint\fP datasize)"
+.br
+.ti -1c
+.RI "\fBsf_count_t\fP \fBsf_seek\fP (\fBSNDFILE\fP *sndfile, \fBsf_count_t\fP \fBoffset\fP, \fBint\fP whence)"
+.br
+.ti -1c
+.RI "\fBconst\fP char * \fBsf_get_string\fP (\fBSNDFILE\fP *sndfile, \fBint\fP str_type)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBsf_set_string\fP (\fBSNDFILE\fP *sndfile, \fBint\fP str_type, \fBconst\fP char *\fBstr\fP)"
+.br
+.ti -1c
+.RI "\fBsf_count_t\fP \fBsf_read_raw\fP (\fBSNDFILE\fP *sndfile, \fBvoid\fP *ptr, \fBsf_count_t\fP bytes)"
+.br
+.ti -1c
+.RI "\fBsf_count_t\fP \fBsf_read_short\fP (\fBSNDFILE\fP *sndfile, short *ptr, \fBsf_count_t\fP \fBlen\fP)"
+.br
+.ti -1c
+.RI "\fBsf_count_t\fP \fBsf_readf_short\fP (\fBSNDFILE\fP *sndfile, short *ptr, \fBsf_count_t\fP frames)"
+.br
+.ti -1c
+.RI "\fBsf_count_t\fP \fBsf_read_int\fP (\fBSNDFILE\fP *sndfile, \fBint\fP *ptr, \fBsf_count_t\fP \fBlen\fP)"
+.br
+.ti -1c
+.RI "\fBsf_count_t\fP \fBsf_readf_int\fP (\fBSNDFILE\fP *sndfile, \fBint\fP *ptr, \fBsf_count_t\fP frames)"
+.br
+.ti -1c
+.RI "\fBsf_count_t\fP \fBsf_read_float\fP (\fBSNDFILE\fP *sndfile, float *ptr, \fBsf_count_t\fP \fBlen\fP)"
+.br
+.ti -1c
+.RI "\fBsf_count_t\fP \fBsf_readf_float\fP (\fBSNDFILE\fP *sndfile, float *ptr, \fBsf_count_t\fP frames)"
+.br
+.ti -1c
+.RI "\fBsf_count_t\fP \fBsf_read_double\fP (\fBSNDFILE\fP *sndfile, double *ptr, \fBsf_count_t\fP \fBlen\fP)"
+.br
+.ti -1c
+.RI "\fBsf_count_t\fP \fBsf_readf_double\fP (\fBSNDFILE\fP *sndfile, double *ptr, \fBsf_count_t\fP frames)"
+.br
+.ti -1c
+.RI "\fBsf_count_t\fP \fBsf_write_raw\fP (\fBSNDFILE\fP *sndfile, \fBconst\fP \fBvoid\fP *ptr, \fBsf_count_t\fP \fBlen\fP)"
+.br
+.ti -1c
+.RI "\fBsf_count_t\fP \fBsf_write_short\fP (\fBSNDFILE\fP *sndfile, \fBconst\fP short *ptr, \fBsf_count_t\fP \fBlen\fP)"
+.br
+.ti -1c
+.RI "\fBsf_count_t\fP \fBsf_writef_short\fP (\fBSNDFILE\fP *sndfile, \fBconst\fP short *ptr, \fBsf_count_t\fP frames)"
+.br
+.ti -1c
+.RI "\fBsf_count_t\fP \fBsf_write_int\fP (\fBSNDFILE\fP *sndfile, \fBconst\fP \fBint\fP *ptr, \fBsf_count_t\fP \fBlen\fP)"
+.br
+.ti -1c
+.RI "\fBsf_count_t\fP \fBsf_writef_int\fP (\fBSNDFILE\fP *sndfile, \fBconst\fP \fBint\fP *ptr, \fBsf_count_t\fP frames)"
+.br
+.ti -1c
+.RI "\fBsf_count_t\fP \fBsf_write_float\fP (\fBSNDFILE\fP *sndfile, \fBconst\fP float *ptr, \fBsf_count_t\fP \fBlen\fP)"
+.br
+.ti -1c
+.RI "\fBsf_count_t\fP \fBsf_writef_float\fP (\fBSNDFILE\fP *sndfile, \fBconst\fP float *ptr, \fBsf_count_t\fP frames)"
+.br
+.ti -1c
+.RI "\fBsf_count_t\fP \fBsf_write_double\fP (\fBSNDFILE\fP *sndfile, \fBconst\fP double *ptr, \fBsf_count_t\fP \fBlen\fP)"
+.br
+.ti -1c
+.RI "\fBsf_count_t\fP \fBsf_writef_double\fP (\fBSNDFILE\fP *sndfile, \fBconst\fP double *ptr, \fBsf_count_t\fP frames)"
+.br
+.ti -1c
+.RI "\fBSNDFILE\fP * \fBpsf_open_file\fP (\fBSF_PRIVATE\fP *psf, \fBSF_INFO\fP *\fBsfinfo\fP)"
+.br
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "\fBint\fP \fBsf_errno\fP = 0"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define SNDFILE_MAGICK   0x1234C0DE"
+
+.PP
+Definition at line 29 of file sndfile\&.c\&.
+.SS "#define VALIDATE_SNDFILE_AND_ASSIGN_PSF(\fBa\fP, \fBb\fP, \fBc\fP)"
+\fBValue:\fP
+.PP
+.nf
+{    if ((a) == NULL)                        \
+            {   sf_errno = SFE_BAD_SNDFILE_PTR ;    \\
+				return 0 ;                          \
+                } ;                                 \
+            (b) = (SF_PRIVATE*) (a) ;               \\
+			if ((b)->virtual_io == SF_FALSE &&       \
+                psf_file_valid (b) == 0)            \
+            {   (b)->error = SFE_BAD_FILE_PTR ;     \\
+				return 0 ;                          \
+                } ;                                 \\
+			if ((b)->Magick != SNDFILE_MAGICK)       \
+            {   (b)->error = SFE_BAD_SNDFILE_PTR ;  \\
+				return 0 ;                          \
+                } ;                                 \\
+			if (c) (b)->error = 0 ;                  \
+            }
+.fi
+.PP
+Definition at line 283 of file sndfile\&.c\&.
+.SH "Function Documentation"
+.PP 
+.SS "\fBSNDFILE\fP* psf_open_file (\fBSF_PRIVATE\fP * psf, \fBSF_INFO\fP * sfinfo)"
+
+.PP
+Definition at line 2552 of file sndfile\&.c\&.
+.SS "\fBint\fP sf_close (\fBSNDFILE\fP * sndfile)"
+
+.PP
+Definition at line 401 of file sndfile\&.c\&.
+.SS "\fBint\fP sf_command (\fBSNDFILE\fP * sndfile, \fBint\fP command, \fBvoid\fP * data, \fBint\fP datasize)"
+
+.PP
+Definition at line 838 of file sndfile\&.c\&.
+.SS "\fBint\fP sf_error (\fBSNDFILE\fP * sndfile)"
+
+.PP
+Definition at line 475 of file sndfile\&.c\&.
+.SS "\fBconst\fP char* sf_error_number (\fBint\fP errnum)"
+
+.PP
+Definition at line 425 of file sndfile\&.c\&.
+.SS "\fBint\fP sf_error_str (\fBSNDFILE\fP * sndfile, char * str, size_t maxlen)"
+
+.PP
+Definition at line 514 of file sndfile\&.c\&.
+.SS "\fBint\fP sf_format_check (\fBconst\fP \fBSF_INFO\fP * info)"
+
+.PP
+Definition at line 537 of file sndfile\&.c\&.
+.SS "\fBconst\fP char* sf_get_string (\fBSNDFILE\fP * sndfile, \fBint\fP str_type)"
+
+.PP
+Definition at line 1392 of file sndfile\&.c\&.
+.SS "\fBSNDFILE\fP* sf_open (\fBconst\fP char * path, \fBint\fP mode, \fBSF_INFO\fP * sfinfo)"
+
+.PP
+Definition at line 306 of file sndfile\&.c\&.
+.SS "\fBSNDFILE\fP* sf_open_fd (\fBint\fP fd, \fBint\fP mode, \fBSF_INFO\fP * sfinfo, \fBint\fP close_desc)"
+
+.PP
+Definition at line 334 of file sndfile\&.c\&.
+.SS "\fBSNDFILE\fP* sf_open_virtual (\fBSF_VIRTUAL_IO\fP * sfvirtual, \fBint\fP mode, \fBSF_INFO\fP * sfinfo, \fBvoid\fP * user_data)"
+
+.PP
+Definition at line 362 of file sndfile\&.c\&.
+.SS "\fBint\fP sf_perror (\fBSNDFILE\fP * sndfile)"
+
+.PP
+Definition at line 493 of file sndfile\&.c\&.
+.SS "\fBsf_count_t\fP sf_read_double (\fBSNDFILE\fP * sndfile, double * ptr, \fBsf_count_t\fP len)"
+
+.PP
+Definition at line 1741 of file sndfile\&.c\&.
+.SS "\fBsf_count_t\fP sf_read_float (\fBSNDFILE\fP * sndfile, float * ptr, \fBsf_count_t\fP len)"
+
+.PP
+Definition at line 1649 of file sndfile\&.c\&.
+.SS "\fBsf_count_t\fP sf_read_int (\fBSNDFILE\fP * sndfile, \fBint\fP * ptr, \fBsf_count_t\fP len)"
+
+.PP
+Definition at line 1557 of file sndfile\&.c\&.
+.SS "\fBsf_count_t\fP sf_read_raw (\fBSNDFILE\fP * sndfile, \fBvoid\fP * ptr, \fBsf_count_t\fP bytes)"
+
+.PP
+Definition at line 1416 of file sndfile\&.c\&.
+.SS "\fBsf_count_t\fP sf_read_short (\fBSNDFILE\fP * sndfile, short * ptr, \fBsf_count_t\fP len)"
+
+.PP
+Definition at line 1465 of file sndfile\&.c\&.
+.SS "\fBsf_count_t\fP sf_readf_double (\fBSNDFILE\fP * sndfile, double * ptr, \fBsf_count_t\fP frames)"
+
+.PP
+Definition at line 1788 of file sndfile\&.c\&.
+.SS "\fBsf_count_t\fP sf_readf_float (\fBSNDFILE\fP * sndfile, float * ptr, \fBsf_count_t\fP frames)"
+
+.PP
+Definition at line 1696 of file sndfile\&.c\&.
+.SS "\fBsf_count_t\fP sf_readf_int (\fBSNDFILE\fP * sndfile, \fBint\fP * ptr, \fBsf_count_t\fP frames)"
+
+.PP
+Definition at line 1604 of file sndfile\&.c\&.
+.SS "\fBsf_count_t\fP sf_readf_short (\fBSNDFILE\fP * sndfile, short * ptr, \fBsf_count_t\fP frames)"
+
+.PP
+Definition at line 1512 of file sndfile\&.c\&.
+.SS "\fBsf_count_t\fP sf_seek (\fBSNDFILE\fP * sndfile, \fBsf_count_t\fP offset, \fBint\fP whence)"
+
+.PP
+Definition at line 1274 of file sndfile\&.c\&.
+.SS "\fBint\fP sf_set_string (\fBSNDFILE\fP * sndfile, \fBint\fP str_type, \fBconst\fP char * str)"
+
+.PP
+Definition at line 1404 of file sndfile\&.c\&.
+.SS "\fBconst\fP char* sf_strerror (\fBSNDFILE\fP * sndfile)"
+
+.PP
+Definition at line 447 of file sndfile\&.c\&.
+.SS "\fBconst\fP char* sf_version_string (\fBvoid\fP)"
+
+.PP
+Definition at line 824 of file sndfile\&.c\&.
+.SS "\fBsf_count_t\fP sf_write_double (\fBSNDFILE\fP * sndfile, \fBconst\fP double * ptr, \fBsf_count_t\fP len)"
+
+.PP
+Definition at line 2144 of file sndfile\&.c\&.
+.SS "\fBsf_count_t\fP sf_write_float (\fBSNDFILE\fP * sndfile, \fBconst\fP float * ptr, \fBsf_count_t\fP len)"
+
+.PP
+Definition at line 2056 of file sndfile\&.c\&.
+.SS "\fBsf_count_t\fP sf_write_int (\fBSNDFILE\fP * sndfile, \fBconst\fP \fBint\fP * ptr, \fBsf_count_t\fP len)"
+
+.PP
+Definition at line 1968 of file sndfile\&.c\&.
+.SS "\fBsf_count_t\fP sf_write_raw (\fBSNDFILE\fP * sndfile, \fBconst\fP \fBvoid\fP * ptr, \fBsf_count_t\fP len)"
+
+.PP
+Definition at line 1833 of file sndfile\&.c\&.
+.SS "\fBsf_count_t\fP sf_write_short (\fBSNDFILE\fP * sndfile, \fBconst\fP short * ptr, \fBsf_count_t\fP len)"
+
+.PP
+Definition at line 1880 of file sndfile\&.c\&.
+.SS "\fBvoid\fP sf_write_sync (\fBSNDFILE\fP * sndfile)"
+
+.PP
+Definition at line 410 of file sndfile\&.c\&.
+.SS "\fBsf_count_t\fP sf_writef_double (\fBSNDFILE\fP * sndfile, \fBconst\fP double * ptr, \fBsf_count_t\fP frames)"
+
+.PP
+Definition at line 2189 of file sndfile\&.c\&.
+.SS "\fBsf_count_t\fP sf_writef_float (\fBSNDFILE\fP * sndfile, \fBconst\fP float * ptr, \fBsf_count_t\fP frames)"
+
+.PP
+Definition at line 2101 of file sndfile\&.c\&.
+.SS "\fBsf_count_t\fP sf_writef_int (\fBSNDFILE\fP * sndfile, \fBconst\fP \fBint\fP * ptr, \fBsf_count_t\fP frames)"
+
+.PP
+Definition at line 2013 of file sndfile\&.c\&.
+.SS "\fBsf_count_t\fP sf_writef_short (\fBSNDFILE\fP * sndfile, \fBconst\fP short * ptr, \fBsf_count_t\fP frames)"
+
+.PP
+Definition at line 1925 of file sndfile\&.c\&.
+.SH "Variable Documentation"
+.PP 
+.SS "\fBint\fP sf_errno = 0"
+
+.PP
+Definition at line 276 of file sndfile\&.c\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

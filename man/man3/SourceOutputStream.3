@@ -1,0 +1,92 @@
+.TH "SourceOutputStream" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+SourceOutputStream \- Helper class based on wxOutputStream used to get a png file in text format\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+Inherits wxOutputStream\&.
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBSourceOutputStream\fP ()"
+.br
+.ti -1c
+.RI "\fBint\fP \fBOpenFile\fP (\fBconst\fP wxString &Filename)"
+.br
+.RI "\fIOpens the file and also adds a standard comment at the start of it\&. \fP"
+.ti -1c
+.RI "virtual \fB~SourceOutputStream\fP ()"
+.br
+.RI "\fIDestructor\&. We close our text stream in here\&. \fP"
+.in -1c
+.SS "Protected Member Functions"
+
+.in +1c
+.ti -1c
+.RI "size_t \fBOnSysWrite\fP (\fBconst\fP \fBvoid\fP *\fBbuffer\fP, size_t bufsize) override"
+.br
+.in -1c
+.SS "Protected Attributes"
+
+.in +1c
+.ti -1c
+.RI "wxFile \fBFile\fP"
+.br
+.ti -1c
+.RI "\fBint\fP \fBnBytes\fP"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Helper class based on wxOutputStream used to get a png file in text format\&. 
+
+Allows us to capture output of the Save \&.png and 'pipe' it into our own output function which gives a series of numbers\&.
+.PP
+The trick used here is that wxWidgets can write a PNG image to a stream\&. By writing to a custom stream, we get to see each byte of data in turn, convert it to text, put in commas, and then write that out to our own text stream\&.
+.PP
+This class is currently used by \fBTheme\fP to pack its images into the image cache\&. Perhaps someday we will improve \fBFlowPacker\fP and make it more flexible, and use it for toolbar and window layouts too\&. 
+.PP
+Definition at line 480 of file Theme\&.cpp\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "SourceOutputStream::SourceOutputStream ()\fC [inline]\fP"
+
+.PP
+Definition at line 483 of file Theme\&.cpp\&.
+.SS "SourceOutputStream::~SourceOutputStream ()\fC [virtual]\fP"
+
+.PP
+Destructor\&. We close our text stream in here\&. 
+.PP
+Definition at line 531 of file Theme\&.cpp\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "size_t SourceOutputStream::OnSysWrite (\fBconst\fP \fBvoid\fP * buffer, size_t bufsize)\fC [override]\fP, \fC [protected]\fP"
+This is the 'callback' function called with each write of PNG data to the stream\&. This is where we conveet to text and add commas\&. 
+.PP
+Definition at line 512 of file Theme\&.cpp\&.
+.SS "\fBint\fP SourceOutputStream::OpenFile (\fBconst\fP wxString & Filename)"
+
+.PP
+Opens the file and also adds a standard comment at the start of it\&. 
+.PP
+Definition at line 494 of file Theme\&.cpp\&.
+.SH "Member Data Documentation"
+.PP 
+.SS "wxFile SourceOutputStream::File\fC [protected]\fP"
+
+.PP
+Definition at line 489 of file Theme\&.cpp\&.
+.SS "\fBint\fP SourceOutputStream::nBytes\fC [protected]\fP"
+
+.PP
+Definition at line 490 of file Theme\&.cpp\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

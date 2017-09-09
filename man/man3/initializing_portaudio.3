@@ -1,0 +1,36 @@
+.TH "initializing_portaudio" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+initializing_portaudio \- Initializing PortAudio 
+
+.SH "Initializing PortAudio"
+.PP
+Before making any other calls to PortAudio, you 'must' call \fBPa_Initialize()\fP\&. This will trigger a scan of available devices which can be queried later\&. Like most PA functions, it will return a result of type paError\&. If the result is not paNoError, then an error has occurred\&. 
+.PP
+.nf
+err = Pa_Initialize();
+if( err != paNoError ) goto error;
+
+.fi
+.PP
+.PP
+You can get a text message that explains the error message by passing it to Pa_GetErrorText( err )\&. For Example:
+.PP
+.PP
+.nf
+printf(  "PortAudio error: %s\n", Pa_GetErrorText( err ) );
+.fi
+.PP
+.PP
+It is also important, when you are done with PortAudio, to Terminate it:
+.PP
+.PP
+.nf
+err = Pa_Terminate();
+if( err != paNoError )
+   printf(  "PortAudio error: %s\n", Pa_GetErrorText( err ) );
+.fi
+.PP
+.PP
+Previous: \fBWriting a Callback Function\fP | Next: \fBOpening a Stream Using Defaults\fP 

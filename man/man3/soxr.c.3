@@ -1,0 +1,338 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/lib-src/libsoxr/src/soxr.c" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/lib-src/libsoxr/src/soxr.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <math\&.h>\fP
+.br
+\fC#include <stdlib\&.h>\fP
+.br
+\fC#include <string\&.h>\fP
+.br
+\fC#include <time\&.h>\fP
+.br
+\fC#include 'soxr\&.h'\fP
+.br
+\fC#include 'data\-io\&.h'\fP
+.br
+\fC#include 'internal\&.h'\fP
+.br
+
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "struct \fBsoxr\fP"
+.br
+.in -1c
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBresampler_input\fP   (*(\fBsample_t\fP * (*)(\fBvoid\fP *, \fBsample_t\fP * \fBsamples\fP, size_t   n))\fBp\fP\->control_block[0])"
+.br
+.ti -1c
+.RI "#define \fBresampler_process\fP   (*(\fBvoid\fP (*)(\fBvoid\fP *, size_t))\fBp\fP\->control_block[1])"
+.br
+.ti -1c
+.RI "#define \fBresampler_output\fP   (*(\fBsample_t\fP \fBconst\fP * (*)(\fBvoid\fP *, \fBsample_t\fP * \fBsamples\fP, size_t * n))\fBp\fP\->control_block[2])"
+.br
+.ti -1c
+.RI "#define \fBresampler_flush\fP   (*(\fBvoid\fP (*)(\fBvoid\fP *))\fBp\fP\->control_block[3])"
+.br
+.ti -1c
+.RI "#define \fBresampler_close\fP   (*(\fBvoid\fP (*)(\fBvoid\fP *))\fBp\fP\->control_block[4])"
+.br
+.ti -1c
+.RI "#define \fBresampler_delay\fP   (*(double (*)(\fBvoid\fP *))\fBp\fP\->control_block[5])"
+.br
+.ti -1c
+.RI "#define \fBresampler_sizes\fP   (*(\fBvoid\fP (*)(size_t * shared, size_t * channel))\fBp\fP\->control_block[6])"
+.br
+.ti -1c
+.RI "#define \fBresampler_create\fP   (*(char \fBconst\fP * (*)(\fBvoid\fP * channel, \fBvoid\fP * shared, double io_ratio, \fBsoxr_quality_spec_t\fP * q_spec, \fBsoxr_runtime_spec_t\fP * r_spec, double \fBscale\fP))\fBp\fP\->control_block[7])"
+.br
+.ti -1c
+.RI "#define \fBresampler_set_io_ratio\fP   (*(\fBvoid\fP (*)(\fBvoid\fP *, double io_ratio, size_t \fBlen\fP))\fBp\fP\->control_block[8])"
+.br
+.ti -1c
+.RI "#define \fBresampler_id\fP   (*(char \fBconst\fP * (*)(\fBvoid\fP))\fBp\fP\->control_block[9])"
+.br
+.ti -1c
+.RI "#define \fBTO_3dB\fP(\fBa\fP)             ((1\&.6e\-6*a\-7\&.5e\-4)*a+\&.646)"
+.br
+.ti -1c
+.RI "#define \fBLOW_Q_BW0\fP   (1385 / 2048\&.) /* 0\&.67625 rounded to be \fBa\fP FP exact\&. */"
+.br
+.in -1c
+.SS "Typedefs"
+
+.in +1c
+.ti -1c
+.RI "typedef \fBvoid\fP \fBsample_t\fP"
+.br
+.ti -1c
+.RI "typedef \fBvoid\fP(* \fBfn_t\fP) (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "typedef \fBfn_t\fP \fBcontrol_block_t\fP[10]"
+.br
+.ti -1c
+.RI "typedef \fBvoid\fP * \fBresampler_t\fP"
+.br
+.ti -1c
+.RI "typedef \fBvoid\fP * \fBresampler_shared_t\fP"
+.br
+.ti -1c
+.RI "typedef \fBvoid\fP(* \fBdeinterleave_t\fP) (\fBsample_t\fP **dest, \fBsoxr_datatype_t\fP data_type, \fBvoid\fP \fBconst\fP **src0, size_t n, unsigned ch)"
+.br
+.ti -1c
+.RI "typedef size_t(* \fBinterleave_t\fP) (\fBsoxr_datatype_t\fP data_type, \fBvoid\fP **dest, \fBsample_t\fP \fBconst\fP *\fBconst\fP *src, size_t, unsigned, unsigned long *)"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "char \fBconst\fP * \fBsoxr_version\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBsoxr_quality_spec_t\fP \fBsoxr_quality_spec\fP (unsigned long recipe, unsigned long flags)"
+.br
+.ti -1c
+.RI "char \fBconst\fP * \fBsoxr_engine\fP (\fBsoxr_t\fP \fBp\fP)"
+.br
+.ti -1c
+.RI "size_t * \fBsoxr_num_clips\fP (\fBsoxr_t\fP \fBp\fP)"
+.br
+.ti -1c
+.RI "\fBsoxr_error_t\fP \fBsoxr_error\fP (\fBsoxr_t\fP \fBp\fP)"
+.br
+.ti -1c
+.RI "\fBsoxr_runtime_spec_t\fP \fBsoxr_runtime_spec\fP (unsigned num_threads)"
+.br
+.ti -1c
+.RI "\fBsoxr_io_spec_t\fP \fBsoxr_io_spec\fP (\fBsoxr_datatype_t\fP itype, \fBsoxr_datatype_t\fP otype)"
+.br
+.ti -1c
+.RI "\fBsoxr_t\fP \fBsoxr_create\fP (double input_rate, double output_rate, unsigned num_channels, \fBsoxr_error_t\fP *error0, \fBsoxr_io_spec_t\fP \fBconst\fP *io_spec, \fBsoxr_quality_spec_t\fP \fBconst\fP *q_spec, \fBsoxr_runtime_spec_t\fP \fBconst\fP *runtime_spec)"
+.br
+.ti -1c
+.RI "\fBsoxr_error_t\fP \fBsoxr_set_input_fn\fP (\fBsoxr_t\fP \fBp\fP, \fBsoxr_input_fn_t\fP input_fn, \fBvoid\fP *input_fn_state, size_t max_ilen)"
+.br
+.ti -1c
+.RI "double \fBsoxr_delay\fP (\fBsoxr_t\fP \fBp\fP)"
+.br
+.ti -1c
+.RI "\fBsoxr_error_t\fP \fBsoxr_set_num_channels\fP (\fBsoxr_t\fP \fBp\fP, unsigned num_channels)"
+.br
+.ti -1c
+.RI "\fBsoxr_error_t\fP \fBsoxr_set_io_ratio\fP (\fBsoxr_t\fP \fBp\fP, double io_ratio, size_t slew_len)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBsoxr_delete\fP (\fBsoxr_t\fP \fBp\fP)"
+.br
+.ti -1c
+.RI "\fBsoxr_error_t\fP \fBsoxr_clear\fP (\fBsoxr_t\fP \fBp\fP)"
+.br
+.ti -1c
+.RI "size_t \fBsoxr_output\fP (\fBsoxr_t\fP \fBp\fP, \fBvoid\fP *\fBout\fP, size_t len0)"
+.br
+.ti -1c
+.RI "\fBsoxr_error_t\fP \fBsoxr_process\fP (\fBsoxr_t\fP \fBp\fP, \fBvoid\fP \fBconst\fP *\fBin\fP, size_t ilen0, size_t *idone0, \fBvoid\fP *\fBout\fP, size_t olen, size_t *odone0)"
+.br
+.ti -1c
+.RI "\fBsoxr_error_t\fP \fBsoxr_oneshot\fP (double irate, double orate, unsigned num_channels, \fBvoid\fP \fBconst\fP *\fBin\fP, size_t ilen, size_t *idone, \fBvoid\fP *\fBout\fP, size_t olen, size_t *odone, \fBsoxr_io_spec_t\fP \fBconst\fP *io_spec, \fBsoxr_quality_spec_t\fP \fBconst\fP *q_spec, \fBsoxr_runtime_spec_t\fP \fBconst\fP *runtime_spec)"
+.br
+.ti -1c
+.RI "\fBsoxr_error_t\fP \fBsoxr_set_error\fP (\fBsoxr_t\fP \fBp\fP, \fBsoxr_error_t\fP \fBerror\fP)"
+.br
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "\fBcontrol_block_t\fP \fB_soxr_rate32s_cb\fP"
+.br
+.ti -1c
+.RI "\fBcontrol_block_t\fP \fB_soxr_rate32_cb\fP"
+.br
+.ti -1c
+.RI "\fBcontrol_block_t\fP \fB_soxr_rate64_cb\fP"
+.br
+.ti -1c
+.RI "\fBcontrol_block_t\fP \fB_soxr_vr32_cb\fP"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define LOW_Q_BW0   (1385 / 2048\&.) /* 0\&.67625 rounded to be \fBa\fP FP exact\&. */"
+
+.PP
+Definition at line 72 of file soxr\&.c\&.
+.SS "#define resampler_close   (*(\fBvoid\fP (*)(\fBvoid\fP *))\fBp\fP\->control_block[4])"
+
+.PP
+Definition at line 30 of file soxr\&.c\&.
+.SS "#define resampler_create   (*(char \fBconst\fP * (*)(\fBvoid\fP * channel, \fBvoid\fP * shared, double io_ratio, \fBsoxr_quality_spec_t\fP * q_spec, \fBsoxr_runtime_spec_t\fP * r_spec, double \fBscale\fP))\fBp\fP\->control_block[7])"
+
+.PP
+Definition at line 33 of file soxr\&.c\&.
+.SS "#define resampler_delay   (*(double (*)(\fBvoid\fP *))\fBp\fP\->control_block[5])"
+
+.PP
+Definition at line 31 of file soxr\&.c\&.
+.SS "#define resampler_flush   (*(\fBvoid\fP (*)(\fBvoid\fP *))\fBp\fP\->control_block[3])"
+
+.PP
+Definition at line 29 of file soxr\&.c\&.
+.SS "#define resampler_id   (*(char \fBconst\fP * (*)(\fBvoid\fP))\fBp\fP\->control_block[9])"
+
+.PP
+Definition at line 35 of file soxr\&.c\&.
+.SS "#define resampler_input   (*(\fBsample_t\fP * (*)(\fBvoid\fP *, \fBsample_t\fP * \fBsamples\fP, size_t   n))\fBp\fP\->control_block[0])"
+
+.PP
+Definition at line 26 of file soxr\&.c\&.
+.SS "#define resampler_output   (*(\fBsample_t\fP \fBconst\fP * (*)(\fBvoid\fP *, \fBsample_t\fP * \fBsamples\fP, size_t * n))\fBp\fP\->control_block[2])"
+
+.PP
+Definition at line 28 of file soxr\&.c\&.
+.SS "#define resampler_process   (*(\fBvoid\fP (*)(\fBvoid\fP *, size_t))\fBp\fP\->control_block[1])"
+
+.PP
+Definition at line 27 of file soxr\&.c\&.
+.SS "#define resampler_set_io_ratio   (*(\fBvoid\fP (*)(\fBvoid\fP *, double io_ratio, size_t \fBlen\fP))\fBp\fP\->control_block[8])"
+
+.PP
+Definition at line 34 of file soxr\&.c\&.
+.SS "#define resampler_sizes   (*(\fBvoid\fP (*)(size_t * shared, size_t * channel))\fBp\fP\->control_block[6])"
+
+.PP
+Definition at line 32 of file soxr\&.c\&.
+.SS "#define TO_3dB(\fBa\fP)   ((1\&.6e\-6*a\-7\&.5e\-4)*a+\&.646)"
+
+.PP
+Definition at line 71 of file soxr\&.c\&.
+.SH "Typedef Documentation"
+.PP 
+.SS "typedef \fBfn_t\fP control_block_t[10]"
+
+.PP
+Definition at line 24 of file soxr\&.c\&.
+.SS "typedef \fBvoid\fP(*  deinterleave_t) (\fBsample_t\fP **dest, \fBsoxr_datatype_t\fP data_type, \fBvoid\fP \fBconst\fP **src0, size_t n, unsigned ch)"
+
+.PP
+Definition at line 39 of file soxr\&.c\&.
+.SS "typedef \fBvoid\fP(*  fn_t) (\fBvoid\fP)"
+
+.PP
+Definition at line 23 of file soxr\&.c\&.
+.SS "typedef size_t(*  interleave_t) (\fBsoxr_datatype_t\fP data_type, \fBvoid\fP **dest, \fBsample_t\fP \fBconst\fP *\fBconst\fP *src, size_t, unsigned, unsigned long *)"
+
+.PP
+Definition at line 41 of file soxr\&.c\&.
+.SS "typedef \fBvoid\fP* \fBresampler_shared_t\fP"
+
+.PP
+Definition at line 38 of file soxr\&.c\&.
+.SS "typedef \fBvoid\fP* \fBresampler_t\fP"
+
+.PP
+Definition at line 37 of file soxr\&.c\&.
+.SS "typedef \fBvoid\fP \fBsample_t\fP"
+
+.PP
+Definition at line 22 of file soxr\&.c\&.
+.SH "Function Documentation"
+.PP 
+.SS "\fBsoxr_error_t\fP soxr_clear (\fBsoxr_t\fP p)"
+
+.PP
+Definition at line 394 of file soxr\&.c\&.
+.SS "\fBsoxr_t\fP soxr_create (double input_rate, double output_rate, unsigned num_channels, \fBsoxr_error_t\fP * error0, \fBsoxr_io_spec_t\fP \fBconst\fP * io_spec, \fBsoxr_quality_spec_t\fP \fBconst\fP * q_spec, \fBsoxr_runtime_spec_t\fP \fBconst\fP * runtime_spec)"
+
+.PP
+Definition at line 199 of file soxr\&.c\&.
+.SS "double soxr_delay (\fBsoxr_t\fP p)"
+
+.PP
+Definition at line 305 of file soxr\&.c\&.
+.SS "\fBvoid\fP soxr_delete (\fBsoxr_t\fP p)"
+
+.PP
+Definition at line 386 of file soxr\&.c\&.
+.SS "char \fBconst\fP* soxr_engine (\fBsoxr_t\fP p)"
+
+.PP
+Definition at line 111 of file soxr\&.c\&.
+.SS "\fBsoxr_error_t\fP soxr_error (\fBsoxr_t\fP p)"
+
+.PP
+Definition at line 125 of file soxr\&.c\&.
+.SS "\fBsoxr_io_spec_t\fP \fBsoxr_io_spec\fP (\fBsoxr_datatype_t\fP itype, \fBsoxr_datatype_t\fP otype)"
+
+.PP
+Definition at line 145 of file soxr\&.c\&.
+.SS "size_t* soxr_num_clips (\fBsoxr_t\fP p)"
+
+.PP
+Definition at line 118 of file soxr\&.c\&.
+.SS "\fBsoxr_error_t\fP soxr_oneshot (double irate, double orate, unsigned num_channels, \fBvoid\fP \fBconst\fP * in, size_t ilen, size_t * idone, \fBvoid\fP * out, size_t olen, size_t * odone, \fBsoxr_io_spec_t\fP \fBconst\fP * io_spec, \fBsoxr_quality_spec_t\fP \fBconst\fP * q_spec, \fBsoxr_runtime_spec_t\fP \fBconst\fP * runtime_spec)"
+
+.PP
+Definition at line 601 of file soxr\&.c\&.
+.SS "size_t soxr_output (\fBsoxr_t\fP p, \fBvoid\fP * out, size_t len0)"
+
+.PP
+Definition at line 491 of file soxr\&.c\&.
+.SS "\fBsoxr_error_t\fP soxr_process (\fBsoxr_t\fP p, \fBvoid\fP \fBconst\fP * in, size_t ilen0, size_t * idone0, \fBvoid\fP * out, size_t olen, size_t * odone0)"
+
+.PP
+Definition at line 545 of file soxr\&.c\&.
+.SS "\fBsoxr_quality_spec_t\fP \fBsoxr_quality_spec\fP (unsigned long recipe, unsigned long flags)"
+
+.PP
+Definition at line 74 of file soxr\&.c\&.
+.SS "\fBsoxr_runtime_spec_t\fP \fBsoxr_runtime_spec\fP (unsigned num_threads)"
+
+.PP
+Definition at line 132 of file soxr\&.c\&.
+.SS "\fBsoxr_error_t\fP soxr_set_error (\fBsoxr_t\fP p, \fBsoxr_error_t\fP error)"
+
+.PP
+Definition at line 628 of file soxr\&.c\&.
+.SS "\fBsoxr_error_t\fP soxr_set_input_fn (\fBsoxr_t\fP p, \fBsoxr_input_fn_t\fP input_fn, \fBvoid\fP * input_fn_state, size_t max_ilen)"
+
+.PP
+Definition at line 276 of file soxr\&.c\&.
+.SS "\fBsoxr_error_t\fP soxr_set_io_ratio (\fBsoxr_t\fP p, double io_ratio, size_t slew_len)"
+
+.PP
+Definition at line 363 of file soxr\&.c\&.
+.SS "\fBsoxr_error_t\fP soxr_set_num_channels (\fBsoxr_t\fP p, unsigned num_channels)"
+
+.PP
+Definition at line 351 of file soxr\&.c\&.
+.SS "char \fBconst\fP* soxr_version (\fBvoid\fP)"
+
+.PP
+Definition at line 15 of file soxr\&.c\&.
+.SH "Variable Documentation"
+.PP 
+.SS "\fBcontrol_block_t\fP _soxr_rate32_cb"
+
+.SS "\fBcontrol_block_t\fP _soxr_rate32s_cb"
+
+.SS "\fBcontrol_block_t\fP _soxr_rate64_cb"
+
+.SS "\fBcontrol_block_t\fP _soxr_vr32_cb"
+
+.PP
+Definition at line 760 of file vr32\&.c\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

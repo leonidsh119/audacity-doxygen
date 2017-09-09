@@ -1,0 +1,190 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/src/AudioIO.cpp" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/src/AudioIO.cpp \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include 'Audacity\&.h'\fP
+.br
+\fC#include 'Experimental\&.h'\fP
+.br
+\fC#include 'AudioIO\&.h'\fP
+.br
+\fC#include 'float_cast\&.h'\fP
+.br
+\fC#include <math\&.h>\fP
+.br
+\fC#include <stdlib\&.h>\fP
+.br
+\fC#include <algorithm>\fP
+.br
+\fC#include <wx/log\&.h>\fP
+.br
+\fC#include <wx/textctrl\&.h>\fP
+.br
+\fC#include <wx/msgdlg\&.h>\fP
+.br
+\fC#include <wx/timer\&.h>\fP
+.br
+\fC#include <wx/intl\&.h>\fP
+.br
+\fC#include <wx/debug\&.h>\fP
+.br
+\fC#include <wx/sstream\&.h>\fP
+.br
+\fC#include <wx/txtstrm\&.h>\fP
+.br
+\fC#include 'AudacityApp\&.h'\fP
+.br
+\fC#include 'Mix\&.h'\fP
+.br
+\fC#include 'MixerBoard\&.h'\fP
+.br
+\fC#include 'Resample\&.h'\fP
+.br
+\fC#include 'RingBuffer\&.h'\fP
+.br
+\fC#include 'prefs/GUISettings\&.h'\fP
+.br
+\fC#include 'Prefs\&.h'\fP
+.br
+\fC#include 'Project\&.h'\fP
+.br
+\fC#include 'TimeTrack\&.h'\fP
+.br
+\fC#include 'WaveTrack\&.h'\fP
+.br
+\fC#include 'AutoRecovery\&.h'\fP
+.br
+\fC#include 'toolbars/ControlToolBar\&.h'\fP
+.br
+\fC#include 'widgets/Meter\&.h'\fP
+.br
+
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "struct \fBAudioIO::ScrubQueue\fP"
+.br
+.ti -1c
+.RI "class \fBAudioThread\fP"
+.br
+.RI "\fIDefined different on Mac and other platforms (on Mac it does not use wxWidgets wxThread), this class sits in a thread loop reading and writing audio\&. \fP"
+.in -1c
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBMAX\fP(\fBa\fP,  \fBb\fP)   ((\fBa\fP) > (\fBb\fP) ? (\fBa\fP) : (\fBb\fP))"
+.br
+.ti -1c
+.RI "#define \fBORIGINAL_DO_NOT_PLAY_ALL_MUTED_TRACKS_TO_END\fP"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBDEFINE_EVENT_TYPE\fP (EVT_AUDIOIO_PLAYBACK)"
+.br
+.ti -1c
+.RI "\fBDEFINE_EVENT_TYPE\fP (EVT_AUDIOIO_CAPTURE)"
+.br
+.ti -1c
+.RI "\fBDEFINE_EVENT_TYPE\fP (EVT_AUDIOIO_MONITOR)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBaudacityAudioCallback\fP (\fBconst\fP \fBvoid\fP *inputBuffer, \fBvoid\fP *outputBuffer, unsigned long framesPerBuffer, \fBconst\fP \fBPaStreamCallbackTimeInfo\fP *timeInfo, \fBPaStreamCallbackFlags\fP statusFlags, \fBvoid\fP *\fBuserData\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBInitAudioIO\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBDeinitAudioIO\fP ()"
+.br
+.ti -1c
+.RI "wxString \fBDeviceName\fP (\fBconst\fP \fBPaDeviceInfo\fP *\fBinfo\fP)"
+.br
+.ti -1c
+.RI "wxString \fBHostName\fP (\fBconst\fP \fBPaDeviceInfo\fP *\fBinfo\fP)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBaudacityAudioCallback\fP (\fBconst\fP \fBvoid\fP *inputBuffer, \fBvoid\fP *outputBuffer, unsigned long framesPerBuffer,       \fBconst\fP \fBPaStreamCallbackTimeInfo\fP *WXUNUSED(timeInfo), \fBconst\fP \fBPaStreamCallbackFlags\fP WXUNUSED(statusFlags), \fBvoid\fP *WXUNUSED(\fBuserData\fP))"
+.br
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "\fBAudioIO\fP * \fBgAudioIO\fP"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define MAX(\fBa\fP, \fBb\fP)   ((\fBa\fP) > (\fBb\fP) ? (\fBa\fP) : (\fBb\fP))"
+
+.PP
+Definition at line 3915 of file AudioIO\&.cpp\&.
+.SS "#define ORIGINAL_DO_NOT_PLAY_ALL_MUTED_TRACKS_TO_END"
+
+.SH "Function Documentation"
+.PP 
+.SS "\fBint\fP audacityAudioCallback (\fBconst\fP \fBvoid\fP * inputBuffer, \fBvoid\fP * outputBuffer, unsigned long framesPerBuffer, \fBconst\fP \fBPaStreamCallbackTimeInfo\fP * timeInfo, \fBPaStreamCallbackFlags\fP statusFlags, \fBvoid\fP * userData)"
+brief The function which is called from PortAudio's callback thread context to collect and deliver audio for / from the sound device\&.
+.PP
+This covers recording, playback, and doing both simultaneously\&. It is also invoked to do monitoring and software playthrough\&. Note that dealing with the two buffers needs some care to ensure that the right things happen for all possible cases\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIinputBuffer\fP Buffer of length framesPerBuffer containing samples from the sound card, or null if not capturing audio\&. Note that the data type will depend on the format of audio data that was chosen when the stream was created (so could be floats or various integers) 
+.br
+\fIoutputBuffer\fP Uninitialised buffer of length framesPerBuffer which will be sent to the sound card after the callback, or null if not playing audio back\&. 
+.br
+\fIframesPerBuffer\fP The length of the playback and recording buffers 
+.br
+\fI\fBPaStreamCallbackTimeInfo\fP\fP Pointer to PortAudio time information structure, which tells us how long we have been playing / recording 
+.br
+\fIstatusFlags\fP PortAudio stream status flags 
+.br
+\fIuserData\fP pointer to user-defined data structure\&. Provided for flexibility by PortAudio, but not used by Audacity - the data is stored in the \fBAudioIO\fP class instead\&. 
+.RE
+.PP
+
+.SS "\fBint\fP audacityAudioCallback (\fBconst\fP \fBvoid\fP * inputBuffer, \fBvoid\fP * outputBuffer, unsigned long framesPerBuffer, \fBconst\fP \fBPaStreamCallbackTimeInfo\fP * WXUNUSEDtimeInfo, \fBconst\fP \fBPaStreamCallbackFlags\fP  WXUNUSEDstatusFlags, \fBvoid\fP * WXUNUSEDuserData)"
+
+.PP
+Definition at line 3938 of file AudioIO\&.cpp\&.
+.SS "DEFINE_EVENT_TYPE (EVT_AUDIOIO_PLAYBACK)"
+
+.SS "DEFINE_EVENT_TYPE (EVT_AUDIOIO_CAPTURE)"
+
+.SS "DEFINE_EVENT_TYPE (EVT_AUDIOIO_MONITOR)"
+
+.SS "\fBvoid\fP DeinitAudioIO ()"
+
+.PP
+Definition at line 825 of file AudioIO\&.cpp\&.
+.SS "wxString DeviceName (\fBconst\fP \fBPaDeviceInfo\fP * info)"
+
+.PP
+Definition at line 830 of file AudioIO\&.cpp\&.
+.SS "wxString HostName (\fBconst\fP \fBPaDeviceInfo\fP * info)"
+
+.PP
+Definition at line 837 of file AudioIO\&.cpp\&.
+.SS "\fBvoid\fP InitAudioIO ()"
+
+.PP
+Definition at line 795 of file AudioIO\&.cpp\&.
+.SH "Variable Documentation"
+.PP 
+.SS "\fBAudioIO\fP* gAudioIO"
+
+.PP
+Definition at line 329 of file AudioIO\&.cpp\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

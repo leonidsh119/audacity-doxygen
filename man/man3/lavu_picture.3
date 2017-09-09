@@ -1,0 +1,293 @@
+.TH "lavu_picture" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+lavu_picture \- Image related
+.SS "Enumerations"
+
+.in +1c
+.ti -1c
+.RI "enum \fBAVPictureType\fP { \fBAV_PICTURE_TYPE_NONE\fP = 0, \fBAV_PICTURE_TYPE_I\fP, \fBAV_PICTURE_TYPE_P\fP, \fBAV_PICTURE_TYPE_B\fP, \fBAV_PICTURE_TYPE_S\fP, \fBAV_PICTURE_TYPE_SI\fP, \fBAV_PICTURE_TYPE_SP\fP, \fBAV_PICTURE_TYPE_BI\fP }"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "char \fBav_get_picture_type_char\fP (enum \fBAVPictureType\fP pict_type)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBav_image_fill_max_pixsteps\fP (\fBint\fP max_pixsteps[4], \fBint\fP max_pixstep_comps[4], \fBconst\fP \fBAVPixFmtDescriptor\fP *pixdesc)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_image_get_linesize\fP (enum \fBAVPixelFormat\fP pix_fmt, \fBint\fP width, \fBint\fP plane)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_image_fill_linesizes\fP (\fBint\fP linesizes[4], enum \fBAVPixelFormat\fP pix_fmt, \fBint\fP width)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_image_fill_pointers\fP (\fBuint8_t\fP *\fBdata\fP[4], enum \fBAVPixelFormat\fP pix_fmt, \fBint\fP height, \fBuint8_t\fP *ptr, \fBconst\fP \fBint\fP linesizes[4])"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_image_alloc\fP (\fBuint8_t\fP *pointers[4], \fBint\fP linesizes[4], \fBint\fP w, \fBint\fP h, enum \fBAVPixelFormat\fP pix_fmt, \fBint\fP align)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBav_image_copy_plane\fP (\fBuint8_t\fP *dst, \fBint\fP dst_linesize, \fBconst\fP \fBuint8_t\fP *src, \fBint\fP src_linesize, \fBint\fP bytewidth, \fBint\fP height)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBav_image_copy\fP (\fBuint8_t\fP *dst_data[4], \fBint\fP dst_linesizes[4], \fBconst\fP \fBuint8_t\fP *src_data[4], \fBconst\fP \fBint\fP src_linesizes[4], enum \fBAVPixelFormat\fP pix_fmt, \fBint\fP width, \fBint\fP height)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_image_fill_arrays\fP (\fBuint8_t\fP *dst_data[4], \fBint\fP dst_linesize[4], \fBconst\fP \fBuint8_t\fP *src, enum \fBAVPixelFormat\fP pix_fmt, \fBint\fP width, \fBint\fP height, \fBint\fP align)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_image_get_buffer_size\fP (enum \fBAVPixelFormat\fP pix_fmt, \fBint\fP width, \fBint\fP height, \fBint\fP align)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_image_copy_to_buffer\fP (\fBuint8_t\fP *dst, \fBint\fP dst_size, \fBconst\fP \fBuint8_t\fP *\fBconst\fP src_data[4], \fBconst\fP \fBint\fP src_linesize[4], enum \fBAVPixelFormat\fP pix_fmt, \fBint\fP width, \fBint\fP height, \fBint\fP align)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_image_check_size\fP (unsigned \fBint\fP w, unsigned \fBint\fP h, \fBint\fP log_offset, \fBvoid\fP *log_ctx)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBavpriv_set_systematic_pal2\fP (\fBuint32_t\fP pal[256], enum \fBAVPixelFormat\fP pix_fmt)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+\fBAVPicture\fP types, pixel formats and basic image planes manipulation\&. 
+.SH "Enumeration Type Documentation"
+.PP 
+.SS "enum \fBAVPictureType\fP"
+
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fIAV_PICTURE_TYPE_NONE \fP\fP
+Undefined\&. 
+.TP
+\fB\fIAV_PICTURE_TYPE_I \fP\fP
+Intra\&. 
+.TP
+\fB\fIAV_PICTURE_TYPE_P \fP\fP
+Predicted\&. 
+.TP
+\fB\fIAV_PICTURE_TYPE_B \fP\fP
+Bi-dir predicted\&. 
+.TP
+\fB\fIAV_PICTURE_TYPE_S \fP\fP
+\fBS(GMC)\fP-VOP MPEG4\&. 
+.TP
+\fB\fIAV_PICTURE_TYPE_SI \fP\fP
+Switching Intra\&. 
+.TP
+\fB\fIAV_PICTURE_TYPE_SP \fP\fP
+Switching Predicted\&. 
+.TP
+\fB\fIAV_PICTURE_TYPE_BI \fP\fP
+BI type\&. 
+.PP
+Definition at line 259 of file avutil\&.h\&.
+.SH "Function Documentation"
+.PP 
+.SS "char av_get_picture_type_char (enum \fBAVPictureType\fP pict_type)"
+Return a single letter to describe the given picture type pict_type\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIpict_type\fP the picture type 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+a single character representing the picture type, '?' if pict_type is unknown 
+.RE
+.PP
+
+.SS "\fBint\fP av_image_alloc (\fBuint8_t\fP * pointers[4], \fBint\fP linesizes[4], \fBint\fP w, \fBint\fP h, enum \fBAVPixelFormat\fP pix_fmt, \fBint\fP align)"
+Allocate an image with size w and h and pixel format pix_fmt, and fill pointers and linesizes accordingly\&. The allocated image buffer has to be freed by using av_freep(&pointers[0])\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIalign\fP the value to use for buffer size alignment 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the size in bytes required for the image buffer, a negative error code in case of failure 
+.RE
+.PP
+
+.SS "\fBint\fP av_image_check_size (unsigned \fBint\fP w, unsigned \fBint\fP h, \fBint\fP log_offset, \fBvoid\fP * log_ctx)"
+Check if the given dimension of an image is valid, meaning that all bytes of the image can be addressed with a signed int\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIw\fP the width of the picture 
+.br
+\fIh\fP the height of the picture 
+.br
+\fIlog_offset\fP the offset to sum to the log level for logging with log_ctx 
+.br
+\fIlog_ctx\fP the parent logging context, it may be NULL 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+>= 0 if valid, a negative error code otherwise 
+.RE
+.PP
+
+.SS "\fBvoid\fP av_image_copy (\fBuint8_t\fP * dst_data[4], \fBint\fP dst_linesizes[4], \fBconst\fP \fBuint8_t\fP * src_data[4], \fBconst\fP \fBint\fP src_linesizes[4], enum \fBAVPixelFormat\fP pix_fmt, \fBint\fP width, \fBint\fP height)"
+Copy image in src_data to dst_data\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdst_linesizes\fP linesizes for the image in dst_data 
+.br
+\fIsrc_linesizes\fP linesizes for the image in src_data 
+.RE
+.PP
+
+.SS "\fBvoid\fP av_image_copy_plane (\fBuint8_t\fP * dst, \fBint\fP dst_linesize, \fBconst\fP \fBuint8_t\fP * src, \fBint\fP src_linesize, \fBint\fP bytewidth, \fBint\fP height)"
+Copy image plane from src to dst\&. That is, copy 'height' number of lines of 'bytewidth' bytes each\&. The first byte of each successive line is separated by *_linesize bytes\&.
+.PP
+bytewidth must be contained by both absolute values of dst_linesize and src_linesize, otherwise the function behavior is undefined\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdst_linesize\fP linesize for the image plane in dst 
+.br
+\fIsrc_linesize\fP linesize for the image plane in src 
+.RE
+.PP
+
+.SS "\fBint\fP av_image_copy_to_buffer (\fBuint8_t\fP * dst, \fBint\fP dst_size, \fBconst\fP \fBuint8_t\fP *\fBconst\fP src_data[4], \fBconst\fP \fBint\fP src_linesize[4], enum \fBAVPixelFormat\fP pix_fmt, \fBint\fP width, \fBint\fP height, \fBint\fP align)"
+Copy image data from an image into a buffer\&.
+.PP
+\fBav_image_get_buffer_size()\fP can be used to compute the required size for the buffer to fill\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdst\fP a buffer into which picture data will be copied 
+.br
+\fIdst_size\fP the size in bytes of dst 
+.br
+\fIsrc_data\fP pointers containing the source image data 
+.br
+\fIsrc_linesizes\fP linesizes for the image in src_data 
+.br
+\fIpix_fmt\fP the pixel format of the source image 
+.br
+\fIwidth\fP the width of the source image in pixels 
+.br
+\fIheight\fP the height of the source image in pixels 
+.br
+\fIalign\fP the assumed linesize alignment for dst 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the number of bytes written to dst, or a negative value (error code) on error 
+.RE
+.PP
+
+.SS "\fBint\fP av_image_fill_arrays (\fBuint8_t\fP * dst_data[4], \fBint\fP dst_linesize[4], \fBconst\fP \fBuint8_t\fP * src, enum \fBAVPixelFormat\fP pix_fmt, \fBint\fP width, \fBint\fP height, \fBint\fP align)"
+Setup the data pointers and linesizes based on the specified image parameters and the provided array\&.
+.PP
+The fields of the given image are filled in by using the src address which points to the image data buffer\&. Depending on the specified pixel format, one or multiple image data pointers and line sizes will be set\&. If a planar format is specified, several pointers will be set pointing to the different picture planes and the line sizes of the different planes will be stored in the lines_sizes array\&. Call with src == NULL to get the required size for the src buffer\&.
+.PP
+To allocate the buffer and fill in the dst_data and dst_linesize in one call, use \fBav_image_alloc()\fP\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdst_data\fP data pointers to be filled in 
+.br
+\fIdst_linesizes\fP linesizes for the image in dst_data to be filled in 
+.br
+\fIsrc\fP buffer which will contain or contains the actual image data, can be NULL 
+.br
+\fIpix_fmt\fP the pixel format of the image 
+.br
+\fIwidth\fP the width of the image in pixels 
+.br
+\fIheight\fP the height of the image in pixels 
+.br
+\fIalign\fP the value used in src for linesize alignment 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the size in bytes required for src, a negative error code in case of failure 
+.RE
+.PP
+
+.SS "\fBint\fP av_image_fill_linesizes (\fBint\fP linesizes[4], enum \fBAVPixelFormat\fP pix_fmt, \fBint\fP width)"
+Fill plane linesizes for an image with pixel format pix_fmt and width width\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIlinesizes\fP array to be filled with the linesize for each plane 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+>= 0 in case of success, a negative error code otherwise 
+.RE
+.PP
+
+.SS "\fBvoid\fP av_image_fill_max_pixsteps (\fBint\fP max_pixsteps[4], \fBint\fP max_pixstep_comps[4], \fBconst\fP \fBAVPixFmtDescriptor\fP * pixdesc)"
+Compute the max pixel step for each plane of an image with a format described by pixdesc\&.
+.PP
+The pixel step is the distance in bytes between the first byte of the group of bytes which describe a pixel component and the first byte of the successive group in the same plane for the same component\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fImax_pixsteps\fP an array which is filled with the max pixel step for each plane\&. Since a plane may contain different pixel components, the computed max_pixsteps[plane] is relative to the component in the plane with the max pixel step\&. 
+.br
+\fImax_pixstep_comps\fP an array which is filled with the component for each plane which has the max pixel step\&. May be NULL\&. 
+.RE
+.PP
+
+.SS "\fBint\fP av_image_fill_pointers (\fBuint8_t\fP * data[4], enum \fBAVPixelFormat\fP pix_fmt, \fBint\fP height, \fBuint8_t\fP * ptr, \fBconst\fP \fBint\fP linesizes[4])"
+Fill plane data pointers for an image with pixel format pix_fmt and height height\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdata\fP pointers array to be filled with the pointer for each image plane 
+.br
+\fIptr\fP the pointer to a buffer which will contain the image 
+.br
+\fIlinesizes\fP the array containing the linesize for each plane, should be filled by \fBav_image_fill_linesizes()\fP 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the size in bytes required for the image buffer, a negative error code in case of failure 
+.RE
+.PP
+
+.SS "\fBint\fP av_image_get_buffer_size (enum \fBAVPixelFormat\fP pix_fmt, \fBint\fP width, \fBint\fP height, \fBint\fP align)"
+Return the size in bytes of the amount of data required to store an image with the given parameters\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIalign\fP the assumed linesize alignment 
+.RE
+.PP
+
+.SS "\fBint\fP av_image_get_linesize (enum \fBAVPixelFormat\fP pix_fmt, \fBint\fP width, \fBint\fP plane)"
+Compute the size of an image line with format pix_fmt and width width for the plane plane\&.
+.PP
+\fBReturns:\fP
+.RS 4
+the computed size in bytes 
+.RE
+.PP
+
+.SS "\fBint\fP avpriv_set_systematic_pal2 (\fBuint32_t\fP pal[256], enum \fBAVPixelFormat\fP pix_fmt)"
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

@@ -1,0 +1,146 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/lib-src/portaudio-v19/src/common/pa_util.h" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/lib-src/portaudio-v19/src/common/pa_util.h \- Prototypes for utility functions used by PortAudio implementations\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+\fC#include 'portaudio\&.h'\fP
+.br
+
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBPaError\fP \fBPaUtil_GetHostApiRepresentation\fP (struct \fBPaUtilHostApiRepresentation\fP **hostApi, \fBPaHostApiTypeId\fP type)"
+.br
+.ti -1c
+.RI "\fBPaError\fP \fBPaUtil_DeviceIndexToHostApiDeviceIndex\fP (\fBPaDeviceIndex\fP *hostApiDevice, \fBPaDeviceIndex\fP device, struct \fBPaUtilHostApiRepresentation\fP *hostApi)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBPaUtil_SetLastHostErrorInfo\fP (\fBPaHostApiTypeId\fP hostApiType, long \fBerrorCode\fP, \fBconst\fP char *errorText)"
+.br
+.ti -1c
+.RI "\fBvoid\fP * \fBPaUtil_AllocateMemory\fP (long \fBsize\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBPaUtil_FreeMemory\fP (\fBvoid\fP *\fBblock\fP)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBPaUtil_CountCurrentlyAllocatedBlocks\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBPaUtil_InitializeClock\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "double \fBPaUtil_GetTime\fP (\fBvoid\fP)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Prototypes for utility functions used by PortAudio implementations\&. 
+
+Some functions declared here are defined in pa_front\&.c while others are implemented separately for each platform\&. 
+.PP
+Definition in file \fBpa_util\&.h\fP\&.
+.SH "Function Documentation"
+.PP 
+.SS "\fBvoid\fP* PaUtil_AllocateMemory (long size)"
+Allocate size bytes, guaranteed to be aligned to a FIXME byte boundary 
+.PP
+Definition at line 74 of file pa_unix_util\&.c\&.
+.SS "\fBint\fP PaUtil_CountCurrentlyAllocatedBlocks (\fBvoid\fP)"
+Return the number of currently allocated blocks\&. This function can be used for detecting memory leaks\&.
+.PP
+\fBNote:\fP
+.RS 4
+Allocations will only be tracked if PA_TRACK_MEMORY is #defined\&. If it isn't, this function will always return 0\&. 
+.RE
+.PP
+
+.PP
+Definition at line 98 of file pa_unix_util\&.c\&.
+.SS "\fBPaError\fP PaUtil_DeviceIndexToHostApiDeviceIndex (\fBPaDeviceIndex\fP * hostApiDevice, \fBPaDeviceIndex\fP device, struct \fBPaUtilHostApiRepresentation\fP * hostApi)"
+Convert a PortAudio device index into a host API specific device index\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIhostApiDevice\fP Pointer to a device index, on success this will recieve the converted device index value\&. 
+.br
+\fIdevice\fP The PortAudio device index to convert\&. 
+.br
+\fIhostApi\fP The host api which the index should be converted for\&.
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+On success returns PaNoError and places the converted index in the hostApiDevice parameter\&. 
+.RE
+.PP
+
+.PP
+Definition at line 529 of file pa_front\&.c\&.
+.SS "\fBvoid\fP PaUtil_FreeMemory (\fBvoid\fP * block)"
+Realease block if non-NULL\&. block may be NULL 
+.PP
+Definition at line 85 of file pa_unix_util\&.c\&.
+.SS "\fBPaError\fP PaUtil_GetHostApiRepresentation (struct \fBPaUtilHostApiRepresentation\fP ** hostApi, \fBPaHostApiTypeId\fP type)"
+Retrieve a specific host API representation\&. This function can be used by implementations to retrieve a pointer to their representation in host api specific extension functions which aren't passed a rep pointer by pa_front\&.c\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIhostApi\fP A pointer to a host API represenation pointer\&. Apon success this will receive the requested representation pointer\&.
+.br
+\fItype\fP A valid host API type identifier\&.
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+An error code\&. If the result is PaNoError then a pointer to the requested host API representation will be stored in *hostApi\&. If the host API specified by type is not found, this function returns paHostApiNotFound\&. 
+.RE
+.PP
+
+.PP
+Definition at line 500 of file pa_front\&.c\&.
+.SS "double PaUtil_GetTime (\fBvoid\fP)"
+Return the system time in seconds\&. Used to implement CPU load functions
+.PP
+\fBSee also:\fP
+.RS 4
+\fBPaUtil_InitializeClock\fP 
+.RE
+.PP
+
+.PP
+Definition at line 157 of file pa_unix_util\&.c\&.
+.SS "\fBvoid\fP PaUtil_InitializeClock (\fBvoid\fP)"
+Initialize the clock used by \fBPaUtil_GetTime()\fP\&. Call this before calling PaUtil_GetTime\&.
+.PP
+\fBSee also:\fP
+.RS 4
+\fBPaUtil_GetTime\fP 
+.RE
+.PP
+
+.PP
+Definition at line 146 of file pa_unix_util\&.c\&.
+.SS "\fBvoid\fP PaUtil_SetLastHostErrorInfo (\fBPaHostApiTypeId\fP hostApiType, long errorCode, \fBconst\fP char * errorText)"
+Set the host error information returned by Pa_GetLastHostErrorInfo\&. This function and the paUnanticipatedHostError error code should be used as a last resort\&. Implementors should use existing PA error codes where possible, or nominate new ones\&. Note that at it is always better to use \fBPaUtil_SetLastHostErrorInfo()\fP and paUnanticipatedHostError than to return an ambiguous or inaccurate PaError code\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIhostApiType\fP The host API which encountered the error (ie of the caller)
+.br
+\fIerrorCode\fP The error code returned by the native API function\&.
+.br
+\fIerrorText\fP A string describing the error\&. PaUtil_SetLastHostErrorInfo makes a copy of the string, so it is not necessary for the pointer to remain valid after the call to \fBPaUtil_SetLastHostErrorInfo()\fP returns\&. 
+.RE
+.PP
+
+.PP
+Definition at line 145 of file pa_front\&.c\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

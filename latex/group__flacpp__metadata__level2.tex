@@ -1,0 +1,80 @@
+\hypertarget{group__flacpp__metadata__level2}{}\section{F\+L\+A\+C++/metadata.h\+: metadata level 2 interface}
+\label{group__flacpp__metadata__level2}\index{F\+L\+A\+C++/metadata.\+h\+: metadata level 2 interface@{F\+L\+A\+C++/metadata.\+h\+: metadata level 2 interface}}
+
+
+Level 2 metadata iterator.  
+
+
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \hyperlink{class_f_l_a_c_1_1_metadata_1_1_chain}{F\+L\+A\+C\+::\+Metadata\+::\+Chain}
+\item 
+class \hyperlink{class_f_l_a_c_1_1_metadata_1_1_iterator}{F\+L\+A\+C\+::\+Metadata\+::\+Iterator}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{group__flacpp__metadata__level2_gae49fa399a6273ccad7cb0e6f787a3f5c}{F\+L\+A\+C\+::\+Metadata\+::\+Prototype\+::\+Prototype} (\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} Prototype \&)
+\item 
+\hyperlink{group__flacpp__metadata__level2_ga3d03bfec2cd09578f166fcd463b56d4f}{F\+L\+A\+C\+::\+Metadata\+::\+Prototype\+::\+Prototype} (\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \+::\hyperlink{struct_f_l_a_c_____stream_metadata}{F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Metadata} \&)
+\item 
+\hyperlink{group__flacpp__metadata__level2_ga1b39c0561f84c3529302dc68b1ba8a2e}{F\+L\+A\+C\+::\+Metadata\+::\+Prototype\+::\+Prototype} (\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \+::\hyperlink{struct_f_l_a_c_____stream_metadata}{F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Metadata} $\ast$)
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Level 2 metadata iterator. 
+
+The flow through the iterator in the C++ layer is similar to the C layer\+:
+\begin{DoxyItemize}
+\item Create a \hyperlink{class_f_l_a_c_1_1_metadata_1_1_chain}{Chain} instance
+\item Check \hyperlink{class_f_l_a_c_1_1_metadata_1_1_chain_a7c7799a4ed676ac334381af9e3888549}{Chain\+::is\+\_\+valid()}
+\item Call \hyperlink{class_f_l_a_c_1_1_metadata_1_1_chain_a509bf6a75a12df65bc77947a4765d9c1}{Chain\+::read()} and check the return
+\item Traverse and/or edit with an \hyperlink{class_f_l_a_c_1_1_metadata_1_1_iterator}{Iterator} or with \hyperlink{class_f_l_a_c_1_1_metadata_1_1_chain_aef51a0414284f468a2d73c07b540641d}{Chain\+::merge\+\_\+padding()} or \hyperlink{class_f_l_a_c_1_1_metadata_1_1_chain_a779eaac12da7e7edac67089053e5907f}{Chain\+::sort\+\_\+padding()}
+\item Write changes back to \hyperlink{namespace_f_l_a_c}{F\+L\+AC} file with \hyperlink{class_f_l_a_c_1_1_metadata_1_1_chain_a2341690885e2312013afc561e6fafd81}{Chain\+::write()}
+\item Destroy the \hyperlink{class_f_l_a_c_1_1_metadata_1_1_chain}{Chain} instance
+\end{DoxyItemize}
+
+The ownership of pointers in the C++ layer is slightly different than in the C layer, i.\+e.
+\begin{DoxyItemize}
+\item The objects returned by \hyperlink{class_f_l_a_c_1_1_metadata_1_1_iterator_a9fb167ff8f0b058e244353a21541f3d7}{Iterator\+::get\+\_\+block()} are N\+OT owned by the iterator and should be deleted by the caller when finished, B\+UT, when you modify the block, it will directly edit what\textquotesingle{}s in the chain and you do not need to call \hyperlink{class_f_l_a_c_1_1_metadata_1_1_iterator_a3123daf89fca2a8981c9f361f466a418}{Iterator\+::set\+\_\+block()}. However the changes will not be reflected in the \hyperlink{namespace_f_l_a_c}{F\+L\+AC} file until the chain is written with \hyperlink{class_f_l_a_c_1_1_metadata_1_1_chain_a2341690885e2312013afc561e6fafd81}{Chain\+::write()}.
+\item When you pass an object to \hyperlink{class_f_l_a_c_1_1_metadata_1_1_iterator_a3123daf89fca2a8981c9f361f466a418}{Iterator\+::set\+\_\+block()}, \hyperlink{class_f_l_a_c_1_1_metadata_1_1_iterator_a86de6d0b21ac08b74a2ea8c1a9adce36}{Iterator\+::insert\+\_\+block\+\_\+before()}, or \hyperlink{class_f_l_a_c_1_1_metadata_1_1_iterator_a73e7a3f7192f369cb3a19d078da504ab}{Iterator\+::insert\+\_\+block\+\_\+after()}, the iterator takes ownership of the block and it will be deleted by the chain.
+\end{DoxyItemize}
+
+See the \hyperlink{group__flac__metadata__level2}{C layer equivalent } for more. 
+
+\subsection{Function Documentation}
+\index{F\+L\+A\+C++/metadata.\+h\+: metadata level 2 interface@{F\+L\+A\+C++/metadata.\+h\+: metadata level 2 interface}!Prototype@{Prototype}}
+\index{Prototype@{Prototype}!F\+L\+A\+C++/metadata.\+h\+: metadata level 2 interface@{F\+L\+A\+C++/metadata.\+h\+: metadata level 2 interface}}
+\subsubsection[{\texorpdfstring{Prototype(const Prototype \&)}{Prototype(const Prototype &)}}]{\setlength{\rightskip}{0pt plus 5cm}F\+L\+A\+C\+::\+Metadata\+::\+Prototype\+::\+Prototype (
+\begin{DoxyParamCaption}
+\item[{{\bf const} {\bf Prototype} \&}]{object}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [protected]}}\hypertarget{group__flacpp__metadata__level2_gae49fa399a6273ccad7cb0e6f787a3f5c}{}\label{group__flacpp__metadata__level2_gae49fa399a6273ccad7cb0e6f787a3f5c}
+Constructs a copy of the given object. This form always performs a deep copy. 
+
+Definition at line 129 of file metadata.\+cpp.
+
+\index{F\+L\+A\+C++/metadata.\+h\+: metadata level 2 interface@{F\+L\+A\+C++/metadata.\+h\+: metadata level 2 interface}!Prototype@{Prototype}}
+\index{Prototype@{Prototype}!F\+L\+A\+C++/metadata.\+h\+: metadata level 2 interface@{F\+L\+A\+C++/metadata.\+h\+: metadata level 2 interface}}
+\subsubsection[{\texorpdfstring{Prototype(const \+::\+F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Metadata \&)}{Prototype(const ::FLAC__StreamMetadata &)}}]{\setlength{\rightskip}{0pt plus 5cm}F\+L\+A\+C\+::\+Metadata\+::\+Prototype\+::\+Prototype (
+\begin{DoxyParamCaption}
+\item[{{\bf const} \+::{\bf F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Metadata} \&}]{object}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [protected]}}\hypertarget{group__flacpp__metadata__level2_ga3d03bfec2cd09578f166fcd463b56d4f}{}\label{group__flacpp__metadata__level2_ga3d03bfec2cd09578f166fcd463b56d4f}
+
+
+Definition at line 136 of file metadata.\+cpp.
+
+\index{F\+L\+A\+C++/metadata.\+h\+: metadata level 2 interface@{F\+L\+A\+C++/metadata.\+h\+: metadata level 2 interface}!Prototype@{Prototype}}
+\index{Prototype@{Prototype}!F\+L\+A\+C++/metadata.\+h\+: metadata level 2 interface@{F\+L\+A\+C++/metadata.\+h\+: metadata level 2 interface}}
+\subsubsection[{\texorpdfstring{Prototype(const \+::\+F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Metadata $\ast$)}{Prototype(const ::FLAC__StreamMetadata *)}}]{\setlength{\rightskip}{0pt plus 5cm}F\+L\+A\+C\+::\+Metadata\+::\+Prototype\+::\+Prototype (
+\begin{DoxyParamCaption}
+\item[{{\bf const} \+::{\bf F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Metadata} $\ast$}]{object}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [protected]}}\hypertarget{group__flacpp__metadata__level2_ga1b39c0561f84c3529302dc68b1ba8a2e}{}\label{group__flacpp__metadata__level2_ga1b39c0561f84c3529302dc68b1ba8a2e}
+
+
+Definition at line 142 of file metadata.\+cpp.
+

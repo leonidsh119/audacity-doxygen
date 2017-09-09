@@ -1,0 +1,358 @@
+.TH "lavu_audio" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+lavu_audio \- Audio related
+.SS "Modules"
+
+.in +1c
+.ti -1c
+.RI "\fBAudio channel masks\fP"
+.br
+.ti -1c
+.RI "\fBAudio channel convenience macros\fP"
+.br
+.ti -1c
+.RI "\fBAudio downmix metadata\fP"
+.br
+.in -1c
+.SS "Typedefs"
+
+.in +1c
+.ti -1c
+.RI "typedef struct \fBAVAudioFifo\fP \fBAVAudioFifo\fP"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBvoid\fP \fBav_audio_fifo_free\fP (\fBAVAudioFifo\fP *af)"
+.br
+.ti -1c
+.RI "\fBAVAudioFifo\fP * \fBav_audio_fifo_alloc\fP (enum \fBAVSampleFormat\fP sample_fmt, \fBint\fP channels, \fBint\fP nb_samples)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_audio_fifo_realloc\fP (\fBAVAudioFifo\fP *af, \fBint\fP nb_samples)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_audio_fifo_write\fP (\fBAVAudioFifo\fP *af, \fBvoid\fP **\fBdata\fP, \fBint\fP nb_samples)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_audio_fifo_read\fP (\fBAVAudioFifo\fP *af, \fBvoid\fP **\fBdata\fP, \fBint\fP nb_samples)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_audio_fifo_drain\fP (\fBAVAudioFifo\fP *af, \fBint\fP nb_samples)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBav_audio_fifo_reset\fP (\fBAVAudioFifo\fP *af)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_audio_fifo_size\fP (\fBAVAudioFifo\fP *af)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_audio_fifo_space\fP (\fBAVAudioFifo\fP *af)"
+.br
+.ti -1c
+.RI "\fBuint64_t\fP \fBav_get_channel_layout\fP (\fBconst\fP char *\fBname\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBav_get_channel_layout_string\fP (char *\fBbuf\fP, \fBint\fP buf_size, \fBint\fP nb_channels, \fBuint64_t\fP channel_layout)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBav_bprint_channel_layout\fP (struct \fBAVBPrint\fP *bp, \fBint\fP nb_channels, \fBuint64_t\fP channel_layout)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_get_channel_layout_nb_channels\fP (\fBuint64_t\fP channel_layout)"
+.br
+.ti -1c
+.RI "\fBint64_t\fP \fBav_get_default_channel_layout\fP (\fBint\fP nb_channels)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_get_channel_layout_channel_index\fP (\fBuint64_t\fP channel_layout, \fBuint64_t\fP channel)"
+.br
+.ti -1c
+.RI "\fBuint64_t\fP \fBav_channel_layout_extract_channel\fP (\fBuint64_t\fP channel_layout, \fBint\fP index)"
+.br
+.ti -1c
+.RI "\fBconst\fP char * \fBav_get_channel_name\fP (\fBuint64_t\fP channel)"
+.br
+.ti -1c
+.RI "\fBconst\fP char * \fBav_get_channel_description\fP (\fBuint64_t\fP channel)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_get_standard_channel_layout\fP (unsigned index, \fBuint64_t\fP *layout, \fBconst\fP char **\fBname\fP)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+
+.SH "Typedef Documentation"
+.PP 
+.SS "typedef struct \fBAVAudioFifo\fP \fBAVAudioFifo\fP"
+Context for an Audio FIFO Buffer\&.
+.PP
+.IP "\(bu" 2
+Operates at the sample level rather than the byte level\&.
+.IP "\(bu" 2
+Supports multiple channels with either planar or packed sample format\&.
+.IP "\(bu" 2
+Automatic reallocation when writing to a full buffer\&. 
+.PP
+
+.PP
+Definition at line 46 of file audio_fifo\&.h\&.
+.SH "Function Documentation"
+.PP 
+.SS "\fBAVAudioFifo\fP* av_audio_fifo_alloc (enum \fBAVSampleFormat\fP sample_fmt, \fBint\fP channels, \fBint\fP nb_samples)"
+Allocate an AVAudioFifo\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIsample_fmt\fP sample format 
+.br
+\fIchannels\fP number of channels 
+.br
+\fInb_samples\fP initial allocation size, in samples 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+newly allocated AVAudioFifo, or NULL on error 
+.RE
+.PP
+
+.SS "\fBint\fP av_audio_fifo_drain (\fBAVAudioFifo\fP * af, \fBint\fP nb_samples)"
+Drain data from an AVAudioFifo\&.
+.PP
+Removes the data without reading it\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIaf\fP AVAudioFifo to drain 
+.br
+\fInb_samples\fP number of samples to drain 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+0 if OK, or negative AVERROR code on failure 
+.RE
+.PP
+
+.SS "\fBvoid\fP av_audio_fifo_free (\fBAVAudioFifo\fP * af)"
+Free an AVAudioFifo\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIaf\fP AVAudioFifo to free 
+.RE
+.PP
+
+.SS "\fBint\fP av_audio_fifo_read (\fBAVAudioFifo\fP * af, \fBvoid\fP ** data, \fBint\fP nb_samples)"
+Read data from an AVAudioFifo\&.
+.PP
+\fBSee also:\fP
+.RS 4
+enum \fBAVSampleFormat\fP The documentation \fBfor\fP \fBAVSampleFormat\fP describes \fBthe\fP \fBdata\fP layout\&.
+.RE
+.PP
+\fBParameters:\fP
+.RS 4
+\fIaf\fP AVAudioFifo to read from 
+.br
+\fIdata\fP audio data plane pointers 
+.br
+\fInb_samples\fP number of samples to read 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+number of samples actually read, or negative AVERROR code on failure\&. The number of samples actually read will not be greater than nb_samples, and will only be less than nb_samples if av_audio_fifo_size is less than nb_samples\&. 
+.RE
+.PP
+
+.SS "\fBint\fP av_audio_fifo_realloc (\fBAVAudioFifo\fP * af, \fBint\fP nb_samples)"
+Reallocate an AVAudioFifo\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIaf\fP AVAudioFifo to reallocate 
+.br
+\fInb_samples\fP new allocation size, in samples 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+0 if OK, or negative AVERROR code on failure 
+.RE
+.PP
+
+.SS "\fBvoid\fP av_audio_fifo_reset (\fBAVAudioFifo\fP * af)"
+Reset the AVAudioFifo buffer\&.
+.PP
+This empties all data in the buffer\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIaf\fP AVAudioFifo to reset 
+.RE
+.PP
+
+.SS "\fBint\fP av_audio_fifo_size (\fBAVAudioFifo\fP * af)"
+Get the current number of samples in the AVAudioFifo available for reading\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIaf\fP the AVAudioFifo to query 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+number of samples available for reading 
+.RE
+.PP
+
+.SS "\fBint\fP av_audio_fifo_space (\fBAVAudioFifo\fP * af)"
+Get the current number of samples in the AVAudioFifo available for writing\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIaf\fP the AVAudioFifo to query 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+number of samples available for writing 
+.RE
+.PP
+
+.SS "\fBint\fP av_audio_fifo_write (\fBAVAudioFifo\fP * af, \fBvoid\fP ** data, \fBint\fP nb_samples)"
+Write data to an AVAudioFifo\&.
+.PP
+The AVAudioFifo will be reallocated automatically if the available space is less than nb_samples\&.
+.PP
+\fBSee also:\fP
+.RS 4
+enum \fBAVSampleFormat\fP The documentation \fBfor\fP \fBAVSampleFormat\fP describes \fBthe\fP \fBdata\fP layout\&.
+.RE
+.PP
+\fBParameters:\fP
+.RS 4
+\fIaf\fP AVAudioFifo to write to 
+.br
+\fIdata\fP audio data plane pointers 
+.br
+\fInb_samples\fP number of samples to write 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+number of samples actually written, or negative AVERROR code on failure\&. If successful, the number of samples actually written will always be nb_samples\&. 
+.RE
+.PP
+
+.SS "\fBvoid\fP av_bprint_channel_layout (struct \fBAVBPrint\fP * bp, \fBint\fP nb_channels, \fBuint64_t\fP channel_layout)"
+Append a description of a channel layout to a bprint buffer\&. 
+.SS "\fBuint64_t\fP av_channel_layout_extract_channel (\fBuint64_t\fP channel_layout, \fBint\fP index)"
+Get the channel with the given index in channel_layout\&. 
+.SS "\fBconst\fP char* av_get_channel_description (\fBuint64_t\fP channel)"
+Get the description of a given channel\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIchannel\fP a channel layout with a single channel 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+channel description on success, NULL on error 
+.RE
+.PP
+
+.SS "\fBuint64_t\fP av_get_channel_layout (\fBconst\fP char * name)"
+Return a channel layout id that matches name, or 0 if no match is found\&.
+.PP
+name can be one or several of the following notations, separated by '+' or '|':
+.IP "\(bu" 2
+the name of an usual channel layout (mono, stereo, 4\&.0, quad, 5\&.0, 5\&.0(side), 5\&.1, 5\&.1(side), 7\&.1, 7\&.1(wide), downmix);
+.IP "\(bu" 2
+the name of a single channel (FL, FR, FC, LFE, BL, BR, FLC, FRC, BC, SL, SR, TC, TFL, TFC, TFR, TBL, TBC, TBR, DL, DR);
+.IP "\(bu" 2
+a number of channels, in decimal, optionally followed by 'c', yielding the default channel layout for that number of channels (
+.PP
+\fBSee also:\fP
+.RS 4
+\fBav_get_default_channel_layout\fP);
+.RE
+.PP
+
+.IP "\(bu" 2
+a channel layout mask, in hexadecimal starting with '0x' (see the AV_CH_* macros)\&.
+.PP
+.PP
+\fBWarning:\fP
+.RS 4
+Starting from the next major bump the trailing character 'c' to specify a number of channels will be required, while a channel layout mask could also be specified as a decimal number (if and only if not followed by 'c')\&.
+.RE
+.PP
+Example: 'stereo+FC' = '2c+FC' = '2c+1c' = '0x7' 
+.SS "\fBint\fP av_get_channel_layout_channel_index (\fBuint64_t\fP channel_layout, \fBuint64_t\fP channel)"
+Get the index of a channel in channel_layout\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIchannel\fP a channel layout describing exactly one channel which must be present in channel_layout\&.
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+index of channel in channel_layout on success, a negative AVERROR on error\&. 
+.RE
+.PP
+
+.SS "\fBint\fP av_get_channel_layout_nb_channels (\fBuint64_t\fP channel_layout)"
+Return the number of channels in the channel layout\&. 
+.SS "\fBvoid\fP av_get_channel_layout_string (char * buf, \fBint\fP buf_size, \fBint\fP nb_channels, \fBuint64_t\fP channel_layout)"
+Return a description of a channel layout\&. If nb_channels is <= 0, it is guessed from the channel_layout\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIbuf\fP put here the string containing the channel layout 
+.br
+\fIbuf_size\fP size in bytes of the buffer 
+.RE
+.PP
+
+.SS "\fBconst\fP char* av_get_channel_name (\fBuint64_t\fP channel)"
+Get the name of a given channel\&.
+.PP
+\fBReturns:\fP
+.RS 4
+channel name on success, NULL on error\&. 
+.RE
+.PP
+
+.SS "\fBint64_t\fP av_get_default_channel_layout (\fBint\fP nb_channels)"
+Return default channel layout for a given number of channels\&. 
+.SS "\fBint\fP av_get_standard_channel_layout (unsigned index, \fBuint64_t\fP * layout, \fBconst\fP char ** name)"
+Get the value and name of a standard channel layout\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIindex\fP index in an internal list, starting at 0 
+.br
+\fIlayout\fP channel layout mask 
+.br
+\fIname\fP name of the layout 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+0 if the layout exists, <0 if index is beyond the limits 
+.RE
+.PP
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

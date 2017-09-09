@@ -1,0 +1,307 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/src/Menus.cpp" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/src/Menus.cpp \- All \fBAudacityProject\fP functions that provide the menus\&. Implements \fBAudacityProjectCommandFunctor\fP\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+\fC#include 'Audacity\&.h'\fP
+.br
+\fC#include 'Project\&.h'\fP
+.br
+\fC#include <iterator>\fP
+.br
+\fC#include <limits>\fP
+.br
+\fC#include <math\&.h>\fP
+.br
+\fC#include <wx/defs\&.h>\fP
+.br
+\fC#include <wx/docview\&.h>\fP
+.br
+\fC#include <wx/msgdlg\&.h>\fP
+.br
+\fC#include <wx/filedlg\&.h>\fP
+.br
+\fC#include <wx/textfile\&.h>\fP
+.br
+\fC#include <wx/textdlg\&.h>\fP
+.br
+\fC#include <wx/progdlg\&.h>\fP
+.br
+\fC#include <wx/scrolbar\&.h>\fP
+.br
+\fC#include <wx/ffile\&.h>\fP
+.br
+\fC#include <wx/statusbr\&.h>\fP
+.br
+\fC#include <wx/utils\&.h>\fP
+.br
+\fC#include 'FreqWindow\&.h'\fP
+.br
+\fC#include 'effects/Contrast\&.h'\fP
+.br
+\fC#include 'TrackPanel\&.h'\fP
+.br
+\fC#include 'effects/EffectManager\&.h'\fP
+.br
+\fC#include 'AudacityApp\&.h'\fP
+.br
+\fC#include 'AudacityLogger\&.h'\fP
+.br
+\fC#include 'AudioIO\&.h'\fP
+.br
+\fC#include 'Dependencies\&.h'\fP
+.br
+\fC#include 'float_cast\&.h'\fP
+.br
+\fC#include 'LabelTrack\&.h'\fP
+.br
+\fC#include 'import/ImportRaw\&.h'\fP
+.br
+\fC#include 'export/Export\&.h'\fP
+.br
+\fC#include 'export/ExportMultiple\&.h'\fP
+.br
+\fC#include 'prefs/PrefsDialog\&.h'\fP
+.br
+\fC#include 'ShuttleGui\&.h'\fP
+.br
+\fC#include 'HistoryWindow\&.h'\fP
+.br
+\fC#include 'LyricsWindow\&.h'\fP
+.br
+\fC#include 'MixerBoard\&.h'\fP
+.br
+\fC#include 'Internat\&.h'\fP
+.br
+\fC#include 'FileFormats\&.h'\fP
+.br
+\fC#include 'ModuleManager\&.h'\fP
+.br
+\fC#include 'PluginManager\&.h'\fP
+.br
+\fC#include 'Prefs\&.h'\fP
+.br
+\fC#include 'Printing\&.h'\fP
+.br
+\fC#include 'Tags\&.h'\fP
+.br
+\fC#include 'TimeTrack\&.h'\fP
+.br
+\fC#include 'Mix\&.h'\fP
+.br
+\fC#include 'AboutDialog\&.h'\fP
+.br
+\fC#include 'Benchmark\&.h'\fP
+.br
+\fC#include 'Screenshot\&.h'\fP
+.br
+\fC#include 'ondemand/ODManager\&.h'\fP
+.br
+\fC#include 'Resample\&.h'\fP
+.br
+\fC#include 'BatchProcessDialog\&.h'\fP
+.br
+\fC#include 'BatchCommands\&.h'\fP
+.br
+\fC#include 'prefs/BatchPrefs\&.h'\fP
+.br
+\fC#include 'toolbars/ToolManager\&.h'\fP
+.br
+\fC#include 'toolbars/ControlToolBar\&.h'\fP
+.br
+\fC#include 'toolbars/ToolsToolBar\&.h'\fP
+.br
+\fC#include 'toolbars/EditToolBar\&.h'\fP
+.br
+\fC#include 'toolbars/DeviceToolBar\&.h'\fP
+.br
+\fC#include 'toolbars/MixerToolBar\&.h'\fP
+.br
+\fC#include 'toolbars/TranscriptionToolBar\&.h'\fP
+.br
+\fC#include 'widgets/LinkingHtmlWindow\&.h'\fP
+.br
+\fC#include 'Experimental\&.h'\fP
+.br
+\fC#include 'PlatformCompatibility\&.h'\fP
+.br
+\fC#include 'FileNames\&.h'\fP
+.br
+\fC#include 'TimeDialog\&.h'\fP
+.br
+\fC#include 'TimerRecordDialog\&.h'\fP
+.br
+\fC#include 'SoundActivatedRecord\&.h'\fP
+.br
+\fC#include 'LabelDialog\&.h'\fP
+.br
+\fC#include 'FileDialog\&.h'\fP
+.br
+\fC#include 'SplashDialog\&.h'\fP
+.br
+\fC#include 'widgets/HelpSystem\&.h'\fP
+.br
+\fC#include 'DeviceManager\&.h'\fP
+.br
+\fC#include 'Snap\&.h'\fP
+.br
+\fC#include 'UndoManager\&.h'\fP
+.br
+\fC#include 'WaveTrack\&.h'\fP
+.br
+
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "class \fBVoidFunctor\fP"
+.br
+.ti -1c
+.RI "class \fBKeyFunctor\fP"
+.br
+.ti -1c
+.RI "class \fBListFunctor\fP"
+.br
+.ti -1c
+.RI "class \fBPluginFunctor\fP"
+.br
+.in -1c
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBFN\fP(X)   (\fBMakeFunctor\fP(this, &AudacityProject:: X ))"
+.br
+.ti -1c
+.RI "#define \fBFNS\fP(X,  \fBS\fP)   (\fBMakeFunctor\fP(this, (\fBS\fP), &AudacityProject:: X ))"
+.br
+.in -1c
+.SS "Typedefs"
+
+.in +1c
+.ti -1c
+.RI "using \fBaudCommandFunction\fP) = \fBvoid\fP(AudacityProject::*)("
+.br
+.ti -1c
+.RI "using \fBaudCommandKeyFunction\fP = \fBvoid\fP(AudacityProject::*)(\fBconst\fP wxEvent *)"
+.br
+.ti -1c
+.RI "using \fBaudCommandListFunction\fP = \fBvoid\fP(AudacityProject::*)(\fBint\fP)"
+.br
+.ti -1c
+.RI "using \fBaudCommandPluginFunction\fP = \fBbool\fP(AudacityProject::*)(\fBconst\fP \fBPluginID\fP &, \fBint\fP)"
+.br
+.in -1c
+.SS "Enumerations"
+
+.in +1c
+.ti -1c
+.RI "enum { \fBkAlignStartZero\fP = 0, \fBkAlignStartSelStart\fP, \fBkAlignStartSelEnd\fP, \fBkAlignEndSelStart\fP, \fBkAlignEndSelEnd\fP, \fBkAlignEndToEnd\fP, \fBkAlignTogether\fP }"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBCommandFunctorPointer\fP \fBMakeFunctor\fP (\fBAudacityProject\fP *project, \fBaudCommandFunction\fP pfn)"
+.br
+.ti -1c
+.RI "\fBCommandFunctorPointer\fP \fBMakeFunctor\fP (\fBAudacityProject\fP *project, \fBaudCommandKeyFunction\fP pfn)"
+.br
+.ti -1c
+.RI "\fBCommandFunctorPointer\fP \fBMakeFunctor\fP (\fBAudacityProject\fP *project, \fBaudCommandListFunction\fP pfn)"
+.br
+.ti -1c
+.RI "\fBCommandFunctorPointer\fP \fBMakeFunctor\fP (\fBAudacityProject\fP *project, \fBconst\fP \fBPluginID\fP &id, \fBaudCommandPluginFunction\fP pfn)"
+.br
+.ti -1c
+.RI "\fBWX_DEFINE_ARRAY_PTR\fP (\fBconst\fP \fBPluginDescriptor\fP *, EffectPlugs)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+All \fBAudacityProject\fP functions that provide the menus\&. Implements \fBAudacityProjectCommandFunctor\fP\&. 
+
+This file implements the method that creates the menu bar, plus all of the methods that get called when you select an item from a menu\&.
+.PP
+All of the menu bar handling is part of the class \fBAudacityProject\fP, but the event handlers for all of the menu items have been moved to \fBMenus\&.h\fP and \fBMenus\&.cpp\fP for clarity\&. 
+.PP
+Definition in file \fBMenus\&.cpp\fP\&.
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define FN(X)   (\fBMakeFunctor\fP(this, &AudacityProject:: X ))"
+
+.PP
+Definition at line 214 of file Menus\&.cpp\&.
+.SS "#define FNS(X, \fBS\fP)   (\fBMakeFunctor\fP(this, (\fBS\fP), &AudacityProject:: X ))"
+
+.PP
+Definition at line 215 of file Menus\&.cpp\&.
+.SH "Typedef Documentation"
+.PP 
+.SS "using audCommandFunction =  \fBvoid\fP (AudacityProject::*)("
+
+.PP
+Definition at line 150 of file Menus\&.cpp\&.
+.SS "using \fBaudCommandKeyFunction\fP =  \fBvoid\fP (AudacityProject::*)(\fBconst\fP wxEvent *)"
+
+.PP
+Definition at line 163 of file Menus\&.cpp\&.
+.SS "using \fBaudCommandListFunction\fP =  \fBvoid\fP (AudacityProject::*)(\fBint\fP)"
+
+.PP
+Definition at line 176 of file Menus\&.cpp\&.
+.SS "using \fBaudCommandPluginFunction\fP =  \fBbool\fP (AudacityProject::*)(\fBconst\fP \fBPluginID\fP &, \fBint\fP)"
+
+.PP
+Definition at line 189 of file Menus\&.cpp\&.
+.SH "Enumeration Type Documentation"
+.PP 
+.SS "anonymous enum"
+
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fIkAlignStartZero \fP\fP
+.TP
+\fB\fIkAlignStartSelStart \fP\fP
+.TP
+\fB\fIkAlignStartSelEnd \fP\fP
+.TP
+\fB\fIkAlignEndSelStart \fP\fP
+.TP
+\fB\fIkAlignEndSelEnd \fP\fP
+.TP
+\fB\fIkAlignEndToEnd \fP\fP
+.TP
+\fB\fIkAlignTogether \fP\fP
+.PP
+Definition at line 136 of file Menus\&.cpp\&.
+.SH "Function Documentation"
+.PP 
+.SS "\fBCommandFunctorPointer\fP MakeFunctor (\fBAudacityProject\fP * project, \fBaudCommandFunction\fP pfn)\fC [inline]\fP"
+
+.PP
+Definition at line 204 of file Menus\&.cpp\&.
+.SS "\fBCommandFunctorPointer\fP MakeFunctor (\fBAudacityProject\fP * project, \fBaudCommandKeyFunction\fP pfn)\fC [inline]\fP"
+
+.PP
+Definition at line 206 of file Menus\&.cpp\&.
+.SS "\fBCommandFunctorPointer\fP MakeFunctor (\fBAudacityProject\fP * project, \fBaudCommandListFunction\fP pfn)\fC [inline]\fP"
+
+.PP
+Definition at line 208 of file Menus\&.cpp\&.
+.SS "\fBCommandFunctorPointer\fP MakeFunctor (\fBAudacityProject\fP * project, \fBconst\fP \fBPluginID\fP & id, \fBaudCommandPluginFunction\fP pfn)\fC [inline]\fP"
+
+.PP
+Definition at line 210 of file Menus\&.cpp\&.
+.SS "WX_DEFINE_ARRAY_PTR (\fBconst\fP \fBPluginDescriptor\fP *, EffectPlugs)"
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

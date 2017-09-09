@@ -1,0 +1,138 @@
+\hypertarget{libflac_2src_2flac_2encode_8c}{}\section{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/libflac/src/flac/encode.c File Reference}
+\label{libflac_2src_2flac_2encode_8c}\index{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/libflac/src/flac/encode.\+c@{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/libflac/src/flac/encode.\+c}}
+{\ttfamily \#include $<$errno.\+h$>$}\\*
+{\ttfamily \#include $<$limits.\+h$>$}\\*
+{\ttfamily \#include $<$math.\+h$>$}\\*
+{\ttfamily \#include $<$stdio.\+h$>$}\\*
+{\ttfamily \#include $<$stdlib.\+h$>$}\\*
+{\ttfamily \#include $<$string.\+h$>$}\\*
+{\ttfamily \#include $<$sys/stat.\+h$>$}\\*
+{\ttfamily \#include \char`\"{}F\+L\+A\+C/all.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}share/alloc.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}share/grabbag.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}share/compat.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}share/private.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}share/safe\+\_\+str.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}encode.\+h\char`\"{}}\\*
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{struct_sample_info}{Sample\+Info}
+\item 
+struct \hyperlink{struct_f_l_a_c_decoder_data}{F\+L\+A\+C\+Decoder\+Data}
+\item 
+struct \hyperlink{struct_encoder_session}{Encoder\+Session}
+\item 
+struct \hyperlink{structstatic__metadata__t}{static\+\_\+metadata\+\_\+t}
+\end{DoxyCompactItemize}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{libflac_2src_2flac_2encode_8c_abb702d8b501669a23aa0ab3b281b9384}{min}(x,  y)~((x)$<$(y)?(x)\+:(y))
+\item 
+\#define \hyperlink{libflac_2src_2flac_2encode_8c_ac39d9cef6a5e030ba8d9e11121054268}{max}(x,  y)~((x)$>$(y)?(x)\+:(y))
+\item 
+\#define \hyperlink{libflac_2src_2flac_2encode_8c_ac26d293c7023125de1e0e3e1301fc4bb}{C\+H\+U\+N\+K\+\_\+\+O\+F\+\_\+\+S\+A\+M\+P\+L\+ES}~2048
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{libflac_2src_2flac_2encode_8c_ad40913d0c916ad63aadb47987bf29754}{flac\+\_\+\+\_\+encode\+\_\+file} (F\+I\+LE $\ast$infile, \hyperlink{libflac_2include_2share_2compat_8h_a125fb0105eee035da35c6a4999d140eb}{F\+L\+A\+C\+\_\+\+\_\+off\+\_\+t} infilesize, \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} char $\ast$infilename, \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} char $\ast$outfilename, \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{ordinals_8h_a5eb569b12d5b047cdacada4d57924ee3}{F\+L\+A\+C\+\_\+\+\_\+byte} $\ast$lookahead, unsigned lookahead\+\_\+length, \hyperlink{structencode__options__t}{encode\+\_\+options\+\_\+t} options)
+\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{libflac_2src_2flac_2encode_8c_ac5137438dc7cdf9ef6b87e06058b5498}{F\+L\+A\+C\+\_\+\+E\+N\+C\+O\+D\+E\+\_\+\+\_\+\+D\+E\+F\+A\+U\+L\+T\+\_\+\+P\+A\+D\+D\+I\+NG} = 8192
+\end{DoxyCompactItemize}
+
+
+\subsection{Macro Definition Documentation}
+\index{libflac/src/flac/encode.\+c@{libflac/src/flac/encode.\+c}!C\+H\+U\+N\+K\+\_\+\+O\+F\+\_\+\+S\+A\+M\+P\+L\+ES@{C\+H\+U\+N\+K\+\_\+\+O\+F\+\_\+\+S\+A\+M\+P\+L\+ES}}
+\index{C\+H\+U\+N\+K\+\_\+\+O\+F\+\_\+\+S\+A\+M\+P\+L\+ES@{C\+H\+U\+N\+K\+\_\+\+O\+F\+\_\+\+S\+A\+M\+P\+L\+ES}!libflac/src/flac/encode.\+c@{libflac/src/flac/encode.\+c}}
+\subsubsection[{\texorpdfstring{C\+H\+U\+N\+K\+\_\+\+O\+F\+\_\+\+S\+A\+M\+P\+L\+ES}{CHUNK_OF_SAMPLES}}]{\setlength{\rightskip}{0pt plus 5cm}\#define C\+H\+U\+N\+K\+\_\+\+O\+F\+\_\+\+S\+A\+M\+P\+L\+ES~2048}\hypertarget{libflac_2src_2flac_2encode_8c_ac26d293c7023125de1e0e3e1301fc4bb}{}\label{libflac_2src_2flac_2encode_8c_ac26d293c7023125de1e0e3e1301fc4bb}
+
+
+Definition at line 50 of file encode.\+c.
+
+\index{libflac/src/flac/encode.\+c@{libflac/src/flac/encode.\+c}!max@{max}}
+\index{max@{max}!libflac/src/flac/encode.\+c@{libflac/src/flac/encode.\+c}}
+\subsubsection[{\texorpdfstring{max}{max}}]{\setlength{\rightskip}{0pt plus 5cm}\#define max(
+\begin{DoxyParamCaption}
+\item[{}]{x, }
+\item[{}]{y}
+\end{DoxyParamCaption}
+)~((x)$>$(y)?(x)\+:(y))}\hypertarget{libflac_2src_2flac_2encode_8c_ac39d9cef6a5e030ba8d9e11121054268}{}\label{libflac_2src_2flac_2encode_8c_ac39d9cef6a5e030ba8d9e11121054268}
+
+
+Definition at line 46 of file encode.\+c.
+
+\index{libflac/src/flac/encode.\+c@{libflac/src/flac/encode.\+c}!min@{min}}
+\index{min@{min}!libflac/src/flac/encode.\+c@{libflac/src/flac/encode.\+c}}
+\subsubsection[{\texorpdfstring{min}{min}}]{\setlength{\rightskip}{0pt plus 5cm}\#define min(
+\begin{DoxyParamCaption}
+\item[{}]{x, }
+\item[{}]{y}
+\end{DoxyParamCaption}
+)~((x)$<$(y)?(x)\+:(y))}\hypertarget{libflac_2src_2flac_2encode_8c_abb702d8b501669a23aa0ab3b281b9384}{}\label{libflac_2src_2flac_2encode_8c_abb702d8b501669a23aa0ab3b281b9384}
+
+
+Definition at line 42 of file encode.\+c.
+
+
+
+\subsection{Function Documentation}
+\index{libflac/src/flac/encode.\+c@{libflac/src/flac/encode.\+c}!flac\+\_\+\+\_\+encode\+\_\+file@{flac\+\_\+\+\_\+encode\+\_\+file}}
+\index{flac\+\_\+\+\_\+encode\+\_\+file@{flac\+\_\+\+\_\+encode\+\_\+file}!libflac/src/flac/encode.\+c@{libflac/src/flac/encode.\+c}}
+\subsubsection[{\texorpdfstring{flac\+\_\+\+\_\+encode\+\_\+file(\+F\+I\+L\+E $\ast$infile, F\+L\+A\+C\+\_\+\+\_\+off\+\_\+t infilesize, const char $\ast$infilename, const char $\ast$outfilename, const F\+L\+A\+C\+\_\+\+\_\+byte $\ast$lookahead, unsigned lookahead\+\_\+length, encode\+\_\+options\+\_\+t options)}{flac__encode_file(FILE *infile, FLAC__off_t infilesize, const char *infilename, const char *outfilename, const FLAC__byte *lookahead, unsigned lookahead_length, encode_options_t options)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf int} flac\+\_\+\+\_\+encode\+\_\+file (
+\begin{DoxyParamCaption}
+\item[{F\+I\+LE $\ast$}]{infile, }
+\item[{{\bf F\+L\+A\+C\+\_\+\+\_\+off\+\_\+t}}]{infilesize, }
+\item[{{\bf const} char $\ast$}]{infilename, }
+\item[{{\bf const} char $\ast$}]{outfilename, }
+\item[{{\bf const} {\bf F\+L\+A\+C\+\_\+\+\_\+byte} $\ast$}]{lookahead, }
+\item[{unsigned}]{lookahead\+\_\+length, }
+\item[{{\bf encode\+\_\+options\+\_\+t}}]{options}
+\end{DoxyParamCaption}
+)}\hypertarget{libflac_2src_2flac_2encode_8c_ad40913d0c916ad63aadb47987bf29754}{}\label{libflac_2src_2flac_2encode_8c_ad40913d0c916ad63aadb47987bf29754}
+
+
+Definition at line 955 of file encode.\+c.
+
+
+
+\subsection{Variable Documentation}
+\index{libflac/src/flac/encode.\+c@{libflac/src/flac/encode.\+c}!F\+L\+A\+C\+\_\+\+E\+N\+C\+O\+D\+E\+\_\+\+\_\+\+D\+E\+F\+A\+U\+L\+T\+\_\+\+P\+A\+D\+D\+I\+NG@{F\+L\+A\+C\+\_\+\+E\+N\+C\+O\+D\+E\+\_\+\+\_\+\+D\+E\+F\+A\+U\+L\+T\+\_\+\+P\+A\+D\+D\+I\+NG}}
+\index{F\+L\+A\+C\+\_\+\+E\+N\+C\+O\+D\+E\+\_\+\+\_\+\+D\+E\+F\+A\+U\+L\+T\+\_\+\+P\+A\+D\+D\+I\+NG@{F\+L\+A\+C\+\_\+\+E\+N\+C\+O\+D\+E\+\_\+\+\_\+\+D\+E\+F\+A\+U\+L\+T\+\_\+\+P\+A\+D\+D\+I\+NG}!libflac/src/flac/encode.\+c@{libflac/src/flac/encode.\+c}}
+\subsubsection[{\texorpdfstring{F\+L\+A\+C\+\_\+\+E\+N\+C\+O\+D\+E\+\_\+\+\_\+\+D\+E\+F\+A\+U\+L\+T\+\_\+\+P\+A\+D\+D\+I\+NG}{FLAC_ENCODE__DEFAULT_PADDING}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf const} {\bf int} F\+L\+A\+C\+\_\+\+E\+N\+C\+O\+D\+E\+\_\+\+\_\+\+D\+E\+F\+A\+U\+L\+T\+\_\+\+P\+A\+D\+D\+I\+NG = 8192}\hypertarget{libflac_2src_2flac_2encode_8c_ac5137438dc7cdf9ef6b87e06058b5498}{}\label{libflac_2src_2flac_2encode_8c_ac5137438dc7cdf9ef6b87e06058b5498}
+
+
+Definition at line 115 of file encode.\+c.
+
+\index{libflac/src/flac/encode.\+c@{libflac/src/flac/encode.\+c}!s16@{s16}}
+\index{s16@{s16}!libflac/src/flac/encode.\+c@{libflac/src/flac/encode.\+c}}
+\subsubsection[{\texorpdfstring{s16}{s16}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf F\+L\+A\+C\+\_\+\+\_\+int16}$\ast$ s16}\hypertarget{libflac_2src_2flac_2encode_8c_a81153741828c2fc46c1b7ed09ba6a4f1}{}\label{libflac_2src_2flac_2encode_8c_a81153741828c2fc46c1b7ed09ba6a4f1}
+
+
+Definition at line 124 of file encode.\+c.
+
+\index{libflac/src/flac/encode.\+c@{libflac/src/flac/encode.\+c}!s8@{s8}}
+\index{s8@{s8}!libflac/src/flac/encode.\+c@{libflac/src/flac/encode.\+c}}
+\subsubsection[{\texorpdfstring{s8}{s8}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf F\+L\+A\+C\+\_\+\+\_\+int8}$\ast$ s8}\hypertarget{libflac_2src_2flac_2encode_8c_af18263e6ac04ac50ad5b6968f8b78a10}{}\label{libflac_2src_2flac_2encode_8c_af18263e6ac04ac50ad5b6968f8b78a10}
+
+
+Definition at line 122 of file encode.\+c.
+
+\index{libflac/src/flac/encode.\+c@{libflac/src/flac/encode.\+c}!u16@{u16}}
+\index{u16@{u16}!libflac/src/flac/encode.\+c@{libflac/src/flac/encode.\+c}}
+\subsubsection[{\texorpdfstring{u16}{u16}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf F\+L\+A\+C\+\_\+\+\_\+uint16}$\ast$ u16}\hypertarget{libflac_2src_2flac_2encode_8c_a4f0ae371be2287bc1d2228396cd68851}{}\label{libflac_2src_2flac_2encode_8c_a4f0ae371be2287bc1d2228396cd68851}
+
+
+Definition at line 125 of file encode.\+c.
+
+\index{libflac/src/flac/encode.\+c@{libflac/src/flac/encode.\+c}!u8@{u8}}
+\index{u8@{u8}!libflac/src/flac/encode.\+c@{libflac/src/flac/encode.\+c}}
+\subsubsection[{\texorpdfstring{u8}{u8}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf F\+L\+A\+C\+\_\+\+\_\+uint8}$\ast$ u8}\hypertarget{libflac_2src_2flac_2encode_8c_ac07e044137bc7170cde7363a0c5576fe}{}\label{libflac_2src_2flac_2encode_8c_ac07e044137bc7170cde7363a0c5576fe}
+
+
+Definition at line 123 of file encode.\+c.
+

@@ -1,0 +1,277 @@
+\hypertarget{pmmacosxcm_8c}{}\section{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/portmidi/pm\+\_\+mac/pmmacosxcm.c File Reference}
+\label{pmmacosxcm_8c}\index{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/portmidi/pm\+\_\+mac/pmmacosxcm.\+c@{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/portmidi/pm\+\_\+mac/pmmacosxcm.\+c}}
+{\ttfamily \#include $<$stdlib.\+h$>$}\\*
+{\ttfamily \#include \char`\"{}portmidi.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}pmutil.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}pminternal.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}porttime.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}pmmac.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}pmmacosxcm.\+h\char`\"{}}\\*
+{\ttfamily \#include $<$stdio.\+h$>$}\\*
+{\ttfamily \#include $<$string.\+h$>$}\\*
+{\ttfamily \#include $<$Core\+Services/\+Core\+Services.\+h$>$}\\*
+{\ttfamily \#include $<$Core\+M\+I\+D\+I/\+M\+I\+D\+I\+Services.\+h$>$}\\*
+{\ttfamily \#include $<$Core\+Audio/\+Host\+Time.\+h$>$}\\*
+{\ttfamily \#include $<$unistd.\+h$>$}\\*
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structmidi__macosxcm__struct}{midi\+\_\+macosxcm\+\_\+struct}
+\end{DoxyCompactItemize}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{pmmacosxcm_8c_ab30af815d6e9494361629440f14e3716}{P\+A\+C\+K\+E\+T\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+S\+I\+ZE}~1024
+\item 
+\#define \hyperlink{pmmacosxcm_8c_aeb15216e0c2b60b68510cb66b663e7a6}{M\+A\+X\+\_\+\+B\+Y\+T\+E\+S\+\_\+\+P\+E\+R\+\_\+S}~14000
+\item 
+\#define \hyperlink{pmmacosxcm_8c_a9a40745097e734ce15167f6375e69eda}{L\+I\+M\+I\+T\+\_\+\+R\+A\+TE}~1
+\item 
+\#define \hyperlink{pmmacosxcm_8c_a1d8bc4eae0955327e214d935e00eb3d7}{S\+Y\+S\+E\+X\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+S\+I\+ZE}~128
+\item 
+\#define \hyperlink{pmmacosxcm_8c_acbbde1bd17dd8e09b46e3f0d809deea1}{V\+E\+R\+B\+O\+S\+E\+\_\+\+ON}~1
+\item 
+\#define \hyperlink{pmmacosxcm_8c_a42f8c497a1968074f38bf5055c650dca}{V\+E\+R\+B\+O\+SE}~\hyperlink{sndfile__save_8m_a55944e1fa1bcc1bfc6185bc610b0a930}{if} (\hyperlink{pmmacosxcm_8c_acbbde1bd17dd8e09b46e3f0d809deea1}{V\+E\+R\+B\+O\+S\+E\+\_\+\+ON})
+\item 
+\#define \hyperlink{pmmacosxcm_8c_aa2197f6ca200566c0986e737edd211e4}{M\+I\+D\+I\+\_\+\+S\+Y\+S\+EX}~0xf0
+\item 
+\#define \hyperlink{pmmacosxcm_8c_a140c8cfa4bbf1a03494abdbd639d49f2}{M\+I\+D\+I\+\_\+\+E\+OX}~0xf7
+\item 
+\#define \hyperlink{pmmacosxcm_8c_a1ee2586a063422ec7d18e2abfbafa545}{M\+I\+D\+I\+\_\+\+S\+T\+A\+T\+U\+S\+\_\+\+M\+A\+SK}~0x80
+\item 
+\#define \hyperlink{pmmacosxcm_8c_a251830c54e275283ed14173d5ed0e610}{N\+U\+L\+L\+\_\+\+R\+EF}~\hyperlink{px__mixer_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{N\+U\+LL}
+\end{DoxyCompactItemize}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef struct \hyperlink{structmidi__macosxcm__struct}{midi\+\_\+macosxcm\+\_\+struct} \hyperlink{pmmacosxcm_8c_a9ec032b9b4c250f0d5c3582eaeb2e763}{midi\+\_\+macosxcm\+\_\+node}
+\item 
+typedef struct \hyperlink{structmidi__macosxcm__struct}{midi\+\_\+macosxcm\+\_\+struct} $\ast$ \hyperlink{pmmacosxcm_8c_ae166cd7460930e0604053ee5adf79f5b}{midi\+\_\+macosxcm\+\_\+type}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+M\+I\+D\+I\+Time\+Stamp \hyperlink{pmmacosxcm_8c_ad568f8aa7eb36520f82e66495921c959}{timestamp\+\_\+pm\+\_\+to\+\_\+cm} (\hyperlink{portmidi_8h_acf4245beeef251c4a46d66e99d77ffdf}{Pm\+Timestamp} timestamp)
+\item 
+\hyperlink{portmidi_8h_acf4245beeef251c4a46d66e99d77ffdf}{Pm\+Timestamp} \hyperlink{pmmacosxcm_8c_a0e1fdfd5e03e05a85470dadee7f1e237}{timestamp\+\_\+cm\+\_\+to\+\_\+pm} (M\+I\+D\+I\+Time\+Stamp timestamp)
+\item 
+char $\ast$ \hyperlink{pmmacosxcm_8c_ae90a73f7fe6862656bad47ce0df16def}{cm\+\_\+get\+\_\+full\+\_\+endpoint\+\_\+name} (M\+I\+D\+I\+Endpoint\+Ref endpoint)
+\item 
+C\+F\+String\+Ref \hyperlink{pmmacosxcm_8c_ad23cf6b92596cdc2273a377e6534af64}{Endpoint\+Name} (M\+I\+D\+I\+Endpoint\+Ref endpoint, \hyperlink{mac_2config_2i386_2lib-src_2libsoxr_2soxr-config_8h_abb452686968e48b67397da5f97445f5b}{bool} is\+External)
+\item 
+\hyperlink{portmidi_8h_a5fd46ccd2e320e17a840886731e8c6b9}{Pm\+Error} \hyperlink{pmmacosxcm_8c_a558b66062ad3b79541651a4b7bb3ec3e}{pm\+\_\+macosxcm\+\_\+init} (\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void})
+\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{pmmacosxcm_8c_a57920448f35efec74a9d8ed028c89dd9}{pm\+\_\+macosxcm\+\_\+term} (\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void})
+\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{structpm__fns__node}{pm\+\_\+fns\+\_\+node} \hyperlink{pmmacosxcm_8c_ae873c00d5f23a0694ac7ab51b14b4850}{pm\+\_\+macosx\+\_\+in\+\_\+dictionary}
+\item 
+\hyperlink{structpm__fns__node}{pm\+\_\+fns\+\_\+node} \hyperlink{pmmacosxcm_8c_aa9435e0a77e0a9e7ae94dcce3b3f637f}{pm\+\_\+macosx\+\_\+out\+\_\+dictionary}
+\end{DoxyCompactItemize}
+
+
+\subsection{Macro Definition Documentation}
+\index{pmmacosxcm.\+c@{pmmacosxcm.\+c}!L\+I\+M\+I\+T\+\_\+\+R\+A\+TE@{L\+I\+M\+I\+T\+\_\+\+R\+A\+TE}}
+\index{L\+I\+M\+I\+T\+\_\+\+R\+A\+TE@{L\+I\+M\+I\+T\+\_\+\+R\+A\+TE}!pmmacosxcm.\+c@{pmmacosxcm.\+c}}
+\subsubsection[{\texorpdfstring{L\+I\+M\+I\+T\+\_\+\+R\+A\+TE}{LIMIT_RATE}}]{\setlength{\rightskip}{0pt plus 5cm}\#define L\+I\+M\+I\+T\+\_\+\+R\+A\+TE~1}\hypertarget{pmmacosxcm_8c_a9a40745097e734ce15167f6375e69eda}{}\label{pmmacosxcm_8c_a9a40745097e734ce15167f6375e69eda}
+
+
+Definition at line 66 of file pmmacosxcm.\+c.
+
+\index{pmmacosxcm.\+c@{pmmacosxcm.\+c}!M\+A\+X\+\_\+\+B\+Y\+T\+E\+S\+\_\+\+P\+E\+R\+\_\+S@{M\+A\+X\+\_\+\+B\+Y\+T\+E\+S\+\_\+\+P\+E\+R\+\_\+S}}
+\index{M\+A\+X\+\_\+\+B\+Y\+T\+E\+S\+\_\+\+P\+E\+R\+\_\+S@{M\+A\+X\+\_\+\+B\+Y\+T\+E\+S\+\_\+\+P\+E\+R\+\_\+S}!pmmacosxcm.\+c@{pmmacosxcm.\+c}}
+\subsubsection[{\texorpdfstring{M\+A\+X\+\_\+\+B\+Y\+T\+E\+S\+\_\+\+P\+E\+R\+\_\+S}{MAX_BYTES_PER_S}}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+A\+X\+\_\+\+B\+Y\+T\+E\+S\+\_\+\+P\+E\+R\+\_\+S~14000}\hypertarget{pmmacosxcm_8c_aeb15216e0c2b60b68510cb66b663e7a6}{}\label{pmmacosxcm_8c_aeb15216e0c2b60b68510cb66b663e7a6}
+
+
+Definition at line 45 of file pmmacosxcm.\+c.
+
+\index{pmmacosxcm.\+c@{pmmacosxcm.\+c}!M\+I\+D\+I\+\_\+\+E\+OX@{M\+I\+D\+I\+\_\+\+E\+OX}}
+\index{M\+I\+D\+I\+\_\+\+E\+OX@{M\+I\+D\+I\+\_\+\+E\+OX}!pmmacosxcm.\+c@{pmmacosxcm.\+c}}
+\subsubsection[{\texorpdfstring{M\+I\+D\+I\+\_\+\+E\+OX}{MIDI_EOX}}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+I\+D\+I\+\_\+\+E\+OX~0xf7}\hypertarget{pmmacosxcm_8c_a140c8cfa4bbf1a03494abdbd639d49f2}{}\label{pmmacosxcm_8c_a140c8cfa4bbf1a03494abdbd639d49f2}
+
+
+Definition at line 74 of file pmmacosxcm.\+c.
+
+\index{pmmacosxcm.\+c@{pmmacosxcm.\+c}!M\+I\+D\+I\+\_\+\+S\+T\+A\+T\+U\+S\+\_\+\+M\+A\+SK@{M\+I\+D\+I\+\_\+\+S\+T\+A\+T\+U\+S\+\_\+\+M\+A\+SK}}
+\index{M\+I\+D\+I\+\_\+\+S\+T\+A\+T\+U\+S\+\_\+\+M\+A\+SK@{M\+I\+D\+I\+\_\+\+S\+T\+A\+T\+U\+S\+\_\+\+M\+A\+SK}!pmmacosxcm.\+c@{pmmacosxcm.\+c}}
+\subsubsection[{\texorpdfstring{M\+I\+D\+I\+\_\+\+S\+T\+A\+T\+U\+S\+\_\+\+M\+A\+SK}{MIDI_STATUS_MASK}}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+I\+D\+I\+\_\+\+S\+T\+A\+T\+U\+S\+\_\+\+M\+A\+SK~0x80}\hypertarget{pmmacosxcm_8c_a1ee2586a063422ec7d18e2abfbafa545}{}\label{pmmacosxcm_8c_a1ee2586a063422ec7d18e2abfbafa545}
+
+
+Definition at line 75 of file pmmacosxcm.\+c.
+
+\index{pmmacosxcm.\+c@{pmmacosxcm.\+c}!M\+I\+D\+I\+\_\+\+S\+Y\+S\+EX@{M\+I\+D\+I\+\_\+\+S\+Y\+S\+EX}}
+\index{M\+I\+D\+I\+\_\+\+S\+Y\+S\+EX@{M\+I\+D\+I\+\_\+\+S\+Y\+S\+EX}!pmmacosxcm.\+c@{pmmacosxcm.\+c}}
+\subsubsection[{\texorpdfstring{M\+I\+D\+I\+\_\+\+S\+Y\+S\+EX}{MIDI_SYSEX}}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+I\+D\+I\+\_\+\+S\+Y\+S\+EX~0xf0}\hypertarget{pmmacosxcm_8c_aa2197f6ca200566c0986e737edd211e4}{}\label{pmmacosxcm_8c_aa2197f6ca200566c0986e737edd211e4}
+
+
+Definition at line 73 of file pmmacosxcm.\+c.
+
+\index{pmmacosxcm.\+c@{pmmacosxcm.\+c}!N\+U\+L\+L\+\_\+\+R\+EF@{N\+U\+L\+L\+\_\+\+R\+EF}}
+\index{N\+U\+L\+L\+\_\+\+R\+EF@{N\+U\+L\+L\+\_\+\+R\+EF}!pmmacosxcm.\+c@{pmmacosxcm.\+c}}
+\subsubsection[{\texorpdfstring{N\+U\+L\+L\+\_\+\+R\+EF}{NULL_REF}}]{\setlength{\rightskip}{0pt plus 5cm}\#define N\+U\+L\+L\+\_\+\+R\+EF~{\bf N\+U\+LL}}\hypertarget{pmmacosxcm_8c_a251830c54e275283ed14173d5ed0e610}{}\label{pmmacosxcm_8c_a251830c54e275283ed14173d5ed0e610}
+
+
+Definition at line 82 of file pmmacosxcm.\+c.
+
+\index{pmmacosxcm.\+c@{pmmacosxcm.\+c}!P\+A\+C\+K\+E\+T\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+S\+I\+ZE@{P\+A\+C\+K\+E\+T\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+S\+I\+ZE}}
+\index{P\+A\+C\+K\+E\+T\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+S\+I\+ZE@{P\+A\+C\+K\+E\+T\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+S\+I\+ZE}!pmmacosxcm.\+c@{pmmacosxcm.\+c}}
+\subsubsection[{\texorpdfstring{P\+A\+C\+K\+E\+T\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+S\+I\+ZE}{PACKET_BUFFER_SIZE}}]{\setlength{\rightskip}{0pt plus 5cm}\#define P\+A\+C\+K\+E\+T\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+S\+I\+ZE~1024}\hypertarget{pmmacosxcm_8c_ab30af815d6e9494361629440f14e3716}{}\label{pmmacosxcm_8c_ab30af815d6e9494361629440f14e3716}
+
+
+Definition at line 43 of file pmmacosxcm.\+c.
+
+\index{pmmacosxcm.\+c@{pmmacosxcm.\+c}!S\+Y\+S\+E\+X\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+S\+I\+ZE@{S\+Y\+S\+E\+X\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+S\+I\+ZE}}
+\index{S\+Y\+S\+E\+X\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+S\+I\+ZE@{S\+Y\+S\+E\+X\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+S\+I\+ZE}!pmmacosxcm.\+c@{pmmacosxcm.\+c}}
+\subsubsection[{\texorpdfstring{S\+Y\+S\+E\+X\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+S\+I\+ZE}{SYSEX_BUFFER_SIZE}}]{\setlength{\rightskip}{0pt plus 5cm}\#define S\+Y\+S\+E\+X\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+S\+I\+ZE~128}\hypertarget{pmmacosxcm_8c_a1d8bc4eae0955327e214d935e00eb3d7}{}\label{pmmacosxcm_8c_a1d8bc4eae0955327e214d935e00eb3d7}
+
+
+Definition at line 68 of file pmmacosxcm.\+c.
+
+\index{pmmacosxcm.\+c@{pmmacosxcm.\+c}!V\+E\+R\+B\+O\+SE@{V\+E\+R\+B\+O\+SE}}
+\index{V\+E\+R\+B\+O\+SE@{V\+E\+R\+B\+O\+SE}!pmmacosxcm.\+c@{pmmacosxcm.\+c}}
+\subsubsection[{\texorpdfstring{V\+E\+R\+B\+O\+SE}{VERBOSE}}]{\setlength{\rightskip}{0pt plus 5cm}\#define V\+E\+R\+B\+O\+SE~{\bf if} ({\bf V\+E\+R\+B\+O\+S\+E\+\_\+\+ON})}\hypertarget{pmmacosxcm_8c_a42f8c497a1968074f38bf5055c650dca}{}\label{pmmacosxcm_8c_a42f8c497a1968074f38bf5055c650dca}
+
+
+Definition at line 71 of file pmmacosxcm.\+c.
+
+\index{pmmacosxcm.\+c@{pmmacosxcm.\+c}!V\+E\+R\+B\+O\+S\+E\+\_\+\+ON@{V\+E\+R\+B\+O\+S\+E\+\_\+\+ON}}
+\index{V\+E\+R\+B\+O\+S\+E\+\_\+\+ON@{V\+E\+R\+B\+O\+S\+E\+\_\+\+ON}!pmmacosxcm.\+c@{pmmacosxcm.\+c}}
+\subsubsection[{\texorpdfstring{V\+E\+R\+B\+O\+S\+E\+\_\+\+ON}{VERBOSE_ON}}]{\setlength{\rightskip}{0pt plus 5cm}\#define V\+E\+R\+B\+O\+S\+E\+\_\+\+ON~1}\hypertarget{pmmacosxcm_8c_acbbde1bd17dd8e09b46e3f0d809deea1}{}\label{pmmacosxcm_8c_acbbde1bd17dd8e09b46e3f0d809deea1}
+
+
+Definition at line 70 of file pmmacosxcm.\+c.
+
+
+
+\subsection{Typedef Documentation}
+\index{pmmacosxcm.\+c@{pmmacosxcm.\+c}!midi\+\_\+macosxcm\+\_\+node@{midi\+\_\+macosxcm\+\_\+node}}
+\index{midi\+\_\+macosxcm\+\_\+node@{midi\+\_\+macosxcm\+\_\+node}!pmmacosxcm.\+c@{pmmacosxcm.\+c}}
+\subsubsection[{\texorpdfstring{midi\+\_\+macosxcm\+\_\+node}{midi_macosxcm_node}}]{\setlength{\rightskip}{0pt plus 5cm}typedef struct {\bf midi\+\_\+macosxcm\+\_\+struct}  {\bf midi\+\_\+macosxcm\+\_\+node}}\hypertarget{pmmacosxcm_8c_a9ec032b9b4c250f0d5c3582eaeb2e763}{}\label{pmmacosxcm_8c_a9ec032b9b4c250f0d5c3582eaeb2e763}
+\index{pmmacosxcm.\+c@{pmmacosxcm.\+c}!midi\+\_\+macosxcm\+\_\+type@{midi\+\_\+macosxcm\+\_\+type}}
+\index{midi\+\_\+macosxcm\+\_\+type@{midi\+\_\+macosxcm\+\_\+type}!pmmacosxcm.\+c@{pmmacosxcm.\+c}}
+\subsubsection[{\texorpdfstring{midi\+\_\+macosxcm\+\_\+type}{midi_macosxcm_type}}]{\setlength{\rightskip}{0pt plus 5cm}typedef struct {\bf midi\+\_\+macosxcm\+\_\+struct} $\ast$ {\bf midi\+\_\+macosxcm\+\_\+type}}\hypertarget{pmmacosxcm_8c_ae166cd7460930e0604053ee5adf79f5b}{}\label{pmmacosxcm_8c_ae166cd7460930e0604053ee5adf79f5b}
+
+
+\subsection{Function Documentation}
+\index{pmmacosxcm.\+c@{pmmacosxcm.\+c}!cm\+\_\+get\+\_\+full\+\_\+endpoint\+\_\+name@{cm\+\_\+get\+\_\+full\+\_\+endpoint\+\_\+name}}
+\index{cm\+\_\+get\+\_\+full\+\_\+endpoint\+\_\+name@{cm\+\_\+get\+\_\+full\+\_\+endpoint\+\_\+name}!pmmacosxcm.\+c@{pmmacosxcm.\+c}}
+\subsubsection[{\texorpdfstring{cm\+\_\+get\+\_\+full\+\_\+endpoint\+\_\+name(\+M\+I\+D\+I\+Endpoint\+Ref endpoint)}{cm_get_full_endpoint_name(MIDIEndpointRef endpoint)}}]{\setlength{\rightskip}{0pt plus 5cm}char $\ast$ cm\+\_\+get\+\_\+full\+\_\+endpoint\+\_\+name (
+\begin{DoxyParamCaption}
+\item[{M\+I\+D\+I\+Endpoint\+Ref}]{endpoint}
+\end{DoxyParamCaption}
+)}\hypertarget{pmmacosxcm_8c_ae90a73f7fe6862656bad47ce0df16def}{}\label{pmmacosxcm_8c_ae90a73f7fe6862656bad47ce0df16def}
+
+
+Definition at line 837 of file pmmacosxcm.\+c.
+
+\index{pmmacosxcm.\+c@{pmmacosxcm.\+c}!Endpoint\+Name@{Endpoint\+Name}}
+\index{Endpoint\+Name@{Endpoint\+Name}!pmmacosxcm.\+c@{pmmacosxcm.\+c}}
+\subsubsection[{\texorpdfstring{Endpoint\+Name(\+M\+I\+D\+I\+Endpoint\+Ref endpoint, bool is\+External)}{EndpointName(MIDIEndpointRef endpoint, bool isExternal)}}]{\setlength{\rightskip}{0pt plus 5cm}C\+F\+String\+Ref Endpoint\+Name (
+\begin{DoxyParamCaption}
+\item[{M\+I\+D\+I\+Endpoint\+Ref}]{endpoint, }
+\item[{{\bf bool}}]{is\+External}
+\end{DoxyParamCaption}
+)}\hypertarget{pmmacosxcm_8c_ad23cf6b92596cdc2273a377e6534af64}{}\label{pmmacosxcm_8c_ad23cf6b92596cdc2273a377e6534af64}
+
+
+Definition at line 711 of file pmmacosxcm.\+c.
+
+\index{pmmacosxcm.\+c@{pmmacosxcm.\+c}!pm\+\_\+macosxcm\+\_\+init@{pm\+\_\+macosxcm\+\_\+init}}
+\index{pm\+\_\+macosxcm\+\_\+init@{pm\+\_\+macosxcm\+\_\+init}!pmmacosxcm.\+c@{pmmacosxcm.\+c}}
+\subsubsection[{\texorpdfstring{pm\+\_\+macosxcm\+\_\+init(void)}{pm_macosxcm_init(void)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Pm\+Error} pm\+\_\+macosxcm\+\_\+init (
+\begin{DoxyParamCaption}
+\item[{{\bf void}}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{pmmacosxcm_8c_a558b66062ad3b79541651a4b7bb3ec3e}{}\label{pmmacosxcm_8c_a558b66062ad3b79541651a4b7bb3ec3e}
+
+
+Definition at line 920 of file pmmacosxcm.\+c.
+
+\index{pmmacosxcm.\+c@{pmmacosxcm.\+c}!pm\+\_\+macosxcm\+\_\+term@{pm\+\_\+macosxcm\+\_\+term}}
+\index{pm\+\_\+macosxcm\+\_\+term@{pm\+\_\+macosxcm\+\_\+term}!pmmacosxcm.\+c@{pmmacosxcm.\+c}}
+\subsubsection[{\texorpdfstring{pm\+\_\+macosxcm\+\_\+term(void)}{pm_macosxcm_term(void)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} pm\+\_\+macosxcm\+\_\+term (
+\begin{DoxyParamCaption}
+\item[{{\bf void}}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{pmmacosxcm_8c_a57920448f35efec74a9d8ed028c89dd9}{}\label{pmmacosxcm_8c_a57920448f35efec74a9d8ed028c89dd9}
+
+
+Definition at line 1007 of file pmmacosxcm.\+c.
+
+\index{pmmacosxcm.\+c@{pmmacosxcm.\+c}!timestamp\+\_\+cm\+\_\+to\+\_\+pm@{timestamp\+\_\+cm\+\_\+to\+\_\+pm}}
+\index{timestamp\+\_\+cm\+\_\+to\+\_\+pm@{timestamp\+\_\+cm\+\_\+to\+\_\+pm}!pmmacosxcm.\+c@{pmmacosxcm.\+c}}
+\subsubsection[{\texorpdfstring{timestamp\+\_\+cm\+\_\+to\+\_\+pm(\+M\+I\+D\+I\+Time\+Stamp timestamp)}{timestamp_cm_to_pm(MIDITimeStamp timestamp)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Pm\+Timestamp} timestamp\+\_\+cm\+\_\+to\+\_\+pm (
+\begin{DoxyParamCaption}
+\item[{M\+I\+D\+I\+Time\+Stamp}]{timestamp}
+\end{DoxyParamCaption}
+)}\hypertarget{pmmacosxcm_8c_a0e1fdfd5e03e05a85470dadee7f1e237}{}\label{pmmacosxcm_8c_a0e1fdfd5e03e05a85470dadee7f1e237}
+
+
+Definition at line 698 of file pmmacosxcm.\+c.
+
+\index{pmmacosxcm.\+c@{pmmacosxcm.\+c}!timestamp\+\_\+pm\+\_\+to\+\_\+cm@{timestamp\+\_\+pm\+\_\+to\+\_\+cm}}
+\index{timestamp\+\_\+pm\+\_\+to\+\_\+cm@{timestamp\+\_\+pm\+\_\+to\+\_\+cm}!pmmacosxcm.\+c@{pmmacosxcm.\+c}}
+\subsubsection[{\texorpdfstring{timestamp\+\_\+pm\+\_\+to\+\_\+cm(\+Pm\+Timestamp timestamp)}{timestamp_pm_to_cm(PmTimestamp timestamp)}}]{\setlength{\rightskip}{0pt plus 5cm}M\+I\+D\+I\+Time\+Stamp timestamp\+\_\+pm\+\_\+to\+\_\+cm (
+\begin{DoxyParamCaption}
+\item[{{\bf Pm\+Timestamp}}]{timestamp}
+\end{DoxyParamCaption}
+)}\hypertarget{pmmacosxcm_8c_ad568f8aa7eb36520f82e66495921c959}{}\label{pmmacosxcm_8c_ad568f8aa7eb36520f82e66495921c959}
+
+
+Definition at line 687 of file pmmacosxcm.\+c.
+
+
+
+\subsection{Variable Documentation}
+\index{pmmacosxcm.\+c@{pmmacosxcm.\+c}!pm\+\_\+macosx\+\_\+in\+\_\+dictionary@{pm\+\_\+macosx\+\_\+in\+\_\+dictionary}}
+\index{pm\+\_\+macosx\+\_\+in\+\_\+dictionary@{pm\+\_\+macosx\+\_\+in\+\_\+dictionary}!pmmacosxcm.\+c@{pmmacosxcm.\+c}}
+\subsubsection[{\texorpdfstring{pm\+\_\+macosx\+\_\+in\+\_\+dictionary}{pm_macosx_in_dictionary}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf pm\+\_\+fns\+\_\+node} pm\+\_\+macosx\+\_\+in\+\_\+dictionary}\hypertarget{pmmacosxcm_8c_ae873c00d5f23a0694ac7ab51b14b4850}{}\label{pmmacosxcm_8c_ae873c00d5f23a0694ac7ab51b14b4850}
+{\bfseries Initial value\+:}
+\begin{DoxyCode}
+= \{
+    \hyperlink{pminternal_8h_a841d04eb4d4efa3eebfc4e718cf9faa3}{none\_write\_short},
+    \hyperlink{pminternal_8h_ac44b30c88f5076903c62f9e8fc8c51ec}{none\_sysex},
+    \hyperlink{pminternal_8h_ac44b30c88f5076903c62f9e8fc8c51ec}{none\_sysex},
+    \hyperlink{pminternal_8h_a2181992bfdc1d719bdd96353763965d7}{none\_write\_byte},
+    \hyperlink{pminternal_8h_a841d04eb4d4efa3eebfc4e718cf9faa3}{none\_write\_short},
+    \hyperlink{pminternal_8h_a1381cf29da7767a1db6c268b7941a6f8}{none\_write\_flush},
+    \hyperlink{pminternal_8h_a9128319a3c3cb967bdde782ae9c5c4ba}{none\_synchronize},
+    midi\_in\_open,
+    midi\_abort,
+    midi\_in\_close,
+    \hyperlink{pminternal_8h_a82b255eb9e5a1098698166fd974ce265}{success\_poll},
+    midi\_has\_host\_error,
+    midi\_get\_host\_error,
+\}
+\end{DoxyCode}
+
+
+Definition at line 887 of file pmmacosxcm.\+c.
+
+\index{pmmacosxcm.\+c@{pmmacosxcm.\+c}!pm\+\_\+macosx\+\_\+out\+\_\+dictionary@{pm\+\_\+macosx\+\_\+out\+\_\+dictionary}}
+\index{pm\+\_\+macosx\+\_\+out\+\_\+dictionary@{pm\+\_\+macosx\+\_\+out\+\_\+dictionary}!pmmacosxcm.\+c@{pmmacosxcm.\+c}}
+\subsubsection[{\texorpdfstring{pm\+\_\+macosx\+\_\+out\+\_\+dictionary}{pm_macosx_out_dictionary}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf pm\+\_\+fns\+\_\+node} pm\+\_\+macosx\+\_\+out\+\_\+dictionary}\hypertarget{pmmacosxcm_8c_aa9435e0a77e0a9e7ae94dcce3b3f637f}{}\label{pmmacosxcm_8c_aa9435e0a77e0a9e7ae94dcce3b3f637f}
+{\bfseries Initial value\+:}
+\begin{DoxyCode}
+= \{
+    midi\_write\_short,
+    midi\_begin\_sysex,
+    midi\_end\_sysex,
+    midi\_write\_byte,
+    midi\_write\_realtime,
+    midi\_write\_flush,
+    midi\_synchronize,
+    midi\_out\_open,
+    midi\_abort,
+    midi\_out\_close,
+    \hyperlink{pminternal_8h_a82b255eb9e5a1098698166fd974ce265}{success\_poll},
+    midi\_has\_host\_error,
+    midi\_get\_host\_error,
+\}
+\end{DoxyCode}
+
+
+Definition at line 903 of file pmmacosxcm.\+c.
+

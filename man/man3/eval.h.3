@@ -1,0 +1,142 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/lib-src/ffmpeg/libavutil/eval.h" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/lib-src/ffmpeg/libavutil/eval.h \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include 'avutil\&.h'\fP
+.br
+
+.SS "Typedefs"
+
+.in +1c
+.ti -1c
+.RI "typedef struct \fBAVExpr\fP \fBAVExpr\fP"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBint\fP \fBav_expr_parse_and_eval\fP (double *res, \fBconst\fP char *\fBs\fP, \fBconst\fP char *\fBconst\fP *const_names, \fBconst\fP double *const_values, \fBconst\fP char *\fBconst\fP *func1_names, double(*\fBconst\fP *funcs1)(\fBvoid\fP *, double), \fBconst\fP char *\fBconst\fP *func2_names, double(*\fBconst\fP *funcs2)(\fBvoid\fP *, double, double), \fBvoid\fP *opaque, \fBint\fP log_offset, \fBvoid\fP *log_ctx)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_expr_parse\fP (\fBAVExpr\fP **expr, \fBconst\fP char *\fBs\fP, \fBconst\fP char *\fBconst\fP *const_names, \fBconst\fP char *\fBconst\fP *func1_names, double(*\fBconst\fP *funcs1)(\fBvoid\fP *, double), \fBconst\fP char *\fBconst\fP *func2_names, double(*\fBconst\fP *funcs2)(\fBvoid\fP *, double, double), \fBint\fP log_offset, \fBvoid\fP *log_ctx)"
+.br
+.ti -1c
+.RI "double \fBav_expr_eval\fP (\fBAVExpr\fP *e, \fBconst\fP double *const_values, \fBvoid\fP *opaque)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBav_expr_free\fP (\fBAVExpr\fP *e)"
+.br
+.ti -1c
+.RI "double \fBav_strtod\fP (\fBconst\fP char *numstr, char **tail)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+simple arithmetic expression evaluator 
+.PP
+Definition in file \fBeval\&.h\fP\&.
+.SH "Typedef Documentation"
+.PP 
+.SS "typedef struct \fBAVExpr\fP \fBAVExpr\fP"
+
+.PP
+Definition at line 31 of file eval\&.h\&.
+.SH "Function Documentation"
+.PP 
+.SS "double av_expr_eval (\fBAVExpr\fP * e, \fBconst\fP double * const_values, \fBvoid\fP * opaque)"
+Evaluate a previously parsed expression\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIconst_values\fP a zero terminated array of values for the identifiers from \fBav_expr_parse()\fP const_names 
+.br
+\fIopaque\fP a pointer which will be passed to all functions from funcs1 and funcs2 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the value of the expression 
+.RE
+.PP
+
+.SS "\fBvoid\fP av_expr_free (\fBAVExpr\fP * e)"
+Free a parsed expression previously created with \fBav_expr_parse()\fP\&. 
+.SS "\fBint\fP av_expr_parse (\fBAVExpr\fP ** expr, \fBconst\fP char * s, \fBconst\fP char *\fBconst\fP * const_names, \fBconst\fP char *\fBconst\fP * func1_names, double(**)(\fBvoid\fP *, double) funcs1, \fBconst\fP char *\fBconst\fP * func2_names, double(**)(\fBvoid\fP *, double, double) funcs2, \fBint\fP log_offset, \fBvoid\fP * log_ctx)"
+Parse an expression\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIexpr\fP a pointer where is put an AVExpr containing the parsed value in case of successful parsing, or NULL otherwise\&. The pointed to AVExpr must be freed with \fBav_expr_free()\fP by the user when it is not needed anymore\&. 
+.br
+\fIs\fP expression as a zero terminated string, for example '1+2^3+5*5+sin(2/3)' 
+.br
+\fIconst_names\fP NULL terminated array of zero terminated strings of constant identifiers, for example {'PI', 'E', 0} 
+.br
+\fIfunc1_names\fP NULL terminated array of zero terminated strings of funcs1 identifiers 
+.br
+\fIfuncs1\fP NULL terminated array of function pointers for functions which take 1 argument 
+.br
+\fIfunc2_names\fP NULL terminated array of zero terminated strings of funcs2 identifiers 
+.br
+\fIfuncs2\fP NULL terminated array of function pointers for functions which take 2 arguments 
+.br
+\fIlog_ctx\fP parent logging context 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+>= 0 in case of success, a negative value corresponding to an AVERROR code otherwise 
+.RE
+.PP
+
+.SS "\fBint\fP av_expr_parse_and_eval (double * res, \fBconst\fP char * s, \fBconst\fP char *\fBconst\fP * const_names, \fBconst\fP double * const_values, \fBconst\fP char *\fBconst\fP * func1_names, double(**)(\fBvoid\fP *, double) funcs1, \fBconst\fP char *\fBconst\fP * func2_names, double(**)(\fBvoid\fP *, double, double) funcs2, \fBvoid\fP * opaque, \fBint\fP log_offset, \fBvoid\fP * log_ctx)"
+Parse and evaluate an expression\&. Note, this is significantly slower than \fBav_expr_eval()\fP\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIres\fP a pointer to a double where is put the result value of the expression, or NAN in case of error 
+.br
+\fIs\fP expression as a zero terminated string, for example '1+2^3+5*5+sin(2/3)' 
+.br
+\fIconst_names\fP NULL terminated array of zero terminated strings of constant identifiers, for example {'PI', 'E', 0} 
+.br
+\fIconst_values\fP a zero terminated array of values for the identifiers from const_names 
+.br
+\fIfunc1_names\fP NULL terminated array of zero terminated strings of funcs1 identifiers 
+.br
+\fIfuncs1\fP NULL terminated array of function pointers for functions which take 1 argument 
+.br
+\fIfunc2_names\fP NULL terminated array of zero terminated strings of funcs2 identifiers 
+.br
+\fIfuncs2\fP NULL terminated array of function pointers for functions which take 2 arguments 
+.br
+\fIopaque\fP a pointer which will be passed to all functions from funcs1 and funcs2 
+.br
+\fIlog_ctx\fP parent logging context 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+>= 0 in case of success, a negative value corresponding to an AVERROR code otherwise 
+.RE
+.PP
+
+.SS "double av_strtod (\fBconst\fP char * numstr, char ** tail)"
+Parse the string in numstr and return its value as a double\&. If the string is empty, contains only whitespaces, or does not contain an initial substring that has the expected syntax for a floating-point number, no conversion is performed\&. In this case, returns a value of zero and the value returned in tail is the value of numstr\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fInumstr\fP a string representing a number, may contain one of the International System number postfixes, for example 'K', 'M', 'G'\&. If 'i' is appended after the postfix, powers of 2 are used instead of powers of 10\&. The 'B' postfix multiplies the value for 8, and can be appended after another postfix or used alone\&. This allows using for example 'KB', 'MiB', 'G' and 'B' as postfix\&. 
+.br
+\fItail\fP if non-NULL puts here the pointer to the char next after the last parsed character 
+.RE
+.PP
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

@@ -1,0 +1,97 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/lib-src/portmidi/pm_win/pmwin.c" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/lib-src/portmidi/pm_win/pmwin.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include 'stdlib\&.h'\fP
+.br
+\fC#include 'portmidi\&.h'\fP
+.br
+\fC#include 'pmutil\&.h'\fP
+.br
+\fC#include 'pminternal\&.h'\fP
+.br
+\fC#include 'pmwinmm\&.h'\fP
+.br
+\fC#include <windows\&.h>\fP
+.br
+\fC#include 'stdio\&.h'\fP
+.br
+
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBPATTERN_MAX\fP   256"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBvoid\fP \fBpm_init\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBpm_term\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBPmDeviceID\fP \fBPm_GetDefaultInputDeviceID\fP ()"
+.br
+.ti -1c
+.RI "\fBPmDeviceID\fP \fBPm_GetDefaultOutputDeviceID\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP * \fBpm_alloc\fP (size_t \fBs\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBpm_free\fP (\fBvoid\fP *ptr)"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define PATTERN_MAX   256"
+
+.SH "Function Documentation"
+.PP 
+.SS "\fBvoid\fP* pm_alloc (size_t s)"
+
+.PP
+Definition at line 135 of file pmwin\&.c\&.
+.SS "\fBvoid\fP pm_free (\fBvoid\fP * ptr)"
+
+.PP
+Definition at line 140 of file pmwin\&.c\&.
+.SS "\fBPmDeviceID\fP Pm_GetDefaultInputDeviceID (\fBvoid\fP)"
+\fBPm_GetDefaultInputDeviceID()\fP, \fBPm_GetDefaultOutputDeviceID()\fP
+.PP
+Return the default device ID or pmNoDevice if there are no devices\&. The result (but not pmNoDevice) can be passed to Pm_OpenMidi()\&.
+.PP
+The default device can be specified using a small application named pmdefaults that is part of the PortMidi distribution\&. This program in turn uses the Java Preferences object created by java\&.util\&.prefs\&.Preferences\&.userRoot()\&.node('/PortMidi'); the preference is set by calling prefs\&.put('PM_RECOMMENDED_OUTPUT_DEVICE', prefName); or prefs\&.put('PM_RECOMMENDED_INPUT_DEVICE', prefName);
+.PP
+In the statements above, prefName is a string describing the MIDI device in the form 'interf, name' where interf identifies the underlying software system or API used by PortMdi to access devices and name is the name of the device\&. These correspond to the interf and name fields of a \fBPmDeviceInfo\fP\&. (Currently supported interfaces are 'MMSystem' for Win32, 'ALSA' for Linux, and 'CoreMIDI' for OS X, so in fact, there is no choice of interface\&.) In 'interf, name', the strings are actually substrings of the full interface and name strings\&. For example, the preference 'Core, Sport' will match a device with interface 'CoreMIDI' and name 'In USB MidiSport 1x1'\&. It will also match 'CoreMIDI' and 'In USB MidiSport 2x2'\&. The devices are enumerated in device ID order, so the lowest device ID that matches the pattern becomes the default device\&. Finally, if the comma-space (', ') separator between interface and name parts of the preference is not found, the entire preference string is interpreted as a name, and the interface part is the empty string, which matches anything\&.
+.PP
+On the MAC, preferences are stored in /Users/$NAME/Library/Preferences/com\&.apple\&.java\&.util\&.prefs\&.plist which is a binary file\&. In addition to the pmdefaults program, there are utilities that can read and edit this preference file\&.
+.PP
+On the PC,
+.PP
+On Linux, 
+.PP
+Definition at line 121 of file pmwin\&.c\&.
+.SS "\fBPmDeviceID\fP Pm_GetDefaultOutputDeviceID (\fBvoid\fP)"
+see PmDeviceID \fBPm_GetDefaultInputDeviceID()\fP 
+.PP
+Definition at line 127 of file pmwin\&.c\&.
+.SS "\fBvoid\fP pm_init (\fBvoid\fP)"
+
+.PP
+Definition at line 45 of file pmwin\&.c\&.
+.SS "\fBvoid\fP pm_term (\fBvoid\fP)"
+
+.PP
+Definition at line 56 of file pmwin\&.c\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

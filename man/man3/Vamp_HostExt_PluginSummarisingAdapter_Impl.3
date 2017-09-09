@@ -1,0 +1,311 @@
+.TH "Vamp::HostExt::PluginSummarisingAdapter::Impl" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Vamp::HostExt::PluginSummarisingAdapter::Impl \- 
+.SH SYNOPSIS
+.br
+.PP
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "struct \fBOutputAccumulator\fP"
+.br
+.ti -1c
+.RI "struct \fBOutputBinSummary\fP"
+.br
+.ti -1c
+.RI "struct \fBResult\fP"
+.br
+.in -1c
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBImpl\fP (\fBPlugin\fP *plugin, float inputSampleRate)"
+.br
+.ti -1c
+.RI "\fB~Impl\fP ()"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBinitialise\fP (size_t channels, size_t stepSize, size_t blockSize)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBreset\fP ()"
+.br
+.ti -1c
+.RI "\fBFeatureSet\fP \fBprocess\fP (\fBconst\fP float *\fBconst\fP *inputBuffers, \fBRealTime\fP timestamp)"
+.br
+.ti -1c
+.RI "\fBFeatureSet\fP \fBgetRemainingFeatures\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBsetSummarySegmentBoundaries\fP (\fBconst\fP \fBSegmentBoundaries\fP &)"
+.br
+.ti -1c
+.RI "\fBFeatureList\fP \fBgetSummaryForOutput\fP (\fBint\fP \fBoutput\fP, \fBSummaryType\fP type, \fBAveragingMethod\fP avg)"
+.br
+.ti -1c
+.RI "\fBFeatureSet\fP \fBgetSummaryForAllOutputs\fP (\fBSummaryType\fP type, \fBAveragingMethod\fP avg)"
+.br
+.in -1c
+.SS "Protected Types"
+
+.in +1c
+.ti -1c
+.RI "typedef std::vector< float > \fBValueList\fP"
+.br
+.ti -1c
+.RI "typedef std::vector< \fBResult\fP > \fBResultList\fP"
+.br
+.ti -1c
+.RI "typedef \fBstd::map\fP< \fBint\fP, \fBOutputAccumulator\fP > \fBOutputAccumulatorMap\fP"
+.br
+.ti -1c
+.RI "typedef \fBstd::map\fP< \fBRealTime\fP, \fBOutputAccumulator\fP > \fBSegmentAccumulatorMap\fP"
+.br
+.ti -1c
+.RI "typedef \fBstd::map\fP< \fBint\fP, \fBSegmentAccumulatorMap\fP > \fBOutputSegmentAccumulatorMap\fP"
+.br
+.ti -1c
+.RI "typedef \fBstd::map\fP< \fBint\fP, \fBRealTime\fP > \fBOutputTimestampMap\fP"
+.br
+.ti -1c
+.RI "typedef \fBstd::map\fP< \fBint\fP, \fBOutputBinSummary\fP > \fBOutputSummary\fP"
+.br
+.ti -1c
+.RI "typedef \fBstd::map\fP< \fBRealTime\fP, \fBOutputSummary\fP > \fBSummarySegmentMap\fP"
+.br
+.ti -1c
+.RI "typedef \fBstd::map\fP< \fBint\fP, \fBSummarySegmentMap\fP > \fBOutputSummarySegmentMap\fP"
+.br
+.in -1c
+.SS "Protected Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBvoid\fP \fBaccumulate\fP (\fBconst\fP \fBFeatureSet\fP &\fBfs\fP, \fBRealTime\fP, \fBbool\fP final)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBaccumulate\fP (\fBint\fP \fBoutput\fP, \fBconst\fP \fBFeature\fP &\fBf\fP, \fBRealTime\fP, \fBbool\fP final)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBaccumulateFinalDurations\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBfindSegmentBounds\fP (\fBRealTime\fP \fBt\fP, \fBRealTime\fP &\fBstart\fP, \fBRealTime\fP &\fBend\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBsegment\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBreduce\fP ()"
+.br
+.ti -1c
+.RI "\fBstd::string\fP \fBgetSummaryLabel\fP (\fBSummaryType\fP type, \fBAveragingMethod\fP avg)"
+.br
+.in -1c
+.SS "Protected Attributes"
+
+.in +1c
+.ti -1c
+.RI "\fBPlugin\fP * \fBm_plugin\fP"
+.br
+.ti -1c
+.RI "float \fBm_inputSampleRate\fP"
+.br
+.ti -1c
+.RI "size_t \fBm_stepSize\fP"
+.br
+.ti -1c
+.RI "size_t \fBm_blockSize\fP"
+.br
+.ti -1c
+.RI "\fBSegmentBoundaries\fP \fBm_boundaries\fP"
+.br
+.ti -1c
+.RI "\fBOutputAccumulatorMap\fP \fBm_accumulators\fP"
+.br
+.ti -1c
+.RI "\fBOutputSegmentAccumulatorMap\fP \fBm_segmentedAccumulators\fP"
+.br
+.ti -1c
+.RI "\fBOutputTimestampMap\fP \fBm_prevTimestamps\fP"
+.br
+.ti -1c
+.RI "\fBOutputTimestampMap\fP \fBm_prevDurations\fP"
+.br
+.ti -1c
+.RI "\fBOutputSummarySegmentMap\fP \fBm_summaries\fP"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBm_reduced\fP"
+.br
+.ti -1c
+.RI "\fBRealTime\fP \fBm_endTime\fP"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Definition at line 53 of file PluginSummarisingAdapter\&.cpp\&.
+.SH "Member Typedef Documentation"
+.PP 
+.SS "typedef \fBstd::map\fP<\fBint\fP, \fBOutputAccumulator\fP> \fBVamp::HostExt::PluginSummarisingAdapter::Impl::OutputAccumulatorMap\fP\fC [protected]\fP"
+
+.PP
+Definition at line 99 of file PluginSummarisingAdapter\&.cpp\&.
+.SS "typedef \fBstd::map\fP<\fBint\fP, \fBSegmentAccumulatorMap\fP> \fBVamp::HostExt::PluginSummarisingAdapter::Impl::OutputSegmentAccumulatorMap\fP\fC [protected]\fP"
+
+.PP
+Definition at line 103 of file PluginSummarisingAdapter\&.cpp\&.
+.SS "typedef \fBstd::map\fP<\fBint\fP, \fBOutputBinSummary\fP> \fBVamp::HostExt::PluginSummarisingAdapter::Impl::OutputSummary\fP\fC [protected]\fP"
+
+.PP
+Definition at line 131 of file PluginSummarisingAdapter\&.cpp\&.
+.SS "typedef \fBstd::map\fP<\fBint\fP, \fBSummarySegmentMap\fP> \fBVamp::HostExt::PluginSummarisingAdapter::Impl::OutputSummarySegmentMap\fP\fC [protected]\fP"
+
+.PP
+Definition at line 133 of file PluginSummarisingAdapter\&.cpp\&.
+.SS "typedef \fBstd::map\fP<\fBint\fP, \fBRealTime\fP> \fBVamp::HostExt::PluginSummarisingAdapter::Impl::OutputTimestampMap\fP\fC [protected]\fP"
+
+.PP
+Definition at line 106 of file PluginSummarisingAdapter\&.cpp\&.
+.SS "typedef std::vector<\fBResult\fP> \fBVamp::HostExt::PluginSummarisingAdapter::Impl::ResultList\fP\fC [protected]\fP"
+
+.PP
+Definition at line 91 of file PluginSummarisingAdapter\&.cpp\&.
+.SS "typedef \fBstd::map\fP<\fBRealTime\fP, \fBOutputAccumulator\fP> \fBVamp::HostExt::PluginSummarisingAdapter::Impl::SegmentAccumulatorMap\fP\fC [protected]\fP"
+
+.PP
+Definition at line 102 of file PluginSummarisingAdapter\&.cpp\&.
+.SS "typedef \fBstd::map\fP<\fBRealTime\fP, \fBOutputSummary\fP> \fBVamp::HostExt::PluginSummarisingAdapter::Impl::SummarySegmentMap\fP\fC [protected]\fP"
+
+.PP
+Definition at line 132 of file PluginSummarisingAdapter\&.cpp\&.
+.SS "typedef std::vector<float> \fBVamp::HostExt::PluginSummarisingAdapter::Impl::ValueList\fP\fC [protected]\fP"
+
+.PP
+Definition at line 83 of file PluginSummarisingAdapter\&.cpp\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "Vamp::HostExt::PluginSummarisingAdapter::Impl::Impl (\fBPlugin\fP * plugin, float inputSampleRate)"
+
+.PP
+Definition at line 211 of file PluginSummarisingAdapter\&.cpp\&.
+.SS "Vamp::HostExt::PluginSummarisingAdapter::Impl::~Impl ()"
+
+.PP
+Definition at line 218 of file PluginSummarisingAdapter\&.cpp\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "\fBvoid\fP Vamp::HostExt::PluginSummarisingAdapter::Impl::accumulate (\fBconst\fP \fBFeatureSet\fP & fs, \fBRealTime\fP timestamp, \fBbool\fP final)\fC [protected]\fP"
+!! is this correct? 
+.PP
+Definition at line 407 of file PluginSummarisingAdapter\&.cpp\&.
+.SS "\fBvoid\fP Vamp::HostExt::PluginSummarisingAdapter::Impl::accumulate (\fBint\fP output, \fBconst\fP \fBFeature\fP & f, \fBRealTime\fP timestamp, \fBbool\fP final)\fC [protected]\fP"
+
+.PP
+Definition at line 451 of file PluginSummarisingAdapter\&.cpp\&.
+.SS "\fBvoid\fP Vamp::HostExt::PluginSummarisingAdapter::Impl::accumulateFinalDurations ()\fC [protected]\fP"
+
+.PP
+Definition at line 558 of file PluginSummarisingAdapter\&.cpp\&.
+.SS "\fBvoid\fP Vamp::HostExt::PluginSummarisingAdapter::Impl::findSegmentBounds (\fBRealTime\fP t, \fBRealTime\fP & start, \fBRealTime\fP & end)\fC [protected]\fP"
+
+.PP
+Definition at line 602 of file PluginSummarisingAdapter\&.cpp\&.
+.SS "\fBPlugin::FeatureSet\fP Vamp::HostExt::PluginSummarisingAdapter::Impl::getRemainingFeatures ()"
+
+.PP
+Definition at line 259 of file PluginSummarisingAdapter\&.cpp\&.
+.SS "\fBPlugin::FeatureSet\fP Vamp::HostExt::PluginSummarisingAdapter::Impl::getSummaryForAllOutputs (\fBSummaryType\fP type, \fBAveragingMethod\fP avg)"
+
+.PP
+Definition at line 388 of file PluginSummarisingAdapter\&.cpp\&.
+.SS "\fBPlugin::FeatureList\fP Vamp::HostExt::PluginSummarisingAdapter::Impl::getSummaryForOutput (\fBint\fP output, \fBSummaryType\fP type, \fBAveragingMethod\fP avg)"
+
+.PP
+Definition at line 284 of file PluginSummarisingAdapter\&.cpp\&.
+.SS "\fBstd::string\fP Vamp::HostExt::PluginSummarisingAdapter::Impl::getSummaryLabel (\fBSummaryType\fP type, \fBAveragingMethod\fP avg)\fC [protected]\fP"
+
+.PP
+Definition at line 425 of file PluginSummarisingAdapter\&.cpp\&.
+.SS "\fBbool\fP Vamp::HostExt::PluginSummarisingAdapter::Impl::initialise (size_t channels, size_t stepSize, size_t blockSize)"
+
+.PP
+Definition at line 223 of file PluginSummarisingAdapter\&.cpp\&.
+.SS "\fBPlugin::FeatureSet\fP Vamp::HostExt::PluginSummarisingAdapter::Impl::process (\fBconst\fP float *\fBconst\fP * inputBuffers, \fBRealTime\fP timestamp)"
+
+.PP
+Definition at line 245 of file PluginSummarisingAdapter\&.cpp\&.
+.SS "\fBvoid\fP Vamp::HostExt::PluginSummarisingAdapter::Impl::reduce ()\fC [protected]\fP"
+!! is this right? 
+.PP
+Definition at line 738 of file PluginSummarisingAdapter\&.cpp\&.
+.SS "\fBvoid\fP Vamp::HostExt::PluginSummarisingAdapter::Impl::reset (\fBvoid\fP)"
+
+.PP
+Definition at line 232 of file PluginSummarisingAdapter\&.cpp\&.
+.SS "\fBvoid\fP Vamp::HostExt::PluginSummarisingAdapter::Impl::segment ()\fC [protected]\fP"
+
+.PP
+Definition at line 630 of file PluginSummarisingAdapter\&.cpp\&.
+.SS "\fBvoid\fP Vamp::HostExt::PluginSummarisingAdapter::Impl::setSummarySegmentBoundaries (\fBconst\fP \fBSegmentBoundaries\fP & b)"
+
+.PP
+Definition at line 270 of file PluginSummarisingAdapter\&.cpp\&.
+.SH "Member Data Documentation"
+.PP 
+.SS "\fBOutputAccumulatorMap\fP Vamp::HostExt::PluginSummarisingAdapter::Impl::m_accumulators\fC [protected]\fP"
+
+.PP
+Definition at line 100 of file PluginSummarisingAdapter\&.cpp\&.
+.SS "size_t Vamp::HostExt::PluginSummarisingAdapter::Impl::m_blockSize\fC [protected]\fP"
+
+.PP
+Definition at line 79 of file PluginSummarisingAdapter\&.cpp\&.
+.SS "\fBSegmentBoundaries\fP Vamp::HostExt::PluginSummarisingAdapter::Impl::m_boundaries\fC [protected]\fP"
+
+.PP
+Definition at line 81 of file PluginSummarisingAdapter\&.cpp\&.
+.SS "\fBRealTime\fP Vamp::HostExt::PluginSummarisingAdapter::Impl::m_endTime\fC [protected]\fP"
+
+.PP
+Definition at line 138 of file PluginSummarisingAdapter\&.cpp\&.
+.SS "float Vamp::HostExt::PluginSummarisingAdapter::Impl::m_inputSampleRate\fC [protected]\fP"
+
+.PP
+Definition at line 77 of file PluginSummarisingAdapter\&.cpp\&.
+.SS "\fBPlugin\fP* Vamp::HostExt::PluginSummarisingAdapter::Impl::m_plugin\fC [protected]\fP"
+
+.PP
+Definition at line 76 of file PluginSummarisingAdapter\&.cpp\&.
+.SS "\fBOutputTimestampMap\fP Vamp::HostExt::PluginSummarisingAdapter::Impl::m_prevDurations\fC [protected]\fP"
+
+.PP
+Definition at line 108 of file PluginSummarisingAdapter\&.cpp\&.
+.SS "\fBOutputTimestampMap\fP Vamp::HostExt::PluginSummarisingAdapter::Impl::m_prevTimestamps\fC [protected]\fP"
+
+.PP
+Definition at line 107 of file PluginSummarisingAdapter\&.cpp\&.
+.SS "\fBbool\fP Vamp::HostExt::PluginSummarisingAdapter::Impl::m_reduced\fC [protected]\fP"
+
+.PP
+Definition at line 137 of file PluginSummarisingAdapter\&.cpp\&.
+.SS "\fBOutputSegmentAccumulatorMap\fP Vamp::HostExt::PluginSummarisingAdapter::Impl::m_segmentedAccumulators\fC [protected]\fP"
+
+.PP
+Definition at line 104 of file PluginSummarisingAdapter\&.cpp\&.
+.SS "size_t Vamp::HostExt::PluginSummarisingAdapter::Impl::m_stepSize\fC [protected]\fP"
+
+.PP
+Definition at line 78 of file PluginSummarisingAdapter\&.cpp\&.
+.SS "\fBOutputSummarySegmentMap\fP Vamp::HostExt::PluginSummarisingAdapter::Impl::m_summaries\fC [protected]\fP"
+
+.PP
+Definition at line 135 of file PluginSummarisingAdapter\&.cpp\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

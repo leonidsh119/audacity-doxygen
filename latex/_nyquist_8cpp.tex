@@ -1,0 +1,167 @@
+\hypertarget{_nyquist_8cpp}{}\section{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/src/effects/nyquist/\+Nyquist.cpp File Reference}
+\label{_nyquist_8cpp}\index{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/src/effects/nyquist/\+Nyquist.\+cpp@{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/src/effects/nyquist/\+Nyquist.\+cpp}}
+{\ttfamily \#include \char`\"{}../../\+Audacity.\+h\char`\"{}}\\*
+{\ttfamily \#include $<$algorithm$>$}\\*
+{\ttfamily \#include $<$math.\+h$>$}\\*
+{\ttfamily \#include $<$locale.\+h$>$}\\*
+{\ttfamily \#include $<$wx/checkbox.\+h$>$}\\*
+{\ttfamily \#include $<$wx/choice.\+h$>$}\\*
+{\ttfamily \#include $<$wx/datetime.\+h$>$}\\*
+{\ttfamily \#include $<$wx/intl.\+h$>$}\\*
+{\ttfamily \#include $<$wx/log.\+h$>$}\\*
+{\ttfamily \#include $<$wx/msgdlg.\+h$>$}\\*
+{\ttfamily \#include $<$wx/sstream.\+h$>$}\\*
+{\ttfamily \#include $<$wx/textdlg.\+h$>$}\\*
+{\ttfamily \#include $<$wx/txtstrm.\+h$>$}\\*
+{\ttfamily \#include $<$wx/valgen.\+h$>$}\\*
+{\ttfamily \#include $<$wx/wfstream.\+h$>$}\\*
+{\ttfamily \#include $<$wx/numformatter.\+h$>$}\\*
+{\ttfamily \#include \char`\"{}../../\+Audacity\+App.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../../\+File\+Names.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../../\+Internat.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../../\+Label\+Track.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../../prefs/\+Spectrogram\+Settings.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../../\+Project.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../../\+Shuttle\+Gui.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../../\+Wave\+Clip.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../../\+Wave\+Track.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../../widgets/valnum.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../../\+Prefs.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../../prefs/\+Waveform\+Settings.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}File\+Dialog.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Nyquist.\+h\char`\"{}}\\*
+{\ttfamily \#include $<$iostream$>$}\\*
+{\ttfamily \#include $<$ostream$>$}\\*
+{\ttfamily \#include $<$sstream$>$}\\*
+{\ttfamily \#include $<$float.\+h$>$}\\*
+{\ttfamily \#include \char`\"{}../../\+Experimental.\+h\char`\"{}}\\*
+{\ttfamily \#include $<$wx/arrimpl.\+cpp$>$}\\*
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{_nyquist_8cpp_af6799b63a08ef67d44de108e9d5a5700}{N\+Y\+Q\+\_\+\+M\+A\+X\+\_\+\+L\+EN}~((\hyperlink{include_2audacity_2_types_8h_afa427e1f521ea5ec12d054e8bd4d0f71}{sample\+Count}) 2147483647)
+\item 
+\#define \hyperlink{_nyquist_8cpp_a13137e42e8c7b9ba5d8c4d86a69220ec}{U\+N\+I\+N\+I\+T\+I\+A\+L\+I\+Z\+E\+D\+\_\+\+C\+O\+N\+T\+R\+OL}~((double)99999999.\+99)
+\end{DoxyCompactItemize}
+\subsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \{ \\*
+\hyperlink{_nyquist_8cpp_a0efc1b13f14c790dd3d59de11e12bc6da03559c092f2fd95896b4c60199597c2a}{I\+D\+\_\+\+Editor} = 10000, 
+\hyperlink{_nyquist_8cpp_a0efc1b13f14c790dd3d59de11e12bc6daa1947f02fcf8e524575972609f4be631}{I\+D\+\_\+\+Version}, 
+\hyperlink{_nyquist_8cpp_a0efc1b13f14c790dd3d59de11e12bc6da06b8cb985b37f80e53166d743db75aba}{I\+D\+\_\+\+Load}, 
+\hyperlink{_nyquist_8cpp_a0efc1b13f14c790dd3d59de11e12bc6dafa4322fd2655f8efa458357eaf967191}{I\+D\+\_\+\+Save}, 
+\\*
+\hyperlink{_nyquist_8cpp_a0efc1b13f14c790dd3d59de11e12bc6da973bbe1ccd5c880428d852aa95597c1e}{I\+D\+\_\+\+Slider} = 11000, 
+\hyperlink{_nyquist_8cpp_a0efc1b13f14c790dd3d59de11e12bc6da77b0e7a0218c8eeb7eaf8b4ed6fa12c5}{I\+D\+\_\+\+Choice} = 13000
+ \}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{_nyquist_8cpp_a04a430ddeaf3996a0eb07534c6848201}{W\+X\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+O\+B\+J\+A\+R\+R\+AY} (Nyq\+Control\+Array)
+\item 
+\hyperlink{_nyquist_8cpp_a742e462659e9d42420bcab7baa3bac33}{E\+V\+T\+\_\+\+C\+O\+M\+M\+A\+N\+D\+\_\+\+R\+A\+N\+GE} (\hyperlink{_nyquist_8cpp_a0efc1b13f14c790dd3d59de11e12bc6da973bbe1ccd5c880428d852aa95597c1e}{I\+D\+\_\+\+Slider}, \hyperlink{_nyquist_8cpp_a0efc1b13f14c790dd3d59de11e12bc6da973bbe1ccd5c880428d852aa95597c1e}{I\+D\+\_\+\+Slider}+99, wx\+E\+V\+T\+\_\+\+C\+O\+M\+M\+A\+N\+D\+\_\+\+S\+L\+I\+D\+E\+R\+\_\+\+U\+P\+D\+A\+T\+ED, Nyquist\+Effect\+::\+On\+Slider) E\+V\+T\+\_\+\+C\+O\+M\+M\+A\+N\+D\+\_\+\+R\+A\+N\+GE(\hyperlink{_nyquist_8cpp_ace083968e63aa5d6d0a8c34c9a4277a7}{I\+D\+\_\+\+Text}
+\item 
+Nyquist\+Effect\+::\+On\+Text \hyperlink{_nyquist_8cpp_a0f03851034908393ce1d472667f5490f}{E\+V\+T\+\_\+\+C\+O\+M\+M\+A\+N\+D\+\_\+\+R\+A\+N\+GE} (\hyperlink{_nyquist_8cpp_a0efc1b13f14c790dd3d59de11e12bc6da77b0e7a0218c8eeb7eaf8b4ed6fa12c5}{I\+D\+\_\+\+Choice}, \hyperlink{_nyquist_8cpp_a0efc1b13f14c790dd3d59de11e12bc6da77b0e7a0218c8eeb7eaf8b4ed6fa12c5}{I\+D\+\_\+\+Choice}+99, wx\+E\+V\+T\+\_\+\+C\+O\+M\+M\+A\+N\+D\+\_\+\+C\+H\+O\+I\+C\+E\+\_\+\+S\+E\+L\+E\+C\+T\+ED, Nyquist\+Effect\+::\+On\+Choice) \hyperlink{class_nyquist_effect}{Nyquist\+Effect}
+\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{_nyquist_8cpp_ace083968e63aa5d6d0a8c34c9a4277a7}{I\+D\+\_\+\+Text} = 12000
+\item 
+\hyperlink{_nyquist_8cpp_a265b98136e36f9aaaff3529182d41365}{wx\+E\+V\+T\+\_\+\+C\+O\+M\+M\+A\+N\+D\+\_\+\+T\+E\+X\+T\+\_\+\+U\+P\+D\+A\+T\+ED}
+\end{DoxyCompactItemize}
+
+
+\subsection{Macro Definition Documentation}
+\index{Nyquist.\+cpp@{Nyquist.\+cpp}!N\+Y\+Q\+\_\+\+M\+A\+X\+\_\+\+L\+EN@{N\+Y\+Q\+\_\+\+M\+A\+X\+\_\+\+L\+EN}}
+\index{N\+Y\+Q\+\_\+\+M\+A\+X\+\_\+\+L\+EN@{N\+Y\+Q\+\_\+\+M\+A\+X\+\_\+\+L\+EN}!Nyquist.\+cpp@{Nyquist.\+cpp}}
+\subsubsection[{\texorpdfstring{N\+Y\+Q\+\_\+\+M\+A\+X\+\_\+\+L\+EN}{NYQ_MAX_LEN}}]{\setlength{\rightskip}{0pt plus 5cm}\#define N\+Y\+Q\+\_\+\+M\+A\+X\+\_\+\+L\+EN~(({\bf sample\+Count}) 2147483647)}\hypertarget{_nyquist_8cpp_af6799b63a08ef67d44de108e9d5a5700}{}\label{_nyquist_8cpp_af6799b63a08ef67d44de108e9d5a5700}
+
+
+Definition at line 89 of file Nyquist.\+cpp.
+
+\index{Nyquist.\+cpp@{Nyquist.\+cpp}!U\+N\+I\+N\+I\+T\+I\+A\+L\+I\+Z\+E\+D\+\_\+\+C\+O\+N\+T\+R\+OL@{U\+N\+I\+N\+I\+T\+I\+A\+L\+I\+Z\+E\+D\+\_\+\+C\+O\+N\+T\+R\+OL}}
+\index{U\+N\+I\+N\+I\+T\+I\+A\+L\+I\+Z\+E\+D\+\_\+\+C\+O\+N\+T\+R\+OL@{U\+N\+I\+N\+I\+T\+I\+A\+L\+I\+Z\+E\+D\+\_\+\+C\+O\+N\+T\+R\+OL}!Nyquist.\+cpp@{Nyquist.\+cpp}}
+\subsubsection[{\texorpdfstring{U\+N\+I\+N\+I\+T\+I\+A\+L\+I\+Z\+E\+D\+\_\+\+C\+O\+N\+T\+R\+OL}{UNINITIALIZED_CONTROL}}]{\setlength{\rightskip}{0pt plus 5cm}\#define U\+N\+I\+N\+I\+T\+I\+A\+L\+I\+Z\+E\+D\+\_\+\+C\+O\+N\+T\+R\+OL~((double)99999999.\+99)}\hypertarget{_nyquist_8cpp_a13137e42e8c7b9ba5d8c4d86a69220ec}{}\label{_nyquist_8cpp_a13137e42e8c7b9ba5d8c4d86a69220ec}
+
+
+Definition at line 91 of file Nyquist.\+cpp.
+
+
+
+\subsection{Enumeration Type Documentation}
+\subsubsection[{\texorpdfstring{anonymous enum}{anonymous enum}}]{\setlength{\rightskip}{0pt plus 5cm}anonymous enum}\hypertarget{_nyquist_8cpp_a0efc1b13f14c790dd3d59de11e12bc6d}{}\label{_nyquist_8cpp_a0efc1b13f14c790dd3d59de11e12bc6d}
+\begin{Desc}
+\item[Enumerator]\par
+\begin{description}
+\index{I\+D\+\_\+\+Editor@{I\+D\+\_\+\+Editor}!Nyquist.\+cpp@{Nyquist.\+cpp}}\index{Nyquist.\+cpp@{Nyquist.\+cpp}!I\+D\+\_\+\+Editor@{I\+D\+\_\+\+Editor}}\item[{\em 
+I\+D\+\_\+\+Editor\hypertarget{_nyquist_8cpp_a0efc1b13f14c790dd3d59de11e12bc6da03559c092f2fd95896b4c60199597c2a}{}\label{_nyquist_8cpp_a0efc1b13f14c790dd3d59de11e12bc6da03559c092f2fd95896b4c60199597c2a}
+}]\index{I\+D\+\_\+\+Version@{I\+D\+\_\+\+Version}!Nyquist.\+cpp@{Nyquist.\+cpp}}\index{Nyquist.\+cpp@{Nyquist.\+cpp}!I\+D\+\_\+\+Version@{I\+D\+\_\+\+Version}}\item[{\em 
+I\+D\+\_\+\+Version\hypertarget{_nyquist_8cpp_a0efc1b13f14c790dd3d59de11e12bc6daa1947f02fcf8e524575972609f4be631}{}\label{_nyquist_8cpp_a0efc1b13f14c790dd3d59de11e12bc6daa1947f02fcf8e524575972609f4be631}
+}]\index{I\+D\+\_\+\+Load@{I\+D\+\_\+\+Load}!Nyquist.\+cpp@{Nyquist.\+cpp}}\index{Nyquist.\+cpp@{Nyquist.\+cpp}!I\+D\+\_\+\+Load@{I\+D\+\_\+\+Load}}\item[{\em 
+I\+D\+\_\+\+Load\hypertarget{_nyquist_8cpp_a0efc1b13f14c790dd3d59de11e12bc6da06b8cb985b37f80e53166d743db75aba}{}\label{_nyquist_8cpp_a0efc1b13f14c790dd3d59de11e12bc6da06b8cb985b37f80e53166d743db75aba}
+}]\index{I\+D\+\_\+\+Save@{I\+D\+\_\+\+Save}!Nyquist.\+cpp@{Nyquist.\+cpp}}\index{Nyquist.\+cpp@{Nyquist.\+cpp}!I\+D\+\_\+\+Save@{I\+D\+\_\+\+Save}}\item[{\em 
+I\+D\+\_\+\+Save\hypertarget{_nyquist_8cpp_a0efc1b13f14c790dd3d59de11e12bc6dafa4322fd2655f8efa458357eaf967191}{}\label{_nyquist_8cpp_a0efc1b13f14c790dd3d59de11e12bc6dafa4322fd2655f8efa458357eaf967191}
+}]\index{I\+D\+\_\+\+Slider@{I\+D\+\_\+\+Slider}!Nyquist.\+cpp@{Nyquist.\+cpp}}\index{Nyquist.\+cpp@{Nyquist.\+cpp}!I\+D\+\_\+\+Slider@{I\+D\+\_\+\+Slider}}\item[{\em 
+I\+D\+\_\+\+Slider\hypertarget{_nyquist_8cpp_a0efc1b13f14c790dd3d59de11e12bc6da973bbe1ccd5c880428d852aa95597c1e}{}\label{_nyquist_8cpp_a0efc1b13f14c790dd3d59de11e12bc6da973bbe1ccd5c880428d852aa95597c1e}
+}]\index{I\+D\+\_\+\+Choice@{I\+D\+\_\+\+Choice}!Nyquist.\+cpp@{Nyquist.\+cpp}}\index{Nyquist.\+cpp@{Nyquist.\+cpp}!I\+D\+\_\+\+Choice@{I\+D\+\_\+\+Choice}}\item[{\em 
+I\+D\+\_\+\+Choice\hypertarget{_nyquist_8cpp_a0efc1b13f14c790dd3d59de11e12bc6da77b0e7a0218c8eeb7eaf8b4ed6fa12c5}{}\label{_nyquist_8cpp_a0efc1b13f14c790dd3d59de11e12bc6da77b0e7a0218c8eeb7eaf8b4ed6fa12c5}
+}]\end{description}
+\end{Desc}
+
+
+Definition at line 76 of file Nyquist.\+cpp.
+
+
+
+\subsection{Function Documentation}
+\index{Nyquist.\+cpp@{Nyquist.\+cpp}!E\+V\+T\+\_\+\+C\+O\+M\+M\+A\+N\+D\+\_\+\+R\+A\+N\+GE@{E\+V\+T\+\_\+\+C\+O\+M\+M\+A\+N\+D\+\_\+\+R\+A\+N\+GE}}
+\index{E\+V\+T\+\_\+\+C\+O\+M\+M\+A\+N\+D\+\_\+\+R\+A\+N\+GE@{E\+V\+T\+\_\+\+C\+O\+M\+M\+A\+N\+D\+\_\+\+R\+A\+N\+GE}!Nyquist.\+cpp@{Nyquist.\+cpp}}
+\subsubsection[{\texorpdfstring{E\+V\+T\+\_\+\+C\+O\+M\+M\+A\+N\+D\+\_\+\+R\+A\+N\+G\+E(\+I\+D\+\_\+\+Slider, I\+D\+\_\+\+Slider+99, wx\+E\+V\+T\+\_\+\+C\+O\+M\+M\+A\+N\+D\+\_\+\+S\+L\+I\+D\+E\+R\+\_\+\+U\+P\+D\+A\+T\+E\+D, Nyquist\+Effect\+::\+On\+Slider) E\+V\+T\+\_\+\+C\+O\+M\+M\+A\+N\+D\+\_\+\+R\+A\+N\+G\+E(\+I\+D\+\_\+\+Text}{EVT_COMMAND_RANGE(ID_Slider, ID_Slider+99, wxEVT_COMMAND_SLIDER_UPDATED, NyquistEffect::OnSlider) EVT_COMMAND_RANGE(ID_Text}}]{\setlength{\rightskip}{0pt plus 5cm}E\+V\+T\+\_\+\+C\+O\+M\+M\+A\+N\+D\+\_\+\+R\+A\+N\+GE (
+\begin{DoxyParamCaption}
+\item[{{\bf I\+D\+\_\+\+Slider}}]{, }
+\item[{{\bf I\+D\+\_\+\+Slider}+}]{99, }
+\item[{wx\+E\+V\+T\+\_\+\+C\+O\+M\+M\+A\+N\+D\+\_\+\+S\+L\+I\+D\+E\+R\+\_\+\+U\+P\+D\+A\+T\+ED}]{, }
+\item[{Nyquist\+Effect\+::\+On\+Slider}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{_nyquist_8cpp_a742e462659e9d42420bcab7baa3bac33}{}\label{_nyquist_8cpp_a742e462659e9d42420bcab7baa3bac33}
+\index{Nyquist.\+cpp@{Nyquist.\+cpp}!E\+V\+T\+\_\+\+C\+O\+M\+M\+A\+N\+D\+\_\+\+R\+A\+N\+GE@{E\+V\+T\+\_\+\+C\+O\+M\+M\+A\+N\+D\+\_\+\+R\+A\+N\+GE}}
+\index{E\+V\+T\+\_\+\+C\+O\+M\+M\+A\+N\+D\+\_\+\+R\+A\+N\+GE@{E\+V\+T\+\_\+\+C\+O\+M\+M\+A\+N\+D\+\_\+\+R\+A\+N\+GE}!Nyquist.\+cpp@{Nyquist.\+cpp}}
+\subsubsection[{\texorpdfstring{E\+V\+T\+\_\+\+C\+O\+M\+M\+A\+N\+D\+\_\+\+R\+A\+N\+G\+E(\+I\+D\+\_\+\+Choice, I\+D\+\_\+\+Choice+99, wx\+E\+V\+T\+\_\+\+C\+O\+M\+M\+A\+N\+D\+\_\+\+C\+H\+O\+I\+C\+E\+\_\+\+S\+E\+L\+E\+C\+T\+E\+D, Nyquist\+Effect\+::\+On\+Choice) Nyquist\+Effect}{EVT_COMMAND_RANGE(ID_Choice, ID_Choice+99, wxEVT_COMMAND_CHOICE_SELECTED, NyquistEffect::OnChoice) NyquistEffect}}]{\setlength{\rightskip}{0pt plus 5cm}Nyquist\+Effect\+::\+On\+Text E\+V\+T\+\_\+\+C\+O\+M\+M\+A\+N\+D\+\_\+\+R\+A\+N\+GE (
+\begin{DoxyParamCaption}
+\item[{{\bf I\+D\+\_\+\+Choice}}]{, }
+\item[{{\bf I\+D\+\_\+\+Choice}+}]{99, }
+\item[{wx\+E\+V\+T\+\_\+\+C\+O\+M\+M\+A\+N\+D\+\_\+\+C\+H\+O\+I\+C\+E\+\_\+\+S\+E\+L\+E\+C\+T\+ED}]{, }
+\item[{Nyquist\+Effect\+::\+On\+Choice}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{_nyquist_8cpp_a0f03851034908393ce1d472667f5490f}{}\label{_nyquist_8cpp_a0f03851034908393ce1d472667f5490f}
+
+
+Definition at line 113 of file Nyquist.\+cpp.
+
+\index{Nyquist.\+cpp@{Nyquist.\+cpp}!W\+X\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+O\+B\+J\+A\+R\+R\+AY@{W\+X\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+O\+B\+J\+A\+R\+R\+AY}}
+\index{W\+X\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+O\+B\+J\+A\+R\+R\+AY@{W\+X\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+O\+B\+J\+A\+R\+R\+AY}!Nyquist.\+cpp@{Nyquist.\+cpp}}
+\subsubsection[{\texorpdfstring{W\+X\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+O\+B\+J\+A\+R\+R\+A\+Y(\+Nyq\+Control\+Array)}{WX_DEFINE_OBJARRAY(NyqControlArray)}}]{\setlength{\rightskip}{0pt plus 5cm}W\+X\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+O\+B\+J\+A\+R\+R\+AY (
+\begin{DoxyParamCaption}
+\item[{Nyq\+Control\+Array}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{_nyquist_8cpp_a04a430ddeaf3996a0eb07534c6848201}{}\label{_nyquist_8cpp_a04a430ddeaf3996a0eb07534c6848201}
+
+
+\subsection{Variable Documentation}
+\index{Nyquist.\+cpp@{Nyquist.\+cpp}!I\+D\+\_\+\+Text@{I\+D\+\_\+\+Text}}
+\index{I\+D\+\_\+\+Text@{I\+D\+\_\+\+Text}!Nyquist.\+cpp@{Nyquist.\+cpp}}
+\subsubsection[{\texorpdfstring{I\+D\+\_\+\+Text}{ID_Text}}]{\setlength{\rightskip}{0pt plus 5cm}I\+D\+\_\+\+Text = 12000}\hypertarget{_nyquist_8cpp_ace083968e63aa5d6d0a8c34c9a4277a7}{}\label{_nyquist_8cpp_ace083968e63aa5d6d0a8c34c9a4277a7}
+
+
+Definition at line 111 of file Nyquist.\+cpp.
+
+\index{Nyquist.\+cpp@{Nyquist.\+cpp}!wx\+E\+V\+T\+\_\+\+C\+O\+M\+M\+A\+N\+D\+\_\+\+T\+E\+X\+T\+\_\+\+U\+P\+D\+A\+T\+ED@{wx\+E\+V\+T\+\_\+\+C\+O\+M\+M\+A\+N\+D\+\_\+\+T\+E\+X\+T\+\_\+\+U\+P\+D\+A\+T\+ED}}
+\index{wx\+E\+V\+T\+\_\+\+C\+O\+M\+M\+A\+N\+D\+\_\+\+T\+E\+X\+T\+\_\+\+U\+P\+D\+A\+T\+ED@{wx\+E\+V\+T\+\_\+\+C\+O\+M\+M\+A\+N\+D\+\_\+\+T\+E\+X\+T\+\_\+\+U\+P\+D\+A\+T\+ED}!Nyquist.\+cpp@{Nyquist.\+cpp}}
+\subsubsection[{\texorpdfstring{wx\+E\+V\+T\+\_\+\+C\+O\+M\+M\+A\+N\+D\+\_\+\+T\+E\+X\+T\+\_\+\+U\+P\+D\+A\+T\+ED}{wxEVT_COMMAND_TEXT_UPDATED}}]{\setlength{\rightskip}{0pt plus 5cm}wx\+E\+V\+T\+\_\+\+C\+O\+M\+M\+A\+N\+D\+\_\+\+T\+E\+X\+T\+\_\+\+U\+P\+D\+A\+T\+ED}\hypertarget{_nyquist_8cpp_a265b98136e36f9aaaff3529182d41365}{}\label{_nyquist_8cpp_a265b98136e36f9aaaff3529182d41365}
+
+
+Definition at line 111 of file Nyquist.\+cpp.
+

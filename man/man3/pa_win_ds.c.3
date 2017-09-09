@@ -1,0 +1,407 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/lib-src/portaudio-v19/src/hostapi/dsound/pa_win_ds.c" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/lib-src/portaudio-v19/src/hostapi/dsound/pa_win_ds.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <assert\&.h>\fP
+.br
+\fC#include <stdio\&.h>\fP
+.br
+\fC#include <string\&.h>\fP
+.br
+\fC#include <initguid\&.h>\fP
+.br
+\fC#include <windows\&.h>\fP
+.br
+\fC#include <objbase\&.h>\fP
+.br
+\fC#include <dsound\&.h>\fP
+.br
+\fC#include <process\&.h>\fP
+.br
+\fC#include 'pa_util\&.h'\fP
+.br
+\fC#include 'pa_allocation\&.h'\fP
+.br
+\fC#include 'pa_hostapi\&.h'\fP
+.br
+\fC#include 'pa_stream\&.h'\fP
+.br
+\fC#include 'pa_cpuload\&.h'\fP
+.br
+\fC#include 'pa_process\&.h'\fP
+.br
+\fC#include 'pa_debugprint\&.h'\fP
+.br
+\fC#include 'pa_win_ds\&.h'\fP
+.br
+\fC#include 'pa_win_ds_dynlink\&.h'\fP
+.br
+\fC#include 'pa_win_waveformat\&.h'\fP
+.br
+\fC#include 'pa_win_wdmks_utils\&.h'\fP
+.br
+\fC#include 'pa_win_coinitialize\&.h'\fP
+.br
+
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "struct \fBPaWinDsDeviceInfo\fP"
+.br
+.ti -1c
+.RI "struct \fBPaWinDsHostApiRepresentation\fP"
+.br
+.ti -1c
+.RI "struct \fBPaWinDsStream\fP"
+.br
+.ti -1c
+.RI "struct \fBDSDeviceNameAndGUID\fP"
+.br
+.ti -1c
+.RI "struct \fBDSDeviceNameAndGUIDVector\fP"
+.br
+.ti -1c
+.RI "struct \fBDSDeviceNamesAndGUIDs\fP"
+.br
+.in -1c
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fB_WIN32_WINNT\fP   0x0400 /* required to get waitable timer APIs */"
+.br
+.ti -1c
+.RI "#define \fBDIRECTSOUND_VERSION\fP   0x0300"
+.br
+.ti -1c
+.RI "#define \fBCREATE_THREAD\fP   (\fBHANDLE\fP)_beginthreadex"
+.br
+.ti -1c
+.RI "#define \fBPA_THREAD_FUNC\fP   static unsigned \fBWINAPI\fP"
+.br
+.ti -1c
+.RI "#define \fBPA_THREAD_ID\fP   unsigned"
+.br
+.ti -1c
+.RI "#define \fBPA_WIN_DS_USE_WAITABLE_TIMER_OBJECT\fP   /* use waitable timer where possible, otherwise we use \fBa\fP WaitForSingleObject timeout */"
+.br
+.ti -1c
+.RI "#define \fBDWORD_PTR\fP   unsigned long"
+.br
+.ti -1c
+.RI "#define \fBPRINT\fP(x)   \fBPA_DEBUG\fP(x);"
+.br
+.ti -1c
+.RI "#define \fBERR_RPT\fP(x)   \fBPRINT\fP(x)"
+.br
+.ti -1c
+.RI "#define \fBDBUG\fP(x)     \fBPRINT\fP(x)"
+.br
+.ti -1c
+.RI "#define \fBDBUGX\fP(x)   \fBPRINT\fP(x)"
+.br
+.ti -1c
+.RI "#define \fBPA_USE_HIGH_LATENCY\fP   (0)"
+.br
+.ti -1c
+.RI "#define \fBPA_DS_WIN_9X_DEFAULT_LATENCY_\fP   (\&.140)"
+.br
+.ti -1c
+.RI "#define \fBPA_DS_WIN_NT_DEFAULT_LATENCY_\fP   (\&.280)"
+.br
+.ti -1c
+.RI "#define \fBPA_DS_WIN_WDM_DEFAULT_LATENCY_\fP   (\&.120)"
+.br
+.ti -1c
+.RI "#define \fBPA_DS_MINIMUM_POLLING_PERIOD_SECONDS\fP   (0\&.001) /* 1ms */"
+.br
+.ti -1c
+.RI "#define \fBPA_DS_MAXIMUM_POLLING_PERIOD_SECONDS\fP   (0\&.100) /* 100ms */"
+.br
+.ti -1c
+.RI "#define \fBPA_DS_POLLING_JITTER_SECONDS\fP   (0\&.001) /* 1ms */"
+.br
+.ti -1c
+.RI "#define \fBSECONDS_PER_MSEC\fP   (0\&.001)"
+.br
+.ti -1c
+.RI "#define \fBMSECS_PER_SECOND\fP   (1000)"
+.br
+.ti -1c
+.RI "#define \fBPA_DS_SET_LAST_DIRECTSOUND_ERROR\fP(hr)   \fBPaUtil_SetLastHostErrorInfo\fP( \fBpaDirectSound\fP, hr, 'DirectSound \fBerror\fP' )"
+.br
+.ti -1c
+.RI "#define \fBPA_LATENCY_ENV_NAME\fP   ('PA_MIN_LATENCY_MSEC')"
+.br
+.ti -1c
+.RI "#define \fBPA_ENV_BUF_SIZE\fP   (32)"
+.br
+.ti -1c
+.RI "#define \fBPA_DEFAULTSAMPLERATESEARCHORDER_COUNT_\fP   (13) /* must \fBmatch\fP array \fBlength\fP below */"
+.br
+.ti -1c
+.RI "#define \fBDSSPEAKER_7POINT1_SURROUND\fP   0x00000008"
+.br
+.ti -1c
+.RI "#define \fBDSSPEAKER_5POINT1_SURROUND\fP   0x00000009"
+.br
+.ti -1c
+.RI "#define \fBWAVE_FORMAT_48M08\fP   0x00001000    /* 48     kHz, Mono,   8\-bit  */"
+.br
+.ti -1c
+.RI "#define \fBWAVE_FORMAT_48S08\fP   0x00002000    /* 48     kHz, Stereo, 8\-bit  */"
+.br
+.ti -1c
+.RI "#define \fBWAVE_FORMAT_48M16\fP   0x00004000    /* 48     kHz, Mono,   16\-bit */"
+.br
+.ti -1c
+.RI "#define \fBWAVE_FORMAT_48S16\fP   0x00008000    /* 48     kHz, Stereo, 16\-bit */"
+.br
+.ti -1c
+.RI "#define \fBWAVE_FORMAT_96M08\fP   0x00010000    /* 96     kHz, Mono,   8\-bit  */"
+.br
+.ti -1c
+.RI "#define \fBWAVE_FORMAT_96S08\fP   0x00020000    /* 96     kHz, Stereo, 8\-bit  */"
+.br
+.ti -1c
+.RI "#define \fBWAVE_FORMAT_96M16\fP   0x00040000    /* 96     kHz, Mono,   16\-bit */"
+.br
+.ti -1c
+.RI "#define \fBWAVE_FORMAT_96S16\fP   0x00080000    /* 96     kHz, Stereo, 16\-bit */"
+.br
+.in -1c
+.SS "Typedefs"
+
+.in +1c
+.ti -1c
+.RI "typedef struct \fBPaWinDsDeviceInfo\fP \fBPaWinDsDeviceInfo\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBPaWinDsStream\fP \fBPaWinDsStream\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBDSDeviceNameAndGUID\fP \fBDSDeviceNameAndGUID\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBDSDeviceNameAndGUIDVector\fP \fBDSDeviceNameAndGUIDVector\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBDSDeviceNamesAndGUIDs\fP \fBDSDeviceNamesAndGUIDs\fP"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBPA_THREAD_FUNC\fP \fBProcessingThreadProc\fP (\fBvoid\fP *pArg)"
+.br
+.ti -1c
+.RI "\fBPaError\fP \fBPaWinDs_Initialize\fP (\fBPaUtilHostApiRepresentation\fP **hostApi, \fBPaHostApiIndex\fP index)"
+.br
+.ti -1c
+.RI "LPGUID \fBPaWinDS_GetStreamInputGUID\fP (\fBPaStream\fP *\fBs\fP)"
+.br
+.ti -1c
+.RI "LPGUID \fBPaWinDS_GetStreamOutputGUID\fP (\fBPaStream\fP *\fBs\fP)"
+.br
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "GUID \fBIID_IRolandVSCEmulated1\fP = {0xc2ad1800, 0xb243, 0x11ce, 0xa8, 0xa4, 0x00, 0xaa, 0x00, 0x6c, 0x45, 0x01}"
+.br
+.ti -1c
+.RI "GUID \fBIID_IRolandVSCEmulated2\fP = {0xc2ad1800, 0xb243, 0x11ce, 0xa8, 0xa4, 0x00, 0xaa, 0x00, 0x6c, 0x45, 0x02}"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define _WIN32_WINNT   0x0400 /* required to get waitable timer APIs */"
+
+.PP
+Definition at line 54 of file pa_win_ds\&.c\&.
+.SS "#define CREATE_THREAD   (\fBHANDLE\fP)_beginthreadex"
+
+.PP
+Definition at line 102 of file pa_win_ds\&.c\&.
+.SS "#define DBUG(x)   \fBPRINT\fP(x)"
+
+.PP
+Definition at line 141 of file pa_win_ds\&.c\&.
+.SS "#define DBUGX(x)   \fBPRINT\fP(x)"
+
+.PP
+Definition at line 142 of file pa_win_ds\&.c\&.
+.SS "#define DIRECTSOUND_VERSION   0x0300"
+
+.PP
+Definition at line 66 of file pa_win_ds\&.c\&.
+.SS "#define DSSPEAKER_5POINT1_SURROUND   0x00000009"
+
+.SS "#define DSSPEAKER_7POINT1_SURROUND   0x00000008"
+
+.SS "#define DWORD_PTR   unsigned long"
+
+.PP
+Definition at line 135 of file pa_win_ds\&.c\&.
+.SS "#define ERR_RPT(x)   \fBPRINT\fP(x)"
+
+.PP
+Definition at line 140 of file pa_win_ds\&.c\&.
+.SS "#define MSECS_PER_SECOND   (1000)"
+
+.PP
+Definition at line 163 of file pa_win_ds\&.c\&.
+.SS "#define PA_DEFAULTSAMPLERATESEARCHORDER_COUNT_   (13) /* must \fBmatch\fP array \fBlength\fP below */"
+
+.PP
+Definition at line 754 of file pa_win_ds\&.c\&.
+.SS "#define PA_DS_MAXIMUM_POLLING_PERIOD_SECONDS   (0\&.100) /* 100ms */"
+
+.PP
+Definition at line 159 of file pa_win_ds\&.c\&.
+.SS "#define PA_DS_MINIMUM_POLLING_PERIOD_SECONDS   (0\&.001) /* 1ms */"
+
+.PP
+Definition at line 158 of file pa_win_ds\&.c\&.
+.SS "#define PA_DS_POLLING_JITTER_SECONDS   (0\&.001) /* 1ms */"
+
+.PP
+Definition at line 160 of file pa_win_ds\&.c\&.
+.SS "#define PA_DS_SET_LAST_DIRECTSOUND_ERROR(hr)   \fBPaUtil_SetLastHostErrorInfo\fP( \fBpaDirectSound\fP, hr, 'DirectSound \fBerror\fP' )"
+
+.PP
+Definition at line 207 of file pa_win_ds\&.c\&.
+.SS "#define PA_DS_WIN_9X_DEFAULT_LATENCY_   (\&.140)"
+
+.PP
+Definition at line 149 of file pa_win_ds\&.c\&.
+.SS "#define PA_DS_WIN_NT_DEFAULT_LATENCY_   (\&.280)"
+
+.PP
+Definition at line 150 of file pa_win_ds\&.c\&.
+.SS "#define PA_DS_WIN_WDM_DEFAULT_LATENCY_   (\&.120)"
+
+.PP
+Definition at line 153 of file pa_win_ds\&.c\&.
+.SS "#define PA_ENV_BUF_SIZE   (32)"
+
+.PP
+Definition at line 376 of file pa_win_ds\&.c\&.
+.SS "#define PA_LATENCY_ENV_NAME   ('PA_MIN_LATENCY_MSEC')"
+
+.PP
+Definition at line 375 of file pa_win_ds\&.c\&.
+.SS "#define PA_THREAD_FUNC   static unsigned \fBWINAPI\fP"
+
+.PP
+Definition at line 104 of file pa_win_ds\&.c\&.
+.SS "#define PA_THREAD_ID   unsigned"
+
+.PP
+Definition at line 105 of file pa_win_ds\&.c\&.
+.SS "#define PA_USE_HIGH_LATENCY   (0)"
+
+.PP
+Definition at line 144 of file pa_win_ds\&.c\&.
+.SS "#define PA_WIN_DS_USE_WAITABLE_TIMER_OBJECT   /* use waitable timer where possible, otherwise we use \fBa\fP WaitForSingleObject timeout */"
+
+.PP
+Definition at line 122 of file pa_win_ds\&.c\&.
+.SS "#define PRINT(x)   \fBPA_DEBUG\fP(x);"
+
+.PP
+Definition at line 139 of file pa_win_ds\&.c\&.
+.SS "#define SECONDS_PER_MSEC   (0\&.001)"
+
+.PP
+Definition at line 162 of file pa_win_ds\&.c\&.
+.SS "#define WAVE_FORMAT_48M08   0x00001000    /* 48     kHz, Mono,   8\-bit  */"
+
+.SS "#define WAVE_FORMAT_48M16   0x00004000    /* 48     kHz, Mono,   16\-bit */"
+
+.SS "#define WAVE_FORMAT_48S08   0x00002000    /* 48     kHz, Stereo, 8\-bit  */"
+
+.SS "#define WAVE_FORMAT_48S16   0x00008000    /* 48     kHz, Stereo, 16\-bit */"
+
+.SS "#define WAVE_FORMAT_96M08   0x00010000    /* 96     kHz, Mono,   8\-bit  */"
+
+.SS "#define WAVE_FORMAT_96M16   0x00040000    /* 96     kHz, Mono,   16\-bit */"
+
+.SS "#define WAVE_FORMAT_96S08   0x00020000    /* 96     kHz, Stereo, 8\-bit  */"
+
+.SS "#define WAVE_FORMAT_96S16   0x00080000    /* 96     kHz, Stereo, 16\-bit */"
+
+.SH "Typedef Documentation"
+.PP 
+.SS "typedef struct \fBDSDeviceNameAndGUID\fP  \fBDSDeviceNameAndGUID\fP"
+
+.SS "typedef struct \fBDSDeviceNameAndGUIDVector\fP  \fBDSDeviceNameAndGUIDVector\fP"
+
+.SS "typedef struct \fBDSDeviceNamesAndGUIDs\fP  \fBDSDeviceNamesAndGUIDs\fP"
+
+.SS "typedef struct \fBPaWinDsDeviceInfo\fP  \fBPaWinDsDeviceInfo\fP"
+
+.SS "typedef struct \fBPaWinDsStream\fP  \fBPaWinDsStream\fP"
+
+.SH "Function Documentation"
+.PP 
+.SS "LPGUID PaWinDS_GetStreamInputGUID (\fBPaStream\fP * s)"
+Retrieve the GUID of the input device\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIstream\fP The stream to query\&.
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+A pointer to the GUID, or NULL if none\&. 
+.RE
+.PP
+
+.PP
+Definition at line 3292 of file pa_win_ds\&.c\&.
+.SS "LPGUID PaWinDS_GetStreamOutputGUID (\fBPaStream\fP * s)"
+Retrieve the GUID of the output device\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIstream\fP The stream to query\&.
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+A pointer to the GUID, or NULL if none\&. 
+.RE
+.PP
+
+.PP
+Definition at line 3300 of file pa_win_ds\&.c\&.
+.SS "\fBPaError\fP PaWinDs_Initialize (\fBPaUtilHostApiRepresentation\fP ** hostApi, \fBPaHostApiIndex\fP index)"
+
+.PP
+Definition at line 1187 of file pa_win_ds\&.c\&.
+.SS "\fBPA_THREAD_FUNC\fP ProcessingThreadProc (\fBvoid\fP * pArg)"
+
+.PP
+Definition at line 2787 of file pa_win_ds\&.c\&.
+.SH "Variable Documentation"
+.PP 
+.SS "GUID IID_IRolandVSCEmulated1 = {0xc2ad1800, 0xb243, 0x11ce, 0xa8, 0xa4, 0x00, 0xaa, 0x00, 0x6c, 0x45, 0x01}"
+
+.PP
+Definition at line 750 of file pa_win_ds\&.c\&.
+.SS "GUID IID_IRolandVSCEmulated2 = {0xc2ad1800, 0xb243, 0x11ce, 0xa8, 0xa4, 0x00, 0xaa, 0x00, 0x6c, 0x45, 0x02}"
+
+.PP
+Definition at line 751 of file pa_win_ds\&.c\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

@@ -1,0 +1,200 @@
+\hypertarget{class_l_o_f_import_file_handle}{}\section{L\+O\+F\+Import\+File\+Handle Class Reference}
+\label{class_l_o_f_import_file_handle}\index{L\+O\+F\+Import\+File\+Handle@{L\+O\+F\+Import\+File\+Handle}}
+
+
+An \hyperlink{class_import_file_handle}{Import\+File\+Handle} for L\+OF data.  
+
+
+Inheritance diagram for L\+O\+F\+Import\+File\+Handle\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_l_o_f_import_file_handle}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{class_l_o_f_import_file_handle_a9c612911df30c2295dd899536dedb279}{L\+O\+F\+Import\+File\+Handle} (\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} wx\+String \&\hyperlink{lib_2expat_8h_a1b49b495b59f9e73205b69ad1a2965b0}{name}, wx\+Text\+File $\ast$file)
+\item 
+\hyperlink{class_l_o_f_import_file_handle_a1b5d3be515828d8dadd3312a46b33f3a}{$\sim$\+L\+O\+F\+Import\+File\+Handle} ()
+\item 
+wx\+String \hyperlink{class_l_o_f_import_file_handle_aed079b0e4d7feddacbec1dcfe12fcdec}{Get\+File\+Description} ()
+\item 
+\hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{class_l_o_f_import_file_handle_a516c53563ce679b5d941f8f04d44c01d}{Get\+File\+Uncompressed\+Bytes} ()
+\item 
+\hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{class_l_o_f_import_file_handle_a49fa4013b00112033e5367cffdc083da}{Import} (\hyperlink{class_track_factory}{Track\+Factory} $\ast$track\+Factory, \hyperlink{class_track}{Track} $\ast$$\ast$$\ast$out\+Tracks, \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} $\ast$out\+Num\+Tracks, \hyperlink{class_tags}{Tags} $\ast$tags)
+\item 
+wx\+Int32 \hyperlink{class_l_o_f_import_file_handle_a808f304c0465e11f1638bf54ce7aeb28}{Get\+Stream\+Count} ()
+\item 
+wx\+Array\+String $\ast$ \hyperlink{class_l_o_f_import_file_handle_ab691f881bb9f62bae4f4523f3503f86b}{Get\+Stream\+Info} ()
+\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{class_l_o_f_import_file_handle_aa44aa98b63f06d620d9ea4dabb5ff460}{Set\+Stream\+Usage} (wx\+Int32 W\+X\+U\+N\+U\+S\+ED(Stream\+ID), \hyperlink{mac_2config_2i386_2lib-src_2libsoxr_2soxr-config_8h_abb452686968e48b67397da5f97445f5b}{bool} W\+X\+U\+N\+U\+S\+ED(Use))
+\end{DoxyCompactItemize}
+\subsection*{Additional Inherited Members}
+
+
+\subsection{Detailed Description}
+An \hyperlink{class_import_file_handle}{Import\+File\+Handle} for L\+OF data. 
+
+Supports the opening of \char`\"{}.\+lof\char`\"{} files which are text files that contain a list of individual files to open in audacity in specific formats. Files may be file names (in the same directory as the L\+OF file), absolute paths or relative paths relative to the directory of the L\+OF file.
+
+(In B\+NF) The syntax for an L\+OF file, denoted by $<$lof$>$\+:
+
+\begin{DoxyVerb}  <lof> ::= [<window> | <file> | <#>]*
+  <window> ::= window [<window-parameter>]* <newline>
+  <window-parameter> ::= offset <time> | duration <time>
+  <time> ::= [<digit>]+ [ . [<digit>]* ]
+  <file> ::= file [<file-parameter>]* <newline>
+  <file-parameter> ::= offset <time>
+  <#> ::= <comment> <newline>
+\end{DoxyVerb}
+
+
+E\+X\+A\+M\+P\+LE L\+OF file\+:
+
+\begin{DoxyVerb}  # everything following the hash character is ignored
+  window # an initial window command is implicit and optional
+  file "C:\folder1\sample1.wav"    # sample1.wav is displayed
+  file "C:\sample2.wav" offset 5   # sample2 is displayed with a 5s offset
+  File "C:\sample3.wav"            # sample3 is displayed with no offset
+  File "foo.aiff" # foo is loaded from the same directory as the LOF file
+  window offset 5 duration 10      # open a NEW window, zoom to display
+  # 10 seconds total starting at 5 (ending at 15) seconds
+  file "C:\sample3.wav" offset 2.5
+\end{DoxyVerb}
+
+
+S\+E\+M\+A\+N\+T\+I\+CS\+:
+
+There are two commands\+: \char`\"{}window\char`\"{} creates a N\+EW window, and \char`\"{}file\char`\"{} appends a track to the current window and displays the file there. The first file is always placed in a N\+EW window, whether or not an initial \char`\"{}window\char`\"{} command is given.
+
+Commands have optional keyword parameters that may be listed in any order. A parameter should only occur once per command. The \char`\"{}offset\char`\"{} parameter specifies a time offset. For windows, this is the leftmost time displayed in the window. For files, the offset is an amount by which the file is shifted in time before display (only enabled for audio; not midi). The offset is specified as an integer or decimal number of seconds, and the default value is zero.
+
+Windows may also have a \char`\"{}duration\char`\"{} parameter, which specifies how much time should be displayed in the window. The default duration is equal to the duration of the longest track currently displayed. 
+
+Definition at line 120 of file Import\+L\+O\+F.\+cpp.
+
+
+
+\subsection{Constructor \& Destructor Documentation}
+\index{L\+O\+F\+Import\+File\+Handle@{L\+O\+F\+Import\+File\+Handle}!L\+O\+F\+Import\+File\+Handle@{L\+O\+F\+Import\+File\+Handle}}
+\index{L\+O\+F\+Import\+File\+Handle@{L\+O\+F\+Import\+File\+Handle}!L\+O\+F\+Import\+File\+Handle@{L\+O\+F\+Import\+File\+Handle}}
+\subsubsection[{\texorpdfstring{L\+O\+F\+Import\+File\+Handle(const wx\+String \&name, wx\+Text\+File $\ast$file)}{LOFImportFileHandle(const wxString &name, wxTextFile *file)}}]{\setlength{\rightskip}{0pt plus 5cm}L\+O\+F\+Import\+File\+Handle\+::\+L\+O\+F\+Import\+File\+Handle (
+\begin{DoxyParamCaption}
+\item[{{\bf const} wx\+String \&}]{name, }
+\item[{wx\+Text\+File $\ast$}]{file}
+\end{DoxyParamCaption}
+)}\hypertarget{class_l_o_f_import_file_handle_a9c612911df30c2295dd899536dedb279}{}\label{class_l_o_f_import_file_handle_a9c612911df30c2295dd899536dedb279}
+
+
+Definition at line 160 of file Import\+L\+O\+F.\+cpp.
+
+\index{L\+O\+F\+Import\+File\+Handle@{L\+O\+F\+Import\+File\+Handle}!````~L\+O\+F\+Import\+File\+Handle@{$\sim$\+L\+O\+F\+Import\+File\+Handle}}
+\index{````~L\+O\+F\+Import\+File\+Handle@{$\sim$\+L\+O\+F\+Import\+File\+Handle}!L\+O\+F\+Import\+File\+Handle@{L\+O\+F\+Import\+File\+Handle}}
+\subsubsection[{\texorpdfstring{$\sim$\+L\+O\+F\+Import\+File\+Handle()}{~LOFImportFileHandle()}}]{\setlength{\rightskip}{0pt plus 5cm}L\+O\+F\+Import\+File\+Handle\+::$\sim$\+L\+O\+F\+Import\+File\+Handle (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{class_l_o_f_import_file_handle_a1b5d3be515828d8dadd3312a46b33f3a}{}\label{class_l_o_f_import_file_handle_a1b5d3be515828d8dadd3312a46b33f3a}
+
+
+Definition at line 496 of file Import\+L\+O\+F.\+cpp.
+
+
+
+\subsection{Member Function Documentation}
+\index{L\+O\+F\+Import\+File\+Handle@{L\+O\+F\+Import\+File\+Handle}!Get\+File\+Description@{Get\+File\+Description}}
+\index{Get\+File\+Description@{Get\+File\+Description}!L\+O\+F\+Import\+File\+Handle@{L\+O\+F\+Import\+File\+Handle}}
+\subsubsection[{\texorpdfstring{Get\+File\+Description()}{GetFileDescription()}}]{\setlength{\rightskip}{0pt plus 5cm}wx\+String L\+O\+F\+Import\+File\+Handle\+::\+Get\+File\+Description (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}\hypertarget{class_l_o_f_import_file_handle_aed079b0e4d7feddacbec1dcfe12fcdec}{}\label{class_l_o_f_import_file_handle_aed079b0e4d7feddacbec1dcfe12fcdec}
+
+
+Implements \hyperlink{class_import_file_handle_a0f769d28b5fd08617f30400134072575}{Import\+File\+Handle}.
+
+
+
+Definition at line 222 of file Import\+L\+O\+F.\+cpp.
+
+\index{L\+O\+F\+Import\+File\+Handle@{L\+O\+F\+Import\+File\+Handle}!Get\+File\+Uncompressed\+Bytes@{Get\+File\+Uncompressed\+Bytes}}
+\index{Get\+File\+Uncompressed\+Bytes@{Get\+File\+Uncompressed\+Bytes}!L\+O\+F\+Import\+File\+Handle@{L\+O\+F\+Import\+File\+Handle}}
+\subsubsection[{\texorpdfstring{Get\+File\+Uncompressed\+Bytes()}{GetFileUncompressedBytes()}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf int} L\+O\+F\+Import\+File\+Handle\+::\+Get\+File\+Uncompressed\+Bytes (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}\hypertarget{class_l_o_f_import_file_handle_a516c53563ce679b5d941f8f04d44c01d}{}\label{class_l_o_f_import_file_handle_a516c53563ce679b5d941f8f04d44c01d}
+
+
+Implements \hyperlink{class_import_file_handle_a114cb61bc19efce2692d412e157a841e}{Import\+File\+Handle}.
+
+
+
+Definition at line 227 of file Import\+L\+O\+F.\+cpp.
+
+\index{L\+O\+F\+Import\+File\+Handle@{L\+O\+F\+Import\+File\+Handle}!Get\+Stream\+Count@{Get\+Stream\+Count}}
+\index{Get\+Stream\+Count@{Get\+Stream\+Count}!L\+O\+F\+Import\+File\+Handle@{L\+O\+F\+Import\+File\+Handle}}
+\subsubsection[{\texorpdfstring{Get\+Stream\+Count()}{GetStreamCount()}}]{\setlength{\rightskip}{0pt plus 5cm}wx\+Int32 L\+O\+F\+Import\+File\+Handle\+::\+Get\+Stream\+Count (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\hypertarget{class_l_o_f_import_file_handle_a808f304c0465e11f1638bf54ce7aeb28}{}\label{class_l_o_f_import_file_handle_a808f304c0465e11f1638bf54ce7aeb28}
+
+
+Implements \hyperlink{class_import_file_handle_a3ae984b2de4a336f2ce358c3050b1015}{Import\+File\+Handle}.
+
+
+
+Definition at line 131 of file Import\+L\+O\+F.\+cpp.
+
+\index{L\+O\+F\+Import\+File\+Handle@{L\+O\+F\+Import\+File\+Handle}!Get\+Stream\+Info@{Get\+Stream\+Info}}
+\index{Get\+Stream\+Info@{Get\+Stream\+Info}!L\+O\+F\+Import\+File\+Handle@{L\+O\+F\+Import\+File\+Handle}}
+\subsubsection[{\texorpdfstring{Get\+Stream\+Info()}{GetStreamInfo()}}]{\setlength{\rightskip}{0pt plus 5cm}wx\+Array\+String$\ast$ L\+O\+F\+Import\+File\+Handle\+::\+Get\+Stream\+Info (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\hypertarget{class_l_o_f_import_file_handle_ab691f881bb9f62bae4f4523f3503f86b}{}\label{class_l_o_f_import_file_handle_ab691f881bb9f62bae4f4523f3503f86b}
+
+
+Implements \hyperlink{class_import_file_handle_a4c6bec47b379654f0af42a832d78ab11}{Import\+File\+Handle}.
+
+
+
+Definition at line 133 of file Import\+L\+O\+F.\+cpp.
+
+\index{L\+O\+F\+Import\+File\+Handle@{L\+O\+F\+Import\+File\+Handle}!Import@{Import}}
+\index{Import@{Import}!L\+O\+F\+Import\+File\+Handle@{L\+O\+F\+Import\+File\+Handle}}
+\subsubsection[{\texorpdfstring{Import(\+Track\+Factory $\ast$track\+Factory, Track $\ast$$\ast$$\ast$out\+Tracks, int $\ast$out\+Num\+Tracks, Tags $\ast$tags)}{Import(TrackFactory *trackFactory, Track ***outTracks, int *outNumTracks, Tags *tags)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf int} L\+O\+F\+Import\+File\+Handle\+::\+Import (
+\begin{DoxyParamCaption}
+\item[{{\bf Track\+Factory} $\ast$}]{track\+Factory, }
+\item[{{\bf Track} $\ast$$\ast$$\ast$}]{out\+Tracks, }
+\item[{{\bf int} $\ast$}]{out\+Num\+Tracks, }
+\item[{{\bf Tags} $\ast$}]{tags}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}\hypertarget{class_l_o_f_import_file_handle_a49fa4013b00112033e5367cffdc083da}{}\label{class_l_o_f_import_file_handle_a49fa4013b00112033e5367cffdc083da}
+
+
+Implements \hyperlink{class_import_file_handle_a2b620acd5b223d1de4af22dbf6866137}{Import\+File\+Handle}.
+
+
+
+Definition at line 232 of file Import\+L\+O\+F.\+cpp.
+
+\index{L\+O\+F\+Import\+File\+Handle@{L\+O\+F\+Import\+File\+Handle}!Set\+Stream\+Usage@{Set\+Stream\+Usage}}
+\index{Set\+Stream\+Usage@{Set\+Stream\+Usage}!L\+O\+F\+Import\+File\+Handle@{L\+O\+F\+Import\+File\+Handle}}
+\subsubsection[{\texorpdfstring{Set\+Stream\+Usage(wx\+Int32 W\+X\+U\+N\+U\+S\+E\+D(\+Stream\+I\+D), bool W\+X\+U\+N\+U\+S\+E\+D(\+Use))}{SetStreamUsage(wxInt32 WXUNUSED(StreamID), bool WXUNUSED(Use))}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} L\+O\+F\+Import\+File\+Handle\+::\+Set\+Stream\+Usage (
+\begin{DoxyParamCaption}
+\item[{wx\+Int32 }]{W\+X\+U\+N\+U\+S\+EDStream\+ID, }
+\item[{{\bf bool} }]{W\+X\+U\+N\+U\+S\+EDUse}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{class_l_o_f_import_file_handle_aa44aa98b63f06d620d9ea4dabb5ff460}{}\label{class_l_o_f_import_file_handle_aa44aa98b63f06d620d9ea4dabb5ff460}
+
+
+Definition at line 135 of file Import\+L\+O\+F.\+cpp.
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/src/import/\hyperlink{_import_l_o_f_8cpp}{Import\+L\+O\+F.\+cpp}\end{DoxyCompactItemize}

@@ -1,0 +1,59 @@
+.TH "LV2_Event" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+LV2_Event \- 
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <event\&.h>\fP
+.SS "Public Attributes"
+
+.in +1c
+.ti -1c
+.RI "\fBuint32_t\fP \fBframes\fP"
+.br
+.ti -1c
+.RI "\fBuint32_t\fP \fBsubframes\fP"
+.br
+.ti -1c
+.RI "\fBuint16_t\fP \fBtype\fP"
+.br
+.ti -1c
+.RI "\fBuint16_t\fP \fBsize\fP"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+An LV2 event (header only)\&.
+.PP
+LV2 events are generic time-stamped containers for any type of event\&. The type field defines the format of a given event's contents\&.
+.PP
+This struct defines the header of an LV2 event\&. An LV2 event is a single chunk of POD (plain old data), usually contained in a flat buffer (see LV2_EventBuffer below)\&. Unless a required feature says otherwise, hosts may assume a deep copy of an LV2 event can be created safely using a simple:
+.PP
+memcpy(ev_copy, ev, sizeof(LV2_Event) + ev->size); (or equivalent) 
+.PP
+Definition at line 78 of file event\&.h\&.
+.SH "Member Data Documentation"
+.PP 
+.SS "\fBuint32_t\fP LV2_Event::frames"
+The frames portion of timestamp\&. The units used here can optionally be set for a port (with the lv2ev:timeUnits property), otherwise this is audio frames, corresponding to the sample_count parameter of the LV2 run method (e\&.g\&. frame 0 is the first frame for that call to run)\&. 
+.PP
+Definition at line 85 of file event\&.h\&.
+.SS "\fBuint16_t\fP LV2_Event::size"
+The size of the data portion of this event in bytes, which immediately follows\&. The header size (12 bytes) is not included in this value\&. 
+.PP
+Definition at line 116 of file event\&.h\&.
+.SS "\fBuint32_t\fP LV2_Event::subframes"
+The sub-frames portion of timestamp\&. The units used here can optionally be set for a port (with the lv2ev:timeUnits property), otherwise this is 1/(2^32) of an audio frame\&. 
+.PP
+Definition at line 92 of file event\&.h\&.
+.SS "\fBuint16_t\fP LV2_Event::type"
+The type of this event, as a number which represents some URI defining an event type\&. This value MUST be some value previously returned from a call to the uri_to_id function defined in the LV2 URI map extension (see lv2_uri_map\&.h)\&. There are special rules which must be followed depending on the type of an event\&. If the plugin recognizes an event type, the definition of that event type will describe how to interpret the event, and any required behaviour\&. Otherwise, if the type is 0, this event is a non-POD event and lv2_event_unref MUST be called if the event is 'dropped' (see above)\&. Even if the plugin does not understand an event, it may pass the event through to an output by simply copying (and NOT calling lv2_event_unref)\&. These rules are designed to allow for generic event handling plugins and large non-POD events, but with minimal hassle on simple plugins that 'don't care' about these more advanced features\&. 
+.PP
+Definition at line 110 of file event\&.h\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

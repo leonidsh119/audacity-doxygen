@@ -1,0 +1,194 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/src/effects/ScienFilter.cpp" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/src/effects/ScienFilter.cpp \- Implements \fBEffectScienFilter\fP, \fBEffectScienFilterPanel\fP\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+\fC#include '\&.\&./Audacity\&.h'\fP
+.br
+\fC#include 'ScienFilter\&.h'\fP
+.br
+\fC#include <math\&.h>\fP
+.br
+\fC#include <float\&.h>\fP
+.br
+\fC#include <wx/brush\&.h>\fP
+.br
+\fC#include <wx/dcmemory\&.h>\fP
+.br
+\fC#include <wx/intl\&.h>\fP
+.br
+\fC#include <wx/msgdlg\&.h>\fP
+.br
+\fC#include <wx/settings\&.h>\fP
+.br
+\fC#include <wx/utils\&.h>\fP
+.br
+\fC#include <wx/valgen\&.h>\fP
+.br
+\fC#include '\&.\&./AColor\&.h'\fP
+.br
+\fC#include '\&.\&./AllThemeResources\&.h'\fP
+.br
+\fC#include '\&.\&./PlatformCompatibility\&.h'\fP
+.br
+\fC#include '\&.\&./Prefs\&.h'\fP
+.br
+\fC#include '\&.\&./Project\&.h'\fP
+.br
+\fC#include '\&.\&./ShuttleGui\&.h'\fP
+.br
+\fC#include '\&.\&./Theme\&.h'\fP
+.br
+\fC#include '\&.\&./WaveTrack\&.h'\fP
+.br
+\fC#include '\&.\&./widgets/valnum\&.h'\fP
+.br
+\fC#include 'Equalization\&.h'\fP
+.br
+
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBPI\fP   = 3\&.1415926535897932384626433832795"
+.br
+.ti -1c
+.RI "#define \fBsquare\fP(\fBa\fP)   ((\fBa\fP)*(\fBa\fP))"
+.br
+.in -1c
+.SS "Enumerations"
+
+.in +1c
+.ti -1c
+.RI "enum { \fBID_FilterPanel\fP = 10000, \fBID_dBMax\fP, \fBID_dBMin\fP, \fBID_Type\fP, \fBID_SubType\fP, \fBID_Order\fP, \fBID_Ripple\fP, \fBID_Cutoff\fP, \fBID_StopbandRipple\fP }"
+.br
+.ti -1c
+.RI "enum \fBkTypes\fP { \fBkWhite\fP, \fBkPink\fP, \fBkBrownian\fP, \fBkNumTypes\fP, \fBkButterworth\fP, \fBkChebyshevTypeI\fP, \fBkChebyshevTypeII\fP, \fBkNumTypes\fP }"
+.br
+.ti -1c
+.RI "enum \fBkSubTypes\fP { \fBkLowPass\fP, \fBkHighPass\fP, \fBkNumSubTypes\fP }"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBParam\fP (Type, \fBint\fP, \fBXO\fP('FilterType'), kButterworth, 0, \fBkNumTypes\fP\-1, 1)"
+.br
+.ti -1c
+.RI "\fBParam\fP (Subtype, \fBint\fP, \fBXO\fP('FilterSubtype'), kLowPass, 0, \fBkNumSubTypes\fP\-1, 1)"
+.br
+.ti -1c
+.RI "\fBParam\fP (Order, \fBint\fP, \fBXO\fP('Order'), 1, 1, 10, 1)"
+.br
+.ti -1c
+.RI "\fBParam\fP (Cutoff, float, \fBXO\fP('Cutoff'), 1000\&.0, 1\&.0, FLT_MAX, 1)"
+.br
+.ti -1c
+.RI "\fBParam\fP (Passband, float, \fBXO\fP('PassbandRipple'), 1\&.0, 0\&.0, 100\&.0, 1)"
+.br
+.ti -1c
+.RI "\fBParam\fP (Stopband, float, \fBXO\fP('StopbandRipple'), 30\&.0, 0\&.0, 100\&.0, 1)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Implements \fBEffectScienFilter\fP, \fBEffectScienFilterPanel\fP\&. 
+
+
+.PP
+Definition in file \fBScienFilter\&.cpp\fP\&.
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define PI   = 3\&.1415926535897932384626433832795"
+
+.PP
+Definition at line 62 of file ScienFilter\&.cpp\&.
+.SS "#define square(\fBa\fP)   ((\fBa\fP)*(\fBa\fP))"
+
+.PP
+Definition at line 66 of file ScienFilter\&.cpp\&.
+.SH "Enumeration Type Documentation"
+.PP 
+.SS "anonymous enum"
+
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fIID_FilterPanel \fP\fP
+.TP
+\fB\fIID_dBMax \fP\fP
+.TP
+\fB\fIID_dBMin \fP\fP
+.TP
+\fB\fIID_Type \fP\fP
+.TP
+\fB\fIID_SubType \fP\fP
+.TP
+\fB\fIID_Order \fP\fP
+.TP
+\fB\fIID_Ripple \fP\fP
+.TP
+\fB\fIID_Cutoff \fP\fP
+.TP
+\fB\fIID_StopbandRipple \fP\fP
+.PP
+Definition at line 68 of file ScienFilter\&.cpp\&.
+.SS "enum \fBkSubTypes\fP"
+
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fIkLowPass \fP\fP
+.TP
+\fB\fIkHighPass \fP\fP
+.TP
+\fB\fIkNumSubTypes \fP\fP
+.PP
+Definition at line 99 of file ScienFilter\&.cpp\&.
+.SS "enum \fBkTypes\fP"
+
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fIkWhite \fP\fP
+.TP
+\fB\fIkPink \fP\fP
+.TP
+\fB\fIkBrownian \fP\fP
+.TP
+\fB\fIkNumTypes \fP\fP
+.TP
+\fB\fIkButterworth \fP\fP
+.TP
+\fB\fIkChebyshevTypeI \fP\fP
+.TP
+\fB\fIkChebyshevTypeII \fP\fP
+.TP
+\fB\fIkNumTypes \fP\fP
+.PP
+Definition at line 81 of file ScienFilter\&.cpp\&.
+.SH "Function Documentation"
+.PP 
+.SS "Param (Type, \fBint\fP, \fBXO\fP('FilterType'), \fBkButterworth\fP, 0, \fBkNumTypes\fP\- 1, 1)"
+
+.SS "Param (Subtype, \fBint\fP, \fBXO\fP('FilterSubtype'), \fBkLowPass\fP, 0, \fBkNumSubTypes\fP\- 1, 1)"
+
+.SS "Param (Order, \fBint\fP, \fBXO\fP('Order'), 1, 1, 10, 1)"
+
+.SS "Param (Cutoff, float, \fBXO\fP('Cutoff'), 1000\&. 0, 1\&. 0, FLT_MAX, 1)"
+
+.SS "Param (Passband, float, \fBXO\fP('PassbandRipple'), 1\&. 0, 0\&. 0, 100\&. 0, 1)"
+
+.SS "Param (Stopband, float, \fBXO\fP('StopbandRipple'), 30\&. 0, 0\&. 0, 100\&. 0, 1)"
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

@@ -1,0 +1,236 @@
+.TH "ODComputeSummaryTask" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+ODComputeSummaryTask \- A class representing a modular task to be used with the On-Demand structures\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <ODComputeSummaryTask\&.h>\fP
+.PP
+Inherits \fBODTask\fP\&.
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBODComputeSummaryTask\fP ()"
+.br
+.RI "\fIConstructs an \fBODTask\fP\&. \fP"
+.ti -1c
+.RI "virtual \fB~ODComputeSummaryTask\fP ()"
+.br
+.ti -1c
+.RI "\fBODTask\fP * \fBClone\fP () override"
+.br
+.ti -1c
+.RI "unsigned \fBint\fP \fBGetODType\fP () override"
+.br
+.RI "\fISubclasses should override to return respective type\&. \fP"
+.ti -1c
+.RI "\fBconst\fP char * \fBGetTaskName\fP () override"
+.br
+.RI "\fIReturn the task name\&. \fP"
+.ti -1c
+.RI "\fBconst\fP wxChar * \fBGetTip\fP () override"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBUsesCustomWorkUntilPercentage\fP () override"
+.br
+.ti -1c
+.RI "float \fBComputeNextWorkUntilPercentageComplete\fP () override"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBTerminate\fP () override"
+.br
+.RI "\fIreleases memory that the \fBODTask\fP owns\&. Subclasses should override\&. \fP"
+.in -1c
+.SS "Protected Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBvoid\fP \fBCalculatePercentComplete\fP () override"
+.br
+.RI "\fIrecalculates the percentage complete\&. \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBDoSomeInternal\fP () override"
+.br
+.RI "\fIComputes and writes the data for one \fBBlockFile\fP if it still has a refcount\&. \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBUpdate\fP () override"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOrderBlockFiles\fP (std::vector< \fBODPCMAliasBlockFile\fP * > &unorderedBlocks)"
+.br
+.RI "\fIOrders the input as either On-Demand or default layered order\&. \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBMarkUpdateRan\fP ()"
+.br
+.RI "\fItells us whether or not Update has been run at least once\&. \fP"
+.ti -1c
+.RI "\fBbool\fP \fBHasUpdateRan\fP ()"
+.br
+.in -1c
+.SS "Protected Attributes"
+
+.in +1c
+.ti -1c
+.RI "\fBODLock\fP \fBmBlockFilesMutex\fP"
+.br
+.ti -1c
+.RI "std::vector< \fBODPCMAliasBlockFile\fP * > \fBmBlockFiles\fP"
+.br
+.ti -1c
+.RI "\fBint\fP \fBmMaxBlockFiles\fP"
+.br
+.ti -1c
+.RI "\fBint\fP \fBmComputedBlockFiles\fP"
+.br
+.ti -1c
+.RI "\fBODLock\fP \fBmHasUpdateRanMutex\fP"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBmHasUpdateRan\fP"
+.br
+.in -1c
+.SS "Additional Inherited Members"
+.SH "Detailed Description"
+.PP 
+A class representing a modular task to be used with the On-Demand structures\&. 
+
+Computes the summary data for a PCM (WAV) file and writes it to disk, updating the \fBODPCMAliasBlockFile\fP and the GUI of the newly available data\&. 
+.PP
+Definition at line 29 of file ODComputeSummaryTask\&.h\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "ODComputeSummaryTask::ODComputeSummaryTask ()"
+
+.PP
+Constructs an \fBODTask\fP\&. Creates a NEW task that computes summaries for a wavetrack that needs to be specified through SetWaveTrack() 
+.PP
+Definition at line 31 of file ODComputeSummaryTask\&.cpp\&.
+.SS "virtual ODComputeSummaryTask::~ODComputeSummaryTask ()\fC [inline]\fP, \fC [virtual]\fP"
+
+.PP
+Definition at line 37 of file ODComputeSummaryTask\&.h\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "\fBvoid\fP ODComputeSummaryTask::CalculatePercentComplete ()\fC [override]\fP, \fC [protected]\fP, \fC [virtual]\fP"
+
+.PP
+recalculates the percentage complete\&. 
+.PP
+Implements \fBODTask\fP\&.
+.PP
+Definition at line 157 of file ODComputeSummaryTask\&.cpp\&.
+.SS "\fBODTask\fP * ODComputeSummaryTask::Clone ()\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Implements \fBODTask\fP\&.
+.PP
+Definition at line 38 of file ODComputeSummaryTask\&.cpp\&.
+.SS "float ODComputeSummaryTask::ComputeNextWorkUntilPercentageComplete ()\fC [override]\fP, \fC [virtual]\fP"
+compute the next time we should take a break in terms of overall percentage\&. We want to do a constant number of blockfiles\&. 
+.PP
+Reimplemented from \fBODTask\fP\&.
+.PP
+Definition at line 128 of file ODComputeSummaryTask\&.cpp\&.
+.SS "\fBvoid\fP ODComputeSummaryTask::DoSomeInternal ()\fC [override]\fP, \fC [protected]\fP, \fC [virtual]\fP"
+
+.PP
+Computes and writes the data for one \fBBlockFile\fP if it still has a refcount\&. 
+.PP
+Implements \fBODTask\fP\&.
+.PP
+Definition at line 59 of file ODComputeSummaryTask\&.cpp\&.
+.SS "unsigned \fBint\fP ODComputeSummaryTask::GetODType ()\fC [inline]\fP, \fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Subclasses should override to return respective type\&. 
+.PP
+Reimplemented from \fBODTask\fP\&.
+.PP
+Definition at line 42 of file ODComputeSummaryTask\&.h\&.
+.SS "\fBconst\fP char* ODComputeSummaryTask::GetTaskName ()\fC [inline]\fP, \fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Return the task name\&. 
+.PP
+Reimplemented from \fBODTask\fP\&.
+.PP
+Definition at line 45 of file ODComputeSummaryTask\&.h\&.
+.SS "\fBconst\fP wxChar* ODComputeSummaryTask::GetTip ()\fC [inline]\fP, \fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Implements \fBODTask\fP\&.
+.PP
+Definition at line 47 of file ODComputeSummaryTask\&.h\&.
+.SS "\fBbool\fP ODComputeSummaryTask::HasUpdateRan ()\fC [protected]\fP"
+
+.PP
+Definition at line 148 of file ODComputeSummaryTask\&.cpp\&.
+.SS "\fBvoid\fP ODComputeSummaryTask::MarkUpdateRan ()\fC [protected]\fP"
+
+.PP
+tells us whether or not Update has been run at least once\&. 
+.PP
+Definition at line 141 of file ODComputeSummaryTask\&.cpp\&.
+.SS "\fBvoid\fP ODComputeSummaryTask::OrderBlockFiles (std::vector< \fBODPCMAliasBlockFile\fP * > & unorderedBlocks)\fC [protected]\fP"
+
+.PP
+Orders the input as either On-Demand or default layered order\&. Computes the summary calculation queue order of the blockfiles\&. 
+.PP
+Definition at line 243 of file ODComputeSummaryTask\&.cpp\&.
+.SS "\fBvoid\fP ODComputeSummaryTask::Terminate ()\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+releases memory that the \fBODTask\fP owns\&. Subclasses should override\&. 
+.PP
+Reimplemented from \fBODTask\fP\&.
+.PP
+Definition at line 47 of file ODComputeSummaryTask\&.cpp\&.
+.SS "\fBvoid\fP ODComputeSummaryTask::Update ()\fC [override]\fP, \fC [protected]\fP, \fC [virtual]\fP"
+Readjusts the blockfile order in the default manner\&. If we have had an ODRequest Then it updates in the OD manner\&.
+.PP
+creates the order of the wavetrack to load\&. by default left to right, or frome the point the user has clicked\&. 
+.PP
+Reimplemented from \fBODTask\fP\&.
+.PP
+Definition at line 171 of file ODComputeSummaryTask\&.cpp\&.
+.SS "\fBbool\fP ODComputeSummaryTask::UsesCustomWorkUntilPercentage ()\fC [inline]\fP, \fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Reimplemented from \fBODTask\fP\&.
+.PP
+Definition at line 49 of file ODComputeSummaryTask\&.h\&.
+.SH "Member Data Documentation"
+.PP 
+.SS "std::vector<\fBODPCMAliasBlockFile\fP*> ODComputeSummaryTask::mBlockFiles\fC [protected]\fP"
+
+.PP
+Definition at line 75 of file ODComputeSummaryTask\&.h\&.
+.SS "\fBODLock\fP ODComputeSummaryTask::mBlockFilesMutex\fC [protected]\fP"
+
+.PP
+Definition at line 74 of file ODComputeSummaryTask\&.h\&.
+.SS "\fBint\fP ODComputeSummaryTask::mComputedBlockFiles\fC [protected]\fP"
+
+.PP
+Definition at line 77 of file ODComputeSummaryTask\&.h\&.
+.SS "\fBbool\fP ODComputeSummaryTask::mHasUpdateRan\fC [protected]\fP"
+
+.PP
+Definition at line 79 of file ODComputeSummaryTask\&.h\&.
+.SS "\fBODLock\fP ODComputeSummaryTask::mHasUpdateRanMutex\fC [protected]\fP"
+
+.PP
+Definition at line 78 of file ODComputeSummaryTask\&.h\&.
+.SS "\fBint\fP ODComputeSummaryTask::mMaxBlockFiles\fC [protected]\fP"
+
+.PP
+Definition at line 76 of file ODComputeSummaryTask\&.h\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

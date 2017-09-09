@@ -1,0 +1,342 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/lib-src/lv2/serd/serd/serd.h" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/lib-src/lv2/serd/serd/serd.h \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <stdarg\&.h>\fP
+.br
+\fC#include <stddef\&.h>\fP
+.br
+\fC#include <stdint\&.h>\fP
+.br
+\fC#include <stdio\&.h>\fP
+.br
+\fC#include <stdbool\&.h>\fP
+.br
+
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "struct \fBSerdNode\fP"
+.br
+.ti -1c
+.RI "struct \fBSerdChunk\fP"
+.br
+.ti -1c
+.RI "struct \fBSerdError\fP"
+.br
+.ti -1c
+.RI "struct \fBSerdURI\fP"
+.br
+.in -1c
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBSERD_API\fP"
+.br
+.in -1c
+.SS "Typedefs"
+
+.in +1c
+.ti -1c
+.RI "typedef struct \fBSerdEnvImpl\fP \fBSerdEnv\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBSerdReaderImpl\fP \fBSerdReader\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBSerdWriterImpl\fP \fBSerdWriter\fP"
+.br
+.ti -1c
+.RI "typedef \fBuint32_t\fP \fBSerdStatementFlags\fP"
+.br
+.ti -1c
+.RI "typedef \fBuint32_t\fP \fBSerdNodeFlags\fP"
+.br
+.in -1c
+.PP
+.RI "\fBEvent Handlers\fP"
+.br
+
+.in +1c
+.in +1c
+.ti -1c
+.RI "typedef \fBSerdStatus\fP(* \fBSerdErrorSink\fP) (\fBvoid\fP *handle, \fBconst\fP \fBSerdError\fP *\fBerror\fP)"
+.br
+.ti -1c
+.RI "typedef \fBSerdStatus\fP(* \fBSerdBaseSink\fP) (\fBvoid\fP *handle, \fBconst\fP \fBSerdNode\fP *\fBuri\fP)"
+.br
+.ti -1c
+.RI "typedef \fBSerdStatus\fP(* \fBSerdPrefixSink\fP) (\fBvoid\fP *handle, \fBconst\fP \fBSerdNode\fP *\fBname\fP, \fBconst\fP \fBSerdNode\fP *\fBuri\fP)"
+.br
+.ti -1c
+.RI "typedef \fBSerdStatus\fP(* \fBSerdStatementSink\fP) (\fBvoid\fP *handle, \fBSerdStatementFlags\fP flags, \fBconst\fP \fBSerdNode\fP *graph, \fBconst\fP \fBSerdNode\fP *subject, \fBconst\fP \fBSerdNode\fP *\fBpredicate\fP, \fBconst\fP \fBSerdNode\fP *object, \fBconst\fP \fBSerdNode\fP *object_datatype, \fBconst\fP \fBSerdNode\fP *object_lang)"
+.br
+.ti -1c
+.RI "typedef \fBSerdStatus\fP(* \fBSerdEndSink\fP) (\fBvoid\fP *handle, \fBconst\fP \fBSerdNode\fP *\fBnode\fP)"
+.br
+.in -1c
+.in -1c
+.SS "Enumerations"
+
+.in +1c
+.ti -1c
+.RI "enum \fBSerdStatus\fP { \fBSERD_SUCCESS\fP, \fBSERD_FAILURE\fP, \fBSERD_ERR_UNKNOWN\fP, \fBSERD_ERR_BAD_SYNTAX\fP, \fBSERD_ERR_BAD_ARG\fP, \fBSERD_ERR_NOT_FOUND\fP, \fBSERD_ERR_ID_CLASH\fP, \fBSERD_ERR_BAD_CURIE\fP, \fBSERD_ERR_INTERNAL\fP }"
+.br
+.ti -1c
+.RI "enum \fBSerdSyntax\fP { \fBSERD_TURTLE\fP = 1, \fBSERD_NTRIPLES\fP = 2 }"
+.br
+.ti -1c
+.RI "enum \fBSerdStatementFlag\fP { \fBSERD_EMPTY_S\fP = 1 << 1, \fBSERD_EMPTY_O\fP = 1 << 2, \fBSERD_ANON_S_BEGIN\fP = 1 << 3, \fBSERD_ANON_O_BEGIN\fP = 1 << 4, \fBSERD_ANON_CONT\fP = 1 << 5, \fBSERD_LIST_S_BEGIN\fP = 1 << 6, \fBSERD_LIST_O_BEGIN\fP = 1 << 7, \fBSERD_LIST_CONT\fP = 1 << 8 }"
+.br
+.ti -1c
+.RI "enum \fBSerdType\fP { \fBSERD_NOTHING\fP = 0, \fBSERD_LITERAL\fP = 1, \fBSERD_URI\fP = 2, \fBSERD_CURIE\fP = 3, \fBSERD_BLANK\fP = 4 }"
+.br
+.ti -1c
+.RI "enum \fBSerdNodeFlag\fP { \fBSERD_HAS_NEWLINE\fP = 1, \fBSERD_HAS_QUOTE\fP = 1 << 1 }"
+.br
+.ti -1c
+.RI "enum \fBSerdStyle\fP { \fBSERD_STYLE_ABBREVIATED\fP = 1, \fBSERD_STYLE_ASCII\fP = 1 << 1, \fBSERD_STYLE_RESOLVED\fP = 1 << 2, \fBSERD_STYLE_CURIED\fP = 1 << 3, \fBSERD_STYLE_BULK\fP = 1 << 4 }"
+.br
+.in -1c
+.SS "Functions"
+
+.PP
+.RI "\fBString Utilities\fP"
+.br
+
+.in +1c
+.in +1c
+.ti -1c
+.RI "\fBSERD_API\fP \fBconst\fP \fBuint8_t\fP * \fBserd_strerror\fP (\fBSerdStatus\fP \fBstatus\fP)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP size_t \fBserd_strlen\fP (\fBconst\fP \fBuint8_t\fP *\fBstr\fP, size_t *n_bytes, \fBSerdNodeFlags\fP *flags)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP double \fBserd_strtod\fP (\fBconst\fP char *\fBstr\fP, char **endptr)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBvoid\fP * \fBserd_base64_decode\fP (\fBconst\fP \fBuint8_t\fP *\fBstr\fP, size_t \fBlen\fP, size_t *\fBsize\fP)"
+.br
+.in -1c
+.in -1c
+.PP
+.RI "\fBEnvironment\fP"
+.br
+
+.in +1c
+.in +1c
+.ti -1c
+.RI "\fBSERD_API\fP \fBSerdEnv\fP * \fBserd_env_new\fP (\fBconst\fP \fBSerdNode\fP *base_uri)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBvoid\fP \fBserd_env_free\fP (\fBSerdEnv\fP *env)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBconst\fP \fBSerdNode\fP * \fBserd_env_get_base_uri\fP (\fBconst\fP \fBSerdEnv\fP *env, \fBSerdURI\fP *\fBout\fP)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBSerdStatus\fP \fBserd_env_set_base_uri\fP (\fBSerdEnv\fP *env, \fBconst\fP \fBSerdNode\fP *\fBuri\fP)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBSerdStatus\fP \fBserd_env_set_prefix\fP (\fBSerdEnv\fP *env, \fBconst\fP \fBSerdNode\fP *\fBname\fP, \fBconst\fP \fBSerdNode\fP *\fBuri\fP)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBSerdStatus\fP \fBserd_env_set_prefix_from_strings\fP (\fBSerdEnv\fP *env, \fBconst\fP \fBuint8_t\fP *\fBname\fP, \fBconst\fP \fBuint8_t\fP *\fBuri\fP)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBbool\fP \fBserd_env_qualify\fP (\fBconst\fP \fBSerdEnv\fP *env, \fBconst\fP \fBSerdNode\fP *\fBuri\fP, \fBSerdNode\fP *\fBprefix\fP, \fBSerdChunk\fP *suffix)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBSerdStatus\fP \fBserd_env_expand\fP (\fBconst\fP \fBSerdEnv\fP *env, \fBconst\fP \fBSerdNode\fP *curie, \fBSerdChunk\fP *uri_prefix, \fBSerdChunk\fP *uri_suffix)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBSerdNode\fP \fBserd_env_expand_node\fP (\fBconst\fP \fBSerdEnv\fP *env, \fBconst\fP \fBSerdNode\fP *\fBnode\fP)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBvoid\fP \fBserd_env_foreach\fP (\fBconst\fP \fBSerdEnv\fP *env, \fBSerdPrefixSink\fP func, \fBvoid\fP *handle)"
+.br
+.in -1c
+.in -1c
+.PP
+.RI "\fBReader\fP"
+.br
+
+.in +1c
+.in +1c
+.ti -1c
+.RI "\fBSERD_API\fP \fBSerdReader\fP * \fBserd_reader_new\fP (\fBSerdSyntax\fP \fBsyntax\fP, \fBvoid\fP *handle, \fBvoid\fP(*free_handle)(\fBvoid\fP *), \fBSerdBaseSink\fP base_sink, \fBSerdPrefixSink\fP prefix_sink, \fBSerdStatementSink\fP statement_sink, \fBSerdEndSink\fP end_sink)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBvoid\fP \fBserd_reader_set_error_sink\fP (\fBSerdReader\fP *reader, \fBSerdErrorSink\fP error_sink, \fBvoid\fP *handle)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBvoid\fP * \fBserd_reader_get_handle\fP (\fBconst\fP \fBSerdReader\fP *reader)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBvoid\fP \fBserd_reader_add_blank_prefix\fP (\fBSerdReader\fP *reader, \fBconst\fP \fBuint8_t\fP *\fBprefix\fP)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBvoid\fP \fBserd_reader_set_default_graph\fP (\fBSerdReader\fP *reader, \fBconst\fP \fBSerdNode\fP *graph)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBSerdStatus\fP \fBserd_reader_read_file\fP (\fBSerdReader\fP *reader, \fBconst\fP \fBuint8_t\fP *\fBuri\fP)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBSerdStatus\fP \fBserd_reader_start_stream\fP (\fBSerdReader\fP *me, FILE *file, \fBconst\fP \fBuint8_t\fP *\fBname\fP, \fBbool\fP bulk)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBSerdStatus\fP \fBserd_reader_read_chunk\fP (\fBSerdReader\fP *me)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBSerdStatus\fP \fBserd_reader_end_stream\fP (\fBSerdReader\fP *me)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBSerdStatus\fP \fBserd_reader_read_file_handle\fP (\fBSerdReader\fP *reader, FILE *file, \fBconst\fP \fBuint8_t\fP *\fBname\fP)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBSerdStatus\fP \fBserd_reader_read_string\fP (\fBSerdReader\fP *me, \fBconst\fP \fBuint8_t\fP *utf8)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBvoid\fP \fBserd_reader_free\fP (\fBSerdReader\fP *reader)"
+.br
+.in -1c
+.in -1c
+.PP
+.RI "\fBWriter\fP"
+.br
+
+.in +1c
+.in +1c
+.ti -1c
+.RI "\fBSERD_API\fP \fBSerdWriter\fP * \fBserd_writer_new\fP (\fBSerdSyntax\fP \fBsyntax\fP, \fBSerdStyle\fP style, \fBSerdEnv\fP *env, \fBconst\fP \fBSerdURI\fP *base_uri, \fBSerdSink\fP sink, \fBvoid\fP *stream)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBvoid\fP \fBserd_writer_free\fP (\fBSerdWriter\fP *writer)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBSerdEnv\fP * \fBserd_writer_get_env\fP (\fBSerdWriter\fP *writer)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP size_t \fBserd_file_sink\fP (\fBconst\fP \fBvoid\fP *\fBbuf\fP, size_t \fBlen\fP, \fBvoid\fP *stream)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP size_t \fBserd_chunk_sink\fP (\fBconst\fP \fBvoid\fP *\fBbuf\fP, size_t \fBlen\fP, \fBvoid\fP *stream)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBuint8_t\fP * \fBserd_chunk_sink_finish\fP (\fBSerdChunk\fP *stream)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBvoid\fP \fBserd_writer_set_error_sink\fP (\fBSerdWriter\fP *writer, \fBSerdErrorSink\fP error_sink, \fBvoid\fP *handle)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBvoid\fP \fBserd_writer_chop_blank_prefix\fP (\fBSerdWriter\fP *writer, \fBconst\fP \fBuint8_t\fP *\fBprefix\fP)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBSerdStatus\fP \fBserd_writer_set_base_uri\fP (\fBSerdWriter\fP *writer, \fBconst\fP \fBSerdNode\fP *\fBuri\fP)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBSerdStatus\fP \fBserd_writer_set_root_uri\fP (\fBSerdWriter\fP *writer, \fBconst\fP \fBSerdNode\fP *\fBuri\fP)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBSerdStatus\fP \fBserd_writer_set_prefix\fP (\fBSerdWriter\fP *writer, \fBconst\fP \fBSerdNode\fP *\fBname\fP, \fBconst\fP \fBSerdNode\fP *\fBuri\fP)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBSerdStatus\fP \fBserd_writer_write_statement\fP (\fBSerdWriter\fP *writer, \fBSerdStatementFlags\fP flags, \fBconst\fP \fBSerdNode\fP *graph, \fBconst\fP \fBSerdNode\fP *subject, \fBconst\fP \fBSerdNode\fP *\fBpredicate\fP, \fBconst\fP \fBSerdNode\fP *object, \fBconst\fP \fBSerdNode\fP *object_datatype, \fBconst\fP \fBSerdNode\fP *object_lang)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBSerdStatus\fP \fBserd_writer_end_anon\fP (\fBSerdWriter\fP *writer, \fBconst\fP \fBSerdNode\fP *\fBnode\fP)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBSerdStatus\fP \fBserd_writer_finish\fP (\fBSerdWriter\fP *writer)"
+.br
+.in -1c
+.in -1c
+.SS "URI"
+
+.in +1c
+.ti -1c
+.RI "typedef size_t(* \fBSerdSink\fP) (\fBconst\fP \fBvoid\fP *\fBbuf\fP, size_t \fBlen\fP, \fBvoid\fP *stream)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBconst\fP \fBuint8_t\fP * \fBserd_uri_to_path\fP (\fBconst\fP \fBuint8_t\fP *\fBuri\fP)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBuint8_t\fP * \fBserd_file_uri_parse\fP (\fBconst\fP \fBuint8_t\fP *\fBuri\fP, \fBuint8_t\fP **hostname)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBbool\fP \fBserd_uri_string_has_scheme\fP (\fBconst\fP \fBuint8_t\fP *utf8)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBSerdStatus\fP \fBserd_uri_parse\fP (\fBconst\fP \fBuint8_t\fP *utf8, \fBSerdURI\fP *\fBout\fP)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBvoid\fP \fBserd_uri_resolve\fP (\fBconst\fP \fBSerdURI\fP *\fBuri\fP, \fBconst\fP \fBSerdURI\fP *\fBbase\fP, \fBSerdURI\fP *\fBout\fP)"
+.br
+.RI "\fISee http://tools.ietf.org/html/rfc3986#section-5.2.2\&. \fP"
+.ti -1c
+.RI "\fBSERD_API\fP size_t \fBserd_uri_serialise\fP (\fBconst\fP \fBSerdURI\fP *\fBuri\fP, \fBSerdSink\fP sink, \fBvoid\fP *stream)"
+.br
+.RI "\fISee http://tools.ietf.org/html/rfc3986#section-5.3\&. \fP"
+.ti -1c
+.RI "\fBSERD_API\fP size_t \fBserd_uri_serialise_relative\fP (\fBconst\fP \fBSerdURI\fP *\fBuri\fP, \fBconst\fP \fBSerdURI\fP *\fBbase\fP, \fBconst\fP \fBSerdURI\fP *root, \fBSerdSink\fP sink, \fBvoid\fP *stream)"
+.br
+.RI "\fISee http://tools.ietf.org/html/rfc3986#section-5.3\&. \fP"
+.in -1c
+.SS "Node"
+
+.in +1c
+.ti -1c
+.RI "\fBSERD_API\fP \fBSerdNode\fP \fBserd_node_from_string\fP (\fBSerdType\fP type, \fBconst\fP \fBuint8_t\fP *\fBstr\fP)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBSerdNode\fP \fBserd_node_copy\fP (\fBconst\fP \fBSerdNode\fP *\fBnode\fP)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBbool\fP \fBserd_node_equals\fP (\fBconst\fP \fBSerdNode\fP *\fBa\fP, \fBconst\fP \fBSerdNode\fP *\fBb\fP)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBSerdNode\fP \fBserd_node_new_uri_from_node\fP (\fBconst\fP \fBSerdNode\fP *uri_node, \fBconst\fP \fBSerdURI\fP *\fBbase\fP, \fBSerdURI\fP *\fBout\fP)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBSerdNode\fP \fBserd_node_new_uri_from_string\fP (\fBconst\fP \fBuint8_t\fP *\fBstr\fP, \fBconst\fP \fBSerdURI\fP *\fBbase\fP, \fBSerdURI\fP *\fBout\fP)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBSerdNode\fP \fBserd_node_new_file_uri\fP (\fBconst\fP \fBuint8_t\fP *path, \fBconst\fP \fBuint8_t\fP *hostname, \fBSerdURI\fP *\fBout\fP, \fBbool\fP escape)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBSerdNode\fP \fBserd_node_new_uri\fP (\fBconst\fP \fBSerdURI\fP *\fBuri\fP, \fBconst\fP \fBSerdURI\fP *\fBbase\fP, \fBSerdURI\fP *\fBout\fP)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBSerdNode\fP \fBserd_node_new_decimal\fP (double \fBd\fP, unsigned frac_digits)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBSerdNode\fP \fBserd_node_new_integer\fP (\fBint64_t\fP \fBi\fP)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBSerdNode\fP \fBserd_node_new_blob\fP (\fBconst\fP \fBvoid\fP *\fBbuf\fP, size_t \fBsize\fP, \fBbool\fP wrap_lines)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBvoid\fP \fBserd_node_free\fP (\fBSerdNode\fP *\fBnode\fP)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+API for Serd, a lightweight RDF syntax library\&. 
+.PP
+Definition in file \fBserd\&.h\fP\&.
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define SERD_API"
+
+.PP
+Definition at line 43 of file serd\&.h\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

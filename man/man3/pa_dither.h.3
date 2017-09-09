@@ -1,0 +1,113 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/lib-src/portaudio-v19/src/common/pa_dither.h" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/lib-src/portaudio-v19/src/common/pa_dither.h \- Functions for generating dither noise\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+\fC#include 'pa_types\&.h'\fP
+.br
+
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "struct \fBPaUtilTriangularDitherGenerator\fP"
+.br
+.RI "\fI\fBState\fP needed to generate a dither signal\&. \fP"
+.in -1c
+.SS "Typedefs"
+
+.in +1c
+.ti -1c
+.RI "typedef struct \fBPaUtilTriangularDitherGenerator\fP \fBPaUtilTriangularDitherGenerator\fP"
+.br
+.RI "\fI\fBState\fP needed to generate a dither signal\&. \fP"
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBvoid\fP \fBPaUtil_InitializeTriangularDitherState\fP (\fBPaUtilTriangularDitherGenerator\fP *ditherState)"
+.br
+.RI "\fIInitialize dither state\&. \fP"
+.ti -1c
+.RI "\fBPaInt32\fP \fBPaUtil_Generate16BitTriangularDither\fP (\fBPaUtilTriangularDitherGenerator\fP *ditherState)"
+.br
+.RI "\fICalculate 2 LSB dither signal with a triangular distribution\&. Ranged for adding to a 1 bit right-shifted 32 bit integer prior to >>15\&. eg: \fP"
+.ti -1c
+.RI "float \fBPaUtil_GenerateFloatTriangularDither\fP (\fBPaUtilTriangularDitherGenerator\fP *ditherState)"
+.br
+.RI "\fICalculate 2 LSB dither signal with a triangular distribution\&. Ranged for adding to a pre-scaled float\&. \fP"
+.in -1c
+.SH "Detailed Description"
+.PP 
+Functions for generating dither noise\&. 
+
+
+.PP
+Definition in file \fBpa_dither\&.h\fP\&.
+.SH "Typedef Documentation"
+.PP 
+.SS "typedef struct \fBPaUtilTriangularDitherGenerator\fP  \fBPaUtilTriangularDitherGenerator\fP"
+
+.PP
+\fBState\fP needed to generate a dither signal\&. 
+.SH "Function Documentation"
+.PP 
+.SS "\fBPaInt32\fP PaUtil_Generate16BitTriangularDither (\fBPaUtilTriangularDitherGenerator\fP * ditherState)"
+
+.PP
+Calculate 2 LSB dither signal with a triangular distribution\&. Ranged for adding to a 1 bit right-shifted 32 bit integer prior to >>15\&. eg: 
+.PP
+.nf
+
+    signed long in = *
+    signed long dither = PaUtil_Generate16BitTriangularDither( ditherState );
+    signed short out = (signed short)(((in>>1) + dither) >> 15);
+.fi
+.PP
+ 
+.PP
+\fBReturns:\fP
+.RS 4
+A signed 32-bit integer with a range of +32767 to -32768 
+.RE
+.PP
+
+.PP
+Definition at line 65 of file pa_dither\&.c\&.
+.SS "float PaUtil_GenerateFloatTriangularDither (\fBPaUtilTriangularDitherGenerator\fP * ditherState)"
+
+.PP
+Calculate 2 LSB dither signal with a triangular distribution\&. Ranged for adding to a pre-scaled float\&. 
+.PP
+.nf
+
+    float in = *
+    float dither = PaUtil_GenerateFloatTriangularDither( ditherState );
+    // use smaller scaler to prevent overflow when we add the dither
+    signed short out = (signed short)(in*(32766\&.0f) + dither );
+.fi
+.PP
+ 
+.PP
+\fBReturns:\fP
+.RS 4
+A float with a range of -2\&.0 to +1\&.99999\&. 
+.RE
+.PP
+
+.PP
+Definition at line 93 of file pa_dither\&.c\&.
+.SS "\fBvoid\fP PaUtil_InitializeTriangularDitherState (\fBPaUtilTriangularDitherGenerator\fP * ditherState)"
+
+.PP
+Initialize dither state\&. 
+.PP
+Definition at line 57 of file pa_dither\&.c\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

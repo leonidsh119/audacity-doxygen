@@ -1,0 +1,272 @@
+.TH "ODWaveTrackTaskQueue" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+ODWaveTrackTaskQueue \- A class representing a modular task to be used with the On-Demand structures\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <ODWaveTrackTaskQueue\&.h>\fP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBODWaveTrackTaskQueue\fP ()"
+.br
+.RI "\fIConstructs an \fBODWaveTrackTaskQueue\fP\&. \fP"
+.ti -1c
+.RI "virtual \fB~ODWaveTrackTaskQueue\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBAddWaveTrack\fP (\fBWaveTrack\fP *track)"
+.br
+.RI "\fIAdds a track to the associated list\&. \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBRemoveWaveTrack\fP (\fBWaveTrack\fP *track)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBDemandTrackUpdate\fP (\fBWaveTrack\fP *track, double seconds)"
+.br
+.RI "\fIchanges the tasks associated with this Waveform to process the task from a different point in the track \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBReplaceWaveTrack\fP (\fBWaveTrack\fP *oldTrack, \fBWaveTrack\fP *newTrack)"
+.br
+.RI "\fIreplaces all instances of a \fBWaveTrack\fP within this task with another\&. \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBMakeWaveTrackIndependent\fP (\fBWaveTrack\fP *track)"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBCanMergeWith\fP (\fBODWaveTrackTaskQueue\fP *otherQueue)"
+.br
+.RI "\fIreturns whether or not this queue's task list and another's can merge together, as when we make two mono tracks stereo\&. \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBMergeWaveTrack\fP (\fBWaveTrack\fP *track)"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBContainsWaveTrack\fP (\fBWaveTrack\fP *track)"
+.br
+.RI "\fIreturns true if the argument is in the \fBWaveTrack\fP list\&. \fP"
+.ti -1c
+.RI "\fBWaveTrack\fP * \fBGetWaveTrack\fP (size_t x)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBGetNumWaveTracks\fP ()"
+.br
+.RI "\fIreturns the number of wavetracks in this queue\&. \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBAddTask\fP (\fBODTask\fP *task)"
+.br
+.RI "\fIAdd a task to the queue\&. \fP"
+.ti -1c
+.RI "\fBbool\fP \fBIsEmpty\fP ()"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBIsFrontTaskComplete\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBRemoveFrontTask\fP ()"
+.br
+.RI "\fIRemoves and deletes the front task from the list\&. \fP"
+.ti -1c
+.RI "\fBODTask\fP * \fBGetFrontTask\fP ()"
+.br
+.RI "\fISchedules the front task for immediate execution\&. \fP"
+.ti -1c
+.RI "\fBint\fP \fBGetNumTasks\fP ()"
+.br
+.RI "\fIreturns the number of ODTasks in this queue \fP"
+.ti -1c
+.RI "\fBODTask\fP * \fBGetTask\fP (size_t x)"
+.br
+.RI "\fIreturns a \fBODTask\fP at position x \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBFillTipForWaveTrack\fP (\fBWaveTrack\fP *\fBt\fP, wxString &tip)"
+.br
+.RI "\fIfills in the status bar message for a given track \fP"
+.in -1c
+.SS "Protected Attributes"
+
+.in +1c
+.ti -1c
+.RI "wxString \fBmTipMsg\fP"
+.br
+.ti -1c
+.RI "std::vector< \fBWaveTrack\fP * > \fBmTracks\fP"
+.br
+.RI "\fIthe list of tracks associated with this queue\&. \fP"
+.ti -1c
+.RI "\fBODLock\fP \fBmTracksMutex\fP"
+.br
+.ti -1c
+.RI "std::vector< \fBODTask\fP * > \fBmTasks\fP"
+.br
+.RI "\fIthe list of tasks associated with the tracks\&. This class owns these tasks\&. \fP"
+.ti -1c
+.RI "\fBODLock\fP \fBmTasksMutex\fP"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+A class representing a modular task to be used with the On-Demand structures\&. 
+
+watches over all to be done (not yet started and started but not finished) tasks associated with a \fBWaveTrack\fP\&. 
+.PP
+Definition at line 31 of file ODWaveTrackTaskQueue\&.h\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "ODWaveTrackTaskQueue::ODWaveTrackTaskQueue ()"
+
+.PP
+Constructs an \fBODWaveTrackTaskQueue\fP\&. 
+.PP
+Definition at line 23 of file ODWaveTrackTaskQueue\&.cpp\&.
+.SS "ODWaveTrackTaskQueue::~ODWaveTrackTaskQueue ()\fC [virtual]\fP"
+
+.PP
+Definition at line 27 of file ODWaveTrackTaskQueue\&.cpp\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "\fBvoid\fP ODWaveTrackTaskQueue::AddTask (\fBODTask\fP * task)"
+
+.PP
+Add a task to the queue\&. 
+.PP
+Definition at line 103 of file ODWaveTrackTaskQueue\&.cpp\&.
+.SS "\fBvoid\fP ODWaveTrackTaskQueue::AddWaveTrack (\fBWaveTrack\fP * track)"
+
+.PP
+Adds a track to the associated list\&. 
+.PP
+Definition at line 93 of file ODWaveTrackTaskQueue\&.cpp\&.
+.SS "\fBbool\fP ODWaveTrackTaskQueue::CanMergeWith (\fBODWaveTrackTaskQueue\fP * otherQueue)"
+
+.PP
+returns whether or not this queue's task list and another's can merge together, as when we make two mono tracks stereo\&. 
+.PP
+Definition at line 41 of file ODWaveTrackTaskQueue\&.cpp\&.
+.SS "\fBbool\fP ODWaveTrackTaskQueue::ContainsWaveTrack (\fBWaveTrack\fP * track)"
+
+.PP
+returns true if the argument is in the \fBWaveTrack\fP list\&. 
+.PP
+Definition at line 78 of file ODWaveTrackTaskQueue\&.cpp\&.
+.SS "\fBvoid\fP ODWaveTrackTaskQueue::DemandTrackUpdate (\fBWaveTrack\fP * track, double seconds)"
+
+.PP
+changes the tasks associated with this Waveform to process the task from a different point in the track changes the tasks associated with this Waveform to process the task from a different point in the track 
+.PP
+\fBParameters:\fP
+.RS 4
+\fItrack\fP the track to update 
+.br
+\fIseconds\fP the point in the track from which the tasks associated with track should begin processing from\&. 
+.RE
+.PP
+
+.PP
+Definition at line 190 of file ODWaveTrackTaskQueue\&.cpp\&.
+.SS "\fBvoid\fP ODWaveTrackTaskQueue::FillTipForWaveTrack (\fBWaveTrack\fP * t, wxString & tip)"
+
+.PP
+fills in the status bar message for a given track 
+.PP
+Definition at line 328 of file ODWaveTrackTaskQueue\&.cpp\&.
+.SS "\fBODTask\fP * ODWaveTrackTaskQueue::GetFrontTask ()"
+
+.PP
+Schedules the front task for immediate execution\&. gets the front task for immediate execution 
+.PP
+Definition at line 315 of file ODWaveTrackTaskQueue\&.cpp\&.
+.SS "\fBint\fP ODWaveTrackTaskQueue::GetNumTasks ()"
+
+.PP
+returns the number of ODTasks in this queue 
+.PP
+Definition at line 245 of file ODWaveTrackTaskQueue\&.cpp\&.
+.SS "\fBint\fP ODWaveTrackTaskQueue::GetNumWaveTracks ()"
+
+.PP
+returns the number of wavetracks in this queue\&. 
+.PP
+Definition at line 235 of file ODWaveTrackTaskQueue\&.cpp\&.
+.SS "\fBODTask\fP * ODWaveTrackTaskQueue::GetTask (size_t x)"
+
+.PP
+returns a \fBODTask\fP at position x 
+.PP
+Definition at line 255 of file ODWaveTrackTaskQueue\&.cpp\&.
+.SS "\fBWaveTrack\fP * ODWaveTrackTaskQueue::GetWaveTrack (size_t x)"
+
+.PP
+Definition at line 224 of file ODWaveTrackTaskQueue\&.cpp\&.
+.SS "\fBbool\fP ODWaveTrackTaskQueue::IsEmpty ()"
+
+.PP
+Definition at line 268 of file ODWaveTrackTaskQueue\&.cpp\&.
+.SS "\fBbool\fP ODWaveTrackTaskQueue::IsFrontTaskComplete ()"
+
+.PP
+Definition at line 283 of file ODWaveTrackTaskQueue\&.cpp\&.
+.SS "\fBvoid\fP ODWaveTrackTaskQueue::MakeWaveTrackIndependent (\fBWaveTrack\fP * track)"
+
+.PP
+Definition at line 146 of file ODWaveTrackTaskQueue\&.cpp\&.
+.SS "\fBvoid\fP ODWaveTrackTaskQueue::MergeWaveTrack (\fBWaveTrack\fP * track)"
+add track to the masterTrack's queue - this will allow future ODScheduling to affect them together\&. sets the NeedODUpdateFlag since we don't want the head task to finish without haven't dealt with the depednent
+.PP
+\fBParameters:\fP
+.RS 4
+\fItrack\fP the track to bring into the tasks AND tracklist for this queue 
+.RE
+.PP
+
+.PP
+Definition at line 64 of file ODWaveTrackTaskQueue\&.cpp\&.
+.SS "\fBvoid\fP ODWaveTrackTaskQueue::RemoveFrontTask ()"
+
+.PP
+Removes and deletes the front task from the list\&. 
+.PP
+Definition at line 302 of file ODWaveTrackTaskQueue\&.cpp\&.
+.SS "\fBvoid\fP ODWaveTrackTaskQueue::RemoveWaveTrack (\fBWaveTrack\fP * track)"
+Removes a track from the list\&. Also notifies mTasks to stop using references to the instance in a thread-safe manner (may block) 
+.PP
+Definition at line 126 of file ODWaveTrackTaskQueue\&.cpp\&.
+.SS "\fBvoid\fP ODWaveTrackTaskQueue::ReplaceWaveTrack (\fBWaveTrack\fP * oldTrack, \fBWaveTrack\fP * newTrack)"
+
+.PP
+replaces all instances of a \fBWaveTrack\fP within this task with another\&. 
+.PP
+Definition at line 206 of file ODWaveTrackTaskQueue\&.cpp\&.
+.SH "Member Data Documentation"
+.PP 
+.SS "std::vector<\fBODTask\fP*> ODWaveTrackTaskQueue::mTasks\fC [protected]\fP"
+
+.PP
+the list of tasks associated with the tracks\&. This class owns these tasks\&. 
+.PP
+Definition at line 108 of file ODWaveTrackTaskQueue\&.h\&.
+.SS "\fBODLock\fP ODWaveTrackTaskQueue::mTasksMutex\fC [protected]\fP"
+
+.PP
+Definition at line 109 of file ODWaveTrackTaskQueue\&.h\&.
+.SS "wxString ODWaveTrackTaskQueue::mTipMsg\fC [protected]\fP"
+
+.PP
+Definition at line 100 of file ODWaveTrackTaskQueue\&.h\&.
+.SS "std::vector<\fBWaveTrack\fP*> ODWaveTrackTaskQueue::mTracks\fC [protected]\fP"
+
+.PP
+the list of tracks associated with this queue\&. 
+.PP
+Definition at line 104 of file ODWaveTrackTaskQueue\&.h\&.
+.SS "\fBODLock\fP ODWaveTrackTaskQueue::mTracksMutex\fC [protected]\fP"
+
+.PP
+Definition at line 105 of file ODWaveTrackTaskQueue\&.h\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

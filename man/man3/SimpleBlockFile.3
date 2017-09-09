@@ -1,0 +1,286 @@
+.TH "SimpleBlockFile" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+SimpleBlockFile \- A \fBBlockFile\fP that reads and writes uncompressed data using libsndfile\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <SimpleBlockFile\&.h>\fP
+.PP
+Inherits \fBBlockFile\fP\&.
+.PP
+Inherited by \fBODDecodeBlockFile\fP\&.
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBSimpleBlockFile\fP (wxFileName baseFileName, \fBsamplePtr\fP sampleData, \fBsampleCount\fP sampleLen, \fBsampleFormat\fP \fBformat\fP, \fBbool\fP allowDeferredWrite=\fBfalse\fP, \fBbool\fP bypassCache=\fBfalse\fP)"
+.br
+.RI "\fICreate a disk file and write summary and sample data to it\&. \fP"
+.ti -1c
+.RI "\fBSimpleBlockFile\fP (wxFileName existingFile, \fBsampleCount\fP \fBlen\fP, float \fBmin\fP, float \fBmax\fP, float rms)"
+.br
+.RI "\fICreate the memory structure to refer to the given block file\&. \fP"
+.ti -1c
+.RI "virtual \fB~SimpleBlockFile\fP ()"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBReadSummary\fP (\fBvoid\fP *\fBdata\fP) override"
+.br
+.RI "\fIRead the summary section of the disk file\&. \fP"
+.ti -1c
+.RI "\fBint\fP \fBReadData\fP (\fBsamplePtr\fP \fBdata\fP, \fBsampleFormat\fP \fBformat\fP, \fBsampleCount\fP \fBstart\fP, \fBsampleCount\fP \fBlen\fP) override"
+.br
+.RI "\fIRead the data section of the disk file\&. \fP"
+.ti -1c
+.RI "\fBBlockFile\fP * \fBCopy\fP (wxFileName newFileName) override"
+.br
+.RI "\fICreate a NEW block file identical to this one\&. \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBSaveXML\fP (\fBXMLWriter\fP &xmlFile) override"
+.br
+.RI "\fIWrite an XML representation of this file\&. \fP"
+.ti -1c
+.RI "wxLongLong \fBGetSpaceUsage\fP () override"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBRecover\fP () override"
+.br
+.RI "\fIif the on-disk state disappeared, either recover it (if it was \fP"
+.ti -1c
+.RI "\fBbool\fP \fBGetNeedWriteCacheToDisk\fP () override"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBWriteCacheToDisk\fP () override"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBGetNeedFillCache\fP () override"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBFillCache\fP () override"
+.br
+.in -1c
+.SS "Static Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "static \fBBlockFile\fP * \fBBuildFromXML\fP (\fBDirManager\fP &dm, \fBconst\fP wxChar **attrs)"
+.br
+.RI "\fIstatic \fP"
+.in -1c
+.SS "Protected Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBbool\fP \fBWriteSimpleBlockFile\fP (\fBsamplePtr\fP sampleData, \fBsampleCount\fP sampleLen, \fBsampleFormat\fP \fBformat\fP, \fBvoid\fP *summaryData)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBReadIntoCache\fP ()"
+.br
+.in -1c
+.SS "Static Protected Member Functions"
+
+.in +1c
+.ti -1c
+.RI "static \fBbool\fP \fBGetCache\fP ()"
+.br
+.in -1c
+.SS "Protected Attributes"
+
+.in +1c
+.ti -1c
+.RI "\fBSimpleBlockFileCache\fP \fBmCache\fP"
+.br
+.ti -1c
+.RI "\fBsampleFormat\fP \fBmFormat\fP"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+A \fBBlockFile\fP that reads and writes uncompressed data using libsndfile\&. 
+
+A block file that writes the audio data to an \&.au file and reads it back using libsndfile\&.
+.PP
+There are two ways to construct a simple block file\&. One is to supply data and have the constructor write the file\&. The other is for when the file already exists and we simply want to create the data structure to refer to it\&.
+.PP
+The block file can be cached in two ways\&. Caching is enabled if the preference '/Directories/CacheBlockFiles' is set, otherwise disabled\&. The default is to disable caching\&.
+.PP
+Read-caching: If caching is enabled, all block files will always be read-cached\&. Block files on disk will be read as soon as they are created and held in memory\&. New block files will be written to disk, but held in memory, so they are never read from disk in the current session\&.
+.PP
+Write-caching: If caching is enabled and the parameter allowDeferredWrite is enabled at the block file constructor, NEW block files are held in memory and written to disk only when \fBWriteCacheToDisk()\fP is called\&. This is used during recording to prevent disk access\&. After recording, \fBWriteCacheToDisk()\fP will be called on all block files and they will be written to disk\&. During normal editing, no write cache is active, that is, any block files will be written to disk instantly\&.
+.PP
+Even with write cache, auto recovery during normal editing will work as expected\&. However, auto recovery during recording will not work (not even manual auto recovery, because the files are never written physically to disk)\&. 
+.PP
+Definition at line 45 of file SimpleBlockFile\&.h\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "SimpleBlockFile::SimpleBlockFile (wxFileName baseFileName, \fBsamplePtr\fP sampleData, \fBsampleCount\fP sampleLen, \fBsampleFormat\fP format, \fBbool\fP allowDeferredWrite = \fC\fBfalse\fP\fP, \fBbool\fP bypassCache = \fC\fBfalse\fP\fP)"
+
+.PP
+Create a disk file and write summary and sample data to it\&. Constructs a \fBSimpleBlockFile\fP based on sample data and writes it to disk\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIbaseFileName\fP The filename to use, but without an extension\&. This constructor will add the appropriate extension (\&.au in this case)\&. 
+.br
+\fIsampleData\fP The sample data to be written to this block\&. 
+.br
+\fIsampleLen\fP The number of samples to be written to this block\&. 
+.br
+\fIformat\fP The format of the given samples\&. 
+.br
+\fIallowDeferredWrite\fP Allow deferred write-caching 
+.RE
+.PP
+
+.PP
+Definition at line 98 of file SimpleBlockFile\&.cpp\&.
+.SS "SimpleBlockFile::SimpleBlockFile (wxFileName existingFile, \fBsampleCount\fP len, float min, float max, float rms)"
+
+.PP
+Create the memory structure to refer to the given block file\&. Construct a \fBSimpleBlockFile\fP memory structure that will point to an existing block file\&. This file must exist and be a valid block file\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIexistingFile\fP The disk file this \fBSimpleBlockFile\fP should use\&. 
+.RE
+.PP
+
+.PP
+Definition at line 138 of file SimpleBlockFile\&.cpp\&.
+.SS "SimpleBlockFile::~SimpleBlockFile ()\fC [virtual]\fP"
+
+.PP
+Definition at line 152 of file SimpleBlockFile\&.cpp\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "\fBBlockFile\fP * SimpleBlockFile::BuildFromXML (\fBDirManager\fP & dm, \fBconst\fP wxChar ** attrs)\fC [static]\fP"
+
+.PP
+static 
+.PP
+Definition at line 489 of file SimpleBlockFile\&.cpp\&.
+.SS "\fBBlockFile\fP * SimpleBlockFile::Copy (wxFileName newFileName)\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Create a NEW block file identical to this one\&. Create a copy of this \fBBlockFile\fP, but using a different disk file\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fInewFileName\fP The name of the NEW file to use\&. 
+.RE
+.PP
+
+.PP
+Implements \fBBlockFile\fP\&.
+.PP
+Definition at line 535 of file SimpleBlockFile\&.cpp\&.
+.SS "\fBvoid\fP SimpleBlockFile::FillCache ()\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Reimplemented from \fBBlockFile\fP\&.
+.PP
+Definition at line 268 of file SimpleBlockFile\&.cpp\&.
+.SS "\fBbool\fP SimpleBlockFile::GetCache ()\fC [static]\fP, \fC [protected]\fP"
+
+.PP
+Definition at line 642 of file SimpleBlockFile\&.cpp\&.
+.SS "\fBbool\fP SimpleBlockFile::GetNeedFillCache ()\fC [inline]\fP, \fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Reimplemented from \fBBlockFile\fP\&.
+.PP
+Definition at line 83 of file SimpleBlockFile\&.h\&.
+.SS "\fBbool\fP SimpleBlockFile::GetNeedWriteCacheToDisk ()\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Reimplemented from \fBBlockFile\fP\&.
+.PP
+Definition at line 637 of file SimpleBlockFile\&.cpp\&.
+.SS "wxLongLong SimpleBlockFile::GetSpaceUsage ()\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Implements \fBBlockFile\fP\&.
+.PP
+Definition at line 543 of file SimpleBlockFile\&.cpp\&.
+.SS "\fBint\fP SimpleBlockFile::ReadData (\fBsamplePtr\fP data, \fBsampleFormat\fP format, \fBsampleCount\fP start, \fBsampleCount\fP len)\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Read the data section of the disk file\&. Read the data portion of the block file using libsndfile\&. Convert it to the given format if it is not already\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdata\fP The buffer where the data will be stored 
+.br
+\fIformat\fP The format the data will be stored in 
+.br
+\fIstart\fP The offset in this block file 
+.br
+\fIlen\fP The number of samples to read 
+.RE
+.PP
+
+.PP
+Implements \fBBlockFile\fP\&.
+.PP
+Definition at line 386 of file SimpleBlockFile\&.cpp\&.
+.SS "\fBvoid\fP SimpleBlockFile::ReadIntoCache ()\fC [protected]\fP"
+
+.SS "\fBbool\fP SimpleBlockFile::ReadSummary (\fBvoid\fP * data)\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Read the summary section of the disk file\&. Read the summary section of the disk file\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fI*data\fP The buffer to write the data to\&. It must be at least mSummaryinfo\&.totalSummaryBytes long\&. 
+.RE
+.PP
+
+.PP
+Implements \fBBlockFile\fP\&.
+.PP
+Definition at line 337 of file SimpleBlockFile\&.cpp\&.
+.SS "\fBvoid\fP SimpleBlockFile::Recover ()\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+if the on-disk state disappeared, either recover it (if it was 
+.PP
+Implements \fBBlockFile\fP\&.
+.PP
+Definition at line 599 of file SimpleBlockFile\&.cpp\&.
+.SS "\fBvoid\fP SimpleBlockFile::SaveXML (\fBXMLWriter\fP & xmlFile)\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Write an XML representation of this file\&. 
+.PP
+Implements \fBBlockFile\fP\&.
+.PP
+Definition at line 472 of file SimpleBlockFile\&.cpp\&.
+.SS "\fBvoid\fP SimpleBlockFile::WriteCacheToDisk ()\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Reimplemented from \fBBlockFile\fP\&.
+.PP
+Definition at line 627 of file SimpleBlockFile\&.cpp\&.
+.SS "\fBbool\fP SimpleBlockFile::WriteSimpleBlockFile (\fBsamplePtr\fP sampleData, \fBsampleCount\fP sampleLen, \fBsampleFormat\fP format, \fBvoid\fP * summaryData)\fC [protected]\fP"
+
+.PP
+Definition at line 161 of file SimpleBlockFile\&.cpp\&.
+.SH "Member Data Documentation"
+.PP 
+.SS "\fBSimpleBlockFileCache\fP SimpleBlockFile::mCache\fC [protected]\fP"
+
+.PP
+Definition at line 93 of file SimpleBlockFile\&.h\&.
+.SS "\fBsampleFormat\fP SimpleBlockFile::mFormat\fC [protected]\fP"
+
+.PP
+Definition at line 95 of file SimpleBlockFile\&.h\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

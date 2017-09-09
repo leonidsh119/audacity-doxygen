@@ -1,0 +1,238 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/lib-src/libflac/src/libFLAC/bitreader.c" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/lib-src/libflac/src/libFLAC/bitreader.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <stdlib\&.h>\fP
+.br
+\fC#include <string\&.h>\fP
+.br
+\fC#include 'private/bitmath\&.h'\fP
+.br
+\fC#include 'private/bitreader\&.h'\fP
+.br
+\fC#include 'private/crc\&.h'\fP
+.br
+\fC#include 'private/macros\&.h'\fP
+.br
+\fC#include 'FLAC/assert\&.h'\fP
+.br
+\fC#include 'share/compat\&.h'\fP
+.br
+\fC#include 'share/endswap\&.h'\fP
+.br
+
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "struct \fBFLAC__BitReader\fP"
+.br
+.in -1c
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBFLAC__BYTES_PER_WORD\fP   4		/* sizeof \fBuint32_t\fP */"
+.br
+.ti -1c
+.RI "#define \fBFLAC__BITS_PER_WORD\fP   (8 * \fBFLAC__BYTES_PER_WORD\fP)"
+.br
+.ti -1c
+.RI "#define \fBFLAC__WORD_ALL_ONES\fP   ((\fBFLAC__uint32\fP)0xffffffff)"
+.br
+.ti -1c
+.RI "#define \fBSWAP_BE_WORD_TO_HOST\fP(x)   \fBENDSWAP_32\fP(x)"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBFLAC__BitReader\fP * \fBFLAC__bitreader_new\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBFLAC__bitreader_delete\fP (\fBFLAC__BitReader\fP *br)"
+.br
+.ti -1c
+.RI "\fBFLAC__bool\fP \fBFLAC__bitreader_init\fP (\fBFLAC__BitReader\fP *br, \fBFLAC__BitReaderReadCallback\fP rcb, \fBvoid\fP *\fBcd\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBFLAC__bitreader_free\fP (\fBFLAC__BitReader\fP *br)"
+.br
+.ti -1c
+.RI "\fBFLAC__bool\fP \fBFLAC__bitreader_clear\fP (\fBFLAC__BitReader\fP *br)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBFLAC__bitreader_dump\fP (\fBconst\fP \fBFLAC__BitReader\fP *br, FILE *\fBout\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBFLAC__bitreader_reset_read_crc16\fP (\fBFLAC__BitReader\fP *br, \fBFLAC__uint16\fP seed)"
+.br
+.ti -1c
+.RI "\fBFLAC__uint16\fP \fBFLAC__bitreader_get_read_crc16\fP (\fBFLAC__BitReader\fP *br)"
+.br
+.ti -1c
+.RI "\fBFLAC__bool\fP \fBFLAC__bitreader_is_consumed_byte_aligned\fP (\fBconst\fP \fBFLAC__BitReader\fP *br)"
+.br
+.ti -1c
+.RI "unsigned \fBFLAC__bitreader_bits_left_for_byte_alignment\fP (\fBconst\fP \fBFLAC__BitReader\fP *br)"
+.br
+.ti -1c
+.RI "unsigned \fBFLAC__bitreader_get_input_bits_unconsumed\fP (\fBconst\fP \fBFLAC__BitReader\fP *br)"
+.br
+.ti -1c
+.RI "\fBFLAC__bool\fP \fBFLAC__bitreader_read_raw_uint32\fP (\fBFLAC__BitReader\fP *br, \fBFLAC__uint32\fP *val, unsigned \fBbits\fP)"
+.br
+.ti -1c
+.RI "\fBFLAC__bool\fP \fBFLAC__bitreader_read_raw_int32\fP (\fBFLAC__BitReader\fP *br, \fBFLAC__int32\fP *val, unsigned \fBbits\fP)"
+.br
+.ti -1c
+.RI "\fBFLAC__bool\fP \fBFLAC__bitreader_read_raw_uint64\fP (\fBFLAC__BitReader\fP *br, \fBFLAC__uint64\fP *val, unsigned \fBbits\fP)"
+.br
+.ti -1c
+.RI "\fBFLAC__bool\fP \fBFLAC__bitreader_read_uint32_little_endian\fP (\fBFLAC__BitReader\fP *br, \fBFLAC__uint32\fP *val)"
+.br
+.ti -1c
+.RI "\fBFLAC__bool\fP \fBFLAC__bitreader_skip_bits_no_crc\fP (\fBFLAC__BitReader\fP *br, unsigned \fBbits\fP)"
+.br
+.ti -1c
+.RI "\fBFLAC__bool\fP \fBFLAC__bitreader_skip_byte_block_aligned_no_crc\fP (\fBFLAC__BitReader\fP *br, unsigned nvals)"
+.br
+.ti -1c
+.RI "\fBFLAC__bool\fP \fBFLAC__bitreader_read_byte_block_aligned_no_crc\fP (\fBFLAC__BitReader\fP *br, \fBFLAC__byte\fP *val, unsigned nvals)"
+.br
+.ti -1c
+.RI "\fBFLAC__bool\fP \fBFLAC__bitreader_read_unary_unsigned\fP (\fBFLAC__BitReader\fP *br, unsigned *val)"
+.br
+.ti -1c
+.RI "\fBFLAC__bool\fP \fBFLAC__bitreader_read_rice_signed\fP (\fBFLAC__BitReader\fP *br, \fBint\fP *val, unsigned parameter)"
+.br
+.ti -1c
+.RI "\fBFLAC__bool\fP \fBFLAC__bitreader_read_rice_signed_block\fP (\fBFLAC__BitReader\fP *br, \fBint\fP vals[], unsigned nvals, unsigned parameter)"
+.br
+.ti -1c
+.RI "\fBFLAC__bool\fP \fBFLAC__bitreader_read_utf8_uint32\fP (\fBFLAC__BitReader\fP *br, \fBFLAC__uint32\fP *val, \fBFLAC__byte\fP *raw, unsigned *rawlen)"
+.br
+.ti -1c
+.RI "\fBFLAC__bool\fP \fBFLAC__bitreader_read_utf8_uint64\fP (\fBFLAC__BitReader\fP *br, \fBFLAC__uint64\fP *val, \fBFLAC__byte\fP *raw, unsigned *rawlen)"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define FLAC__BITS_PER_WORD   (8 * \fBFLAC__BYTES_PER_WORD\fP)"
+
+.PP
+Definition at line 52 of file bitreader\&.c\&.
+.SS "#define FLAC__BYTES_PER_WORD   4		/* sizeof \fBuint32_t\fP */"
+
+.PP
+Definition at line 51 of file bitreader\&.c\&.
+.SS "#define FLAC__WORD_ALL_ONES   ((\fBFLAC__uint32\fP)0xffffffff)"
+
+.PP
+Definition at line 53 of file bitreader\&.c\&.
+.SS "#define SWAP_BE_WORD_TO_HOST(x)   \fBENDSWAP_32\fP(x)"
+
+.PP
+Definition at line 58 of file bitreader\&.c\&.
+.SH "Function Documentation"
+.PP 
+.SS "unsigned FLAC__bitreader_bits_left_for_byte_alignment (\fBconst\fP \fBFLAC__BitReader\fP * br)\fC [inline]\fP"
+
+.PP
+Definition at line 330 of file bitreader\&.c\&.
+.SS "\fBFLAC__bool\fP FLAC__bitreader_clear (\fBFLAC__BitReader\fP * br)"
+
+.PP
+Definition at line 262 of file bitreader\&.c\&.
+.SS "\fBvoid\fP FLAC__bitreader_delete (\fBFLAC__BitReader\fP * br)"
+
+.PP
+Definition at line 218 of file bitreader\&.c\&.
+.SS "\fBvoid\fP FLAC__bitreader_dump (\fBconst\fP \fBFLAC__BitReader\fP * br, FILE * out)"
+
+.PP
+Definition at line 269 of file bitreader\&.c\&.
+.SS "\fBvoid\fP FLAC__bitreader_free (\fBFLAC__BitReader\fP * br)"
+
+.PP
+Definition at line 248 of file bitreader\&.c\&.
+.SS "unsigned FLAC__bitreader_get_input_bits_unconsumed (\fBconst\fP \fBFLAC__BitReader\fP * br)\fC [inline]\fP"
+
+.PP
+Definition at line 335 of file bitreader\&.c\&.
+.SS "\fBFLAC__uint16\fP FLAC__bitreader_get_read_crc16 (\fBFLAC__BitReader\fP * br)"
+
+.PP
+Definition at line 309 of file bitreader\&.c\&.
+.SS "\fBFLAC__bool\fP FLAC__bitreader_init (\fBFLAC__BitReader\fP * br, \fBFLAC__BitReaderReadCallback\fP rcb, \fBvoid\fP * cd)"
+
+.PP
+Definition at line 232 of file bitreader\&.c\&.
+.SS "\fBFLAC__bool\fP FLAC__bitreader_is_consumed_byte_aligned (\fBconst\fP \fBFLAC__BitReader\fP * br)\fC [inline]\fP"
+
+.PP
+Definition at line 325 of file bitreader\&.c\&.
+.SS "\fBFLAC__BitReader\fP* FLAC__bitreader_new (\fBvoid\fP)"
+
+.PP
+Definition at line 202 of file bitreader\&.c\&.
+.SS "\fBFLAC__bool\fP FLAC__bitreader_read_byte_block_aligned_no_crc (\fBFLAC__BitReader\fP * br, \fBFLAC__byte\fP * val, unsigned nvals)"
+
+.PP
+Definition at line 546 of file bitreader\&.c\&.
+.SS "\fBFLAC__bool\fP FLAC__bitreader_read_raw_int32 (\fBFLAC__BitReader\fP * br, \fBFLAC__int32\fP * val, unsigned bits)"
+
+.PP
+Definition at line 419 of file bitreader\&.c\&.
+.SS "\fBFLAC__bool\fP FLAC__bitreader_read_raw_uint32 (\fBFLAC__BitReader\fP * br, \fBFLAC__uint32\fP * val, unsigned bits)"
+
+.PP
+Definition at line 340 of file bitreader\&.c\&.
+.SS "\fBFLAC__bool\fP FLAC__bitreader_read_raw_uint64 (\fBFLAC__BitReader\fP * br, \fBFLAC__uint64\fP * val, unsigned bits)"
+
+.PP
+Definition at line 430 of file bitreader\&.c\&.
+.SS "\fBFLAC__bool\fP FLAC__bitreader_read_rice_signed (\fBFLAC__BitReader\fP * br, \fBint\fP * val, unsigned parameter)"
+
+.PP
+Definition at line 683 of file bitreader\&.c\&.
+.SS "\fBFLAC__bool\fP FLAC__bitreader_read_rice_signed_block (\fBFLAC__BitReader\fP * br, \fBint\fP vals[], unsigned nvals, unsigned parameter)"
+
+.PP
+Definition at line 711 of file bitreader\&.c\&.
+.SS "\fBFLAC__bool\fP FLAC__bitreader_read_uint32_little_endian (\fBFLAC__BitReader\fP * br, \fBFLAC__uint32\fP * val)\fC [inline]\fP"
+
+.PP
+Definition at line 451 of file bitreader\&.c\&.
+.SS "\fBFLAC__bool\fP FLAC__bitreader_read_unary_unsigned (\fBFLAC__BitReader\fP * br, unsigned * val)"
+
+.PP
+Definition at line 602 of file bitreader\&.c\&.
+.SS "\fBFLAC__bool\fP FLAC__bitreader_read_utf8_uint32 (\fBFLAC__BitReader\fP * br, \fBFLAC__uint32\fP * val, \fBFLAC__byte\fP * raw, unsigned * rawlen)"
+
+.PP
+Definition at line 935 of file bitreader\&.c\&.
+.SS "\fBFLAC__bool\fP FLAC__bitreader_read_utf8_uint64 (\fBFLAC__BitReader\fP * br, \fBFLAC__uint64\fP * val, \fBFLAC__byte\fP * raw, unsigned * rawlen)"
+
+.PP
+Definition at line 990 of file bitreader\&.c\&.
+.SS "\fBvoid\fP FLAC__bitreader_reset_read_crc16 (\fBFLAC__BitReader\fP * br, \fBFLAC__uint16\fP seed)"
+
+.PP
+Definition at line 299 of file bitreader\&.c\&.
+.SS "\fBFLAC__bool\fP FLAC__bitreader_skip_bits_no_crc (\fBFLAC__BitReader\fP * br, unsigned bits)"
+
+.PP
+Definition at line 476 of file bitreader\&.c\&.
+.SS "\fBFLAC__bool\fP FLAC__bitreader_skip_byte_block_aligned_no_crc (\fBFLAC__BitReader\fP * br, unsigned nvals)"
+
+.PP
+Definition at line 511 of file bitreader\&.c\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

@@ -1,0 +1,13 @@
+var searchData=
+[
+  ['zix_5fstatus_5fbad_5farg',['ZIX_STATUS_BAD_ARG',['../group__zix.html#gga8ff29bfb81c64f449534790cac128b19a3294bbc5dea336d98009e227e639b9e6',1,'ZIX_STATUS_BAD_ARG():&#160;common.h'],['../group__zix.html#gga8ff29bfb81c64f449534790cac128b19a3294bbc5dea336d98009e227e639b9e6',1,'ZIX_STATUS_BAD_ARG():&#160;common.h']]],
+  ['zix_5fstatus_5fbad_5fperms',['ZIX_STATUS_BAD_PERMS',['../group__zix.html#gga8ff29bfb81c64f449534790cac128b19ab09461cead15e68f4899c0709f1340d3',1,'ZIX_STATUS_BAD_PERMS():&#160;common.h'],['../group__zix.html#gga8ff29bfb81c64f449534790cac128b19ab09461cead15e68f4899c0709f1340d3',1,'ZIX_STATUS_BAD_PERMS():&#160;common.h']]],
+  ['zix_5fstatus_5ferror',['ZIX_STATUS_ERROR',['../group__zix.html#gga8ff29bfb81c64f449534790cac128b19a9f29a21d2bf72007f464e00c96bd1a2f',1,'ZIX_STATUS_ERROR():&#160;common.h'],['../group__zix.html#gga8ff29bfb81c64f449534790cac128b19a9f29a21d2bf72007f464e00c96bd1a2f',1,'ZIX_STATUS_ERROR():&#160;common.h']]],
+  ['zix_5fstatus_5fexists',['ZIX_STATUS_EXISTS',['../group__zix.html#gga8ff29bfb81c64f449534790cac128b19a2c07af4b01d1fc96659ca300cd1bbcf7',1,'ZIX_STATUS_EXISTS():&#160;common.h'],['../group__zix.html#gga8ff29bfb81c64f449534790cac128b19a2c07af4b01d1fc96659ca300cd1bbcf7',1,'ZIX_STATUS_EXISTS():&#160;common.h']]],
+  ['zix_5fstatus_5fno_5fmem',['ZIX_STATUS_NO_MEM',['../group__zix.html#gga8ff29bfb81c64f449534790cac128b19aa50cc115cbee685c480288d34fca8d4e',1,'ZIX_STATUS_NO_MEM():&#160;common.h'],['../group__zix.html#gga8ff29bfb81c64f449534790cac128b19aa50cc115cbee685c480288d34fca8d4e',1,'ZIX_STATUS_NO_MEM():&#160;common.h']]],
+  ['zix_5fstatus_5fnot_5ffound',['ZIX_STATUS_NOT_FOUND',['../group__zix.html#gga8ff29bfb81c64f449534790cac128b19a58e7463bb2e4782124ab61d9160fcb33',1,'ZIX_STATUS_NOT_FOUND():&#160;common.h'],['../group__zix.html#gga8ff29bfb81c64f449534790cac128b19a58e7463bb2e4782124ab61d9160fcb33',1,'ZIX_STATUS_NOT_FOUND():&#160;common.h']]],
+  ['zix_5fstatus_5fsuccess',['ZIX_STATUS_SUCCESS',['../group__zix.html#gga8ff29bfb81c64f449534790cac128b19aabb16c2bfb9258e19ecebb901845db50',1,'ZIX_STATUS_SUCCESS():&#160;common.h'],['../group__zix.html#gga8ff29bfb81c64f449534790cac128b19aabb16c2bfb9258e19ecebb901845db50',1,'ZIX_STATUS_SUCCESS():&#160;common.h']]],
+  ['zoominavailableflag',['ZoomInAvailableFlag',['../_audacity_app_8h.html#ad86178b9def692404403c1e6ef728ceda1f18455fa436de03a77de8d84d5def9e',1,'AudacityApp.h']]],
+  ['zoomoutavailableflag',['ZoomOutAvailableFlag',['../_audacity_app_8h.html#ad86178b9def692404403c1e6ef728cedad01da0f25dc00b493f846f0a4920fb28',1,'AudacityApp.h']]],
+  ['zoomtool',['zoomTool',['../_tools_tool_bar_8h.html#a72e63dc1307b88cc08ad0bd6c737d748a68d9a0eebbd7ecb9b7c7fc5deb442b91',1,'ToolsToolBar.h']]]
+];

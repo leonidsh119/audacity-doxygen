@@ -1,0 +1,153 @@
+.TH "Nyq::WaveLoop" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Nyq::WaveLoop \- 
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <WaveLoop\&.h>\fP
+.PP
+Inherits \fBNyq::FileWvIn\fP\&.
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBWaveLoop\fP (unsigned long chunkThreshold=1000000, unsigned long chunkSize=1024)"
+.br
+.RI "\fIDefault constructor\&. \fP"
+.ti -1c
+.RI "\fBWaveLoop\fP (\fBstd::string\fP fileName, \fBbool\fP raw=\fBfalse\fP, \fBbool\fP doNormalize=\fBtrue\fP, unsigned long chunkThreshold=1000000, unsigned long chunkSize=1024)"
+.br
+.RI "\fIClass constructor that opens a specified file\&. \fP"
+.ti -1c
+.RI "virtual \fB~WaveLoop\fP ()"
+.br
+.RI "\fIClass destructor\&. \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBopenFile\fP (\fBstd::string\fP fileName, \fBbool\fP raw=\fBfalse\fP, \fBbool\fP doNormalize=\fBtrue\fP)"
+.br
+.RI "\fIOpen the specified file and load its data\&. \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBsetRate\fP (\fBStkFloat\fP \fBrate\fP)"
+.br
+.RI "\fISet the data read rate in samples\&. The rate can be negative\&. \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBsetFrequency\fP (\fBStkFloat\fP frequency)"
+.br
+.RI "\fISet the data interpolation rate based on a looping frequency\&. \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBaddTime\fP (\fBStkFloat\fP time)"
+.br
+.RI "\fIIncrement the read pointer by \fItime\fP samples, modulo file size\&. \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBaddPhase\fP (\fBStkFloat\fP angle)"
+.br
+.RI "\fIIncrement current read pointer by \fIangle\fP, relative to a looping frequency\&. \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBaddPhaseOffset\fP (\fBStkFloat\fP angle)"
+.br
+.RI "\fIAdd a phase offset to the current read pointer\&. \fP"
+.in -1c
+.SS "Protected Member Functions"
+
+.in +1c
+.ti -1c
+.RI "virtual \fBvoid\fP \fBcomputeFrame\fP (\fBvoid\fP)"
+.br
+.in -1c
+.SS "Protected Attributes"
+
+.in +1c
+.ti -1c
+.RI "\fBStkFrames\fP \fBfirstFrame_\fP"
+.br
+.ti -1c
+.RI "\fBStkFloat\fP \fBphaseOffset_\fP"
+.br
+.in -1c
+.SS "Additional Inherited Members"
+.SH "Detailed Description"
+.PP 
+Definition at line 27 of file WaveLoop\&.h\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "WaveLoop::WaveLoop (unsigned long chunkThreshold = \fC1000000\fP, unsigned long chunkSize = \fC1024\fP)"
+
+.PP
+Default constructor\&. 
+.PP
+Definition at line 24 of file WaveLoop\&.cpp\&.
+.SS "WaveLoop::WaveLoop (\fBstd::string\fP fileName, \fBbool\fP raw = \fC\fBfalse\fP\fP, \fBbool\fP doNormalize = \fC\fBtrue\fP\fP, unsigned long chunkThreshold = \fC1000000\fP, unsigned long chunkSize = \fC1024\fP)"
+
+.PP
+Class constructor that opens a specified file\&. 
+.PP
+Definition at line 29 of file WaveLoop\&.cpp\&.
+.SS "WaveLoop::~WaveLoop ()\fC [virtual]\fP"
+
+.PP
+Class destructor\&. 
+.PP
+Definition at line 36 of file WaveLoop\&.cpp\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "\fBvoid\fP WaveLoop::addPhase (\fBStkFloat\fP angle)"
+
+.PP
+Increment current read pointer by \fIangle\fP, relative to a looping frequency\&. This function increments the read pointer based on the file size and the current \fBStk::sampleRate\fP\&. The \fIanAngle\fP value is a multiple of file size\&. 
+.PP
+Definition at line 111 of file WaveLoop\&.cpp\&.
+.SS "\fBvoid\fP WaveLoop::addPhaseOffset (\fBStkFloat\fP angle)"
+
+.PP
+Add a phase offset to the current read pointer\&. This function determines a time offset based on the file size and the current \fBStk::sampleRate\fP\&. The \fIangle\fP value is a multiple of file size\&. 
+.PP
+Definition at line 123 of file WaveLoop\&.cpp\&.
+.SS "\fBvoid\fP WaveLoop::addTime (\fBStkFloat\fP time)\fC [virtual]\fP"
+
+.PP
+Increment the read pointer by \fItime\fP samples, modulo file size\&. 
+.PP
+Reimplemented from \fBNyq::FileWvIn\fP\&.
+.PP
+Definition at line 99 of file WaveLoop\&.cpp\&.
+.SS "\fBvoid\fP WaveLoop::computeFrame (\fBvoid\fP)\fC [protected]\fP, \fC [virtual]\fP"
+
+.PP
+Reimplemented from \fBNyq::FileWvIn\fP\&.
+.PP
+Definition at line 129 of file WaveLoop\&.cpp\&.
+.SS "\fBvoid\fP WaveLoop::openFile (\fBstd::string\fP fileName, \fBbool\fP raw = \fC\fBfalse\fP\fP, \fBbool\fP doNormalize = \fC\fBtrue\fP\fP)"
+
+.PP
+Open the specified file and load its data\&. Data from a previously opened file will be overwritten by this function\&. An \fBStkError\fP will be thrown if the file is not found, its format is unknown, or a read error occurs\&. If the file data is to be loaded incrementally from disk and normalization is specified, a scaling will be applied with respect to fixed-point limits\&. If the data format is floating-point, no scaling is performed\&. 
+.PP
+Definition at line 40 of file WaveLoop\&.cpp\&.
+.SS "\fBvoid\fP WaveLoop::setFrequency (\fBStkFloat\fP frequency)"
+
+.PP
+Set the data interpolation rate based on a looping frequency\&. This function determines the interpolation rate based on the file size and the current \fBStk::sampleRate\fP\&. The \fIfrequency\fP value corresponds to file cycles per second\&. The frequency can be negative, in which case the loop is read in reverse order\&. 
+.PP
+Definition at line 93 of file WaveLoop\&.cpp\&.
+.SS "\fBvoid\fP WaveLoop::setRate (\fBStkFloat\fP rate)"
+
+.PP
+Set the data read rate in samples\&. The rate can be negative\&. If the rate value is negative, the data is read in reverse order\&. 
+.PP
+Definition at line 85 of file WaveLoop\&.cpp\&.
+.SH "Member Data Documentation"
+.PP 
+.SS "\fBStkFrames\fP Nyq::WaveLoop::firstFrame_\fC [protected]\fP"
+
+.PP
+Definition at line 90 of file WaveLoop\&.h\&.
+.SS "\fBStkFloat\fP Nyq::WaveLoop::phaseOffset_\fC [protected]\fP"
+
+.PP
+Definition at line 91 of file WaveLoop\&.h\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

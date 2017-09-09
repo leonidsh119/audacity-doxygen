@@ -1,0 +1,348 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="_f_i_f_o_sample_buffer_8cpp" kind="file" language="C++">
+    <compoundname>FIFOSampleBuffer.cpp</compoundname>
+    <includes local="no">stdlib.h</includes>
+    <includes refid="memory_8h" local="no">memory.h</includes>
+    <includes local="no">string.h</includes>
+    <includes refid="assert_8h" local="no">assert.h</includes>
+    <includes refid="_f_i_f_o_sample_buffer_8h" local="yes">FIFOSampleBuffer.h</includes>
+    <incdepgraph>
+      <node id="32246">
+        <label>FLAC/ordinals.h</label>
+        <link refid="ordinals_8h"/>
+        <childnode refid="32247" relation="include">
+        </childnode>
+      </node>
+      <node id="32247">
+        <label>stdint.h</label>
+      </node>
+      <node id="32243">
+        <label>stdlib.h</label>
+      </node>
+      <node id="32253">
+        <label>stdexcept</label>
+      </node>
+      <node id="32251">
+        <label>FIFOSamplePipe.h</label>
+        <link refid="_f_i_f_o_sample_pipe_8h"/>
+        <childnode refid="32249" relation="include">
+        </childnode>
+        <childnode refid="32243" relation="include">
+        </childnode>
+        <childnode refid="32252" relation="include">
+        </childnode>
+      </node>
+      <node id="32244">
+        <label>memory.h</label>
+        <link refid="memory_8h"/>
+        <childnode refid="32243" relation="include">
+        </childnode>
+        <childnode refid="32245" relation="include">
+        </childnode>
+        <childnode refid="32246" relation="include">
+        </childnode>
+      </node>
+      <node id="32249">
+        <label>assert.h</label>
+        <link refid="assert_8h"/>
+      </node>
+      <node id="32248">
+        <label>string.h</label>
+      </node>
+      <node id="32245">
+        <label>private/float.h</label>
+        <link refid="float_8h"/>
+        <childnode refid="32246" relation="include">
+        </childnode>
+      </node>
+      <node id="32250">
+        <label>FIFOSampleBuffer.h</label>
+        <link refid="_f_i_f_o_sample_buffer_8h"/>
+        <childnode refid="32251" relation="include">
+        </childnode>
+      </node>
+      <node id="32242">
+        <label>C:/_dev/OpenU/Audacity/audacity/lib-src/soundtouch/source/SoundTouch/FIFOSampleBuffer.cpp</label>
+        <link refid="FIFOSampleBuffer.cpp"/>
+        <childnode refid="32243" relation="include">
+        </childnode>
+        <childnode refid="32244" relation="include">
+        </childnode>
+        <childnode refid="32248" relation="include">
+        </childnode>
+        <childnode refid="32249" relation="include">
+        </childnode>
+        <childnode refid="32250" relation="include">
+        </childnode>
+      </node>
+      <node id="32252">
+        <label>STTypes.h</label>
+        <link refid="_s_t_types_8h"/>
+        <childnode refid="32253" relation="include">
+        </childnode>
+      </node>
+    </incdepgraph>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="18"><highlight class="normal"></highlight><highlight class="comment">//<sp/>Last<sp/>changed<sp/><sp/>:<sp/>$Date:<sp/>2012-11-08<sp/>20:53:01<sp/>+0200<sp/>(Thu,<sp/>08<sp/>Nov<sp/>2012)<sp/>$</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="19"><highlight class="normal"></highlight><highlight class="comment">//<sp/>File<sp/>revision<sp/>:<sp/>$Revision:<sp/>4<sp/>$</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="20"><highlight class="normal"></highlight><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="21"><highlight class="normal"></highlight><highlight class="comment">//<sp/>$Id:<sp/>FIFOSampleBuffer.cpp<sp/>160<sp/>2012-11-08<sp/>18:53:01Z<sp/>oparviai<sp/>$</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="22"><highlight class="normal"></highlight><highlight class="comment">//</highlight></codeline>
+<codeline lineno="24"><highlight class="comment"></highlight><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="25"><highlight class="normal"></highlight><highlight class="comment">//<sp/>License<sp/>:</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="26"><highlight class="normal"></highlight><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="27"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>SoundTouch<sp/>audio<sp/>processing<sp/>library</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="28"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>Copyright<sp/>(c)<sp/>Olli<sp/>Parviainen</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="29"><highlight class="normal"></highlight><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="30"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>This<sp/>library<sp/>is<sp/>free<sp/>software;<sp/>you<sp/>can<sp/>redistribute<sp/>it<sp/>and/or</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="31"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>modify<sp/>it<sp/>under<sp/>the<sp/>terms<sp/>of<sp/>the<sp/>GNU<sp/>Lesser<sp/>General<sp/>Public</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="32"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>License<sp/>as<sp/>published<sp/>by<sp/>the<sp/>Free<sp/>Software<sp/>Foundation;<sp/>either</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="33"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>version<sp/>2.1<sp/>of<sp/>the<sp/>License,<sp/>or<sp/>(at<sp/>your<sp/>option)<sp/>any<sp/>later<sp/>version.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="34"><highlight class="normal"></highlight><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="35"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>This<sp/>library<sp/>is<sp/>distributed<sp/>in<sp/>the<sp/>hope<sp/>that<sp/>it<sp/>will<sp/>be<sp/>useful,</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="36"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>but<sp/>WITHOUT<sp/>ANY<sp/>WARRANTY;<sp/>without<sp/>even<sp/>the<sp/>implied<sp/>warranty<sp/>of</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="37"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>MERCHANTABILITY<sp/>or<sp/>FITNESS<sp/>FOR<sp/>A<sp/>PARTICULAR<sp/>PURPOSE.<sp/><sp/>See<sp/>the<sp/>GNU</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="38"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>Lesser<sp/>General<sp/>Public<sp/>License<sp/>for<sp/>more<sp/>details.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="39"><highlight class="normal"></highlight><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="40"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>You<sp/>should<sp/>have<sp/>received<sp/>a<sp/>copy<sp/>of<sp/>the<sp/>GNU<sp/>Lesser<sp/>General<sp/>Public</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="41"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>License<sp/>along<sp/>with<sp/>this<sp/>library;<sp/>if<sp/>not,<sp/>write<sp/>to<sp/>the<sp/>Free<sp/>Software</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="42"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>Foundation,<sp/>Inc.,<sp/>59<sp/>Temple<sp/>Place,<sp/>Suite<sp/>330,<sp/>Boston,<sp/>MA<sp/><sp/>02111-1307<sp/><sp/>USA</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="43"><highlight class="normal"></highlight><highlight class="comment">//</highlight></codeline>
+<codeline lineno="45"><highlight class="comment"></highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="46"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;stdlib.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="47"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="memory_8h" kindref="compound">memory.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="48"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;string.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="49"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="assert_8h" kindref="compound">assert.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="50"><highlight class="normal"></highlight></codeline>
+<codeline lineno="51"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="_f_i_f_o_sample_buffer_8h" kindref="compound">FIFOSampleBuffer.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="52"><highlight class="normal"></highlight></codeline>
+<codeline lineno="53"><highlight class="normal"></highlight><highlight class="keyword">using<sp/>namespace<sp/></highlight><highlight class="normal"><ref refid="namespacesoundtouch" kindref="compound">soundtouch</ref>;</highlight></codeline>
+<codeline lineno="54"><highlight class="normal"></highlight></codeline>
+<codeline lineno="55"><highlight class="normal"></highlight><highlight class="comment">//<sp/>Constructor</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="56" refid="classsoundtouch_1_1_f_i_f_o_sample_buffer_1a5b227717b07215a1fb7a5125f2418dde" refkind="member"><highlight class="normal"><ref refid="classsoundtouch_1_1_f_i_f_o_sample_buffer_1a5b227717b07215a1fb7a5125f2418dde" kindref="member">FIFOSampleBuffer::FIFOSampleBuffer</ref>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>numChannels)</highlight></codeline>
+<codeline lineno="57"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="58"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="libid3tag_2global_8h_1af576bf8ffa22a44e53018c67095ffbf0" kindref="member">assert</ref>(numChannels<sp/>&gt;<sp/>0);</highlight></codeline>
+<codeline lineno="59"><highlight class="normal"><sp/><sp/><sp/><sp/>sizeInBytes<sp/>=<sp/>0;<sp/></highlight><highlight class="comment">//<sp/>reasonable<sp/>initial<sp/>value</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="60"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structbuffer" kindref="compound">buffer</ref><sp/>=<sp/><ref refid="getopt1_8c_1a070d2ce7b6bb7e5c05602aa8c308d0c4" kindref="member">NULL</ref>;</highlight></codeline>
+<codeline lineno="61"><highlight class="normal"><sp/><sp/><sp/><sp/>bufferUnaligned<sp/>=<sp/><ref refid="getopt1_8c_1a070d2ce7b6bb7e5c05602aa8c308d0c4" kindref="member">NULL</ref>;</highlight></codeline>
+<codeline lineno="62"><highlight class="normal"><sp/><sp/><sp/><sp/>samplesInBuffer<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="63"><highlight class="normal"><sp/><sp/><sp/><sp/>bufferPos<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="64"><highlight class="normal"><sp/><sp/><sp/><sp/>channels<sp/>=<sp/>(<ref refid="_s_t_types_8h_1a91ad9478d81a7aaf2593e8d9c3d06a14" kindref="member">uint</ref>)numChannels;</highlight></codeline>
+<codeline lineno="65"><highlight class="normal"><sp/><sp/><sp/><sp/>ensureCapacity(32);<sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>allocate<sp/>initial<sp/>capacity<sp/></highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="66"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="67"><highlight class="normal"></highlight></codeline>
+<codeline lineno="68"><highlight class="normal"></highlight></codeline>
+<codeline lineno="69"><highlight class="normal"></highlight><highlight class="comment">//<sp/>destructor</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="70" refid="classsoundtouch_1_1_f_i_f_o_sample_buffer_1adc9e09731283269276d3b00d68cb45e3" refkind="member"><highlight class="normal"><ref refid="classsoundtouch_1_1_f_i_f_o_sample_buffer_1adc9e09731283269276d3b00d68cb45e3" kindref="member">FIFOSampleBuffer::~FIFOSampleBuffer</ref>()</highlight></codeline>
+<codeline lineno="71"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="72"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">delete</highlight><highlight class="normal">[]<sp/>bufferUnaligned;</highlight></codeline>
+<codeline lineno="73"><highlight class="normal"><sp/><sp/><sp/><sp/>bufferUnaligned<sp/>=<sp/><ref refid="getopt1_8c_1a070d2ce7b6bb7e5c05602aa8c308d0c4" kindref="member">NULL</ref>;</highlight></codeline>
+<codeline lineno="74"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structbuffer" kindref="compound">buffer</ref><sp/>=<sp/><ref refid="getopt1_8c_1a070d2ce7b6bb7e5c05602aa8c308d0c4" kindref="member">NULL</ref>;</highlight></codeline>
+<codeline lineno="75"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="76"><highlight class="normal"></highlight></codeline>
+<codeline lineno="77"><highlight class="normal"></highlight></codeline>
+<codeline lineno="78"><highlight class="normal"></highlight><highlight class="comment">//<sp/>Sets<sp/>number<sp/>of<sp/>channels,<sp/>1<sp/>=<sp/>mono,<sp/>2<sp/>=<sp/>stereo</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="79" refid="classsoundtouch_1_1_f_i_f_o_sample_buffer_1a8e9630f4f9c41ef1be3f44d546be0e87" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classsoundtouch_1_1_f_i_f_o_sample_buffer_1a8e9630f4f9c41ef1be3f44d546be0e87" kindref="member">FIFOSampleBuffer::setChannels</ref>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>numChannels)</highlight></codeline>
+<codeline lineno="80"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="81"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="_s_t_types_8h_1a91ad9478d81a7aaf2593e8d9c3d06a14" kindref="member">uint</ref><sp/>usedBytes;</highlight></codeline>
+<codeline lineno="82"><highlight class="normal"></highlight></codeline>
+<codeline lineno="83"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="libid3tag_2global_8h_1af576bf8ffa22a44e53018c67095ffbf0" kindref="member">assert</ref>(numChannels<sp/>&gt;<sp/>0);</highlight></codeline>
+<codeline lineno="84"><highlight class="normal"><sp/><sp/><sp/><sp/>usedBytes<sp/>=<sp/>channels<sp/>*<sp/>samplesInBuffer;</highlight></codeline>
+<codeline lineno="85"><highlight class="normal"><sp/><sp/><sp/><sp/>channels<sp/>=<sp/>(<ref refid="_s_t_types_8h_1a91ad9478d81a7aaf2593e8d9c3d06a14" kindref="member">uint</ref>)numChannels;</highlight></codeline>
+<codeline lineno="86"><highlight class="normal"><sp/><sp/><sp/><sp/>samplesInBuffer<sp/>=<sp/>usedBytes<sp/>/<sp/>channels;</highlight></codeline>
+<codeline lineno="87"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="88"><highlight class="normal"></highlight></codeline>
+<codeline lineno="89"><highlight class="normal"></highlight></codeline>
+<codeline lineno="90"><highlight class="normal"></highlight><highlight class="comment">//<sp/>if<sp/>output<sp/>location<sp/>pointer<sp/>&apos;bufferPos&apos;<sp/>isn&apos;t<sp/>zero,<sp/>&apos;rewinds&apos;<sp/>the<sp/>buffer<sp/>and</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="91"><highlight class="normal"></highlight><highlight class="comment">//<sp/>zeroes<sp/>this<sp/>pointer<sp/>by<sp/>copying<sp/>samples<sp/>from<sp/>the<sp/>&apos;bufferPos&apos;<sp/>pointer<sp/></highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="92"><highlight class="normal"></highlight><highlight class="comment">//<sp/>location<sp/>on<sp/>to<sp/>the<sp/>beginning<sp/>of<sp/>the<sp/>buffer.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="93"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>FIFOSampleBuffer::rewind()</highlight></codeline>
+<codeline lineno="94"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="95"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<ref refid="structbuffer" kindref="compound">buffer</ref><sp/>&amp;&amp;<sp/>bufferPos)<sp/></highlight></codeline>
+<codeline lineno="96"><highlight class="normal"><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="97"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>memmove(<ref refid="structbuffer" kindref="compound">buffer</ref>,<sp/><ref refid="classsoundtouch_1_1_f_i_f_o_sample_buffer_1ac5342c9dbb7863c54500501d74c6a2d4" kindref="member">ptrBegin</ref>(),<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(<ref refid="namespacesoundtouch_1a97cfd29a7abb4d4b2a72f803d5b5850c" kindref="member">SAMPLETYPE</ref>)<sp/>*<sp/>channels<sp/>*<sp/>samplesInBuffer);</highlight></codeline>
+<codeline lineno="98"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>bufferPos<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="99"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="100"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="101"><highlight class="normal"></highlight></codeline>
+<codeline lineno="102"><highlight class="normal"></highlight></codeline>
+<codeline lineno="103"><highlight class="normal"></highlight><highlight class="comment">//<sp/>Adds<sp/>&apos;numSamples&apos;<sp/>pcs<sp/>of<sp/>samples<sp/>from<sp/>the<sp/>&apos;samples&apos;<sp/>memory<sp/>position<sp/>to<sp/></highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="104"><highlight class="normal"></highlight><highlight class="comment">//<sp/>the<sp/>sample<sp/>buffer.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="105" refid="classsoundtouch_1_1_f_i_f_o_sample_buffer_1a94f2865cbc6f487b936dd69424410e97" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classsoundtouch_1_1_f_i_f_o_sample_buffer_1a94f2865cbc6f487b936dd69424410e97" kindref="member">FIFOSampleBuffer::putSamples</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="namespacesoundtouch_1a97cfd29a7abb4d4b2a72f803d5b5850c" kindref="member">SAMPLETYPE</ref><sp/>*<ref refid="test__rw__echo_8c_1a39c8d1039645bc924aecc49d76f472a0" kindref="member">samples</ref>,<sp/><ref refid="_s_t_types_8h_1a91ad9478d81a7aaf2593e8d9c3d06a14" kindref="member">uint</ref><sp/>nSamples)</highlight></codeline>
+<codeline lineno="106"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="107"><highlight class="normal"><sp/><sp/><sp/><sp/>memcpy(<ref refid="classsoundtouch_1_1_f_i_f_o_sample_buffer_1a03d285e2148ec382caefd4d399ccb720" kindref="member">ptrEnd</ref>(nSamples),<sp/>samples,<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(<ref refid="namespacesoundtouch_1a97cfd29a7abb4d4b2a72f803d5b5850c" kindref="member">SAMPLETYPE</ref>)<sp/>*<sp/>nSamples<sp/>*<sp/>channels);</highlight></codeline>
+<codeline lineno="108"><highlight class="normal"><sp/><sp/><sp/><sp/>samplesInBuffer<sp/>+=<sp/>nSamples;</highlight></codeline>
+<codeline lineno="109"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="110"><highlight class="normal"></highlight></codeline>
+<codeline lineno="111"><highlight class="normal"></highlight></codeline>
+<codeline lineno="112"><highlight class="normal"></highlight><highlight class="comment">//<sp/>Increases<sp/>the<sp/>number<sp/>of<sp/>samples<sp/>in<sp/>the<sp/>buffer<sp/>without<sp/>copying<sp/>any<sp/>actual</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="113"><highlight class="normal"></highlight><highlight class="comment">//<sp/>samples.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="114"><highlight class="normal"></highlight><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="115"><highlight class="normal"></highlight><highlight class="comment">//<sp/>This<sp/>function<sp/>is<sp/>used<sp/>to<sp/>update<sp/>the<sp/>number<sp/>of<sp/>samples<sp/>in<sp/>the<sp/>sample<sp/>buffer</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="116"><highlight class="normal"></highlight><highlight class="comment">//<sp/>when<sp/>accessing<sp/>the<sp/>buffer<sp/>directly<sp/>with<sp/>&apos;ptrEnd&apos;<sp/>function.<sp/>Please<sp/>be<sp/></highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="117"><highlight class="normal"></highlight><highlight class="comment">//<sp/>careful<sp/>though!</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="118" refid="classsoundtouch_1_1_f_i_f_o_sample_buffer_1afda08dabb67d6015e9cfb8a7045a6b5c" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classsoundtouch_1_1_f_i_f_o_sample_buffer_1a94f2865cbc6f487b936dd69424410e97" kindref="member">FIFOSampleBuffer::putSamples</ref>(<ref refid="_s_t_types_8h_1a91ad9478d81a7aaf2593e8d9c3d06a14" kindref="member">uint</ref><sp/>nSamples)</highlight></codeline>
+<codeline lineno="119"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="120"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="_s_t_types_8h_1a91ad9478d81a7aaf2593e8d9c3d06a14" kindref="member">uint</ref><sp/>req;</highlight></codeline>
+<codeline lineno="121"><highlight class="normal"></highlight></codeline>
+<codeline lineno="122"><highlight class="normal"><sp/><sp/><sp/><sp/>req<sp/>=<sp/>samplesInBuffer<sp/>+<sp/>nSamples;</highlight></codeline>
+<codeline lineno="123"><highlight class="normal"><sp/><sp/><sp/><sp/>ensureCapacity(req);</highlight></codeline>
+<codeline lineno="124"><highlight class="normal"><sp/><sp/><sp/><sp/>samplesInBuffer<sp/>+=<sp/>nSamples;</highlight></codeline>
+<codeline lineno="125"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="126"><highlight class="normal"></highlight></codeline>
+<codeline lineno="127"><highlight class="normal"></highlight></codeline>
+<codeline lineno="128"><highlight class="normal"></highlight><highlight class="comment">//<sp/>Returns<sp/>a<sp/>pointer<sp/>to<sp/>the<sp/>end<sp/>of<sp/>the<sp/>used<sp/>part<sp/>of<sp/>the<sp/>sample<sp/>buffer<sp/>(i.e.<sp/></highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="129"><highlight class="normal"></highlight><highlight class="comment">//<sp/>where<sp/>the<sp/>new<sp/>samples<sp/>are<sp/>to<sp/>be<sp/>inserted).<sp/>This<sp/>function<sp/>may<sp/>be<sp/>used<sp/>for<sp/></highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="130"><highlight class="normal"></highlight><highlight class="comment">//<sp/>inserting<sp/>new<sp/>samples<sp/>into<sp/>the<sp/>sample<sp/>buffer<sp/>directly.<sp/>Please<sp/>be<sp/>careful!<sp/></highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="131"><highlight class="normal"></highlight><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="132"><highlight class="normal"></highlight><highlight class="comment">//<sp/>Parameter<sp/>&apos;slackCapacity&apos;<sp/>tells<sp/>the<sp/>function<sp/>how<sp/>much<sp/>free<sp/>capacity<sp/>(in</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="133"><highlight class="normal"></highlight><highlight class="comment">//<sp/>terms<sp/>of<sp/>samples)<sp/>there<sp/>_at<sp/>least_<sp/>should<sp/>be,<sp/>in<sp/>order<sp/>to<sp/>the<sp/>caller<sp/>to</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="134"><highlight class="normal"></highlight><highlight class="comment">//<sp/>succesfully<sp/>insert<sp/>all<sp/>the<sp/>required<sp/>samples<sp/>to<sp/>the<sp/>buffer.<sp/>When<sp/>necessary,<sp/></highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="135"><highlight class="normal"></highlight><highlight class="comment">//<sp/>the<sp/>function<sp/>grows<sp/>the<sp/>buffer<sp/>size<sp/>to<sp/>comply<sp/>with<sp/>this<sp/>requirement.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="136"><highlight class="normal"></highlight><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="137"><highlight class="normal"></highlight><highlight class="comment">//<sp/>When<sp/>using<sp/>this<sp/>function<sp/>as<sp/>means<sp/>for<sp/>inserting<sp/>new<sp/>samples,<sp/>also<sp/>remember<sp/></highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="138"><highlight class="normal"></highlight><highlight class="comment">//<sp/>to<sp/>increase<sp/>the<sp/>sample<sp/>count<sp/>afterwards,<sp/>by<sp/>calling<sp/><sp/>the<sp/></highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="139"><highlight class="normal"></highlight><highlight class="comment">//<sp/>&apos;putSamples(numSamples)&apos;<sp/>function.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="140" refid="classsoundtouch_1_1_f_i_f_o_sample_buffer_1a03d285e2148ec382caefd4d399ccb720" refkind="member"><highlight class="normal"><ref refid="namespacesoundtouch_1a97cfd29a7abb4d4b2a72f803d5b5850c" kindref="member">SAMPLETYPE</ref><sp/>*<ref refid="classsoundtouch_1_1_f_i_f_o_sample_buffer_1a03d285e2148ec382caefd4d399ccb720" kindref="member">FIFOSampleBuffer::ptrEnd</ref>(<ref refid="_s_t_types_8h_1a91ad9478d81a7aaf2593e8d9c3d06a14" kindref="member">uint</ref><sp/>slackCapacity)<sp/></highlight></codeline>
+<codeline lineno="141"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="142"><highlight class="normal"><sp/><sp/><sp/><sp/>ensureCapacity(samplesInBuffer<sp/>+<sp/>slackCapacity);</highlight></codeline>
+<codeline lineno="143"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="structbuffer" kindref="compound">buffer</ref><sp/>+<sp/>samplesInBuffer<sp/>*<sp/>channels;</highlight></codeline>
+<codeline lineno="144"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="145"><highlight class="normal"></highlight></codeline>
+<codeline lineno="146"><highlight class="normal"></highlight></codeline>
+<codeline lineno="147"><highlight class="normal"></highlight><highlight class="comment">//<sp/>Returns<sp/>a<sp/>pointer<sp/>to<sp/>the<sp/>beginning<sp/>of<sp/>the<sp/>currently<sp/>non-outputted<sp/>samples.<sp/></highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="148"><highlight class="normal"></highlight><highlight class="comment">//<sp/>This<sp/>function<sp/>is<sp/>provided<sp/>for<sp/>accessing<sp/>the<sp/>output<sp/>samples<sp/>directly.<sp/></highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="149"><highlight class="normal"></highlight><highlight class="comment">//<sp/>Please<sp/>be<sp/>careful!</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="150"><highlight class="normal"></highlight><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="151"><highlight class="normal"></highlight><highlight class="comment">//<sp/>When<sp/>using<sp/>this<sp/>function<sp/>to<sp/>output<sp/>samples,<sp/>also<sp/>remember<sp/>to<sp/>&apos;remove&apos;<sp/>the</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="152"><highlight class="normal"></highlight><highlight class="comment">//<sp/>outputted<sp/>samples<sp/>from<sp/>the<sp/>buffer<sp/>by<sp/>calling<sp/>the<sp/></highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="153"><highlight class="normal"></highlight><highlight class="comment">//<sp/>&apos;receiveSamples(numSamples)&apos;<sp/>function</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="154" refid="classsoundtouch_1_1_f_i_f_o_sample_buffer_1ac5342c9dbb7863c54500501d74c6a2d4" refkind="member"><highlight class="normal"><ref refid="namespacesoundtouch_1a97cfd29a7abb4d4b2a72f803d5b5850c" kindref="member">SAMPLETYPE</ref><sp/>*<ref refid="classsoundtouch_1_1_f_i_f_o_sample_buffer_1ac5342c9dbb7863c54500501d74c6a2d4" kindref="member">FIFOSampleBuffer::ptrBegin</ref>()</highlight></codeline>
+<codeline lineno="155"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="156"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="libid3tag_2global_8h_1af576bf8ffa22a44e53018c67095ffbf0" kindref="member">assert</ref>(<ref refid="structbuffer" kindref="compound">buffer</ref>);</highlight></codeline>
+<codeline lineno="157"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="structbuffer" kindref="compound">buffer</ref><sp/>+<sp/>bufferPos<sp/>*<sp/>channels;</highlight></codeline>
+<codeline lineno="158"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="159"><highlight class="normal"></highlight></codeline>
+<codeline lineno="160"><highlight class="normal"></highlight></codeline>
+<codeline lineno="161"><highlight class="normal"></highlight><highlight class="comment">//<sp/>Ensures<sp/>that<sp/>the<sp/>buffer<sp/>has<sp/>enought<sp/>capacity,<sp/>i.e.<sp/>space<sp/>for<sp/>_at<sp/>least_</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="162"><highlight class="normal"></highlight><highlight class="comment">//<sp/>&apos;capacityRequirement&apos;<sp/>number<sp/>of<sp/>samples.<sp/>The<sp/>buffer<sp/>is<sp/>grown<sp/>in<sp/>steps<sp/>of</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="163"><highlight class="normal"></highlight><highlight class="comment">//<sp/>4<sp/>kilobytes<sp/>to<sp/>eliminate<sp/>the<sp/>need<sp/>for<sp/>frequently<sp/>growing<sp/>up<sp/>the<sp/>buffer,</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="164"><highlight class="normal"></highlight><highlight class="comment">//<sp/>as<sp/>well<sp/>as<sp/>to<sp/>round<sp/>the<sp/>buffer<sp/>size<sp/>up<sp/>to<sp/>the<sp/>virtual<sp/>memory<sp/>page<sp/>size.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="165"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>FIFOSampleBuffer::ensureCapacity(<ref refid="_s_t_types_8h_1a91ad9478d81a7aaf2593e8d9c3d06a14" kindref="member">uint</ref><sp/>capacityRequirement)</highlight></codeline>
+<codeline lineno="166"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="167"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="namespacesoundtouch_1a97cfd29a7abb4d4b2a72f803d5b5850c" kindref="member">SAMPLETYPE</ref><sp/>*tempUnaligned,<sp/>*temp;</highlight></codeline>
+<codeline lineno="168"><highlight class="normal"></highlight></codeline>
+<codeline lineno="169"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(capacityRequirement<sp/>&gt;<sp/>getCapacity())<sp/></highlight></codeline>
+<codeline lineno="170"><highlight class="normal"><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="171"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>enlarge<sp/>the<sp/>buffer<sp/>in<sp/>4kbyte<sp/>steps<sp/>(round<sp/>up<sp/>to<sp/>next<sp/>4k<sp/>boundary)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="172"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>sizeInBytes<sp/>=<sp/>(capacityRequirement<sp/>*<sp/>channels<sp/>*<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(<ref refid="namespacesoundtouch_1a97cfd29a7abb4d4b2a72f803d5b5850c" kindref="member">SAMPLETYPE</ref>)<sp/>+<sp/>4095)<sp/>&amp;<sp/>(<ref refid="_s_t_types_8h_1a91ad9478d81a7aaf2593e8d9c3d06a14" kindref="member">uint</ref>)-4096;</highlight></codeline>
+<codeline lineno="173"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="libid3tag_2global_8h_1af576bf8ffa22a44e53018c67095ffbf0" kindref="member">assert</ref>(sizeInBytes<sp/>%<sp/>2<sp/>==<sp/>0);</highlight></codeline>
+<codeline lineno="174"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>tempUnaligned<sp/>=<sp/></highlight><highlight class="keyword">new</highlight><highlight class="normal"><sp/><ref refid="namespacesoundtouch_1a97cfd29a7abb4d4b2a72f803d5b5850c" kindref="member">SAMPLETYPE</ref>[sizeInBytes<sp/>/<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(<ref refid="namespacesoundtouch_1a97cfd29a7abb4d4b2a72f803d5b5850c" kindref="member">SAMPLETYPE</ref>)<sp/>+<sp/>16<sp/>/<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(<ref refid="namespacesoundtouch_1a97cfd29a7abb4d4b2a72f803d5b5850c" kindref="member">SAMPLETYPE</ref>)];</highlight></codeline>
+<codeline lineno="175"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(tempUnaligned<sp/>==<sp/><ref refid="getopt1_8c_1a070d2ce7b6bb7e5c05602aa8c308d0c4" kindref="member">NULL</ref>)</highlight></codeline>
+<codeline lineno="176"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="177"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="_s_t_types_8h_1afa654bbb8cd596f823ab5ff898767363" kindref="member">ST_THROW_RT_ERROR</ref>(</highlight><highlight class="stringliteral">&quot;Couldn&apos;t<sp/>allocate<sp/>memory!\n&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="178"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="179"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Align<sp/>the<sp/>buffer<sp/>to<sp/>begin<sp/>at<sp/>16byte<sp/>cache<sp/>line<sp/>boundary<sp/>for<sp/>optimal<sp/>performance</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="180"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>temp<sp/>=<sp/>(<ref refid="namespacesoundtouch_1a97cfd29a7abb4d4b2a72f803d5b5850c" kindref="member">SAMPLETYPE</ref><sp/>*)<ref refid="_s_t_types_8h_1a0d55a6111a9ebb471a6e763827bdce2b" kindref="member">SOUNDTOUCH_ALIGN_POINTER_16</ref>(tempUnaligned);</highlight></codeline>
+<codeline lineno="181"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(samplesInBuffer)</highlight></codeline>
+<codeline lineno="182"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="183"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>memcpy(temp,<sp/><ref refid="classsoundtouch_1_1_f_i_f_o_sample_buffer_1ac5342c9dbb7863c54500501d74c6a2d4" kindref="member">ptrBegin</ref>(),<sp/>samplesInBuffer<sp/>*<sp/>channels<sp/>*<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(<ref refid="namespacesoundtouch_1a97cfd29a7abb4d4b2a72f803d5b5850c" kindref="member">SAMPLETYPE</ref>));</highlight></codeline>
+<codeline lineno="184"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="185"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">delete</highlight><highlight class="normal">[]<sp/>bufferUnaligned;</highlight></codeline>
+<codeline lineno="186"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="structbuffer" kindref="compound">buffer</ref><sp/>=<sp/>temp;</highlight></codeline>
+<codeline lineno="187"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>bufferUnaligned<sp/>=<sp/>tempUnaligned;</highlight></codeline>
+<codeline lineno="188"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>bufferPos<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="189"><highlight class="normal"><sp/><sp/><sp/><sp/>}<sp/></highlight></codeline>
+<codeline lineno="190"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/></highlight></codeline>
+<codeline lineno="191"><highlight class="normal"><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="192"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>simply<sp/>rewind<sp/>the<sp/>buffer<sp/>(if<sp/>necessary)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="193"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>rewind();</highlight></codeline>
+<codeline lineno="194"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="195"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="196"><highlight class="normal"></highlight></codeline>
+<codeline lineno="197"><highlight class="normal"></highlight></codeline>
+<codeline lineno="198"><highlight class="normal"></highlight><highlight class="comment">//<sp/>Returns<sp/>the<sp/>current<sp/>buffer<sp/>capacity<sp/>in<sp/>terms<sp/>of<sp/>samples</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="199"><highlight class="normal"><ref refid="_s_t_types_8h_1a91ad9478d81a7aaf2593e8d9c3d06a14" kindref="member">uint</ref><sp/>FIFOSampleBuffer::getCapacity()</highlight><highlight class="keyword"><sp/>const</highlight></codeline>
+<codeline lineno="200"><highlight class="keyword"></highlight><highlight class="normal">{</highlight></codeline>
+<codeline lineno="201"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>sizeInBytes<sp/>/<sp/>(channels<sp/>*<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(<ref refid="namespacesoundtouch_1a97cfd29a7abb4d4b2a72f803d5b5850c" kindref="member">SAMPLETYPE</ref>));</highlight></codeline>
+<codeline lineno="202"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="203"><highlight class="normal"></highlight></codeline>
+<codeline lineno="204"><highlight class="normal"></highlight></codeline>
+<codeline lineno="205"><highlight class="normal"></highlight><highlight class="comment">//<sp/>Returns<sp/>the<sp/>number<sp/>of<sp/>samples<sp/>currently<sp/>in<sp/>the<sp/>buffer</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="206" refid="classsoundtouch_1_1_f_i_f_o_sample_buffer_1a6b6b914d52e4e5d952f160e9c3b54d66" refkind="member"><highlight class="normal"><ref refid="_s_t_types_8h_1a91ad9478d81a7aaf2593e8d9c3d06a14" kindref="member">uint</ref><sp/><ref refid="classsoundtouch_1_1_f_i_f_o_sample_buffer_1a6b6b914d52e4e5d952f160e9c3b54d66" kindref="member">FIFOSampleBuffer::numSamples</ref>()</highlight><highlight class="keyword"><sp/>const</highlight></codeline>
+<codeline lineno="207"><highlight class="keyword"></highlight><highlight class="normal">{</highlight></codeline>
+<codeline lineno="208"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>samplesInBuffer;</highlight></codeline>
+<codeline lineno="209"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="210"><highlight class="normal"></highlight></codeline>
+<codeline lineno="211"><highlight class="normal"></highlight></codeline>
+<codeline lineno="212"><highlight class="normal"></highlight><highlight class="comment">//<sp/>Output<sp/>samples<sp/>from<sp/>beginning<sp/>of<sp/>the<sp/>sample<sp/>buffer.<sp/>Copies<sp/>demanded<sp/>number</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="213"><highlight class="normal"></highlight><highlight class="comment">//<sp/>of<sp/>samples<sp/>to<sp/>output<sp/>and<sp/>removes<sp/>them<sp/>from<sp/>the<sp/>sample<sp/>buffer.<sp/>If<sp/>there</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="214"><highlight class="normal"></highlight><highlight class="comment">//<sp/>are<sp/>less<sp/>than<sp/>&apos;numsample&apos;<sp/>samples<sp/>in<sp/>the<sp/>buffer,<sp/>returns<sp/>all<sp/>available.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="215"><highlight class="normal"></highlight><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="216"><highlight class="normal"></highlight><highlight class="comment">//<sp/>Returns<sp/>number<sp/>of<sp/>samples<sp/>copied.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="217" refid="classsoundtouch_1_1_f_i_f_o_sample_buffer_1a9bec369673be4b4d328befe0afd9f137" refkind="member"><highlight class="normal"><ref refid="_s_t_types_8h_1a91ad9478d81a7aaf2593e8d9c3d06a14" kindref="member">uint</ref><sp/><ref refid="classsoundtouch_1_1_f_i_f_o_sample_buffer_1a9bec369673be4b4d328befe0afd9f137" kindref="member">FIFOSampleBuffer::receiveSamples</ref>(<ref refid="namespacesoundtouch_1a97cfd29a7abb4d4b2a72f803d5b5850c" kindref="member">SAMPLETYPE</ref><sp/>*<ref refid="namespacelv2specgen_1a653e2b7722801dea4d25040ac958b631" kindref="member">output</ref>,<sp/><ref refid="_s_t_types_8h_1a91ad9478d81a7aaf2593e8d9c3d06a14" kindref="member">uint</ref><sp/>maxSamples)</highlight></codeline>
+<codeline lineno="218"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="219"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="_s_t_types_8h_1a91ad9478d81a7aaf2593e8d9c3d06a14" kindref="member">uint</ref><sp/>num;</highlight></codeline>
+<codeline lineno="220"><highlight class="normal"></highlight></codeline>
+<codeline lineno="221"><highlight class="normal"><sp/><sp/><sp/><sp/>num<sp/>=<sp/>(maxSamples<sp/>&gt;<sp/>samplesInBuffer)<sp/>?<sp/>samplesInBuffer<sp/>:<sp/>maxSamples;</highlight></codeline>
+<codeline lineno="222"><highlight class="normal"></highlight></codeline>
+<codeline lineno="223"><highlight class="normal"><sp/><sp/><sp/><sp/>memcpy(output,<sp/><ref refid="classsoundtouch_1_1_f_i_f_o_sample_buffer_1ac5342c9dbb7863c54500501d74c6a2d4" kindref="member">ptrBegin</ref>(),<sp/>channels<sp/>*<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(<ref refid="namespacesoundtouch_1a97cfd29a7abb4d4b2a72f803d5b5850c" kindref="member">SAMPLETYPE</ref>)<sp/>*<sp/>num);</highlight></codeline>
+<codeline lineno="224"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="classsoundtouch_1_1_f_i_f_o_sample_buffer_1a9bec369673be4b4d328befe0afd9f137" kindref="member">receiveSamples</ref>(num);</highlight></codeline>
+<codeline lineno="225"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="226"><highlight class="normal"></highlight></codeline>
+<codeline lineno="227"><highlight class="normal"></highlight></codeline>
+<codeline lineno="228"><highlight class="normal"></highlight><highlight class="comment">//<sp/>Removes<sp/>samples<sp/>from<sp/>the<sp/>beginning<sp/>of<sp/>the<sp/>sample<sp/>buffer<sp/>without<sp/>copying<sp/>them</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="229"><highlight class="normal"></highlight><highlight class="comment">//<sp/>anywhere.<sp/>Used<sp/>to<sp/>reduce<sp/>the<sp/>number<sp/>of<sp/>samples<sp/>in<sp/>the<sp/>buffer,<sp/>when<sp/>accessing</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="230"><highlight class="normal"></highlight><highlight class="comment">//<sp/>the<sp/>sample<sp/>buffer<sp/>with<sp/>the<sp/>&apos;ptrBegin&apos;<sp/>function.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="231" refid="classsoundtouch_1_1_f_i_f_o_sample_buffer_1a1956c4d63018ed733d70125337265372" refkind="member"><highlight class="normal"><ref refid="_s_t_types_8h_1a91ad9478d81a7aaf2593e8d9c3d06a14" kindref="member">uint</ref><sp/><ref refid="classsoundtouch_1_1_f_i_f_o_sample_buffer_1a9bec369673be4b4d328befe0afd9f137" kindref="member">FIFOSampleBuffer::receiveSamples</ref>(<ref refid="_s_t_types_8h_1a91ad9478d81a7aaf2593e8d9c3d06a14" kindref="member">uint</ref><sp/>maxSamples)</highlight></codeline>
+<codeline lineno="232"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="233"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(maxSamples<sp/>&gt;=<sp/>samplesInBuffer)</highlight></codeline>
+<codeline lineno="234"><highlight class="normal"><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="235"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="_s_t_types_8h_1a91ad9478d81a7aaf2593e8d9c3d06a14" kindref="member">uint</ref><sp/>temp;</highlight></codeline>
+<codeline lineno="236"><highlight class="normal"></highlight></codeline>
+<codeline lineno="237"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>temp<sp/>=<sp/>samplesInBuffer;</highlight></codeline>
+<codeline lineno="238"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>samplesInBuffer<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="239"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>temp;</highlight></codeline>
+<codeline lineno="240"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="241"><highlight class="normal"></highlight></codeline>
+<codeline lineno="242"><highlight class="normal"><sp/><sp/><sp/><sp/>samplesInBuffer<sp/>-=<sp/>maxSamples;</highlight></codeline>
+<codeline lineno="243"><highlight class="normal"><sp/><sp/><sp/><sp/>bufferPos<sp/>+=<sp/>maxSamples;</highlight></codeline>
+<codeline lineno="244"><highlight class="normal"></highlight></codeline>
+<codeline lineno="245"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>maxSamples;</highlight></codeline>
+<codeline lineno="246"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="247"><highlight class="normal"></highlight></codeline>
+<codeline lineno="248"><highlight class="normal"></highlight></codeline>
+<codeline lineno="249"><highlight class="normal"></highlight><highlight class="comment">//<sp/>Returns<sp/>nonzero<sp/>if<sp/>the<sp/>sample<sp/>buffer<sp/>is<sp/>empty</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="250" refid="classsoundtouch_1_1_f_i_f_o_sample_buffer_1a6e42894951c896ed0e71bd90ccdf9147" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="classsoundtouch_1_1_f_i_f_o_sample_buffer_1a6e42894951c896ed0e71bd90ccdf9147" kindref="member">FIFOSampleBuffer::isEmpty</ref>()</highlight><highlight class="keyword"><sp/>const</highlight></codeline>
+<codeline lineno="251"><highlight class="keyword"></highlight><highlight class="normal">{</highlight></codeline>
+<codeline lineno="252"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>(samplesInBuffer<sp/>==<sp/>0)<sp/>?<sp/>1<sp/>:<sp/>0;</highlight></codeline>
+<codeline lineno="253"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="254"><highlight class="normal"></highlight></codeline>
+<codeline lineno="255"><highlight class="normal"></highlight></codeline>
+<codeline lineno="256"><highlight class="normal"></highlight><highlight class="comment">//<sp/>Clears<sp/>the<sp/>sample<sp/>buffer</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="257" refid="classsoundtouch_1_1_f_i_f_o_sample_buffer_1a2b211a51e213f86e2e5a03d0715da7b5" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classsoundtouch_1_1_f_i_f_o_sample_buffer_1a2b211a51e213f86e2e5a03d0715da7b5" kindref="member">FIFOSampleBuffer::clear</ref>()</highlight></codeline>
+<codeline lineno="258"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="259"><highlight class="normal"><sp/><sp/><sp/><sp/>samplesInBuffer<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="260"><highlight class="normal"><sp/><sp/><sp/><sp/>bufferPos<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="261"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="262"><highlight class="normal"></highlight></codeline>
+<codeline lineno="263"><highlight class="normal"></highlight></codeline>
+<codeline lineno="266" refid="classsoundtouch_1_1_f_i_f_o_sample_buffer_1a3f32f4db9c4268c9be61a32acd715f5f" refkind="member"><highlight class="normal"><ref refid="_s_t_types_8h_1a91ad9478d81a7aaf2593e8d9c3d06a14" kindref="member">uint</ref><sp/><ref refid="classsoundtouch_1_1_f_i_f_o_sample_buffer_1a3f32f4db9c4268c9be61a32acd715f5f" kindref="member">FIFOSampleBuffer::adjustAmountOfSamples</ref>(<ref refid="_s_t_types_8h_1a91ad9478d81a7aaf2593e8d9c3d06a14" kindref="member">uint</ref><sp/><ref refid="classsoundtouch_1_1_f_i_f_o_sample_buffer_1a6b6b914d52e4e5d952f160e9c3b54d66" kindref="member">numSamples</ref>)</highlight></codeline>
+<codeline lineno="267"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="268"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(numSamples<sp/>&lt;<sp/>samplesInBuffer)</highlight></codeline>
+<codeline lineno="269"><highlight class="normal"><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="270"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>samplesInBuffer<sp/>=<sp/><ref refid="classsoundtouch_1_1_f_i_f_o_sample_buffer_1a6b6b914d52e4e5d952f160e9c3b54d66" kindref="member">numSamples</ref>;</highlight></codeline>
+<codeline lineno="271"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="272"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>samplesInBuffer;</highlight></codeline>
+<codeline lineno="273"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="274"><highlight class="normal"></highlight></codeline>
+    </programlisting>
+    <location file="C:/_dev/OpenU/Audacity/audacity/lib-src/soundtouch/source/SoundTouch/FIFOSampleBuffer.cpp"/>
+  </compounddef>
+</doxygen>

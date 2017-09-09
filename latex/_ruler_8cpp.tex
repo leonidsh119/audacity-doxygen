@@ -1,0 +1,122 @@
+\hypertarget{_ruler_8cpp}{}\section{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/src/widgets/\+Ruler.cpp File Reference}
+\label{_ruler_8cpp}\index{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/src/widgets/\+Ruler.\+cpp@{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/src/widgets/\+Ruler.\+cpp}}
+{\ttfamily \#include \char`\"{}../\+Audacity.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Ruler.\+h\char`\"{}}\\*
+{\ttfamily \#include $<$math.\+h$>$}\\*
+{\ttfamily \#include $<$wx/dcscreen.\+h$>$}\\*
+{\ttfamily \#include $<$wx/dcmemory.\+h$>$}\\*
+{\ttfamily \#include $<$wx/dcbuffer.\+h$>$}\\*
+{\ttfamily \#include $<$wx/settings.\+h$>$}\\*
+{\ttfamily \#include $<$wx/menu.\+h$>$}\\*
+{\ttfamily \#include $<$wx/menuitem.\+h$>$}\\*
+{\ttfamily \#include $<$wx/tooltip.\+h$>$}\\*
+{\ttfamily \#include \char`\"{}../\+Audio\+I\+O.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../\+Internat.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../\+Project.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../toolbars/\+Control\+Tool\+Bar.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../\+Theme.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../\+All\+Theme\+Resources.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../\+Experimental.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../\+Time\+Track.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../\+Track\+Panel.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../\+Menus.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../\+Number\+Scale.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../\+Prefs.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../\+Snap.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../\+View\+Info.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../\+A\+Color.\+h\char`\"{}}\\*
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{_ruler_8cpp_af0f4ea5958763477d7c309d914586377}{S\+E\+L\+E\+C\+T\+\_\+\+T\+O\+L\+E\+R\+A\+N\+C\+E\+\_\+\+P\+I\+X\+EL}~4
+\item 
+\#define \hyperlink{_ruler_8cpp_a29790616f2fa3914a423763fe98b8e59}{P\+L\+A\+Y\+\_\+\+R\+E\+G\+I\+O\+N\+\_\+\+T\+R\+I\+A\+N\+G\+L\+E\+\_\+\+S\+I\+ZE}~6
+\item 
+\#define \hyperlink{_ruler_8cpp_a93f3e08c55357b3206eed2ab39e48f07}{P\+L\+A\+Y\+\_\+\+R\+E\+G\+I\+O\+N\+\_\+\+R\+E\+C\+T\+\_\+\+W\+I\+D\+TH}~1
+\item 
+\#define \hyperlink{_ruler_8cpp_a70b7aaafaa781292e176831d4ca5ca74}{P\+L\+A\+Y\+\_\+\+R\+E\+G\+I\+O\+N\+\_\+\+R\+E\+C\+T\+\_\+\+H\+E\+I\+G\+HT}~3
+\item 
+\#define \hyperlink{_ruler_8cpp_a9486cfc2645258e4fcf17084629b9eaa}{P\+L\+A\+Y\+\_\+\+R\+E\+G\+I\+O\+N\+\_\+\+G\+L\+O\+B\+A\+L\+\_\+\+O\+F\+F\+S\+E\+T\+\_\+Y}~7
+\item 
+\#define \hyperlink{_ruler_8cpp_ab8d7ec2c34b8ee3e5142ac2fdfd194ff}{k\+Top\+Inset}~4
+\end{DoxyCompactItemize}
+\subsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \{ \\*
+\hyperlink{_ruler_8cpp_a19516aacc906a3c234aed4c5fdb53c35afa292cfcddaf78a967ea2e799888d2bd}{On\+Toggle\+Quick\+Play\+ID} = 7000, 
+\hyperlink{_ruler_8cpp_a19516aacc906a3c234aed4c5fdb53c35adad33692ad38b45f83581db98c14a665}{On\+Sync\+Quick\+Play\+Sel\+ID}, 
+\hyperlink{_ruler_8cpp_a19516aacc906a3c234aed4c5fdb53c35a58a4bf1c38c8e1a686f37cf7790d6a44}{On\+Timeline\+Tool\+Tip\+ID}, 
+\hyperlink{_ruler_8cpp_a19516aacc906a3c234aed4c5fdb53c35a8fbfafcbc550b3c6f279e782119afbc6}{On\+Auto\+Scroll\+ID}, 
+\\*
+\hyperlink{_ruler_8cpp_a19516aacc906a3c234aed4c5fdb53c35ac4aeb881012dd1a4fde2313c68e44f10}{On\+Lock\+Play\+Region\+ID}
+ \}
+\end{DoxyCompactItemize}
+
+
+\subsection{Macro Definition Documentation}
+\index{Ruler.\+cpp@{Ruler.\+cpp}!k\+Top\+Inset@{k\+Top\+Inset}}
+\index{k\+Top\+Inset@{k\+Top\+Inset}!Ruler.\+cpp@{Ruler.\+cpp}}
+\subsubsection[{\texorpdfstring{k\+Top\+Inset}{kTopInset}}]{\setlength{\rightskip}{0pt plus 5cm}\#define k\+Top\+Inset~4}\hypertarget{_ruler_8cpp_ab8d7ec2c34b8ee3e5142ac2fdfd194ff}{}\label{_ruler_8cpp_ab8d7ec2c34b8ee3e5142ac2fdfd194ff}
+
+
+Definition at line 93 of file Ruler.\+cpp.
+
+\index{Ruler.\+cpp@{Ruler.\+cpp}!P\+L\+A\+Y\+\_\+\+R\+E\+G\+I\+O\+N\+\_\+\+G\+L\+O\+B\+A\+L\+\_\+\+O\+F\+F\+S\+E\+T\+\_\+Y@{P\+L\+A\+Y\+\_\+\+R\+E\+G\+I\+O\+N\+\_\+\+G\+L\+O\+B\+A\+L\+\_\+\+O\+F\+F\+S\+E\+T\+\_\+Y}}
+\index{P\+L\+A\+Y\+\_\+\+R\+E\+G\+I\+O\+N\+\_\+\+G\+L\+O\+B\+A\+L\+\_\+\+O\+F\+F\+S\+E\+T\+\_\+Y@{P\+L\+A\+Y\+\_\+\+R\+E\+G\+I\+O\+N\+\_\+\+G\+L\+O\+B\+A\+L\+\_\+\+O\+F\+F\+S\+E\+T\+\_\+Y}!Ruler.\+cpp@{Ruler.\+cpp}}
+\subsubsection[{\texorpdfstring{P\+L\+A\+Y\+\_\+\+R\+E\+G\+I\+O\+N\+\_\+\+G\+L\+O\+B\+A\+L\+\_\+\+O\+F\+F\+S\+E\+T\+\_\+Y}{PLAY_REGION_GLOBAL_OFFSET_Y}}]{\setlength{\rightskip}{0pt plus 5cm}\#define P\+L\+A\+Y\+\_\+\+R\+E\+G\+I\+O\+N\+\_\+\+G\+L\+O\+B\+A\+L\+\_\+\+O\+F\+F\+S\+E\+T\+\_\+Y~7}\hypertarget{_ruler_8cpp_a9486cfc2645258e4fcf17084629b9eaa}{}\label{_ruler_8cpp_a9486cfc2645258e4fcf17084629b9eaa}
+
+
+Definition at line 91 of file Ruler.\+cpp.
+
+\index{Ruler.\+cpp@{Ruler.\+cpp}!P\+L\+A\+Y\+\_\+\+R\+E\+G\+I\+O\+N\+\_\+\+R\+E\+C\+T\+\_\+\+H\+E\+I\+G\+HT@{P\+L\+A\+Y\+\_\+\+R\+E\+G\+I\+O\+N\+\_\+\+R\+E\+C\+T\+\_\+\+H\+E\+I\+G\+HT}}
+\index{P\+L\+A\+Y\+\_\+\+R\+E\+G\+I\+O\+N\+\_\+\+R\+E\+C\+T\+\_\+\+H\+E\+I\+G\+HT@{P\+L\+A\+Y\+\_\+\+R\+E\+G\+I\+O\+N\+\_\+\+R\+E\+C\+T\+\_\+\+H\+E\+I\+G\+HT}!Ruler.\+cpp@{Ruler.\+cpp}}
+\subsubsection[{\texorpdfstring{P\+L\+A\+Y\+\_\+\+R\+E\+G\+I\+O\+N\+\_\+\+R\+E\+C\+T\+\_\+\+H\+E\+I\+G\+HT}{PLAY_REGION_RECT_HEIGHT}}]{\setlength{\rightskip}{0pt plus 5cm}\#define P\+L\+A\+Y\+\_\+\+R\+E\+G\+I\+O\+N\+\_\+\+R\+E\+C\+T\+\_\+\+H\+E\+I\+G\+HT~3}\hypertarget{_ruler_8cpp_a70b7aaafaa781292e176831d4ca5ca74}{}\label{_ruler_8cpp_a70b7aaafaa781292e176831d4ca5ca74}
+
+
+Definition at line 90 of file Ruler.\+cpp.
+
+\index{Ruler.\+cpp@{Ruler.\+cpp}!P\+L\+A\+Y\+\_\+\+R\+E\+G\+I\+O\+N\+\_\+\+R\+E\+C\+T\+\_\+\+W\+I\+D\+TH@{P\+L\+A\+Y\+\_\+\+R\+E\+G\+I\+O\+N\+\_\+\+R\+E\+C\+T\+\_\+\+W\+I\+D\+TH}}
+\index{P\+L\+A\+Y\+\_\+\+R\+E\+G\+I\+O\+N\+\_\+\+R\+E\+C\+T\+\_\+\+W\+I\+D\+TH@{P\+L\+A\+Y\+\_\+\+R\+E\+G\+I\+O\+N\+\_\+\+R\+E\+C\+T\+\_\+\+W\+I\+D\+TH}!Ruler.\+cpp@{Ruler.\+cpp}}
+\subsubsection[{\texorpdfstring{P\+L\+A\+Y\+\_\+\+R\+E\+G\+I\+O\+N\+\_\+\+R\+E\+C\+T\+\_\+\+W\+I\+D\+TH}{PLAY_REGION_RECT_WIDTH}}]{\setlength{\rightskip}{0pt plus 5cm}\#define P\+L\+A\+Y\+\_\+\+R\+E\+G\+I\+O\+N\+\_\+\+R\+E\+C\+T\+\_\+\+W\+I\+D\+TH~1}\hypertarget{_ruler_8cpp_a93f3e08c55357b3206eed2ab39e48f07}{}\label{_ruler_8cpp_a93f3e08c55357b3206eed2ab39e48f07}
+
+
+Definition at line 89 of file Ruler.\+cpp.
+
+\index{Ruler.\+cpp@{Ruler.\+cpp}!P\+L\+A\+Y\+\_\+\+R\+E\+G\+I\+O\+N\+\_\+\+T\+R\+I\+A\+N\+G\+L\+E\+\_\+\+S\+I\+ZE@{P\+L\+A\+Y\+\_\+\+R\+E\+G\+I\+O\+N\+\_\+\+T\+R\+I\+A\+N\+G\+L\+E\+\_\+\+S\+I\+ZE}}
+\index{P\+L\+A\+Y\+\_\+\+R\+E\+G\+I\+O\+N\+\_\+\+T\+R\+I\+A\+N\+G\+L\+E\+\_\+\+S\+I\+ZE@{P\+L\+A\+Y\+\_\+\+R\+E\+G\+I\+O\+N\+\_\+\+T\+R\+I\+A\+N\+G\+L\+E\+\_\+\+S\+I\+ZE}!Ruler.\+cpp@{Ruler.\+cpp}}
+\subsubsection[{\texorpdfstring{P\+L\+A\+Y\+\_\+\+R\+E\+G\+I\+O\+N\+\_\+\+T\+R\+I\+A\+N\+G\+L\+E\+\_\+\+S\+I\+ZE}{PLAY_REGION_TRIANGLE_SIZE}}]{\setlength{\rightskip}{0pt plus 5cm}\#define P\+L\+A\+Y\+\_\+\+R\+E\+G\+I\+O\+N\+\_\+\+T\+R\+I\+A\+N\+G\+L\+E\+\_\+\+S\+I\+ZE~6}\hypertarget{_ruler_8cpp_a29790616f2fa3914a423763fe98b8e59}{}\label{_ruler_8cpp_a29790616f2fa3914a423763fe98b8e59}
+
+
+Definition at line 88 of file Ruler.\+cpp.
+
+\index{Ruler.\+cpp@{Ruler.\+cpp}!S\+E\+L\+E\+C\+T\+\_\+\+T\+O\+L\+E\+R\+A\+N\+C\+E\+\_\+\+P\+I\+X\+EL@{S\+E\+L\+E\+C\+T\+\_\+\+T\+O\+L\+E\+R\+A\+N\+C\+E\+\_\+\+P\+I\+X\+EL}}
+\index{S\+E\+L\+E\+C\+T\+\_\+\+T\+O\+L\+E\+R\+A\+N\+C\+E\+\_\+\+P\+I\+X\+EL@{S\+E\+L\+E\+C\+T\+\_\+\+T\+O\+L\+E\+R\+A\+N\+C\+E\+\_\+\+P\+I\+X\+EL}!Ruler.\+cpp@{Ruler.\+cpp}}
+\subsubsection[{\texorpdfstring{S\+E\+L\+E\+C\+T\+\_\+\+T\+O\+L\+E\+R\+A\+N\+C\+E\+\_\+\+P\+I\+X\+EL}{SELECT_TOLERANCE_PIXEL}}]{\setlength{\rightskip}{0pt plus 5cm}\#define S\+E\+L\+E\+C\+T\+\_\+\+T\+O\+L\+E\+R\+A\+N\+C\+E\+\_\+\+P\+I\+X\+EL~4}\hypertarget{_ruler_8cpp_af0f4ea5958763477d7c309d914586377}{}\label{_ruler_8cpp_af0f4ea5958763477d7c309d914586377}
+
+
+Definition at line 86 of file Ruler.\+cpp.
+
+
+
+\subsection{Enumeration Type Documentation}
+\subsubsection[{\texorpdfstring{anonymous enum}{anonymous enum}}]{\setlength{\rightskip}{0pt plus 5cm}anonymous enum}\hypertarget{_ruler_8cpp_a19516aacc906a3c234aed4c5fdb53c35}{}\label{_ruler_8cpp_a19516aacc906a3c234aed4c5fdb53c35}
+\begin{Desc}
+\item[Enumerator]\par
+\begin{description}
+\index{On\+Toggle\+Quick\+Play\+ID@{On\+Toggle\+Quick\+Play\+ID}!Ruler.\+cpp@{Ruler.\+cpp}}\index{Ruler.\+cpp@{Ruler.\+cpp}!On\+Toggle\+Quick\+Play\+ID@{On\+Toggle\+Quick\+Play\+ID}}\item[{\em 
+On\+Toggle\+Quick\+Play\+ID\hypertarget{_ruler_8cpp_a19516aacc906a3c234aed4c5fdb53c35afa292cfcddaf78a967ea2e799888d2bd}{}\label{_ruler_8cpp_a19516aacc906a3c234aed4c5fdb53c35afa292cfcddaf78a967ea2e799888d2bd}
+}]\index{On\+Sync\+Quick\+Play\+Sel\+ID@{On\+Sync\+Quick\+Play\+Sel\+ID}!Ruler.\+cpp@{Ruler.\+cpp}}\index{Ruler.\+cpp@{Ruler.\+cpp}!On\+Sync\+Quick\+Play\+Sel\+ID@{On\+Sync\+Quick\+Play\+Sel\+ID}}\item[{\em 
+On\+Sync\+Quick\+Play\+Sel\+ID\hypertarget{_ruler_8cpp_a19516aacc906a3c234aed4c5fdb53c35adad33692ad38b45f83581db98c14a665}{}\label{_ruler_8cpp_a19516aacc906a3c234aed4c5fdb53c35adad33692ad38b45f83581db98c14a665}
+}]\index{On\+Timeline\+Tool\+Tip\+ID@{On\+Timeline\+Tool\+Tip\+ID}!Ruler.\+cpp@{Ruler.\+cpp}}\index{Ruler.\+cpp@{Ruler.\+cpp}!On\+Timeline\+Tool\+Tip\+ID@{On\+Timeline\+Tool\+Tip\+ID}}\item[{\em 
+On\+Timeline\+Tool\+Tip\+ID\hypertarget{_ruler_8cpp_a19516aacc906a3c234aed4c5fdb53c35a58a4bf1c38c8e1a686f37cf7790d6a44}{}\label{_ruler_8cpp_a19516aacc906a3c234aed4c5fdb53c35a58a4bf1c38c8e1a686f37cf7790d6a44}
+}]\index{On\+Auto\+Scroll\+ID@{On\+Auto\+Scroll\+ID}!Ruler.\+cpp@{Ruler.\+cpp}}\index{Ruler.\+cpp@{Ruler.\+cpp}!On\+Auto\+Scroll\+ID@{On\+Auto\+Scroll\+ID}}\item[{\em 
+On\+Auto\+Scroll\+ID\hypertarget{_ruler_8cpp_a19516aacc906a3c234aed4c5fdb53c35a8fbfafcbc550b3c6f279e782119afbc6}{}\label{_ruler_8cpp_a19516aacc906a3c234aed4c5fdb53c35a8fbfafcbc550b3c6f279e782119afbc6}
+}]\index{On\+Lock\+Play\+Region\+ID@{On\+Lock\+Play\+Region\+ID}!Ruler.\+cpp@{Ruler.\+cpp}}\index{Ruler.\+cpp@{Ruler.\+cpp}!On\+Lock\+Play\+Region\+ID@{On\+Lock\+Play\+Region\+ID}}\item[{\em 
+On\+Lock\+Play\+Region\+ID\hypertarget{_ruler_8cpp_a19516aacc906a3c234aed4c5fdb53c35ac4aeb881012dd1a4fde2313c68e44f10}{}\label{_ruler_8cpp_a19516aacc906a3c234aed4c5fdb53c35ac4aeb881012dd1a4fde2313c68e44f10}
+}]\end{description}
+\end{Desc}
+
+
+Definition at line 1657 of file Ruler.\+cpp.
+

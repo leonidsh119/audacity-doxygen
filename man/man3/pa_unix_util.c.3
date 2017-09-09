@@ -1,0 +1,265 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/lib-src/portaudio-v19/src/os/unix/pa_unix_util.c" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/lib-src/portaudio-v19/src/os/unix/pa_unix_util.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <pthread\&.h>\fP
+.br
+\fC#include <unistd\&.h>\fP
+.br
+\fC#include <stdlib\&.h>\fP
+.br
+\fC#include <time\&.h>\fP
+.br
+\fC#include <sys/time\&.h>\fP
+.br
+\fC#include <assert\&.h>\fP
+.br
+\fC#include <string\&.h>\fP
+.br
+\fC#include <math\&.h>\fP
+.br
+\fC#include <errno\&.h>\fP
+.br
+\fC#include 'pa_util\&.h'\fP
+.br
+\fC#include 'pa_unix_util\&.h'\fP
+.br
+\fC#include 'pa_debugprint\&.h'\fP
+.br
+
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBvoid\fP * \fBPaUtil_AllocateMemory\fP (long \fBsize\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBPaUtil_FreeMemory\fP (\fBvoid\fP *\fBblock\fP)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBPaUtil_CountCurrentlyAllocatedBlocks\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBPa_Sleep\fP (long msec)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBPaUtil_InitializeClock\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBPaTime\fP \fBPaUtil_GetTime\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBPaError\fP \fBPaUtil_InitializeThreading\fP (\fBPaUtilThreading\fP *threading)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBPaUtil_TerminateThreading\fP (\fBPaUtilThreading\fP *threading)"
+.br
+.ti -1c
+.RI "\fBPaError\fP \fBPaUtil_StartThreading\fP (\fBPaUtilThreading\fP *threading, \fBvoid\fP *(*threadRoutine)(\fBvoid\fP *), \fBvoid\fP *\fBdata\fP)"
+.br
+.ti -1c
+.RI "\fBPaError\fP \fBPaUtil_CancelThreading\fP (\fBPaUtilThreading\fP *threading, \fBint\fP wait, \fBPaError\fP *exitResult)"
+.br
+.ti -1c
+.RI "\fBPaError\fP \fBPaUnixThreading_Initialize\fP ()"
+.br
+.ti -1c
+.RI "\fBPaError\fP \fBPaUnixThread_New\fP (\fBPaUnixThread\fP *self, \fBvoid\fP *(*threadFunc)(\fBvoid\fP *), \fBvoid\fP *threadArg, \fBPaTime\fP waitForChild, \fBint\fP rtSched)"
+.br
+.ti -1c
+.RI "\fBPaError\fP \fBPaUnixThread_Terminate\fP (\fBPaUnixThread\fP *self, \fBint\fP wait, \fBPaError\fP *exitResult)"
+.br
+.ti -1c
+.RI "\fBPaError\fP \fBPaUnixThread_PrepareNotify\fP (\fBPaUnixThread\fP *self)"
+.br
+.ti -1c
+.RI "\fBPaError\fP \fBPaUnixThread_NotifyParent\fP (\fBPaUnixThread\fP *self)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBPaUnixThread_StopRequested\fP (\fBPaUnixThread\fP *self)"
+.br
+.ti -1c
+.RI "\fBPaError\fP \fBPaUnixMutex_Initialize\fP (\fBPaUnixMutex\fP *self)"
+.br
+.ti -1c
+.RI "\fBPaError\fP \fBPaUnixMutex_Terminate\fP (\fBPaUnixMutex\fP *self)"
+.br
+.ti -1c
+.RI "\fBPaError\fP \fBPaUnixMutex_Lock\fP (\fBPaUnixMutex\fP *self)"
+.br
+.ti -1c
+.RI "\fBPaError\fP \fBPaUnixMutex_Unlock\fP (\fBPaUnixMutex\fP *self)"
+.br
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "pthread_t \fBpaUnixMainThread\fP = 0"
+.br
+.in -1c
+.SH "Function Documentation"
+.PP 
+.SS "\fBvoid\fP Pa_Sleep (long msec)"
+Put the caller to sleep for at least 'msec' milliseconds\&. This function is provided only as a convenience for authors of portable code (such as the tests and examples in the PortAudio distribution\&.)
+.PP
+The function may sleep longer than requested so don't rely on this for accurate musical timing\&. 
+.PP
+Definition at line 108 of file pa_unix_util\&.c\&.
+.SS "\fBPaError\fP PaUnixMutex_Initialize (\fBPaUnixMutex\fP * self)"
+
+.PP
+Definition at line 500 of file pa_unix_util\&.c\&.
+.SS "\fBPaError\fP PaUnixMutex_Lock (\fBPaUnixMutex\fP * self)"
+Lock mutex\&.
+.PP
+We're disabling thread cancellation while the thread is holding a lock, so mutexes are properly unlocked at termination time\&. 
+.PP
+Definition at line 519 of file pa_unix_util\&.c\&.
+.SS "\fBPaError\fP PaUnixMutex_Terminate (\fBPaUnixMutex\fP * self)"
+
+.PP
+Definition at line 507 of file pa_unix_util\&.c\&.
+.SS "\fBPaError\fP PaUnixMutex_Unlock (\fBPaUnixMutex\fP * self)"
+Unlock mutex\&.
+.PP
+Thread cancellation is enabled again after the mutex is properly unlocked\&. 
+.PP
+Definition at line 537 of file pa_unix_util\&.c\&.
+.SS "\fBPaError\fP PaUnixThread_New (\fBPaUnixThread\fP * self, \fBvoid\fP *(*)(\fBvoid\fP *) threadFunc, \fBvoid\fP * threadArg, \fBPaTime\fP waitForChild, \fBint\fP rtSched)"
+Spawn a thread\&.
+.PP
+Intended for spawning the callback thread from the main thread\&. This function can even block (for a certain time or indefinitely) untill notified by the callback thread (using PaUnixThread_NotifyParent), which can be useful in order to make sure that callback has commenced before returning from Pa_StartStream\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIthreadFunc\fP The function to be executed in the child thread\&. 
+.br
+\fIwaitForChild\fP If not 0, wait for child thread to call PaUnixThread_NotifyParent\&. Less than 0 means wait for ever, greater than 0 wait for the specified time\&. 
+.br
+\fIrtSched\fP Enable realtime scheduling? 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+: If timed out waiting on child, paTimedOut\&. 
+.RE
+.PP
+
+.PP
+Definition at line 268 of file pa_unix_util\&.c\&.
+.SS "\fBPaError\fP PaUnixThread_NotifyParent (\fBPaUnixThread\fP * self)"
+Notify waiting parent thread\&.
+.PP
+\fBReturns:\fP
+.RS 4
+: If parent timed out waiting, paTimedOut\&. If parent was never waiting, paInternalError\&. 
+.RE
+.PP
+
+.PP
+Definition at line 476 of file pa_unix_util\&.c\&.
+.SS "\fBPaError\fP PaUnixThread_PrepareNotify (\fBPaUnixThread\fP * self)"
+Prepare to notify waiting parent thread\&.
+.PP
+An internal lock must be held before the parent is notified in PaUnixThread_NotifyParent, call this to acquire it beforehand\&. 
+.PP
+\fBReturns:\fP
+.RS 4
+: If parent is not waiting, paInternalError\&. 
+.RE
+.PP
+
+.PP
+Definition at line 464 of file pa_unix_util\&.c\&.
+.SS "\fBint\fP PaUnixThread_StopRequested (\fBPaUnixThread\fP * self)"
+Has the parent thread requested this thread to stop? 
+.PP
+Definition at line 495 of file pa_unix_util\&.c\&.
+.SS "\fBPaError\fP PaUnixThread_Terminate (\fBPaUnixThread\fP * self, \fBint\fP wait, \fBPaError\fP * exitResult)"
+Terminate thread\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIwait\fP If true, request that background thread stop and wait untill it does, else cancel it\&. 
+.br
+\fIexitResult\fP If non-null this will upon return contain the exit status of the thread\&. 
+.RE
+.PP
+
+.PP
+Definition at line 402 of file pa_unix_util\&.c\&.
+.SS "\fBPaError\fP PaUnixThreading_Initialize ()"
+Initialize global threading state\&. 
+.PP
+Definition at line 239 of file pa_unix_util\&.c\&.
+.SS "\fBvoid\fP* PaUtil_AllocateMemory (long size)"
+Allocate size bytes, guaranteed to be aligned to a FIXME byte boundary 
+.PP
+Definition at line 74 of file pa_unix_util\&.c\&.
+.SS "\fBPaError\fP PaUtil_CancelThreading (\fBPaUtilThreading\fP * threading, \fBint\fP wait, \fBPaError\fP * exitResult)"
+
+.PP
+Definition at line 188 of file pa_unix_util\&.c\&.
+.SS "\fBint\fP PaUtil_CountCurrentlyAllocatedBlocks (\fBvoid\fP)"
+Return the number of currently allocated blocks\&. This function can be used for detecting memory leaks\&.
+.PP
+\fBNote:\fP
+.RS 4
+Allocations will only be tracked if PA_TRACK_MEMORY is #defined\&. If it isn't, this function will always return 0\&. 
+.RE
+.PP
+
+.PP
+Definition at line 98 of file pa_unix_util\&.c\&.
+.SS "\fBvoid\fP PaUtil_FreeMemory (\fBvoid\fP * block)"
+Realease block if non-NULL\&. block may be NULL 
+.PP
+Definition at line 85 of file pa_unix_util\&.c\&.
+.SS "\fBPaTime\fP PaUtil_GetTime (\fBvoid\fP)"
+Return the system time in seconds\&. Used to implement CPU load functions
+.PP
+\fBSee also:\fP
+.RS 4
+\fBPaUtil_InitializeClock\fP 
+.RE
+.PP
+
+.PP
+Definition at line 157 of file pa_unix_util\&.c\&.
+.SS "\fBvoid\fP PaUtil_InitializeClock (\fBvoid\fP)"
+Initialize the clock used by \fBPaUtil_GetTime()\fP\&. Call this before calling PaUtil_GetTime\&.
+.PP
+\fBSee also:\fP
+.RS 4
+\fBPaUtil_GetTime\fP 
+.RE
+.PP
+
+.PP
+Definition at line 146 of file pa_unix_util\&.c\&.
+.SS "\fBPaError\fP PaUtil_InitializeThreading (\fBPaUtilThreading\fP * threading)"
+
+.PP
+Definition at line 172 of file pa_unix_util\&.c\&.
+.SS "\fBPaError\fP PaUtil_StartThreading (\fBPaUtilThreading\fP * threading, \fBvoid\fP *(*)(\fBvoid\fP *) threadRoutine, \fBvoid\fP * data)"
+
+.PP
+Definition at line 182 of file pa_unix_util\&.c\&.
+.SS "\fBvoid\fP PaUtil_TerminateThreading (\fBPaUtilThreading\fP * threading)"
+
+.PP
+Definition at line 178 of file pa_unix_util\&.c\&.
+.SH "Variable Documentation"
+.PP 
+.SS "pthread_t paUnixMainThread = 0"
+
+.PP
+Definition at line 236 of file pa_unix_util\&.c\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

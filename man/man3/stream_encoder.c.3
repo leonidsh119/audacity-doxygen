@@ -1,0 +1,351 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/lib-src/libflac/src/libFLAC/stream_encoder.c" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/lib-src/libflac/src/libFLAC/stream_encoder.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <limits\&.h>\fP
+.br
+\fC#include <stdio\&.h>\fP
+.br
+\fC#include <stdlib\&.h>\fP
+.br
+\fC#include <string\&.h>\fP
+.br
+\fC#include <sys/types\&.h>\fP
+.br
+\fC#include 'share/compat\&.h'\fP
+.br
+\fC#include 'FLAC/assert\&.h'\fP
+.br
+\fC#include 'FLAC/stream_decoder\&.h'\fP
+.br
+\fC#include 'protected/stream_encoder\&.h'\fP
+.br
+\fC#include 'private/bitwriter\&.h'\fP
+.br
+\fC#include 'private/bitmath\&.h'\fP
+.br
+\fC#include 'private/crc\&.h'\fP
+.br
+\fC#include 'private/cpu\&.h'\fP
+.br
+\fC#include 'private/fixed\&.h'\fP
+.br
+\fC#include 'private/format\&.h'\fP
+.br
+\fC#include 'private/lpc\&.h'\fP
+.br
+\fC#include 'private/md5\&.h'\fP
+.br
+\fC#include 'private/memory\&.h'\fP
+.br
+\fC#include 'private/macros\&.h'\fP
+.br
+\fC#include 'private/stream_encoder\&.h'\fP
+.br
+\fC#include 'private/stream_encoder_framing\&.h'\fP
+.br
+\fC#include 'private/window\&.h'\fP
+.br
+\fC#include 'share/alloc\&.h'\fP
+.br
+\fC#include 'share/private\&.h'\fP
+.br
+
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "struct \fBverify_input_fifo\fP"
+.br
+.ti -1c
+.RI "struct \fBverify_output\fP"
+.br
+.ti -1c
+.RI "struct \fBCompressionLevels\fP"
+.br
+.ti -1c
+.RI "struct \fBFLAC__StreamEncoderPrivate\fP"
+.br
+.in -1c
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBSPOTCHECK_ESTIMATE\fP   0"
+.br
+.ti -1c
+.RI "#define \fBlocal__fwrite\fP   fwrite"
+.br
+.in -1c
+.SS "Typedefs"
+
+.in +1c
+.ti -1c
+.RI "typedef struct \fBFLAC__StreamEncoderPrivate\fP \fBFLAC__StreamEncoderPrivate\fP"
+.br
+.in -1c
+.SS "Enumerations"
+
+.in +1c
+.ti -1c
+.RI "enum \fBEncoderStateHint\fP { \fBENCODER_IN_MAGIC\fP = 0, \fBENCODER_IN_METADATA\fP = 1, \fBENCODER_IN_AUDIO\fP = 2 }"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__StreamEncoder\fP * \fBFLAC__stream_encoder_new\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBvoid\fP \fBFLAC__stream_encoder_delete\fP (\fBFLAC__StreamEncoder\fP *encoder)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__StreamEncoderInitStatus\fP \fBFLAC__stream_encoder_init_stream\fP (\fBFLAC__StreamEncoder\fP *encoder, \fBFLAC__StreamEncoderWriteCallback\fP write_callback, \fBFLAC__StreamEncoderSeekCallback\fP seek_callback, \fBFLAC__StreamEncoderTellCallback\fP tell_callback, \fBFLAC__StreamEncoderMetadataCallback\fP metadata_callback, \fBvoid\fP *client_data)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__StreamEncoderInitStatus\fP \fBFLAC__stream_encoder_init_ogg_stream\fP (\fBFLAC__StreamEncoder\fP *encoder, \fBFLAC__StreamEncoderReadCallback\fP read_callback, \fBFLAC__StreamEncoderWriteCallback\fP write_callback, \fBFLAC__StreamEncoderSeekCallback\fP seek_callback, \fBFLAC__StreamEncoderTellCallback\fP tell_callback, \fBFLAC__StreamEncoderMetadataCallback\fP metadata_callback, \fBvoid\fP *client_data)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__StreamEncoderInitStatus\fP \fBFLAC__stream_encoder_init_FILE\fP (\fBFLAC__StreamEncoder\fP *encoder, FILE *file, \fBFLAC__StreamEncoderProgressCallback\fP progress_callback, \fBvoid\fP *client_data)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__StreamEncoderInitStatus\fP \fBFLAC__stream_encoder_init_ogg_FILE\fP (\fBFLAC__StreamEncoder\fP *encoder, FILE *file, \fBFLAC__StreamEncoderProgressCallback\fP progress_callback, \fBvoid\fP *client_data)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__StreamEncoderInitStatus\fP \fBFLAC__stream_encoder_init_file\fP (\fBFLAC__StreamEncoder\fP *encoder, \fBconst\fP char *\fBfilename\fP, \fBFLAC__StreamEncoderProgressCallback\fP progress_callback, \fBvoid\fP *client_data)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__StreamEncoderInitStatus\fP \fBFLAC__stream_encoder_init_ogg_file\fP (\fBFLAC__StreamEncoder\fP *encoder, \fBconst\fP char *\fBfilename\fP, \fBFLAC__StreamEncoderProgressCallback\fP progress_callback, \fBvoid\fP *client_data)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__stream_encoder_finish\fP (\fBFLAC__StreamEncoder\fP *encoder)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__stream_encoder_set_ogg_serial_number\fP (\fBFLAC__StreamEncoder\fP *encoder, long \fBvalue\fP)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__stream_encoder_set_verify\fP (\fBFLAC__StreamEncoder\fP *encoder, \fBFLAC__bool\fP \fBvalue\fP)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__stream_encoder_set_streamable_subset\fP (\fBFLAC__StreamEncoder\fP *encoder, \fBFLAC__bool\fP \fBvalue\fP)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__stream_encoder_set_do_md5\fP (\fBFLAC__StreamEncoder\fP *encoder, \fBFLAC__bool\fP \fBvalue\fP)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__stream_encoder_set_channels\fP (\fBFLAC__StreamEncoder\fP *encoder, unsigned \fBvalue\fP)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__stream_encoder_set_bits_per_sample\fP (\fBFLAC__StreamEncoder\fP *encoder, unsigned \fBvalue\fP)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__stream_encoder_set_sample_rate\fP (\fBFLAC__StreamEncoder\fP *encoder, unsigned \fBvalue\fP)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__stream_encoder_set_compression_level\fP (\fBFLAC__StreamEncoder\fP *encoder, unsigned \fBvalue\fP)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__stream_encoder_set_blocksize\fP (\fBFLAC__StreamEncoder\fP *encoder, unsigned \fBvalue\fP)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__stream_encoder_set_do_mid_side_stereo\fP (\fBFLAC__StreamEncoder\fP *encoder, \fBFLAC__bool\fP \fBvalue\fP)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__stream_encoder_set_loose_mid_side_stereo\fP (\fBFLAC__StreamEncoder\fP *encoder, \fBFLAC__bool\fP \fBvalue\fP)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__stream_encoder_set_apodization\fP (\fBFLAC__StreamEncoder\fP *encoder, \fBconst\fP char *specification)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__stream_encoder_set_max_lpc_order\fP (\fBFLAC__StreamEncoder\fP *encoder, unsigned \fBvalue\fP)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__stream_encoder_set_qlp_coeff_precision\fP (\fBFLAC__StreamEncoder\fP *encoder, unsigned \fBvalue\fP)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__stream_encoder_set_do_qlp_coeff_prec_search\fP (\fBFLAC__StreamEncoder\fP *encoder, \fBFLAC__bool\fP \fBvalue\fP)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__stream_encoder_set_do_escape_coding\fP (\fBFLAC__StreamEncoder\fP *encoder, \fBFLAC__bool\fP \fBvalue\fP)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__stream_encoder_set_do_exhaustive_model_search\fP (\fBFLAC__StreamEncoder\fP *encoder, \fBFLAC__bool\fP \fBvalue\fP)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__stream_encoder_set_min_residual_partition_order\fP (\fBFLAC__StreamEncoder\fP *encoder, unsigned \fBvalue\fP)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__stream_encoder_set_max_residual_partition_order\fP (\fBFLAC__StreamEncoder\fP *encoder, unsigned \fBvalue\fP)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__stream_encoder_set_rice_parameter_search_dist\fP (\fBFLAC__StreamEncoder\fP *encoder, unsigned \fBvalue\fP)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__stream_encoder_set_total_samples_estimate\fP (\fBFLAC__StreamEncoder\fP *encoder, \fBFLAC__uint64\fP \fBvalue\fP)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__stream_encoder_set_metadata\fP (\fBFLAC__StreamEncoder\fP *encoder, \fBFLAC__StreamMetadata\fP **metadata, unsigned num_blocks)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__stream_encoder_disable_constant_subframes\fP (\fBFLAC__StreamEncoder\fP *encoder, \fBFLAC__bool\fP \fBvalue\fP)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__stream_encoder_disable_fixed_subframes\fP (\fBFLAC__StreamEncoder\fP *encoder, \fBFLAC__bool\fP \fBvalue\fP)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__stream_encoder_disable_verbatim_subframes\fP (\fBFLAC__StreamEncoder\fP *encoder, \fBFLAC__bool\fP \fBvalue\fP)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__StreamEncoderState\fP \fBFLAC__stream_encoder_get_state\fP (\fBconst\fP \fBFLAC__StreamEncoder\fP *encoder)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__StreamDecoderState\fP \fBFLAC__stream_encoder_get_verify_decoder_state\fP (\fBconst\fP \fBFLAC__StreamEncoder\fP *encoder)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBconst\fP char * \fBFLAC__stream_encoder_get_resolved_state_string\fP (\fBconst\fP \fBFLAC__StreamEncoder\fP *encoder)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBvoid\fP \fBFLAC__stream_encoder_get_verify_decoder_error_stats\fP (\fBconst\fP \fBFLAC__StreamEncoder\fP *encoder, \fBFLAC__uint64\fP *absolute_sample, unsigned *frame_number, unsigned *channel, unsigned *sample, \fBFLAC__int32\fP *expected, \fBFLAC__int32\fP *got)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__stream_encoder_get_verify\fP (\fBconst\fP \fBFLAC__StreamEncoder\fP *encoder)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__stream_encoder_get_streamable_subset\fP (\fBconst\fP \fBFLAC__StreamEncoder\fP *encoder)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__stream_encoder_get_do_md5\fP (\fBconst\fP \fBFLAC__StreamEncoder\fP *encoder)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP unsigned \fBFLAC__stream_encoder_get_channels\fP (\fBconst\fP \fBFLAC__StreamEncoder\fP *encoder)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP unsigned \fBFLAC__stream_encoder_get_bits_per_sample\fP (\fBconst\fP \fBFLAC__StreamEncoder\fP *encoder)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP unsigned \fBFLAC__stream_encoder_get_sample_rate\fP (\fBconst\fP \fBFLAC__StreamEncoder\fP *encoder)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP unsigned \fBFLAC__stream_encoder_get_blocksize\fP (\fBconst\fP \fBFLAC__StreamEncoder\fP *encoder)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__stream_encoder_get_do_mid_side_stereo\fP (\fBconst\fP \fBFLAC__StreamEncoder\fP *encoder)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__stream_encoder_get_loose_mid_side_stereo\fP (\fBconst\fP \fBFLAC__StreamEncoder\fP *encoder)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP unsigned \fBFLAC__stream_encoder_get_max_lpc_order\fP (\fBconst\fP \fBFLAC__StreamEncoder\fP *encoder)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP unsigned \fBFLAC__stream_encoder_get_qlp_coeff_precision\fP (\fBconst\fP \fBFLAC__StreamEncoder\fP *encoder)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__stream_encoder_get_do_qlp_coeff_prec_search\fP (\fBconst\fP \fBFLAC__StreamEncoder\fP *encoder)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__stream_encoder_get_do_escape_coding\fP (\fBconst\fP \fBFLAC__StreamEncoder\fP *encoder)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__stream_encoder_get_do_exhaustive_model_search\fP (\fBconst\fP \fBFLAC__StreamEncoder\fP *encoder)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP unsigned \fBFLAC__stream_encoder_get_min_residual_partition_order\fP (\fBconst\fP \fBFLAC__StreamEncoder\fP *encoder)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP unsigned \fBFLAC__stream_encoder_get_max_residual_partition_order\fP (\fBconst\fP \fBFLAC__StreamEncoder\fP *encoder)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP unsigned \fBFLAC__stream_encoder_get_rice_parameter_search_dist\fP (\fBconst\fP \fBFLAC__StreamEncoder\fP *encoder)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__uint64\fP \fBFLAC__stream_encoder_get_total_samples_estimate\fP (\fBconst\fP \fBFLAC__StreamEncoder\fP *encoder)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__stream_encoder_process\fP (\fBFLAC__StreamEncoder\fP *encoder, \fBconst\fP \fBFLAC__int32\fP *\fBconst\fP \fBbuffer\fP[], unsigned \fBsamples\fP)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__stream_encoder_process_interleaved\fP (\fBFLAC__StreamEncoder\fP *encoder, \fBconst\fP \fBFLAC__int32\fP \fBbuffer\fP[], unsigned \fBsamples\fP)"
+.br
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "\fBFLAC_API\fP \fBconst\fP char *\fBconst\fP \fBFLAC__StreamEncoderStateString\fP []"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBconst\fP char *\fBconst\fP \fBFLAC__StreamEncoderInitStatusString\fP []"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBconst\fP char *\fBconst\fP \fBFLAC__StreamEncoderReadStatusString\fP []"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBconst\fP char *\fBconst\fP \fBFLAC__StreamEncoderWriteStatusString\fP []"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBconst\fP char *\fBconst\fP \fBFLAC__StreamEncoderSeekStatusString\fP []"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBconst\fP char *\fBconst\fP \fBFLAC__StreamEncoderTellStatusString\fP []"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define local__fwrite   fwrite"
+
+.PP
+Definition at line 4472 of file stream_encoder\&.c\&.
+.SS "#define SPOTCHECK_ESTIMATE   0"
+
+.PP
+Definition at line 3607 of file stream_encoder\&.c\&.
+.SH "Typedef Documentation"
+.PP 
+.SS "typedef struct \fBFLAC__StreamEncoderPrivate\fP  \fBFLAC__StreamEncoderPrivate\fP"
+
+.SH "Enumeration Type Documentation"
+.PP 
+.SS "enum \fBEncoderStateHint\fP"
+
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fIENCODER_IN_MAGIC \fP\fP
+.TP
+\fB\fIENCODER_IN_METADATA \fP\fP
+.TP
+\fB\fIENCODER_IN_AUDIO \fP\fP
+.PP
+Definition at line 92 of file stream_encoder\&.c\&.
+.SH "Function Documentation"
+.PP 
+.SS "\fBFLAC_API\fP \fBFLAC__bool\fP FLAC__stream_encoder_disable_constant_subframes (\fBFLAC__StreamEncoder\fP * encoder, \fBFLAC__bool\fP value)"
+
+.PP
+Definition at line 1900 of file stream_encoder\&.c\&.
+.SS "\fBFLAC_API\fP \fBFLAC__bool\fP FLAC__stream_encoder_disable_fixed_subframes (\fBFLAC__StreamEncoder\fP * encoder, \fBFLAC__bool\fP value)"
+
+.PP
+Definition at line 1911 of file stream_encoder\&.c\&.
+.SS "\fBFLAC_API\fP \fBFLAC__bool\fP FLAC__stream_encoder_disable_verbatim_subframes (\fBFLAC__StreamEncoder\fP * encoder, \fBFLAC__bool\fP value)"
+
+.PP
+Definition at line 1922 of file stream_encoder\&.c\&.
+.SS "\fBFLAC_API\fP \fBFLAC__bool\fP FLAC__stream_encoder_get_do_md5 (\fBconst\fP \fBFLAC__StreamEncoder\fP * encoder)"
+
+.PP
+Definition at line 1998 of file stream_encoder\&.c\&.
+.SS "\fBFLAC_API\fP \fBFLAC__bool\fP FLAC__stream_encoder_set_do_md5 (\fBFLAC__StreamEncoder\fP * encoder, \fBFLAC__bool\fP value)"
+
+.PP
+Definition at line 1531 of file stream_encoder\&.c\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

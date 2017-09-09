@@ -1,0 +1,177 @@
+.TH "flac_metadata_level0" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+flac_metadata_level0 \- FLAC/metadata\&.h: metadata level 0 interface
+.PP
+The level 0 interface consists of individual routines to read the STREAMINFO, VORBIS_COMMENT, CUESHEET, and PICTURE blocks, requiring only a filename\&.  
+
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__metadata_get_streaminfo\fP (\fBconst\fP char *\fBfilename\fP, \fBFLAC__StreamMetadata\fP *streaminfo)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__metadata_get_tags\fP (\fBconst\fP char *\fBfilename\fP, \fBFLAC__StreamMetadata\fP **tags)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__metadata_get_cuesheet\fP (\fBconst\fP char *\fBfilename\fP, \fBFLAC__StreamMetadata\fP **cuesheet)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__metadata_get_picture\fP (\fBconst\fP char *\fBfilename\fP, \fBFLAC__StreamMetadata\fP **picture, \fBFLAC__StreamMetadata_Picture_Type\fP type, \fBconst\fP char *mime_type, \fBconst\fP \fBFLAC__byte\fP *description, unsigned max_width, unsigned max_height, unsigned max_depth, unsigned max_colors)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+The level 0 interface consists of individual routines to read the STREAMINFO, VORBIS_COMMENT, CUESHEET, and PICTURE blocks, requiring only a filename\&. 
+
+They try to skip any ID3v2 tag at the head of the file\&. 
+.SH "Function Documentation"
+.PP 
+.SS "\fBFLAC_API\fP \fBFLAC__bool\fP FLAC__metadata_get_cuesheet (\fBconst\fP char * filename, \fBFLAC__StreamMetadata\fP ** cuesheet)"
+Read the CUESHEET metadata block of the given \fBFLAC\fP file\&. This function will try to skip any ID3v2 tag at the head of the file\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIfilename\fP The path to the \fBFLAC\fP file to read\&. 
+.br
+\fIcuesheet\fP The address where the returned pointer will be stored\&. The \fIcuesheet\fP object must be deleted by the caller using \fBFLAC__metadata_object_delete()\fP\&.  
+.PP
+.nf
+1 filename != NULL 
+
+.fi
+.PP
+ 
+.PP
+.nf
+1 cuesheet != NULL 
+
+.fi
+.PP
+ 
+.RE
+.PP
+\fBReturn values:\fP
+.RS 4
+\fIFLAC__bool\fP \fCtrue\fP if a valid CUESHEET block was read from \fIfilename\fP, and \fI*cuesheet\fP will be set to the address of the metadata structure\&. Returns \fCfalse\fP if there was a memory allocation error, a file decoder error, or the file contained no CUESHEET block, and \fI*cuesheet\fP will be set to \fCNULL\fP\&. 
+.RE
+.PP
+
+.PP
+Definition at line 227 of file metadata_iterators\&.c\&.
+.SS "\fBFLAC_API\fP \fBFLAC__bool\fP FLAC__metadata_get_picture (\fBconst\fP char * filename, \fBFLAC__StreamMetadata\fP ** picture, \fBFLAC__StreamMetadata_Picture_Type\fP type, \fBconst\fP char * mime_type, \fBconst\fP \fBFLAC__byte\fP * description, unsigned max_width, unsigned max_height, unsigned max_depth, unsigned max_colors)"
+Read a PICTURE metadata block of the given \fBFLAC\fP file\&. This function will try to skip any ID3v2 tag at the head of the file\&. Since there can be more than one PICTURE block in a file, this function takes a number of parameters that act as constraints to the search\&. The PICTURE block with the largest area matching all the constraints will be returned, or \fI*picture\fP will be set to \fCNULL\fP if there was no such block\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIfilename\fP The path to the \fBFLAC\fP file to read\&. 
+.br
+\fIpicture\fP The address where the returned pointer will be stored\&. The \fIpicture\fP object must be deleted by the caller using \fBFLAC__metadata_object_delete()\fP\&. 
+.br
+\fItype\fP The desired picture type\&. Use \fC-1\fP to mean 'any type'\&. 
+.br
+\fImime_type\fP The desired MIME type, e\&.g\&. 'image/jpeg'\&. The string will be matched exactly\&. Use \fCNULL\fP to mean 'any MIME type'\&. 
+.br
+\fIdescription\fP The desired description\&. The string will be matched exactly\&. Use \fCNULL\fP to mean 'any
+                   description'\&. 
+.br
+\fImax_width\fP The maximum width in pixels desired\&. Use \fC\fP(unsigned)(-1) to mean 'any width'\&. 
+.br
+\fImax_height\fP The maximum height in pixels desired\&. Use \fC\fP(unsigned)(-1) to mean 'any height'\&. 
+.br
+\fImax_depth\fP The maximum color depth in bits-per-pixel desired\&. Use \fC\fP(unsigned)(-1) to mean 'any depth'\&. 
+.br
+\fImax_colors\fP The maximum number of colors desired\&. Use \fC\fP(unsigned)(-1) to mean 'any number of colors'\&.  
+.PP
+.nf
+1 filename != NULL 
+
+.fi
+.PP
+ 
+.PP
+.nf
+1 picture != NULL 
+
+.fi
+.PP
+ 
+.RE
+.PP
+\fBReturn values:\fP
+.RS 4
+\fIFLAC__bool\fP \fCtrue\fP if a valid PICTURE block was read from \fIfilename\fP, and \fI*picture\fP will be set to the address of the metadata structure\&. Returns \fCfalse\fP if there was a memory allocation error, a file decoder error, or the file contained no PICTURE block, and \fI*picture\fP will be set to \fCNULL\fP\&. 
+.RE
+.PP
+
+.PP
+Definition at line 268 of file metadata_iterators\&.c\&.
+.SS "\fBFLAC_API\fP \fBFLAC__bool\fP FLAC__metadata_get_streaminfo (\fBconst\fP char * filename, \fBFLAC__StreamMetadata\fP * streaminfo)"
+Read the STREAMINFO metadata block of the given \fBFLAC\fP file\&. This function will try to skip any ID3v2 tag at the head of the file\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIfilename\fP The path to the \fBFLAC\fP file to read\&. 
+.br
+\fIstreaminfo\fP A pointer to space for the STREAMINFO block\&. Since \fBFLAC__StreamMetadata\fP is a simple structure with no memory allocation involved, you pass the address of an existing structure\&. It need not be initialized\&.  
+.PP
+.nf
+1 filename != NULL 
+
+.fi
+.PP
+ 
+.PP
+.nf
+1 streaminfo != NULL 
+
+.fi
+.PP
+ 
+.RE
+.PP
+\fBReturn values:\fP
+.RS 4
+\fIFLAC__bool\fP \fCtrue\fP if a valid STREAMINFO block was read from \fIfilename\fP\&. Returns \fCfalse\fP if there was a memory allocation error, a file decoder error, or the file contained no STREAMINFO block\&. (A memory allocation error is possible because this function must set up a file decoder\&.) 
+.RE
+.PP
+
+.PP
+Definition at line 197 of file metadata_iterators\&.c\&.
+.SS "\fBFLAC_API\fP \fBFLAC__bool\fP FLAC__metadata_get_tags (\fBconst\fP char * filename, \fBFLAC__StreamMetadata\fP ** tags)"
+Read the VORBIS_COMMENT metadata block of the given \fBFLAC\fP file\&. This function will try to skip any ID3v2 tag at the head of the file\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIfilename\fP The path to the \fBFLAC\fP file to read\&. 
+.br
+\fItags\fP The address where the returned pointer will be stored\&. The \fItags\fP object must be deleted by the caller using \fBFLAC__metadata_object_delete()\fP\&.  
+.PP
+.nf
+1 filename != NULL 
+
+.fi
+.PP
+ 
+.PP
+.nf
+1 tags != NULL 
+
+.fi
+.PP
+ 
+.RE
+.PP
+\fBReturn values:\fP
+.RS 4
+\fIFLAC__bool\fP \fCtrue\fP if a valid VORBIS_COMMENT block was read from \fIfilename\fP, and \fI*tags\fP will be set to the address of the metadata structure\&. Returns \fCfalse\fP if there was a memory allocation error, a file decoder error, or the file contained no VORBIS_COMMENT block, and \fI*tags\fP will be set to \fCNULL\fP\&. 
+.RE
+.PP
+
+.PP
+Definition at line 217 of file metadata_iterators\&.c\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

@@ -1,0 +1,159 @@
+.TH "soundtouch::PeakFinder" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+soundtouch::PeakFinder \- 
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <PeakFinder\&.h>\fP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBPeakFinder\fP ()"
+.br
+.RI "\fIConstructor\&. \fP"
+.ti -1c
+.RI "double \fBdetectPeak\fP (\fBconst\fP float *\fBdata\fP,   \fBint\fP \fBminPos\fP, \fBint\fP \fBmaxPos\fP)"
+.br
+.in -1c
+.SS "Protected Member Functions"
+
+.in +1c
+.ti -1c
+.RI "double \fBcalcMassCenter\fP (\fBconst\fP float *\fBdata\fP, \fBint\fP firstPos, \fBint\fP lastPos) \fBconst\fP "
+.br
+.RI "\fICalculates the mass center between given vector items\&. \fP"
+.ti -1c
+.RI "\fBint\fP \fBfindCrossingLevel\fP (\fBconst\fP float *\fBdata\fP, float level, \fBint\fP peakpos, \fBint\fP direction) \fBconst\fP "
+.br
+.ti -1c
+.RI "\fBint\fP \fBfindTop\fP (\fBconst\fP float *\fBdata\fP, \fBint\fP peakpos) \fBconst\fP "
+.br
+.ti -1c
+.RI "\fBint\fP \fBfindGround\fP (\fBconst\fP float *\fBdata\fP, \fBint\fP peakpos, \fBint\fP direction) \fBconst\fP "
+.br
+.ti -1c
+.RI "double \fBgetPeakCenter\fP (\fBconst\fP float *\fBdata\fP, \fBint\fP peakpos) \fBconst\fP "
+.br
+.RI "\fIget exact center of peak near given position by calculating local mass of center \fP"
+.in -1c
+.SS "Protected Attributes"
+
+.in +1c
+.ti -1c
+.RI "\fBint\fP \fBminPos\fP"
+.br
+.RI "\fIMin, max allowed peak positions within the data vector\&. \fP"
+.ti -1c
+.RI "\fBint\fP \fBmaxPos\fP"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Definition at line 46 of file PeakFinder\&.h\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "PeakFinder::PeakFinder ()"
+
+.PP
+Constructor\&. 
+.PP
+Definition at line 52 of file PeakFinder\&.cpp\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "double PeakFinder::calcMassCenter (\fBconst\fP float * data, \fBint\fP firstPos, \fBint\fP lastPos) const\fC [protected]\fP"
+
+.PP
+Calculates the mass center between given vector items\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdata\fP Data vector\&. 
+.br
+\fIfirstPos\fP Index of first vector item beloging to the peak\&. 
+.br
+\fIlastPos\fP Index of last vector item beloging to the peak\&. 
+.RE
+.PP
+
+.PP
+Definition at line 162 of file PeakFinder\&.cpp\&.
+.SS "double PeakFinder::detectPeak (\fBconst\fP float * data, \fBint\fP minPos, \fBint\fP maxPos)"
+Detect exact peak position of the data vector by finding the largest peak 'hump' and calculating the mass-center location of the peak hump\&.
+.PP
+\fBReturns:\fP
+.RS 4
+The location of the largest base harmonic peak hump\&. 
+.RE
+.PP
+
+.PP
+\fBParameters:\fP
+.RS 4
+\fIminPos\fP Data vector to be analyzed\&. The data vector has to be at least 'maxPos' items long\&. Min allowed peak location within the vector data\&. 
+.br
+\fImaxPos\fP Max allowed peak location within the vector data\&. 
+.RE
+.PP
+
+.PP
+Definition at line 212 of file PeakFinder\&.cpp\&.
+.SS "\fBint\fP PeakFinder::findCrossingLevel (\fBconst\fP float * data, float level, \fBint\fP peakpos, \fBint\fP direction) const\fC [protected]\fP"
+Finds the data vector index where the monotoniously decreasing signal crosses the given level\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdata\fP Data vector\&. 
+.br
+\fIlevel\fP Goal crossing level\&. 
+.br
+\fIpeakpos\fP Peak position index within the data vector\&. 
+.br
+\fIdirection\fP Direction where to proceed from the peak: 1 = right, -1 = left\&. 
+.RE
+.PP
+
+.PP
+Definition at line 144 of file PeakFinder\&.cpp\&.
+.SS "\fBint\fP PeakFinder::findGround (\fBconst\fP float * data, \fBint\fP peakpos, \fBint\fP direction) const\fC [protected]\fP"
+Finds the 'ground' level, i\&.e\&. smallest level between two neighbouring peaks, to right- or left-hand side of the given peak position\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIpeakpos\fP Data vector\&. 
+.br
+\fIdirection\fP Peak position index within the data vector\&. Direction where to proceed from the peak: 1 = right, -1 = left\&. 
+.RE
+.PP
+
+.PP
+Definition at line 92 of file PeakFinder\&.cpp\&.
+.SS "\fBint\fP PeakFinder::findTop (\fBconst\fP float * data, \fBint\fP peakpos) const\fC [protected]\fP"
+
+.PP
+Definition at line 59 of file PeakFinder\&.cpp\&.
+.SS "double PeakFinder::getPeakCenter (\fBconst\fP float * data, \fBint\fP peakpos) const\fC [protected]\fP"
+
+.PP
+get exact center of peak near given position by calculating local mass of center 
+.PP
+Definition at line 183 of file PeakFinder\&.cpp\&.
+.SH "Member Data Documentation"
+.PP 
+.SS "\fBint\fP soundtouch::PeakFinder::maxPos\fC [protected]\fP"
+
+.PP
+Definition at line 50 of file PeakFinder\&.h\&.
+.SS "\fBint\fP soundtouch::PeakFinder::minPos\fC [protected]\fP"
+
+.PP
+Min, max allowed peak positions within the data vector\&. 
+.PP
+Definition at line 50 of file PeakFinder\&.h\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

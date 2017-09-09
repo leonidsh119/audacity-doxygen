@@ -1,0 +1,228 @@
+.TH "Vamp::HostExt::PluginLoader" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Vamp::HostExt::PluginLoader \- 
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <vamp\-hostsdk/PluginLoader\&.h>\fP
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "class \fBImpl\fP"
+.br
+.in -1c
+.SS "Public Types"
+
+.in +1c
+.ti -1c
+.RI "enum \fBAdapterFlags\fP { \fBADAPT_INPUT_DOMAIN\fP = 0x01, \fBADAPT_CHANNEL_COUNT\fP = 0x02, \fBADAPT_BUFFER_SIZE\fP = 0x04, \fBADAPT_ALL_SAFE\fP = 0x03, \fBADAPT_ALL\fP = 0xff }"
+.br
+.ti -1c
+.RI "typedef \fBstd::string\fP \fBPluginKey\fP"
+.br
+.ti -1c
+.RI "typedef std::vector< \fBPluginKey\fP > \fBPluginKeyList\fP"
+.br
+.ti -1c
+.RI "typedef std::vector< \fBstd::string\fP > \fBPluginCategoryHierarchy\fP"
+.br
+.in -1c
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBPluginKeyList\fP \fBlistPlugins\fP ()"
+.br
+.ti -1c
+.RI "\fBPlugin\fP * \fBloadPlugin\fP (\fBPluginKey\fP key, float inputSampleRate, \fBint\fP adapterFlags=0)"
+.br
+.ti -1c
+.RI "\fBPluginKey\fP \fBcomposePluginKey\fP (\fBstd::string\fP libraryName, \fBstd::string\fP identifier)"
+.br
+.ti -1c
+.RI "\fBPluginCategoryHierarchy\fP \fBgetPluginCategory\fP (\fBPluginKey\fP plugin)"
+.br
+.ti -1c
+.RI "\fBstd::string\fP \fBgetLibraryPathForPlugin\fP (\fBPluginKey\fP plugin)"
+.br
+.in -1c
+.SS "Static Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "static \fBPluginLoader\fP * \fBgetInstance\fP ()"
+.br
+.in -1c
+.SS "Protected Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBPluginLoader\fP ()"
+.br
+.ti -1c
+.RI "virtual \fB~PluginLoader\fP ()"
+.br
+.in -1c
+.SS "Protected Attributes"
+
+.in +1c
+.ti -1c
+.RI "\fBImpl\fP * \fBm_impl\fP"
+.br
+.in -1c
+.SS "Static Protected Attributes"
+
+.in +1c
+.ti -1c
+.RI "static \fBPluginLoader\fP * \fBm_instance\fP = 0"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+\fBVamp::HostExt::PluginLoader\fP is a convenience class for discovering and loading \fBVamp\fP plugins using the typical plugin-path, library naming, and categorisation conventions described in the \fBVamp\fP SDK documentation\&. This class is intended to greatly simplify the task of becoming a \fBVamp\fP plugin host for any C++ application\&.
+.PP
+Hosts are not required by the \fBVamp\fP specification to use the same plugin search path and naming conventions as implemented by this class, and are certainly not required to use this actual class\&. But we do strongly recommend it\&.
+.PP
+\fBNote:\fP
+.RS 4
+This class was introduced in version 1\&.1 of the \fBVamp\fP plugin SDK\&. 
+.RE
+.PP
+
+.PP
+Definition at line 72 of file PluginLoader\&.h\&.
+.SH "Member Typedef Documentation"
+.PP 
+.SS "typedef std::vector<\fBstd::string\fP> \fBVamp::HostExt::PluginLoader::PluginCategoryHierarchy\fP"
+PluginCategoryHierarchy is a sequence of general->specific category names, as may be associated with a single plugin\&. This sequence describes the location of a plugin within a category forest, containing the human-readable names of the plugin's category tree root, followed by each of the nodes down to the leaf containing the plugin\&.
+.PP
+\fBSee also:\fP
+.RS 4
+\fBgetPluginCategory()\fP 
+.RE
+.PP
+
+.PP
+Definition at line 119 of file PluginLoader\&.h\&.
+.SS "typedef \fBstd::string\fP \fBVamp::HostExt::PluginLoader::PluginKey\fP"
+PluginKey is a string type that is used to identify a plugin uniquely within the scope of 'the current system'\&. It consists of the lower-cased base name of the plugin library, a colon separator, and the identifier string for the plugin\&. It is only meaningful in the context of a given plugin path (the one returned by \fBPluginHostAdapter::getPluginPath()\fP)\&.
+.PP
+Use \fBcomposePluginKey()\fP to construct a plugin key from a known plugin library name and identifier\&.
+.PP
+Note: the fact that the library component of the key is lower-cased implies that library names are matched case-insensitively by the \fBPluginLoader\fP class, regardless of the case sensitivity of the underlying filesystem\&. (\fBPlugin\fP identifiers \fIare\fP case sensitive, however\&.) Also, it is not possible to portably extract a working library name from a plugin key, as the result may fail on case-sensitive filesystems\&. Use \fBgetLibraryPathForPlugin()\fP instead\&. 
+.PP
+Definition at line 101 of file PluginLoader\&.h\&.
+.SS "typedef std::vector<\fBPluginKey\fP> \fBVamp::HostExt::PluginLoader::PluginKeyList\fP"
+PluginKeyList is a sequence of plugin keys, such as returned by \fBlistPlugins()\fP\&. 
+.PP
+Definition at line 107 of file PluginLoader\&.h\&.
+.SH "Member Enumeration Documentation"
+.PP 
+.SS "enum \fBVamp::HostExt::PluginLoader::AdapterFlags\fP"
+AdapterFlags contains a set of values that may be OR'd together to indicate in which circumstances \fBPluginLoader\fP should use a plugin adapter to make a plugin easier to use for a host that does not want to cater for complex features\&.
+.PP
+The available flags are:
+.PP
+ADAPT_INPUT_DOMAIN - If the plugin expects frequency domain input, wrap it in a \fBPluginInputDomainAdapter\fP that automatically converts the plugin to one that expects time-domain input\&. This enables a host to accommodate time- and frequency-domain plugins without needing to do any conversion itself\&.
+.PP
+ADAPT_CHANNEL_COUNT - Wrap the plugin in a \fBPluginChannelAdapter\fP to handle any mismatch between the number of channels of audio the plugin can handle and the number available in the host\&. This enables a host to use plugins that may require the input to be mixed down to mono, etc\&., without having to worry about doing that itself\&.
+.PP
+ADAPT_BUFFER_SIZE - Wrap the plugin in a \fBPluginBufferingAdapter\fP permitting the host to provide audio input using any block size, with no overlap, regardless of the plugin's preferred block size (suitable for hosts that read from non-seekable streaming media, for example)\&. This adapter introduces some run-time overhead and also changes the semantics of the plugin slightly (see the \fBPluginBufferingAdapter\fP header documentation for details)\&.
+.PP
+ADAPT_ALL_SAFE - Perform all available adaptations that are meaningful for the plugin and 'safe'\&. Currently this means to ADAPT_INPUT_DOMAIN if the plugin wants FrequencyDomain input; ADAPT_CHANNEL_COUNT always; and ADAPT_BUFFER_SIZE never\&.
+.PP
+ADAPT_ALL - Perform all available adaptations that are meaningful for the plugin\&.
+.PP
+See \fBPluginInputDomainAdapter\fP, \fBPluginChannelAdapter\fP and \fBPluginBufferingAdapter\fP for more details of the classes that the loader may use if these flags are set\&. 
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fIADAPT_INPUT_DOMAIN \fP\fP
+.TP
+\fB\fIADAPT_CHANNEL_COUNT \fP\fP
+.TP
+\fB\fIADAPT_BUFFER_SIZE \fP\fP
+.TP
+\fB\fIADAPT_ALL_SAFE \fP\fP
+.TP
+\fB\fIADAPT_ALL \fP\fP
+.PP
+Definition at line 169 of file PluginLoader\&.h\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "Vamp::HostExt::PluginLoader::PluginLoader ()\fC [protected]\fP"
+
+.PP
+Definition at line 143 of file PluginLoader\&.cpp\&.
+.SS "Vamp::HostExt::PluginLoader::~PluginLoader ()\fC [protected]\fP, \fC [virtual]\fP"
+
+.PP
+Definition at line 148 of file PluginLoader\&.cpp\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "\fBPluginLoader::PluginKey\fP Vamp::HostExt::PluginLoader::composePluginKey (\fBstd::string\fP libraryName, \fBstd::string\fP identifier)"
+Given a \fBVamp\fP plugin library name and plugin identifier, return the corresponding plugin key in a form suitable for passing in to \fBloadPlugin()\fP\&. 
+.PP
+Definition at line 181 of file PluginLoader\&.cpp\&.
+.SS "\fBPluginLoader\fP * Vamp::HostExt::PluginLoader::getInstance ()\fC [static]\fP"
+Obtain a pointer to the singleton instance of \fBPluginLoader\fP\&. Use this to obtain your loader object\&. 
+.PP
+Definition at line 154 of file PluginLoader\&.cpp\&.
+.SS "\fBstring\fP Vamp::HostExt::PluginLoader::getLibraryPathForPlugin (\fBPluginKey\fP plugin)"
+Return the file path of the dynamic library from which the given plugin will be loaded (if available)\&. 
+.PP
+Definition at line 193 of file PluginLoader\&.cpp\&.
+.SS "\fBPluginLoader::PluginCategoryHierarchy\fP Vamp::HostExt::PluginLoader::getPluginCategory (\fBPluginKey\fP plugin)"
+Return the category hierarchy for a \fBVamp\fP plugin, given its identifying key\&.
+.PP
+If the plugin has no category information, return an empty hierarchy\&.
+.PP
+\fBSee also:\fP
+.RS 4
+\fBPluginCategoryHierarchy\fP 
+.RE
+.PP
+
+.PP
+Definition at line 187 of file PluginLoader\&.cpp\&.
+.SS "vector< \fBPluginLoader::PluginKey\fP > Vamp::HostExt::PluginLoader::listPlugins ()"
+Search for all available \fBVamp\fP plugins, and return a list of them in the order in which they were found\&. 
+.PP
+Definition at line 167 of file PluginLoader\&.cpp\&.
+.SS "\fBPlugin\fP * Vamp::HostExt::PluginLoader::loadPlugin (\fBPluginKey\fP key, float inputSampleRate, \fBint\fP adapterFlags = \fC0\fP)"
+Load a \fBVamp\fP plugin, given its identifying key\&. If the plugin could not be loaded, returns 0\&.
+.PP
+The returned plugin should be deleted (using the standard C++ delete keyword) after use\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIadapterFlags\fP a bitwise OR of the values in the AdapterFlags enumeration, indicating under which circumstances an adapter should be used to wrap the original plugin\&. If adapterFlags is 0, no optional adapters will be used\&. Otherwise, the returned plugin may be of an adapter class type which will behave identically to the original plugin, apart from any particular features implemented by the adapter itself\&.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBAdapterFlags\fP, \fBPluginInputDomainAdapter\fP, \fBPluginChannelAdapter\fP 
+.RE
+.PP
+
+.PP
+Definition at line 173 of file PluginLoader\&.cpp\&.
+.SH "Member Data Documentation"
+.PP 
+.SS "\fBImpl\fP* Vamp::HostExt::PluginLoader::m_impl\fC [protected]\fP"
+
+.PP
+Definition at line 230 of file PluginLoader\&.h\&.
+.SS "\fBPluginLoader\fP * Vamp::HostExt::PluginLoader::m_instance = 0\fC [static]\fP, \fC [protected]\fP"
+
+.PP
+Definition at line 233 of file PluginLoader\&.h\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

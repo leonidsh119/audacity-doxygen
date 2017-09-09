@@ -1,0 +1,207 @@
+.TH "Nyq::Delay" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Nyq::Delay \- 
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <Delay\&.h>\fP
+.PP
+Inherits \fBNyq::Filter\fP\&.
+.PP
+Inherited by \fBNyq::DelayA\fP, and \fBNyq::DelayL\fP\&.
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBDelay\fP ()"
+.br
+.RI "\fIDefault constructor creates a delay-line with maximum length of 4095 samples and zero delay\&. \fP"
+.ti -1c
+.RI "\fBDelay\fP (unsigned long delay, unsigned long \fBmaxDelay\fP)"
+.br
+.RI "\fIOverloaded constructor which specifies the current and maximum delay-line lengths\&. \fP"
+.ti -1c
+.RI "virtual \fB~Delay\fP ()"
+.br
+.RI "\fIClass destructor\&. \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBclear\fP ()"
+.br
+.RI "\fIClears the internal state of the delay line\&. \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBsetMaximumDelay\fP (unsigned long delay)"
+.br
+.RI "\fISet the maximum delay-line length\&. \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBsetDelay\fP (unsigned long delay)"
+.br
+.RI "\fISet the delay-line length\&. \fP"
+.ti -1c
+.RI "unsigned long \fBgetDelay\fP (\fBvoid\fP) \fBconst\fP "
+.br
+.RI "\fIReturn the current delay-line length\&. \fP"
+.ti -1c
+.RI "\fBStkFloat\fP \fBenergy\fP (\fBvoid\fP) \fBconst\fP "
+.br
+.RI "\fICalculate and return the signal energy in the delay-line\&. \fP"
+.ti -1c
+.RI "\fBStkFloat\fP \fBcontentsAt\fP (unsigned long tapDelay)"
+.br
+.RI "\fIReturn the value at \fItapDelay\fP samples from the delay-line input\&. \fP"
+.ti -1c
+.RI "\fBStkFloat\fP \fBlastOut\fP (\fBvoid\fP) \fBconst\fP "
+.br
+.RI "\fIReturn the last computed output value\&. \fP"
+.ti -1c
+.RI "virtual \fBStkFloat\fP \fBnextOut\fP (\fBvoid\fP)"
+.br
+.RI "\fIReturn the value which will be output by the next call to \fBtick()\fP\&. \fP"
+.ti -1c
+.RI "virtual \fBStkFloat\fP \fBtick\fP (\fBStkFloat\fP sample)"
+.br
+.RI "\fIInput one sample to the filter and return one output\&. \fP"
+.ti -1c
+.RI "virtual \fBStkFrames\fP & \fBtick\fP (\fBStkFrames\fP &frames, unsigned \fBint\fP channel=0)"
+.br
+.RI "\fITake a channel of the \fBStkFrames\fP object as inputs to the filter and replace with corresponding outputs\&. \fP"
+.in -1c
+.SS "Protected Member Functions"
+
+.in +1c
+.ti -1c
+.RI "virtual \fBStkFloat\fP \fBcomputeSample\fP (\fBStkFloat\fP input)"
+.br
+.in -1c
+.SS "Protected Attributes"
+
+.in +1c
+.ti -1c
+.RI "unsigned long \fBinPoint_\fP"
+.br
+.ti -1c
+.RI "unsigned long \fBoutPoint_\fP"
+.br
+.ti -1c
+.RI "\fBStkFloat\fP \fBdelay_\fP"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Definition at line 29 of file Delay\&.h\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "Delay::Delay ()"
+
+.PP
+Default constructor creates a delay-line with maximum length of 4095 samples and zero delay\&. 
+.PP
+Definition at line 25 of file Delay\&.cpp\&.
+.SS "Delay::Delay (unsigned long delay, unsigned long maxDelay)"
+
+.PP
+Overloaded constructor which specifies the current and maximum delay-line lengths\&. An \fBStkError\fP will be thrown if the delay parameter is less than zero, the maximum delay parameter is less than one, or the delay parameter is greater than the maxDelay value\&. 
+.PP
+Definition at line 36 of file Delay\&.cpp\&.
+.SS "Delay::~Delay ()\fC [virtual]\fP"
+
+.PP
+Class destructor\&. 
+.PP
+Definition at line 60 of file Delay\&.cpp\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "\fBvoid\fP Delay::clear (\fBvoid\fP)"
+
+.PP
+Clears the internal state of the delay line\&. 
+.PP
+Definition at line 64 of file Delay\&.cpp\&.
+.SS "\fBStkFloat\fP Delay::computeSample (\fBStkFloat\fP input)\fC [protected]\fP, \fC [virtual]\fP"
+
+.PP
+Reimplemented in \fBNyq::DelayA\fP, and \fBNyq::DelayL\fP\&.
+.PP
+Definition at line 172 of file Delay\&.cpp\&.
+.SS "\fBStkFloat\fP Delay::contentsAt (unsigned long tapDelay)"
+
+.PP
+Return the value at \fItapDelay\fP samples from the delay-line input\&. The tap point is determined modulo the delay-line length and is relative to the last input value (i\&.e\&., a tapDelay of zero returns the last input value)\&. 
+.PP
+Definition at line 141 of file Delay\&.cpp\&.
+.SS "\fBStkFloat\fP Delay::energy (\fBvoid\fP) const"
+
+.PP
+Calculate and return the signal energy in the delay-line\&. 
+.PP
+Definition at line 119 of file Delay\&.cpp\&.
+.SS "unsigned long Delay::getDelay (\fBvoid\fP) const"
+
+.PP
+Return the current delay-line length\&. 
+.PP
+Definition at line 114 of file Delay\&.cpp\&.
+.SS "\fBStkFloat\fP Delay::lastOut (\fBvoid\fP) const\fC [virtual]\fP"
+
+.PP
+Return the last computed output value\&. 
+.PP
+Reimplemented from \fBNyq::Filter\fP\&.
+.PP
+Definition at line 162 of file Delay\&.cpp\&.
+.SS "\fBStkFloat\fP Delay::nextOut (\fBvoid\fP)\fC [virtual]\fP"
+
+.PP
+Return the value which will be output by the next call to \fBtick()\fP\&. This method is valid only for delay settings greater than zero! 
+.PP
+Reimplemented in \fBNyq::DelayA\fP, and \fBNyq::DelayL\fP\&.
+.PP
+Definition at line 167 of file Delay\&.cpp\&.
+.SS "\fBvoid\fP Delay::setDelay (unsigned long delay)"
+
+.PP
+Set the delay-line length\&. The valid range for \fItheDelay\fP is from 0 to the maximum delay-line length\&. 
+.PP
+Definition at line 89 of file Delay\&.cpp\&.
+.SS "\fBvoid\fP Delay::setMaximumDelay (unsigned long delay)"
+
+.PP
+Set the maximum delay-line length\&. This method should generally only be used during initial setup of the delay line\&. If it is used between calls to the \fBtick()\fP function, without a call to \fBclear()\fP, a signal discontinuity will likely occur\&. If the current maximum length is greater than the new length, no change will be made\&. 
+.PP
+Definition at line 71 of file Delay\&.cpp\&.
+.SS "\fBStkFloat\fP Delay::tick (\fBStkFloat\fP sample)\fC [virtual]\fP"
+
+.PP
+Input one sample to the filter and return one output\&. 
+.PP
+Reimplemented from \fBNyq::Filter\fP\&.
+.PP
+Definition at line 189 of file Delay\&.cpp\&.
+.SS "\fBStkFrames\fP & Delay::tick (\fBStkFrames\fP & frames, unsigned \fBint\fP channel = \fC0\fP)\fC [virtual]\fP"
+
+.PP
+Take a channel of the \fBStkFrames\fP object as inputs to the filter and replace with corresponding outputs\&. The \fCchannel\fP argument should be zero or greater (the first channel is specified by 0)\&. An \fBStkError\fP will be thrown if the \fCchannel\fP argument is equal to or greater than the number of channels in the \fBStkFrames\fP object\&. 
+.PP
+Reimplemented from \fBNyq::Filter\fP\&.
+.PP
+Definition at line 194 of file Delay\&.cpp\&.
+.SH "Member Data Documentation"
+.PP 
+.SS "\fBStkFloat\fP Nyq::Delay::delay_\fC [protected]\fP"
+
+.PP
+Definition at line 109 of file Delay\&.h\&.
+.SS "unsigned long Nyq::Delay::inPoint_\fC [protected]\fP"
+
+.PP
+Definition at line 107 of file Delay\&.h\&.
+.SS "unsigned long Nyq::Delay::outPoint_\fC [protected]\fP"
+
+.PP
+Definition at line 108 of file Delay\&.h\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

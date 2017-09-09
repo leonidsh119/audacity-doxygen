@@ -1,0 +1,179 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/lib-src/portaudio-v19/src/common/pa_converters.h" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/lib-src/portaudio-v19/src/common/pa_converters.h \- Conversion functions used to convert buffers of samples from one format to another\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+\fC#include 'portaudio\&.h'\fP
+.br
+
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "struct \fBPaUtilConverterTable\fP"
+.br
+.ti -1c
+.RI "struct \fBPaUtilZeroerTable\fP"
+.br
+.in -1c
+.SS "Typedefs"
+
+.in +1c
+.ti -1c
+.RI "typedef \fBvoid\fP \fBPaUtilConverter\fP(\fBvoid\fP *destinationBuffer, signed \fBint\fP destinationStride, \fBvoid\fP *sourceBuffer, signed \fBint\fP sourceStride, unsigned \fBint\fP \fBcount\fP, struct \fBPaUtilTriangularDitherGenerator\fP *ditherGenerator)"
+.br
+.ti -1c
+.RI "typedef \fBvoid\fP \fBPaUtilZeroer\fP(\fBvoid\fP *destinationBuffer, signed \fBint\fP destinationStride, unsigned \fBint\fP \fBcount\fP)"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBPaSampleFormat\fP \fBPaUtil_SelectClosestAvailableFormat\fP (\fBPaSampleFormat\fP availableFormats, \fBPaSampleFormat\fP \fBformat\fP)"
+.br
+.ti -1c
+.RI "\fBPaUtilConverter\fP * \fBPaUtil_SelectConverter\fP (\fBPaSampleFormat\fP sourceFormat, \fBPaSampleFormat\fP destinationFormat, \fBPaStreamFlags\fP flags)"
+.br
+.ti -1c
+.RI "\fBPaUtilZeroer\fP * \fBPaUtil_SelectZeroer\fP (\fBPaSampleFormat\fP destinationFormat)"
+.br
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "\fBPaUtilConverterTable\fP \fBpaConverters\fP"
+.br
+.ti -1c
+.RI "\fBPaUtilZeroerTable\fP \fBpaZeroers\fP"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Conversion functions used to convert buffers of samples from one format to another\&. 
+
+
+.PP
+Definition in file \fBpa_converters\&.h\fP\&.
+.SH "Typedef Documentation"
+.PP 
+.SS "typedef \fBvoid\fP PaUtilConverter(\fBvoid\fP *destinationBuffer, signed \fBint\fP destinationStride, \fBvoid\fP *sourceBuffer, signed \fBint\fP sourceStride, unsigned \fBint\fP \fBcount\fP, struct \fBPaUtilTriangularDitherGenerator\fP *ditherGenerator)"
+The generic sample converter prototype\&. \fBSample\fP converters convert count samples from sourceBuffer to destinationBuffer\&. The actual type of the data pointed to by these parameters varys for different converter functions\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdestinationBuffer\fP A pointer to the first sample of the destination\&. 
+.br
+\fIdestinationStride\fP An offset between successive destination samples expressed in samples (not bytes\&.) It may be negative\&. 
+.br
+\fIsourceBuffer\fP A pointer to the first sample of the source\&. 
+.br
+\fIsourceStride\fP An offset between successive source samples expressed in samples (not bytes\&.) It may be negative\&. 
+.br
+\fIcount\fP The number of samples to convert\&. 
+.br
+\fIditherState\fP \fBState\fP information used to calculate dither\&. Converters that do not perform dithering will ignore this parameter, in which case NULL or invalid dither state may be passed\&. 
+.RE
+.PP
+
+.PP
+Definition at line 90 of file pa_converters\&.h\&.
+.SS "typedef \fBvoid\fP PaUtilZeroer(\fBvoid\fP *destinationBuffer, signed \fBint\fP destinationStride, unsigned \fBint\fP \fBcount\fP)"
+The generic buffer zeroer prototype\&. Buffer zeroers copy count zeros to destinationBuffer\&. The actual type of the data pointed to varys for different zeroer functions\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdestinationBuffer\fP A pointer to the first sample of the destination\&. 
+.br
+\fIdestinationStride\fP An offset between successive destination samples expressed in samples (not bytes\&.) It may be negative\&. 
+.br
+\fIcount\fP The number of samples to zero\&. 
+.RE
+.PP
+
+.PP
+Definition at line 119 of file pa_converters\&.h\&.
+.SH "Function Documentation"
+.PP 
+.SS "\fBPaSampleFormat\fP PaUtil_SelectClosestAvailableFormat (\fBPaSampleFormat\fP availableFormats, \fBPaSampleFormat\fP format)"
+Choose an available sample format which is most appropriate for representing the requested format\&. If the requested format is not available higher quality formats are considered before lower quality formates\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIavailableFormats\fP A variable containing the logical OR of all available formats\&. 
+.br
+\fIformat\fP The desired format\&. 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+The most appropriate available format for representing the requested format\&. 
+.RE
+.PP
+
+.PP
+Definition at line 70 of file pa_converters\&.c\&.
+.SS "\fBPaUtilConverter\fP* PaUtil_SelectConverter (\fBPaSampleFormat\fP sourceFormat, \fBPaSampleFormat\fP destinationFormat, \fBPaStreamFlags\fP flags)"
+Find a sample converter function for the given source and destinations formats and flags (clip and dither\&.) 
+.PP
+\fBReturns:\fP
+.RS 4
+A pointer to a PaUtilConverter which will perform the requested conversion, or NULL if the given format conversion is not supported\&. For conversions where clipping or dithering is not necessary, the clip and dither flags are ignored and a non-clipping or dithering version is returned\&. If the source and destination formats are the same, a function which copies data of the appropriate size will be returned\&. 
+.RE
+.PP
+
+.PP
+Definition at line 178 of file pa_converters\&.c\&.
+.SS "\fBPaUtilZeroer\fP* PaUtil_SelectZeroer (\fBPaSampleFormat\fP destinationFormat)"
+Find a buffer zeroer function for the given destination format\&. 
+.PP
+\fBReturns:\fP
+.RS 4
+A pointer to a PaUtilZeroer which will perform the requested zeroing\&. 
+.RE
+.PP
+
+.PP
+Definition at line 1857 of file pa_converters\&.c\&.
+.SH "Variable Documentation"
+.PP 
+.SS "\fBPaUtilConverterTable\fP paConverters"
+A table of pointers to all required converter functions\&. \fBPaUtil_SelectConverter()\fP uses this table to lookup the appropriate conversion functions\&. The fields of this structure are initialized with default conversion functions\&. Fields may be NULL, indicating that no conversion function is available\&. User code may substitue optimised conversion functions by assigning different function pointers to these fields\&.
+.PP
+\fBNote:\fP
+.RS 4
+If the PA_NO_STANDARD_CONVERTERS preprocessor variable is defined, PortAudio's standard converters will not be compiled, and all fields of this structure will be initialized to NULL\&. In such cases, users should supply their own conversion functions if the require PortAudio to open a stream that requires sample conversion\&.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBPaUtilConverterTable\fP, \fBPaUtilConverter\fP, \fBPaUtil_SelectConverter\fP 
+.RE
+.PP
+
+.PP
+Definition at line 1780 of file pa_converters\&.c\&.
+.SS "\fBPaUtilZeroerTable\fP paZeroers"
+A table of pointers to all required zeroer functions\&. \fBPaUtil_SelectZeroer()\fP uses this table to lookup the appropriate conversion functions\&. The fields of this structure are initialized with default conversion functions\&. User code may substitue optimised conversion functions by assigning different function pointers to these fields\&.
+.PP
+\fBNote:\fP
+.RS 4
+If the PA_NO_STANDARD_ZEROERS preprocessor variable is defined, PortAudio's standard zeroers will not be compiled, and all fields of this structure will be initialized to NULL\&. In such cases, users should supply their own zeroing functions for the sample sizes which they intend to use\&.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBPaUtilZeroerTable\fP, \fBPaUtilZeroer\fP, \fBPaUtil_SelectZeroer\fP 
+.RE
+.PP
+
+.PP
+Definition at line 1973 of file pa_converters\&.c\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

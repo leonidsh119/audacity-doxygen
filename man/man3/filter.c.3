@@ -1,0 +1,196 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/lib-src/libsoxr/src/filter.c" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/lib-src/libsoxr/src/filter.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include 'filter\&.h'\fP
+.br
+\fC#include <math\&.h>\fP
+.br
+\fC#include <assert\&.h>\fP
+.br
+\fC#include <string\&.h>\fP
+.br
+\fC#include <stdlib\&.h>\fP
+.br
+\fC#include 'fft4g\&.h'\fP
+.br
+\fC#include 'ccrw2\&.h'\fP
+.br
+\fC#include 'fft4g_cache\&.h'\fP
+.br
+\fC#include 'rdft\&.h'\fP
+.br
+
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBM_PI\fP   3\&.14159265358979323846"
+.br
+.ti -1c
+.RI "#define \fBDFT_FLOAT\fP   double"
+.br
+.ti -1c
+.RI "#define \fBDONE_WITH_FFT_CACHE\fP   done_with_fft_cache"
+.br
+.ti -1c
+.RI "#define \fBFFT_CACHE_CCRW\fP   fft_cache_ccrw"
+.br
+.ti -1c
+.RI "#define \fBFFT_LEN\fP   fft_len"
+.br
+.ti -1c
+.RI "#define \fBLSX_CDFT\fP   \fBlsx_cdft\fP"
+.br
+.ti -1c
+.RI "#define \fBLSX_CLEAR_FFT_CACHE\fP   \fBlsx_clear_fft_cache\fP"
+.br
+.ti -1c
+.RI "#define \fBLSX_FFT_BR\fP   lsx_fft_br"
+.br
+.ti -1c
+.RI "#define \fBLSX_FFT_SC\fP   lsx_fft_sc"
+.br
+.ti -1c
+.RI "#define \fBLSX_INIT_FFT_CACHE\fP   \fBlsx_init_fft_cache\fP"
+.br
+.ti -1c
+.RI "#define \fBLSX_RDFT\fP   \fBlsx_rdft\fP"
+.br
+.ti -1c
+.RI "#define \fBLSX_SAFE_CDFT\fP   \fBlsx_safe_cdft\fP"
+.br
+.ti -1c
+.RI "#define \fBLSX_SAFE_RDFT\fP   \fBlsx_safe_rdft\fP"
+.br
+.ti -1c
+.RI "#define \fBUPDATE_FFT_CACHE\fP   update_fft_cache"
+.br
+.ti -1c
+.RI "#define \fBDFT_FLOAT\fP   double"
+.br
+.ti -1c
+.RI "#define \fBORDERED_CONVOLVE\fP   \fBlsx_ordered_convolve\fP"
+.br
+.ti -1c
+.RI "#define \fBORDERED_PARTIAL_CONVOLVE\fP   \fBlsx_ordered_partial_convolve\fP"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "double \fBlsx_kaiser_beta\fP (double \fBatt\fP, double tr_bw)"
+.br
+.ti -1c
+.RI "double * \fBlsx_make_lpf\fP (\fBint\fP num_taps, double Fc, double beta, double rho, double \fBscale\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBlsx_kaiser_params\fP (double \fBatt\fP, double Fc, double tr_bw, double *beta, \fBint\fP *num_taps)"
+.br
+.ti -1c
+.RI "double * \fBlsx_design_lpf\fP (double Fp, double Fs, double Fn, double \fBatt\fP, \fBint\fP *num_taps, \fBint\fP \fBk\fP, double beta)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBlsx_fir_to_phase\fP (double **h, \fBint\fP *\fBlen\fP, \fBint\fP *post_len, double phase)"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define DFT_FLOAT   double"
+
+.PP
+Definition at line 52 of file filter\&.c\&.
+.SS "#define DFT_FLOAT   double"
+
+.PP
+Definition at line 52 of file filter\&.c\&.
+.SS "#define DONE_WITH_FFT_CACHE   done_with_fft_cache"
+
+.PP
+Definition at line 19 of file filter\&.c\&.
+.SS "#define FFT_CACHE_CCRW   fft_cache_ccrw"
+
+.PP
+Definition at line 20 of file filter\&.c\&.
+.SS "#define FFT_LEN   fft_len"
+
+.PP
+Definition at line 21 of file filter\&.c\&.
+.SS "#define LSX_CDFT   \fBlsx_cdft\fP"
+
+.PP
+Definition at line 22 of file filter\&.c\&.
+.SS "#define LSX_CLEAR_FFT_CACHE   \fBlsx_clear_fft_cache\fP"
+
+.PP
+Definition at line 23 of file filter\&.c\&.
+.SS "#define LSX_FFT_BR   lsx_fft_br"
+
+.PP
+Definition at line 24 of file filter\&.c\&.
+.SS "#define LSX_FFT_SC   lsx_fft_sc"
+
+.PP
+Definition at line 25 of file filter\&.c\&.
+.SS "#define LSX_INIT_FFT_CACHE   \fBlsx_init_fft_cache\fP"
+
+.PP
+Definition at line 26 of file filter\&.c\&.
+.SS "#define LSX_RDFT   \fBlsx_rdft\fP"
+
+.PP
+Definition at line 27 of file filter\&.c\&.
+.SS "#define LSX_SAFE_CDFT   \fBlsx_safe_cdft\fP"
+
+.PP
+Definition at line 28 of file filter\&.c\&.
+.SS "#define LSX_SAFE_RDFT   \fBlsx_safe_rdft\fP"
+
+.PP
+Definition at line 29 of file filter\&.c\&.
+.SS "#define M_PI   3\&.14159265358979323846"
+
+.PP
+Definition at line 8 of file filter\&.c\&.
+.SS "#define ORDERED_CONVOLVE   \fBlsx_ordered_convolve\fP"
+
+.PP
+Definition at line 53 of file filter\&.c\&.
+.SS "#define ORDERED_PARTIAL_CONVOLVE   \fBlsx_ordered_partial_convolve\fP"
+
+.PP
+Definition at line 54 of file filter\&.c\&.
+.SS "#define UPDATE_FFT_CACHE   update_fft_cache"
+
+.PP
+Definition at line 30 of file filter\&.c\&.
+.SH "Function Documentation"
+.PP 
+.SS "double* lsx_design_lpf (double Fp, double Fs, double Fn, double att, \fBint\fP * num_taps, \fBint\fP k, double beta)"
+
+.PP
+Definition at line 120 of file filter\&.c\&.
+.SS "\fBvoid\fP lsx_fir_to_phase (double ** h, \fBint\fP * len, \fBint\fP * post_len, double phase)"
+
+.PP
+Definition at line 154 of file filter\&.c\&.
+.SS "double lsx_kaiser_beta (double att, double tr_bw)"
+
+.PP
+Definition at line 65 of file filter\&.c\&.
+.SS "\fBvoid\fP lsx_kaiser_params (double att, double Fc, double tr_bw, double * beta, \fBint\fP * num_taps)"
+
+.PP
+Definition at line 112 of file filter\&.c\&.
+.SS "double* lsx_make_lpf (\fBint\fP num_taps, double Fc, double beta, double rho, double scale)"
+
+.PP
+Definition at line 92 of file filter\&.c\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

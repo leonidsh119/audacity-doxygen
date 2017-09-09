@@ -1,0 +1,4364 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/lib-src/libnyquist/nyquist/xlisp/xlisp.h" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/lib-src/libnyquist/nyquist/xlisp/xlisp.h \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <stdlib\&.h>\fP
+.br
+\fC#include <stdio\&.h>\fP
+.br
+\fC#include <ctype\&.h>\fP
+.br
+\fC#include <setjmp\&.h>\fP
+.br
+\fC#include 'xldmem\&.h'\fP
+.br
+
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "struct \fBFUNDEF\fP"
+.br
+.ti -1c
+.RI "struct \fBcontext\fP"
+.br
+.in -1c
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBNNODES\fP   1000"
+.br
+.ti -1c
+.RI "#define \fBNTYPES\fP   20"
+.br
+.ti -1c
+.RI "#define \fBEDEPTH\fP   4000"
+.br
+.ti -1c
+.RI "#define \fBADEPTH\fP   2000"
+.br
+.ti -1c
+.RI "#define \fBFORWARD\fP"
+.br
+.ti -1c
+.RI "#define \fBLOCAL\fP   static"
+.br
+.ti -1c
+.RI "#define \fBAFMT\fP   '%x'"
+.br
+.ti -1c
+.RI "#define \fBFIXTYPE\fP   long"
+.br
+.ti -1c
+.RI "#define \fBITYPE\fP   long atol()"
+.br
+.ti -1c
+.RI "#define \fBICNV\fP(n)   atol(n)"
+.br
+.ti -1c
+.RI "#define \fBIFMT\fP   '%ld'"
+.br
+.ti -1c
+.RI "#define \fBFLOTYPE\fP   double"
+.br
+.ti -1c
+.RI "#define \fBOFFTYPE\fP   \fBint\fP"
+.br
+.ti -1c
+.RI "#define \fBCVPTR\fP(x)   (x)"
+.br
+.ti -1c
+.RI "#define \fBUCHAR\fP   unsigned char"
+.br
+.ti -1c
+.RI "#define \fBSTDERR\fP   stderr"
+.br
+.ti -1c
+.RI "#define \fBTRUE\fP   1"
+.br
+.ti -1c
+.RI "#define \fBFALSE\fP   0"
+.br
+.ti -1c
+.RI "#define \fBexternp\fP(x)   ((x) && \fBntype\fP(x) == \fBEXTERN\fP)"
+.br
+.ti -1c
+.RI "#define \fBNIL\fP   (\fBLVAL\fP )0"
+.br
+.ti -1c
+.RI "#define \fBSTRMAX\fP   250		/* maximum \fBlength\fP \fBof\fP \fBa\fP \fBstring\fP constant */"
+.br
+.ti -1c
+.RI "#define \fBHSIZE\fP   1499		/* symbol \fBhash\fP table \fBsize\fP */"
+.br
+.ti -1c
+.RI "#define \fBSAMPLE\fP   50000		/* control character sample \fBrate\fP */"
+.br
+.ti -1c
+.RI "#define \fBFT_RMHASH\fP   0"
+.br
+.ti -1c
+.RI "#define \fBFT_RMQUOTE\fP   1"
+.br
+.ti -1c
+.RI "#define \fBFT_RMDQUOTE\fP   2"
+.br
+.ti -1c
+.RI "#define \fBFT_RMBQUOTE\fP   3"
+.br
+.ti -1c
+.RI "#define \fBFT_RMCOMMA\fP   4"
+.br
+.ti -1c
+.RI "#define \fBFT_RMLPAR\fP   5"
+.br
+.ti -1c
+.RI "#define \fBFT_RMRPAR\fP   6"
+.br
+.ti -1c
+.RI "#define \fBFT_RMSEMI\fP   7"
+.br
+.ti -1c
+.RI "#define \fBFT_CLNEW\fP   10"
+.br
+.ti -1c
+.RI "#define \fBFT_CLISNEW\fP   11"
+.br
+.ti -1c
+.RI "#define \fBFT_CLANSWER\fP   12"
+.br
+.ti -1c
+.RI "#define \fBFT_OBISNEW\fP   13"
+.br
+.ti -1c
+.RI "#define \fBFT_OBCLASS\fP   14"
+.br
+.ti -1c
+.RI "#define \fBFT_OBSHOW\fP   15"
+.br
+.ti -1c
+.RI "#define \fBFT_OBISA\fP   16"
+.br
+.ti -1c
+.RI "#define \fBpusharg\fP(x)"
+.br
+.ti -1c
+.RI "#define \fBxlstkcheck\fP(n)   {\fBif\fP (\fBxlstack\fP \- (n) < \fBxlstkbase\fP) \fBxlstkoverflow\fP();}"
+.br
+.ti -1c
+.RI "#define \fBxlsave\fP(n)   {*\-\-\fBxlstack\fP = &n; n = \fBNIL\fP;}"
+.br
+.ti -1c
+.RI "#define \fBxlprotect\fP(n)   {*\-\-\fBxlstack\fP = &n;}"
+.br
+.ti -1c
+.RI "#define \fBxlsave1\fP(n)"
+.br
+.ti -1c
+.RI "#define \fBxlprot1\fP(n)"
+.br
+.ti -1c
+.RI "#define \fBxlpop\fP()   {++\fBxlstack\fP;}"
+.br
+.ti -1c
+.RI "#define \fBxlpopn\fP(n)   {\fBxlstack\fP+=(n);}"
+.br
+.ti -1c
+.RI "#define \fBxlframe\fP(e)   \fBcons\fP(\fBNIL\fP,e)"
+.br
+.ti -1c
+.RI "#define \fBxlbind\fP(\fBs\fP,  v)   \fBxlpbind\fP(\fBs\fP,v,\fBxlenv\fP)"
+.br
+.ti -1c
+.RI "#define \fBxlfbind\fP(\fBs\fP,  v)   \fBxlpbind\fP(\fBs\fP,v,\fBxlfenv\fP);"
+.br
+.ti -1c
+.RI "#define \fBxlpbind\fP(\fBs\fP,  v,  e)   {\fBrplaca\fP(e,\fBcons\fP(\fBcons\fP(\fBs\fP,v),\fBcar\fP(e)));}"
+.br
+.ti -1c
+.RI "#define \fBxldbind\fP(\fBs\fP,  v)"
+.br
+.ti -1c
+.RI "#define \fBxlunbind\fP(e)"
+.br
+.ti -1c
+.RI "#define \fBatomp\fP(x)   ((x) == \fBNIL\fP || \fBntype\fP(x) != \fBCONS\fP)"
+.br
+.ti -1c
+.RI "#define \fBnull\fP(x)   ((x) == \fBNIL\fP)"
+.br
+.ti -1c
+.RI "#define \fBlistp\fP(x)   ((x) == \fBNIL\fP || \fBntype\fP(x) == \fBCONS\fP)"
+.br
+.ti -1c
+.RI "#define \fBconsp\fP(x)   ((x) && \fBntype\fP(x) == \fBCONS\fP)"
+.br
+.ti -1c
+.RI "#define \fBsubrp\fP(x)   ((x) && \fBntype\fP(x) == \fBSUBR\fP)"
+.br
+.ti -1c
+.RI "#define \fBfsubrp\fP(x)   ((x) && \fBntype\fP(x) == \fBFSUBR\fP)"
+.br
+.ti -1c
+.RI "#define \fBstringp\fP(x)   ((x) && \fBntype\fP(x) == \fBSTRING\fP)"
+.br
+.ti -1c
+.RI "#define \fBsymbolp\fP(x)   ((x) && \fBntype\fP(x) == \fBSYMBOL\fP)"
+.br
+.ti -1c
+.RI "#define \fBstreamp\fP(x)   ((x) && \fBntype\fP(x) == \fBSTREAM\fP)"
+.br
+.ti -1c
+.RI "#define \fBobjectp\fP(x)   ((x) && \fBntype\fP(x) == \fBOBJECT\fP)"
+.br
+.ti -1c
+.RI "#define \fBfixp\fP(x)   ((x) && \fBntype\fP(x) == \fBFIXNUM\fP)"
+.br
+.ti -1c
+.RI "#define \fBfloatp\fP(x)   ((x) && \fBntype\fP(x) == \fBFLONUM\fP)"
+.br
+.ti -1c
+.RI "#define \fBvectorp\fP(x)   ((x) && \fBntype\fP(x) == \fBVECTOR\fP)"
+.br
+.ti -1c
+.RI "#define \fBclosurep\fP(x)   ((x) && \fBntype\fP(x) == \fBCLOSURE\fP)"
+.br
+.ti -1c
+.RI "#define \fBcharp\fP(x)   ((x) && \fBntype\fP(x) == \fBCHAR\fP)"
+.br
+.ti -1c
+.RI "#define \fBustreamp\fP(x)   ((x) && \fBntype\fP(x) == \fBUSTREAM\fP)"
+.br
+.ti -1c
+.RI "#define \fBboundp\fP(x)   (\fBgetvalue\fP(x) != \fBs_unbound\fP)"
+.br
+.ti -1c
+.RI "#define \fBfboundp\fP(x)   (\fBgetfunction\fP(x) != \fBs_unbound\fP)"
+.br
+.ti -1c
+.RI "#define \fBconsa\fP(x)   \fBcons\fP(x,\fBNIL\fP)"
+.br
+.ti -1c
+.RI "#define \fBconsd\fP(x)   \fBcons\fP(\fBNIL\fP,x)"
+.br
+.ti -1c
+.RI "#define \fBxlgetarg\fP()   (\fBtestarg\fP(\fBnextarg\fP()))"
+.br
+.ti -1c
+.RI "#define \fBxllastarg\fP()   {\fBif\fP (\fBxlargc\fP != 0) \fBxltoomany\fP();}"
+.br
+.ti -1c
+.RI "#define \fBtestarg\fP(e)   (\fBmoreargs\fP() ? (e) : \fBxltoofew\fP())"
+.br
+.ti -1c
+.RI "#define \fBtypearg\fP(tp)   (tp(*\fBxlargv\fP) ? \fBnextarg\fP() : \fBxlbadtype\fP(*\fBxlargv\fP))"
+.br
+.ti -1c
+.RI "#define \fBnextarg\fP()   (\-\-\fBxlargc\fP, *\fBxlargv\fP++)"
+.br
+.ti -1c
+.RI "#define \fBmoreargs\fP()   (\fBxlargc\fP > 0)"
+.br
+.ti -1c
+.RI "#define \fBxlgacons\fP()   (\fBtestarg\fP(\fBtypearg\fP(\fBconsp\fP)))"
+.br
+.ti -1c
+.RI "#define \fBxlgalist\fP()   (\fBtestarg\fP(\fBtypearg\fP(\fBlistp\fP)))"
+.br
+.ti -1c
+.RI "#define \fBxlgasymbol\fP()   (\fBtestarg\fP(\fBtypearg\fP(\fBsymbolp\fP)))"
+.br
+.ti -1c
+.RI "#define \fBxlgastring\fP()   (\fBtestarg\fP(\fBtypearg\fP(\fBstringp\fP)))"
+.br
+.ti -1c
+.RI "#define \fBxlgaobject\fP()   (\fBtestarg\fP(\fBtypearg\fP(\fBobjectp\fP)))"
+.br
+.ti -1c
+.RI "#define \fBxlgafixnum\fP()   (\fBtestarg\fP(\fBtypearg\fP(\fBfixp\fP)))"
+.br
+.ti -1c
+.RI "#define \fBxlgaflonum\fP()   (\fBtestarg\fP(\fBtypearg\fP(\fBfloatp\fP)))"
+.br
+.ti -1c
+.RI "#define \fBxlgachar\fP()   (\fBtestarg\fP(\fBtypearg\fP(\fBcharp\fP)))"
+.br
+.ti -1c
+.RI "#define \fBxlgavector\fP()   (\fBtestarg\fP(\fBtypearg\fP(\fBvectorp\fP)))"
+.br
+.ti -1c
+.RI "#define \fBxlgastream\fP()   (\fBtestarg\fP(\fBtypearg\fP(\fBstreamp\fP)))"
+.br
+.ti -1c
+.RI "#define \fBxlgaustream\fP()   (\fBtestarg\fP(\fBtypearg\fP(\fBustreamp\fP)))"
+.br
+.ti -1c
+.RI "#define \fBxlgaclosure\fP()   (\fBtestarg\fP(\fBtypearg\fP(\fBclosurep\fP)))"
+.br
+.ti -1c
+.RI "#define \fBCF_GO\fP   0x0001"
+.br
+.ti -1c
+.RI "#define \fBCF_RETURN\fP   0x0002"
+.br
+.ti -1c
+.RI "#define \fBCF_THROW\fP   0x0004"
+.br
+.ti -1c
+.RI "#define \fBCF_ERROR\fP   0x0008"
+.br
+.ti -1c
+.RI "#define \fBCF_CLEANUP\fP   0x0010"
+.br
+.ti -1c
+.RI "#define \fBCF_CONTINUE\fP   0x0020"
+.br
+.ti -1c
+.RI "#define \fBCF_TOPLEVEL\fP   0x0040"
+.br
+.ti -1c
+.RI "#define \fBCF_BRKLEVEL\fP   0x0080"
+.br
+.ti -1c
+.RI "#define \fBCF_UNWIND\fP   0x0100"
+.br
+.ti -1c
+.RI "#define \fBSAFE_NYQUIST\fP   (\fBsafe_write_path\fP != \fBNULL\fP)"
+.br
+.in -1c
+.SS "Typedefs"
+
+.in +1c
+.ti -1c
+.RI "typedef struct \fBcontext\fP \fBXLCONTEXT\fP"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "FILE * \fBosaopen\fP (\fBconst\fP char *\fBname\fP, \fBconst\fP char *mode)"
+.br
+.ti -1c
+.RI "FILE * \fBosbopen\fP (\fBconst\fP char *\fBname\fP, \fBconst\fP char *mode)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBinval_caches\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxeval\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxapply\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxfuncall\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxmacroexpand\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBx1macroexpand\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxatom\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxsymbolp\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxnumberp\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxintegerp\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxfloatp\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxcharp\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxstringp\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxarrayp\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxstreamp\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxobjectp\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxboundp\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxfboundp\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxnull\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlistp\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxendp\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxconsp\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxeq\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxeql\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxequal\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxset\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxgensym\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxmakesymbol\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxintern\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxsymname\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxsymvalue\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxsymfunction\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxsymplist\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxget\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxputprop\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxremprop\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxhash\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxaref\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxmkarray\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxvector\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxerror\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxcerror\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxbreak\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxcleanup\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxtoplevel\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxcontinue\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxevalhook\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxquote\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxfunction\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxbquote\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlambda\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxgetlambda\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxsetq\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxpsetq\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxsetf\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxdefun\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxdefmacro\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxcond\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxwhen\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxunless\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxcase\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxand\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBx_or\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxif\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlet\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxletstar\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxflet\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlabels\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxmacrolet\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxprog\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxprogstar\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxgo\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxreturn\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxrtnfrom\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxprog1\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxprog2\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxprogn\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxprogv\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxloop\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxdo\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxdostar\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxdolist\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxdotimes\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxblock\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxtagbody\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxcatch\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxthrow\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxunwindprotect\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxerrset\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxtrace\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxuntrace\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBxlabort\fP (\fBconst\fP char *emsg)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBxlbreak\fP (\fBconst\fP char *emsg, \fBLVAL\fP arg)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBxlfail\fP (\fBconst\fP char *emsg)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBxlerror\fP (\fBconst\fP char *emsg, \fBLVAL\fP arg)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBxlcerror\fP (\fBconst\fP char *cmsg, \fBconst\fP char *emsg, \fBLVAL\fP arg)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBxlerrprint\fP (\fBconst\fP char *hdr, \fBconst\fP char *cmsg, \fBconst\fP char *emsg, \fBLVAL\fP arg)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBxlbaktrace\fP (\fBint\fP n)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBxldinit\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBclose_loadingfiles\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBcons\fP (\fBLVAL\fP x, \fBLVAL\fP y)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBcvstring\fP (\fBconst\fP char *\fBstr\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBnew_string\fP (\fBint\fP \fBsize\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBcvsymbol\fP (\fBconst\fP char *\fBpname\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBcvsubr\fP (\fBLVAL\fP(*fcn)(\fBvoid\fP), \fBint\fP type, \fBint\fP \fBoffset\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBcvfile\fP (FILE *fp)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBcvfixnum\fP (\fBFIXTYPE\fP n)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBcvflonum\fP (\fBFLOTYPE\fP n)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBcvchar\fP (\fBint\fP n)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBnewustream\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBnewobject\fP (\fBLVAL\fP cls, \fBint\fP \fBsize\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBnewclosure\fP (\fBLVAL\fP \fBname\fP, \fBLVAL\fP type, \fBLVAL\fP env, \fBLVAL\fP fenv)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBnewvector\fP (\fBint\fP \fBsize\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBgc\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBSEGMENT\fP * \fBnewsegment\fP (\fBint\fP n)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxgc\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxexpand\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxalloc\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxmem\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxsave\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxrestore\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBxlminit\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBcvextern\fP (\fBxtype_desc\fP typeptr, unsigned char *instptr)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBnewnode\fP (\fBint\fP type)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBmark\fP (\fBLVAL\fP ptr)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxleval\fP (\fBLVAL\fP expr)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlxeval\fP (\fBLVAL\fP expr)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlapply\fP (\fBint\fP \fBargc\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlexpandmacros\fP (\fBLVAL\fP form)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBmacroexpand\fP (\fBLVAL\fP fun, \fBLVAL\fP args, \fBLVAL\fP *pval)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBpushargs\fP (\fBLVAL\fP fun, \fBLVAL\fP args)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBmakearglist\fP (\fBint\fP \fBargc\fP, \fBLVAL\fP *\fBargv\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlclose\fP (\fBLVAL\fP \fBname\fP, \fBLVAL\fP type, \fBLVAL\fP fargs, \fBLVAL\fP body, \fBLVAL\fP env, \fBLVAL\fP fenv)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBxlabind\fP (\fBLVAL\fP fun, \fBint\fP \fBargc\fP, \fBLVAL\fP *\fBargv\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBxlunbound\fP (\fBLVAL\fP sym)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBxlfunbound\fP (\fBLVAL\fP sym)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBxlstkoverflow\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBxlargstkoverflow\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxread\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxprint\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxprin1\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxprinc\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxterpri\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxflatsize\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxflatc\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxopen\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxbopen\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxclose\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxrdchar\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxrdbyte\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxpkchar\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxwrchar\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxwrbyte\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxrdint\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxwrint\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxrdfloat\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxwrfloat\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxreadline\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxmkstrinput\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxmkstroutput\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxgetstroutput\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxgetlstoutput\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxformat\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlistdir\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBxlisave\fP (\fBconst\fP char *fname)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBxlirestore\fP (\fBconst\fP char *fname)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBxlinit\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBxlsymbols\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBxlgetc\fP (\fBLVAL\fP fptr)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBxlungetc\fP (\fBLVAL\fP fptr, \fBint\fP ch)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBxlpeek\fP (\fBLVAL\fP fptr)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBxlputc\fP (\fBLVAL\fP fptr, \fBint\fP ch)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBxloutflush\fP (\fBLVAL\fP fptr)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBxlflush\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBstdprint\fP (\fBLVAL\fP expr)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBstdputstr\fP (\fBconst\fP char *\fBstr\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBstdflush\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBerrprint\fP (\fBLVAL\fP expr)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBerrputstr\fP (\fBconst\fP char *\fBstr\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBdbgprint\fP (\fBLVAL\fP expr)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBdbgputstr\fP (\fBconst\fP char *\fBstr\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBtrcprin1\fP (\fBLVAL\fP expr)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBtrcputstr\fP (\fBconst\fP char *\fBstr\fP)"
+.br
+.ti -1c
+.RI "long \fBxlrand\fP (long range)"
+.br
+.ti -1c
+.RI "double \fBxlrealrand\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBxlrdsave\fP (\fBLVAL\fP expr)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBxlevsave\fP (\fBLVAL\fP expr)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBxlfatal\fP (\fBconst\fP char *msg)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBxlisp_main_init\fP (\fBint\fP, char **)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBxlisp_main\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBxlisp_wrapup\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBxlbegin\fP (\fBXLCONTEXT\fP *cptr, \fBint\fP flags, \fBLVAL\fP expr)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBxlend\fP (\fBXLCONTEXT\fP *cptr)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBxlgo\fP (\fBLVAL\fP \fBlabel\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBxlreturn\fP (\fBLVAL\fP \fBname\fP, \fBLVAL\fP val)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBxlthrow\fP (\fBLVAL\fP \fBtag\fP, \fBLVAL\fP val)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBxlsignal\fP (\fBconst\fP char *emsg, \fBLVAL\fP arg)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBxltoplevel\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBxlbrklevel\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBxlcleanup\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBxlcontinue\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBxljump\fP (\fBXLCONTEXT\fP *\fBtarget\fP, \fBint\fP \fBmask\fP, \fBLVAL\fP val)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxcar\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxcdr\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxcaar\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxcadr\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxcdar\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxcddr\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxcaaar\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxcaadr\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxcadar\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxcaddr\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxcdaar\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxcdadr\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxcddar\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxcdddr\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxcaaaar\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxcaaadr\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxcaadar\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxcaaddr\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxcadaar\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxcadadr\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxcaddar\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxcadddr\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxcdaaar\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxcdaadr\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxcdadar\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxcdaddr\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxcddaar\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxcddadr\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxcdddar\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxcddddr\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxcons\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlist\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxappend\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxreverse\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlast\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxmember\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxassoc\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxsubst\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxsublis\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxremove\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxremif\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxremifnot\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBdotest1\fP (\fBLVAL\fP arg, \fBLVAL\fP fun)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBdotest2\fP (\fBLVAL\fP arg1, \fBLVAL\fP arg2, \fBLVAL\fP fun)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxnth\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxnthcdr\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlength\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxmapc\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxmapcar\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxmapl\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxmaplist\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxrplca\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxrplcd\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxnconc\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxdelete\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxdelif\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxdelifnot\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxsort\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxadd\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxsub\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxmul\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxdiv\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxrem\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxmin\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxmax\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxexpt\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlogand\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlogior\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlogxor\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxgcd\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBcheckizero\fP (\fBFIXTYPE\fP iarg)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBcheckfzero\fP (\fBFLOTYPE\fP farg)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBcheckfneg\fP (\fBFLOTYPE\fP farg)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlognot\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxabs\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxadd1\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxsub1\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxsin\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxcos\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxtan\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxexp\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxsqrt\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxfix\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxfloat\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxrand\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxminusp\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxzerop\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxplusp\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxevenp\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxoddp\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlss\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxleq\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxequ\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxneq\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxgeq\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxgtr\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxsend\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxsendsuper\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlclass\fP (\fBconst\fP char *\fBname\fP, \fBint\fP vcnt)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBxladdivar\fP (\fBLVAL\fP cls, \fBconst\fP char *var)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBxladdmsg\fP (\fBLVAL\fP cls, \fBconst\fP char *msg, \fBint\fP \fBoffset\fP)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBxlobgetvalue\fP (\fBLVAL\fP pair, \fBLVAL\fP sym, \fBLVAL\fP *pval)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBxlobsetvalue\fP (\fBLVAL\fP pair, \fBLVAL\fP sym, \fBLVAL\fP val)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBobisnew\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBobclass\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBobshow\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBobisa\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBclnew\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBclisnew\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBclanswer\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBobsymbols\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBxloinit\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxpp\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBxlprint\fP (\fBLVAL\fP fptr, \fBLVAL\fP vptr, \fBint\fP flag)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBxlterpri\fP (\fBLVAL\fP fptr)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBxlputstr\fP (\fBLVAL\fP fptr, \fBconst\fP char *\fBstr\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBputatm\fP (\fBLVAL\fP fptr, \fBconst\fP char *\fBtag\fP, \fBLVAL\fP val)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBxlload\fP (\fBconst\fP char *fname, \fBint\fP vflag, \fBint\fP pflag)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBxlread\fP (\fBLVAL\fP fptr, \fBLVAL\fP *pval, \fBint\fP rflag)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBreadone\fP (\fBLVAL\fP fptr, \fBLVAL\fP *pval)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBrmhash\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBrmquote\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBrmdquote\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBrmbquote\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBrmcomma\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBrmlpar\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBrmrpar\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBrmsemi\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBtentry\fP (\fBint\fP ch)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBxlisnumber\fP (char *\fBstr\fP, \fBLVAL\fP *pval)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBdefmacro\fP (\fBint\fP ch, \fBLVAL\fP type, \fBint\fP \fBoffset\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBcallmacro\fP (\fBLVAL\fP fptr, \fBint\fP ch)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBxlrinit\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxstrlss\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxstrleq\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxstreql\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxstrneq\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxstrgeq\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxstrgtr\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxstrilss\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxstrileq\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxstrieql\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxstrineq\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxstrigeq\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxstrigtr\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxupcase\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxdowncase\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxnupcase\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxndowncase\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxstrsearch\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxtrim\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlefttrim\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxrighttrim\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxstrcat\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxsubseq\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxstring\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxchar\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxcharint\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxintchar\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxuppercasep\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlowercasep\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxbothcasep\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxdigitp\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxcharcode\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxcodechar\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxchupcase\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxchdowncase\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxdigitchar\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxalphanumericp\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxchrlss\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxchrleq\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxchreql\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxchrneq\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxchrgeq\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxchrgtr\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxchrilss\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxchrileq\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxchrieql\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxchrineq\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxchrigeq\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxchrigtr\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxinfo\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlsubr\fP (\fBconst\fP char *sname, \fBint\fP type, \fBLVAL\fP(*fcn)(\fBvoid\fP), \fBint\fP \fBoffset\fP)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBxlgetkeyarg\fP (\fBLVAL\fP key, \fBLVAL\fP *pval)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBxltest\fP (\fBLVAL\fP *pfcn, \fBint\fP *ptresult)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBxlgkfixnum\fP (\fBLVAL\fP key, \fBLVAL\fP *pval)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlgetfile\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlgetfname\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBneedsextension\fP (\fBconst\fP char *\fBname\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlbadtype\fP (\fBLVAL\fP arg)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxltoofew\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxltoomany\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBeq\fP (\fBLVAL\fP arg1, \fBLVAL\fP arg2)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBeql\fP (\fBLVAL\fP arg1, \fBLVAL\fP arg2)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBlval_equal\fP (\fBLVAL\fP arg1, \fBLVAL\fP arg2)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlenter\fP (\fBconst\fP char *\fBname\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlmakesym\fP (\fBconst\fP char *\fBname\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlgetvalue\fP (\fBLVAL\fP sym)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlxgetvalue\fP (\fBLVAL\fP sym)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBxlsetvalue\fP (\fBLVAL\fP sym, \fBLVAL\fP val)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlgetfunction\fP (\fBLVAL\fP sym)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlxgetfunction\fP (\fBLVAL\fP sym)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBxlsetfunction\fP (\fBLVAL\fP sym, \fBLVAL\fP val)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlgetprop\fP (\fBLVAL\fP sym, \fBLVAL\fP prp)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBxlputprop\fP (\fBLVAL\fP sym, \fBLVAL\fP val, \fBLVAL\fP prp)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBxlremprop\fP (\fBLVAL\fP sym, \fBLVAL\fP prp)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBhash\fP (\fBconst\fP char *\fBstr\fP, \fBint\fP \fBlen\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBxlsinit\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBfindprop\fP (\fBLVAL\fP sym, \fBLVAL\fP prp)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxget_env\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxload\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxtranscript\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxtype\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxbaktrace\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxexit\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxpeek\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxpoke\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxaddrs\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxgetruntime\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBok_to_open\fP (\fBconst\fP char *\fBfilename\fP, \fBconst\fP char *mode)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBosinit\fP (\fBconst\fP char *banner)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBoserror\fP (\fBconst\fP char *msg)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBosfinish\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBosclose\fP (FILE *fp)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBosflush\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBoscheck\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBosaputc\fP (\fBint\fP ch, FILE *fp)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBosoutflush\fP (FILE *fp)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBosbputc\fP (\fBint\fP ch, FILE *fp)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBostputc\fP (\fBint\fP ch)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBostoutflush\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBosagetc\fP (FILE *fp)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBosbgetc\fP (FILE *fp)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBostgetc\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBossymbols\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlinfo\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxsetdir\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBosdir_list_start\fP (\fBconst\fP char *path)"
+.br
+.ti -1c
+.RI "\fBconst\fP char * \fBosdir_list_next\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBosdir_list_finish\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxosc_enable\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxget_temp_path\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxfind_in_xlisp_path\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBconst\fP char * \fBreturn_xlisp_path\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBconst\fP char * \fBfind_in_xlisp_path\fP (\fBconst\fP char *fname)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBset_xlisp_path\fP (\fBconst\fP char *\fBp\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBlocalinit\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBlocalsymbols\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBprint_local_gc_info\fP (\fBvoid\fP)"
+.br
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "\fBLVAL\fP ** \fBxlstktop\fP"
+.br
+.ti -1c
+.RI "\fBLVAL\fP ** \fBxlstkbase\fP"
+.br
+.ti -1c
+.RI "\fBLVAL\fP ** \fBxlstack\fP"
+.br
+.ti -1c
+.RI "\fBLVAL\fP * \fBxlargstkbase\fP"
+.br
+.ti -1c
+.RI "\fBLVAL\fP * \fBxlargstktop\fP"
+.br
+.ti -1c
+.RI "\fBLVAL\fP * \fBxlfp\fP"
+.br
+.ti -1c
+.RI "\fBLVAL\fP * \fBxlsp\fP"
+.br
+.ti -1c
+.RI "\fBLVAL\fP * \fBxlargv\fP"
+.br
+.ti -1c
+.RI "\fBint\fP \fBxlargc\fP"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlenv\fP"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlfenv\fP"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxldenv\fP"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlvalue\fP"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBs_true\fP"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBlk_optional\fP"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBlk_rest\fP"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBlk_key\fP"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBlk_aux\fP"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBlk_allow_other_keys\fP"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBs_evalhook\fP"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBs_applyhook\fP"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBs_tracelist\fP"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBs_lambda\fP"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBs_macro\fP"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBs_unbound\fP"
+.br
+.ti -1c
+.RI "\fBint\fP \fBxlsample\fP"
+.br
+.ti -1c
+.RI "char \fBbuf\fP []"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBobarray\fP"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBs_gcflag\fP"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBs_gchook\fP"
+.br
+.ti -1c
+.RI "\fBint\fP \fBxldebug\fP"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBs_debugio\fP"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBs_tracenable\fP"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBs_tlimit\fP"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBs_breakenable\fP"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBs_loadingfiles\fP"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBk_direction\fP"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBk_input\fP"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBk_output\fP"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBs_stdin\fP"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBs_stdout\fP"
+.br
+.ti -1c
+.RI "\fBint\fP \fBxlfsize\fP"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBs_car\fP"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBs_cdr\fP"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBs_nth\fP"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBs_get\fP"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBs_svalue\fP"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBs_splist\fP"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBs_aref\fP"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBs_comma\fP"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBs_comat\fP"
+.br
+.ti -1c
+.RI "char \fBgsprefix\fP []"
+.br
+.ti -1c
+.RI "\fBint\fP \fBgsnumber\fP"
+.br
+.ti -1c
+.RI "long \fBtotal\fP"
+.br
+.ti -1c
+.RI "\fBconst\fP char \fBos_pathchar\fP"
+.br
+.ti -1c
+.RI "\fBconst\fP char \fBos_sepchar\fP"
+.br
+.ti -1c
+.RI "char * \fBsecure_read_path\fP"
+.br
+.ti -1c
+.RI "char * \fBsafe_write_path\fP"
+.br
+.ti -1c
+.RI "\fBint\fP \fBrun_time_limit\fP"
+.br
+.ti -1c
+.RI "\fBint\fP \fBrun_time\fP"
+.br
+.ti -1c
+.RI "\fBint\fP \fBmemory_limit\fP"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define ADEPTH   2000"
+
+.PP
+Definition at line 185 of file xlisp\&.h\&.
+.SS "#define AFMT   '%x'"
+
+.PP
+Definition at line 194 of file xlisp\&.h\&.
+.SS "#define atomp(x)   ((x) == \fBNIL\fP || \fBntype\fP(x) != \fBCONS\fP)"
+
+.PP
+Definition at line 322 of file xlisp\&.h\&.
+.SS "#define boundp(x)   (\fBgetvalue\fP(x) != \fBs_unbound\fP)"
+
+.PP
+Definition at line 338 of file xlisp\&.h\&.
+.SS "#define CF_BRKLEVEL   0x0080"
+
+.PP
+Definition at line 382 of file xlisp\&.h\&.
+.SS "#define CF_CLEANUP   0x0010"
+
+.PP
+Definition at line 379 of file xlisp\&.h\&.
+.SS "#define CF_CONTINUE   0x0020"
+
+.PP
+Definition at line 380 of file xlisp\&.h\&.
+.SS "#define CF_ERROR   0x0008"
+
+.PP
+Definition at line 378 of file xlisp\&.h\&.
+.SS "#define CF_GO   0x0001"
+
+.PP
+Definition at line 375 of file xlisp\&.h\&.
+.SS "#define CF_RETURN   0x0002"
+
+.PP
+Definition at line 376 of file xlisp\&.h\&.
+.SS "#define CF_THROW   0x0004"
+
+.PP
+Definition at line 377 of file xlisp\&.h\&.
+.SS "#define CF_TOPLEVEL   0x0040"
+
+.PP
+Definition at line 381 of file xlisp\&.h\&.
+.SS "#define CF_UNWIND   0x0100"
+
+.PP
+Definition at line 383 of file xlisp\&.h\&.
+.SS "#define charp(x)   ((x) && \fBntype\fP(x) == \fBCHAR\fP)"
+
+.PP
+Definition at line 336 of file xlisp\&.h\&.
+.SS "#define closurep(x)   ((x) && \fBntype\fP(x) == \fBCLOSURE\fP)"
+
+.PP
+Definition at line 335 of file xlisp\&.h\&.
+.SS "#define consa(x)   \fBcons\fP(x,\fBNIL\fP)"
+
+.PP
+Definition at line 342 of file xlisp\&.h\&.
+.SS "#define consd(x)   \fBcons\fP(\fBNIL\fP,x)"
+
+.PP
+Definition at line 343 of file xlisp\&.h\&.
+.SS "#define consp(x)   ((x) && \fBntype\fP(x) == \fBCONS\fP)"
+
+.PP
+Definition at line 325 of file xlisp\&.h\&.
+.SS "#define CVPTR(x)   (x)"
+
+.PP
+Definition at line 217 of file xlisp\&.h\&.
+.SS "#define EDEPTH   4000"
+
+.PP
+Definition at line 181 of file xlisp\&.h\&.
+.SS "#define externp(x)   ((x) && \fBntype\fP(x) == \fBEXTERN\fP)"
+
+.PP
+Definition at line 232 of file xlisp\&.h\&.
+.SS "#define FALSE   0"
+
+.PP
+Definition at line 230 of file xlisp\&.h\&.
+.SS "#define fboundp(x)   (\fBgetfunction\fP(x) != \fBs_unbound\fP)"
+
+.PP
+Definition at line 339 of file xlisp\&.h\&.
+.SS "#define fixp(x)   ((x) && \fBntype\fP(x) == \fBFIXNUM\fP)"
+
+.PP
+Definition at line 332 of file xlisp\&.h\&.
+.SS "#define FIXTYPE   long"
+
+.PP
+Definition at line 197 of file xlisp\&.h\&.
+.SS "#define floatp(x)   ((x) && \fBntype\fP(x) == \fBFLONUM\fP)"
+
+.PP
+Definition at line 333 of file xlisp\&.h\&.
+.SS "#define FLOTYPE   double"
+
+.PP
+Definition at line 211 of file xlisp\&.h\&.
+.SS "#define FORWARD"
+
+.PP
+Definition at line 188 of file xlisp\&.h\&.
+.SS "#define fsubrp(x)   ((x) && \fBntype\fP(x) == \fBFSUBR\fP)"
+
+.PP
+Definition at line 327 of file xlisp\&.h\&.
+.SS "#define FT_CLANSWER   12"
+
+.PP
+Definition at line 262 of file xlisp\&.h\&.
+.SS "#define FT_CLISNEW   11"
+
+.PP
+Definition at line 261 of file xlisp\&.h\&.
+.SS "#define FT_CLNEW   10"
+
+.PP
+Definition at line 260 of file xlisp\&.h\&.
+.SS "#define FT_OBCLASS   14"
+
+.PP
+Definition at line 264 of file xlisp\&.h\&.
+.SS "#define FT_OBISA   16"
+
+.PP
+Definition at line 266 of file xlisp\&.h\&.
+.SS "#define FT_OBISNEW   13"
+
+.PP
+Definition at line 263 of file xlisp\&.h\&.
+.SS "#define FT_OBSHOW   15"
+
+.PP
+Definition at line 265 of file xlisp\&.h\&.
+.SS "#define FT_RMBQUOTE   3"
+
+.PP
+Definition at line 255 of file xlisp\&.h\&.
+.SS "#define FT_RMCOMMA   4"
+
+.PP
+Definition at line 256 of file xlisp\&.h\&.
+.SS "#define FT_RMDQUOTE   2"
+
+.PP
+Definition at line 254 of file xlisp\&.h\&.
+.SS "#define FT_RMHASH   0"
+
+.PP
+Definition at line 252 of file xlisp\&.h\&.
+.SS "#define FT_RMLPAR   5"
+
+.PP
+Definition at line 257 of file xlisp\&.h\&.
+.SS "#define FT_RMQUOTE   1"
+
+.PP
+Definition at line 253 of file xlisp\&.h\&.
+.SS "#define FT_RMRPAR   6"
+
+.PP
+Definition at line 258 of file xlisp\&.h\&.
+.SS "#define FT_RMSEMI   7"
+
+.PP
+Definition at line 259 of file xlisp\&.h\&.
+.SS "#define HSIZE   1499		/* symbol \fBhash\fP table \fBsize\fP */"
+
+.PP
+Definition at line 246 of file xlisp\&.h\&.
+.SS "#define ICNV(n)   atol(n)"
+
+.PP
+Definition at line 205 of file xlisp\&.h\&.
+.SS "#define IFMT   '%ld'"
+
+.PP
+Definition at line 208 of file xlisp\&.h\&.
+.SS "#define ITYPE   long atol()"
+
+.PP
+Definition at line 201 of file xlisp\&.h\&.
+.SS "#define listp(x)   ((x) == \fBNIL\fP || \fBntype\fP(x) == \fBCONS\fP)"
+
+.PP
+Definition at line 324 of file xlisp\&.h\&.
+.SS "#define LOCAL   static"
+
+.PP
+Definition at line 191 of file xlisp\&.h\&.
+.SS "#define moreargs()   (\fBxlargc\fP > 0)"
+
+.PP
+Definition at line 351 of file xlisp\&.h\&.
+.SS "#define nextarg()   (\-\-\fBxlargc\fP, *\fBxlargv\fP++)"
+
+.PP
+Definition at line 350 of file xlisp\&.h\&.
+.SS "#define NIL   (\fBLVAL\fP )0"
+
+.PP
+Definition at line 234 of file xlisp\&.h\&.
+.SS "#define NNODES   1000"
+
+.PP
+Definition at line 174 of file xlisp\&.h\&.
+.SS "#define NTYPES   20"
+
+.PP
+Definition at line 177 of file xlisp\&.h\&.
+.SS "#define null(x)   ((x) == \fBNIL\fP)"
+
+.PP
+Definition at line 323 of file xlisp\&.h\&.
+.SS "#define objectp(x)   ((x) && \fBntype\fP(x) == \fBOBJECT\fP)"
+
+.PP
+Definition at line 331 of file xlisp\&.h\&.
+.SS "#define OFFTYPE   \fBint\fP"
+
+.PP
+Definition at line 214 of file xlisp\&.h\&.
+.SS "#define pusharg(x)"
+\fBValue:\fP
+.PP
+.nf
+{if (xlsp >= xlargstktop) xlargstkoverflow();\
+                         *xlsp++ = (x);}
+.fi
+.PP
+Definition at line 269 of file xlisp\&.h\&.
+.SS "#define SAFE_NYQUIST   (\fBsafe_write_path\fP != \fBNULL\fP)"
+
+.PP
+Definition at line 990 of file xlisp\&.h\&.
+.SS "#define \fBSAMPLE\fP   50000		/* control character sample \fBrate\fP */"
+
+.PP
+Definition at line 247 of file xlisp\&.h\&.
+.SS "#define STDERR   stderr"
+
+.PP
+Definition at line 224 of file xlisp\&.h\&.
+.SS "#define streamp(x)   ((x) && \fBntype\fP(x) == \fBSTREAM\fP)"
+
+.PP
+Definition at line 330 of file xlisp\&.h\&.
+.SS "#define stringp(x)   ((x) && \fBntype\fP(x) == \fBSTRING\fP)"
+
+.PP
+Definition at line 328 of file xlisp\&.h\&.
+.SS "#define STRMAX   250		/* maximum \fBlength\fP \fBof\fP \fBa\fP \fBstring\fP constant */"
+
+.PP
+Definition at line 241 of file xlisp\&.h\&.
+.SS "#define subrp(x)   ((x) && \fBntype\fP(x) == \fBSUBR\fP)"
+
+.PP
+Definition at line 326 of file xlisp\&.h\&.
+.SS "#define symbolp(x)   ((x) && \fBntype\fP(x) == \fBSYMBOL\fP)"
+
+.PP
+Definition at line 329 of file xlisp\&.h\&.
+.SS "#define testarg(e)   (\fBmoreargs\fP() ? (e) : \fBxltoofew\fP())"
+
+.PP
+Definition at line 348 of file xlisp\&.h\&.
+.SS "#define TRUE   1"
+
+.PP
+Definition at line 229 of file xlisp\&.h\&.
+.SS "#define typearg(tp)   (tp(*\fBxlargv\fP) ? \fBnextarg\fP() : \fBxlbadtype\fP(*\fBxlargv\fP))"
+
+.PP
+Definition at line 349 of file xlisp\&.h\&.
+.SS "#define UCHAR   unsigned char"
+
+.PP
+Definition at line 220 of file xlisp\&.h\&.
+.SS "#define ustreamp(x)   ((x) && \fBntype\fP(x) == \fBUSTREAM\fP)"
+
+.PP
+Definition at line 337 of file xlisp\&.h\&.
+.SS "#define vectorp(x)   ((x) && \fBntype\fP(x) == \fBVECTOR\fP)"
+
+.PP
+Definition at line 334 of file xlisp\&.h\&.
+.SS "#define xlbind(\fBs\fP, v)   \fBxlpbind\fP(\fBs\fP,v,\fBxlenv\fP)"
+
+.PP
+Definition at line 311 of file xlisp\&.h\&.
+.SS "#define xldbind(\fBs\fP, v)"
+\fBValue:\fP
+.PP
+.nf
+{xldenv = cons(cons(s,getvalue(s)),xldenv);\
+                         setvalue(s,v);}
+.fi
+.PP
+Definition at line 316 of file xlisp\&.h\&.
+.SS "#define xlfbind(\fBs\fP, v)   \fBxlpbind\fP(\fBs\fP,v,\fBxlfenv\fP);"
+
+.PP
+Definition at line 312 of file xlisp\&.h\&.
+.SS "#define xlframe(e)   \fBcons\fP(\fBNIL\fP,e)"
+
+.PP
+Definition at line 310 of file xlisp\&.h\&.
+.SS "#define xlgachar()   (\fBtestarg\fP(\fBtypearg\fP(\fBcharp\fP)))"
+
+.PP
+Definition at line 361 of file xlisp\&.h\&.
+.SS "#define xlgaclosure()   (\fBtestarg\fP(\fBtypearg\fP(\fBclosurep\fP)))"
+
+.PP
+Definition at line 365 of file xlisp\&.h\&.
+.SS "#define xlgacons()   (\fBtestarg\fP(\fBtypearg\fP(\fBconsp\fP)))"
+
+.PP
+Definition at line 354 of file xlisp\&.h\&.
+.SS "#define xlgafixnum()   (\fBtestarg\fP(\fBtypearg\fP(\fBfixp\fP)))"
+
+.PP
+Definition at line 359 of file xlisp\&.h\&.
+.SS "#define xlgaflonum()   (\fBtestarg\fP(\fBtypearg\fP(\fBfloatp\fP)))"
+
+.PP
+Definition at line 360 of file xlisp\&.h\&.
+.SS "#define xlgalist()   (\fBtestarg\fP(\fBtypearg\fP(\fBlistp\fP)))"
+
+.PP
+Definition at line 355 of file xlisp\&.h\&.
+.SS "#define xlgaobject()   (\fBtestarg\fP(\fBtypearg\fP(\fBobjectp\fP)))"
+
+.PP
+Definition at line 358 of file xlisp\&.h\&.
+.SS "#define xlgastream()   (\fBtestarg\fP(\fBtypearg\fP(\fBstreamp\fP)))"
+
+.PP
+Definition at line 363 of file xlisp\&.h\&.
+.SS "#define xlgastring()   (\fBtestarg\fP(\fBtypearg\fP(\fBstringp\fP)))"
+
+.PP
+Definition at line 357 of file xlisp\&.h\&.
+.SS "#define xlgasymbol()   (\fBtestarg\fP(\fBtypearg\fP(\fBsymbolp\fP)))"
+
+.PP
+Definition at line 356 of file xlisp\&.h\&.
+.SS "#define xlgaustream()   (\fBtestarg\fP(\fBtypearg\fP(\fBustreamp\fP)))"
+
+.PP
+Definition at line 364 of file xlisp\&.h\&.
+.SS "#define xlgavector()   (\fBtestarg\fP(\fBtypearg\fP(\fBvectorp\fP)))"
+
+.PP
+Definition at line 362 of file xlisp\&.h\&.
+.SS "#define xlgetarg()   (\fBtestarg\fP(\fBnextarg\fP()))"
+
+.PP
+Definition at line 346 of file xlisp\&.h\&.
+.SS "#define xllastarg()   {\fBif\fP (\fBxlargc\fP != 0) \fBxltoomany\fP();}"
+
+.PP
+Definition at line 347 of file xlisp\&.h\&.
+.SS "#define xlpbind(\fBs\fP, v, e)   {\fBrplaca\fP(e,\fBcons\fP(\fBcons\fP(\fBs\fP,v),\fBcar\fP(e)));}"
+
+.PP
+Definition at line 313 of file xlisp\&.h\&.
+.SS "#define xlpop()   {++\fBxlstack\fP;}"
+
+.PP
+Definition at line 305 of file xlisp\&.h\&.
+.SS "#define xlpopn(n)   {\fBxlstack\fP+=(n);}"
+
+.PP
+Definition at line 306 of file xlisp\&.h\&.
+.SS "#define xlprot1(n)"
+\fBValue:\fP
+.PP
+.nf
+{if (xlstack <= xlstkbase) xlstkoverflow();\
+                         *--xlstack = &n;}
+.fi
+.PP
+Definition at line 301 of file xlisp\&.h\&.
+.SS "#define xlprotect(n)   {*\-\-\fBxlstack\fP = &n;}"
+
+.PP
+Definition at line 296 of file xlisp\&.h\&.
+.SS "#define xlsave(n)   {*\-\-\fBxlstack\fP = &n; n = \fBNIL\fP;}"
+
+.PP
+Definition at line 295 of file xlisp\&.h\&.
+.SS "#define xlsave1(n)"
+\fBValue:\fP
+.PP
+.nf
+{if (xlstack <= xlstkbase) xlstkoverflow();\
+                         *--xlstack = &n; n = NIL;}
+.fi
+.PP
+Definition at line 299 of file xlisp\&.h\&.
+.SS "#define xlstkcheck(n)   {\fBif\fP (\fBxlstack\fP \- (n) < \fBxlstkbase\fP) \fBxlstkoverflow\fP();}"
+
+.PP
+Definition at line 294 of file xlisp\&.h\&.
+.SS "#define xlunbind(e)"
+\fBValue:\fP
+.PP
+.nf
+{for (; xldenv != (e); xldenv = cdr(xldenv))\
+                           setvalue(car(car(xldenv)),cdr(car(xldenv)));}
+.fi
+.PP
+Definition at line 318 of file xlisp\&.h\&.
+.SH "Typedef Documentation"
+.PP 
+.SS "typedef struct \fBcontext\fP  \fBXLCONTEXT\fP"
+
+.SH "Function Documentation"
+.PP 
+.SS "\fBLVAL\fP callmacro (\fBLVAL\fP fptr, \fBint\fP ch)"
+
+.PP
+Definition at line 935 of file xlread\&.c\&.
+.SS "\fBvoid\fP checkfneg (\fBFLOTYPE\fP farg)"
+
+.PP
+Definition at line 225 of file xlmath\&.c\&.
+.SS "\fBvoid\fP checkfzero (\fBFLOTYPE\fP farg)"
+
+.PP
+Definition at line 218 of file xlmath\&.c\&.
+.SS "\fBvoid\fP checkizero (\fBFIXTYPE\fP iarg)"
+
+.PP
+Definition at line 211 of file xlmath\&.c\&.
+.SS "\fBLVAL\fP clanswer (\fBvoid\fP)"
+
+.PP
+Definition at line 281 of file xlobj\&.c\&.
+.SS "\fBLVAL\fP clisnew (\fBvoid\fP)"
+
+.PP
+Definition at line 252 of file xlobj\&.c\&.
+.SS "\fBLVAL\fP clnew (\fBvoid\fP)"
+
+.PP
+Definition at line 244 of file xlobj\&.c\&.
+.SS "\fBvoid\fP close_loadingfiles (\fBvoid\fP)"
+
+.PP
+Definition at line 42 of file xldbug\&.c\&.
+.SS "\fBLVAL\fP cons (\fBLVAL\fP x, \fBLVAL\fP y)"
+
+.PP
+Definition at line 77 of file xldmem\&.c\&.
+.SS "\fBLVAL\fP cvchar (\fBint\fP n)"
+
+.PP
+Definition at line 195 of file xldmem\&.c\&.
+.SS "\fBLVAL\fP cvextern (\fBxtype_desc\fP typeptr, unsigned char * instptr)"
+
+.PP
+Definition at line 81 of file extern\&.c\&.
+.SS "\fBLVAL\fP cvfile (FILE * fp)"
+
+.PP
+Definition at line 165 of file xldmem\&.c\&.
+.SS "\fBLVAL\fP cvfixnum (\fBFIXTYPE\fP n)"
+
+.PP
+Definition at line 175 of file xldmem\&.c\&.
+.SS "\fBLVAL\fP cvflonum (\fBFLOTYPE\fP n)"
+
+.PP
+Definition at line 186 of file xldmem\&.c\&.
+.SS "\fBLVAL\fP cvstring (\fBconst\fP char * str)"
+
+.PP
+Definition at line 106 of file xldmem\&.c\&.
+.SS "\fBLVAL\fP cvsubr (\fBLVAL\fP(*)(\fBvoid\fP) fcn, \fBint\fP type, \fBint\fP offset)"
+
+.PP
+Definition at line 155 of file xldmem\&.c\&.
+.SS "\fBLVAL\fP cvsymbol (\fBconst\fP char * pname)"
+
+.PP
+Definition at line 132 of file xldmem\&.c\&.
+.SS "\fBvoid\fP dbgprint (\fBLVAL\fP expr)"
+
+.PP
+Definition at line 218 of file xlio\&.c\&.
+.SS "\fBvoid\fP dbgputstr (\fBconst\fP char * str)"
+
+.PP
+Definition at line 225 of file xlio\&.c\&.
+.SS "\fBvoid\fP defmacro (\fBint\fP ch, \fBLVAL\fP type, \fBint\fP offset)"
+
+.PP
+Definition at line 926 of file xlread\&.c\&.
+.SS "\fBint\fP dotest1 (\fBLVAL\fP arg, \fBLVAL\fP fun)"
+
+.PP
+Definition at line 453 of file xllist\&.c\&.
+.SS "\fBint\fP dotest2 (\fBLVAL\fP arg1, \fBLVAL\fP arg2, \fBLVAL\fP fun)"
+
+.PP
+Definition at line 471 of file xllist\&.c\&.
+.SS "\fBint\fP eq (\fBLVAL\fP arg1, \fBLVAL\fP arg2)"
+
+.PP
+Definition at line 143 of file xlsubr\&.c\&.
+.SS "\fBint\fP eql (\fBLVAL\fP arg1, \fBLVAL\fP arg2)"
+
+.PP
+Definition at line 149 of file xlsubr\&.c\&.
+.SS "\fBvoid\fP errprint (\fBLVAL\fP expr)"
+
+.PP
+Definition at line 205 of file xlio\&.c\&.
+.SS "\fBvoid\fP errputstr (\fBconst\fP char * str)"
+
+.SS "\fBconst\fP char* find_in_xlisp_path (\fBconst\fP char * fname)"
+
+.PP
+Definition at line 145 of file path\&.c\&.
+.SS "\fBLVAL\fP findprop (\fBLVAL\fP sym, \fBLVAL\fP prp)"
+
+.PP
+Definition at line 338 of file xlsym\&.c\&.
+.SS "\fBvoid\fP gc (\fBvoid\fP)"
+
+.PP
+Definition at line 307 of file xldmem\&.c\&.
+.SS "\fBint\fP hash (\fBconst\fP char * str, \fBint\fP len)"
+
+.PP
+Definition at line 348 of file xlsym\&.c\&.
+.SS "\fBvoid\fP inval_caches (\fBvoid\fP)"
+
+.PP
+Definition at line 123 of file extern\&.c\&.
+.SS "\fBvoid\fP localinit (\fBvoid\fP)"
+
+.PP
+Definition at line 20 of file local\&.c\&.
+.SS "\fBvoid\fP localsymbols (\fBvoid\fP)"
+
+.PP
+Definition at line 33 of file local\&.c\&.
+.SS "\fBint\fP lval_equal (\fBLVAL\fP arg1, \fBLVAL\fP arg2)"
+
+.PP
+Definition at line 169 of file xlsubr\&.c\&.
+.SS "\fBint\fP macroexpand (\fBLVAL\fP fun, \fBLVAL\fP args, \fBLVAL\fP * pval)"
+
+.PP
+Definition at line 322 of file xleval\&.c\&.
+.SS "\fBLVAL\fP makearglist (\fBint\fP argc, \fBLVAL\fP * argv)"
+
+.PP
+Definition at line 423 of file xleval\&.c\&.
+.SS "\fBvoid\fP mark (\fBLVAL\fP ptr)"
+
+.PP
+Definition at line 379 of file xldmem\&.c\&.
+.SS "\fBint\fP needsextension (\fBconst\fP char * name)"
+
+.PP
+Definition at line 100 of file xlsubr\&.c\&.
+.SS "\fBLVAL\fP new_string (\fBint\fP size)"
+
+.PP
+Definition at line 119 of file xldmem\&.c\&.
+.SS "\fBLVAL\fP newclosure (\fBLVAL\fP name, \fBLVAL\fP type, \fBLVAL\fP env, \fBLVAL\fP fenv)"
+
+.PP
+Definition at line 224 of file xldmem\&.c\&.
+.SS "\fBLVAL\fP newnode (\fBint\fP type)"
+
+.PP
+Definition at line 258 of file xldmem\&.c\&.
+.SS "\fBLVAL\fP newobject (\fBLVAL\fP cls, \fBint\fP size)"
+
+.PP
+Definition at line 214 of file xldmem\&.c\&.
+.SS "\fBSEGMENT\fP* newsegment (\fBint\fP n)"
+
+.PP
+Definition at line 550 of file xldmem\&.c\&.
+.SS "\fBLVAL\fP newustream (\fBvoid\fP)"
+
+.PP
+Definition at line 204 of file xldmem\&.c\&.
+.SS "\fBLVAL\fP newvector (\fBint\fP size)"
+
+.PP
+Definition at line 237 of file xldmem\&.c\&.
+.SS "\fBLVAL\fP obclass (\fBvoid\fP)"
+
+.PP
+Definition at line 181 of file xlobj\&.c\&.
+.SS "\fBLVAL\fP obisa (\fBvoid\fP)"
+
+.PP
+Definition at line 229 of file xlobj\&.c\&.
+.SS "\fBLVAL\fP obisnew (\fBvoid\fP)"
+
+.PP
+Definition at line 172 of file xlobj\&.c\&.
+.SS "\fBLVAL\fP obshow (\fBvoid\fP)"
+
+.PP
+Definition at line 190 of file xlobj\&.c\&.
+.SS "\fBvoid\fP obsymbols (\fBvoid\fP)"
+
+.PP
+Definition at line 446 of file xlobj\&.c\&.
+.SS "\fBint\fP ok_to_open (\fBconst\fP char * filename, \fBconst\fP char * mode)"
+
+.PP
+Definition at line 58 of file security\&.c\&.
+.SS "\fBint\fP osagetc (FILE * fp)"
+
+.PP
+Definition at line 1133 of file nyx\&.c\&.
+.SS "FILE* osaopen (\fBconst\fP char * name, \fBconst\fP char * mode)"
+
+.PP
+Definition at line 53 of file winguistuff\&.c\&.
+.SS "\fBint\fP osaputc (\fBint\fP ch, FILE * fp)"
+
+.PP
+Definition at line 1139 of file nyx\&.c\&.
+.SS "\fBint\fP osbgetc (FILE * fp)"
+
+.PP
+Definition at line 1152 of file nyx\&.c\&.
+.SS "FILE* osbopen (\fBconst\fP char * name, \fBconst\fP char * mode)"
+
+.PP
+Definition at line 60 of file winguistuff\&.c\&.
+.SS "\fBint\fP osbputc (\fBint\fP ch, FILE * fp)"
+
+.PP
+Definition at line 1159 of file nyx\&.c\&.
+.SS "\fBvoid\fP oscheck (\fBvoid\fP)"
+
+.PP
+Definition at line 1188 of file nyx\&.c\&.
+.SS "\fBint\fP osclose (FILE * fp)"
+
+.PP
+Definition at line 1127 of file nyx\&.c\&.
+.SS "\fBvoid\fP osdir_list_finish (\fBvoid\fP)"
+
+.PP
+Definition at line 1263 of file nyx\&.c\&.
+.SS "\fBconst\fP char* osdir_list_next (\fBvoid\fP)"
+
+.PP
+Definition at line 1260 of file nyx\&.c\&.
+.SS "\fBint\fP osdir_list_start (\fBconst\fP char * path)"
+
+.PP
+Definition at line 760 of file osstuff\&.c\&.
+.SS "\fBvoid\fP oserror (\fBconst\fP char * msg)"
+
+.PP
+Definition at line 147 of file osstuff\&.c\&.
+.SS "\fBvoid\fP osfinish (\fBvoid\fP)"
+
+.PP
+Definition at line 1090 of file nyx\&.c\&.
+.SS "\fBvoid\fP osflush (\fBvoid\fP)"
+
+.PP
+Definition at line 1183 of file nyx\&.c\&.
+.SS "\fBvoid\fP osinit (\fBconst\fP char * banner)"
+
+.PP
+Definition at line 110 of file osstuff\&.c\&.
+.SS "\fBvoid\fP osoutflush (FILE * fp)"
+
+.PP
+Definition at line 1145 of file nyx\&.c\&.
+.SS "\fBvoid\fP ossymbols (\fBvoid\fP)"
+
+.PP
+Definition at line 1239 of file nyx\&.c\&.
+.SS "\fBint\fP ostgetc (\fBvoid\fP)"
+
+.PP
+Definition at line 1068 of file nyx\&.c\&.
+.SS "\fBvoid\fP ostoutflush (\fBvoid\fP)"
+
+.PP
+Definition at line 1176 of file nyx\&.c\&.
+.SS "\fBvoid\fP ostputc (\fBint\fP ch)"
+
+.PP
+Definition at line 1165 of file nyx\&.c\&.
+.SS "\fBvoid\fP print_local_gc_info (\fBvoid\fP)"
+
+.PP
+Definition at line 46 of file local\&.c\&.
+.SS "\fBint\fP pushargs (\fBLVAL\fP fun, \fBLVAL\fP args)"
+
+.PP
+Definition at line 399 of file xleval\&.c\&.
+.SS "\fBvoid\fP putatm (\fBLVAL\fP fptr, \fBconst\fP char * tag, \fBLVAL\fP val)"
+
+.PP
+Definition at line 245 of file xlprin\&.c\&.
+.SS "\fBint\fP readone (\fBLVAL\fP fptr, \fBLVAL\fP * pval)"
+
+.PP
+Definition at line 292 of file xlread\&.c\&.
+.SS "\fBconst\fP char* return_xlisp_path (\fBvoid\fP)"
+
+.PP
+Definition at line 121 of file path\&.c\&.
+.SS "\fBLVAL\fP rmbquote (\fBvoid\fP)"
+
+.PP
+Definition at line 512 of file xlread\&.c\&.
+.SS "\fBLVAL\fP rmcomma (\fBvoid\fP)"
+
+.PP
+Definition at line 526 of file xlread\&.c\&.
+.SS "\fBLVAL\fP rmdquote (\fBvoid\fP)"
+
+.PP
+Definition at line 432 of file xlread\&.c\&.
+.SS "\fBLVAL\fP rmhash (\fBvoid\fP)"
+
+.PP
+Definition at line 346 of file xlread\&.c\&.
+.SS "\fBLVAL\fP rmlpar (\fBvoid\fP)"
+
+.PP
+Definition at line 549 of file xlread\&.c\&.
+.SS "\fBLVAL\fP rmquote (\fBvoid\fP)"
+
+.PP
+Definition at line 418 of file xlread\&.c\&.
+.SS "\fBLVAL\fP rmrpar (\fBvoid\fP)"
+
+.PP
+Definition at line 567 of file xlread\&.c\&.
+.SS "\fBLVAL\fP rmsemi (\fBvoid\fP)"
+
+.PP
+Definition at line 574 of file xlread\&.c\&.
+.SS "\fBvoid\fP set_xlisp_path (\fBconst\fP char * p)"
+
+.PP
+Definition at line 31 of file path\&.c\&.
+.SS "\fBvoid\fP stdflush (\fBvoid\fP)"
+
+.PP
+Definition at line 199 of file xlio\&.c\&.
+.SS "\fBvoid\fP stdprint (\fBLVAL\fP expr)"
+
+.PP
+Definition at line 186 of file xlio\&.c\&.
+.SS "\fBvoid\fP stdputstr (\fBconst\fP char * str)"
+
+.PP
+Definition at line 193 of file xlio\&.c\&.
+.SS "\fBLVAL\fP tentry (\fBint\fP ch)"
+
+.PP
+Definition at line 837 of file xlread\&.c\&.
+.SS "\fBvoid\fP trcprin1 (\fBLVAL\fP expr)"
+
+.PP
+Definition at line 231 of file xlio\&.c\&.
+.SS "\fBvoid\fP trcputstr (\fBconst\fP char * str)"
+
+.PP
+Definition at line 237 of file xlio\&.c\&.
+.SS "\fBLVAL\fP x1macroexpand (\fBvoid\fP)"
+
+.PP
+Definition at line 73 of file xlbfun\&.c\&.
+.SS "\fBLVAL\fP x_or (\fBvoid\fP)"
+
+.PP
+Definition at line 502 of file xlcont\&.c\&.
+.SS "\fBLVAL\fP xabs (\fBvoid\fP)"
+
+.PP
+Definition at line 240 of file xlmath\&.c\&.
+.SS "\fBLVAL\fP xadd (\fBvoid\fP)"
+
+.PP
+Definition at line 27 of file xlmath\&.c\&.
+.SS "\fBLVAL\fP xadd1 (\fBvoid\fP)"
+
+.PP
+Definition at line 241 of file xlmath\&.c\&.
+.SS "\fBLVAL\fP xaddrs (\fBvoid\fP)"
+
+.SS "\fBLVAL\fP xalloc (\fBvoid\fP)"
+
+.PP
+Definition at line 626 of file xldmem\&.c\&.
+.SS "\fBLVAL\fP xalphanumericp (\fBvoid\fP)"
+
+.PP
+Definition at line 500 of file xlstr\&.c\&.
+.SS "\fBLVAL\fP xand (\fBvoid\fP)"
+
+.PP
+Definition at line 487 of file xlcont\&.c\&.
+.SS "\fBLVAL\fP xappend (\fBvoid\fP)"
+
+.PP
+Definition at line 142 of file xllist\&.c\&.
+.SS "\fBLVAL\fP xapply (\fBvoid\fP)"
+
+.PP
+Definition at line 26 of file xlbfun\&.c\&.
+.SS "\fBLVAL\fP xaref (\fBvoid\fP)"
+
+.PP
+Definition at line 498 of file xlbfun\&.c\&.
+.SS "\fBLVAL\fP xarrayp (\fBvoid\fP)"
+
+.PP
+Definition at line 165 of file xlbfun\&.c\&.
+.SS "\fBLVAL\fP xassoc (\fBvoid\fP)"
+
+.PP
+Definition at line 246 of file xllist\&.c\&.
+.SS "\fBLVAL\fP xatom (\fBvoid\fP)"
+
+.PP
+Definition at line 102 of file xlbfun\&.c\&.
+.SS "\fBLVAL\fP xbaktrace (\fBvoid\fP)"
+
+.PP
+Definition at line 143 of file xlsys\&.c\&.
+.SS "\fBLVAL\fP xblock (\fBvoid\fP)"
+
+.PP
+Definition at line 1022 of file xlcont\&.c\&.
+.SS "\fBLVAL\fP xbopen (\fBvoid\fP)"
+
+.PP
+Definition at line 175 of file xlfio\&.c\&.
+.SS "\fBLVAL\fP xbothcasep (\fBvoid\fP)"
+
+.PP
+Definition at line 433 of file xlstr\&.c\&.
+.SS "\fBLVAL\fP xboundp (\fBvoid\fP)"
+
+.PP
+Definition at line 192 of file xlbfun\&.c\&.
+.SS "\fBLVAL\fP xbquote (\fBvoid\fP)"
+
+.PP
+Definition at line 78 of file xlcont\&.c\&.
+.SS "\fBLVAL\fP xbreak (\fBvoid\fP)"
+
+.PP
+Definition at line 585 of file xlbfun\&.c\&.
+.SS "\fBLVAL\fP xcaaaar (\fBvoid\fP)"
+
+.PP
+Definition at line 64 of file xllist\&.c\&.
+.SS "\fBLVAL\fP xcaaadr (\fBvoid\fP)"
+
+.PP
+Definition at line 65 of file xllist\&.c\&.
+.SS "\fBLVAL\fP xcaaar (\fBvoid\fP)"
+
+.PP
+Definition at line 54 of file xllist\&.c\&.
+.SS "\fBLVAL\fP xcaadar (\fBvoid\fP)"
+
+.PP
+Definition at line 66 of file xllist\&.c\&.
+.SS "\fBLVAL\fP xcaaddr (\fBvoid\fP)"
+
+.PP
+Definition at line 67 of file xllist\&.c\&.
+.SS "\fBLVAL\fP xcaadr (\fBvoid\fP)"
+
+.PP
+Definition at line 55 of file xllist\&.c\&.
+.SS "\fBLVAL\fP xcaar (\fBvoid\fP)"
+
+.PP
+Definition at line 48 of file xllist\&.c\&.
+.SS "\fBLVAL\fP xcadaar (\fBvoid\fP)"
+
+.PP
+Definition at line 68 of file xllist\&.c\&.
+.SS "\fBLVAL\fP xcadadr (\fBvoid\fP)"
+
+.PP
+Definition at line 69 of file xllist\&.c\&.
+.SS "\fBLVAL\fP xcadar (\fBvoid\fP)"
+
+.PP
+Definition at line 56 of file xllist\&.c\&.
+.SS "\fBLVAL\fP xcaddar (\fBvoid\fP)"
+
+.PP
+Definition at line 70 of file xllist\&.c\&.
+.SS "\fBLVAL\fP xcadddr (\fBvoid\fP)"
+
+.PP
+Definition at line 71 of file xllist\&.c\&.
+.SS "\fBLVAL\fP xcaddr (\fBvoid\fP)"
+
+.PP
+Definition at line 57 of file xllist\&.c\&.
+.SS "\fBLVAL\fP xcadr (\fBvoid\fP)"
+
+.PP
+Definition at line 49 of file xllist\&.c\&.
+.SS "\fBLVAL\fP xcar (\fBvoid\fP)"
+
+.PP
+Definition at line 30 of file xllist\&.c\&.
+.SS "\fBLVAL\fP xcase (\fBvoid\fP)"
+
+.PP
+Definition at line 434 of file xlcont\&.c\&.
+.SS "\fBLVAL\fP xcatch (\fBvoid\fP)"
+
+.PP
+Definition at line 1053 of file xlcont\&.c\&.
+.SS "\fBLVAL\fP xcdaaar (\fBvoid\fP)"
+
+.PP
+Definition at line 72 of file xllist\&.c\&.
+.SS "\fBLVAL\fP xcdaadr (\fBvoid\fP)"
+
+.PP
+Definition at line 73 of file xllist\&.c\&.
+.SS "\fBLVAL\fP xcdaar (\fBvoid\fP)"
+
+.PP
+Definition at line 58 of file xllist\&.c\&.
+.SS "\fBLVAL\fP xcdadar (\fBvoid\fP)"
+
+.PP
+Definition at line 74 of file xllist\&.c\&.
+.SS "\fBLVAL\fP xcdaddr (\fBvoid\fP)"
+
+.PP
+Definition at line 75 of file xllist\&.c\&.
+.SS "\fBLVAL\fP xcdadr (\fBvoid\fP)"
+
+.PP
+Definition at line 59 of file xllist\&.c\&.
+.SS "\fBLVAL\fP xcdar (\fBvoid\fP)"
+
+.PP
+Definition at line 50 of file xllist\&.c\&.
+.SS "\fBLVAL\fP xcddaar (\fBvoid\fP)"
+
+.PP
+Definition at line 76 of file xllist\&.c\&.
+.SS "\fBLVAL\fP xcddadr (\fBvoid\fP)"
+
+.PP
+Definition at line 77 of file xllist\&.c\&.
+.SS "\fBLVAL\fP xcddar (\fBvoid\fP)"
+
+.PP
+Definition at line 60 of file xllist\&.c\&.
+.SS "\fBLVAL\fP xcdddar (\fBvoid\fP)"
+
+.PP
+Definition at line 78 of file xllist\&.c\&.
+.SS "\fBLVAL\fP xcddddr (\fBvoid\fP)"
+
+.PP
+Definition at line 79 of file xllist\&.c\&.
+.SS "\fBLVAL\fP xcdddr (\fBvoid\fP)"
+
+.PP
+Definition at line 61 of file xllist\&.c\&.
+.SS "\fBLVAL\fP xcddr (\fBvoid\fP)"
+
+.PP
+Definition at line 51 of file xllist\&.c\&.
+.SS "\fBLVAL\fP xcdr (\fBvoid\fP)"
+
+.PP
+Definition at line 39 of file xllist\&.c\&.
+.SS "\fBLVAL\fP xcerror (\fBvoid\fP)"
+
+.PP
+Definition at line 567 of file xlbfun\&.c\&.
+.SS "\fBLVAL\fP xchar (\fBvoid\fP)"
+
+.PP
+Definition at line 378 of file xlstr\&.c\&.
+.SS "\fBLVAL\fP xcharcode (\fBvoid\fP)"
+
+.PP
+Definition at line 451 of file xlstr\&.c\&.
+.SS "\fBLVAL\fP xcharint (\fBvoid\fP)"
+
+.PP
+Definition at line 397 of file xlstr\&.c\&.
+.SS "\fBLVAL\fP xcharp (\fBvoid\fP)"
+
+.PP
+Definition at line 147 of file xlbfun\&.c\&.
+.SS "\fBLVAL\fP xchdowncase (\fBvoid\fP)"
+
+.PP
+Definition at line 480 of file xlstr\&.c\&.
+.SS "\fBLVAL\fP xchreql (\fBvoid\fP)"
+
+.PP
+Definition at line 511 of file xlstr\&.c\&.
+.SS "\fBLVAL\fP xchrgeq (\fBvoid\fP)"
+
+.PP
+Definition at line 513 of file xlstr\&.c\&.
+.SS "\fBLVAL\fP xchrgtr (\fBvoid\fP)"
+
+.PP
+Definition at line 514 of file xlstr\&.c\&.
+.SS "\fBLVAL\fP xchrieql (\fBvoid\fP)"
+
+.PP
+Definition at line 519 of file xlstr\&.c\&.
+.SS "\fBLVAL\fP xchrigeq (\fBvoid\fP)"
+
+.PP
+Definition at line 521 of file xlstr\&.c\&.
+.SS "\fBLVAL\fP xchrigtr (\fBvoid\fP)"
+
+.PP
+Definition at line 522 of file xlstr\&.c\&.
+.SS "\fBLVAL\fP xchrileq (\fBvoid\fP)"
+
+.PP
+Definition at line 518 of file xlstr\&.c\&.
+.SS "\fBLVAL\fP xchrilss (\fBvoid\fP)"
+
+.PP
+Definition at line 517 of file xlstr\&.c\&.
+.SS "\fBLVAL\fP xchrineq (\fBvoid\fP)"
+
+.PP
+Definition at line 520 of file xlstr\&.c\&.
+.SS "\fBLVAL\fP xchrleq (\fBvoid\fP)"
+
+.PP
+Definition at line 510 of file xlstr\&.c\&.
+.SS "\fBLVAL\fP xchrlss (\fBvoid\fP)"
+
+.PP
+Definition at line 509 of file xlstr\&.c\&.
+.SS "\fBLVAL\fP xchrneq (\fBvoid\fP)"
+
+.PP
+Definition at line 512 of file xlstr\&.c\&.
+.SS "\fBLVAL\fP xchupcase (\fBvoid\fP)"
+
+.PP
+Definition at line 470 of file xlstr\&.c\&.
+.SS "\fBLVAL\fP xcleanup (\fBvoid\fP)"
+
+.PP
+Definition at line 602 of file xlbfun\&.c\&.
+.SS "\fBLVAL\fP xclose (\fBvoid\fP)"
+
+.PP
+Definition at line 181 of file xlfio\&.c\&.
+.SS "\fBLVAL\fP xcodechar (\fBvoid\fP)"
+
+.PP
+Definition at line 460 of file xlstr\&.c\&.
+.SS "\fBLVAL\fP xcond (\fBvoid\fP)"
+
+.PP
+Definition at line 379 of file xlcont\&.c\&.
+.SS "\fBLVAL\fP xcons (\fBvoid\fP)"
+
+.PP
+Definition at line 103 of file xllist\&.c\&.
+.SS "\fBLVAL\fP xconsp (\fBvoid\fP)"
+
+.PP
+Definition at line 237 of file xlbfun\&.c\&.
+.SS "\fBLVAL\fP xcontinue (\fBvoid\fP)"
+
+.PP
+Definition at line 621 of file xlbfun\&.c\&.
+.SS "\fBLVAL\fP xcos (\fBvoid\fP)"
+
+.PP
+Definition at line 244 of file xlmath\&.c\&.
+.SS "\fBLVAL\fP xdefmacro (\fBvoid\fP)"
+
+.PP
+Definition at line 360 of file xlcont\&.c\&.
+.SS "\fBLVAL\fP xdefun (\fBvoid\fP)"
+
+.PP
+Definition at line 341 of file xlcont\&.c\&.
+.SS "\fBLVAL\fP xdelete (\fBvoid\fP)"
+
+.PP
+Definition at line 712 of file xllist\&.c\&.
+.SS "\fBLVAL\fP xdelif (\fBvoid\fP)"
+
+.PP
+Definition at line 761 of file xllist\&.c\&.
+.SS "\fBLVAL\fP xdelifnot (\fBvoid\fP)"
+
+.PP
+Definition at line 768 of file xllist\&.c\&.
+.SS "\fBLVAL\fP xdigitchar (\fBvoid\fP)"
+
+.PP
+Definition at line 490 of file xlstr\&.c\&.
+.SS "\fBLVAL\fP xdigitp (\fBvoid\fP)"
+
+.PP
+Definition at line 442 of file xlstr\&.c\&.
+.SS "\fBLVAL\fP xdiv (\fBvoid\fP)"
+
+.PP
+Definition at line 30 of file xlmath\&.c\&.
+.SS "\fBLVAL\fP xdo (\fBvoid\fP)"
+
+.PP
+Definition at line 846 of file xlcont\&.c\&.
+.SS "\fBLVAL\fP xdolist (\fBvoid\fP)"
+
+.PP
+Definition at line 917 of file xlcont\&.c\&.
+.SS "\fBLVAL\fP xdostar (\fBvoid\fP)"
+
+.PP
+Definition at line 852 of file xlcont\&.c\&.
+.SS "\fBLVAL\fP xdotimes (\fBvoid\fP)"
+
+.PP
+Definition at line 972 of file xlcont\&.c\&.
+.SS "\fBLVAL\fP xdowncase (\fBvoid\fP)"
+
+.PP
+Definition at line 101 of file xlstr\&.c\&.
+.SS "\fBLVAL\fP xendp (\fBvoid\fP)"
+
+.PP
+Definition at line 228 of file xlbfun\&.c\&.
+.SS "\fBLVAL\fP xeq (\fBvoid\fP)"
+
+.PP
+Definition at line 246 of file xlbfun\&.c\&.
+.SS "\fBLVAL\fP xeql (\fBvoid\fP)"
+
+.PP
+Definition at line 260 of file xlbfun\&.c\&.
+.SS "\fBLVAL\fP xequ (\fBvoid\fP)"
+
+.PP
+Definition at line 350 of file xlmath\&.c\&.
+.SS "\fBLVAL\fP xequal (\fBvoid\fP)"
+
+.PP
+Definition at line 274 of file xlbfun\&.c\&.
+.SS "\fBLVAL\fP xerror (\fBvoid\fP)"
+
+.PP
+Definition at line 552 of file xlbfun\&.c\&.
+.SS "\fBLVAL\fP xerrset (\fBvoid\fP)"
+
+.PP
+Definition at line 1144 of file xlcont\&.c\&.
+.SS "\fBLVAL\fP xeval (\fBvoid\fP)"
+
+.PP
+Definition at line 13 of file xlbfun\&.c\&.
+.SS "\fBLVAL\fP xevalhook (\fBvoid\fP)"
+
+.PP
+Definition at line 629 of file xlbfun\&.c\&.
+.SS "\fBLVAL\fP xevenp (\fBvoid\fP)"
+
+.PP
+Definition at line 305 of file xlmath\&.c\&.
+.SS "\fBLVAL\fP xexit (\fBvoid\fP)"
+
+.PP
+Definition at line 172 of file xlsys\&.c\&.
+.SS "\fBLVAL\fP xexp (\fBvoid\fP)"
+
+.PP
+Definition at line 246 of file xlmath\&.c\&.
+.SS "\fBLVAL\fP xexpand (\fBvoid\fP)"
+
+.PP
+Definition at line 602 of file xldmem\&.c\&.
+.SS "\fBLVAL\fP xexpt (\fBvoid\fP)"
+
+.PP
+Definition at line 34 of file xlmath\&.c\&.
+.SS "\fBLVAL\fP xfboundp (\fBvoid\fP)"
+
+.PP
+Definition at line 201 of file xlbfun\&.c\&.
+.SS "\fBLVAL\fP xfind_in_xlisp_path (\fBvoid\fP)"
+
+.PP
+Definition at line 219 of file path\&.c\&.
+.SS "\fBLVAL\fP xfix (\fBvoid\fP)"
+
+.PP
+Definition at line 248 of file xlmath\&.c\&.
+.SS "\fBLVAL\fP xflatc (\fBvoid\fP)"
+
+.PP
+Definition at line 116 of file xlfio\&.c\&.
+.SS "\fBLVAL\fP xflatsize (\fBvoid\fP)"
+
+.PP
+Definition at line 110 of file xlfio\&.c\&.
+.SS "\fBLVAL\fP xflet (\fBvoid\fP)"
+
+.PP
+Definition at line 577 of file xlcont\&.c\&.
+.SS "\fBLVAL\fP xfloat (\fBvoid\fP)"
+
+.PP
+Definition at line 249 of file xlmath\&.c\&.
+.SS "\fBLVAL\fP xfloatp (\fBvoid\fP)"
+
+.PP
+Definition at line 138 of file xlbfun\&.c\&.
+.SS "\fBLVAL\fP xformat (\fBvoid\fP)"
+
+.PP
+Definition at line 615 of file xlfio\&.c\&.
+.SS "\fBLVAL\fP xfuncall (\fBvoid\fP)"
+
+.PP
+Definition at line 40 of file xlbfun\&.c\&.
+.SS "\fBLVAL\fP xfunction (\fBvoid\fP)"
+
+.PP
+Definition at line 53 of file xlcont\&.c\&.
+.SS "\fBLVAL\fP xgc (\fBvoid\fP)"
+
+.PP
+Definition at line 589 of file xldmem\&.c\&.
+.SS "\fBLVAL\fP xgcd (\fBvoid\fP)"
+
+.PP
+Definition at line 41 of file xlmath\&.c\&.
+.SS "\fBLVAL\fP xgensym (\fBvoid\fP)"
+
+.PP
+Definition at line 305 of file xlbfun\&.c\&.
+.SS "\fBLVAL\fP xgeq (\fBvoid\fP)"
+
+.PP
+Definition at line 352 of file xlmath\&.c\&.
+.SS "\fBLVAL\fP xget (\fBvoid\fP)"
+
+.PP
+Definition at line 423 of file xlbfun\&.c\&.
+.SS "\fBLVAL\fP xget_env (\fBvoid\fP)"
+
+.PP
+Definition at line 56 of file xlsys\&.c\&.
+.SS "\fBLVAL\fP xget_temp_path (\fBvoid\fP)"
+
+.PP
+Definition at line 1267 of file nyx\&.c\&.
+.SS "\fBLVAL\fP xgetlambda (\fBvoid\fP)"
+
+.PP
+Definition at line 161 of file xlcont\&.c\&.
+.SS "\fBLVAL\fP xgetlstoutput (\fBvoid\fP)"
+
+.PP
+Definition at line 595 of file xlfio\&.c\&.
+.SS "\fBLVAL\fP xgetruntime (\fBvoid\fP)"
+
+.PP
+Definition at line 276 of file xlsys\&.c\&.
+.SS "\fBLVAL\fP xgetstroutput (\fBvoid\fP)"
+
+.PP
+Definition at line 586 of file xlfio\&.c\&.
+.SS "\fBLVAL\fP xgo (\fBvoid\fP)"
+
+.PP
+Definition at line 687 of file xlcont\&.c\&.
+.SS "\fBLVAL\fP xgtr (\fBvoid\fP)"
+
+.PP
+Definition at line 353 of file xlmath\&.c\&.
+.SS "\fBLVAL\fP xhash (\fBvoid\fP)"
+
+.PP
+Definition at line 472 of file xlbfun\&.c\&.
+.SS "\fBLVAL\fP xif (\fBvoid\fP)"
+
+.PP
+Definition at line 516 of file xlcont\&.c\&.
+.SS "\fBLVAL\fP xinfo (\fBvoid\fP)"
+
+.PP
+Definition at line 661 of file xldmem\&.c\&.
+.SS "\fBLVAL\fP xintchar (\fBvoid\fP)"
+
+.PP
+Definition at line 406 of file xlstr\&.c\&.
+.SS "\fBLVAL\fP xintegerp (\fBvoid\fP)"
+
+.PP
+Definition at line 129 of file xlbfun\&.c\&.
+.SS "\fBLVAL\fP xintern (\fBvoid\fP)"
+
+.PP
+Definition at line 343 of file xlbfun\&.c\&.
+.SS "\fBLVAL\fP xlabels (\fBvoid\fP)"
+
+.PP
+Definition at line 583 of file xlcont\&.c\&.
+.SS "\fBvoid\fP xlabind (\fBLVAL\fP fun, \fBint\fP argc, \fBLVAL\fP * argv)"
+
+.PP
+Definition at line 706 of file xleval\&.c\&.
+.SS "\fBvoid\fP xlabort (\fBconst\fP char * emsg)"
+
+.PP
+Definition at line 22 of file xldbug\&.c\&.
+.SS "\fBvoid\fP xladdivar (\fBLVAL\fP cls, \fBconst\fP char * var)"
+
+.PP
+Definition at line 83 of file xlobj\&.c\&.
+.SS "\fBvoid\fP xladdmsg (\fBLVAL\fP cls, \fBconst\fP char * msg, \fBint\fP offset)"
+
+.PP
+Definition at line 89 of file xlobj\&.c\&.
+.SS "\fBLVAL\fP xlambda (\fBvoid\fP)"
+
+.PP
+Definition at line 143 of file xlcont\&.c\&.
+.SS "\fBLVAL\fP xlapply (\fBint\fP argc)"
+
+.PP
+Definition at line 89 of file xleval\&.c\&.
+.SS "\fBvoid\fP xlargstkoverflow (\fBvoid\fP)"
+
+.PP
+Definition at line 876 of file xleval\&.c\&.
+.SS "\fBLVAL\fP xlast (\fBvoid\fP)"
+
+.PP
+Definition at line 201 of file xllist\&.c\&.
+.SS "\fBLVAL\fP xlbadtype (\fBLVAL\fP arg)"
+
+.PP
+Definition at line 122 of file xlsubr\&.c\&.
+.SS "\fBvoid\fP xlbaktrace (\fBint\fP n)"
+
+.PP
+Definition at line 197 of file xldbug\&.c\&.
+.SS "\fBvoid\fP xlbegin (\fBXLCONTEXT\fP * cptr, \fBint\fP flags, \fBLVAL\fP expr)"
+
+.PP
+Definition at line 17 of file xljump\&.c\&.
+.SS "\fBvoid\fP xlbreak (\fBconst\fP char * emsg, \fBLVAL\fP arg)"
+
+.PP
+Definition at line 30 of file xldbug\&.c\&.
+.SS "\fBvoid\fP xlbrklevel (\fBvoid\fP)"
+
+.PP
+Definition at line 108 of file xljump\&.c\&.
+.SS "\fBvoid\fP xlcerror (\fBconst\fP char * cmsg, \fBconst\fP char * emsg, \fBLVAL\fP arg)"
+
+.PP
+Definition at line 73 of file xldbug\&.c\&.
+.SS "\fBLVAL\fP xlclass (\fBconst\fP char * name, \fBint\fP vcnt)"
+
+.PP
+Definition at line 62 of file xlobj\&.c\&.
+.SS "\fBvoid\fP xlcleanup (\fBvoid\fP)"
+
+.PP
+Definition at line 114 of file xljump\&.c\&.
+.SS "\fBLVAL\fP xlclose (\fBLVAL\fP name, \fBLVAL\fP type, \fBLVAL\fP fargs, \fBLVAL\fP body, \fBLVAL\fP env, \fBLVAL\fP fenv)"
+
+.PP
+Definition at line 486 of file xleval\&.c\&.
+.SS "\fBvoid\fP xlcontinue (\fBvoid\fP)"
+
+.PP
+Definition at line 121 of file xljump\&.c\&.
+.SS "\fBvoid\fP xldinit (\fBvoid\fP)"
+
+.PP
+Definition at line 215 of file xldbug\&.c\&.
+.SS "\fBLVAL\fP xlefttrim (\fBvoid\fP)"
+
+.PP
+Definition at line 184 of file xlstr\&.c\&.
+.SS "\fBvoid\fP xlend (\fBXLCONTEXT\fP * cptr)"
+
+.PP
+Definition at line 34 of file xljump\&.c\&.
+.SS "\fBLVAL\fP xlength (\fBvoid\fP)"
+
+.PP
+Definition at line 525 of file xllist\&.c\&.
+.SS "\fBLVAL\fP xlenter (\fBconst\fP char * name)"
+
+.PP
+Definition at line 156 of file xlsym\&.c\&.
+.SS "\fBLVAL\fP xleq (\fBvoid\fP)"
+
+.PP
+Definition at line 349 of file xlmath\&.c\&.
+.SS "\fBvoid\fP xlerror (\fBconst\fP char * emsg, \fBLVAL\fP arg)"
+
+.PP
+Definition at line 60 of file xldbug\&.c\&.
+.SS "\fBvoid\fP xlerrprint (\fBconst\fP char * hdr, \fBconst\fP char * cmsg, \fBconst\fP char * emsg, \fBLVAL\fP arg)"
+
+.PP
+Definition at line 85 of file xldbug\&.c\&.
+.SS "\fBLVAL\fP xlet (\fBvoid\fP)"
+
+.PP
+Definition at line 531 of file xlcont\&.c\&.
+.SS "\fBLVAL\fP xletstar (\fBvoid\fP)"
+
+.PP
+Definition at line 537 of file xlcont\&.c\&.
+.SS "\fBLVAL\fP xleval (\fBLVAL\fP expr)"
+
+.PP
+Definition at line 43 of file xleval\&.c\&.
+.SS "\fBvoid\fP xlevsave (\fBLVAL\fP expr)"
+
+.PP
+Definition at line 293 of file xlisp\&.c\&.
+.SS "\fBLVAL\fP xlexpandmacros (\fBLVAL\fP form)"
+
+.PP
+Definition at line 295 of file xleval\&.c\&.
+.SS "\fBvoid\fP xlfail (\fBconst\fP char * emsg)"
+
+.PP
+Definition at line 36 of file xldbug\&.c\&.
+.SS "\fBvoid\fP xlfatal (\fBconst\fP char * msg)"
+
+.PP
+Definition at line 301 of file xlisp\&.c\&.
+.SS "\fBvoid\fP xlflush (\fBvoid\fP)"
+
+.PP
+Definition at line 180 of file xlio\&.c\&.
+.SS "\fBvoid\fP xlfunbound (\fBLVAL\fP sym)"
+
+.PP
+Definition at line 864 of file xleval\&.c\&.
+.SS "\fBint\fP xlgetc (\fBLVAL\fP fptr)"
+
+.PP
+Definition at line 22 of file xlio\&.c\&.
+.SS "\fBLVAL\fP xlgetfile (\fBvoid\fP)"
+
+.PP
+Definition at line 65 of file xlsubr\&.c\&.
+.SS "\fBLVAL\fP xlgetfname (\fBvoid\fP)"
+
+.PP
+Definition at line 82 of file xlsubr\&.c\&.
+.SS "\fBLVAL\fP xlgetfunction (\fBLVAL\fP sym)"
+
+.PP
+Definition at line 260 of file xlsym\&.c\&.
+.SS "\fBint\fP xlgetkeyarg (\fBLVAL\fP key, \fBLVAL\fP * pval)"
+
+.PP
+Definition at line 27 of file xlsubr\&.c\&.
+.SS "\fBLVAL\fP xlgetprop (\fBLVAL\fP sym, \fBLVAL\fP prp)"
+
+.PP
+Definition at line 305 of file xlsym\&.c\&.
+.SS "\fBLVAL\fP xlgetvalue (\fBLVAL\fP sym)"
+
+.PP
+Definition at line 194 of file xlsym\&.c\&.
+.SS "\fBint\fP xlgkfixnum (\fBLVAL\fP key, \fBLVAL\fP * pval)"
+
+.PP
+Definition at line 41 of file xlsubr\&.c\&.
+.SS "\fBvoid\fP xlgo (\fBLVAL\fP label)"
+
+.PP
+Definition at line 40 of file xljump\&.c\&.
+.SS "\fBLVAL\fP xlinfo (\fBvoid\fP)"
+
+.SS "\fBvoid\fP xlinit (\fBvoid\fP)"
+
+.PP
+Definition at line 51 of file xlinit\&.c\&.
+.SS "\fBint\fP xlirestore (\fBconst\fP char * fname)"
+
+.SS "\fBint\fP xlisave (\fBconst\fP char * fname)"
+
+.SS "\fBint\fP xlisnumber (char * str, \fBLVAL\fP * pval)"
+
+.PP
+Definition at line 876 of file xlread\&.c\&.
+.SS "\fBvoid\fP xlisp_main (\fBvoid\fP)"
+
+.PP
+Definition at line 215 of file xlisp\&.c\&.
+.SS "\fBvoid\fP xlisp_main_init (\fBint\fP, char **)"
+
+.SS "\fBvoid\fP xlisp_wrapup (\fBvoid\fP)"
+
+.PP
+Definition at line 308 of file xlisp\&.c\&.
+.SS "\fBLVAL\fP xlist (\fBvoid\fP)"
+
+.PP
+Definition at line 117 of file xllist\&.c\&.
+.SS "\fBLVAL\fP xlistdir (\fBvoid\fP)"
+
+.PP
+Definition at line 700 of file xlfio\&.c\&.
+.SS "\fBLVAL\fP xlistp (\fBvoid\fP)"
+
+.PP
+Definition at line 219 of file xlbfun\&.c\&.
+.SS "\fBvoid\fP xljump (\fBXLCONTEXT\fP * target, \fBint\fP mask, \fBLVAL\fP val)"
+
+.PP
+Definition at line 127 of file xljump\&.c\&.
+.SS "\fBint\fP xlload (\fBconst\fP char * fname, \fBint\fP vflag, \fBint\fP pflag)"
+
+.PP
+Definition at line 82 of file xlread\&.c\&.
+.SS "\fBLVAL\fP xlmakesym (\fBconst\fP char * name)"
+
+.PP
+Definition at line 184 of file xlsym\&.c\&.
+.SS "\fBvoid\fP xlminit (\fBvoid\fP)"
+
+.PP
+Definition at line 709 of file xldmem\&.c\&.
+.SS "\fBLVAL\fP xload (\fBvoid\fP)"
+
+.PP
+Definition at line 70 of file xlsys\&.c\&.
+.SS "\fBint\fP xlobgetvalue (\fBLVAL\fP pair, \fBLVAL\fP sym, \fBLVAL\fP * pval)"
+
+.PP
+Definition at line 102 of file xlobj\&.c\&.
+.SS "\fBint\fP xlobsetvalue (\fBLVAL\fP pair, \fBLVAL\fP sym, \fBLVAL\fP val)"
+
+.PP
+Definition at line 137 of file xlobj\&.c\&.
+.SS "\fBLVAL\fP xlogand (\fBvoid\fP)"
+
+.PP
+Definition at line 35 of file xlmath\&.c\&.
+.SS "\fBLVAL\fP xlogior (\fBvoid\fP)"
+
+.PP
+Definition at line 36 of file xlmath\&.c\&.
+.SS "\fBLVAL\fP xlognot (\fBvoid\fP)"
+
+.PP
+Definition at line 239 of file xlmath\&.c\&.
+.SS "\fBLVAL\fP xlogxor (\fBvoid\fP)"
+
+.PP
+Definition at line 37 of file xlmath\&.c\&.
+.SS "\fBvoid\fP xloinit (\fBvoid\fP)"
+
+.PP
+Definition at line 460 of file xlobj\&.c\&.
+.SS "\fBLVAL\fP xloop (\fBvoid\fP)"
+
+.PP
+Definition at line 816 of file xlcont\&.c\&.
+.SS "\fBvoid\fP xloutflush (\fBLVAL\fP fptr)"
+
+.PP
+Definition at line 159 of file xlio\&.c\&.
+.SS "\fBLVAL\fP xlowercasep (\fBvoid\fP)"
+
+.PP
+Definition at line 424 of file xlstr\&.c\&.
+.SS "\fBint\fP xlpeek (\fBLVAL\fP fptr)"
+
+.PP
+Definition at line 93 of file xlio\&.c\&.
+.SS "\fBvoid\fP xlprint (\fBLVAL\fP fptr, \fBLVAL\fP vptr, \fBint\fP flag)"
+
+.PP
+Definition at line 39 of file xlprin\&.c\&.
+.SS "\fBvoid\fP xlputc (\fBLVAL\fP fptr, \fBint\fP ch)"
+
+.PP
+Definition at line 124 of file xlio\&.c\&.
+.SS "\fBvoid\fP xlputprop (\fBLVAL\fP sym, \fBLVAL\fP val, \fBLVAL\fP prp)"
+
+.PP
+Definition at line 312 of file xlsym\&.c\&.
+.SS "\fBvoid\fP xlputstr (\fBLVAL\fP fptr, \fBconst\fP char * str)"
+
+.PP
+Definition at line 133 of file xlprin\&.c\&.
+.SS "long xlrand (long range)"
+
+.PP
+Definition at line 78 of file xlisp\&.c\&.
+.SS "\fBvoid\fP xlrdsave (\fBLVAL\fP expr)"
+
+.PP
+Definition at line 284 of file xlisp\&.c\&.
+.SS "\fBint\fP xlread (\fBLVAL\fP fptr, \fBLVAL\fP * pval, \fBint\fP rflag)"
+
+.PP
+Definition at line 273 of file xlread\&.c\&.
+.SS "double xlrealrand (\fBvoid\fP)"
+
+.PP
+Definition at line 89 of file xlisp\&.c\&.
+.SS "\fBvoid\fP xlremprop (\fBLVAL\fP sym, \fBLVAL\fP prp)"
+
+.PP
+Definition at line 322 of file xlsym\&.c\&.
+.SS "\fBvoid\fP xlreturn (\fBLVAL\fP name, \fBLVAL\fP val)"
+
+.PP
+Definition at line 62 of file xljump\&.c\&.
+.SS "\fBvoid\fP xlrinit (\fBvoid\fP)"
+
+.PP
+Definition at line 959 of file xlread\&.c\&.
+.SS "\fBvoid\fP xlsetfunction (\fBLVAL\fP sym, \fBLVAL\fP val)"
+
+.PP
+Definition at line 288 of file xlsym\&.c\&.
+.SS "\fBvoid\fP xlsetvalue (\fBLVAL\fP sym, \fBLVAL\fP val)"
+
+.PP
+Definition at line 233 of file xlsym\&.c\&.
+.SS "\fBvoid\fP xlsignal (\fBconst\fP char * emsg, \fBLVAL\fP arg)"
+
+.PP
+Definition at line 86 of file xljump\&.c\&.
+.SS "\fBvoid\fP xlsinit (\fBvoid\fP)"
+
+.PP
+Definition at line 358 of file xlsym\&.c\&.
+.SS "\fBLVAL\fP xlss (\fBvoid\fP)"
+
+.PP
+Definition at line 348 of file xlmath\&.c\&.
+.SS "\fBvoid\fP xlstkoverflow (\fBvoid\fP)"
+
+.PP
+Definition at line 870 of file xleval\&.c\&.
+.SS "\fBLVAL\fP xlsubr (\fBconst\fP char * sname, \fBint\fP type, \fBLVAL\fP(*)(\fBvoid\fP) fcn, \fBint\fP offset)"
+
+.PP
+Definition at line 18 of file xlsubr\&.c\&.
+.SS "\fBvoid\fP xlsymbols (\fBvoid\fP)"
+
+.PP
+Definition at line 115 of file xlinit\&.c\&.
+.SS "\fBvoid\fP xlterpri (\fBLVAL\fP fptr)"
+
+.PP
+Definition at line 127 of file xlprin\&.c\&.
+.SS "\fBvoid\fP xltest (\fBLVAL\fP * pfcn, \fBint\fP * ptresult)"
+
+.PP
+Definition at line 52 of file xlsubr\&.c\&.
+.SS "\fBvoid\fP xlthrow (\fBLVAL\fP tag, \fBLVAL\fP val)"
+
+.PP
+Definition at line 74 of file xljump\&.c\&.
+.SS "\fBLVAL\fP xltoofew (\fBvoid\fP)"
+
+.PP
+Definition at line 129 of file xlsubr\&.c\&.
+.SS "\fBLVAL\fP xltoomany (\fBvoid\fP)"
+
+.PP
+Definition at line 136 of file xlsubr\&.c\&.
+.SS "\fBvoid\fP xltoplevel (\fBvoid\fP)"
+
+.PP
+Definition at line 100 of file xljump\&.c\&.
+.SS "\fBvoid\fP xlunbound (\fBLVAL\fP sym)"
+
+.PP
+Definition at line 858 of file xleval\&.c\&.
+.SS "\fBvoid\fP xlungetc (\fBLVAL\fP fptr, \fBint\fP ch)"
+
+.PP
+Definition at line 69 of file xlio\&.c\&.
+.SS "\fBLVAL\fP xlxeval (\fBLVAL\fP expr)"
+
+.PP
+Definition at line 71 of file xleval\&.c\&.
+.SS "\fBLVAL\fP xlxgetfunction (\fBLVAL\fP sym)"
+
+.PP
+Definition at line 273 of file xlsym\&.c\&.
+.SS "\fBLVAL\fP xlxgetvalue (\fBLVAL\fP sym)"
+
+.PP
+Definition at line 207 of file xlsym\&.c\&.
+.SS "\fBLVAL\fP xmacroexpand (\fBvoid\fP)"
+
+.PP
+Definition at line 64 of file xlbfun\&.c\&.
+.SS "\fBLVAL\fP xmacrolet (\fBvoid\fP)"
+
+.PP
+Definition at line 589 of file xlcont\&.c\&.
+.SS "\fBLVAL\fP xmakesymbol (\fBvoid\fP)"
+
+.PP
+Definition at line 337 of file xlbfun\&.c\&.
+.SS "\fBLVAL\fP xmapc (\fBvoid\fP)"
+
+.PP
+Definition at line 556 of file xllist\&.c\&.
+.SS "\fBLVAL\fP xmapcar (\fBvoid\fP)"
+
+.PP
+Definition at line 562 of file xllist\&.c\&.
+.SS "\fBLVAL\fP xmapl (\fBvoid\fP)"
+
+.PP
+Definition at line 568 of file xllist\&.c\&.
+.SS "\fBLVAL\fP xmaplist (\fBvoid\fP)"
+
+.PP
+Definition at line 574 of file xllist\&.c\&.
+.SS "\fBLVAL\fP xmax (\fBvoid\fP)"
+
+.PP
+Definition at line 33 of file xlmath\&.c\&.
+.SS "\fBLVAL\fP xmem (\fBvoid\fP)"
+
+.PP
+Definition at line 647 of file xldmem\&.c\&.
+.SS "\fBLVAL\fP xmember (\fBvoid\fP)"
+
+.PP
+Definition at line 218 of file xllist\&.c\&.
+.SS "\fBLVAL\fP xmin (\fBvoid\fP)"
+
+.PP
+Definition at line 32 of file xlmath\&.c\&.
+.SS "\fBLVAL\fP xminusp (\fBvoid\fP)"
+
+.PP
+Definition at line 302 of file xlmath\&.c\&.
+.SS "\fBLVAL\fP xmkarray (\fBvoid\fP)"
+
+.PP
+Definition at line 517 of file xlbfun\&.c\&.
+.SS "\fBLVAL\fP xmkstrinput (\fBvoid\fP)"
+
+.PP
+Definition at line 530 of file xlfio\&.c\&.
+.SS "\fBLVAL\fP xmkstroutput (\fBvoid\fP)"
+
+.PP
+Definition at line 580 of file xlfio\&.c\&.
+.SS "\fBLVAL\fP xmul (\fBvoid\fP)"
+
+.PP
+Definition at line 29 of file xlmath\&.c\&.
+.SS "\fBLVAL\fP xnconc (\fBvoid\fP)"
+
+.PP
+Definition at line 677 of file xllist\&.c\&.
+.SS "\fBLVAL\fP xndowncase (\fBvoid\fP)"
+
+.PP
+Definition at line 105 of file xlstr\&.c\&.
+.SS "\fBLVAL\fP xneq (\fBvoid\fP)"
+
+.PP
+Definition at line 351 of file xlmath\&.c\&.
+.SS "\fBLVAL\fP xnth (\fBvoid\fP)"
+
+.PP
+Definition at line 490 of file xllist\&.c\&.
+.SS "\fBLVAL\fP xnthcdr (\fBvoid\fP)"
+
+.PP
+Definition at line 496 of file xllist\&.c\&.
+.SS "\fBLVAL\fP xnull (\fBvoid\fP)"
+
+.PP
+Definition at line 210 of file xlbfun\&.c\&.
+.SS "\fBLVAL\fP xnumberp (\fBvoid\fP)"
+
+.PP
+Definition at line 120 of file xlbfun\&.c\&.
+.SS "\fBLVAL\fP xnupcase (\fBvoid\fP)"
+
+.PP
+Definition at line 104 of file xlstr\&.c\&.
+.SS "\fBLVAL\fP xobjectp (\fBvoid\fP)"
+
+.PP
+Definition at line 183 of file xlbfun\&.c\&.
+.SS "\fBLVAL\fP xoddp (\fBvoid\fP)"
+
+.PP
+Definition at line 306 of file xlmath\&.c\&.
+.SS "\fBLVAL\fP xopen (\fBvoid\fP)"
+
+.PP
+Definition at line 169 of file xlfio\&.c\&.
+.SS "\fBLVAL\fP xosc_enable (\fBvoid\fP)"
+
+.PP
+Definition at line 25 of file sndsliders\&.c\&.
+.SS "\fBLVAL\fP xpeek (\fBvoid\fP)"
+
+.SS "\fBLVAL\fP xpkchar (\fBvoid\fP)"
+
+.PP
+Definition at line 322 of file xlfio\&.c\&.
+.SS "\fBLVAL\fP xplusp (\fBvoid\fP)"
+
+.PP
+Definition at line 304 of file xlmath\&.c\&.
+.SS "\fBLVAL\fP xpoke (\fBvoid\fP)"
+
+.SS "\fBLVAL\fP xpp (\fBvoid\fP)"
+
+.PP
+Definition at line 24 of file xlpp\&.c\&.
+.SS "\fBLVAL\fP xprin1 (\fBvoid\fP)"
+
+.PP
+Definition at line 63 of file xlfio\&.c\&.
+.SS "\fBLVAL\fP xprinc (\fBvoid\fP)"
+
+.PP
+Definition at line 69 of file xlfio\&.c\&.
+.SS "\fBLVAL\fP xprint (\fBvoid\fP)"
+
+.PP
+Definition at line 57 of file xlfio\&.c\&.
+.SS "\fBLVAL\fP xprog (\fBvoid\fP)"
+
+.PP
+Definition at line 629 of file xlcont\&.c\&.
+.SS "\fBLVAL\fP xprog1 (\fBvoid\fP)"
+
+.PP
+Definition at line 730 of file xlcont\&.c\&.
+.SS "\fBLVAL\fP xprog2 (\fBvoid\fP)"
+
+.PP
+Definition at line 736 of file xlcont\&.c\&.
+.SS "\fBLVAL\fP xprogn (\fBvoid\fP)"
+
+.PP
+Definition at line 765 of file xlcont\&.c\&.
+.SS "\fBLVAL\fP xprogstar (\fBvoid\fP)"
+
+.PP
+Definition at line 635 of file xlcont\&.c\&.
+.SS "\fBLVAL\fP xprogv (\fBvoid\fP)"
+
+.PP
+Definition at line 778 of file xlcont\&.c\&.
+.SS "\fBLVAL\fP xpsetq (\fBvoid\fP)"
+
+.PP
+Definition at line 186 of file xlcont\&.c\&.
+.SS "\fBLVAL\fP xputprop (\fBvoid\fP)"
+
+.PP
+Definition at line 437 of file xlbfun\&.c\&.
+.SS "\fBLVAL\fP xquote (\fBvoid\fP)"
+
+.PP
+Definition at line 44 of file xlcont\&.c\&.
+.SS "\fBLVAL\fP xrand (\fBvoid\fP)"
+
+.PP
+Definition at line 250 of file xlmath\&.c\&.
+.SS "\fBLVAL\fP xrdbyte (\fBvoid\fP)"
+
+.PP
+Definition at line 308 of file xlfio\&.c\&.
+.SS "\fBLVAL\fP xrdchar (\fBvoid\fP)"
+
+.PP
+Definition at line 202 of file xlfio\&.c\&.
+.SS "\fBLVAL\fP xrdfloat (\fBvoid\fP)"
+
+.PP
+Definition at line 261 of file xlfio\&.c\&.
+.SS "\fBLVAL\fP xrdint (\fBvoid\fP)"
+
+.PP
+Definition at line 217 of file xlfio\&.c\&.
+.SS "\fBLVAL\fP xread (\fBvoid\fP)"
+
+.PP
+Definition at line 38 of file xlfio\&.c\&.
+.SS "\fBLVAL\fP xreadline (\fBvoid\fP)"
+
+.PP
+Definition at line 474 of file xlfio\&.c\&.
+.SS "\fBLVAL\fP xrem (\fBvoid\fP)"
+
+.PP
+Definition at line 31 of file xlmath\&.c\&.
+.SS "\fBLVAL\fP xremif (\fBvoid\fP)"
+
+.PP
+Definition at line 406 of file xllist\&.c\&.
+.SS "\fBLVAL\fP xremifnot (\fBvoid\fP)"
+
+.PP
+Definition at line 413 of file xllist\&.c\&.
+.SS "\fBLVAL\fP xremove (\fBvoid\fP)"
+
+.PP
+Definition at line 372 of file xllist\&.c\&.
+.SS "\fBLVAL\fP xremprop (\fBvoid\fP)"
+
+.PP
+Definition at line 455 of file xlbfun\&.c\&.
+.SS "\fBLVAL\fP xrestore (\fBvoid\fP)"
+
+.SS "\fBLVAL\fP xreturn (\fBvoid\fP)"
+
+.PP
+Definition at line 701 of file xlcont\&.c\&.
+.SS "\fBLVAL\fP xreverse (\fBvoid\fP)"
+
+.PP
+Definition at line 178 of file xllist\&.c\&.
+.SS "\fBLVAL\fP xrighttrim (\fBvoid\fP)"
+
+.PP
+Definition at line 185 of file xlstr\&.c\&.
+.SS "\fBLVAL\fP xrplca (\fBvoid\fP)"
+
+.PP
+Definition at line 643 of file xllist\&.c\&.
+.SS "\fBLVAL\fP xrplcd (\fBvoid\fP)"
+
+.PP
+Definition at line 660 of file xllist\&.c\&.
+.SS "\fBLVAL\fP xrtnfrom (\fBvoid\fP)"
+
+.PP
+Definition at line 715 of file xlcont\&.c\&.
+.SS "\fBLVAL\fP xsave (\fBvoid\fP)"
+
+.SS "\fBLVAL\fP xsend (\fBvoid\fP)"
+
+.PP
+Definition at line 41 of file xlobj\&.c\&.
+.SS "\fBLVAL\fP xsendsuper (\fBvoid\fP)"
+
+.PP
+Definition at line 49 of file xlobj\&.c\&.
+.SS "\fBLVAL\fP xset (\fBvoid\fP)"
+
+.PP
+Definition at line 288 of file xlbfun\&.c\&.
+.SS "\fBLVAL\fP xsetdir (\fBvoid\fP)"
+
+.PP
+Definition at line 1213 of file nyx\&.c\&.
+.SS "\fBLVAL\fP xsetf (\fBvoid\fP)"
+
+.PP
+Definition at line 212 of file xlcont\&.c\&.
+.SS "\fBLVAL\fP xsetq (\fBvoid\fP)"
+
+.PP
+Definition at line 170 of file xlcont\&.c\&.
+.SS "\fBLVAL\fP xsin (\fBvoid\fP)"
+
+.PP
+Definition at line 243 of file xlmath\&.c\&.
+.SS "\fBLVAL\fP xsort (\fBvoid\fP)"
+
+.PP
+Definition at line 823 of file xllist\&.c\&.
+.SS "\fBLVAL\fP xsqrt (\fBvoid\fP)"
+
+.PP
+Definition at line 247 of file xlmath\&.c\&.
+.SS "\fBLVAL\fP xstrcat (\fBvoid\fP)"
+
+.PP
+Definition at line 268 of file xlstr\&.c\&.
+.SS "\fBLVAL\fP xstreamp (\fBvoid\fP)"
+
+.PP
+Definition at line 174 of file xlbfun\&.c\&.
+.SS "\fBLVAL\fP xstreql (\fBvoid\fP)"
+
+.PP
+Definition at line 35 of file xlstr\&.c\&.
+.SS "\fBLVAL\fP xstrgeq (\fBvoid\fP)"
+
+.PP
+Definition at line 37 of file xlstr\&.c\&.
+.SS "\fBLVAL\fP xstrgtr (\fBvoid\fP)"
+
+.PP
+Definition at line 38 of file xlstr\&.c\&.
+.SS "\fBLVAL\fP xstrieql (\fBvoid\fP)"
+
+.PP
+Definition at line 43 of file xlstr\&.c\&.
+.SS "\fBLVAL\fP xstrigeq (\fBvoid\fP)"
+
+.PP
+Definition at line 45 of file xlstr\&.c\&.
+.SS "\fBLVAL\fP xstrigtr (\fBvoid\fP)"
+
+.PP
+Definition at line 46 of file xlstr\&.c\&.
+.SS "\fBLVAL\fP xstrileq (\fBvoid\fP)"
+
+.PP
+Definition at line 42 of file xlstr\&.c\&.
+.SS "\fBLVAL\fP xstrilss (\fBvoid\fP)"
+
+.PP
+Definition at line 41 of file xlstr\&.c\&.
+.SS "\fBLVAL\fP xstrineq (\fBvoid\fP)"
+
+.PP
+Definition at line 44 of file xlstr\&.c\&.
+.SS "\fBLVAL\fP xstring (\fBvoid\fP)"
+
+.PP
+Definition at line 345 of file xlstr\&.c\&.
+.SS "\fBLVAL\fP xstringp (\fBvoid\fP)"
+
+.PP
+Definition at line 156 of file xlbfun\&.c\&.
+.SS "\fBLVAL\fP xstrleq (\fBvoid\fP)"
+
+.PP
+Definition at line 34 of file xlstr\&.c\&.
+.SS "\fBLVAL\fP xstrlss (\fBvoid\fP)"
+
+.PP
+Definition at line 33 of file xlstr\&.c\&.
+.SS "\fBLVAL\fP xstrneq (\fBvoid\fP)"
+
+.PP
+Definition at line 36 of file xlstr\&.c\&.
+.SS "\fBLVAL\fP xstrsearch (\fBvoid\fP)"
+
+.PP
+Definition at line 145 of file xlstr\&.c\&.
+.SS "\fBLVAL\fP xsub (\fBvoid\fP)"
+
+.PP
+Definition at line 28 of file xlmath\&.c\&.
+.SS "\fBLVAL\fP xsub1 (\fBvoid\fP)"
+
+.PP
+Definition at line 242 of file xlmath\&.c\&.
+.SS "\fBLVAL\fP xsublis (\fBvoid\fP)"
+
+.PP
+Definition at line 318 of file xllist\&.c\&.
+.SS "\fBLVAL\fP xsubseq (\fBvoid\fP)"
+
+.PP
+Definition at line 303 of file xlstr\&.c\&.
+.SS "\fBLVAL\fP xsubst (\fBvoid\fP)"
+
+.PP
+Definition at line 275 of file xllist\&.c\&.
+.SS "\fBLVAL\fP xsymbolp (\fBvoid\fP)"
+
+.PP
+Definition at line 111 of file xlbfun\&.c\&.
+.SS "\fBLVAL\fP xsymfunction (\fBvoid\fP)"
+
+.PP
+Definition at line 393 of file xlbfun\&.c\&.
+.SS "\fBLVAL\fP xsymname (\fBvoid\fP)"
+
+.PP
+Definition at line 363 of file xlbfun\&.c\&.
+.SS "\fBLVAL\fP xsymplist (\fBvoid\fP)"
+
+.PP
+Definition at line 410 of file xlbfun\&.c\&.
+.SS "\fBLVAL\fP xsymvalue (\fBvoid\fP)"
+
+.PP
+Definition at line 376 of file xlbfun\&.c\&.
+.SS "\fBLVAL\fP xtagbody (\fBvoid\fP)"
+
+.PP
+Definition at line 1046 of file xlcont\&.c\&.
+.SS "\fBLVAL\fP xtan (\fBvoid\fP)"
+
+.PP
+Definition at line 245 of file xlmath\&.c\&.
+.SS "\fBLVAL\fP xterpri (\fBvoid\fP)"
+
+.PP
+Definition at line 75 of file xlfio\&.c\&.
+.SS "\fBLVAL\fP xthrow (\fBvoid\fP)"
+
+.PP
+Definition at line 1086 of file xlcont\&.c\&.
+.SS "\fBLVAL\fP xtoplevel (\fBvoid\fP)"
+
+.PP
+Definition at line 610 of file xlbfun\&.c\&.
+.SS "\fBLVAL\fP xtrace (\fBvoid\fP)"
+
+.PP
+Definition at line 1173 of file xlcont\&.c\&.
+.SS "\fBLVAL\fP xtranscript (\fBvoid\fP)"
+
+.PP
+Definition at line 96 of file xlsys\&.c\&.
+.SS "\fBLVAL\fP xtrim (\fBvoid\fP)"
+
+.PP
+Definition at line 183 of file xlstr\&.c\&.
+.SS "\fBLVAL\fP xtype (\fBvoid\fP)"
+
+.PP
+Definition at line 115 of file xlsys\&.c\&.
+.SS "\fBLVAL\fP xunless (\fBvoid\fP)"
+
+.PP
+Definition at line 420 of file xlcont\&.c\&.
+.SS "\fBLVAL\fP xuntrace (\fBvoid\fP)"
+
+.PP
+Definition at line 1195 of file xlcont\&.c\&.
+.SS "\fBLVAL\fP xunwindprotect (\fBvoid\fP)"
+
+.PP
+Definition at line 1101 of file xlcont\&.c\&.
+.SS "\fBLVAL\fP xupcase (\fBvoid\fP)"
+
+.PP
+Definition at line 100 of file xlstr\&.c\&.
+.SS "\fBLVAL\fP xuppercasep (\fBvoid\fP)"
+
+.PP
+Definition at line 415 of file xlstr\&.c\&.
+.SS "\fBLVAL\fP xvector (\fBvoid\fP)"
+
+.PP
+Definition at line 531 of file xlbfun\&.c\&.
+.SS "\fBLVAL\fP xwhen (\fBvoid\fP)"
+
+.PP
+Definition at line 406 of file xlcont\&.c\&.
+.SS "\fBLVAL\fP xwrbyte (\fBvoid\fP)"
+
+.PP
+Definition at line 361 of file xlfio\&.c\&.
+.SS "\fBLVAL\fP xwrchar (\fBvoid\fP)"
+
+.PP
+Definition at line 344 of file xlfio\&.c\&.
+.SS "\fBLVAL\fP xwrfloat (\fBvoid\fP)"
+
+.PP
+Definition at line 424 of file xlfio\&.c\&.
+.SS "\fBLVAL\fP xwrint (\fBvoid\fP)"
+
+.PP
+Definition at line 379 of file xlfio\&.c\&.
+.SS "\fBLVAL\fP xzerop (\fBvoid\fP)"
+
+.PP
+Definition at line 303 of file xlmath\&.c\&.
+.SH "Variable Documentation"
+.PP 
+.SS "char buf[]"
+
+.PP
+Definition at line 93 of file xlglob\&.c\&.
+.SS "\fBint\fP gsnumber"
+
+.PP
+Definition at line 86 of file xlglob\&.c\&.
+.SS "char gsprefix[]"
+
+.PP
+Definition at line 85 of file xlglob\&.c\&.
+.SS "\fBLVAL\fP k_direction"
+
+.PP
+Definition at line 44 of file xlglob\&.c\&.
+.SS "\fBLVAL\fP k_input"
+
+.PP
+Definition at line 44 of file xlglob\&.c\&.
+.SS "\fBLVAL\fP k_output"
+
+.PP
+Definition at line 44 of file xlglob\&.c\&.
+.SS "\fBLVAL\fP lk_allow_other_keys"
+
+.PP
+Definition at line 52 of file xlglob\&.c\&.
+.SS "\fBLVAL\fP lk_aux"
+
+.PP
+Definition at line 51 of file xlglob\&.c\&.
+.SS "\fBLVAL\fP lk_key"
+
+.PP
+Definition at line 51 of file xlglob\&.c\&.
+.SS "\fBLVAL\fP lk_optional"
+
+.PP
+Definition at line 51 of file xlglob\&.c\&.
+.SS "\fBLVAL\fP lk_rest"
+
+.PP
+Definition at line 51 of file xlglob\&.c\&.
+.SS "\fBint\fP memory_limit"
+
+.PP
+Definition at line 37 of file security\&.c\&.
+.SS "\fBLVAL\fP obarray"
+
+.PP
+Definition at line 20 of file xlglob\&.c\&.
+.SS "\fBconst\fP char os_pathchar"
+
+.PP
+Definition at line 1247 of file nyx\&.c\&.
+.SS "\fBconst\fP char os_sepchar"
+
+.PP
+Definition at line 1248 of file nyx\&.c\&.
+.SS "\fBint\fP run_time"
+
+.PP
+Definition at line 40 of file security\&.c\&.
+.SS "\fBint\fP run_time_limit"
+
+.PP
+Definition at line 29 of file security\&.c\&.
+.SS "\fBLVAL\fP s_applyhook"
+
+.PP
+Definition at line 24 of file xlglob\&.c\&.
+.SS "\fBLVAL\fP s_aref"
+
+.PP
+Definition at line 31 of file xlglob\&.c\&.
+.SS "\fBLVAL\fP s_breakenable"
+
+.PP
+Definition at line 28 of file xlglob\&.c\&.
+.SS "\fBLVAL\fP s_car"
+
+.PP
+Definition at line 31 of file xlglob\&.c\&.
+.SS "\fBLVAL\fP s_cdr"
+
+.PP
+Definition at line 31 of file xlglob\&.c\&.
+.SS "\fBLVAL\fP s_comat"
+
+.PP
+Definition at line 23 of file xlglob\&.c\&.
+.SS "\fBLVAL\fP s_comma"
+
+.PP
+Definition at line 23 of file xlglob\&.c\&.
+.SS "\fBLVAL\fP s_debugio"
+
+.PP
+Definition at line 26 of file xlglob\&.c\&.
+.SS "\fBLVAL\fP s_evalhook"
+
+.PP
+Definition at line 24 of file xlglob\&.c\&.
+.SS "\fBLVAL\fP s_gcflag"
+
+.PP
+Definition at line 33 of file xlglob\&.c\&.
+.SS "\fBLVAL\fP s_gchook"
+
+.PP
+Definition at line 33 of file xlglob\&.c\&.
+.SS "\fBLVAL\fP s_get"
+
+.PP
+Definition at line 31 of file xlglob\&.c\&.
+.SS "\fBLVAL\fP s_lambda"
+
+.PP
+Definition at line 25 of file xlglob\&.c\&.
+.SS "\fBLVAL\fP s_loadingfiles"
+
+.PP
+Definition at line 29 of file xlglob\&.c\&.
+.SS "\fBLVAL\fP s_macro"
+
+.PP
+Definition at line 25 of file xlglob\&.c\&.
+.SS "\fBLVAL\fP s_nth"
+
+.PP
+Definition at line 31 of file xlglob\&.c\&.
+.SS "\fBLVAL\fP s_splist"
+
+.PP
+Definition at line 32 of file xlglob\&.c\&.
+.SS "\fBLVAL\fP s_stdin"
+
+.PP
+Definition at line 26 of file xlglob\&.c\&.
+.SS "\fBLVAL\fP s_stdout"
+
+.PP
+Definition at line 26 of file xlglob\&.c\&.
+.SS "\fBLVAL\fP s_svalue"
+
+.PP
+Definition at line 32 of file xlglob\&.c\&.
+.SS "\fBLVAL\fP s_tlimit"
+
+.PP
+Definition at line 28 of file xlglob\&.c\&.
+.SS "\fBLVAL\fP s_tracelist"
+
+.PP
+Definition at line 24 of file xlglob\&.c\&.
+.SS "\fBLVAL\fP s_tracenable"
+
+.PP
+Definition at line 28 of file xlglob\&.c\&.
+.SS "\fBLVAL\fP s_true"
+
+.PP
+Definition at line 20 of file xlglob\&.c\&.
+.SS "\fBLVAL\fP s_unbound"
+
+.PP
+Definition at line 21 of file xlglob\&.c\&.
+.SS "char* safe_write_path"
+
+.PP
+Definition at line 52 of file security\&.c\&.
+.SS "char* secure_read_path"
+
+.PP
+Definition at line 46 of file security\&.c\&.
+.SS "long total"
+
+.PP
+Definition at line 39 of file xldmem\&.c\&.
+.SS "\fBint\fP xlargc"
+
+.PP
+Definition at line 71 of file xlglob\&.c\&.
+.SS "\fBLVAL\fP* xlargstkbase"
+
+.PP
+Definition at line 66 of file xlglob\&.c\&.
+.SS "\fBLVAL\fP* xlargstktop"
+
+.PP
+Definition at line 67 of file xlglob\&.c\&.
+.SS "\fBLVAL\fP* xlargv"
+
+.PP
+Definition at line 70 of file xlglob\&.c\&.
+.SS "\fBint\fP xldebug"
+
+.PP
+Definition at line 80 of file xlglob\&.c\&.
+.SS "\fBLVAL\fP xldenv"
+
+.PP
+Definition at line 63 of file xlglob\&.c\&.
+.SS "\fBLVAL\fP xlenv"
+
+.PP
+Definition at line 63 of file xlglob\&.c\&.
+.SS "\fBLVAL\fP xlfenv"
+
+.PP
+Definition at line 63 of file xlglob\&.c\&.
+.SS "\fBLVAL\fP* xlfp"
+
+.PP
+Definition at line 68 of file xlglob\&.c\&.
+.SS "\fBint\fP xlfsize"
+
+.PP
+Definition at line 89 of file xlglob\&.c\&.
+.SS "\fBint\fP xlsample"
+
+.PP
+Definition at line 81 of file xlglob\&.c\&.
+.SS "\fBLVAL\fP* xlsp"
+
+.PP
+Definition at line 69 of file xlglob\&.c\&.
+.SS "\fBLVAL\fP** xlstack"
+
+.PP
+Definition at line 62 of file xlglob\&.c\&.
+.SS "\fBLVAL\fP** xlstkbase"
+
+.PP
+Definition at line 62 of file xlglob\&.c\&.
+.SS "\fBLVAL\fP** xlstktop"
+
+.PP
+Definition at line 62 of file xlglob\&.c\&.
+.SS "\fBLVAL\fP xlvalue"
+
+.PP
+Definition at line 76 of file xlglob\&.c\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

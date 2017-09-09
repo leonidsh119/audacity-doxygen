@@ -1,0 +1,494 @@
+.TH "lavu_string" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+lavu_string \- String Manipulation
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBAV_ESCAPE_FLAG_WHITESPACE\fP   0x01"
+.br
+.ti -1c
+.RI "#define \fBAV_ESCAPE_FLAG_STRICT\fP   0x02"
+.br
+.ti -1c
+.RI "#define \fBAV_UTF8_FLAG_ACCEPT_INVALID_BIG_CODES\fP   1"
+.br
+.RI "\fIaccept codepoints over 0x10FFFF \fP"
+.ti -1c
+.RI "#define \fBAV_UTF8_FLAG_ACCEPT_NON_CHARACTERS\fP   2"
+.br
+.RI "\fIaccept non-characters - 0xFFFE and 0xFFFF \fP"
+.ti -1c
+.RI "#define \fBAV_UTF8_FLAG_ACCEPT_SURROGATES\fP   4"
+.br
+.RI "\fIaccept UTF-16 surrogates codes \fP"
+.ti -1c
+.RI "#define \fBAV_UTF8_FLAG_EXCLUDE_XML_INVALID_CONTROL_CODES\fP   8"
+.br
+.RI "\fIexclude control codes not accepted by XML \fP"
+.ti -1c
+.RI "#define \fBAV_UTF8_FLAG_ACCEPT_ALL\fP   \fBAV_UTF8_FLAG_ACCEPT_INVALID_BIG_CODES\fP|\fBAV_UTF8_FLAG_ACCEPT_NON_CHARACTERS\fP|\fBAV_UTF8_FLAG_ACCEPT_SURROGATES\fP"
+.br
+.in -1c
+.SS "Enumerations"
+
+.in +1c
+.ti -1c
+.RI "enum \fBAVEscapeMode\fP { \fBAV_ESCAPE_MODE_AUTO\fP, \fBAV_ESCAPE_MODE_BACKSLASH\fP, \fBAV_ESCAPE_MODE_QUOTE\fP }"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBint\fP \fBav_strstart\fP (\fBconst\fP char *\fBstr\fP, \fBconst\fP char *pfx, \fBconst\fP char **ptr)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_stristart\fP (\fBconst\fP char *\fBstr\fP, \fBconst\fP char *pfx, \fBconst\fP char **ptr)"
+.br
+.ti -1c
+.RI "char * \fBav_stristr\fP (\fBconst\fP char *haystack, \fBconst\fP char *needle)"
+.br
+.ti -1c
+.RI "char * \fBav_strnstr\fP (\fBconst\fP char *haystack, \fBconst\fP char *needle, size_t hay_length)"
+.br
+.ti -1c
+.RI "size_t \fBav_strlcpy\fP (char *dst, \fBconst\fP char *src, size_t \fBsize\fP)"
+.br
+.ti -1c
+.RI "size_t \fBav_strlcat\fP (char *dst, \fBconst\fP char *src, size_t \fBsize\fP)"
+.br
+.ti -1c
+.RI "size_t \fBav_strlcatf\fP (char *dst, size_t \fBsize\fP, \fBconst\fP char *fmt,\&.\&.\&.) \fBav_printf_format\fP(3"
+.br
+.ti -1c
+.RI "char * \fBav_asprintf\fP (\fBconst\fP char *fmt,\&.\&.\&.) \fBav_printf_format\fP(1"
+.br
+.ti -1c
+.RI "char char * \fBav_d2str\fP (double \fBd\fP)"
+.br
+.ti -1c
+.RI "char * \fBav_get_token\fP (\fBconst\fP char **\fBbuf\fP, \fBconst\fP char *term)"
+.br
+.ti -1c
+.RI "char * \fBav_strtok\fP (char *\fBs\fP, \fBconst\fP char *delim, char **saveptr)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_isdigit\fP (\fBint\fP \fBc\fP)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_isgraph\fP (\fBint\fP \fBc\fP)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_isspace\fP (\fBint\fP \fBc\fP)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_isxdigit\fP (\fBint\fP \fBc\fP)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_strcasecmp\fP (\fBconst\fP char *\fBa\fP, \fBconst\fP char *\fBb\fP)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_strncasecmp\fP (\fBconst\fP char *\fBa\fP, \fBconst\fP char *\fBb\fP, size_t n)"
+.br
+.ti -1c
+.RI "\fBconst\fP char * \fBav_basename\fP (\fBconst\fP char *path)"
+.br
+.ti -1c
+.RI "\fBconst\fP char * \fBav_dirname\fP (char *path)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_escape\fP (char **dst, \fBconst\fP char *src, \fBconst\fP char *special_chars, enum \fBAVEscapeMode\fP mode, \fBint\fP flags)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_utf8_decode\fP (\fBint32_t\fP *codep, \fBconst\fP \fBuint8_t\fP **bufp, \fBconst\fP \fBuint8_t\fP *buf_end, unsigned \fBint\fP flags)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define AV_ESCAPE_FLAG_STRICT   0x02"
+Escape only specified special characters\&. Without this flag, escape also any characters that may be considered special by \fBav_get_token()\fP, such as the single quote\&. 
+.PP
+Definition at line 292 of file avstring\&.h\&.
+.SS "#define AV_ESCAPE_FLAG_WHITESPACE   0x01"
+Consider spaces special and escape them even in the middle of the string\&.
+.PP
+This is equivalent to adding the whitespace characters to the special characters lists, except it is guaranteed to use the exact same list of whitespace characters as the rest of libavutil\&. 
+.PP
+Definition at line 285 of file avstring\&.h\&.
+.SS "#define AV_UTF8_FLAG_ACCEPT_ALL   \fBAV_UTF8_FLAG_ACCEPT_INVALID_BIG_CODES\fP|\fBAV_UTF8_FLAG_ACCEPT_NON_CHARACTERS\fP|\fBAV_UTF8_FLAG_ACCEPT_SURROGATES\fP"
+
+.PP
+Definition at line 318 of file avstring\&.h\&.
+.SS "#define AV_UTF8_FLAG_ACCEPT_INVALID_BIG_CODES   1"
+
+.PP
+accept codepoints over 0x10FFFF 
+.PP
+Definition at line 313 of file avstring\&.h\&.
+.SS "#define AV_UTF8_FLAG_ACCEPT_NON_CHARACTERS   2"
+
+.PP
+accept non-characters - 0xFFFE and 0xFFFF 
+.PP
+Definition at line 314 of file avstring\&.h\&.
+.SS "#define AV_UTF8_FLAG_ACCEPT_SURROGATES   4"
+
+.PP
+accept UTF-16 surrogates codes 
+.PP
+Definition at line 315 of file avstring\&.h\&.
+.SS "#define AV_UTF8_FLAG_EXCLUDE_XML_INVALID_CONTROL_CODES   8"
+
+.PP
+exclude control codes not accepted by XML 
+.PP
+Definition at line 316 of file avstring\&.h\&.
+.SH "Enumeration Type Documentation"
+.PP 
+.SS "enum \fBAVEscapeMode\fP"
+
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fIAV_ESCAPE_MODE_AUTO \fP\fP
+Use auto-selected escaping mode\&. 
+.TP
+\fB\fIAV_ESCAPE_MODE_BACKSLASH \fP\fP
+Use backslash escaping\&. 
+.TP
+\fB\fIAV_ESCAPE_MODE_QUOTE \fP\fP
+Use single-quote escaping\&. 
+.PP
+Definition at line 271 of file avstring\&.h\&.
+.SH "Function Documentation"
+.PP 
+.SS "char* av_asprintf (\fBconst\fP char * fmt,  \&.\&.\&.)"
+Print arguments following specified format into a large enough auto allocated buffer\&. It is similar to GNU asprintf()\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIfmt\fP printf-compatible format string, specifying how the following parameters are used\&. 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the allocated string 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+You have to free the string yourself with \fBav_free()\fP\&. 
+.RE
+.PP
+
+.SS "\fBconst\fP char* av_basename (\fBconst\fP char * path)"
+Thread safe basename\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIpath\fP the path, on DOS both \\ and / are considered separators\&. 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+pointer to the basename substring\&. 
+.RE
+.PP
+
+.SS "char char* av_d2str (double d)"
+Convert a number to a av_malloced string\&. 
+.SS "\fBconst\fP char* av_dirname (char * path)"
+Thread safe dirname\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIpath\fP the path, on DOS both \\ and / are considered separators\&. 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the path with the separator replaced by the string terminator or '\&.'\&. 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+the function may change the input string\&. 
+.RE
+.PP
+
+.SS "\fBint\fP av_escape (char ** dst, \fBconst\fP char * src, \fBconst\fP char * special_chars, enum \fBAVEscapeMode\fP mode, \fBint\fP flags)"
+Escape string in src, and put the escaped string in an allocated string in *dst, which must be freed with \fBav_free()\fP\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdst\fP pointer where an allocated string is put 
+.br
+\fIsrc\fP string to escape, must be non-NULL 
+.br
+\fIspecial_chars\fP string containing the special characters which need to be escaped, can be NULL 
+.br
+\fImode\fP escape mode to employ, see AV_ESCAPE_MODE_* macros\&. Any unknown value for mode will be considered equivalent to AV_ESCAPE_MODE_BACKSLASH, but this behaviour can change without notice\&. 
+.br
+\fIflags\fP flags which control how to escape, see AV_ESCAPE_FLAG_ macros 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the length of the allocated string, or a negative error code in case of error 
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBav_bprint_escape()\fP 
+.RE
+.PP
+
+.SS "char* av_get_token (\fBconst\fP char ** buf, \fBconst\fP char * term)"
+Unescape the given string until a non escaped terminating char, and return the token corresponding to the unescaped string\&.
+.PP
+The normal \\ and ' escaping is supported\&. Leading and trailing whitespaces are removed, unless they are escaped with '\\' or are enclosed between ''\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIbuf\fP the buffer to parse, buf will be updated to point to the terminating char 
+.br
+\fIterm\fP a 0-terminated list of terminating chars 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the malloced unescaped string, which must be av_freed by the user, NULL in case of allocation failure 
+.RE
+.PP
+
+.SS "\fBint\fP av_isdigit (\fBint\fP c)"
+Locale-independent conversion of ASCII isdigit\&. 
+.SS "\fBint\fP av_isgraph (\fBint\fP c)"
+Locale-independent conversion of ASCII isgraph\&. 
+.SS "\fBint\fP av_isspace (\fBint\fP c)"
+Locale-independent conversion of ASCII isspace\&. 
+.SS "\fBint\fP av_isxdigit (\fBint\fP c)"
+Locale-independent conversion of ASCII isxdigit\&. 
+.SS "\fBint\fP av_strcasecmp (\fBconst\fP char * a, \fBconst\fP char * b)"
+Locale-independent case-insensitive compare\&. 
+.PP
+\fBNote:\fP
+.RS 4
+This means only ASCII-range characters are case-insensitive 
+.RE
+.PP
+
+.SS "\fBint\fP av_stristart (\fBconst\fP char * str, \fBconst\fP char * pfx, \fBconst\fP char ** ptr)"
+Return non-zero if pfx is a prefix of str independent of case\&. If it is, *ptr is set to the address of the first character in str after the prefix\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIstr\fP input string 
+.br
+\fIpfx\fP prefix to test 
+.br
+\fIptr\fP updated if the prefix is matched inside str 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+non-zero if the prefix matches, zero otherwise 
+.RE
+.PP
+
+.SS "char* av_stristr (\fBconst\fP char * haystack, \fBconst\fP char * needle)"
+Locate the first case-independent occurrence in the string haystack of the string needle\&. A zero-length string needle is considered to match at the start of haystack\&.
+.PP
+This function is a case-insensitive version of the standard strstr()\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIhaystack\fP string to search in 
+.br
+\fIneedle\fP string to search for 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+pointer to the located match within haystack or a null pointer if no match 
+.RE
+.PP
+
+.SS "size_t av_strlcat (char * dst, \fBconst\fP char * src, size_t size)"
+Append the string src to the string dst, but to a total length of no more than size - 1 bytes, and null-terminate dst\&.
+.PP
+This function is similar to BSD strlcat(), but differs when size <= strlen(dst)\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdst\fP destination buffer 
+.br
+\fIsrc\fP source string 
+.br
+\fIsize\fP size of destination buffer 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the total length of src and dst
+.RE
+.PP
+\fBWarning:\fP
+.RS 4
+since the return value use the length of src and dst, these absolutely \fImust\fP be a properly 0-terminated strings, otherwise this will read beyond the end of the buffer and possibly crash\&. 
+.RE
+.PP
+
+.SS "size_t av_strlcatf (char * dst, size_t size, \fBconst\fP char * fmt,  \&.\&.\&.)"
+Append output to a string, according to a format\&. Never write out of the destination buffer, and always put a terminating 0 within the buffer\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdst\fP destination buffer (string to which the output is appended) 
+.br
+\fIsize\fP total size of the destination buffer 
+.br
+\fIfmt\fP printf-compatible format string, specifying how the following parameters are used 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the length of the string that would have been generated if enough space had been available 
+.RE
+.PP
+
+.SS "size_t av_strlcpy (char * dst, \fBconst\fP char * src, size_t size)"
+Copy the string src to dst, but no more than size - 1 bytes, and null-terminate dst\&.
+.PP
+This function is the same as BSD strlcpy()\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdst\fP destination buffer 
+.br
+\fIsrc\fP source string 
+.br
+\fIsize\fP size of destination buffer 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the length of src
+.RE
+.PP
+\fBWarning:\fP
+.RS 4
+since the return value is the length of src, src absolutely \fImust\fP be a properly 0-terminated string, otherwise this will read beyond the end of the buffer and possibly crash\&. 
+.RE
+.PP
+
+.SS "\fBint\fP av_strncasecmp (\fBconst\fP char * a, \fBconst\fP char * b, size_t n)"
+Locale-independent case-insensitive compare\&. 
+.PP
+\fBNote:\fP
+.RS 4
+This means only ASCII-range characters are case-insensitive 
+.RE
+.PP
+
+.SS "char* av_strnstr (\fBconst\fP char * haystack, \fBconst\fP char * needle, size_t hay_length)"
+Locate the first occurrence of the string needle in the string haystack where not more than hay_length characters are searched\&. A zero-length string needle is considered to match at the start of haystack\&.
+.PP
+This function is a length-limited version of the standard strstr()\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIhaystack\fP string to search in 
+.br
+\fIneedle\fP string to search for 
+.br
+\fIhay_length\fP length of string to search in 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+pointer to the located match within haystack or a null pointer if no match 
+.RE
+.PP
+
+.SS "\fBint\fP av_strstart (\fBconst\fP char * str, \fBconst\fP char * pfx, \fBconst\fP char ** ptr)"
+Return non-zero if pfx is a prefix of str\&. If it is, *ptr is set to the address of the first character in str after the prefix\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIstr\fP input string 
+.br
+\fIpfx\fP prefix to test 
+.br
+\fIptr\fP updated if the prefix is matched inside str 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+non-zero if the prefix matches, zero otherwise 
+.RE
+.PP
+
+.SS "char* av_strtok (char * s, \fBconst\fP char * delim, char ** saveptr)"
+Split the string into several tokens which can be accessed by successive calls to \fBav_strtok()\fP\&.
+.PP
+A token is defined as a sequence of characters not belonging to the set specified in delim\&.
+.PP
+On the first call to \fBav_strtok()\fP, s should point to the string to parse, and the value of saveptr is ignored\&. In subsequent calls, s should be NULL, and saveptr should be unchanged since the previous call\&.
+.PP
+This function is similar to strtok_r() defined in POSIX\&.1\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIs\fP the string to parse, may be NULL 
+.br
+\fIdelim\fP 0-terminated list of token delimiters, must be non-NULL 
+.br
+\fIsaveptr\fP user-provided pointer which points to stored information necessary for \fBav_strtok()\fP to continue scanning the same string\&. saveptr is updated to point to the next character after the first delimiter found, or to NULL if the string was terminated 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the found token, or NULL when no token is found 
+.RE
+.PP
+
+.SS "\fBint\fP av_utf8_decode (\fBint32_t\fP * codep, \fBconst\fP \fBuint8_t\fP ** bufp, \fBconst\fP \fBuint8_t\fP * buf_end, unsigned \fBint\fP flags)"
+Read and decode a single UTF-8 code point (character) from the buffer in *buf, and update *buf to point to the next byte to decode\&.
+.PP
+In case of an invalid byte sequence, the pointer will be updated to the next byte after the invalid sequence and the function will return an error code\&.
+.PP
+Depending on the specified flags, the function will also fail in case the decoded code point does not belong to a valid range\&.
+.PP
+\fBNote:\fP
+.RS 4
+For speed-relevant code a carefully implemented use of \fBGET_UTF8()\fP may be preferred\&.
+.RE
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcodep\fP pointer used to return the parsed code in case of success\&. The value in *codep is set even in case the range check fails\&. 
+.br
+\fIbufp\fP pointer to the address the first byte of the sequence to decode, updated by the function to point to the byte next after the decoded sequence 
+.br
+\fIbuf_end\fP pointer to the end of the buffer, points to the next byte past the last in the buffer\&. This is used to avoid buffer overreads (in case of an unfinished UTF-8 sequence towards the end of the buffer)\&. 
+.br
+\fIflags\fP a collection of AV_UTF8_FLAG_* flags 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+>= 0 in case a sequence was successfully read, a negative value in case of invalid sequence 
+.RE
+.PP
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

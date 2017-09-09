@@ -1,0 +1,198 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/src/MixerBoard.cpp" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/src/MixerBoard.cpp \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include 'Audacity\&.h'\fP
+.br
+\fC#include 'Experimental\&.h'\fP
+.br
+\fC#include 'MixerBoard\&.h'\fP
+.br
+\fC#include <math\&.h>\fP
+.br
+\fC#include <wx/dcmemory\&.h>\fP
+.br
+\fC#include <wx/arrimpl\&.cpp>\fP
+.br
+\fC#include <wx/icon\&.h>\fP
+.br
+\fC#include <wx/settings\&.h>\fP
+.br
+\fC#include 'AColor\&.h'\fP
+.br
+\fC#include 'AudioIO\&.h'\fP
+.br
+\fC#include 'Project\&.h'\fP
+.br
+\fC#include 'TrackPanel\&.h'\fP
+.br
+\fC#include 'UndoManager\&.h'\fP
+.br
+\fC#include 'WaveTrack\&.h'\fP
+.br
+\fC#include 'widgets/Meter\&.h'\fP
+.br
+\fC#include '\&.\&./images/MusicalInstruments\&.h'\fP
+.br
+\fC#include '\&.\&./images/AudacityLogo48x48\&.xpm'\fP
+.br
+
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBkInset\fP   4"
+.br
+.ti -1c
+.RI "#define \fBkDoubleInset\fP   (2 * \fBkInset\fP)"
+.br
+.ti -1c
+.RI "#define \fBkTripleInset\fP   (3 * \fBkInset\fP)"
+.br
+.ti -1c
+.RI "#define \fBkQuadrupleInset\fP   (4 * \fBkInset\fP)"
+.br
+.ti -1c
+.RI "#define \fBTRACK_NAME_HEIGHT\fP   18"
+.br
+.ti -1c
+.RI "#define \fBMUSICAL_INSTRUMENT_HEIGHT_AND_WIDTH\fP   48"
+.br
+.ti -1c
+.RI "#define \fBMUTE_SOLO_HEIGHT\fP   16"
+.br
+.ti -1c
+.RI "#define \fBPAN_HEIGHT\fP   24"
+.br
+.ti -1c
+.RI "#define \fBkLeftSideStackWidth\fP   \fBMUSICAL_INSTRUMENT_HEIGHT_AND_WIDTH\fP \- \fBkDoubleInset\fP"
+.br
+.ti -1c
+.RI "#define \fBkRightSideStackWidth\fP   \fBMUSICAL_INSTRUMENT_HEIGHT_AND_WIDTH\fP + \fBkDoubleInset\fP"
+.br
+.ti -1c
+.RI "#define \fBkMixerTrackClusterWidth\fP   \fBkLeftSideStackWidth\fP + \fBkRightSideStackWidth\fP + \fBkQuadrupleInset\fP"
+.br
+.ti -1c
+.RI "#define \fBMIXER_BOARD_MIN_HEIGHT\fP   460"
+.br
+.ti -1c
+.RI "#define \fBMIXER_BOARD_MIN_WIDTH\fP   \fBkTripleInset\fP + \fBkMixerTrackClusterWidth\fP + \fBkTripleInset\fP"
+.br
+.in -1c
+.SS "Enumerations"
+
+.in +1c
+.ti -1c
+.RI "enum { \fBID_BITMAPBUTTON_MUSICAL_INSTRUMENT\fP = 13000, \fBID_SLIDER_PAN\fP, \fBID_SLIDER_GAIN\fP, \fBID_TOGGLEBUTTON_MUTE\fP, \fBID_TOGGLEBUTTON_SOLO\fP }"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBWX_DEFINE_OBJARRAY\fP (MusicalInstrumentArray)"
+.br
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "\fBconst\fP wxSize \fBkDefaultSize\fP"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define kDoubleInset   (2 * \fBkInset\fP)"
+
+.PP
+Definition at line 122 of file MixerBoard\&.cpp\&.
+.SS "#define kInset   4"
+
+.PP
+Definition at line 121 of file MixerBoard\&.cpp\&.
+.SS "#define kLeftSideStackWidth   \fBMUSICAL_INSTRUMENT_HEIGHT_AND_WIDTH\fP \- \fBkDoubleInset\fP"
+
+.PP
+Definition at line 131 of file MixerBoard\&.cpp\&.
+.SS "#define kMixerTrackClusterWidth   \fBkLeftSideStackWidth\fP + \fBkRightSideStackWidth\fP + \fBkQuadrupleInset\fP"
+
+.PP
+Definition at line 133 of file MixerBoard\&.cpp\&.
+.SS "#define kQuadrupleInset   (4 * \fBkInset\fP)"
+
+.PP
+Definition at line 124 of file MixerBoard\&.cpp\&.
+.SS "#define kRightSideStackWidth   \fBMUSICAL_INSTRUMENT_HEIGHT_AND_WIDTH\fP + \fBkDoubleInset\fP"
+
+.PP
+Definition at line 132 of file MixerBoard\&.cpp\&.
+.SS "#define kTripleInset   (3 * \fBkInset\fP)"
+
+.PP
+Definition at line 123 of file MixerBoard\&.cpp\&.
+.SS "#define MIXER_BOARD_MIN_HEIGHT   460"
+
+.PP
+Definition at line 951 of file MixerBoard\&.cpp\&.
+.SS "#define MIXER_BOARD_MIN_WIDTH   \fBkTripleInset\fP + \fBkMixerTrackClusterWidth\fP + \fBkTripleInset\fP"
+
+.PP
+Definition at line 954 of file MixerBoard\&.cpp\&.
+.SS "#define MUSICAL_INSTRUMENT_HEIGHT_AND_WIDTH   48"
+
+.PP
+Definition at line 127 of file MixerBoard\&.cpp\&.
+.SS "#define MUTE_SOLO_HEIGHT   16"
+
+.PP
+Definition at line 128 of file MixerBoard\&.cpp\&.
+.SS "#define PAN_HEIGHT   24"
+
+.PP
+Definition at line 129 of file MixerBoard\&.cpp\&.
+.SS "#define TRACK_NAME_HEIGHT   18"
+
+.PP
+Definition at line 126 of file MixerBoard\&.cpp\&.
+.SH "Enumeration Type Documentation"
+.PP 
+.SS "anonymous enum"
+
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fIID_BITMAPBUTTON_MUSICAL_INSTRUMENT \fP\fP
+.TP
+\fB\fIID_SLIDER_PAN \fP\fP
+.TP
+\fB\fIID_SLIDER_GAIN \fP\fP
+.TP
+\fB\fIID_TOGGLEBUTTON_MUTE \fP\fP
+.TP
+\fB\fIID_TOGGLEBUTTON_SOLO \fP\fP
+.PP
+Definition at line 135 of file MixerBoard\&.cpp\&.
+.SH "Function Documentation"
+.PP 
+.SS "WX_DEFINE_OBJARRAY (MusicalInstrumentArray)"
+
+.SH "Variable Documentation"
+.PP 
+.SS "\fBconst\fP wxSize kDefaultSize"
+\fBInitial value:\fP
+.PP
+.nf
+=
+   wxSize(MIXER_BOARD_MIN_WIDTH, MIXER_BOARD_MIN_HEIGHT)
+.fi
+.PP
+Definition at line 1744 of file MixerBoard\&.cpp\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

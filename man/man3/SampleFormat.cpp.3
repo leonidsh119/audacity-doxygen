@@ -1,0 +1,104 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/src/SampleFormat.cpp" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/src/SampleFormat.cpp \- Functions that work with \fBDither\fP and initialise it\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <wx/intl\&.h>\fP
+.br
+\fC#include <math\&.h>\fP
+.br
+\fC#include <stdio\&.h>\fP
+.br
+\fC#include <stdlib\&.h>\fP
+.br
+\fC#include <string\&.h>\fP
+.br
+\fC#include 'SampleFormat\&.h'\fP
+.br
+\fC#include 'Prefs\&.h'\fP
+.br
+\fC#include 'Dither\&.h'\fP
+.br
+
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBvoid\fP \fBInitDitherers\fP ()"
+.br
+.ti -1c
+.RI "\fBconst\fP wxChar * \fBGetSampleFormatStr\fP (\fBsampleFormat\fP \fBformat\fP)"
+.br
+.ti -1c
+.RI "AUDACITY_DLL_API \fBsamplePtr\fP \fBNewSamples\fP (\fBint\fP \fBcount\fP, \fBsampleFormat\fP \fBformat\fP)"
+.br
+.ti -1c
+.RI "AUDACITY_DLL_API \fBvoid\fP \fBDeleteSamples\fP (\fBsamplePtr\fP \fBp\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBClearSamples\fP (\fBsamplePtr\fP src, \fBsampleFormat\fP \fBformat\fP, \fBint\fP \fBstart\fP, \fBint\fP \fBlen\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBReverseSamples\fP (\fBsamplePtr\fP src, \fBsampleFormat\fP \fBformat\fP, \fBint\fP \fBstart\fP, \fBint\fP \fBlen\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBCopySamples\fP (\fBsamplePtr\fP src, \fBsampleFormat\fP srcFormat, \fBsamplePtr\fP dst, \fBsampleFormat\fP dstFormat, unsigned \fBint\fP \fBlen\fP, \fBbool\fP highQuality, unsigned \fBint\fP srcStride, unsigned \fBint\fP dstStride)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBCopySamplesNoDither\fP (\fBsamplePtr\fP src, \fBsampleFormat\fP srcFormat, \fBsamplePtr\fP dst, \fBsampleFormat\fP dstFormat, unsigned \fBint\fP \fBlen\fP, unsigned \fBint\fP srcStride, unsigned \fBint\fP dstStride)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Functions that work with \fBDither\fP and initialise it\&. 
+
+This file handles converting between all of the different sample formats that Audacity supports, such as 16-bit, 24-bit (packed into a 32-bit int), and 32-bit float\&.
+.PP
+Floating-point samples use the range -1\&.0\&.\&.\&.1\&.0, inclusive\&. Integer formats use the full signed range of their data type, for example 16-bit samples use the range -32768\&.\&.\&.32767\&. This means that reading in a wav file and writing it out again ('round tripping'), via floats, is lossless; -32768 equates to -1\&.0f and 32767 equates to +1\&.0f - (a little bit)\&. It also means (unfortunatly) that writing out +1\&.0f leads to clipping by 1 LSB\&. This creates some distortion, but I (MJS) have not been able to measure it, it's so small\&. Zero is preserved\&.
+.PP
+http://limpet.net/audacity/bugzilla/show_bug.cgi?id=200 leads to some of the discussions that were held about this\&.
+.PP
+Note: These things are now handled by the \fBDither\fP class, which also replaces the \fBCopySamples()\fP method (msmeyer) 
+.PP
+Definition in file \fBSampleFormat\&.cpp\fP\&.
+.SH "Function Documentation"
+.PP 
+.SS "\fBvoid\fP ClearSamples (\fBsamplePtr\fP src, \fBsampleFormat\fP format, \fBint\fP start, \fBint\fP len)"
+
+.PP
+Definition at line 88 of file SampleFormat\&.cpp\&.
+.SS "\fBvoid\fP CopySamples (\fBsamplePtr\fP src, \fBsampleFormat\fP srcFormat, \fBsamplePtr\fP dst, \fBsampleFormat\fP dstFormat, unsigned \fBint\fP len, \fBbool\fP highQuality, unsigned \fBint\fP srcStride, unsigned \fBint\fP dstStride)"
+
+.PP
+Definition at line 113 of file SampleFormat\&.cpp\&.
+.SS "\fBvoid\fP CopySamplesNoDither (\fBsamplePtr\fP src, \fBsampleFormat\fP srcFormat, \fBsamplePtr\fP dst, \fBsampleFormat\fP dstFormat, unsigned \fBint\fP len, unsigned \fBint\fP srcStride, unsigned \fBint\fP dstStride)"
+
+.PP
+Definition at line 125 of file SampleFormat\&.cpp\&.
+.SS "AUDACITY_DLL_API \fBvoid\fP DeleteSamples (\fBsamplePtr\fP p)"
+
+.PP
+Definition at line 82 of file SampleFormat\&.cpp\&.
+.SS "\fBconst\fP wxChar* GetSampleFormatStr (\fBsampleFormat\fP format)"
+
+.PP
+Definition at line 61 of file SampleFormat\&.cpp\&.
+.SS "\fBvoid\fP InitDitherers ()"
+
+.PP
+Definition at line 51 of file SampleFormat\&.cpp\&.
+.SS "AUDACITY_DLL_API \fBsamplePtr\fP NewSamples (\fBint\fP count, \fBsampleFormat\fP format)"
+
+.PP
+Definition at line 77 of file SampleFormat\&.cpp\&.
+.SS "\fBvoid\fP ReverseSamples (\fBsamplePtr\fP src, \fBsampleFormat\fP format, \fBint\fP start, \fBint\fP len)"
+
+.PP
+Definition at line 95 of file SampleFormat\&.cpp\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

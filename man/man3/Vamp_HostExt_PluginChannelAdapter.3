@@ -1,0 +1,141 @@
+.TH "Vamp::HostExt::PluginChannelAdapter" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Vamp::HostExt::PluginChannelAdapter \- 
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <vamp\-hostsdk/PluginChannelAdapter\&.h>\fP
+.PP
+Inherits \fBVamp::HostExt::PluginWrapper\fP\&.
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "class \fBImpl\fP"
+.br
+.in -1c
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBPluginChannelAdapter\fP (\fBPlugin\fP *plugin)"
+.br
+.ti -1c
+.RI "virtual \fB~PluginChannelAdapter\fP ()"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBinitialise\fP (size_t channels, size_t stepSize, size_t blockSize)"
+.br
+.ti -1c
+.RI "\fBFeatureSet\fP \fBprocess\fP (\fBconst\fP float *\fBconst\fP *inputBuffers, \fBRealTime\fP timestamp)"
+.br
+.ti -1c
+.RI "\fBFeatureSet\fP \fBprocessInterleaved\fP (\fBconst\fP float *inputBuffer, \fBRealTime\fP timestamp)"
+.br
+.in -1c
+.SS "Protected Attributes"
+
+.in +1c
+.ti -1c
+.RI "\fBImpl\fP * \fBm_impl\fP"
+.br
+.in -1c
+.SS "Additional Inherited Members"
+.SH "Detailed Description"
+.PP 
+\fBPluginChannelAdapter\fP is a \fBVamp\fP plugin adapter that implements a policy for management of plugins that expect a different number of input channels from the number actually available in the source audio data\&.
+.PP
+A host using \fBPluginChannelAdapter\fP may ignore the getMinChannelCount and getMaxChannelCount reported by the plugin, and still expect the plugin to run\&.
+.PP
+\fBPluginChannelAdapter\fP implements the following policy:
+.PP
+.IP "\(bu" 2
+If the plugin supports the provided number of channels directly, \fBPluginChannelAdapter\fP will just run the plugin as normal\&.
+.IP "\(bu" 2
+If the plugin only supports exactly one channel but more than one channel is provided, \fBPluginChannelAdapter\fP will use the mean of the channels\&. This ensures that the resulting values remain within the same magnitude range as expected for mono data\&.
+.IP "\(bu" 2
+If the plugin requires more than one channel but exactly one is provided, the provided channel will be duplicated across all the plugin input channels\&.
+.PP
+.PP
+If none of the above apply:
+.PP
+.IP "\(bu" 2
+If the plugin requires more channels than are provided, the minimum acceptable number of channels will be produced by adding empty (zero valued) channels to those provided\&.
+.IP "\(bu" 2
+If the plugin requires fewer channels than are provided, the maximum acceptable number of channels will be produced by discarding the excess channels\&.
+.PP
+.PP
+Hosts requiring a different channel policy from the above will need to implement it themselves, instead of using \fBPluginChannelAdapter\fP\&.
+.PP
+Note that \fBPluginChannelAdapter\fP does not override the minimum and maximum channel counts returned by the wrapped plugin\&. The host will need to be aware that it is using a \fBPluginChannelAdapter\fP, and be prepared to ignore these counts as necessary\&. (This contrasts with the approach used in \fBPluginInputDomainAdapter\fP, which aims to make the host completely unaware of which underlying input domain is in fact in use\&.)
+.PP
+(The rationale for this is that a host may wish to use the \fBPluginChannelAdapter\fP but still discriminate in some way on the basis of the number of channels actually supported\&. For example, a simple stereo audio host may prefer to reject plugins that require more than two channels on the grounds that doesn't actually understand what they are for, rather than allow the channel adapter to make a potentially meaningless channel conversion for them\&.)
+.PP
+In every respect other than its management of channels, the \fBPluginChannelAdapter\fP behaves identically to the plugin that it wraps\&. The wrapped plugin will be deleted when the wrapper is deleted\&.
+.PP
+\fBNote:\fP
+.RS 4
+This class was introduced in version 1\&.1 of the \fBVamp\fP plugin SDK\&. 
+.RE
+.PP
+
+.PP
+Definition at line 112 of file PluginChannelAdapter\&.h\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "Vamp::HostExt::PluginChannelAdapter::PluginChannelAdapter (\fBPlugin\fP * plugin)"
+Construct a \fBPluginChannelAdapter\fP wrapping the given plugin\&. The adapter takes ownership of the plugin, which will be deleted when the adapter is deleted\&. 
+.PP
+Definition at line 66 of file PluginChannelAdapter\&.cpp\&.
+.SS "Vamp::HostExt::PluginChannelAdapter::~PluginChannelAdapter ()\fC [virtual]\fP"
+
+.PP
+Definition at line 72 of file PluginChannelAdapter\&.cpp\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "\fBbool\fP Vamp::HostExt::PluginChannelAdapter::initialise (size_t inputChannels, size_t stepSize, size_t blockSize)\fC [virtual]\fP"
+Initialise a plugin to prepare it for use with the given number of input channels, step size (window increment, in sample frames) and block size (window size, in sample frames)\&.
+.PP
+The input sample rate should have been already specified at construction time\&.
+.PP
+Return true for successful initialisation, false if the number of input channels, step size and/or block size cannot be supported\&. 
+.PP
+Implements \fBVamp::Plugin\fP\&.
+.PP
+Definition at line 78 of file PluginChannelAdapter\&.cpp\&.
+.SS "\fBPluginChannelAdapter::FeatureSet\fP Vamp::HostExt::PluginChannelAdapter::process (\fBconst\fP float *\fBconst\fP * inputBuffers, \fBRealTime\fP timestamp)\fC [virtual]\fP"
+Process a single block of input data\&.
+.PP
+If the plugin's inputDomain is TimeDomain, inputBuffers will point to one array of floats per input channel, and each of these arrays will contain blockSize consecutive audio samples (the host will zero-pad as necessary)\&. The timestamp in this case will be the real time in seconds of the start of the supplied block of samples\&.
+.PP
+If the plugin's inputDomain is FrequencyDomain, inputBuffers will point to one array of floats per input channel, and each of these arrays will contain blockSize/2+1 consecutive pairs of real and imaginary component floats corresponding to bins 0\&.\&.(blockSize/2) of the \fBFFT\fP output\&. That is, bin 0 (the first pair of floats) contains the DC output, up to bin blockSize/2 which contains the Nyquist-frequency output\&. There will therefore be blockSize+2 floats per channel in total\&. The timestamp will be the real time in seconds of the centre of the \fBFFT\fP input window (i\&.e\&. the very first block passed to process might contain the \fBFFT\fP of half a block of zero samples and the first half-block of the actual data, with a timestamp of zero)\&.
+.PP
+Return any features that have become available after this process call\&. (These do not necessarily have to fall within the process block, except for OneSamplePerStep outputs\&.) 
+.PP
+Implements \fBVamp::Plugin\fP\&.
+.PP
+Definition at line 84 of file PluginChannelAdapter\&.cpp\&.
+.SS "\fBPluginChannelAdapter::FeatureSet\fP Vamp::HostExt::PluginChannelAdapter::processInterleaved (\fBconst\fP float * inputBuffer, \fBRealTime\fP timestamp)"
+Call \fBprocess()\fP, providing interleaved audio data with the number of channels passed to \fBinitialise()\fP\&. The adapter will de-interleave into temporary buffers as appropriate before calling \fBprocess()\fP\&.
+.PP
+\fBNote:\fP
+.RS 4
+This function was introduced in version 1\&.4 of the \fBVamp\fP plugin SDK\&. 
+.RE
+.PP
+
+.PP
+Definition at line 91 of file PluginChannelAdapter\&.cpp\&.
+.SH "Member Data Documentation"
+.PP 
+.SS "\fBImpl\fP* Vamp::HostExt::PluginChannelAdapter::m_impl\fC [protected]\fP"
+
+.PP
+Definition at line 139 of file PluginChannelAdapter\&.h\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

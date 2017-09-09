@@ -1,0 +1,217 @@
+.TH "soundtouch::FIFOSampleBuffer" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+soundtouch::FIFOSampleBuffer \- 
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <FIFOSampleBuffer\&.h>\fP
+.PP
+Inherits \fBsoundtouch::FIFOSamplePipe\fP\&.
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBFIFOSampleBuffer\fP (\fBint\fP numChannels=2   )"
+.br
+.RI "\fIConstructor\&. \fP"
+.ti -1c
+.RI "\fB~FIFOSampleBuffer\fP ()"
+.br
+.RI "\fIdestructor \fP"
+.ti -1c
+.RI "virtual \fBSAMPLETYPE\fP * \fBptrBegin\fP ()"
+.br
+.ti -1c
+.RI "\fBSAMPLETYPE\fP * \fBptrEnd\fP (\fBuint\fP slackCapacity)"
+.br
+.ti -1c
+.RI "virtual \fBvoid\fP \fBputSamples\fP (\fBconst\fP \fBSAMPLETYPE\fP *\fBsamples\fP, \fBuint\fP \fBnumSamples\fP)"
+.br
+.ti -1c
+.RI "virtual \fBvoid\fP \fBputSamples\fP (\fBuint\fP \fBnumSamples\fP)"
+.br
+.ti -1c
+.RI "virtual \fBuint\fP \fBreceiveSamples\fP (\fBSAMPLETYPE\fP *\fBoutput\fP, \fBuint\fP maxSamples)"
+.br
+.ti -1c
+.RI "virtual \fBuint\fP \fBreceiveSamples\fP (\fBuint\fP maxSamples)"
+.br
+.ti -1c
+.RI "virtual \fBuint\fP \fBnumSamples\fP () \fBconst\fP "
+.br
+.RI "\fIReturns number of samples currently available\&. \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBsetChannels\fP (\fBint\fP numChannels)"
+.br
+.RI "\fISets number of channels, 1 = mono, 2 = stereo\&. \fP"
+.ti -1c
+.RI "virtual \fBint\fP \fBisEmpty\fP () \fBconst\fP "
+.br
+.RI "\fIReturns nonzero if there aren't any samples available for outputting\&. \fP"
+.ti -1c
+.RI "virtual \fBvoid\fP \fBclear\fP ()"
+.br
+.RI "\fIClears all the samples\&. \fP"
+.ti -1c
+.RI "\fBuint\fP \fBadjustAmountOfSamples\fP (\fBuint\fP \fBnumSamples\fP)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+\fBSample\fP buffer working in FIFO (first-in-first-out) principle\&. The class takes care of storage size adjustment and data moving during input/output operations\&.
+.PP
+Notice that in case of stereo audio, one sample is considered to consist of both channel data\&. 
+.PP
+Definition at line 59 of file FIFOSampleBuffer\&.h\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "FIFOSampleBuffer::FIFOSampleBuffer (\fBint\fP numChannels = \fC2\fP)"
+
+.PP
+Constructor\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fInumChannels\fP Number of channels, 1=mono, 2=stereo\&. Default is stereo\&. 
+.RE
+.PP
+
+.PP
+Definition at line 56 of file FIFOSampleBuffer\&.cpp\&.
+.SS "FIFOSampleBuffer::~FIFOSampleBuffer ()"
+
+.PP
+destructor 
+.PP
+Definition at line 70 of file FIFOSampleBuffer\&.cpp\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "\fBuint\fP FIFOSampleBuffer::adjustAmountOfSamples (\fBuint\fP numSamples)\fC [virtual]\fP"
+allow trimming (downwards) amount of samples in pipeline\&. Returns adjusted amount of samples 
+.PP
+Implements \fBsoundtouch::FIFOSamplePipe\fP\&.
+.PP
+Definition at line 266 of file FIFOSampleBuffer\&.cpp\&.
+.SS "\fBvoid\fP FIFOSampleBuffer::clear (\fBvoid\fP)\fC [virtual]\fP"
+
+.PP
+Clears all the samples\&. 
+.PP
+Implements \fBsoundtouch::FIFOSamplePipe\fP\&.
+.PP
+Definition at line 257 of file FIFOSampleBuffer\&.cpp\&.
+.SS "\fBint\fP FIFOSampleBuffer::isEmpty () const\fC [virtual]\fP"
+
+.PP
+Returns nonzero if there aren't any samples available for outputting\&. 
+.PP
+Implements \fBsoundtouch::FIFOSamplePipe\fP\&.
+.PP
+Definition at line 250 of file FIFOSampleBuffer\&.cpp\&.
+.SS "\fBuint\fP FIFOSampleBuffer::numSamples () const\fC [virtual]\fP"
+
+.PP
+Returns number of samples currently available\&. 
+.PP
+Implements \fBsoundtouch::FIFOSamplePipe\fP\&.
+.PP
+Definition at line 206 of file FIFOSampleBuffer\&.cpp\&.
+.SS "\fBSAMPLETYPE\fP * FIFOSampleBuffer::ptrBegin ()\fC [virtual]\fP"
+Returns a pointer to the beginning of the output samples\&. This function is provided for accessing the output samples directly\&. Please be careful for not to corrupt the book-keeping!
+.PP
+When using this function to output samples, also remember to 'remove' the output samples from the buffer by calling the 'receiveSamples(numSamples)' function 
+.PP
+Implements \fBsoundtouch::FIFOSamplePipe\fP\&.
+.PP
+Definition at line 154 of file FIFOSampleBuffer\&.cpp\&.
+.SS "\fBSAMPLETYPE\fP * FIFOSampleBuffer::ptrEnd (\fBuint\fP slackCapacity)"
+Returns a pointer to the end of the used part of the sample buffer (i\&.e\&. where the new samples are to be inserted)\&. This function may be used for inserting new samples into the sample buffer directly\&. Please be careful not corrupt the book-keeping!
+.PP
+When using this function as means for inserting new samples, also remember to increase the sample count afterwards, by calling the 'putSamples(numSamples)' function\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIslackCapacity\fP How much free capacity (in samples) there \fIat least\fP should be so that the caller can succesfully insert the desired samples to the buffer\&. If necessary, the function grows the buffer size to comply with this requirement\&. 
+.RE
+.PP
+
+.PP
+Definition at line 140 of file FIFOSampleBuffer\&.cpp\&.
+.SS "\fBvoid\fP FIFOSampleBuffer::putSamples (\fBconst\fP \fBSAMPLETYPE\fP * samples, \fBuint\fP numSamples)\fC [virtual]\fP"
+Adds 'numSamples' pcs of samples from the 'samples' memory position to the sample buffer\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIsamples\fP Pointer to samples\&. 
+.br
+\fInumSamples\fP Number of samples to insert\&. 
+.RE
+.PP
+
+.PP
+Implements \fBsoundtouch::FIFOSamplePipe\fP\&.
+.PP
+Definition at line 105 of file FIFOSampleBuffer\&.cpp\&.
+.SS "\fBvoid\fP FIFOSampleBuffer::putSamples (\fBuint\fP numSamples)\fC [virtual]\fP"
+Adjusts the book-keeping to increase number of samples in the buffer without copying any actual samples\&.
+.PP
+This function is used to update the number of samples in the sample buffer when accessing the buffer directly with 'ptrEnd' function\&. Please be careful though! 
+.PP
+\fBParameters:\fP
+.RS 4
+\fInumSamples\fP Number of samples been inserted\&. 
+.RE
+.PP
+
+.PP
+Definition at line 118 of file FIFOSampleBuffer\&.cpp\&.
+.SS "\fBuint\fP FIFOSampleBuffer::receiveSamples (\fBSAMPLETYPE\fP * output, \fBuint\fP maxSamples)\fC [virtual]\fP"
+Output samples from beginning of the sample buffer\&. Copies requested samples to output buffer and removes them from the sample buffer\&. If there are less than 'numsample' samples in the buffer, returns all that available\&.
+.PP
+\fBReturns:\fP
+.RS 4
+Number of samples returned\&. 
+.RE
+.PP
+
+.PP
+\fBParameters:\fP
+.RS 4
+\fIoutput\fP Buffer where to copy output samples\&. 
+.br
+\fImaxSamples\fP How many samples to receive at max\&. 
+.RE
+.PP
+
+.PP
+Implements \fBsoundtouch::FIFOSamplePipe\fP\&.
+.PP
+Definition at line 217 of file FIFOSampleBuffer\&.cpp\&.
+.SS "\fBuint\fP FIFOSampleBuffer::receiveSamples (\fBuint\fP maxSamples)\fC [virtual]\fP"
+Adjusts book-keeping so that given number of samples are removed from beginning of the sample buffer without copying them anywhere\&.
+.PP
+Used to reduce the number of samples in the buffer when accessing the sample buffer directly with 'ptrBegin' function\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fImaxSamples\fP Remove this many samples from the beginning of pipe\&. 
+.RE
+.PP
+
+.PP
+Implements \fBsoundtouch::FIFOSamplePipe\fP\&.
+.PP
+Definition at line 231 of file FIFOSampleBuffer\&.cpp\&.
+.SS "\fBvoid\fP FIFOSampleBuffer::setChannels (\fBint\fP numChannels)"
+
+.PP
+Sets number of channels, 1 = mono, 2 = stereo\&. 
+.PP
+Definition at line 79 of file FIFOSampleBuffer\&.cpp\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

@@ -1,0 +1,201 @@
+.TH "Nyq::Filter" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Nyq::Filter \- 
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <Filter\&.h>\fP
+.PP
+Inherits \fBNyq::Stk\fP\&.
+.PP
+Inherited by \fBNyq::BiQuad\fP\fC [protected]\fP, \fBNyq::Delay\fP\fC [protected]\fP, \fBNyq::OnePole\fP\fC [protected]\fP, \fBNyq::OneZero\fP\fC [protected]\fP, and \fBNyq::PoleZero\fP\fC [protected]\fP\&.
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBFilter\fP (\fBvoid\fP)"
+.br
+.RI "\fIDefault constructor creates a zero-order pass-through 'filter'\&. \fP"
+.ti -1c
+.RI "\fBFilter\fP (std::vector< \fBStkFloat\fP > &bCoefficients, std::vector< \fBStkFloat\fP > &aCoefficients)"
+.br
+.RI "\fIOverloaded constructor which takes filter coefficients\&. \fP"
+.ti -1c
+.RI "virtual \fB~Filter\fP (\fBvoid\fP)"
+.br
+.RI "\fIClass destructor\&. \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBclear\fP (\fBvoid\fP)"
+.br
+.RI "\fISets all internal states of the filter to zero\&. \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBsetCoefficients\fP (std::vector< \fBStkFloat\fP > &bCoefficients, std::vector< \fBStkFloat\fP > &aCoefficients, \fBbool\fP clearState=\fBfalse\fP)"
+.br
+.RI "\fISet filter coefficients\&. \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBsetNumerator\fP (std::vector< \fBStkFloat\fP > &bCoefficients, \fBbool\fP clearState=\fBfalse\fP)"
+.br
+.RI "\fISet numerator coefficients\&. \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBsetDenominator\fP (std::vector< \fBStkFloat\fP > &aCoefficients, \fBbool\fP clearState=\fBfalse\fP)"
+.br
+.RI "\fISet denominator coefficients\&. \fP"
+.ti -1c
+.RI "virtual \fBvoid\fP \fBsetGain\fP (\fBStkFloat\fP gain)"
+.br
+.RI "\fISet the filter gain\&. \fP"
+.ti -1c
+.RI "virtual \fBStkFloat\fP \fBgetGain\fP (\fBvoid\fP) \fBconst\fP "
+.br
+.RI "\fIReturn the current filter gain\&. \fP"
+.ti -1c
+.RI "virtual \fBStkFloat\fP \fBlastOut\fP (\fBvoid\fP) \fBconst\fP "
+.br
+.RI "\fIReturn the last computed output value\&. \fP"
+.ti -1c
+.RI "virtual \fBStkFloat\fP \fBtick\fP (\fBStkFloat\fP input)"
+.br
+.RI "\fIInput one sample to the filter and return one output\&. \fP"
+.ti -1c
+.RI "virtual \fBStkFrames\fP & \fBtick\fP (\fBStkFrames\fP &frames, unsigned \fBint\fP channel=0)"
+.br
+.RI "\fITake a channel of the \fBStkFrames\fP object as inputs to the filter and replace with corresponding outputs\&. \fP"
+.in -1c
+.SS "Protected Attributes"
+
+.in +1c
+.ti -1c
+.RI "\fBStkFloat\fP \fBgain_\fP"
+.br
+.ti -1c
+.RI "std::vector< \fBStkFloat\fP > \fBb_\fP"
+.br
+.ti -1c
+.RI "std::vector< \fBStkFloat\fP > \fBa_\fP"
+.br
+.ti -1c
+.RI "std::vector< \fBStkFloat\fP > \fBoutputs_\fP"
+.br
+.ti -1c
+.RI "std::vector< \fBStkFloat\fP > \fBinputs_\fP"
+.br
+.in -1c
+.SS "Additional Inherited Members"
+.SH "Detailed Description"
+.PP 
+Definition at line 39 of file Filter\&.h\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "Filter::Filter (\fBvoid\fP)"
+
+.PP
+Default constructor creates a zero-order pass-through 'filter'\&. 
+.PP
+Definition at line 35 of file Filter\&.cpp\&.
+.SS "Filter::Filter (std::vector< \fBStkFloat\fP > & bCoefficients, std::vector< \fBStkFloat\fP > & aCoefficients)"
+
+.PP
+Overloaded constructor which takes filter coefficients\&. An \fBStkError\fP can be thrown if either of the coefficient vector sizes is zero, or if the a[0] coefficient is equal to zero\&. 
+.PP
+Definition at line 46 of file Filter\&.cpp\&.
+.SS "Filter::~Filter (\fBvoid\fP)\fC [virtual]\fP"
+
+.PP
+Class destructor\&. 
+.PP
+Definition at line 68 of file Filter\&.cpp\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "\fBvoid\fP Filter::clear (\fBvoid\fP)"
+
+.PP
+Sets all internal states of the filter to zero\&. 
+.PP
+Definition at line 72 of file Filter\&.cpp\&.
+.SS "\fBStkFloat\fP Filter::getGain (\fBvoid\fP) const\fC [virtual]\fP"
+
+.PP
+Return the current filter gain\&. 
+.PP
+Reimplemented in \fBNyq::BiQuad\fP, \fBNyq::PoleZero\fP, \fBNyq::OnePole\fP, and \fBNyq::OneZero\fP\&.
+.PP
+Definition at line 179 of file Filter\&.cpp\&.
+.SS "\fBStkFloat\fP Filter::lastOut (\fBvoid\fP) const\fC [virtual]\fP"
+
+.PP
+Return the last computed output value\&. 
+.PP
+Reimplemented in \fBNyq::BiQuad\fP, \fBNyq::Delay\fP, \fBNyq::PoleZero\fP, \fBNyq::OnePole\fP, and \fBNyq::OneZero\fP\&.
+.PP
+Definition at line 184 of file Filter\&.cpp\&.
+.SS "\fBvoid\fP Filter::setCoefficients (std::vector< \fBStkFloat\fP > & bCoefficients, std::vector< \fBStkFloat\fP > & aCoefficients, \fBbool\fP clearState = \fC\fBfalse\fP\fP)"
+
+.PP
+Set filter coefficients\&. An \fBStkError\fP can be thrown if either of the coefficient vector sizes is zero, or if the a[0] coefficient is equal to zero\&. If a[0] is not equal to 1, the filter coeffcients are normalized by a[0]\&. The internal state of the filter is not cleared unless the \fIclearState\fP flag is \fCtrue\fP\&. 
+.PP
+Definition at line 81 of file Filter\&.cpp\&.
+.SS "\fBvoid\fP Filter::setDenominator (std::vector< \fBStkFloat\fP > & aCoefficients, \fBbool\fP clearState = \fC\fBfalse\fP\fP)"
+
+.PP
+Set denominator coefficients\&. An \fBStkError\fP can be thrown if the coefficient vector is empty or if the a[0] coefficient is equal to zero\&. Previously set numerator coefficients are unaffected unless a[0] is not equal to 1, in which case all coeffcients are normalized by a[0]\&. Note that the default constructor sets the single numerator coefficient b[0] to 1\&.0\&. The internal state of the filter is not cleared unless the \fIclearState\fP flag is \fCtrue\fP\&. 
+.PP
+Definition at line 142 of file Filter\&.cpp\&.
+.SS "\fBvoid\fP Filter::setGain (\fBStkFloat\fP gain)\fC [virtual]\fP"
+
+.PP
+Set the filter gain\&. The gain is applied at the filter input and does not affect the coefficient values\&. The default gain value is 1\&.0\&. 
+.PP
+Reimplemented in \fBNyq::BiQuad\fP, \fBNyq::PoleZero\fP, \fBNyq::OnePole\fP, and \fBNyq::OneZero\fP\&.
+.PP
+Definition at line 174 of file Filter\&.cpp\&.
+.SS "\fBvoid\fP Filter::setNumerator (std::vector< \fBStkFloat\fP > & bCoefficients, \fBbool\fP clearState = \fC\fBfalse\fP\fP)"
+
+.PP
+Set numerator coefficients\&. An \fBStkError\fP can be thrown if coefficient vector is empty\&. Any previously set denominator coefficients are left unaffected\&. Note that the default constructor sets the single denominator coefficient a[0] to 1\&.0\&. The internal state of the filter is not cleared unless the \fIclearState\fP flag is \fCtrue\fP\&. 
+.PP
+Definition at line 122 of file Filter\&.cpp\&.
+.SS "\fBStkFloat\fP Filter::tick (\fBStkFloat\fP input)\fC [virtual]\fP"
+
+.PP
+Input one sample to the filter and return one output\&. 
+.PP
+Reimplemented in \fBNyq::BiQuad\fP, \fBNyq::Delay\fP, \fBNyq::PoleZero\fP, \fBNyq::OnePole\fP, and \fBNyq::OneZero\fP\&.
+.PP
+Definition at line 189 of file Filter\&.cpp\&.
+.SS "\fBStkFrames\fP & Filter::tick (\fBStkFrames\fP & frames, unsigned \fBint\fP channel = \fC0\fP)\fC [virtual]\fP"
+
+.PP
+Take a channel of the \fBStkFrames\fP object as inputs to the filter and replace with corresponding outputs\&. The \fCchannel\fP argument should be zero or greater (the first channel is specified by 0)\&. An \fBStkError\fP will be thrown if the \fCchannel\fP argument is equal to or greater than the number of channels in the \fBStkFrames\fP object\&. 
+.PP
+Reimplemented in \fBNyq::BiQuad\fP, \fBNyq::Delay\fP, \fBNyq::PoleZero\fP, \fBNyq::OnePole\fP, and \fBNyq::OneZero\fP\&.
+.PP
+Definition at line 210 of file Filter\&.cpp\&.
+.SH "Member Data Documentation"
+.PP 
+.SS "std::vector<\fBStkFloat\fP> Nyq::Filter::a_\fC [protected]\fP"
+
+.PP
+Definition at line 119 of file Filter\&.h\&.
+.SS "std::vector<\fBStkFloat\fP> Nyq::Filter::b_\fC [protected]\fP"
+
+.PP
+Definition at line 118 of file Filter\&.h\&.
+.SS "\fBStkFloat\fP Nyq::Filter::gain_\fC [protected]\fP"
+
+.PP
+Definition at line 117 of file Filter\&.h\&.
+.SS "std::vector<\fBStkFloat\fP> Nyq::Filter::inputs_\fC [protected]\fP"
+
+.PP
+Definition at line 121 of file Filter\&.h\&.
+.SS "std::vector<\fBStkFloat\fP> Nyq::Filter::outputs_\fC [protected]\fP"
+
+.PP
+Definition at line 120 of file Filter\&.h\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

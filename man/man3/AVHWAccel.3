@@ -1,0 +1,171 @@
+.TH "AVHWAccel" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+AVHWAccel \- 
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <avcodec\&.h>\fP
+.SS "Public Attributes"
+
+.in +1c
+.ti -1c
+.RI "\fBconst\fP char * \fBname\fP"
+.br
+.ti -1c
+.RI "enum \fBAVMediaType\fP \fBtype\fP"
+.br
+.ti -1c
+.RI "enum \fBAVCodecID\fP \fBid\fP"
+.br
+.ti -1c
+.RI "enum \fBAVPixelFormat\fP \fBpix_fmt\fP"
+.br
+.ti -1c
+.RI "\fBint\fP \fBcapabilities\fP"
+.br
+.ti -1c
+.RI "struct \fBAVHWAccel\fP * \fBnext\fP"
+.br
+.ti -1c
+.RI "\fBint\fP(* \fBstart_frame\fP )(\fBAVCodecContext\fP *avctx, \fBconst\fP \fBuint8_t\fP *\fBbuf\fP, \fBuint32_t\fP buf_size)"
+.br
+.ti -1c
+.RI "\fBint\fP(* \fBdecode_slice\fP )(\fBAVCodecContext\fP *avctx, \fBconst\fP \fBuint8_t\fP *\fBbuf\fP, \fBuint32_t\fP buf_size)"
+.br
+.ti -1c
+.RI "\fBint\fP(* \fBend_frame\fP )(\fBAVCodecContext\fP *avctx)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBpriv_data_size\fP"
+.br
+.ti -1c
+.RI "\fBvoid\fP(* \fBdecode_mb\fP )(struct MpegEncContext *\fBs\fP)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+\fBAVHWAccel\fP\&. 
+.PP
+Definition at line 3132 of file avcodec\&.h\&.
+.SH "Member Data Documentation"
+.PP 
+.SS "\fBint\fP AVHWAccel::capabilities"
+Hardware accelerated codec capabilities\&. see FF_HWACCEL_CODEC_CAP_* 
+.PP
+Definition at line 3165 of file avcodec\&.h\&.
+.SS "\fBvoid\fP(* AVHWAccel::decode_mb) (struct MpegEncContext *\fBs\fP)"
+Called for every Macroblock in a slice\&.
+.PP
+XvMC uses it to replace the ff_MPV_decode_mb()\&. Instead of decoding to raw picture, MB parameters are stored in an array provided by the video driver\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIs\fP the mpeg context 
+.RE
+.PP
+
+.PP
+Definition at line 3228 of file avcodec\&.h\&.
+.SS "\fBint\fP(* AVHWAccel::decode_slice) (\fBAVCodecContext\fP *avctx, \fBconst\fP \fBuint8_t\fP *\fBbuf\fP, \fBuint32_t\fP buf_size)"
+\fBCallback\fP for each slice\&.
+.PP
+Meaningful slice information (codec specific) is guaranteed to be parsed at this point\&. This function is mandatory\&. The only exception is XvMC, that works on MB level\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIavctx\fP the codec context 
+.br
+\fIbuf\fP the slice data buffer base 
+.br
+\fIbuf_size\fP the size of the slice in bytes 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+zero if successful, a negative value otherwise 
+.RE
+.PP
+
+.PP
+Definition at line 3197 of file avcodec\&.h\&.
+.SS "\fBint\fP(* AVHWAccel::end_frame) (\fBAVCodecContext\fP *avctx)"
+Called at the end of each frame or field picture\&.
+.PP
+The whole picture is parsed at this point and can now be sent to the hardware accelerator\&. This function is mandatory\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIavctx\fP the codec context 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+zero if successful, a negative value otherwise 
+.RE
+.PP
+
+.PP
+Definition at line 3208 of file avcodec\&.h\&.
+.SS "enum \fBAVCodecID\fP AVHWAccel::id"
+Codec implemented by the hardware accelerator\&.
+.PP
+See AV_CODEC_ID_xxx 
+.PP
+Definition at line 3152 of file avcodec\&.h\&.
+.SS "\fBconst\fP char* AVHWAccel::name"
+Name of the hardware accelerated codec\&. The name is globally unique among encoders and among decoders (but an encoder and a decoder can share the same name)\&. 
+.PP
+Definition at line 3138 of file avcodec\&.h\&.
+.SS "struct \fBAVHWAccel\fP* AVHWAccel::next"
+
+.PP
+Definition at line 3167 of file avcodec\&.h\&.
+.SS "enum \fBAVPixelFormat\fP AVHWAccel::pix_fmt"
+Supported pixel format\&.
+.PP
+Only hardware accelerated formats are supported here\&. 
+.PP
+Definition at line 3159 of file avcodec\&.h\&.
+.SS "\fBint\fP AVHWAccel::priv_data_size"
+Size of HW accelerator private data\&.
+.PP
+Private data is allocated with \fBav_mallocz()\fP before \fBAVCodecContext\&.get_buffer()\fP and deallocated after \fBAVCodecContext\&.release_buffer()\fP\&. 
+.PP
+Definition at line 3217 of file avcodec\&.h\&.
+.SS "\fBint\fP(* AVHWAccel::start_frame) (\fBAVCodecContext\fP *avctx, \fBconst\fP \fBuint8_t\fP *\fBbuf\fP, \fBuint32_t\fP buf_size)"
+Called at the beginning of each frame or field picture\&.
+.PP
+Meaningful frame information (codec specific) is guaranteed to be parsed at this point\&. This function is mandatory\&.
+.PP
+Note that buf can be NULL along with buf_size set to 0\&. Otherwise, this means the whole frame is available at this point\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIavctx\fP the codec context 
+.br
+\fIbuf\fP the frame data buffer base 
+.br
+\fIbuf_size\fP the size of the frame in bytes 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+zero if successful, a negative value otherwise 
+.RE
+.PP
+
+.PP
+Definition at line 3183 of file avcodec\&.h\&.
+.SS "enum \fBAVMediaType\fP AVHWAccel::type"
+Type of codec implemented by the hardware accelerator\&.
+.PP
+See AVMEDIA_TYPE_xxx 
+.PP
+Definition at line 3145 of file avcodec\&.h\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

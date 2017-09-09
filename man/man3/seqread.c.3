@@ -1,0 +1,861 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/lib-src/libnyquist/nyquist/cmt/seqread.c" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/lib-src/libnyquist/nyquist/cmt/seqread.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include 'switches\&.h'\fP
+.br
+\fC#include <stdio\&.h>\fP
+.br
+\fC#include <string\&.h>\fP
+.br
+\fC#include 'cext\&.h'\fP
+.br
+\fC#include 'cmdline\&.h'\fP
+.br
+\fC#include 'midifns\&.h'\fP
+.br
+\fC#include 'timebase\&.h'\fP
+.br
+\fC#include 'moxc\&.h'\fP
+.br
+\fC#include 'seq\&.h'\fP
+.br
+\fC#include 'seqread\&.h'\fP
+.br
+\fC#include 'userio\&.h'\fP
+.br
+\fC#include 'ctype\&.h'\fP
+.br
+\fC#include 'cmtcmd\&.h'\fP
+.br
+
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "struct \fBdurt\fP"
+.br
+.ti -1c
+.RI "struct \fBloudt\fP"
+.br
+.in -1c
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBtoupper\fP(\fBc\fP)   ((\fBc\fP)\-'\fBa\fP'+'\fBA\fP')"
+.br
+.ti -1c
+.RI "#define \fBprecise\fP(x)   (((\fBtime_type\fP) x) << 8)"
+.br
+.ti -1c
+.RI "#define \fBseqround\fP(x)   ((((\fBtime_type\fP) x) + 128) >> 8)"
+.br
+.ti -1c
+.RI "#define \fBtrunc\fP(x)   (((\fBtime_type\fP) x) >> 8)"
+.br
+.ti -1c
+.RI "#define \fBnullstring\fP(\fBs\fP)   (\fBs\fP[0] == \fBEOS\fP)"
+.br
+.ti -1c
+.RI "#define \fBdurtable_len\fP   7"
+.br
+.ti -1c
+.RI "#define \fBsym_tempo\fP   0"
+.br
+.ti -1c
+.RI "#define \fBsym_rate\fP   1"
+.br
+.ti -1c
+.RI "#define \fBsym_csec\fP   2"
+.br
+.ti -1c
+.RI "#define \fBsym_msec\fP   3"
+.br
+.ti -1c
+.RI "#define \fBsym_seti\fP   4"
+.br
+.ti -1c
+.RI "#define \fBsym_setv\fP   5"
+.br
+.ti -1c
+.RI "#define \fBsym_call\fP   6"
+.br
+.ti -1c
+.RI "#define \fBsym_ramp\fP   7"
+.br
+.ti -1c
+.RI "#define \fBsym_clock\fP   8"
+.br
+.ti -1c
+.RI "#define \fBsym_def\fP   9"
+.br
+.ti -1c
+.RI "#define \fBsym_end\fP   10"
+.br
+.ti -1c
+.RI "#define \fBsym_n\fP   11"
+.br
+.ti -1c
+.RI "#define \fBlinesize\fP   100"
+.br
+.ti -1c
+.RI "#define \fBnctrl\fP   8"
+.br
+.ti -1c
+.RI "#define \fBnmacroctrl\fP   10"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBprivate\fP \fBvoid\fP \fBdo_a_rest\fP ()"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBtime_type\fP \fBdoabsdur\fP ()"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBint\fP \fBdoabspitch\fP ()"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBvoid\fP \fBdoclock\fP ()"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBvoid\fP \fBdocomment\fP ()"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBvoid\fP \fBdoctrl\fP ()"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBvoid\fP \fBdodef\fP ()"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBtime_type\fP \fBdodur\fP ()"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBvoid\fP \fBdoerror\fP ()"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBint\fP \fBdoloud\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBdomacro\fP ()"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBvoid\fP \fBdonextdur\fP ()"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBint\fP \fBdopitch\fP ()"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBvoid\fP \fBdoprogram\fP ()"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBvoid\fP \fBdorate\fP ()"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBvoid\fP \fBdoset\fP ()"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBvoid\fP \fBdospecial\fP ()"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBtime_type\fP \fBdosymdur\fP ()"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBvoid\fP \fBdotempo\fP ()"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBvoid\fP \fBdotime\fP ()"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBvoid\fP \fBdovoice\fP ()"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBvoid\fP \fBfferror\fP ()"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBvoid\fP \fBinit\fP ()"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBint\fP \fBissymbol\fP ()"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBvoid\fP \fBmarker\fP ()"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBvoid\fP \fBparseend\fP ()"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBvoid\fP \fBparsefield\fP ()"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBboolean\fP \fBparsenote\fP ()"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBboolean\fP \fBparseparm\fP ()"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBint\fP \fBscan\fP ()"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBint\fP \fBscan1\fP ()"
+.br
+.ti -1c
+.RI "\fBprivate\fP long \fBscanint\fP ()"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBvoid\fP \fBscansymb\fP ()"
+.br
+.ti -1c
+.RI "\fBprivate\fP long \fBscansgnint\fP ()"
+.br
+.ti -1c
+.RI "\fBboolean\fP \fBdef_append\fP (def, \fBint\fP nparms, \fBint\fP \fBdata\fP)"
+.br
+.ti -1c
+.RI "\fBdef_type\fP \fBdef_lookup\fP (char *symbol)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBdef_parm\fP (def, \fBint\fP nparms, \fBint\fP code)"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBvoid\fP \fBdoartic\fP ()"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBvoid\fP \fBdocall\fP ()"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBvoid\fP \fBdoctrl\fP (\fBint\fP n)"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBvoid\fP \fBdoramp\fP ()"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBvoid\fP \fBdoset\fP (\fBboolean\fP vec_flag)"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBvoid\fP \fBfferror\fP (char *\fBs\fP)"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBboolean\fP \fBins_a_note\fP ()"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBboolean\fP \fBins_ctrls\fP ()"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBvoid\fP \fBmarker\fP (\fBint\fP \fBcount\fP)"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBboolean\fP \fBparseparm\fP (long *valptr)"
+.br
+.ti -1c
+.RI "\fBpublic\fP \fBtime_type\fP \fBscale\fP (\fBulong\fP x, \fBulong\fP n, \fBulong\fP \fBd\fP)"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBint\fP \fBscan1\fP (char *\fBstart\fP)"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBvoid\fP \fBscansymb\fP (char *\fBstr\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBseq_read\fP (\fBseq_type\fP seq, FILE *fp)"
+.br
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "long \fBspace\fP"
+.br
+.ti -1c
+.RI "\fBint\fP \fBabort_flag\fP"
+.br
+.ti -1c
+.RI "struct \fBdurt\fP \fBdurtable\fP [\fBdurtable_len\fP]"
+.br
+.ti -1c
+.RI "struct \fBloudt\fP \fBloudtable\fP []"
+.br
+.ti -1c
+.RI "char \fBtoo_many_error\fP [] = 'Too many parameters'"
+.br
+.ti -1c
+.RI "\fBprivate\fP char * \fBssymbols\fP []"
+.br
+.ti -1c
+.RI "\fBprivate\fP char \fBline\fP [\fBlinesize\fP]"
+.br
+.ti -1c
+.RI "\fBprivate\fP char \fBtoken\fP [\fBlinesize\fP]"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBboolean\fP \fBpitch_flag\fP"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBboolean\fP \fBrest_flag\fP"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBboolean\fP \fBsymbolic_dur_flag\fP"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBboolean\fP \fBctrlflag\fP [\fBnctrl\fP]"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBint\fP \fBctrlval\fP [\fBnctrl\fP]"
+.br
+.ti -1c
+.RI "short \fBmacctrlx\fP"
+.br
+.ti -1c
+.RI "short \fBmacctrlnum\fP [\fBnmacroctrl\fP]"
+.br
+.ti -1c
+.RI "short \fBmacctrlparmx\fP [\fBnmacroctrl\fP]"
+.br
+.ti -1c
+.RI "short \fBmacctrlparms\fP [\fBnmacroctrl\fP *\fBnmacroparms\fP]"
+.br
+.ti -1c
+.RI "short \fBmacctrlnextparm\fP"
+.br
+.ti -1c
+.RI "\fBdef_type\fP \fBmacctrldef\fP [\fBnmacroctrl\fP]"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBtime_type\fP \fBtime_scale\fP"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBboolean\fP \fBend_flag\fP = \fBFALSE\fP"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBint\fP \fBlinex\fP"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBint\fP \fBlineno\fP"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBint\fP \fBfieldx\fP"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBint\fP \fBpitch\fP"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBint\fP \fBloud\fP"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBint\fP \fBvoice\fP"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBint\fP \fBartic\fP"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBboolean\fP \fBndurp\fP"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBtime_type\fP \fBthetime\fP"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBtime_type\fP \fBrate\fP"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBtime_type\fP \fBntime\fP"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBtime_type\fP \fBdur\fP"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBtime_type\fP \fBtempo\fP"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBtime_type\fP \fBstart\fP"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBtime_type\fP \fBticksize\fP"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBint\fP \fBpitchtable\fP [7]"
+.br
+.ti -1c
+.RI "char \fBscore_na\fP [\fBname_length\fP]"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBseq_type\fP \fBthe_score\fP"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define durtable_len   7"
+
+.PP
+Definition at line 163 of file seqread\&.c\&.
+.SS "#define linesize   100"
+
+.PP
+Definition at line 211 of file seqread\&.c\&.
+.SS "#define nctrl   8"
+
+.PP
+Definition at line 229 of file seqread\&.c\&.
+.SS "#define nmacroctrl   10"
+
+.PP
+Definition at line 238 of file seqread\&.c\&.
+.SS "#define nullstring(\fBs\fP)   (\fBs\fP[0] == \fBEOS\fP)"
+
+.PP
+Definition at line 113 of file seqread\&.c\&.
+.SS "#define precise(x)   (((\fBtime_type\fP) x) << 8)"
+
+.PP
+Definition at line 109 of file seqread\&.c\&.
+.SS "#define seqround(x)   ((((\fBtime_type\fP) x) + 128) >> 8)"
+
+.PP
+Definition at line 110 of file seqread\&.c\&.
+.SS "#define sym_call   6"
+
+.PP
+Definition at line 202 of file seqread\&.c\&.
+.SS "#define sym_clock   8"
+
+.PP
+Definition at line 204 of file seqread\&.c\&.
+.SS "#define sym_csec   2"
+
+.PP
+Definition at line 198 of file seqread\&.c\&.
+.SS "#define sym_def   9"
+
+.PP
+Definition at line 205 of file seqread\&.c\&.
+.SS "#define sym_end   10"
+
+.PP
+Definition at line 206 of file seqread\&.c\&.
+.SS "#define sym_msec   3"
+
+.PP
+Definition at line 199 of file seqread\&.c\&.
+.SS "#define sym_n   11"
+
+.PP
+Definition at line 209 of file seqread\&.c\&.
+.SS "#define sym_ramp   7"
+
+.PP
+Definition at line 203 of file seqread\&.c\&.
+.SS "#define sym_rate   1"
+
+.PP
+Definition at line 197 of file seqread\&.c\&.
+.SS "#define sym_seti   4"
+
+.PP
+Definition at line 200 of file seqread\&.c\&.
+.SS "#define sym_setv   5"
+
+.PP
+Definition at line 201 of file seqread\&.c\&.
+.SS "#define sym_tempo   0"
+
+.PP
+Definition at line 196 of file seqread\&.c\&.
+.SS "#define toupper(\fBc\fP)   ((\fBc\fP)\-'\fBa\fP'+'\fBA\fP')"
+
+.PP
+Definition at line 85 of file seqread\&.c\&.
+.SS "#define trunc(x)   (((\fBtime_type\fP) x) >> 8)"
+
+.PP
+Definition at line 111 of file seqread\&.c\&.
+.SH "Function Documentation"
+.PP 
+.SS "\fBboolean\fP def_append (def, \fBint\fP nparms, \fBint\fP data)"
+
+.PP
+Definition at line 316 of file seqread\&.c\&.
+.SS "\fBdef_type\fP def_lookup (char * symbol)"
+
+.PP
+Definition at line 332 of file seqread\&.c\&.
+.SS "\fBvoid\fP def_parm (def, \fBint\fP nparms, \fBint\fP code)"
+
+.PP
+Definition at line 346 of file seqread\&.c\&.
+.SS "\fBprivate\fP \fBvoid\fP do_a_rest ()"
+
+.PP
+Definition at line 376 of file seqread\&.c\&.
+.SS "\fBprivate\fP \fBtime_type\fP doabsdur ()"
+
+.PP
+Definition at line 388 of file seqread\&.c\&.
+.SS "\fBprivate\fP \fBint\fP doabspitch ()"
+
+.PP
+Definition at line 408 of file seqread\&.c\&.
+.SS "\fBprivate\fP \fBvoid\fP doartic ()"
+
+.PP
+Definition at line 444 of file seqread\&.c\&.
+.SS "\fBprivate\fP \fBvoid\fP docall ()"
+
+.PP
+Definition at line 456 of file seqread\&.c\&.
+.SS "\fBprivate\fP \fBvoid\fP doclock ()"
+
+.PP
+Definition at line 541 of file seqread\&.c\&.
+.SS "\fBprivate\fP \fBvoid\fP docomment ()"
+
+.PP
+Definition at line 555 of file seqread\&.c\&.
+.SS "\fBprivate\fP \fBvoid\fP doctrl ()"
+
+.SS "\fBprivate\fP \fBvoid\fP doctrl (\fBint\fP n)"
+
+.PP
+Definition at line 568 of file seqread\&.c\&.
+.SS "\fBprivate\fP \fBvoid\fP dodef ()"
+
+.PP
+Definition at line 581 of file seqread\&.c\&.
+.SS "\fBprivate\fP \fBtime_type\fP dodur ()"
+
+.PP
+Definition at line 670 of file seqread\&.c\&.
+.SS "\fBprivate\fP \fBvoid\fP doerror ()"
+
+.PP
+Definition at line 692 of file seqread\&.c\&.
+.SS "\fBprivate\fP \fBint\fP doloud ()"
+
+.PP
+Definition at line 703 of file seqread\&.c\&.
+.SS "\fBvoid\fP domacro ()"
+
+.PP
+Definition at line 759 of file seqread\&.c\&.
+.SS "\fBprivate\fP \fBvoid\fP donextdur ()"
+
+.PP
+Definition at line 830 of file seqread\&.c\&.
+.SS "\fBprivate\fP \fBint\fP dopitch ()"
+
+.PP
+Definition at line 849 of file seqread\&.c\&.
+.SS "\fBprivate\fP \fBvoid\fP doprogram ()"
+
+.PP
+Definition at line 896 of file seqread\&.c\&.
+.SS "\fBprivate\fP \fBvoid\fP doramp ()"
+
+.PP
+Definition at line 915 of file seqread\&.c\&.
+.SS "\fBprivate\fP \fBvoid\fP dorate ()"
+
+.PP
+Definition at line 1011 of file seqread\&.c\&.
+.SS "\fBprivate\fP \fBvoid\fP doset ()"
+
+.SS "\fBprivate\fP \fBvoid\fP doset (\fBboolean\fP vec_flag)"
+
+.PP
+Definition at line 1034 of file seqread\&.c\&.
+.SS "\fBprivate\fP \fBvoid\fP dospecial ()"
+
+.PP
+Definition at line 1113 of file seqread\&.c\&.
+.SS "\fBprivate\fP \fBtime_type\fP dosymdur ()"
+
+.PP
+Definition at line 1163 of file seqread\&.c\&.
+.SS "\fBprivate\fP \fBvoid\fP dotempo ()"
+
+.PP
+Definition at line 1216 of file seqread\&.c\&.
+.SS "\fBprivate\fP \fBvoid\fP dotime ()"
+
+.PP
+Definition at line 1246 of file seqread\&.c\&.
+.SS "\fBprivate\fP \fBvoid\fP dovoice ()"
+
+.PP
+Definition at line 1265 of file seqread\&.c\&.
+.SS "\fBprivate\fP \fBvoid\fP fferror ()"
+
+.SS "\fBprivate\fP \fBvoid\fP fferror (char * s)"
+
+.PP
+Definition at line 1299 of file seqread\&.c\&.
+.SS "\fBprivate\fP \fBvoid\fP init ()"
+
+.PP
+Definition at line 1313 of file seqread\&.c\&.
+.SS "\fBprivate\fP \fBboolean\fP ins_a_note ()"
+
+.PP
+Definition at line 1357 of file seqread\&.c\&.
+.SS "\fBprivate\fP \fBboolean\fP ins_ctrls ()"
+
+.PP
+Definition at line 1380 of file seqread\&.c\&.
+.SS "\fBprivate\fP \fBint\fP issymbol ()"
+
+.PP
+Definition at line 1403 of file seqread\&.c\&.
+.SS "\fBprivate\fP \fBvoid\fP marker ()"
+
+.SS "\fBprivate\fP \fBvoid\fP marker (\fBint\fP count)"
+
+.PP
+Definition at line 1429 of file seqread\&.c\&.
+.SS "\fBprivate\fP \fBvoid\fP parseend ()"
+
+.PP
+Definition at line 1447 of file seqread\&.c\&.
+.SS "\fBprivate\fP \fBvoid\fP parsefield ()"
+
+.PP
+Definition at line 1480 of file seqread\&.c\&.
+.SS "\fBprivate\fP \fBboolean\fP parsenote ()"
+
+.PP
+Definition at line 1569 of file seqread\&.c\&.
+.SS "\fBprivate\fP \fBboolean\fP parseparm ()"
+
+.SS "\fBprivate\fP \fBboolean\fP parseparm (long * valptr)"
+
+.PP
+Definition at line 1632 of file seqread\&.c\&.
+.SS "\fBpublic\fP \fBtime_type\fP scale (\fBulong\fP x, \fBulong\fP n, \fBulong\fP d)"
+
+.PP
+Definition at line 1697 of file seqread\&.c\&.
+.SS "\fBprivate\fP \fBint\fP scan ()"
+
+.PP
+Definition at line 1720 of file seqread\&.c\&.
+.SS "\fBprivate\fP \fBint\fP scan1 ()"
+
+.SS "\fBprivate\fP \fBint\fP scan1 (char * start)"
+
+.PP
+Definition at line 1758 of file seqread\&.c\&.
+.SS "\fBprivate\fP long scanint ()"
+
+.PP
+Definition at line 1783 of file seqread\&.c\&.
+.SS "\fBprivate\fP long scansgnint ()"
+
+.PP
+Definition at line 1796 of file seqread\&.c\&.
+.SS "\fBprivate\fP \fBvoid\fP scansymb ()"
+
+.SS "\fBprivate\fP \fBvoid\fP scansymb (char * str)"
+
+.PP
+Definition at line 1812 of file seqread\&.c\&.
+.SS "\fBvoid\fP seq_read (\fBseq_type\fP seq, FILE * fp)"
+
+.PP
+Definition at line 1836 of file seqread\&.c\&.
+.SH "Variable Documentation"
+.PP 
+.SS "\fBint\fP abort_flag"
+
+.PP
+Definition at line 187 of file userio\&.c\&.
+.SS "\fBprivate\fP \fBint\fP artic"
+
+.PP
+Definition at line 274 of file seqread\&.c\&.
+.SS "\fBprivate\fP \fBboolean\fP ctrlflag[\fBnctrl\fP]"
+
+.PP
+Definition at line 231 of file seqread\&.c\&.
+.SS "\fBprivate\fP \fBint\fP ctrlval[\fBnctrl\fP]"
+
+.PP
+Definition at line 236 of file seqread\&.c\&.
+.SS "\fBprivate\fP \fBtime_type\fP dur"
+
+.PP
+Definition at line 289 of file seqread\&.c\&.
+.SS "struct \fBdurt\fP durtable[\fBdurtable_len\fP]"
+\fBInitial value:\fP
+.PP
+.nf
+= {
+    {'W', 4800L},
+    {'H', 2400L},
+    {'Q', 1200L},
+    {'I', 600L},
+    {'S', 300L},
+    {'%', 150L},
+    {'^', 75L}
+}
+.fi
+.PP
+Definition at line 164 of file seqread\&.c\&.
+.SS "\fBprivate\fP \fBboolean\fP end_flag = \fBFALSE\fP"
+
+.PP
+Definition at line 259 of file seqread\&.c\&.
+.SS "\fBprivate\fP \fBint\fP fieldx"
+
+.PP
+Definition at line 274 of file seqread\&.c\&.
+.SS "\fBprivate\fP char line[\fBlinesize\fP]"
+
+.PP
+Definition at line 212 of file seqread\&.c\&.
+.SS "\fBprivate\fP \fBint\fP lineno"
+
+.PP
+Definition at line 274 of file seqread\&.c\&.
+.SS "\fBprivate\fP \fBint\fP linex"
+
+.PP
+Definition at line 274 of file seqread\&.c\&.
+.SS "\fBprivate\fP \fBint\fP loud"
+
+.PP
+Definition at line 274 of file seqread\&.c\&.
+.SS "struct \fBloudt\fP loudtable[]"
+\fBInitial value:\fP
+.PP
+.nf
+= {
+    {"PPP", 20},
+    {"PP\0", 26},
+    {"P\0\0", 34},
+    {"MP\0", 44},
+    {"MF\0", 58},
+    {"F\0\0", 75},
+    {"FF\0", 98},
+    {"FFF", 127}
+}
+.fi
+.PP
+Definition at line 179 of file seqread\&.c\&.
+.SS "\fBdef_type\fP macctrldef[\fBnmacroctrl\fP]"
+
+.PP
+Definition at line 246 of file seqread\&.c\&.
+.SS "short macctrlnextparm"
+
+.PP
+Definition at line 245 of file seqread\&.c\&.
+.SS "short macctrlnum[\fBnmacroctrl\fP]"
+
+.PP
+Definition at line 240 of file seqread\&.c\&.
+.SS "short macctrlparms[\fBnmacroctrl\fP *\fBnmacroparms\fP]"
+
+.PP
+Definition at line 244 of file seqread\&.c\&.
+.SS "short macctrlparmx[\fBnmacroctrl\fP]"
+
+.PP
+Definition at line 242 of file seqread\&.c\&.
+.SS "short macctrlx"
+
+.PP
+Definition at line 239 of file seqread\&.c\&.
+.SS "\fBprivate\fP \fBboolean\fP ndurp"
+
+.PP
+Definition at line 282 of file seqread\&.c\&.
+.SS "\fBprivate\fP \fBtime_type\fP ntime"
+
+.PP
+Definition at line 289 of file seqread\&.c\&.
+.SS "\fBprivate\fP \fBint\fP pitch"
+
+.PP
+Definition at line 274 of file seqread\&.c\&.
+.SS "\fBprivate\fP \fBboolean\fP pitch_flag"
+
+.PP
+Definition at line 215 of file seqread\&.c\&.
+.SS "\fBprivate\fP \fBint\fP pitchtable[7]"
+\fBInitial value:\fP
+.PP
+.nf
+= { 
+    69, 71, 60, 62, 64, 65, 67 }
+.fi
+.PP
+Definition at line 297 of file seqread\&.c\&.
+.SS "\fBprivate\fP \fBtime_type\fP rate"
+
+.PP
+Definition at line 289 of file seqread\&.c\&.
+.SS "\fBprivate\fP \fBboolean\fP rest_flag"
+
+.PP
+Definition at line 219 of file seqread\&.c\&.
+.SS "char score_na[\fBname_length\fP]"
+
+.SS "long space"
+
+.SS "\fBprivate\fP char* ssymbols[]"
+\fBInitial value:\fP
+.PP
+.nf
+= {"TEMPO", "RATE", "CSEC", "MSEC", 
+                            "SETI", "SETV", "CALL", "RAMP",
+                            "CLOCK", "DEF", "END"}
+.fi
+.PP
+Definition at line 192 of file seqread\&.c\&.
+.SS "\fBprivate\fP \fBtime_type\fP start"
+
+.PP
+Definition at line 289 of file seqread\&.c\&.
+.SS "\fBprivate\fP \fBboolean\fP symbolic_dur_flag"
+
+.PP
+Definition at line 222 of file seqread\&.c\&.
+.SS "\fBprivate\fP \fBtime_type\fP tempo"
+
+.PP
+Definition at line 289 of file seqread\&.c\&.
+.SS "\fBprivate\fP \fBseq_type\fP the_score"
+
+.PP
+Definition at line 302 of file seqread\&.c\&.
+.SS "\fBprivate\fP \fBtime_type\fP thetime"
+
+.PP
+Definition at line 289 of file seqread\&.c\&.
+.SS "\fBprivate\fP \fBtime_type\fP ticksize"
+
+.PP
+Definition at line 289 of file seqread\&.c\&.
+.SS "\fBprivate\fP \fBtime_type\fP time_scale"
+
+.PP
+Definition at line 248 of file seqread\&.c\&.
+.SS "\fBprivate\fP char token[\fBlinesize\fP]"
+
+.PP
+Definition at line 213 of file seqread\&.c\&.
+.SS "char too_many_error[] = 'Too many parameters'"
+
+.PP
+Definition at line 190 of file seqread\&.c\&.
+.SS "\fBprivate\fP \fBint\fP voice"
+
+.PP
+Definition at line 274 of file seqread\&.c\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

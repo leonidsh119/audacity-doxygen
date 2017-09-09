@@ -1,0 +1,133 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="group__grp__io" kind="group">
+    <compoundname>grp_io</compoundname>
+    <title>Reading and Writing Midi Messages</title>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="group__grp__io_1ga3d59225bc890ede974f245ada3de6456" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="porttime_8h_1ad478fb637833fb6b1a4bdb25a03f4662" kindref="member">PMEXPORT</ref> <ref refid="xmltok_8h_1a5a0d4a5641ce434f1d23533f2b2e6653" kindref="member">int</ref></type>
+        <definition>PMEXPORT int Pm_Read</definition>
+        <argsstring>(PortMidiStream *stream, PmEvent *buffer, int32_t length)</argsstring>
+        <name>Pm_Read</name>
+        <param>
+          <type><ref refid="portmidi_8h_1af4949219ee1bb0afc857cb242d123914" kindref="member">PortMidiStream</ref> *</type>
+          <declname>stream</declname>
+        </param>
+        <param>
+          <type><ref refid="struct_pm_event" kindref="compound">PmEvent</ref> *</type>
+          <declname>buffer</declname>
+        </param>
+        <param>
+          <type><ref refid="lib-src_2ffmpeg_2win32_2stdint_8h_1a37994e3b11c72957c6f454c6ec96d43d" kindref="member">int32_t</ref></type>
+          <declname>length</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para><ref refid="group__grp__io_1ga3d59225bc890ede974f245ada3de6456" kindref="member">Pm_Read()</ref> retrieves midi data into a buffer, and returns the number of events read. Result is a non-negative number unless an error occurs, in which case a PmError value will be returned.</para><para>Buffer Overflow</para><para>The problem: if an input overflow occurs, data will be lost, ultimately because there is no flow control all the way back to the data source. When data is lost, the receiver should be notified and some sort of graceful recovery should take place, e.g. you shouldn&apos;t resume receiving in the middle of a long sysex message.</para><para>With a lock-free fifo, which is pretty much what we&apos;re stuck with to enable portability to the Mac, it&apos;s tricky for the producer and consumer to synchronously reset the buffer and resume normal operation.</para><para>Solution: the buffer managed by PortMidi will be flushed when an overflow occurs. The consumer (<ref refid="group__grp__io_1ga3d59225bc890ede974f245ada3de6456" kindref="member">Pm_Read()</ref>) gets an error message (pmBufferOverflow) and ordinary processing resumes as soon as a new message arrives. The remainder of a partial sysex message is not considered to be a &quot;new
+message&quot; and will be flushed as well. </para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/_dev/OpenU/Audacity/audacity/lib-src/portmidi/pm_common/portmidi.h" line="613" column="1" bodyfile="C:/_dev/OpenU/Audacity/audacity/lib-src/portmidi/pm_common/portmidi.c" bodystart="357" bodyend="396"/>
+      </memberdef>
+      <memberdef kind="function" id="group__grp__io_1ga54198ca9dc1af9d82ec5f44f661faeea" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="porttime_8h_1ad478fb637833fb6b1a4bdb25a03f4662" kindref="member">PMEXPORT</ref> <ref refid="portmidi_8h_1a5fd46ccd2e320e17a840886731e8c6b9" kindref="member">PmError</ref></type>
+        <definition>PMEXPORT PmError Pm_Poll</definition>
+        <argsstring>(PortMidiStream *stream)</argsstring>
+        <name>Pm_Poll</name>
+        <param>
+          <type><ref refid="portmidi_8h_1af4949219ee1bb0afc857cb242d123914" kindref="member">PortMidiStream</ref> *</type>
+          <declname>stream</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para><ref refid="group__grp__io_1ga54198ca9dc1af9d82ec5f44f661faeea" kindref="member">Pm_Poll()</ref> tests whether input is available, returning TRUE, FALSE, or an error value. </para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/_dev/OpenU/Audacity/audacity/lib-src/portmidi/pm_common/portmidi.h" line="619" column="1" bodyfile="C:/_dev/OpenU/Audacity/audacity/lib-src/portmidi/pm_common/portmidi.c" bodystart="398" bodyend="424"/>
+      </memberdef>
+      <memberdef kind="function" id="group__grp__io_1ga82950117f003d28f9ca6536c00af985a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="porttime_8h_1ad478fb637833fb6b1a4bdb25a03f4662" kindref="member">PMEXPORT</ref> <ref refid="portmidi_8h_1a5fd46ccd2e320e17a840886731e8c6b9" kindref="member">PmError</ref></type>
+        <definition>PMEXPORT PmError Pm_Write</definition>
+        <argsstring>(PortMidiStream *stream, PmEvent *buffer, int32_t length)</argsstring>
+        <name>Pm_Write</name>
+        <param>
+          <type><ref refid="portmidi_8h_1af4949219ee1bb0afc857cb242d123914" kindref="member">PortMidiStream</ref> *</type>
+          <declname>stream</declname>
+        </param>
+        <param>
+          <type><ref refid="struct_pm_event" kindref="compound">PmEvent</ref> *</type>
+          <declname>buffer</declname>
+        </param>
+        <param>
+          <type><ref refid="lib-src_2ffmpeg_2win32_2stdint_8h_1a37994e3b11c72957c6f454c6ec96d43d" kindref="member">int32_t</ref></type>
+          <declname>length</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para><ref refid="group__grp__io_1ga82950117f003d28f9ca6536c00af985a" kindref="member">Pm_Write()</ref> writes midi data from a buffer. This may contain:<itemizedlist>
+<listitem><para>short messages or</para></listitem><listitem><para>sysex messages that are converted into a sequence of <ref refid="struct_pm_event" kindref="compound">PmEvent</ref> structures, e.g. sending data from a file or forwarding them from midi input.</para></listitem></itemizedlist>
+</para><para>Use <ref refid="group__grp__io_1ga4bd5753bdfb53a1611bcdf5ba159fc87" kindref="member">Pm_WriteSysEx()</ref> to write a sysex message stored as a contiguous array of bytes.</para><para>Sysex data may contain embedded real-time messages. </para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/_dev/OpenU/Audacity/audacity/lib-src/portmidi/pm_common/portmidi.h" line="634" column="1" bodyfile="C:/_dev/OpenU/Audacity/audacity/lib-src/portmidi/pm_common/portmidi.c" bodystart="448" bodyend="578"/>
+      </memberdef>
+      <memberdef kind="function" id="group__grp__io_1ga4a8cdd77e5b2ad4c16338eed475dfc6b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="porttime_8h_1ad478fb637833fb6b1a4bdb25a03f4662" kindref="member">PMEXPORT</ref> <ref refid="portmidi_8h_1a5fd46ccd2e320e17a840886731e8c6b9" kindref="member">PmError</ref></type>
+        <definition>PMEXPORT PmError Pm_WriteShort</definition>
+        <argsstring>(PortMidiStream *stream, PmTimestamp when, int32_t msg)</argsstring>
+        <name>Pm_WriteShort</name>
+        <param>
+          <type><ref refid="portmidi_8h_1af4949219ee1bb0afc857cb242d123914" kindref="member">PortMidiStream</ref> *</type>
+          <declname>stream</declname>
+        </param>
+        <param>
+          <type><ref refid="portmidi_8h_1acf4245beeef251c4a46d66e99d77ffdf" kindref="member">PmTimestamp</ref></type>
+          <declname>when</declname>
+        </param>
+        <param>
+          <type><ref refid="lib-src_2ffmpeg_2win32_2stdint_8h_1a37994e3b11c72957c6f454c6ec96d43d" kindref="member">int32_t</ref></type>
+          <declname>msg</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para><ref refid="group__grp__io_1ga4a8cdd77e5b2ad4c16338eed475dfc6b" kindref="member">Pm_WriteShort()</ref> writes a timestamped non-system-exclusive midi message. Messages are delivered in order as received, and timestamps must be non-decreasing. (But timestamps are ignored if the stream was opened with latency = 0.) </para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/_dev/OpenU/Audacity/audacity/lib-src/portmidi/pm_common/portmidi.h" line="642" column="1" bodyfile="C:/_dev/OpenU/Audacity/audacity/lib-src/portmidi/pm_common/portmidi.c" bodystart="581" bodyend="588"/>
+      </memberdef>
+      <memberdef kind="function" id="group__grp__io_1ga4bd5753bdfb53a1611bcdf5ba159fc87" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="porttime_8h_1ad478fb637833fb6b1a4bdb25a03f4662" kindref="member">PMEXPORT</ref> <ref refid="portmidi_8h_1a5fd46ccd2e320e17a840886731e8c6b9" kindref="member">PmError</ref></type>
+        <definition>PMEXPORT PmError Pm_WriteSysEx</definition>
+        <argsstring>(PortMidiStream *stream, PmTimestamp when, unsigned char *msg)</argsstring>
+        <name>Pm_WriteSysEx</name>
+        <param>
+          <type><ref refid="portmidi_8h_1af4949219ee1bb0afc857cb242d123914" kindref="member">PortMidiStream</ref> *</type>
+          <declname>stream</declname>
+        </param>
+        <param>
+          <type><ref refid="portmidi_8h_1acf4245beeef251c4a46d66e99d77ffdf" kindref="member">PmTimestamp</ref></type>
+          <declname>when</declname>
+        </param>
+        <param>
+          <type>unsigned char *</type>
+          <declname>msg</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para><ref refid="group__grp__io_1ga4bd5753bdfb53a1611bcdf5ba159fc87" kindref="member">Pm_WriteSysEx()</ref> writes a timestamped system-exclusive midi message. </para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/_dev/OpenU/Audacity/audacity/lib-src/portmidi/pm_common/portmidi.h" line="647" column="1" bodyfile="C:/_dev/OpenU/Audacity/audacity/lib-src/portmidi/pm_common/portmidi.c" bodystart="591" bodyend="665"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+  </compounddef>
+</doxygen>

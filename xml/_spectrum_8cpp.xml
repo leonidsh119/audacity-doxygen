@@ -1,0 +1,241 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="_spectrum_8cpp" kind="file" language="C++">
+    <compoundname>Spectrum.cpp</compoundname>
+    <includes local="no">math.h</includes>
+    <includes refid="_spectrum_8h" local="yes">Spectrum.h</includes>
+    <includes refid="src_2fft_8h" local="yes">FFT.h</includes>
+    <includes refid="_experimental_8h" local="yes">Experimental.h</includes>
+    <incdepgraph>
+      <node id="54524">
+        <label>C:/_dev/OpenU/Audacity/audacity/src/Spectrum.cpp</label>
+        <link refid="Spectrum.cpp"/>
+        <childnode refid="54525" relation="include">
+        </childnode>
+        <childnode refid="54526" relation="include">
+        </childnode>
+        <childnode refid="54527" relation="include">
+        </childnode>
+        <childnode refid="54530" relation="include">
+        </childnode>
+      </node>
+      <node id="54527">
+        <label>FFT.h</label>
+        <link refid="src_2fft_8h"/>
+        <childnode refid="54528" relation="include">
+        </childnode>
+        <childnode refid="54529" relation="include">
+        </childnode>
+        <childnode refid="54530" relation="include">
+        </childnode>
+      </node>
+      <node id="54529">
+        <label>wx/wxchar.h</label>
+      </node>
+      <node id="54530">
+        <label>Experimental.h</label>
+        <link refid="_experimental_8h"/>
+        <childnode refid="54528" relation="include">
+        </childnode>
+      </node>
+      <node id="54528">
+        <label>wx/defs.h</label>
+      </node>
+      <node id="54525">
+        <label>math.h</label>
+      </node>
+      <node id="54526">
+        <label>Spectrum.h</label>
+        <link refid="_spectrum_8h"/>
+        <childnode refid="54527" relation="include">
+        </childnode>
+      </node>
+    </incdepgraph>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="_spectrum_8cpp_1a166e75c5ad8a2ae6a3a54bc62af323b4" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="mac_2config_2i386_2lib-src_2libsoxr_2soxr-config_8h_1abb452686968e48b67397da5f97445f5b" kindref="member">bool</ref></type>
+        <definition>bool ComputeSpectrum</definition>
+        <argsstring>(const float *data, int width, int windowSize, double WXUNUSED(rate), float *output, bool autocorrelation, int windowFunc)</argsstring>
+        <name>ComputeSpectrum</name>
+        <param>
+          <type><ref refid="getopt1_8c_1a2c212835823e3c54a8ab6d95c652660e" kindref="member">const</ref> float *</type>
+          <declname>data</declname>
+        </param>
+        <param>
+          <type><ref refid="xmltok_8h_1a5a0d4a5641ce434f1d23533f2b2e6653" kindref="member">int</ref></type>
+          <declname>width</declname>
+        </param>
+        <param>
+          <type><ref refid="xmltok_8h_1a5a0d4a5641ce434f1d23533f2b2e6653" kindref="member">int</ref></type>
+          <declname>windowSize</declname>
+        </param>
+        <param>
+          <type>double </type>
+          <declname>WXUNUSED</declname>
+          <array>rate</array>
+        </param>
+        <param>
+          <type>float *</type>
+          <declname>output</declname>
+        </param>
+        <param>
+          <type><ref refid="mac_2config_2i386_2lib-src_2libsoxr_2soxr-config_8h_1abb452686968e48b67397da5f97445f5b" kindref="member">bool</ref></type>
+          <declname>autocorrelation</declname>
+        </param>
+        <param>
+          <type><ref refid="xmltok_8h_1a5a0d4a5641ce434f1d23533f2b2e6653" kindref="member">int</ref></type>
+          <declname>windowFunc</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/_dev/OpenU/Audacity/audacity/src/Spectrum.cpp" line="23" column="1" bodyfile="C:/_dev/OpenU/Audacity/audacity/src/Spectrum.cpp" bodystart="23" bodyend="139"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+<para>Functions for computing Spectra. </para>    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="comment">/**********************************************************************</highlight></codeline>
+<codeline lineno="2"><highlight class="comment"></highlight></codeline>
+<codeline lineno="3"><highlight class="comment"><sp/><sp/>Audacity:<sp/>A<sp/>Digital<sp/>Audio<sp/>Editor</highlight></codeline>
+<codeline lineno="4"><highlight class="comment"></highlight></codeline>
+<codeline lineno="5"><highlight class="comment"><sp/><sp/>Spectrum.cpp</highlight></codeline>
+<codeline lineno="6"><highlight class="comment"></highlight></codeline>
+<codeline lineno="7"><highlight class="comment"><sp/><sp/>Dominic<sp/>Mazzoni</highlight></codeline>
+<codeline lineno="8"><highlight class="comment"></highlight></codeline>
+<codeline lineno="9"><highlight class="comment">*******************************************************************/</highlight><highlight class="comment">/*******************************************************************/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight></codeline>
+<codeline lineno="16"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;math.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="17"><highlight class="normal"></highlight></codeline>
+<codeline lineno="18"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="_spectrum_8h" kindref="compound">Spectrum.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="19"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="src_2fft_8h" kindref="compound">FFT.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="20"><highlight class="normal"></highlight></codeline>
+<codeline lineno="21"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="_experimental_8h" kindref="compound">Experimental.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="22"><highlight class="normal"></highlight></codeline>
+<codeline lineno="23" refid="_spectrum_8cpp_1a166e75c5ad8a2ae6a3a54bc62af323b4" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="_spectrum_8cpp_1a166e75c5ad8a2ae6a3a54bc62af323b4" kindref="member">ComputeSpectrum</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>*<sp/><ref refid="lib_2expat_8h_1ac39e72a1de1cb50dbdc54b08d0432a24" kindref="member">data</ref>,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>width,</highlight></codeline>
+<codeline lineno="24"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>windowSize,</highlight></codeline>
+<codeline lineno="25"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>WXUNUSED(<ref refid="test__lib_f_l_a_c_2format_8c_1a960ad82c3ba394a46f17f5f6146c93ea" kindref="member">rate</ref>),<sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>*<ref refid="namespacelv2specgen_1a653e2b7722801dea4d25040ac958b631" kindref="member">output</ref>,</highlight></codeline>
+<codeline lineno="26"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>autocorrelation,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>windowFunc)</highlight></codeline>
+<codeline lineno="27"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="28"><highlight class="normal"><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(width<sp/>&lt;<sp/>windowSize)</highlight></codeline>
+<codeline lineno="29"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="30"><highlight class="normal"></highlight></codeline>
+<codeline lineno="31"><highlight class="normal"><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(!data<sp/>||<sp/>!output)</highlight></codeline>
+<codeline lineno="32"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="33"><highlight class="normal"></highlight></codeline>
+<codeline lineno="34"><highlight class="normal"><sp/><sp/><sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>*processed<sp/>=<sp/></highlight><highlight class="keyword">new</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal">[windowSize];</highlight></codeline>
+<codeline lineno="35"><highlight class="normal"></highlight></codeline>
+<codeline lineno="36"><highlight class="normal"><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="checksum_8c_1ab80e330a3bc9e38c1297fe17381e92b4" kindref="member">i</ref>;</highlight></codeline>
+<codeline lineno="37"><highlight class="normal"><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(i<sp/>=<sp/>0;<sp/>i<sp/>&lt;<sp/>windowSize;<sp/>i++)</highlight></codeline>
+<codeline lineno="38"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>processed[i]<sp/>=<sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal">(0.0);</highlight></codeline>
+<codeline lineno="39"><highlight class="normal"><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>half<sp/>=<sp/>windowSize<sp/>/<sp/>2;</highlight></codeline>
+<codeline lineno="40"><highlight class="normal"></highlight></codeline>
+<codeline lineno="41"><highlight class="normal"><sp/><sp/><sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>*<ref refid="1-single-block_8c_1a18b1d64a94008e3c56953d279b8095e2" kindref="member">in</ref><sp/>=<sp/></highlight><highlight class="keyword">new</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal">[windowSize];</highlight></codeline>
+<codeline lineno="42"><highlight class="normal"><sp/><sp/><sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>*<ref refid="lilv__test_8c_1af5a45dbcaa926b186e6f71d08212acc3" kindref="member">out</ref><sp/>=<sp/></highlight><highlight class="keyword">new</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal">[windowSize];</highlight></codeline>
+<codeline lineno="43"><highlight class="normal"><sp/><sp/><sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>*out2<sp/>=<sp/></highlight><highlight class="keyword">new</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal">[windowSize];</highlight></codeline>
+<codeline lineno="44"><highlight class="normal"></highlight></codeline>
+<codeline lineno="45"><highlight class="normal"><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="seqread_8c_1ac503262ae470564980711da4f78b1181" kindref="member">start</ref><sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="46"><highlight class="normal"><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>windows<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="47"><highlight class="normal"><sp/><sp/><sp/></highlight><highlight class="keywordflow">while</highlight><highlight class="normal"><sp/>(start<sp/>+<sp/>windowSize<sp/>&lt;=<sp/>width)<sp/>{</highlight></codeline>
+<codeline lineno="48"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(i<sp/>=<sp/>0;<sp/>i<sp/>&lt;<sp/>windowSize;<sp/>i++)</highlight></codeline>
+<codeline lineno="49"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>in[i]<sp/>=<sp/>data[start<sp/>+<sp/>i];</highlight></codeline>
+<codeline lineno="50"><highlight class="normal"></highlight></codeline>
+<codeline lineno="51"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="src_2_f_f_t_8cpp_1aa96ead3c3f0cc041f2525ef2a55b5725" kindref="member">WindowFunc</ref>(windowFunc,<sp/>windowSize,<sp/>in);</highlight></codeline>
+<codeline lineno="52"><highlight class="normal"></highlight></codeline>
+<codeline lineno="53"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(autocorrelation)<sp/>{</highlight></codeline>
+<codeline lineno="54"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Take<sp/>FFT</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="55"><highlight class="normal"></highlight><highlight class="preprocessor">#ifdef<sp/>EXPERIMENTAL_USE_REALFFTF</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="56"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="src_2_f_f_t_8cpp_1a04c380365be207b671ee839633af0e3d" kindref="member">RealFFT</ref>(windowSize,<sp/>in,<sp/>out,<sp/>out2);</highlight></codeline>
+<codeline lineno="57"><highlight class="normal"></highlight><highlight class="preprocessor">#else</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="58"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="src_2_f_f_t_8cpp_1a2e6a370e8fb32b62ccce6a44d05b7d06" kindref="member">FFT</ref>(windowSize,<sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">,<sp/>in,<sp/><ref refid="getopt1_8c_1a070d2ce7b6bb7e5c05602aa8c308d0c4" kindref="member">NULL</ref>,<sp/>out,<sp/>out2);</highlight></codeline>
+<codeline lineno="59"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="60"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Compute<sp/>power</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="61"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(i<sp/>=<sp/>0;<sp/>i<sp/>&lt;<sp/>windowSize;<sp/>i++)</highlight></codeline>
+<codeline lineno="62"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>in[i]<sp/>=<sp/>(out[i]<sp/>*<sp/>out[i])<sp/>+<sp/>(out2[<ref refid="checksum_8c_1ab80e330a3bc9e38c1297fe17381e92b4" kindref="member">i</ref>]<sp/>*<sp/>out2[<ref refid="checksum_8c_1ab80e330a3bc9e38c1297fe17381e92b4" kindref="member">i</ref>]);</highlight></codeline>
+<codeline lineno="63"><highlight class="normal"></highlight></codeline>
+<codeline lineno="64"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Tolonen<sp/>and<sp/>Karjalainen<sp/>recommend<sp/>taking<sp/>the<sp/>cube<sp/>root</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="65"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>of<sp/>the<sp/>power,<sp/>instead<sp/>of<sp/>the<sp/>square<sp/>root</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="66"><highlight class="normal"></highlight></codeline>
+<codeline lineno="67"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(i<sp/>=<sp/>0;<sp/>i<sp/>&lt;<sp/>windowSize;<sp/>i++)</highlight></codeline>
+<codeline lineno="68"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>in[i]<sp/>=<sp/>powf(in[i],<sp/>1.0<ref refid="rfft2d_test_m_l_8m_1aacd36fb6ac9ce14cec71f2ca852524d4" kindref="member">f</ref><sp/>/<sp/>3.0<ref refid="rfft2d_test_m_l_8m_1aacd36fb6ac9ce14cec71f2ca852524d4" kindref="member">f</ref>);</highlight></codeline>
+<codeline lineno="69"><highlight class="normal"></highlight></codeline>
+<codeline lineno="70"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Take<sp/>FFT</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="71"><highlight class="normal"></highlight><highlight class="preprocessor">#ifdef<sp/>EXPERIMENTAL_USE_REALFFTF</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="72"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="src_2_f_f_t_8cpp_1a04c380365be207b671ee839633af0e3d" kindref="member">RealFFT</ref>(windowSize,<sp/>in,<sp/>out,<sp/>out2);</highlight></codeline>
+<codeline lineno="73"><highlight class="normal"></highlight><highlight class="preprocessor">#else</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="74"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="src_2_f_f_t_8cpp_1a2e6a370e8fb32b62ccce6a44d05b7d06" kindref="member">FFT</ref>(windowSize,<sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">,<sp/>in,<sp/><ref refid="getopt1_8c_1a070d2ce7b6bb7e5c05602aa8c308d0c4" kindref="member">NULL</ref>,<sp/>out,<sp/>out2);</highlight></codeline>
+<codeline lineno="75"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="76"><highlight class="normal"></highlight></codeline>
+<codeline lineno="77"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="78"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="79"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="src_2_f_f_t_8cpp_1ab287cc9ff67413884629c3130b8e891f" kindref="member">PowerSpectrum</ref>(windowSize,<sp/>in,<sp/>out);</highlight></codeline>
+<codeline lineno="80"><highlight class="normal"></highlight></codeline>
+<codeline lineno="81"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Take<sp/>real<sp/>part<sp/>of<sp/>result</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="82"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(i<sp/>=<sp/>0;<sp/>i<sp/>&lt;<sp/>half;<sp/>i++)</highlight></codeline>
+<codeline lineno="83"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>processed[i]<sp/>+=<sp/>out[i];</highlight></codeline>
+<codeline lineno="84"><highlight class="normal"></highlight></codeline>
+<codeline lineno="85"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>start<sp/>+=<sp/>half;</highlight></codeline>
+<codeline lineno="86"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>windows++;</highlight></codeline>
+<codeline lineno="87"><highlight class="normal"><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="88"><highlight class="normal"></highlight></codeline>
+<codeline lineno="89"><highlight class="normal"><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(autocorrelation)<sp/>{</highlight></codeline>
+<codeline lineno="90"><highlight class="normal"></highlight></codeline>
+<codeline lineno="91"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Peak<sp/>Pruning<sp/>as<sp/>described<sp/>by<sp/>Tolonen<sp/>and<sp/>Karjalainen,<sp/>2000</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="92"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">/*</highlight></codeline>
+<codeline lineno="93"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Combine<sp/>most<sp/>of<sp/>the<sp/>calculations<sp/>in<sp/>a<sp/>single<sp/>for<sp/>loop.</highlight></codeline>
+<codeline lineno="94"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/>It<sp/>should<sp/>be<sp/>safe,<sp/>as<sp/>indexes<sp/>refer<sp/>only<sp/>to<sp/>current<sp/>and<sp/>previous<sp/>elements,</highlight></codeline>
+<codeline lineno="95"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/>that<sp/>have<sp/>already<sp/>been<sp/>clipped,<sp/>etc...</highlight></codeline>
+<codeline lineno="96"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="97"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(i<sp/>=<sp/>0;<sp/>i<sp/>&lt;<sp/>half;<sp/>i++)<sp/>{</highlight></codeline>
+<codeline lineno="98"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Clip<sp/>at<sp/>zero,<sp/>copy<sp/>to<sp/>temp<sp/>array</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="99"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(processed[i]<sp/>&lt;<sp/>0.0)</highlight></codeline>
+<codeline lineno="100"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>processed[<ref refid="checksum_8c_1ab80e330a3bc9e38c1297fe17381e92b4" kindref="member">i</ref>]<sp/>=<sp/>float(0.0);</highlight></codeline>
+<codeline lineno="101"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>out[<ref refid="checksum_8c_1ab80e330a3bc9e38c1297fe17381e92b4" kindref="member">i</ref>]<sp/>=<sp/>processed[<ref refid="checksum_8c_1ab80e330a3bc9e38c1297fe17381e92b4" kindref="member">i</ref>];</highlight></codeline>
+<codeline lineno="102"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Subtract<sp/>a<sp/>time-doubled<sp/>signal<sp/>(linearly<sp/>interp.)<sp/>from<sp/>the<sp/>original</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="103"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>(clipped)<sp/>signal</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="104"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>((i<sp/>%<sp/>2)<sp/>==<sp/>0)</highlight></codeline>
+<codeline lineno="105"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>processed[<ref refid="checksum_8c_1ab80e330a3bc9e38c1297fe17381e92b4" kindref="member">i</ref>]<sp/>-=<sp/>out[i<sp/>/<sp/>2];</highlight></codeline>
+<codeline lineno="106"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="107"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>processed[<ref refid="checksum_8c_1ab80e330a3bc9e38c1297fe17381e92b4" kindref="member">i</ref>]<sp/>-=<sp/>((out[i<sp/>/<sp/>2]<sp/>+<sp/>out[i<sp/>/<sp/>2<sp/>+<sp/>1])<sp/>/<sp/>2);</highlight></codeline>
+<codeline lineno="108"><highlight class="normal"></highlight></codeline>
+<codeline lineno="109"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Clip<sp/>at<sp/>zero<sp/>again</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="110"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(processed[i]<sp/>&lt;<sp/>0.0)</highlight></codeline>
+<codeline lineno="111"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>processed[<ref refid="checksum_8c_1ab80e330a3bc9e38c1297fe17381e92b4" kindref="member">i</ref>]<sp/>=<sp/>float(0.0);</highlight></codeline>
+<codeline lineno="112"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="113"><highlight class="normal"></highlight></codeline>
+<codeline lineno="114"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Reverse<sp/>and<sp/>scale</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="115"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(i<sp/>=<sp/>0;<sp/>i<sp/>&lt;<sp/>half;<sp/>i++)</highlight></codeline>
+<codeline lineno="116"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>in[i]<sp/>=<sp/>processed[i]<sp/>/<sp/>(windowSize<sp/>/<sp/>4);</highlight></codeline>
+<codeline lineno="117"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(i<sp/>=<sp/>0;<sp/>i<sp/>&lt;<sp/>half;<sp/>i++)</highlight></codeline>
+<codeline lineno="118"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>processed[half<sp/>-<sp/>1<sp/>-<sp/>i]<sp/>=<sp/>in[i];</highlight></codeline>
+<codeline lineno="119"><highlight class="normal"><sp/><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="120"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Convert<sp/>to<sp/>decibels</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="121"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>But<sp/>do<sp/>it<sp/>safely;<sp/>-Inf<sp/>is<sp/>nobody&apos;s<sp/>friend</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="122"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(i<sp/>=<sp/>0;<sp/>i<sp/>&lt;<sp/>half;<sp/>i++){</highlight></codeline>
+<codeline lineno="123"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>temp=(processed[<ref refid="checksum_8c_1ab80e330a3bc9e38c1297fe17381e92b4" kindref="member">i</ref>]<sp/>/<sp/>windowSize<sp/>/<sp/>windows);</highlight></codeline>
+<codeline lineno="124"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(temp<sp/>&gt;<sp/>0.0)</highlight></codeline>
+<codeline lineno="125"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>processed[<ref refid="checksum_8c_1ab80e330a3bc9e38c1297fe17381e92b4" kindref="member">i</ref>]<sp/>=<sp/>10*log10(temp);</highlight></codeline>
+<codeline lineno="126"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="127"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>processed[<ref refid="checksum_8c_1ab80e330a3bc9e38c1297fe17381e92b4" kindref="member">i</ref>]<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="128"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="129"><highlight class="normal"><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="130"><highlight class="normal"></highlight></codeline>
+<codeline lineno="131"><highlight class="normal"><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal">(i=0;i&lt;half;i++)</highlight></codeline>
+<codeline lineno="132"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>output[i]<sp/>=<sp/>processed[i];</highlight></codeline>
+<codeline lineno="133"><highlight class="normal"><sp/><sp/><sp/></highlight><highlight class="keyword">delete</highlight><highlight class="normal">[]<ref refid="1-single-block_8c_1a18b1d64a94008e3c56953d279b8095e2" kindref="member">in</ref>;</highlight></codeline>
+<codeline lineno="134"><highlight class="normal"><sp/><sp/><sp/></highlight><highlight class="keyword">delete</highlight><highlight class="normal">[]<ref refid="lilv__test_8c_1af5a45dbcaa926b186e6f71d08212acc3" kindref="member">out</ref>;</highlight></codeline>
+<codeline lineno="135"><highlight class="normal"><sp/><sp/><sp/></highlight><highlight class="keyword">delete</highlight><highlight class="normal">[]out2;</highlight></codeline>
+<codeline lineno="136"><highlight class="normal"><sp/><sp/><sp/></highlight><highlight class="keyword">delete</highlight><highlight class="normal">[]processed;</highlight></codeline>
+<codeline lineno="137"><highlight class="normal"></highlight></codeline>
+<codeline lineno="138"><highlight class="normal"><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="139"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="140"><highlight class="normal"></highlight></codeline>
+    </programlisting>
+    <location file="C:/_dev/OpenU/Audacity/audacity/src/Spectrum.cpp"/>
+  </compounddef>
+</doxygen>

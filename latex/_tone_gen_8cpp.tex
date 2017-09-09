@@ -1,0 +1,221 @@
+\hypertarget{_tone_gen_8cpp}{}\section{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/src/effects/\+Tone\+Gen.cpp File Reference}
+\label{_tone_gen_8cpp}\index{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/src/effects/\+Tone\+Gen.\+cpp@{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/src/effects/\+Tone\+Gen.\+cpp}}
+{\ttfamily \#include \char`\"{}../\+Audacity.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Tone\+Gen.\+h\char`\"{}}\\*
+{\ttfamily \#include $<$math.\+h$>$}\\*
+{\ttfamily \#include $<$float.\+h$>$}\\*
+{\ttfamily \#include $<$wx/intl.\+h$>$}\\*
+{\ttfamily \#include $<$wx/valgen.\+h$>$}\\*
+{\ttfamily \#include \char`\"{}../\+Project.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../\+Shuttle\+Gui.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../widgets/\+Numeric\+Text\+Ctrl.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../widgets/valnum.\+h\char`\"{}}\\*
+\subsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \hyperlink{_tone_gen_8cpp_a671f746774a3e3e4b9315ee9fc7eaf3a}{k\+Interpolations} \{ \\*
+\hyperlink{_equalization_8cpp_a671f746774a3e3e4b9315ee9fc7eaf3aaa46e4fdcc138a549e384640823b4b360}{k\+Bspline}, 
+\hyperlink{_equalization_8cpp_a671f746774a3e3e4b9315ee9fc7eaf3aaa160b4c3dcdb22ac16fe192d1904a049}{k\+Cosine}, 
+\hyperlink{_equalization_8cpp_a671f746774a3e3e4b9315ee9fc7eaf3aa49f7e2a4145afb40a6eba4ad063a2b01}{k\+Cubic}, 
+\hyperlink{_equalization_8cpp_a671f746774a3e3e4b9315ee9fc7eaf3aad98ef34cc74602dd8b0ed0787d9b4fe8}{k\+Num\+Interpolations}, 
+\\*
+\hyperlink{_tone_gen_8cpp_a671f746774a3e3e4b9315ee9fc7eaf3aac188c019178783e5be55110601309d7d}{k\+Linear}, 
+\hyperlink{_tone_gen_8cpp_a671f746774a3e3e4b9315ee9fc7eaf3aab3cdeeb0a68f089a01a04a855610ca49}{k\+Logarithmic}, 
+\hyperlink{_tone_gen_8cpp_a671f746774a3e3e4b9315ee9fc7eaf3aad98ef34cc74602dd8b0ed0787d9b4fe8}{k\+Num\+Interpolations}
+ \}
+\item 
+enum \hyperlink{_tone_gen_8cpp_aa2fde0baa3a15cc12e280fc56d6a3981}{k\+Waveforms} \{ \\*
+\hyperlink{_tone_gen_8cpp_aa2fde0baa3a15cc12e280fc56d6a3981a8481d8a714e2f48ba084bb2099ed71b4}{k\+Sine}, 
+\hyperlink{_tone_gen_8cpp_aa2fde0baa3a15cc12e280fc56d6a3981af43fad2eee15098bbf33bf1f28cc25c1}{k\+Square}, 
+\hyperlink{_tone_gen_8cpp_aa2fde0baa3a15cc12e280fc56d6a3981a4b52b27a7ad859c480b4071ba7d3b997}{k\+Sawtooth}, 
+\hyperlink{_tone_gen_8cpp_aa2fde0baa3a15cc12e280fc56d6a3981ac54e8c6c707b6d39292af4e154f251d5}{k\+Square\+No\+Alias}, 
+\\*
+\hyperlink{_tone_gen_8cpp_aa2fde0baa3a15cc12e280fc56d6a3981a3da7680b96397f30815a286b86a92af4}{k\+Num\+Waveforms}
+ \}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{_tone_gen_8cpp_aa94b96ea3e3effa2aabcfe26a43b069e}{Param} (Start\+Freq, double, \hyperlink{_theme_8cpp_ad4baed404c66b57e257af684bdc5ecf2}{XO}(\char`\"{}Start\+Freq\char`\"{}), 440.\+0, 1.\+0, D\+B\+L\+\_\+\+M\+AX, 1)
+\item 
+\hyperlink{_tone_gen_8cpp_aa7475562d5da02e11bc3491fb6f24674}{Param} (End\+Freq, double, \hyperlink{_theme_8cpp_ad4baed404c66b57e257af684bdc5ecf2}{XO}(\char`\"{}End\+Freq\char`\"{}), 1320.\+0, 1.\+0, D\+B\+L\+\_\+\+M\+AX, 1)
+\item 
+\hyperlink{_tone_gen_8cpp_a5f8c5722aab17c0c6a0b16809a12accb}{Param} (Start\+Amp, double, \hyperlink{_theme_8cpp_ad4baed404c66b57e257af684bdc5ecf2}{XO}(\char`\"{}Start\+Amp\char`\"{}), 0.\+8, 0.\+0, 1.\+0, 1)
+\item 
+\hyperlink{_tone_gen_8cpp_aab3d1f0c1745d4c78307983974fa0939}{Param} (End\+Amp, double, \hyperlink{_theme_8cpp_ad4baed404c66b57e257af684bdc5ecf2}{XO}(\char`\"{}End\+Amp\char`\"{}), 0.\+1, 0.\+0, 1.\+0, 1)
+\item 
+\hyperlink{_tone_gen_8cpp_a818a39c6258e936aaa05c2d4ed3f27da}{Param} (Frequency, double, \hyperlink{_theme_8cpp_ad4baed404c66b57e257af684bdc5ecf2}{XO}(\char`\"{}Frequency\char`\"{}), 440.\+0, 1.\+0, D\+B\+L\+\_\+\+M\+AX, 1)
+\item 
+\hyperlink{_tone_gen_8cpp_a2ea196901ec78b4c1d29d920c58c8ff4}{Param} (Amplitude, double, \hyperlink{_theme_8cpp_ad4baed404c66b57e257af684bdc5ecf2}{XO}(\char`\"{}Amplitude\char`\"{}), 0.\+8, 0.\+0, 1.\+0, 1)
+\item 
+\hyperlink{_tone_gen_8cpp_ae9b3f2313e7d9ad7b7abe0c69e54acb7}{Param} (Waveform, \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int}, \hyperlink{_theme_8cpp_ad4baed404c66b57e257af684bdc5ecf2}{XO}(\char`\"{}Waveform\char`\"{}), 0, 0, k\+Num\+Waveforms-\/1, 1)
+\item 
+\hyperlink{_tone_gen_8cpp_a170b87cd47b38549e511e5b3f6cbbc13}{Param} (Interp, \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int}, \hyperlink{_theme_8cpp_ad4baed404c66b57e257af684bdc5ecf2}{XO}(\char`\"{}Interpolation\char`\"{}), 0, 0, k\+Num\+Interpolations-\/1, 1)
+\item 
+\hyperlink{_tone_gen_8cpp_a8c3469324b3e5d3e6c44c23a418ab937}{E\+N\+D\+\_\+\+E\+V\+E\+N\+T\+\_\+\+T\+A\+B\+LE} ()
+\end{DoxyCompactItemize}
+
+
+\subsection{Enumeration Type Documentation}
+\index{Tone\+Gen.\+cpp@{Tone\+Gen.\+cpp}!k\+Interpolations@{k\+Interpolations}}
+\index{k\+Interpolations@{k\+Interpolations}!Tone\+Gen.\+cpp@{Tone\+Gen.\+cpp}}
+\subsubsection[{\texorpdfstring{k\+Interpolations}{kInterpolations}}]{\setlength{\rightskip}{0pt plus 5cm}enum {\bf k\+Interpolations}}\hypertarget{_tone_gen_8cpp_a671f746774a3e3e4b9315ee9fc7eaf3a}{}\label{_tone_gen_8cpp_a671f746774a3e3e4b9315ee9fc7eaf3a}
+\begin{Desc}
+\item[Enumerator]\par
+\begin{description}
+\index{k\+Bspline@{k\+Bspline}!Tone\+Gen.\+cpp@{Tone\+Gen.\+cpp}}\index{Tone\+Gen.\+cpp@{Tone\+Gen.\+cpp}!k\+Bspline@{k\+Bspline}}\item[{\em 
+k\+Bspline\hypertarget{_tone_gen_8cpp_a671f746774a3e3e4b9315ee9fc7eaf3aaa46e4fdcc138a549e384640823b4b360}{}\label{_tone_gen_8cpp_a671f746774a3e3e4b9315ee9fc7eaf3aaa46e4fdcc138a549e384640823b4b360}
+}]\index{k\+Cosine@{k\+Cosine}!Tone\+Gen.\+cpp@{Tone\+Gen.\+cpp}}\index{Tone\+Gen.\+cpp@{Tone\+Gen.\+cpp}!k\+Cosine@{k\+Cosine}}\item[{\em 
+k\+Cosine\hypertarget{_tone_gen_8cpp_a671f746774a3e3e4b9315ee9fc7eaf3aaa160b4c3dcdb22ac16fe192d1904a049}{}\label{_tone_gen_8cpp_a671f746774a3e3e4b9315ee9fc7eaf3aaa160b4c3dcdb22ac16fe192d1904a049}
+}]\index{k\+Cubic@{k\+Cubic}!Tone\+Gen.\+cpp@{Tone\+Gen.\+cpp}}\index{Tone\+Gen.\+cpp@{Tone\+Gen.\+cpp}!k\+Cubic@{k\+Cubic}}\item[{\em 
+k\+Cubic\hypertarget{_tone_gen_8cpp_a671f746774a3e3e4b9315ee9fc7eaf3aa49f7e2a4145afb40a6eba4ad063a2b01}{}\label{_tone_gen_8cpp_a671f746774a3e3e4b9315ee9fc7eaf3aa49f7e2a4145afb40a6eba4ad063a2b01}
+}]\index{k\+Num\+Interpolations@{k\+Num\+Interpolations}!Tone\+Gen.\+cpp@{Tone\+Gen.\+cpp}}\index{Tone\+Gen.\+cpp@{Tone\+Gen.\+cpp}!k\+Num\+Interpolations@{k\+Num\+Interpolations}}\item[{\em 
+k\+Num\+Interpolations\hypertarget{_tone_gen_8cpp_a671f746774a3e3e4b9315ee9fc7eaf3aad98ef34cc74602dd8b0ed0787d9b4fe8}{}\label{_tone_gen_8cpp_a671f746774a3e3e4b9315ee9fc7eaf3aad98ef34cc74602dd8b0ed0787d9b4fe8}
+}]\index{k\+Linear@{k\+Linear}!Tone\+Gen.\+cpp@{Tone\+Gen.\+cpp}}\index{Tone\+Gen.\+cpp@{Tone\+Gen.\+cpp}!k\+Linear@{k\+Linear}}\item[{\em 
+k\+Linear\hypertarget{_tone_gen_8cpp_a671f746774a3e3e4b9315ee9fc7eaf3aac188c019178783e5be55110601309d7d}{}\label{_tone_gen_8cpp_a671f746774a3e3e4b9315ee9fc7eaf3aac188c019178783e5be55110601309d7d}
+}]\index{k\+Logarithmic@{k\+Logarithmic}!Tone\+Gen.\+cpp@{Tone\+Gen.\+cpp}}\index{Tone\+Gen.\+cpp@{Tone\+Gen.\+cpp}!k\+Logarithmic@{k\+Logarithmic}}\item[{\em 
+k\+Logarithmic\hypertarget{_tone_gen_8cpp_a671f746774a3e3e4b9315ee9fc7eaf3aab3cdeeb0a68f089a01a04a855610ca49}{}\label{_tone_gen_8cpp_a671f746774a3e3e4b9315ee9fc7eaf3aab3cdeeb0a68f089a01a04a855610ca49}
+}]\index{k\+Num\+Interpolations@{k\+Num\+Interpolations}!Tone\+Gen.\+cpp@{Tone\+Gen.\+cpp}}\index{Tone\+Gen.\+cpp@{Tone\+Gen.\+cpp}!k\+Num\+Interpolations@{k\+Num\+Interpolations}}\item[{\em 
+k\+Num\+Interpolations\hypertarget{_tone_gen_8cpp_a671f746774a3e3e4b9315ee9fc7eaf3aad98ef34cc74602dd8b0ed0787d9b4fe8}{}\label{_tone_gen_8cpp_a671f746774a3e3e4b9315ee9fc7eaf3aad98ef34cc74602dd8b0ed0787d9b4fe8}
+}]\end{description}
+\end{Desc}
+
+
+Definition at line 35 of file Tone\+Gen.\+cpp.
+
+\index{Tone\+Gen.\+cpp@{Tone\+Gen.\+cpp}!k\+Waveforms@{k\+Waveforms}}
+\index{k\+Waveforms@{k\+Waveforms}!Tone\+Gen.\+cpp@{Tone\+Gen.\+cpp}}
+\subsubsection[{\texorpdfstring{k\+Waveforms}{kWaveforms}}]{\setlength{\rightskip}{0pt plus 5cm}enum {\bf k\+Waveforms}}\hypertarget{_tone_gen_8cpp_aa2fde0baa3a15cc12e280fc56d6a3981}{}\label{_tone_gen_8cpp_aa2fde0baa3a15cc12e280fc56d6a3981}
+\begin{Desc}
+\item[Enumerator]\par
+\begin{description}
+\index{k\+Sine@{k\+Sine}!Tone\+Gen.\+cpp@{Tone\+Gen.\+cpp}}\index{Tone\+Gen.\+cpp@{Tone\+Gen.\+cpp}!k\+Sine@{k\+Sine}}\item[{\em 
+k\+Sine\hypertarget{_tone_gen_8cpp_aa2fde0baa3a15cc12e280fc56d6a3981a8481d8a714e2f48ba084bb2099ed71b4}{}\label{_tone_gen_8cpp_aa2fde0baa3a15cc12e280fc56d6a3981a8481d8a714e2f48ba084bb2099ed71b4}
+}]\index{k\+Square@{k\+Square}!Tone\+Gen.\+cpp@{Tone\+Gen.\+cpp}}\index{Tone\+Gen.\+cpp@{Tone\+Gen.\+cpp}!k\+Square@{k\+Square}}\item[{\em 
+k\+Square\hypertarget{_tone_gen_8cpp_aa2fde0baa3a15cc12e280fc56d6a3981af43fad2eee15098bbf33bf1f28cc25c1}{}\label{_tone_gen_8cpp_aa2fde0baa3a15cc12e280fc56d6a3981af43fad2eee15098bbf33bf1f28cc25c1}
+}]\index{k\+Sawtooth@{k\+Sawtooth}!Tone\+Gen.\+cpp@{Tone\+Gen.\+cpp}}\index{Tone\+Gen.\+cpp@{Tone\+Gen.\+cpp}!k\+Sawtooth@{k\+Sawtooth}}\item[{\em 
+k\+Sawtooth\hypertarget{_tone_gen_8cpp_aa2fde0baa3a15cc12e280fc56d6a3981a4b52b27a7ad859c480b4071ba7d3b997}{}\label{_tone_gen_8cpp_aa2fde0baa3a15cc12e280fc56d6a3981a4b52b27a7ad859c480b4071ba7d3b997}
+}]\index{k\+Square\+No\+Alias@{k\+Square\+No\+Alias}!Tone\+Gen.\+cpp@{Tone\+Gen.\+cpp}}\index{Tone\+Gen.\+cpp@{Tone\+Gen.\+cpp}!k\+Square\+No\+Alias@{k\+Square\+No\+Alias}}\item[{\em 
+k\+Square\+No\+Alias\hypertarget{_tone_gen_8cpp_aa2fde0baa3a15cc12e280fc56d6a3981ac54e8c6c707b6d39292af4e154f251d5}{}\label{_tone_gen_8cpp_aa2fde0baa3a15cc12e280fc56d6a3981ac54e8c6c707b6d39292af4e154f251d5}
+}]\index{k\+Num\+Waveforms@{k\+Num\+Waveforms}!Tone\+Gen.\+cpp@{Tone\+Gen.\+cpp}}\index{Tone\+Gen.\+cpp@{Tone\+Gen.\+cpp}!k\+Num\+Waveforms@{k\+Num\+Waveforms}}\item[{\em 
+k\+Num\+Waveforms\hypertarget{_tone_gen_8cpp_aa2fde0baa3a15cc12e280fc56d6a3981a3da7680b96397f30815a286b86a92af4}{}\label{_tone_gen_8cpp_aa2fde0baa3a15cc12e280fc56d6a3981a3da7680b96397f30815a286b86a92af4}
+}]\end{description}
+\end{Desc}
+
+
+Definition at line 48 of file Tone\+Gen.\+cpp.
+
+
+
+\subsection{Function Documentation}
+\index{Tone\+Gen.\+cpp@{Tone\+Gen.\+cpp}!E\+N\+D\+\_\+\+E\+V\+E\+N\+T\+\_\+\+T\+A\+B\+LE@{E\+N\+D\+\_\+\+E\+V\+E\+N\+T\+\_\+\+T\+A\+B\+LE}}
+\index{E\+N\+D\+\_\+\+E\+V\+E\+N\+T\+\_\+\+T\+A\+B\+LE@{E\+N\+D\+\_\+\+E\+V\+E\+N\+T\+\_\+\+T\+A\+B\+LE}!Tone\+Gen.\+cpp@{Tone\+Gen.\+cpp}}
+\subsubsection[{\texorpdfstring{E\+N\+D\+\_\+\+E\+V\+E\+N\+T\+\_\+\+T\+A\+B\+L\+E()}{END_EVENT_TABLE()}}]{\setlength{\rightskip}{0pt plus 5cm}E\+N\+D\+\_\+\+E\+V\+E\+N\+T\+\_\+\+T\+A\+B\+LE (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{_tone_gen_8cpp_a8c3469324b3e5d3e6c44c23a418ab937}{}\label{_tone_gen_8cpp_a8c3469324b3e5d3e6c44c23a418ab937}
+\index{Tone\+Gen.\+cpp@{Tone\+Gen.\+cpp}!Param@{Param}}
+\index{Param@{Param}!Tone\+Gen.\+cpp@{Tone\+Gen.\+cpp}}
+\subsubsection[{\texorpdfstring{Param(\+Start\+Freq, double, X\+O(""Start\+Freq""), 440.\+0, 1.\+0, D\+B\+L\+\_\+\+M\+A\+X, 1)}{Param(StartFreq, double, XO("StartFreq"), 440.0, 1.0, DBL_MAX, 1)}}]{\setlength{\rightskip}{0pt plus 5cm}Param (
+\begin{DoxyParamCaption}
+\item[{Start\+Freq}]{, }
+\item[{double}]{, }
+\item[{{\bf XO}(\char`\"{}Start\+Freq\char`\"{})}]{, }
+\item[{440.}]{0, }
+\item[{1.}]{0, }
+\item[{D\+B\+L\+\_\+\+M\+AX}]{, }
+\item[{1}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{_tone_gen_8cpp_aa94b96ea3e3effa2aabcfe26a43b069e}{}\label{_tone_gen_8cpp_aa94b96ea3e3effa2aabcfe26a43b069e}
+\index{Tone\+Gen.\+cpp@{Tone\+Gen.\+cpp}!Param@{Param}}
+\index{Param@{Param}!Tone\+Gen.\+cpp@{Tone\+Gen.\+cpp}}
+\subsubsection[{\texorpdfstring{Param(\+End\+Freq, double, X\+O(""End\+Freq""), 1320.\+0, 1.\+0, D\+B\+L\+\_\+\+M\+A\+X, 1)}{Param(EndFreq, double, XO("EndFreq"), 1320.0, 1.0, DBL_MAX, 1)}}]{\setlength{\rightskip}{0pt plus 5cm}Param (
+\begin{DoxyParamCaption}
+\item[{End\+Freq}]{, }
+\item[{double}]{, }
+\item[{{\bf XO}(\char`\"{}End\+Freq\char`\"{})}]{, }
+\item[{1320.}]{0, }
+\item[{1.}]{0, }
+\item[{D\+B\+L\+\_\+\+M\+AX}]{, }
+\item[{1}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{_tone_gen_8cpp_aa7475562d5da02e11bc3491fb6f24674}{}\label{_tone_gen_8cpp_aa7475562d5da02e11bc3491fb6f24674}
+\index{Tone\+Gen.\+cpp@{Tone\+Gen.\+cpp}!Param@{Param}}
+\index{Param@{Param}!Tone\+Gen.\+cpp@{Tone\+Gen.\+cpp}}
+\subsubsection[{\texorpdfstring{Param(\+Start\+Amp, double, X\+O(""Start\+Amp""), 0.\+8, 0.\+0, 1.\+0, 1)}{Param(StartAmp, double, XO("StartAmp"), 0.8, 0.0, 1.0, 1)}}]{\setlength{\rightskip}{0pt plus 5cm}Param (
+\begin{DoxyParamCaption}
+\item[{Start\+Amp}]{, }
+\item[{double}]{, }
+\item[{{\bf XO}(\char`\"{}Start\+Amp\char`\"{})}]{, }
+\item[{0.}]{8, }
+\item[{0.}]{0, }
+\item[{1.}]{0, }
+\item[{1}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{_tone_gen_8cpp_a5f8c5722aab17c0c6a0b16809a12accb}{}\label{_tone_gen_8cpp_a5f8c5722aab17c0c6a0b16809a12accb}
+\index{Tone\+Gen.\+cpp@{Tone\+Gen.\+cpp}!Param@{Param}}
+\index{Param@{Param}!Tone\+Gen.\+cpp@{Tone\+Gen.\+cpp}}
+\subsubsection[{\texorpdfstring{Param(\+End\+Amp, double, X\+O(""End\+Amp""), 0.\+1, 0.\+0, 1.\+0, 1)}{Param(EndAmp, double, XO("EndAmp"), 0.1, 0.0, 1.0, 1)}}]{\setlength{\rightskip}{0pt plus 5cm}Param (
+\begin{DoxyParamCaption}
+\item[{End\+Amp}]{, }
+\item[{double}]{, }
+\item[{{\bf XO}(\char`\"{}End\+Amp\char`\"{})}]{, }
+\item[{0.}]{1, }
+\item[{0.}]{0, }
+\item[{1.}]{0, }
+\item[{1}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{_tone_gen_8cpp_aab3d1f0c1745d4c78307983974fa0939}{}\label{_tone_gen_8cpp_aab3d1f0c1745d4c78307983974fa0939}
+\index{Tone\+Gen.\+cpp@{Tone\+Gen.\+cpp}!Param@{Param}}
+\index{Param@{Param}!Tone\+Gen.\+cpp@{Tone\+Gen.\+cpp}}
+\subsubsection[{\texorpdfstring{Param(\+Frequency, double, X\+O(""Frequency""), 440.\+0, 1.\+0, D\+B\+L\+\_\+\+M\+A\+X, 1)}{Param(Frequency, double, XO("Frequency"), 440.0, 1.0, DBL_MAX, 1)}}]{\setlength{\rightskip}{0pt plus 5cm}Param (
+\begin{DoxyParamCaption}
+\item[{Frequency}]{, }
+\item[{double}]{, }
+\item[{{\bf XO}(\char`\"{}Frequency\char`\"{})}]{, }
+\item[{440.}]{0, }
+\item[{1.}]{0, }
+\item[{D\+B\+L\+\_\+\+M\+AX}]{, }
+\item[{1}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{_tone_gen_8cpp_a818a39c6258e936aaa05c2d4ed3f27da}{}\label{_tone_gen_8cpp_a818a39c6258e936aaa05c2d4ed3f27da}
+\index{Tone\+Gen.\+cpp@{Tone\+Gen.\+cpp}!Param@{Param}}
+\index{Param@{Param}!Tone\+Gen.\+cpp@{Tone\+Gen.\+cpp}}
+\subsubsection[{\texorpdfstring{Param(\+Amplitude, double, X\+O(""Amplitude""), 0.\+8, 0.\+0, 1.\+0, 1)}{Param(Amplitude, double, XO("Amplitude"), 0.8, 0.0, 1.0, 1)}}]{\setlength{\rightskip}{0pt plus 5cm}Param (
+\begin{DoxyParamCaption}
+\item[{Amplitude}]{, }
+\item[{double}]{, }
+\item[{{\bf XO}(\char`\"{}Amplitude\char`\"{})}]{, }
+\item[{0.}]{8, }
+\item[{0.}]{0, }
+\item[{1.}]{0, }
+\item[{1}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{_tone_gen_8cpp_a2ea196901ec78b4c1d29d920c58c8ff4}{}\label{_tone_gen_8cpp_a2ea196901ec78b4c1d29d920c58c8ff4}
+\index{Tone\+Gen.\+cpp@{Tone\+Gen.\+cpp}!Param@{Param}}
+\index{Param@{Param}!Tone\+Gen.\+cpp@{Tone\+Gen.\+cpp}}
+\subsubsection[{\texorpdfstring{Param(\+Waveform, int, X\+O(""Waveform""), 0, 0, k\+Num\+Waveforms-\/1, 1)}{Param(Waveform, int, XO("Waveform"), 0, 0, kNumWaveforms-1, 1)}}]{\setlength{\rightskip}{0pt plus 5cm}Param (
+\begin{DoxyParamCaption}
+\item[{Waveform}]{, }
+\item[{{\bf int}}]{, }
+\item[{{\bf XO}(\char`\"{}Waveform\char`\"{})}]{, }
+\item[{0}]{, }
+\item[{0}]{, }
+\item[{{\bf k\+Num\+Waveforms}-\/}]{1, }
+\item[{1}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{_tone_gen_8cpp_ae9b3f2313e7d9ad7b7abe0c69e54acb7}{}\label{_tone_gen_8cpp_ae9b3f2313e7d9ad7b7abe0c69e54acb7}
+\index{Tone\+Gen.\+cpp@{Tone\+Gen.\+cpp}!Param@{Param}}
+\index{Param@{Param}!Tone\+Gen.\+cpp@{Tone\+Gen.\+cpp}}
+\subsubsection[{\texorpdfstring{Param(\+Interp, int, X\+O(""Interpolation""), 0, 0, k\+Num\+Interpolations-\/1, 1)}{Param(Interp, int, XO("Interpolation"), 0, 0, kNumInterpolations-1, 1)}}]{\setlength{\rightskip}{0pt plus 5cm}Param (
+\begin{DoxyParamCaption}
+\item[{Interp}]{, }
+\item[{{\bf int}}]{, }
+\item[{{\bf XO}(\char`\"{}Interpolation\char`\"{})}]{, }
+\item[{0}]{, }
+\item[{0}]{, }
+\item[{{\bf k\+Num\+Interpolations}-\/}]{1, }
+\item[{1}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{_tone_gen_8cpp_a170b87cd47b38549e511e5b3f6cbbc13}{}\label{_tone_gen_8cpp_a170b87cd47b38549e511e5b3f6cbbc13}

@@ -1,0 +1,130 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/lib-src/lv2/sratom/src/sratom.c" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/lib-src/lv2/sratom/src/sratom.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <assert\&.h>\fP
+.br
+\fC#include <ctype\&.h>\fP
+.br
+\fC#include <stdio\&.h>\fP
+.br
+\fC#include <stdlib\&.h>\fP
+.br
+\fC#include <string\&.h>\fP
+.br
+\fC#include 'lv2/lv2plug\&.in/ns/ext/atom/forge\&.h'\fP
+.br
+\fC#include 'lv2/lv2plug\&.in/ns/ext/atom/util\&.h'\fP
+.br
+\fC#include 'lv2/lv2plug\&.in/ns/ext/midi/midi\&.h'\fP
+.br
+\fC#include 'sratom/sratom\&.h'\fP
+.br
+
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "struct \fBSratomImpl\fP"
+.br
+.in -1c
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fB__STDC_LIMIT_MACROS\fP   1"
+.br
+.ti -1c
+.RI "#define \fBNS_RDF\fP   (\fBconst\fP \fBuint8_t\fP*)'http://www\&.w3\&.org/1999/02/22\-rdf\-\fBsyntax\fP\-\fBns\fP#'"
+.br
+.ti -1c
+.RI "#define \fBNS_XSD\fP   (\fBconst\fP \fBuint8_t\fP*)'http://www\&.w3\&.org/2001/XMLSchema#'"
+.br
+.ti -1c
+.RI "#define \fBUSTR\fP(\fBstr\fP)   ((\fBconst\fP \fBuint8_t\fP*)(\fBstr\fP))"
+.br
+.in -1c
+.SS "Enumerations"
+
+.in +1c
+.ti -1c
+.RI "enum \fBReadMode\fP { \fBMODE_SUBJECT\fP, \fBMODE_BODY\fP, \fBMODE_SEQUENCE\fP }"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBSRATOM_API\fP \fBSratom\fP * \fBsratom_new\fP (\fBLV2_URID_Map\fP *\fBmap\fP)"
+.br
+.ti -1c
+.RI "\fBSRATOM_API\fP \fBvoid\fP \fBsratom_free\fP (\fBSratom\fP *sratom)"
+.br
+.ti -1c
+.RI "\fBSRATOM_API\fP \fBvoid\fP \fBsratom_set_sink\fP (\fBSratom\fP *sratom, \fBconst\fP char *base_uri, \fBSerdStatementSink\fP write_statement, \fBSerdEndSink\fP end_anon, \fBvoid\fP *handle)"
+.br
+.ti -1c
+.RI "\fBSRATOM_API\fP \fBvoid\fP \fBsratom_set_pretty_numbers\fP (\fBSratom\fP *sratom, \fBbool\fP pretty_numbers)"
+.br
+.ti -1c
+.RI "\fBSRATOM_API\fP \fBvoid\fP \fBsratom_set_object_mode\fP (\fBSratom\fP *sratom, \fBSratomObjectMode\fP object_mode)"
+.br
+.ti -1c
+.RI "\fBSRATOM_API\fP \fBint\fP \fBsratom_write\fP (\fBSratom\fP *sratom, \fBLV2_URID_Unmap\fP *unmap, \fBuint32_t\fP flags, \fBconst\fP \fBSerdNode\fP *subject, \fBconst\fP \fBSerdNode\fP *\fBpredicate\fP, \fBuint32_t\fP type_urid, \fBuint32_t\fP \fBsize\fP, \fBconst\fP \fBvoid\fP *body)"
+.br
+.ti -1c
+.RI "\fBSRATOM_API\fP char * \fBsratom_to_turtle\fP (\fBSratom\fP *sratom, \fBLV2_URID_Unmap\fP *unmap, \fBconst\fP char *base_uri, \fBconst\fP \fBSerdNode\fP *subject, \fBconst\fP \fBSerdNode\fP *\fBpredicate\fP, \fBuint32_t\fP type, \fBuint32_t\fP \fBsize\fP, \fBconst\fP \fBvoid\fP *body)"
+.br
+.ti -1c
+.RI "\fBSRATOM_API\fP \fBvoid\fP \fBsratom_read\fP (\fBSratom\fP *sratom, \fBLV2_Atom_Forge\fP *forge, \fBSordWorld\fP *world, \fBSordModel\fP *\fBmodel\fP, \fBconst\fP \fBSordNode\fP *\fBnode\fP)"
+.br
+.ti -1c
+.RI "\fBSRATOM_API\fP \fBLV2_Atom_Forge_Ref\fP \fBsratom_forge_sink\fP (\fBLV2_Atom_Forge_Sink_Handle\fP handle, \fBconst\fP \fBvoid\fP *\fBbuf\fP, \fBuint32_t\fP \fBsize\fP)"
+.br
+.ti -1c
+.RI "\fBSRATOM_API\fP \fBLV2_Atom\fP * \fBsratom_forge_deref\fP (\fBLV2_Atom_Forge_Sink_Handle\fP handle, \fBLV2_Atom_Forge_Ref\fP ref)"
+.br
+.ti -1c
+.RI "\fBSRATOM_API\fP \fBLV2_Atom\fP * \fBsratom_from_turtle\fP (\fBSratom\fP *sratom, \fBconst\fP char *base_uri, \fBconst\fP \fBSerdNode\fP *subject, \fBconst\fP \fBSerdNode\fP *\fBpredicate\fP, \fBconst\fP char *\fBstr\fP)"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define __STDC_LIMIT_MACROS   1"
+
+.PP
+Definition at line 17 of file sratom\&.c\&.
+.SS "#define NS_RDF   (\fBconst\fP \fBuint8_t\fP*)'http://www\&.w3\&.org/1999/02/22\-rdf\-\fBsyntax\fP\-\fBns\fP#'"
+
+.PP
+Definition at line 31 of file sratom\&.c\&.
+.SS "#define NS_XSD   (\fBconst\fP \fBuint8_t\fP*)'http://www\&.w3\&.org/2001/XMLSchema#'"
+
+.PP
+Definition at line 32 of file sratom\&.c\&.
+.SS "#define USTR(\fBstr\fP)   ((\fBconst\fP \fBuint8_t\fP*)(\fBstr\fP))"
+
+.PP
+Definition at line 34 of file sratom\&.c\&.
+.SH "Enumeration Type Documentation"
+.PP 
+.SS "enum \fBReadMode\fP"
+
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fIMODE_SUBJECT \fP\fP
+.TP
+\fB\fIMODE_BODY \fP\fP
+.TP
+\fB\fIMODE_SEQUENCE \fP\fP
+.PP
+Definition at line 36 of file sratom\&.c\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

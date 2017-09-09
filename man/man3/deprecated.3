@@ -1,0 +1,89 @@
+.TH "deprecated" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+deprecated \- Deprecated List 
+
+.IP "\fBMember \fBav_destruct_packet\fP (\fBAVPacket\fP *pkt)\fP" 1c
+use the AVBuffer API instead  
+.IP "\fBMember \fBav_find_opt\fP (void *obj, const char *name, const char *unit, int mask, int flags)\fP" 1c
+use av_opt_find\&.  
+.IP "\fBMember \fBav_get_bits_per_sample_fmt\fP (enum AVSampleFormat sample_fmt)\fP" 1c
+Use \fBav_get_bytes_per_sample()\fP instead\&.  
+.IP "\fBMember \fBav_log_ask_for_sample\fP (void *avc, const char *msg,\&.\&.\&.) av_printf_format(2\fP" 1c
+Use avpriv_request_sample() instead\&.  
+.IP "\fBMember \fBav_log_missing_feature\fP (void *avc, const char *feature, int want_sample)\fP" 1c
+Use avpriv_report_missing_feature() instead\&.  
+.IP "\fBMember \fBav_parser_change\fP (\fBAVCodecParserContext\fP *s, \fBAVCodecContext\fP *avctx, uint8_t **poutbuf, int *poutbuf_size, const uint8_t *buf, int buf_size, int keyframe)\fP" 1c
+use \fBAVBitStreamFilter\fP  
+.IP "\fBMember \fBav_set_string3\fP (void *obj, const char *name, const char *val, int alloc, const \fBAVOption\fP **o_out)\fP" 1c
+use \fBav_opt_set()\fP  
+.IP "\fBMember \fBavcodec_decode_audio3\fP (\fBAVCodecContext\fP *avctx, int16_t *samples, int *frame_size_ptr, \fBAVPacket\fP *avpkt)\fP" 1c
+Use avcodec_decode_audio4 instead\&. 
+.IP "\fBMember \fBavcodec_encode_audio\fP (\fBAVCodecContext\fP *avctx, uint8_t *buf, int buf_size, const short *samples)\fP" 1c
+Use avcodec_encode_audio2 instead\&. 
+.IP "\fBMember \fBavcodec_encode_video\fP (\fBAVCodecContext\fP *avctx, uint8_t *buf, int buf_size, const \fBAVFrame\fP *pict)\fP" 1c
+use \fBavcodec_encode_video2()\fP instead\&. 
+.IP "\fBMember \fBavcodec_get_edge_width\fP (void)\fP" 1c
+CODEC_FLAG_EMU_EDGE is deprecated, so this function is no longer needed  
+.IP "\fBMember \fBavcodec_set_dimensions\fP (\fBAVCodecContext\fP *s, int width, int height)\fP" 1c
+this function is not supposed to be used from outside of lavc  
+.IP "\fBMember \fBAVCodecContext::error_rate\fP \fP" 1c
+use the 'error_rate' private \fBAVOption\fP of the mpegvideo encoders  
+.IP "\fBMember \fBAVCodecContext::get_buffer\fP )(struct \fBAVCodecContext\fP *c, \fBAVFrame\fP *pic)\fP" 1c
+use \fBget_buffer2()\fP  
+.IP "\fBMember \fBAVCodecContext::pkt\fP \fP" 1c
+this field is not supposed to be accessed from outside lavc  
+.IP "\fBMember \fBAVCodecContext::release_buffer\fP )(struct \fBAVCodecContext\fP *c, \fBAVFrame\fP *pic)\fP" 1c
+custom freeing callbacks should be set from \fBget_buffer2()\fP  
+.IP "\fBMember \fBAVCodecContext::reordered_opaque\fP \fP" 1c
+in favor of pkt_pts
+.IP "\(bu" 2
+encoding: unused
+.IP "\(bu" 2
+decoding: Set by user\&.  
+.PP
+.IP "\fBMember \fBAVCodecContext::request_channels\fP \fP" 1c
+Deprecated in favor of request_channel_layout\&.  
+.IP "\fBMember \fBAVCodecContext::thread_opaque\fP \fP" 1c
+this field should not be used from outside of lavc  
+.IP "\fBMember \fBAVCodecContext::xvmc_acceleration\fP \fP" 1c
+XvMC doesn't need it anymore\&.  
+.IP "\fBMember \fBAVFrame::hwaccel_picture_private\fP \fP" 1c
+this field is unused  
+.IP "\fBMember \fBAVFrame::reordered_opaque\fP \fP" 1c
+in favor of pkt_pts  
+.IP "\fBMember \fBavpicture_deinterlace\fP (\fBAVPicture\fP *dst, const \fBAVPicture\fP *src, enum AVPixelFormat pix_fmt, int width, int height)\fP" 1c
+- use yadif (in libavfilter) instead  
+.IP "\fBMember \fBCODEC_CAP_NEG_LINESIZES\fP \fP" 1c
+no codecs use this capability  
+.IP "\fBMember \fBCODEC_FLAG_EMU_EDGE\fP \fP" 1c
+edges are not used/required anymore\&. I\&.e\&. this flag is now always set\&.  
+.IP "\fBFile \fBdict\&.h\fP \fP" 1c
+AVDictionary is provided for compatibility with libav\&. It is both in implementation as well as API inefficient\&. It does not scale and is extremely slow with large dictionaries\&. It is recommended that new code uses our tree container from tree\&.c/h where applicable, which uses AVL trees to achieve O(log n) performance\&.  
+.IP "\fBMember \fBFF_DEBUG_MV\fP \fP" 1c
+this option does nothing  
+.IP "\fBMember \fBFF_MAX_B_FRAMES\fP \fP" 1c
+there is no libavcodec-wide limit on the number of B-frames  
+.IP "\fB\fBModule\fP \fBlavc_resample\fP \fP" 1c
+use libswresample instead 
+.IP "\fBMember \fBOV_ECTL_RATEMANAGE_AVG\fP \fP" 1c
+Please use \fBOV_ECTL_RATEMANAGE2_SET\fP instead\&. 
+.IP "\fBMember \fBOV_ECTL_RATEMANAGE_GET\fP \fP" 1c
+Please use \fBOV_ECTL_RATEMANAGE2_GET\fP instead\&. 
+.IP "\fBMember \fBOV_ECTL_RATEMANAGE_HARD\fP \fP" 1c
+Please use \fBOV_ECTL_RATEMANAGE2_SET\fP instead\&. 
+.IP "\fBMember \fBOV_ECTL_RATEMANAGE_SET\fP \fP" 1c
+Please use \fBOV_ECTL_RATEMANAGE2_SET\fP instead\&. 
+.IP "\fBClass \fBovectl_ratemanage_arg\fP \fP" 1c
+This is a deprecated interface\&. Please use \fBvorbis_encode_ctl()\fP with the \fBovectl_ratemanage2_arg\fP struct and \fBOV_ECTL_RATEMANAGE2_GET\fP and \fBOV_ECTL_RATEMANAGE2_SET\fP calls in new code\&. 
+.IP "\fBMember \fBPa_GetVersionText\fP (void)\fP" 1c
+use \fBPaVersionInfo()\fP instead  
+.IP "\fBMember \fBPIX_FMT_BE\fP \fP" 1c
+use the AV_PIX_FMT_FLAG_* flags  
+.IP "\fBMember \fBwxApp::MacOpenFile\fP (const wxString &fileName)\fP" 1c
+This function is kept mostly for backwards compatibility\&. Please override \fBwxApp::MacOpenFiles\fP method instead in any new code\&. 
+.IP "\fBMember \fBwxYield\fP ()\fP" 1c
+This function is kept only for backwards compatibility\&. Please use the \fBwxAppConsole::Yield\fP method instead in any new code\&.
+.PP
+

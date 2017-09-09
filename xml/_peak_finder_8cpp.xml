@@ -1,0 +1,315 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="_peak_finder_8cpp" kind="file" language="C++">
+    <compoundname>PeakFinder.cpp</compoundname>
+    <includes local="no">math.h</includes>
+    <includes refid="assert_8h" local="no">assert.h</includes>
+    <includes refid="_peak_finder_8h" local="yes">PeakFinder.h</includes>
+    <incdepgraph>
+      <node id="32280">
+        <label>C:/_dev/OpenU/Audacity/audacity/lib-src/soundtouch/source/SoundTouch/PeakFinder.cpp</label>
+        <link refid="PeakFinder.cpp"/>
+        <childnode refid="32281" relation="include">
+        </childnode>
+        <childnode refid="32282" relation="include">
+        </childnode>
+        <childnode refid="32283" relation="include">
+        </childnode>
+      </node>
+      <node id="32282">
+        <label>assert.h</label>
+        <link refid="assert_8h"/>
+      </node>
+      <node id="32283">
+        <label>PeakFinder.h</label>
+        <link refid="_peak_finder_8h"/>
+      </node>
+      <node id="32281">
+        <label>math.h</label>
+      </node>
+    </incdepgraph>
+      <sectiondef kind="define">
+      <memberdef kind="define" id="_peak_finder_8cpp_1ac39d9cef6a5e030ba8d9e11121054268" prot="public" static="no">
+        <name>max</name>
+        <param><defname>x</defname></param>
+        <param><defname>y</defname></param>
+        <initializer>(((x) &gt; (y)) ? (x) : (y))</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/_dev/OpenU/Audacity/audacity/lib-src/soundtouch/source/SoundTouch/PeakFinder.cpp" line="49" column="9" bodyfile="C:/_dev/OpenU/Audacity/audacity/lib-src/soundtouch/source/SoundTouch/PeakFinder.cpp" bodystart="49" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight><highlight class="comment">//<sp/>Last<sp/>changed<sp/><sp/>:<sp/>$Date:<sp/>2012-12-28<sp/>21:52:47<sp/>+0200<sp/>(Fri,<sp/>28<sp/>Dec<sp/>2012)<sp/>$</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight><highlight class="comment">//<sp/>File<sp/>revision<sp/>:<sp/>$Revision:<sp/>4<sp/>$</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="16"><highlight class="normal"></highlight><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="17"><highlight class="normal"></highlight><highlight class="comment">//<sp/>$Id:<sp/>PeakFinder.cpp<sp/>164<sp/>2012-12-28<sp/>19:52:47Z<sp/>oparviai<sp/>$</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="18"><highlight class="normal"></highlight><highlight class="comment">//</highlight></codeline>
+<codeline lineno="20"><highlight class="comment"></highlight><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="21"><highlight class="normal"></highlight><highlight class="comment">//<sp/>License<sp/>:</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="22"><highlight class="normal"></highlight><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="23"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>SoundTouch<sp/>audio<sp/>processing<sp/>library</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="24"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>Copyright<sp/>(c)<sp/>Olli<sp/>Parviainen</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="25"><highlight class="normal"></highlight><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="26"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>This<sp/>library<sp/>is<sp/>free<sp/>software;<sp/>you<sp/>can<sp/>redistribute<sp/>it<sp/>and/or</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="27"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>modify<sp/>it<sp/>under<sp/>the<sp/>terms<sp/>of<sp/>the<sp/>GNU<sp/>Lesser<sp/>General<sp/>Public</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="28"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>License<sp/>as<sp/>published<sp/>by<sp/>the<sp/>Free<sp/>Software<sp/>Foundation;<sp/>either</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="29"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>version<sp/>2.1<sp/>of<sp/>the<sp/>License,<sp/>or<sp/>(at<sp/>your<sp/>option)<sp/>any<sp/>later<sp/>version.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="30"><highlight class="normal"></highlight><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="31"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>This<sp/>library<sp/>is<sp/>distributed<sp/>in<sp/>the<sp/>hope<sp/>that<sp/>it<sp/>will<sp/>be<sp/>useful,</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="32"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>but<sp/>WITHOUT<sp/>ANY<sp/>WARRANTY;<sp/>without<sp/>even<sp/>the<sp/>implied<sp/>warranty<sp/>of</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="33"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>MERCHANTABILITY<sp/>or<sp/>FITNESS<sp/>FOR<sp/>A<sp/>PARTICULAR<sp/>PURPOSE.<sp/><sp/>See<sp/>the<sp/>GNU</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="34"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>Lesser<sp/>General<sp/>Public<sp/>License<sp/>for<sp/>more<sp/>details.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="35"><highlight class="normal"></highlight><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="36"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>You<sp/>should<sp/>have<sp/>received<sp/>a<sp/>copy<sp/>of<sp/>the<sp/>GNU<sp/>Lesser<sp/>General<sp/>Public</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="37"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>License<sp/>along<sp/>with<sp/>this<sp/>library;<sp/>if<sp/>not,<sp/>write<sp/>to<sp/>the<sp/>Free<sp/>Software</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="38"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>Foundation,<sp/>Inc.,<sp/>59<sp/>Temple<sp/>Place,<sp/>Suite<sp/>330,<sp/>Boston,<sp/>MA<sp/><sp/>02111-1307<sp/><sp/>USA</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="39"><highlight class="normal"></highlight><highlight class="comment">//</highlight></codeline>
+<codeline lineno="41"><highlight class="comment"></highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="42"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;math.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="43"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="assert_8h" kindref="compound">assert.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="44"><highlight class="normal"></highlight></codeline>
+<codeline lineno="45"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="_peak_finder_8h" kindref="compound">PeakFinder.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="46"><highlight class="normal"></highlight></codeline>
+<codeline lineno="47"><highlight class="normal"></highlight><highlight class="keyword">using<sp/>namespace<sp/></highlight><highlight class="normal"><ref refid="namespacesoundtouch" kindref="compound">soundtouch</ref>;</highlight></codeline>
+<codeline lineno="48"><highlight class="normal"></highlight></codeline>
+<codeline lineno="49" refid="_peak_finder_8cpp_1ac39d9cef6a5e030ba8d9e11121054268" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>max(x,<sp/>y)<sp/>(((x)<sp/>&gt;<sp/>(y))<sp/>?<sp/>(x)<sp/>:<sp/>(y))</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="50"><highlight class="normal"></highlight></codeline>
+<codeline lineno="51"><highlight class="normal"></highlight></codeline>
+<codeline lineno="52" refid="classsoundtouch_1_1_peak_finder_1a898d18a5b6c84326569ce627c289d257" refkind="member"><highlight class="normal"><ref refid="classsoundtouch_1_1_peak_finder_1a898d18a5b6c84326569ce627c289d257" kindref="member">PeakFinder::PeakFinder</ref>()</highlight></codeline>
+<codeline lineno="53"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="54"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="classsoundtouch_1_1_peak_finder_1af0e19e7db5bf28173e0625b730d8e86d" kindref="member">minPos</ref><sp/>=<sp/><ref refid="classsoundtouch_1_1_peak_finder_1aa4f066ba70f6cc344575b22a3792fb4c" kindref="member">maxPos</ref><sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="55"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="56"><highlight class="normal"></highlight></codeline>
+<codeline lineno="57"><highlight class="normal"></highlight></codeline>
+<codeline lineno="58"><highlight class="normal"></highlight><highlight class="comment">//<sp/>Finds<sp/>real<sp/>&apos;top&apos;<sp/>of<sp/>a<sp/>peak<sp/>hump<sp/>from<sp/>neighnourhood<sp/>of<sp/>the<sp/>given<sp/>&apos;peakpos&apos;.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="59" refid="classsoundtouch_1_1_peak_finder_1af79e083dbf32efda5b25cf68ce2d3b22" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="classsoundtouch_1_1_peak_finder_1af79e083dbf32efda5b25cf68ce2d3b22" kindref="member">PeakFinder::findTop</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>*<ref refid="lib_2expat_8h_1ac39e72a1de1cb50dbdc54b08d0432a24" kindref="member">data</ref>,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>peakpos)</highlight><highlight class="keyword"><sp/>const</highlight></codeline>
+<codeline lineno="60"><highlight class="keyword"></highlight><highlight class="normal">{</highlight></codeline>
+<codeline lineno="61"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="checksum_8c_1ab80e330a3bc9e38c1297fe17381e92b4" kindref="member">i</ref>;</highlight></codeline>
+<codeline lineno="62"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="seqread_8c_1ac503262ae470564980711da4f78b1181" kindref="member">start</ref>,<sp/><ref refid="convtest_8m_1afb358f48b1646c750fb9da6c6585be2b" kindref="member">end</ref>;</highlight></codeline>
+<codeline lineno="63"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>refvalue;</highlight></codeline>
+<codeline lineno="64"><highlight class="normal"></highlight></codeline>
+<codeline lineno="65"><highlight class="normal"><sp/><sp/><sp/><sp/>refvalue<sp/>=<sp/>data[peakpos];</highlight></codeline>
+<codeline lineno="66"><highlight class="normal"></highlight></codeline>
+<codeline lineno="67"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>seek<sp/>within<sp/>±10<sp/>points</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="68"><highlight class="normal"><sp/><sp/><sp/><sp/>start<sp/>=<sp/>peakpos<sp/>-<sp/>10;</highlight></codeline>
+<codeline lineno="69"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(start<sp/>&lt;<sp/><ref refid="classsoundtouch_1_1_peak_finder_1af0e19e7db5bf28173e0625b730d8e86d" kindref="member">minPos</ref>)<sp/>start<sp/>=<sp/><ref refid="classsoundtouch_1_1_peak_finder_1af0e19e7db5bf28173e0625b730d8e86d" kindref="member">minPos</ref>;</highlight></codeline>
+<codeline lineno="70"><highlight class="normal"><sp/><sp/><sp/><sp/>end<sp/>=<sp/>peakpos<sp/>+<sp/>10;</highlight></codeline>
+<codeline lineno="71"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(end<sp/>&gt;<sp/><ref refid="classsoundtouch_1_1_peak_finder_1aa4f066ba70f6cc344575b22a3792fb4c" kindref="member">maxPos</ref>)<sp/>end<sp/>=<sp/><ref refid="classsoundtouch_1_1_peak_finder_1aa4f066ba70f6cc344575b22a3792fb4c" kindref="member">maxPos</ref>;</highlight></codeline>
+<codeline lineno="72"><highlight class="normal"></highlight></codeline>
+<codeline lineno="73"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(i<sp/>=<sp/>start;<sp/>i<sp/>&lt;=<sp/><ref refid="convtest_8m_1afb358f48b1646c750fb9da6c6585be2b" kindref="member">end</ref>;<sp/>i<sp/>++)</highlight></codeline>
+<codeline lineno="74"><highlight class="normal"><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="75"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(data[i]<sp/>&gt;<sp/>refvalue)</highlight></codeline>
+<codeline lineno="76"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="77"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>peakpos<sp/>=<sp/><ref refid="checksum_8c_1ab80e330a3bc9e38c1297fe17381e92b4" kindref="member">i</ref>;</highlight></codeline>
+<codeline lineno="78"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>refvalue<sp/>=<sp/>data[<ref refid="checksum_8c_1ab80e330a3bc9e38c1297fe17381e92b4" kindref="member">i</ref>];</highlight></codeline>
+<codeline lineno="79"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="80"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="81"><highlight class="normal"></highlight></codeline>
+<codeline lineno="82"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>failure<sp/>if<sp/>max<sp/>value<sp/>is<sp/>at<sp/>edges<sp/>of<sp/>seek<sp/>range<sp/>=&gt;<sp/>it&apos;s<sp/>not<sp/>peak,<sp/>it&apos;s<sp/>at<sp/>slope.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="83"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>((peakpos<sp/>==<sp/>start)<sp/>||<sp/>(peakpos<sp/>==<sp/>end))<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="84"><highlight class="normal"></highlight></codeline>
+<codeline lineno="85"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>peakpos;</highlight></codeline>
+<codeline lineno="86"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="87"><highlight class="normal"></highlight></codeline>
+<codeline lineno="88"><highlight class="normal"></highlight></codeline>
+<codeline lineno="89"><highlight class="normal"></highlight><highlight class="comment">//<sp/>Finds<sp/>&apos;ground<sp/>level&apos;<sp/>of<sp/>a<sp/>peak<sp/>hump<sp/>by<sp/>starting<sp/>from<sp/>&apos;peakpos&apos;<sp/>and<sp/>proceeding</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="90"><highlight class="normal"></highlight><highlight class="comment">//<sp/>to<sp/>direction<sp/>defined<sp/>by<sp/>&apos;direction&apos;<sp/>until<sp/>next<sp/>&apos;hump&apos;<sp/>after<sp/>minimum<sp/>value<sp/>will<sp/></highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="91"><highlight class="normal"></highlight><highlight class="comment">//<sp/>begin</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="92" refid="classsoundtouch_1_1_peak_finder_1a19ae9bce90042ba23709f2467edbc9b7" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="classsoundtouch_1_1_peak_finder_1a19ae9bce90042ba23709f2467edbc9b7" kindref="member">PeakFinder::findGround</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>*<ref refid="lib_2expat_8h_1ac39e72a1de1cb50dbdc54b08d0432a24" kindref="member">data</ref>,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>peakpos,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>direction)</highlight><highlight class="keyword"><sp/>const</highlight></codeline>
+<codeline lineno="93"><highlight class="keyword"></highlight><highlight class="normal">{</highlight></codeline>
+<codeline lineno="94"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>lowpos;</highlight></codeline>
+<codeline lineno="95"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>pos;</highlight></codeline>
+<codeline lineno="96"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>climb_count;</highlight></codeline>
+<codeline lineno="97"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>refvalue;</highlight></codeline>
+<codeline lineno="98"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>delta;</highlight></codeline>
+<codeline lineno="99"><highlight class="normal"></highlight></codeline>
+<codeline lineno="100"><highlight class="normal"><sp/><sp/><sp/><sp/>climb_count<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="101"><highlight class="normal"><sp/><sp/><sp/><sp/>refvalue<sp/>=<sp/>data[peakpos];</highlight></codeline>
+<codeline lineno="102"><highlight class="normal"><sp/><sp/><sp/><sp/>lowpos<sp/>=<sp/>peakpos;</highlight></codeline>
+<codeline lineno="103"><highlight class="normal"></highlight></codeline>
+<codeline lineno="104"><highlight class="normal"><sp/><sp/><sp/><sp/>pos<sp/>=<sp/>peakpos;</highlight></codeline>
+<codeline lineno="105"><highlight class="normal"></highlight></codeline>
+<codeline lineno="106"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">while</highlight><highlight class="normal"><sp/>((pos<sp/>&gt;<sp/><ref refid="classsoundtouch_1_1_peak_finder_1af0e19e7db5bf28173e0625b730d8e86d" kindref="member">minPos</ref>+1)<sp/>&amp;&amp;<sp/>(pos<sp/>&lt;<sp/><ref refid="classsoundtouch_1_1_peak_finder_1aa4f066ba70f6cc344575b22a3792fb4c" kindref="member">maxPos</ref>-1))</highlight></codeline>
+<codeline lineno="107"><highlight class="normal"><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="108"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>prevpos;</highlight></codeline>
+<codeline lineno="109"><highlight class="normal"></highlight></codeline>
+<codeline lineno="110"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>prevpos<sp/>=<sp/>pos;</highlight></codeline>
+<codeline lineno="111"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>pos<sp/>+=<sp/>direction;</highlight></codeline>
+<codeline lineno="112"><highlight class="normal"></highlight></codeline>
+<codeline lineno="113"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>calculate<sp/>derivate</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="114"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>delta<sp/>=<sp/>data[pos]<sp/>-<sp/>data[prevpos];</highlight></codeline>
+<codeline lineno="115"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(delta<sp/>&lt;=<sp/>0)</highlight></codeline>
+<codeline lineno="116"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="117"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>going<sp/>downhill,<sp/>ok</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="118"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(climb_count)</highlight></codeline>
+<codeline lineno="119"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="120"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>climb_count<sp/>--;<sp/><sp/></highlight><highlight class="comment">//<sp/>decrease<sp/>climb<sp/>count</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="121"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="122"><highlight class="normal"></highlight></codeline>
+<codeline lineno="123"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>check<sp/>if<sp/>new<sp/>minimum<sp/>found</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="124"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(data[pos]<sp/>&lt;<sp/>refvalue)</highlight></codeline>
+<codeline lineno="125"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="126"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>new<sp/>minimum<sp/>found</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="127"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>lowpos<sp/>=<sp/>pos;</highlight></codeline>
+<codeline lineno="128"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>refvalue<sp/>=<sp/>data[pos];</highlight></codeline>
+<codeline lineno="129"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="130"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="131"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="132"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="133"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>going<sp/>uphill,<sp/>increase<sp/>climbing<sp/>counter</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="134"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>climb_count<sp/>++;</highlight></codeline>
+<codeline lineno="135"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(climb_count<sp/>&gt;<sp/>5)<sp/></highlight><highlight class="keywordflow">break</highlight><highlight class="normal">;<sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>we&apos;ve<sp/>been<sp/>climbing<sp/>too<sp/>long<sp/>=&gt;<sp/>it&apos;s<sp/>next<sp/>uphill<sp/>=&gt;<sp/>quit</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="136"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="137"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="138"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>lowpos;</highlight></codeline>
+<codeline lineno="139"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="140"><highlight class="normal"></highlight></codeline>
+<codeline lineno="141"><highlight class="normal"></highlight></codeline>
+<codeline lineno="142"><highlight class="normal"></highlight><highlight class="comment">//<sp/>Find<sp/>offset<sp/>where<sp/>the<sp/>value<sp/>crosses<sp/>the<sp/>given<sp/>level,<sp/>when<sp/>starting<sp/>from<sp/>&apos;peakpos&apos;<sp/>and</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="143"><highlight class="normal"></highlight><highlight class="comment">//<sp/>proceeds<sp/>to<sp/>direction<sp/>defined<sp/>in<sp/>&apos;direction&apos;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="144" refid="classsoundtouch_1_1_peak_finder_1a06464b0c57ddc81937dcf633bfcc4394" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="classsoundtouch_1_1_peak_finder_1a06464b0c57ddc81937dcf633bfcc4394" kindref="member">PeakFinder::findCrossingLevel</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>*<ref refid="lib_2expat_8h_1ac39e72a1de1cb50dbdc54b08d0432a24" kindref="member">data</ref>,<sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>level,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>peakpos,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>direction)</highlight><highlight class="keyword"><sp/>const</highlight></codeline>
+<codeline lineno="145"><highlight class="keyword"></highlight><highlight class="normal">{</highlight></codeline>
+<codeline lineno="146"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>peaklevel;</highlight></codeline>
+<codeline lineno="147"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>pos;</highlight></codeline>
+<codeline lineno="148"><highlight class="normal"></highlight></codeline>
+<codeline lineno="149"><highlight class="normal"><sp/><sp/><sp/><sp/>peaklevel<sp/>=<sp/>data[peakpos];</highlight></codeline>
+<codeline lineno="150"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="libid3tag_2global_8h_1af576bf8ffa22a44e53018c67095ffbf0" kindref="member">assert</ref>(peaklevel<sp/>&gt;=<sp/>level);</highlight></codeline>
+<codeline lineno="151"><highlight class="normal"><sp/><sp/><sp/><sp/>pos<sp/>=<sp/>peakpos;</highlight></codeline>
+<codeline lineno="152"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">while</highlight><highlight class="normal"><sp/>((pos<sp/>&gt;=<sp/><ref refid="classsoundtouch_1_1_peak_finder_1af0e19e7db5bf28173e0625b730d8e86d" kindref="member">minPos</ref>)<sp/>&amp;&amp;<sp/>(pos<sp/>&lt;<sp/><ref refid="classsoundtouch_1_1_peak_finder_1aa4f066ba70f6cc344575b22a3792fb4c" kindref="member">maxPos</ref>))</highlight></codeline>
+<codeline lineno="153"><highlight class="normal"><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="154"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(data[pos<sp/>+<sp/>direction]<sp/>&lt;<sp/>level)<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>pos;<sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>crossing<sp/>found</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="155"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>pos<sp/>+=<sp/>direction;</highlight></codeline>
+<codeline lineno="156"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="157"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;<sp/><sp/></highlight><highlight class="comment">//<sp/>not<sp/>found</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="158"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="159"><highlight class="normal"></highlight></codeline>
+<codeline lineno="160"><highlight class="normal"></highlight></codeline>
+<codeline lineno="161"><highlight class="normal"></highlight><highlight class="comment">//<sp/>Calculates<sp/>the<sp/>center<sp/>of<sp/>mass<sp/>location<sp/>of<sp/>&apos;data&apos;<sp/>array<sp/>items<sp/>between<sp/>&apos;firstPos&apos;<sp/>and<sp/>&apos;lastPos&apos;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="162" refid="classsoundtouch_1_1_peak_finder_1a332225286406e853892690fd2289a5f4" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/><ref refid="classsoundtouch_1_1_peak_finder_1a332225286406e853892690fd2289a5f4" kindref="member">PeakFinder::calcMassCenter</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>*<ref refid="lib_2expat_8h_1ac39e72a1de1cb50dbdc54b08d0432a24" kindref="member">data</ref>,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>firstPos,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>lastPos)</highlight><highlight class="keyword"><sp/>const</highlight></codeline>
+<codeline lineno="163"><highlight class="keyword"></highlight><highlight class="normal">{</highlight></codeline>
+<codeline lineno="164"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="checksum_8c_1ab80e330a3bc9e38c1297fe17381e92b4" kindref="member">i</ref>;</highlight></codeline>
+<codeline lineno="165"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>sum;</highlight></codeline>
+<codeline lineno="166"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>wsum;</highlight></codeline>
+<codeline lineno="167"><highlight class="normal"></highlight></codeline>
+<codeline lineno="168"><highlight class="normal"><sp/><sp/><sp/><sp/>sum<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="169"><highlight class="normal"><sp/><sp/><sp/><sp/>wsum<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="170"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(i<sp/>=<sp/>firstPos;<sp/>i<sp/>&lt;=<sp/>lastPos;<sp/>i<sp/>++)</highlight></codeline>
+<codeline lineno="171"><highlight class="normal"><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="172"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>sum<sp/>+=<sp/>(float)i<sp/>*<sp/>data[i];</highlight></codeline>
+<codeline lineno="173"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>wsum<sp/>+=<sp/>data[<ref refid="checksum_8c_1ab80e330a3bc9e38c1297fe17381e92b4" kindref="member">i</ref>];</highlight></codeline>
+<codeline lineno="174"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="175"><highlight class="normal"></highlight></codeline>
+<codeline lineno="176"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(wsum<sp/>&lt;<sp/>1<ref refid="namespacelv2docgen_1a4405dc5a2509537b9ff3b4de10bc28d6" kindref="member">e</ref>-6)<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="177"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>sum<sp/>/<sp/>wsum;</highlight></codeline>
+<codeline lineno="178"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="179"><highlight class="normal"></highlight></codeline>
+<codeline lineno="180"><highlight class="normal"></highlight></codeline>
+<codeline lineno="181"><highlight class="normal"></highlight></codeline>
+<codeline lineno="183" refid="classsoundtouch_1_1_peak_finder_1afd6a05bcdf7d5650a28128337f42c328" refkind="member"><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/><ref refid="classsoundtouch_1_1_peak_finder_1afd6a05bcdf7d5650a28128337f42c328" kindref="member">PeakFinder::getPeakCenter</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>*<ref refid="lib_2expat_8h_1ac39e72a1de1cb50dbdc54b08d0432a24" kindref="member">data</ref>,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>peakpos)</highlight><highlight class="keyword"><sp/>const</highlight></codeline>
+<codeline lineno="184"><highlight class="keyword"></highlight><highlight class="normal">{</highlight></codeline>
+<codeline lineno="185"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>peakLevel;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>peak<sp/>level</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="186"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>crosspos1,<sp/>crosspos2;<sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>position<sp/>where<sp/>the<sp/>peak<sp/>&apos;hump&apos;<sp/>crosses<sp/>cutting<sp/>level</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="187"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>cutLevel;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>cutting<sp/>value</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="188"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>groundLevel;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>ground<sp/>level<sp/>of<sp/>the<sp/>peak</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="189"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>gp1,<sp/>gp2;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>bottom<sp/>positions<sp/>of<sp/>the<sp/>peak<sp/>&apos;hump&apos;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="190"><highlight class="normal"></highlight></codeline>
+<codeline lineno="191"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>find<sp/>ground<sp/>positions.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="192"><highlight class="normal"><sp/><sp/><sp/><sp/>gp1<sp/>=<sp/><ref refid="classsoundtouch_1_1_peak_finder_1a19ae9bce90042ba23709f2467edbc9b7" kindref="member">findGround</ref>(data,<sp/>peakpos,<sp/>-1);</highlight></codeline>
+<codeline lineno="193"><highlight class="normal"><sp/><sp/><sp/><sp/>gp2<sp/>=<sp/><ref refid="classsoundtouch_1_1_peak_finder_1a19ae9bce90042ba23709f2467edbc9b7" kindref="member">findGround</ref>(data,<sp/>peakpos,<sp/>1);</highlight></codeline>
+<codeline lineno="194"><highlight class="normal"></highlight></codeline>
+<codeline lineno="195"><highlight class="normal"><sp/><sp/><sp/><sp/>groundLevel<sp/>=<sp/>0.5f<sp/>*<sp/>(data[gp1]<sp/>+<sp/>data[gp2]);</highlight></codeline>
+<codeline lineno="196"><highlight class="normal"><sp/><sp/><sp/><sp/>peakLevel<sp/>=<sp/>data[peakpos];</highlight></codeline>
+<codeline lineno="197"><highlight class="normal"></highlight></codeline>
+<codeline lineno="198"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>calculate<sp/>70%-level<sp/>of<sp/>the<sp/>peak</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="199"><highlight class="normal"><sp/><sp/><sp/><sp/>cutLevel<sp/>=<sp/>0.70f<sp/>*<sp/>peakLevel<sp/>+<sp/>0.30f<sp/>*<sp/>groundLevel;</highlight></codeline>
+<codeline lineno="200"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>find<sp/>mid-level<sp/>crossings</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="201"><highlight class="normal"><sp/><sp/><sp/><sp/>crosspos1<sp/>=<sp/><ref refid="classsoundtouch_1_1_peak_finder_1a06464b0c57ddc81937dcf633bfcc4394" kindref="member">findCrossingLevel</ref>(data,<sp/>cutLevel,<sp/>peakpos,<sp/>-1);</highlight></codeline>
+<codeline lineno="202"><highlight class="normal"><sp/><sp/><sp/><sp/>crosspos2<sp/>=<sp/><ref refid="classsoundtouch_1_1_peak_finder_1a06464b0c57ddc81937dcf633bfcc4394" kindref="member">findCrossingLevel</ref>(data,<sp/>cutLevel,<sp/>peakpos,<sp/>1);</highlight></codeline>
+<codeline lineno="203"><highlight class="normal"></highlight></codeline>
+<codeline lineno="204"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>((crosspos1<sp/>&lt;<sp/>0)<sp/>||<sp/>(crosspos2<sp/>&lt;<sp/>0))<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;<sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>no<sp/>crossing,<sp/>no<sp/>peak..</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="205"><highlight class="normal"></highlight></codeline>
+<codeline lineno="206"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>calculate<sp/>mass<sp/>center<sp/>of<sp/>the<sp/>peak<sp/>surroundings</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="207"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="classsoundtouch_1_1_peak_finder_1a332225286406e853892690fd2289a5f4" kindref="member">calcMassCenter</ref>(data,<sp/>crosspos1,<sp/>crosspos2);</highlight></codeline>
+<codeline lineno="208"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="209"><highlight class="normal"></highlight></codeline>
+<codeline lineno="210"><highlight class="normal"></highlight></codeline>
+<codeline lineno="211"><highlight class="normal"></highlight></codeline>
+<codeline lineno="212" refid="classsoundtouch_1_1_peak_finder_1adc34496662588bf6089c46ff666b0b2e" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/><ref refid="classsoundtouch_1_1_peak_finder_1adc34496662588bf6089c46ff666b0b2e" kindref="member">PeakFinder::detectPeak</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>*<ref refid="lib_2expat_8h_1ac39e72a1de1cb50dbdc54b08d0432a24" kindref="member">data</ref>,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>aminPos,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>amaxPos)<sp/></highlight></codeline>
+<codeline lineno="213"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="214"><highlight class="normal"></highlight></codeline>
+<codeline lineno="215"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="checksum_8c_1ab80e330a3bc9e38c1297fe17381e92b4" kindref="member">i</ref>;</highlight></codeline>
+<codeline lineno="216"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>peakpos;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>position<sp/>of<sp/>peak<sp/>level</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="217"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>highPeak,<sp/>peak;</highlight></codeline>
+<codeline lineno="218"><highlight class="normal"></highlight></codeline>
+<codeline lineno="219"><highlight class="normal"><sp/><sp/><sp/><sp/>this-&gt;<ref refid="classsoundtouch_1_1_peak_finder_1af0e19e7db5bf28173e0625b730d8e86d" kindref="member">minPos</ref><sp/>=<sp/>aminPos;</highlight></codeline>
+<codeline lineno="220"><highlight class="normal"><sp/><sp/><sp/><sp/>this-&gt;<ref refid="classsoundtouch_1_1_peak_finder_1aa4f066ba70f6cc344575b22a3792fb4c" kindref="member">maxPos</ref><sp/>=<sp/>amaxPos;</highlight></codeline>
+<codeline lineno="221"><highlight class="normal"></highlight></codeline>
+<codeline lineno="222"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>find<sp/>absolute<sp/>peak</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="223"><highlight class="normal"><sp/><sp/><sp/><sp/>peakpos<sp/>=<sp/><ref refid="classsoundtouch_1_1_peak_finder_1af0e19e7db5bf28173e0625b730d8e86d" kindref="member">minPos</ref>;</highlight></codeline>
+<codeline lineno="224"><highlight class="normal"><sp/><sp/><sp/><sp/>peak<sp/>=<sp/>data[<ref refid="classsoundtouch_1_1_peak_finder_1af0e19e7db5bf28173e0625b730d8e86d" kindref="member">minPos</ref>];</highlight></codeline>
+<codeline lineno="225"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(i<sp/>=<sp/><ref refid="classsoundtouch_1_1_peak_finder_1af0e19e7db5bf28173e0625b730d8e86d" kindref="member">minPos</ref><sp/>+<sp/>1;<sp/>i<sp/>&lt;<sp/><ref refid="classsoundtouch_1_1_peak_finder_1aa4f066ba70f6cc344575b22a3792fb4c" kindref="member">maxPos</ref>;<sp/>i<sp/>++)</highlight></codeline>
+<codeline lineno="226"><highlight class="normal"><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="227"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(data[i]<sp/>&gt;<sp/>peak)<sp/></highlight></codeline>
+<codeline lineno="228"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="229"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>peak<sp/>=<sp/>data[<ref refid="checksum_8c_1ab80e330a3bc9e38c1297fe17381e92b4" kindref="member">i</ref>];</highlight></codeline>
+<codeline lineno="230"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>peakpos<sp/>=<sp/><ref refid="checksum_8c_1ab80e330a3bc9e38c1297fe17381e92b4" kindref="member">i</ref>;</highlight></codeline>
+<codeline lineno="231"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="232"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="233"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="234"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Calculate<sp/>exact<sp/>location<sp/>of<sp/>the<sp/>highest<sp/>peak<sp/>mass<sp/>center</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="235"><highlight class="normal"><sp/><sp/><sp/><sp/>highPeak<sp/>=<sp/><ref refid="classsoundtouch_1_1_peak_finder_1afd6a05bcdf7d5650a28128337f42c328" kindref="member">getPeakCenter</ref>(data,<sp/>peakpos);</highlight></codeline>
+<codeline lineno="236"><highlight class="normal"><sp/><sp/><sp/><sp/>peak<sp/>=<sp/>highPeak;</highlight></codeline>
+<codeline lineno="237"><highlight class="normal"></highlight></codeline>
+<codeline lineno="238"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Now<sp/>check<sp/>if<sp/>the<sp/>highest<sp/>peak<sp/>were<sp/>in<sp/>fact<sp/>harmonic<sp/>of<sp/>the<sp/>true<sp/>base<sp/>beat<sp/>peak<sp/></highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="239"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>-<sp/>sometimes<sp/>the<sp/>highest<sp/>peak<sp/>can<sp/>be<sp/>Nth<sp/>harmonic<sp/>of<sp/>the<sp/>true<sp/>base<sp/>peak<sp/>yet<sp/></highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="240"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>just<sp/>a<sp/>slightly<sp/>higher<sp/>than<sp/>the<sp/>true<sp/>base</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="241"><highlight class="normal"></highlight></codeline>
+<codeline lineno="242"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(i<sp/>=<sp/>3;<sp/>i<sp/>&lt;<sp/>10;<sp/>i<sp/>++)</highlight></codeline>
+<codeline lineno="243"><highlight class="normal"><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="244"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>peaktmp,<sp/>harmonic;</highlight></codeline>
+<codeline lineno="245"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="convtest_8m_1aec25a56c89da9b37e346ecc7a8fc68e5" kindref="member">i1</ref>,i2;</highlight></codeline>
+<codeline lineno="246"><highlight class="normal"></highlight></codeline>
+<codeline lineno="247"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>harmonic<sp/>=<sp/>(double)i<sp/>*<sp/>0.5;</highlight></codeline>
+<codeline lineno="248"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>peakpos<sp/>=<sp/>(<ref refid="lib_2expat_8h_1a14bb8924daea0b48c7803f281f66e390" kindref="member">int</ref>)(highPeak<sp/>/<sp/>harmonic<sp/>+<sp/>0.5<ref refid="rfft2d_test_m_l_8m_1aacd36fb6ac9ce14cec71f2ca852524d4" kindref="member">f</ref>);</highlight></codeline>
+<codeline lineno="249"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(peakpos<sp/>&lt;<sp/><ref refid="classsoundtouch_1_1_peak_finder_1af0e19e7db5bf28173e0625b730d8e86d" kindref="member">minPos</ref>)<sp/></highlight><highlight class="keywordflow">break</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="250"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>peakpos<sp/>=<sp/><ref refid="classsoundtouch_1_1_peak_finder_1af79e083dbf32efda5b25cf68ce2d3b22" kindref="member">findTop</ref>(data,<sp/>peakpos);<sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>seek<sp/>true<sp/>local<sp/>maximum<sp/>index</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="251"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(peakpos<sp/>==<sp/>0)<sp/></highlight><highlight class="keywordflow">continue</highlight><highlight class="normal">;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>no<sp/>local<sp/>max<sp/>here</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="252"><highlight class="normal"></highlight></codeline>
+<codeline lineno="253"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>calculate<sp/>mass-center<sp/>of<sp/>possible<sp/>harmonic<sp/>peak</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="254"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>peaktmp<sp/>=<sp/><ref refid="classsoundtouch_1_1_peak_finder_1afd6a05bcdf7d5650a28128337f42c328" kindref="member">getPeakCenter</ref>(data,<sp/>peakpos);</highlight></codeline>
+<codeline lineno="255"><highlight class="normal"></highlight></codeline>
+<codeline lineno="256"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>accept<sp/>harmonic<sp/>peak<sp/>if<sp/></highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="257"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>(a)<sp/>it<sp/>is<sp/>found</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="258"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>(b)<sp/>is<sp/>within<sp/>±4%<sp/>of<sp/>the<sp/>expected<sp/>harmonic<sp/>interval</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="259"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>(c)<sp/>has<sp/>at<sp/>least<sp/>half<sp/>x-corr<sp/>value<sp/>of<sp/>the<sp/>max.<sp/>peak</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="260"><highlight class="normal"></highlight></codeline>
+<codeline lineno="261"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>diff<sp/>=<sp/>harmonic<sp/>*<sp/>peaktmp<sp/>/<sp/>highPeak;</highlight></codeline>
+<codeline lineno="262"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>((diff<sp/>&lt;<sp/>0.96)<sp/>||<sp/>(diff<sp/>&gt;<sp/>1.04))<sp/></highlight><highlight class="keywordflow">continue</highlight><highlight class="normal">;<sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>peak<sp/>too<sp/>afar<sp/>from<sp/>expected</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="263"><highlight class="normal"></highlight></codeline>
+<codeline lineno="264"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>now<sp/>compare<sp/>to<sp/>highest<sp/>detected<sp/>peak</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="265"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>i1<sp/>=<sp/>(<ref refid="lib_2expat_8h_1a14bb8924daea0b48c7803f281f66e390" kindref="member">int</ref>)(highPeak<sp/>+<sp/>0.5);</highlight></codeline>
+<codeline lineno="266"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>i2<sp/>=<sp/>(<ref refid="lib_2expat_8h_1a14bb8924daea0b48c7803f281f66e390" kindref="member">int</ref>)(peaktmp<sp/>+<sp/>0.5);</highlight></codeline>
+<codeline lineno="267"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(data[i2]<sp/>&gt;=<sp/>0.4*data[i1])</highlight></codeline>
+<codeline lineno="268"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="269"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>The<sp/>harmonic<sp/>is<sp/>at<sp/>least<sp/>half<sp/>as<sp/>high<sp/>primary<sp/>peak,</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="270"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>thus<sp/>use<sp/>the<sp/>harmonic<sp/>peak<sp/>instead</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="271"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>peak<sp/>=<sp/>peaktmp;</highlight></codeline>
+<codeline lineno="272"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="273"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="274"><highlight class="normal"></highlight></codeline>
+<codeline lineno="275"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>peak;</highlight></codeline>
+<codeline lineno="276"><highlight class="normal">}</highlight></codeline>
+    </programlisting>
+    <location file="C:/_dev/OpenU/Audacity/audacity/lib-src/soundtouch/source/SoundTouch/PeakFinder.cpp"/>
+  </compounddef>
+</doxygen>

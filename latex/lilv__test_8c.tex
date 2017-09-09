@@ -1,0 +1,327 @@
+\hypertarget{lilv__test_8c}{}\section{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/lv2/lilv/test/lilv\+\_\+test.c File Reference}
+\label{lilv__test_8c}\index{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/lv2/lilv/test/lilv\+\_\+test.\+c@{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/lv2/lilv/test/lilv\+\_\+test.\+c}}
+{\ttfamily \#include $<$assert.\+h$>$}\\*
+{\ttfamily \#include $<$ctype.\+h$>$}\\*
+{\ttfamily \#include $<$errno.\+h$>$}\\*
+{\ttfamily \#include $<$float.\+h$>$}\\*
+{\ttfamily \#include $<$limits.\+h$>$}\\*
+{\ttfamily \#include $<$math.\+h$>$}\\*
+{\ttfamily \#include $<$stdio.\+h$>$}\\*
+{\ttfamily \#include $<$stdlib.\+h$>$}\\*
+{\ttfamily \#include $<$string.\+h$>$}\\*
+{\ttfamily \#include $<$sys/stat.\+h$>$}\\*
+{\ttfamily \#include $<$dirent.\+h$>$}\\*
+{\ttfamily \#include $<$unistd.\+h$>$}\\*
+{\ttfamily \#include \char`\"{}lilv/lilv.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../src/lilv\+\_\+internal.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}lv2/lv2plug.\+in/ns/ext/presets/presets.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}lv2/lv2plug.\+in/ns/ext/state/state.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}lv2/lv2plug.\+in/ns/ext/urid/urid.\+h\char`\"{}}\\*
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{struct_test_case}{Test\+Case}
+\end{DoxyCompactItemize}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{lilv__test_8c_a3024ccd4a9af5109d24e6c57565d74a1}{\+\_\+\+P\+O\+S\+I\+X\+\_\+\+C\+\_\+\+S\+O\+U\+R\+CE}~200112\+L /$\ast$ for setenv $\ast$/
+\item 
+\#define \hyperlink{lilv__test_8c_afbb0a1c5f767b0ecaca63b097ecbb5c8}{T\+E\+S\+T\+\_\+\+P\+A\+T\+H\+\_\+\+M\+AX}~1024
+\item 
+\#define \hyperlink{lilv__test_8c_a4350de5ec67f068ffc2479d213ccb55b}{S\+H\+L\+I\+B\+\_\+\+E\+XT}~\char`\"{}.so\char`\"{}
+\item 
+\#define \hyperlink{lilv__test_8c_a8bc255ff55721571e878568d2b5dcb35}{T\+E\+S\+T\+\_\+\+C\+A\+SE}(\hyperlink{lib_2expat_8h_a1b49b495b59f9e73205b69ad1a2965b0}{name})~\{ \#\hyperlink{lib_2expat_8h_a1b49b495b59f9e73205b69ad1a2965b0}{name}, test\+\_\+\#\#\hyperlink{lib_2expat_8h_a1b49b495b59f9e73205b69ad1a2965b0}{name} \}
+\item 
+\#define \hyperlink{lilv__test_8c_a3bf4f183785f6b84a108bf5837b57f1d}{T\+E\+S\+T\+\_\+\+A\+S\+S\+E\+RT}(check)
+\item 
+\#define \hyperlink{lilv__test_8c_ab5202ed0afa777dc4e771d12ac65109c}{P\+R\+E\+F\+I\+X\+\_\+\+A\+T\+OM}~\char`\"{}@prefix atom\+: $<$http\+://\hyperlink{latency_8c_a7d946209d777cb95fe30364b8d321207}{lv2plug.\+in}/\hyperlink{xmltok_8c_ab6aec1346fb6c7b2733f0f73c9536ad2}{ns}/ext/atom\#$>$ . \textbackslash{}n\char`\"{}
+\item 
+\#define \hyperlink{lilv__test_8c_aa4e953069eb719115dad53f5102a8418}{P\+R\+E\+F\+I\+X\+\_\+\+L\+I\+NE}~\char`\"{}@prefix \+: $<$http\+://example.\+org/$>$ .\textbackslash{}n\char`\"{}
+\item 
+\#define \hyperlink{lilv__test_8c_a5e4df78c65ea5473af554b0c77b22ee0}{P\+R\+E\+F\+I\+X\+\_\+\+L\+V2}~\char`\"{}@prefix lv2\+: $<$http\+://\hyperlink{latency_8c_a7d946209d777cb95fe30364b8d321207}{lv2plug.\+in}/\hyperlink{xmltok_8c_ab6aec1346fb6c7b2733f0f73c9536ad2}{ns}/lv2core\#$>$ .\textbackslash{}n\char`\"{}
+\item 
+\#define \hyperlink{lilv__test_8c_a35c8d81834eeb13ed09b50cbaad41cbd}{P\+R\+E\+F\+I\+X\+\_\+\+L\+V2\+EV}~\char`\"{}@prefix lv2ev\+: $<$http\+://\hyperlink{latency_8c_a7d946209d777cb95fe30364b8d321207}{lv2plug.\+in}/\hyperlink{xmltok_8c_ab6aec1346fb6c7b2733f0f73c9536ad2}{ns}/ext/event\#$>$ . \textbackslash{}n\char`\"{}
+\item 
+\#define \hyperlink{lilv__test_8c_a4d52dba321dbd436d7f4726e0e255bac}{P\+R\+E\+F\+I\+X\+\_\+\+L\+V2\+UI}~\char`\"{}@prefix lv2ui\+: $<$http\+://\hyperlink{latency_8c_a7d946209d777cb95fe30364b8d321207}{lv2plug.\+in}/\hyperlink{xmltok_8c_ab6aec1346fb6c7b2733f0f73c9536ad2}{ns}/extensions/ui\#$>$ .\textbackslash{}n\char`\"{}
+\item 
+\#define \hyperlink{lilv__test_8c_a6e8c079aa5d2efa192e7c4dc3344b36c}{P\+R\+E\+F\+I\+X\+\_\+\+R\+DF}~\char`\"{}@prefix rdf\+:  $<$http\+://www.\+w3.\+org/1999/02/22-\/rdf-\/\hyperlink{cmdline_8c_a9aea52a77da0039230114dcf40c98aa6}{syntax}-\/\hyperlink{xmltok_8c_ab6aec1346fb6c7b2733f0f73c9536ad2}{ns}\#$>$ .\textbackslash{}n\char`\"{}
+\item 
+\#define \hyperlink{lilv__test_8c_ab36b0328ffc1e88382f1aeee85143406}{P\+R\+E\+F\+I\+X\+\_\+\+R\+D\+FS}~\char`\"{}@prefix rdfs\+: $<$http\+://www.\+w3.\+org/2000/01/rdf-\/schema\#$>$ .\textbackslash{}n\char`\"{}
+\item 
+\#define \hyperlink{lilv__test_8c_a4d5a348afc4f141b41da23c364a6589c}{P\+R\+E\+F\+I\+X\+\_\+\+F\+O\+AF}~\char`\"{}@prefix foaf\+: $<$http\+://xmlns.\+com/foaf/0.\+1/$>$ .\textbackslash{}n\char`\"{}
+\item 
+\#define \hyperlink{lilv__test_8c_a3a5f82993e415d7360e7b4e7db0a7b9d}{P\+R\+E\+F\+I\+X\+\_\+\+D\+O\+AP}~\char`\"{}@prefix doap\+: $<$http\+://usefulinc.\+com/\hyperlink{xmltok_8c_ab6aec1346fb6c7b2733f0f73c9536ad2}{ns}/doap\#$>$ .\textbackslash{}n\char`\"{}
+\item 
+\#define \hyperlink{lilv__test_8c_a5fe0b70493022e7ac541b38398f9074e}{P\+R\+E\+F\+I\+X\+\_\+\+P\+S\+ET}~\char`\"{}@prefix pset\+: $<$http\+://\hyperlink{latency_8c_a7d946209d777cb95fe30364b8d321207}{lv2plug.\+in}/\hyperlink{xmltok_8c_ab6aec1346fb6c7b2733f0f73c9536ad2}{ns}/ext/presets\#$>$ .\textbackslash{}n\char`\"{}
+\item 
+\#define \hyperlink{lilv__test_8c_af5d0ac047cc946f7c33ee3e5c20e3b0d}{M\+A\+N\+I\+F\+E\+S\+T\+\_\+\+P\+R\+E\+F\+I\+X\+ES}~\hyperlink{lilv__test_8c_aa4e953069eb719115dad53f5102a8418}{P\+R\+E\+F\+I\+X\+\_\+\+L\+I\+NE} \hyperlink{lilv__test_8c_a5e4df78c65ea5473af554b0c77b22ee0}{P\+R\+E\+F\+I\+X\+\_\+\+L\+V2} \hyperlink{lilv__test_8c_ab36b0328ffc1e88382f1aeee85143406}{P\+R\+E\+F\+I\+X\+\_\+\+R\+D\+FS}
+\item 
+\#define \hyperlink{lilv__test_8c_abed0300741be41749f0e2eeb477073f3}{B\+U\+N\+D\+L\+E\+\_\+\+P\+R\+E\+F\+I\+X\+ES}~\hyperlink{lilv__test_8c_ab5202ed0afa777dc4e771d12ac65109c}{P\+R\+E\+F\+I\+X\+\_\+\+A\+T\+OM} \hyperlink{lilv__test_8c_aa4e953069eb719115dad53f5102a8418}{P\+R\+E\+F\+I\+X\+\_\+\+L\+I\+NE} \hyperlink{lilv__test_8c_a5e4df78c65ea5473af554b0c77b22ee0}{P\+R\+E\+F\+I\+X\+\_\+\+L\+V2} \hyperlink{lilv__test_8c_a6e8c079aa5d2efa192e7c4dc3344b36c}{P\+R\+E\+F\+I\+X\+\_\+\+R\+DF} \hyperlink{lilv__test_8c_ab36b0328ffc1e88382f1aeee85143406}{P\+R\+E\+F\+I\+X\+\_\+\+R\+D\+FS} \hyperlink{lilv__test_8c_a4d5a348afc4f141b41da23c364a6589c}{P\+R\+E\+F\+I\+X\+\_\+\+F\+O\+AF} \hyperlink{lilv__test_8c_a3a5f82993e415d7360e7b4e7db0a7b9d}{P\+R\+E\+F\+I\+X\+\_\+\+D\+O\+AP} \hyperlink{lilv__test_8c_a5fe0b70493022e7ac541b38398f9074e}{P\+R\+E\+F\+I\+X\+\_\+\+P\+S\+ET}
+\item 
+\#define \hyperlink{lilv__test_8c_a27827d6641b8ad04f0086d2ce5083c17}{P\+L\+U\+G\+I\+N\+\_\+\+N\+A\+ME}(\hyperlink{lib_2expat_8h_a1b49b495b59f9e73205b69ad1a2965b0}{name})~\char`\"{}doap\+:name \textbackslash{}\char`\"{}\char`\"{} \hyperlink{lib_2expat_8h_a1b49b495b59f9e73205b69ad1a2965b0}{name} \char`\"{}\textbackslash{}\char`\"{}\char`\"{}
+\item 
+\#define \hyperlink{lilv__test_8c_a15ad66e0abdb30cdc3328afdb35a34ff}{L\+I\+C\+E\+N\+S\+E\+\_\+\+G\+PL}~\char`\"{}doap\+:license $<$http\+://usefulinc.\+com/doap/licenses/gpl$>$\char`\"{}
+\end{DoxyCompactItemize}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int}($\ast$ \hyperlink{lilv__test_8c_addc97aa5030c040d9dfe8657a2dab073}{Test\+Func}) (\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void})
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{lilv__test_8c_a0ddf1224851353fc92bfbff6f499fa97}{main} (\hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{cmdline_8c_aaffeb1bf2056ea44af5b5d0ee4d6ff07}{argc}, char $\ast$\hyperlink{cmdline_8c_ad407d5ba91709bd9b092003858600723}{argv}\mbox{[}$\,$\mbox{]})
+\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{lilv__test_8c_a125a07facfdab18ee2d8495d4f8c9d5b}{test\+\_\+count} = 0
+\item 
+\hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{lilv__test_8c_abd4779c87a347398043e42d70057a48f}{error\+\_\+count} = 0
+\item 
+\hyperlink{lib-src_2ffmpeg_2win32_2stdint_8h_a6eb1e68cc391dd753bc8ce896dbb8315}{uint32\+\_\+t} \hyperlink{lilv__test_8c_ad08f9780ebc76238818d8ec4ebccf73b}{atom\+\_\+\+Float} = 0
+\item 
+float \hyperlink{lilv__test_8c_ae7d18e86426895053287f7804575536b}{in} = 1.\+0
+\item 
+float \hyperlink{lilv__test_8c_af5a45dbcaa926b186e6f71d08212acc3}{out} = 42.\+0
+\item 
+char $\ast$$\ast$ \hyperlink{lilv__test_8c_a42e30b2eba499e78c1647c915bdbb775}{uris} = \hyperlink{px__mixer_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{N\+U\+LL}
+\item 
+size\+\_\+t \hyperlink{lilv__test_8c_a6cac288d3639dbff5f61ce54e5af51ff}{n\+\_\+uris} = 0
+\end{DoxyCompactItemize}
+
+
+\subsection{Macro Definition Documentation}
+\index{lilv\+\_\+test.\+c@{lilv\+\_\+test.\+c}!\+\_\+\+P\+O\+S\+I\+X\+\_\+\+C\+\_\+\+S\+O\+U\+R\+CE@{\+\_\+\+P\+O\+S\+I\+X\+\_\+\+C\+\_\+\+S\+O\+U\+R\+CE}}
+\index{\+\_\+\+P\+O\+S\+I\+X\+\_\+\+C\+\_\+\+S\+O\+U\+R\+CE@{\+\_\+\+P\+O\+S\+I\+X\+\_\+\+C\+\_\+\+S\+O\+U\+R\+CE}!lilv\+\_\+test.\+c@{lilv\+\_\+test.\+c}}
+\subsubsection[{\texorpdfstring{\+\_\+\+P\+O\+S\+I\+X\+\_\+\+C\+\_\+\+S\+O\+U\+R\+CE}{_POSIX_C_SOURCE}}]{\setlength{\rightskip}{0pt plus 5cm}\#define \+\_\+\+P\+O\+S\+I\+X\+\_\+\+C\+\_\+\+S\+O\+U\+R\+CE~200112\+L /$\ast$ for setenv $\ast$/}\hypertarget{lilv__test_8c_a3024ccd4a9af5109d24e6c57565d74a1}{}\label{lilv__test_8c_a3024ccd4a9af5109d24e6c57565d74a1}
+
+
+Definition at line 18 of file lilv\+\_\+test.\+c.
+
+\index{lilv\+\_\+test.\+c@{lilv\+\_\+test.\+c}!B\+U\+N\+D\+L\+E\+\_\+\+P\+R\+E\+F\+I\+X\+ES@{B\+U\+N\+D\+L\+E\+\_\+\+P\+R\+E\+F\+I\+X\+ES}}
+\index{B\+U\+N\+D\+L\+E\+\_\+\+P\+R\+E\+F\+I\+X\+ES@{B\+U\+N\+D\+L\+E\+\_\+\+P\+R\+E\+F\+I\+X\+ES}!lilv\+\_\+test.\+c@{lilv\+\_\+test.\+c}}
+\subsubsection[{\texorpdfstring{B\+U\+N\+D\+L\+E\+\_\+\+P\+R\+E\+F\+I\+X\+ES}{BUNDLE_PREFIXES}}]{\setlength{\rightskip}{0pt plus 5cm}\#define B\+U\+N\+D\+L\+E\+\_\+\+P\+R\+E\+F\+I\+X\+ES~{\bf P\+R\+E\+F\+I\+X\+\_\+\+A\+T\+OM} {\bf P\+R\+E\+F\+I\+X\+\_\+\+L\+I\+NE} {\bf P\+R\+E\+F\+I\+X\+\_\+\+L\+V2} {\bf P\+R\+E\+F\+I\+X\+\_\+\+R\+DF} {\bf P\+R\+E\+F\+I\+X\+\_\+\+R\+D\+FS} {\bf P\+R\+E\+F\+I\+X\+\_\+\+F\+O\+AF} {\bf P\+R\+E\+F\+I\+X\+\_\+\+D\+O\+AP} {\bf P\+R\+E\+F\+I\+X\+\_\+\+P\+S\+ET}}\hypertarget{lilv__test_8c_abed0300741be41749f0e2eeb477073f3}{}\label{lilv__test_8c_abed0300741be41749f0e2eeb477073f3}
+
+
+Definition at line 186 of file lilv\+\_\+test.\+c.
+
+\index{lilv\+\_\+test.\+c@{lilv\+\_\+test.\+c}!L\+I\+C\+E\+N\+S\+E\+\_\+\+G\+PL@{L\+I\+C\+E\+N\+S\+E\+\_\+\+G\+PL}}
+\index{L\+I\+C\+E\+N\+S\+E\+\_\+\+G\+PL@{L\+I\+C\+E\+N\+S\+E\+\_\+\+G\+PL}!lilv\+\_\+test.\+c@{lilv\+\_\+test.\+c}}
+\subsubsection[{\texorpdfstring{L\+I\+C\+E\+N\+S\+E\+\_\+\+G\+PL}{LICENSE_GPL}}]{\setlength{\rightskip}{0pt plus 5cm}\#define L\+I\+C\+E\+N\+S\+E\+\_\+\+G\+PL~\char`\"{}doap\+:license $<$http\+://usefulinc.\+com/doap/licenses/gpl$>$\char`\"{}}\hypertarget{lilv__test_8c_a15ad66e0abdb30cdc3328afdb35a34ff}{}\label{lilv__test_8c_a15ad66e0abdb30cdc3328afdb35a34ff}
+
+
+Definition at line 188 of file lilv\+\_\+test.\+c.
+
+\index{lilv\+\_\+test.\+c@{lilv\+\_\+test.\+c}!M\+A\+N\+I\+F\+E\+S\+T\+\_\+\+P\+R\+E\+F\+I\+X\+ES@{M\+A\+N\+I\+F\+E\+S\+T\+\_\+\+P\+R\+E\+F\+I\+X\+ES}}
+\index{M\+A\+N\+I\+F\+E\+S\+T\+\_\+\+P\+R\+E\+F\+I\+X\+ES@{M\+A\+N\+I\+F\+E\+S\+T\+\_\+\+P\+R\+E\+F\+I\+X\+ES}!lilv\+\_\+test.\+c@{lilv\+\_\+test.\+c}}
+\subsubsection[{\texorpdfstring{M\+A\+N\+I\+F\+E\+S\+T\+\_\+\+P\+R\+E\+F\+I\+X\+ES}{MANIFEST_PREFIXES}}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+A\+N\+I\+F\+E\+S\+T\+\_\+\+P\+R\+E\+F\+I\+X\+ES~{\bf P\+R\+E\+F\+I\+X\+\_\+\+L\+I\+NE} {\bf P\+R\+E\+F\+I\+X\+\_\+\+L\+V2} {\bf P\+R\+E\+F\+I\+X\+\_\+\+R\+D\+FS}}\hypertarget{lilv__test_8c_af5d0ac047cc946f7c33ee3e5c20e3b0d}{}\label{lilv__test_8c_af5d0ac047cc946f7c33ee3e5c20e3b0d}
+
+
+Definition at line 185 of file lilv\+\_\+test.\+c.
+
+\index{lilv\+\_\+test.\+c@{lilv\+\_\+test.\+c}!P\+L\+U\+G\+I\+N\+\_\+\+N\+A\+ME@{P\+L\+U\+G\+I\+N\+\_\+\+N\+A\+ME}}
+\index{P\+L\+U\+G\+I\+N\+\_\+\+N\+A\+ME@{P\+L\+U\+G\+I\+N\+\_\+\+N\+A\+ME}!lilv\+\_\+test.\+c@{lilv\+\_\+test.\+c}}
+\subsubsection[{\texorpdfstring{P\+L\+U\+G\+I\+N\+\_\+\+N\+A\+ME}{PLUGIN_NAME}}]{\setlength{\rightskip}{0pt plus 5cm}\#define P\+L\+U\+G\+I\+N\+\_\+\+N\+A\+ME(
+\begin{DoxyParamCaption}
+\item[{}]{{\bf name}}
+\end{DoxyParamCaption}
+)~\char`\"{}doap\+:name \textbackslash{}\char`\"{}\char`\"{} {\bf name} \char`\"{}\textbackslash{}\char`\"{}\char`\"{}}\hypertarget{lilv__test_8c_a27827d6641b8ad04f0086d2ce5083c17}{}\label{lilv__test_8c_a27827d6641b8ad04f0086d2ce5083c17}
+
+
+Definition at line 187 of file lilv\+\_\+test.\+c.
+
+\index{lilv\+\_\+test.\+c@{lilv\+\_\+test.\+c}!P\+R\+E\+F\+I\+X\+\_\+\+A\+T\+OM@{P\+R\+E\+F\+I\+X\+\_\+\+A\+T\+OM}}
+\index{P\+R\+E\+F\+I\+X\+\_\+\+A\+T\+OM@{P\+R\+E\+F\+I\+X\+\_\+\+A\+T\+OM}!lilv\+\_\+test.\+c@{lilv\+\_\+test.\+c}}
+\subsubsection[{\texorpdfstring{P\+R\+E\+F\+I\+X\+\_\+\+A\+T\+OM}{PREFIX_ATOM}}]{\setlength{\rightskip}{0pt plus 5cm}\#define P\+R\+E\+F\+I\+X\+\_\+\+A\+T\+OM~\char`\"{}@prefix atom\+: $<$http\+://{\bf lv2plug.\+in}/{\bf ns}/ext/atom\#$>$ . \textbackslash{}n\char`\"{}}\hypertarget{lilv__test_8c_ab5202ed0afa777dc4e771d12ac65109c}{}\label{lilv__test_8c_ab5202ed0afa777dc4e771d12ac65109c}
+
+
+Definition at line 174 of file lilv\+\_\+test.\+c.
+
+\index{lilv\+\_\+test.\+c@{lilv\+\_\+test.\+c}!P\+R\+E\+F\+I\+X\+\_\+\+D\+O\+AP@{P\+R\+E\+F\+I\+X\+\_\+\+D\+O\+AP}}
+\index{P\+R\+E\+F\+I\+X\+\_\+\+D\+O\+AP@{P\+R\+E\+F\+I\+X\+\_\+\+D\+O\+AP}!lilv\+\_\+test.\+c@{lilv\+\_\+test.\+c}}
+\subsubsection[{\texorpdfstring{P\+R\+E\+F\+I\+X\+\_\+\+D\+O\+AP}{PREFIX_DOAP}}]{\setlength{\rightskip}{0pt plus 5cm}\#define P\+R\+E\+F\+I\+X\+\_\+\+D\+O\+AP~\char`\"{}@prefix doap\+: $<$http\+://usefulinc.\+com/{\bf ns}/doap\#$>$ .\textbackslash{}n\char`\"{}}\hypertarget{lilv__test_8c_a3a5f82993e415d7360e7b4e7db0a7b9d}{}\label{lilv__test_8c_a3a5f82993e415d7360e7b4e7db0a7b9d}
+
+
+Definition at line 182 of file lilv\+\_\+test.\+c.
+
+\index{lilv\+\_\+test.\+c@{lilv\+\_\+test.\+c}!P\+R\+E\+F\+I\+X\+\_\+\+F\+O\+AF@{P\+R\+E\+F\+I\+X\+\_\+\+F\+O\+AF}}
+\index{P\+R\+E\+F\+I\+X\+\_\+\+F\+O\+AF@{P\+R\+E\+F\+I\+X\+\_\+\+F\+O\+AF}!lilv\+\_\+test.\+c@{lilv\+\_\+test.\+c}}
+\subsubsection[{\texorpdfstring{P\+R\+E\+F\+I\+X\+\_\+\+F\+O\+AF}{PREFIX_FOAF}}]{\setlength{\rightskip}{0pt plus 5cm}\#define P\+R\+E\+F\+I\+X\+\_\+\+F\+O\+AF~\char`\"{}@prefix foaf\+: $<$http\+://xmlns.\+com/foaf/0.\+1/$>$ .\textbackslash{}n\char`\"{}}\hypertarget{lilv__test_8c_a4d5a348afc4f141b41da23c364a6589c}{}\label{lilv__test_8c_a4d5a348afc4f141b41da23c364a6589c}
+
+
+Definition at line 181 of file lilv\+\_\+test.\+c.
+
+\index{lilv\+\_\+test.\+c@{lilv\+\_\+test.\+c}!P\+R\+E\+F\+I\+X\+\_\+\+L\+I\+NE@{P\+R\+E\+F\+I\+X\+\_\+\+L\+I\+NE}}
+\index{P\+R\+E\+F\+I\+X\+\_\+\+L\+I\+NE@{P\+R\+E\+F\+I\+X\+\_\+\+L\+I\+NE}!lilv\+\_\+test.\+c@{lilv\+\_\+test.\+c}}
+\subsubsection[{\texorpdfstring{P\+R\+E\+F\+I\+X\+\_\+\+L\+I\+NE}{PREFIX_LINE}}]{\setlength{\rightskip}{0pt plus 5cm}\#define P\+R\+E\+F\+I\+X\+\_\+\+L\+I\+NE~\char`\"{}@prefix \+: $<$http\+://example.\+org/$>$ .\textbackslash{}n\char`\"{}}\hypertarget{lilv__test_8c_aa4e953069eb719115dad53f5102a8418}{}\label{lilv__test_8c_aa4e953069eb719115dad53f5102a8418}
+
+
+Definition at line 175 of file lilv\+\_\+test.\+c.
+
+\index{lilv\+\_\+test.\+c@{lilv\+\_\+test.\+c}!P\+R\+E\+F\+I\+X\+\_\+\+L\+V2@{P\+R\+E\+F\+I\+X\+\_\+\+L\+V2}}
+\index{P\+R\+E\+F\+I\+X\+\_\+\+L\+V2@{P\+R\+E\+F\+I\+X\+\_\+\+L\+V2}!lilv\+\_\+test.\+c@{lilv\+\_\+test.\+c}}
+\subsubsection[{\texorpdfstring{P\+R\+E\+F\+I\+X\+\_\+\+L\+V2}{PREFIX_LV2}}]{\setlength{\rightskip}{0pt plus 5cm}\#define P\+R\+E\+F\+I\+X\+\_\+\+L\+V2~\char`\"{}@prefix lv2\+: $<$http\+://{\bf lv2plug.\+in}/{\bf ns}/lv2core\#$>$ .\textbackslash{}n\char`\"{}}\hypertarget{lilv__test_8c_a5e4df78c65ea5473af554b0c77b22ee0}{}\label{lilv__test_8c_a5e4df78c65ea5473af554b0c77b22ee0}
+
+
+Definition at line 176 of file lilv\+\_\+test.\+c.
+
+\index{lilv\+\_\+test.\+c@{lilv\+\_\+test.\+c}!P\+R\+E\+F\+I\+X\+\_\+\+L\+V2\+EV@{P\+R\+E\+F\+I\+X\+\_\+\+L\+V2\+EV}}
+\index{P\+R\+E\+F\+I\+X\+\_\+\+L\+V2\+EV@{P\+R\+E\+F\+I\+X\+\_\+\+L\+V2\+EV}!lilv\+\_\+test.\+c@{lilv\+\_\+test.\+c}}
+\subsubsection[{\texorpdfstring{P\+R\+E\+F\+I\+X\+\_\+\+L\+V2\+EV}{PREFIX_LV2EV}}]{\setlength{\rightskip}{0pt plus 5cm}\#define P\+R\+E\+F\+I\+X\+\_\+\+L\+V2\+EV~\char`\"{}@prefix lv2ev\+: $<$http\+://{\bf lv2plug.\+in}/{\bf ns}/ext/event\#$>$ . \textbackslash{}n\char`\"{}}\hypertarget{lilv__test_8c_a35c8d81834eeb13ed09b50cbaad41cbd}{}\label{lilv__test_8c_a35c8d81834eeb13ed09b50cbaad41cbd}
+
+
+Definition at line 177 of file lilv\+\_\+test.\+c.
+
+\index{lilv\+\_\+test.\+c@{lilv\+\_\+test.\+c}!P\+R\+E\+F\+I\+X\+\_\+\+L\+V2\+UI@{P\+R\+E\+F\+I\+X\+\_\+\+L\+V2\+UI}}
+\index{P\+R\+E\+F\+I\+X\+\_\+\+L\+V2\+UI@{P\+R\+E\+F\+I\+X\+\_\+\+L\+V2\+UI}!lilv\+\_\+test.\+c@{lilv\+\_\+test.\+c}}
+\subsubsection[{\texorpdfstring{P\+R\+E\+F\+I\+X\+\_\+\+L\+V2\+UI}{PREFIX_LV2UI}}]{\setlength{\rightskip}{0pt plus 5cm}\#define P\+R\+E\+F\+I\+X\+\_\+\+L\+V2\+UI~\char`\"{}@prefix lv2ui\+: $<$http\+://{\bf lv2plug.\+in}/{\bf ns}/extensions/ui\#$>$ .\textbackslash{}n\char`\"{}}\hypertarget{lilv__test_8c_a4d52dba321dbd436d7f4726e0e255bac}{}\label{lilv__test_8c_a4d52dba321dbd436d7f4726e0e255bac}
+
+
+Definition at line 178 of file lilv\+\_\+test.\+c.
+
+\index{lilv\+\_\+test.\+c@{lilv\+\_\+test.\+c}!P\+R\+E\+F\+I\+X\+\_\+\+P\+S\+ET@{P\+R\+E\+F\+I\+X\+\_\+\+P\+S\+ET}}
+\index{P\+R\+E\+F\+I\+X\+\_\+\+P\+S\+ET@{P\+R\+E\+F\+I\+X\+\_\+\+P\+S\+ET}!lilv\+\_\+test.\+c@{lilv\+\_\+test.\+c}}
+\subsubsection[{\texorpdfstring{P\+R\+E\+F\+I\+X\+\_\+\+P\+S\+ET}{PREFIX_PSET}}]{\setlength{\rightskip}{0pt plus 5cm}\#define P\+R\+E\+F\+I\+X\+\_\+\+P\+S\+ET~\char`\"{}@prefix pset\+: $<$http\+://{\bf lv2plug.\+in}/{\bf ns}/ext/presets\#$>$ .\textbackslash{}n\char`\"{}}\hypertarget{lilv__test_8c_a5fe0b70493022e7ac541b38398f9074e}{}\label{lilv__test_8c_a5fe0b70493022e7ac541b38398f9074e}
+
+
+Definition at line 183 of file lilv\+\_\+test.\+c.
+
+\index{lilv\+\_\+test.\+c@{lilv\+\_\+test.\+c}!P\+R\+E\+F\+I\+X\+\_\+\+R\+DF@{P\+R\+E\+F\+I\+X\+\_\+\+R\+DF}}
+\index{P\+R\+E\+F\+I\+X\+\_\+\+R\+DF@{P\+R\+E\+F\+I\+X\+\_\+\+R\+DF}!lilv\+\_\+test.\+c@{lilv\+\_\+test.\+c}}
+\subsubsection[{\texorpdfstring{P\+R\+E\+F\+I\+X\+\_\+\+R\+DF}{PREFIX_RDF}}]{\setlength{\rightskip}{0pt plus 5cm}\#define P\+R\+E\+F\+I\+X\+\_\+\+R\+DF~\char`\"{}@prefix rdf\+:  $<$http\+://www.\+w3.\+org/1999/02/22-\/rdf-\/{\bf syntax}-\/{\bf ns}\#$>$ .\textbackslash{}n\char`\"{}}\hypertarget{lilv__test_8c_a6e8c079aa5d2efa192e7c4dc3344b36c}{}\label{lilv__test_8c_a6e8c079aa5d2efa192e7c4dc3344b36c}
+
+
+Definition at line 179 of file lilv\+\_\+test.\+c.
+
+\index{lilv\+\_\+test.\+c@{lilv\+\_\+test.\+c}!P\+R\+E\+F\+I\+X\+\_\+\+R\+D\+FS@{P\+R\+E\+F\+I\+X\+\_\+\+R\+D\+FS}}
+\index{P\+R\+E\+F\+I\+X\+\_\+\+R\+D\+FS@{P\+R\+E\+F\+I\+X\+\_\+\+R\+D\+FS}!lilv\+\_\+test.\+c@{lilv\+\_\+test.\+c}}
+\subsubsection[{\texorpdfstring{P\+R\+E\+F\+I\+X\+\_\+\+R\+D\+FS}{PREFIX_RDFS}}]{\setlength{\rightskip}{0pt plus 5cm}\#define P\+R\+E\+F\+I\+X\+\_\+\+R\+D\+FS~\char`\"{}@prefix rdfs\+: $<$http\+://www.\+w3.\+org/2000/01/rdf-\/schema\#$>$ .\textbackslash{}n\char`\"{}}\hypertarget{lilv__test_8c_ab36b0328ffc1e88382f1aeee85143406}{}\label{lilv__test_8c_ab36b0328ffc1e88382f1aeee85143406}
+
+
+Definition at line 180 of file lilv\+\_\+test.\+c.
+
+\index{lilv\+\_\+test.\+c@{lilv\+\_\+test.\+c}!S\+H\+L\+I\+B\+\_\+\+E\+XT@{S\+H\+L\+I\+B\+\_\+\+E\+XT}}
+\index{S\+H\+L\+I\+B\+\_\+\+E\+XT@{S\+H\+L\+I\+B\+\_\+\+E\+XT}!lilv\+\_\+test.\+c@{lilv\+\_\+test.\+c}}
+\subsubsection[{\texorpdfstring{S\+H\+L\+I\+B\+\_\+\+E\+XT}{SHLIB_EXT}}]{\setlength{\rightskip}{0pt plus 5cm}\#define S\+H\+L\+I\+B\+\_\+\+E\+XT~\char`\"{}.so\char`\"{}}\hypertarget{lilv__test_8c_a4350de5ec67f068ffc2479d213ccb55b}{}\label{lilv__test_8c_a4350de5ec67f068ffc2479d213ccb55b}
+
+
+Definition at line 55 of file lilv\+\_\+test.\+c.
+
+\index{lilv\+\_\+test.\+c@{lilv\+\_\+test.\+c}!T\+E\+S\+T\+\_\+\+A\+S\+S\+E\+RT@{T\+E\+S\+T\+\_\+\+A\+S\+S\+E\+RT}}
+\index{T\+E\+S\+T\+\_\+\+A\+S\+S\+E\+RT@{T\+E\+S\+T\+\_\+\+A\+S\+S\+E\+RT}!lilv\+\_\+test.\+c@{lilv\+\_\+test.\+c}}
+\subsubsection[{\texorpdfstring{T\+E\+S\+T\+\_\+\+A\+S\+S\+E\+RT}{TEST_ASSERT}}]{\setlength{\rightskip}{0pt plus 5cm}\#define T\+E\+S\+T\+\_\+\+A\+S\+S\+E\+RT(
+\begin{DoxyParamCaption}
+\item[{}]{check}
+\end{DoxyParamCaption}
+)}\hypertarget{lilv__test_8c_a3bf4f183785f6b84a108bf5837b57f1d}{}\label{lilv__test_8c_a3bf4f183785f6b84a108bf5837b57f1d}
+{\bfseries Value\+:}
+\begin{DoxyCode}
+\textcolor{keywordflow}{do} \{\hyperlink{lilv__test_8c_a125a07facfdab18ee2d8495d4f8c9d5b}{\(\backslash\)}
+\hyperlink{lilv__test_8c_a125a07facfdab18ee2d8495d4f8c9d5b}{    test\_count}++;\hyperlink{winfun_8c_ab24f32995c1d94525943b4568cce20cb}{\(\backslash\)}
+\hyperlink{winfun_8c_ab24f32995c1d94525943b4568cce20cb}{    if} (!(\hyperlink{namespacewaflib_1_1_tools_1_1c__config_a58859fd21b5419c38f4c77256ce3893b}{check})) \{\hyperlink{lilv__test_8c_abd4779c87a347398043e42d70057a48f}{\(\backslash\)}
+\hyperlink{lilv__test_8c_abd4779c87a347398043e42d70057a48f}{        error\_count}++;\(\backslash\)
+        fprintf(\hyperlink{namespacewaflib_1_1ansiterm_a44bedfddf1392d636441272f5f3c95d4}{stderr}, \textcolor{stringliteral}{"lilv\_test.c:%d: error: %s\(\backslash\)n"}, \_\_LINE\_\_, #\hyperlink{namespacewaflib_1_1_tools_1_1c__config_a58859fd21b5419c38f4c77256ce3893b}{check});\(\backslash\)
+    \}\(\backslash\)
+\} \textcolor{keywordflow}{while} (0)
+\end{DoxyCode}
+
+
+Definition at line 159 of file lilv\+\_\+test.\+c.
+
+\index{lilv\+\_\+test.\+c@{lilv\+\_\+test.\+c}!T\+E\+S\+T\+\_\+\+C\+A\+SE@{T\+E\+S\+T\+\_\+\+C\+A\+SE}}
+\index{T\+E\+S\+T\+\_\+\+C\+A\+SE@{T\+E\+S\+T\+\_\+\+C\+A\+SE}!lilv\+\_\+test.\+c@{lilv\+\_\+test.\+c}}
+\subsubsection[{\texorpdfstring{T\+E\+S\+T\+\_\+\+C\+A\+SE}{TEST_CASE}}]{\setlength{\rightskip}{0pt plus 5cm}\#define T\+E\+S\+T\+\_\+\+C\+A\+SE(
+\begin{DoxyParamCaption}
+\item[{}]{{\bf name}}
+\end{DoxyParamCaption}
+)~\{ \#{\bf name}, test\+\_\+\#\#{\bf name} \}}\hypertarget{lilv__test_8c_a8bc255ff55721571e878568d2b5dcb35}{}\label{lilv__test_8c_a8bc255ff55721571e878568d2b5dcb35}
+
+
+Definition at line 158 of file lilv\+\_\+test.\+c.
+
+\index{lilv\+\_\+test.\+c@{lilv\+\_\+test.\+c}!T\+E\+S\+T\+\_\+\+P\+A\+T\+H\+\_\+\+M\+AX@{T\+E\+S\+T\+\_\+\+P\+A\+T\+H\+\_\+\+M\+AX}}
+\index{T\+E\+S\+T\+\_\+\+P\+A\+T\+H\+\_\+\+M\+AX@{T\+E\+S\+T\+\_\+\+P\+A\+T\+H\+\_\+\+M\+AX}!lilv\+\_\+test.\+c@{lilv\+\_\+test.\+c}}
+\subsubsection[{\texorpdfstring{T\+E\+S\+T\+\_\+\+P\+A\+T\+H\+\_\+\+M\+AX}{TEST_PATH_MAX}}]{\setlength{\rightskip}{0pt plus 5cm}\#define T\+E\+S\+T\+\_\+\+P\+A\+T\+H\+\_\+\+M\+AX~1024}\hypertarget{lilv__test_8c_afbb0a1c5f767b0ecaca63b097ecbb5c8}{}\label{lilv__test_8c_afbb0a1c5f767b0ecaca63b097ecbb5c8}
+
+
+Definition at line 48 of file lilv\+\_\+test.\+c.
+
+
+
+\subsection{Typedef Documentation}
+\index{lilv\+\_\+test.\+c@{lilv\+\_\+test.\+c}!Test\+Func@{Test\+Func}}
+\index{Test\+Func@{Test\+Func}!lilv\+\_\+test.\+c@{lilv\+\_\+test.\+c}}
+\subsubsection[{\texorpdfstring{Test\+Func}{TestFunc}}]{\setlength{\rightskip}{0pt plus 5cm}typedef {\bf int}($\ast$ Test\+Func) ({\bf void})}\hypertarget{lilv__test_8c_addc97aa5030c040d9dfe8657a2dab073}{}\label{lilv__test_8c_addc97aa5030c040d9dfe8657a2dab073}
+
+
+Definition at line 167 of file lilv\+\_\+test.\+c.
+
+
+
+\subsection{Function Documentation}
+\index{lilv\+\_\+test.\+c@{lilv\+\_\+test.\+c}!main@{main}}
+\index{main@{main}!lilv\+\_\+test.\+c@{lilv\+\_\+test.\+c}}
+\subsubsection[{\texorpdfstring{main(int argc, char $\ast$argv[])}{main(int argc, char *argv[])}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf int} main (
+\begin{DoxyParamCaption}
+\item[{{\bf int}}]{argc, }
+\item[{char $\ast$}]{argv\mbox{[}$\,$\mbox{]}}
+\end{DoxyParamCaption}
+)}\hypertarget{lilv__test_8c_a0ddf1224851353fc92bfbff6f499fa97}{}\label{lilv__test_8c_a0ddf1224851353fc92bfbff6f499fa97}
+
+
+Definition at line 1910 of file lilv\+\_\+test.\+c.
+
+
+
+\subsection{Variable Documentation}
+\index{lilv\+\_\+test.\+c@{lilv\+\_\+test.\+c}!atom\+\_\+\+Float@{atom\+\_\+\+Float}}
+\index{atom\+\_\+\+Float@{atom\+\_\+\+Float}!lilv\+\_\+test.\+c@{lilv\+\_\+test.\+c}}
+\subsubsection[{\texorpdfstring{atom\+\_\+\+Float}{atom_Float}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint32\+\_\+t} atom\+\_\+\+Float = 0}\hypertarget{lilv__test_8c_ad08f9780ebc76238818d8ec4ebccf73b}{}\label{lilv__test_8c_ad08f9780ebc76238818d8ec4ebccf73b}
+
+
+Definition at line 1394 of file lilv\+\_\+test.\+c.
+
+\index{lilv\+\_\+test.\+c@{lilv\+\_\+test.\+c}!error\+\_\+count@{error\+\_\+count}}
+\index{error\+\_\+count@{error\+\_\+count}!lilv\+\_\+test.\+c@{lilv\+\_\+test.\+c}}
+\subsubsection[{\texorpdfstring{error\+\_\+count}{error_count}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf int} error\+\_\+count = 0}\hypertarget{lilv__test_8c_abd4779c87a347398043e42d70057a48f}{}\label{lilv__test_8c_abd4779c87a347398043e42d70057a48f}
+
+
+Definition at line 66 of file lilv\+\_\+test.\+c.
+
+\index{lilv\+\_\+test.\+c@{lilv\+\_\+test.\+c}!in@{in}}
+\index{in@{in}!lilv\+\_\+test.\+c@{lilv\+\_\+test.\+c}}
+\subsubsection[{\texorpdfstring{in}{in}}]{\setlength{\rightskip}{0pt plus 5cm}float in = 1.\+0}\hypertarget{lilv__test_8c_ae7d18e86426895053287f7804575536b}{}\label{lilv__test_8c_ae7d18e86426895053287f7804575536b}
+
+
+Definition at line 1395 of file lilv\+\_\+test.\+c.
+
+\index{lilv\+\_\+test.\+c@{lilv\+\_\+test.\+c}!n\+\_\+uris@{n\+\_\+uris}}
+\index{n\+\_\+uris@{n\+\_\+uris}!lilv\+\_\+test.\+c@{lilv\+\_\+test.\+c}}
+\subsubsection[{\texorpdfstring{n\+\_\+uris}{n_uris}}]{\setlength{\rightskip}{0pt plus 5cm}size\+\_\+t n\+\_\+uris = 0}\hypertarget{lilv__test_8c_a6cac288d3639dbff5f61ce54e5af51ff}{}\label{lilv__test_8c_a6cac288d3639dbff5f61ce54e5af51ff}
+
+
+Definition at line 1438 of file lilv\+\_\+test.\+c.
+
+\index{lilv\+\_\+test.\+c@{lilv\+\_\+test.\+c}!out@{out}}
+\index{out@{out}!lilv\+\_\+test.\+c@{lilv\+\_\+test.\+c}}
+\subsubsection[{\texorpdfstring{out}{out}}]{\setlength{\rightskip}{0pt plus 5cm}float out = 42.\+0}\hypertarget{lilv__test_8c_af5a45dbcaa926b186e6f71d08212acc3}{}\label{lilv__test_8c_af5a45dbcaa926b186e6f71d08212acc3}
+
+
+Definition at line 1396 of file lilv\+\_\+test.\+c.
+
+\index{lilv\+\_\+test.\+c@{lilv\+\_\+test.\+c}!test\+\_\+count@{test\+\_\+count}}
+\index{test\+\_\+count@{test\+\_\+count}!lilv\+\_\+test.\+c@{lilv\+\_\+test.\+c}}
+\subsubsection[{\texorpdfstring{test\+\_\+count}{test_count}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf int} test\+\_\+count = 0}\hypertarget{lilv__test_8c_a125a07facfdab18ee2d8495d4f8c9d5b}{}\label{lilv__test_8c_a125a07facfdab18ee2d8495d4f8c9d5b}
+
+
+Definition at line 65 of file lilv\+\_\+test.\+c.
+
+\index{lilv\+\_\+test.\+c@{lilv\+\_\+test.\+c}!uris@{uris}}
+\index{uris@{uris}!lilv\+\_\+test.\+c@{lilv\+\_\+test.\+c}}
+\subsubsection[{\texorpdfstring{uris}{uris}}]{\setlength{\rightskip}{0pt plus 5cm}char$\ast$$\ast$ uris = {\bf N\+U\+LL}}\hypertarget{lilv__test_8c_a42e30b2eba499e78c1647c915bdbb775}{}\label{lilv__test_8c_a42e30b2eba499e78c1647c915bdbb775}
+
+
+Definition at line 1437 of file lilv\+\_\+test.\+c.
+

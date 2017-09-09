@@ -1,0 +1,92 @@
+\hypertarget{_import_raw_8cpp}{}\section{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/src/import/\+Import\+Raw.cpp File Reference}
+\label{_import_raw_8cpp}\index{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/src/import/\+Import\+Raw.\+cpp@{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/src/import/\+Import\+Raw.\+cpp}}
+
+
+Functions for guessing audio type and attempting to read from unknown sample audio data. Implements \hyperlink{class_import_raw_dialog}{Import\+Raw\+Dialog}.  
+
+
+{\ttfamily \#include \char`\"{}../\+Audacity.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Import\+Raw.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Import.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../\+Dir\+Manager.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../\+File\+Formats.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../\+Internat.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../\+Prefs.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../\+Shuttle\+Gui.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../\+Wave\+Track.\+h\char`\"{}}\\*
+{\ttfamily \#include $<$cmath$>$}\\*
+{\ttfamily \#include $<$cstdio$>$}\\*
+{\ttfamily \#include $<$stdint.\+h$>$}\\*
+{\ttfamily \#include $<$vector$>$}\\*
+{\ttfamily \#include $<$wx/defs.\+h$>$}\\*
+{\ttfamily \#include $<$wx/button.\+h$>$}\\*
+{\ttfamily \#include $<$wx/choice.\+h$>$}\\*
+{\ttfamily \#include $<$wx/intl.\+h$>$}\\*
+{\ttfamily \#include $<$wx/msgdlg.\+h$>$}\\*
+{\ttfamily \#include $<$wx/panel.\+h$>$}\\*
+{\ttfamily \#include $<$wx/progdlg.\+h$>$}\\*
+{\ttfamily \#include $<$wx/sizer.\+h$>$}\\*
+{\ttfamily \#include $<$wx/stattext.\+h$>$}\\*
+{\ttfamily \#include $<$wx/textctrl.\+h$>$}\\*
+{\ttfamily \#include $<$wx/timer.\+h$>$}\\*
+{\ttfamily \#include \char`\"{}Raw\+Audio\+Guess.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Multi\+Format\+Reader.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Spec\+Power\+Meter.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Format\+Classifier.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}sndfile.\+h\char`\"{}}\\*
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \hyperlink{class_import_raw_dialog}{Import\+Raw\+Dialog}
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_import_raw_dialog}{Import\+Raw\+Dialog} prompts you with options such as endianness and sample size to help you importing data of an unknown format. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \{ \hyperlink{_import_raw_8cpp_a3de3eea4a73877b18b54b412b9ac2a9fae49687dbf20cfb6f5650b991ceb0703c}{Choice\+ID} = 9000, 
+\hyperlink{_import_raw_8cpp_a3de3eea4a73877b18b54b412b9ac2a9fa98ad3fe965f779afc502ea0a84ce8433}{Play\+ID}
+ \}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{_import_raw_8cpp_afd0a2446512dca58aaacf223292a2865}{Import\+Raw} (wx\+Window $\ast$parent, \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} wx\+String \&file\+Name, \hyperlink{class_track_factory}{Track\+Factory} $\ast$track\+Factory, \hyperlink{class_track}{Track} $\ast$$\ast$$\ast$out\+Tracks)
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Functions for guessing audio type and attempting to read from unknown sample audio data. Implements \hyperlink{class_import_raw_dialog}{Import\+Raw\+Dialog}. 
+
+
+
+\subsection{Enumeration Type Documentation}
+\subsubsection[{\texorpdfstring{anonymous enum}{anonymous enum}}]{\setlength{\rightskip}{0pt plus 5cm}anonymous enum}\hypertarget{_import_raw_8cpp_a3de3eea4a73877b18b54b412b9ac2a9f}{}\label{_import_raw_8cpp_a3de3eea4a73877b18b54b412b9ac2a9f}
+\begin{Desc}
+\item[Enumerator]\par
+\begin{description}
+\index{Choice\+ID@{Choice\+ID}!Import\+Raw.\+cpp@{Import\+Raw.\+cpp}}\index{Import\+Raw.\+cpp@{Import\+Raw.\+cpp}!Choice\+ID@{Choice\+ID}}\item[{\em 
+Choice\+ID\hypertarget{_import_raw_8cpp_a3de3eea4a73877b18b54b412b9ac2a9fae49687dbf20cfb6f5650b991ceb0703c}{}\label{_import_raw_8cpp_a3de3eea4a73877b18b54b412b9ac2a9fae49687dbf20cfb6f5650b991ceb0703c}
+}]\index{Play\+ID@{Play\+ID}!Import\+Raw.\+cpp@{Import\+Raw.\+cpp}}\index{Import\+Raw.\+cpp@{Import\+Raw.\+cpp}!Play\+ID@{Play\+ID}}\item[{\em 
+Play\+ID\hypertarget{_import_raw_8cpp_a3de3eea4a73877b18b54b412b9ac2a9fa98ad3fe965f779afc502ea0a84ce8433}{}\label{_import_raw_8cpp_a3de3eea4a73877b18b54b412b9ac2a9fa98ad3fe965f779afc502ea0a84ce8433}
+}]\end{description}
+\end{Desc}
+
+
+Definition at line 291 of file Import\+Raw.\+cpp.
+
+
+
+\subsection{Function Documentation}
+\index{Import\+Raw.\+cpp@{Import\+Raw.\+cpp}!Import\+Raw@{Import\+Raw}}
+\index{Import\+Raw@{Import\+Raw}!Import\+Raw.\+cpp@{Import\+Raw.\+cpp}}
+\subsubsection[{\texorpdfstring{Import\+Raw(wx\+Window $\ast$parent, const wx\+String \&file\+Name, Track\+Factory $\ast$track\+Factory, Track $\ast$$\ast$$\ast$out\+Tracks)}{ImportRaw(wxWindow *parent, const wxString &fileName, TrackFactory *trackFactory, Track ***outTracks)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf int} Import\+Raw (
+\begin{DoxyParamCaption}
+\item[{wx\+Window $\ast$}]{parent, }
+\item[{{\bf const} wx\+String \&}]{file\+Name, }
+\item[{{\bf Track\+Factory} $\ast$}]{track\+Factory, }
+\item[{{\bf Track} $\ast$$\ast$$\ast$}]{out\+Tracks}
+\end{DoxyParamCaption}
+)}\hypertarget{_import_raw_8cpp_afd0a2446512dca58aaacf223292a2865}{}\label{_import_raw_8cpp_afd0a2446512dca58aaacf223292a2865}
+
+
+Definition at line 96 of file Import\+Raw.\+cpp.
+

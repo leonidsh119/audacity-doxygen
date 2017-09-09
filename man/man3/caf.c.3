@@ -1,0 +1,294 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/lib-src/libsndfile/src/caf.c" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/lib-src/libsndfile/src/caf.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include 'sfconfig\&.h'\fP
+.br
+\fC#include <stdio\&.h>\fP
+.br
+\fC#include <stdlib\&.h>\fP
+.br
+\fC#include <string\&.h>\fP
+.br
+\fC#include <ctype\&.h>\fP
+.br
+\fC#include <math\&.h>\fP
+.br
+\fC#include <inttypes\&.h>\fP
+.br
+\fC#include 'sndfile\&.h'\fP
+.br
+\fC#include 'sfendian\&.h'\fP
+.br
+\fC#include 'common\&.h'\fP
+.br
+\fC#include 'chanmap\&.h'\fP
+.br
+
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "struct \fBDESC_CHUNK\fP"
+.br
+.ti -1c
+.RI "struct \fBCAF_PRIVATE\fP"
+.br
+.in -1c
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBaac_MARKER\fP   MAKE_MARKER ('\fBa\fP', '\fBa\fP', '\fBc\fP', ' ')"
+.br
+.ti -1c
+.RI "#define \fBalac_MARKER\fP   MAKE_MARKER ('\fBa\fP', '\fBl\fP', '\fBa\fP', '\fBc\fP')"
+.br
+.ti -1c
+.RI "#define \fBalaw_MARKER\fP   MAKE_MARKER ('\fBa\fP', '\fBl\fP', '\fBa\fP', 'w')"
+.br
+.ti -1c
+.RI "#define \fBcaff_MARKER\fP   MAKE_MARKER ('\fBc\fP', '\fBa\fP', '\fBf\fP', '\fBf\fP')"
+.br
+.ti -1c
+.RI "#define \fBchan_MARKER\fP   MAKE_MARKER ('\fBc\fP', 'h', '\fBa\fP', 'n')"
+.br
+.ti -1c
+.RI "#define \fBdata_MARKER\fP   MAKE_MARKER ('\fBd\fP', '\fBa\fP', '\fBt\fP', '\fBa\fP')"
+.br
+.ti -1c
+.RI "#define \fBdesc_MARKER\fP   MAKE_MARKER ('\fBd\fP', 'e', '\fBs\fP', '\fBc\fP')"
+.br
+.ti -1c
+.RI "#define \fBedct_MARKER\fP   MAKE_MARKER ('e', '\fBd\fP', '\fBc\fP', '\fBt\fP')"
+.br
+.ti -1c
+.RI "#define \fBfree_MARKER\fP   MAKE_MARKER ('\fBf\fP', 'r', 'e', 'e')"
+.br
+.ti -1c
+.RI "#define \fBima4_MARKER\fP   MAKE_MARKER ('\fBi\fP', '\fBm\fP', '\fBa\fP', '4')"
+.br
+.ti -1c
+.RI "#define \fBinfo_MARKER\fP   MAKE_MARKER ('\fBi\fP', 'n', '\fBf\fP', 'o')"
+.br
+.ti -1c
+.RI "#define \fBinst_MARKER\fP   MAKE_MARKER ('\fBi\fP', 'n', '\fBs\fP', '\fBt\fP')"
+.br
+.ti -1c
+.RI "#define \fBkuki_MARKER\fP   MAKE_MARKER ('\fBk\fP', 'u', '\fBk\fP', '\fBi\fP')"
+.br
+.ti -1c
+.RI "#define \fBlpcm_MARKER\fP   MAKE_MARKER ('\fBl\fP', '\fBp\fP', '\fBc\fP', '\fBm\fP')"
+.br
+.ti -1c
+.RI "#define \fBmark_MARKER\fP   MAKE_MARKER ('\fBm\fP', '\fBa\fP', 'r', '\fBk\fP')"
+.br
+.ti -1c
+.RI "#define \fBmidi_MARKER\fP   MAKE_MARKER ('\fBm\fP', '\fBi\fP', '\fBd\fP', '\fBi\fP')"
+.br
+.ti -1c
+.RI "#define \fBmp1_MARKER\fP   MAKE_MARKER ('\&.', '\fBm\fP', '\fBp\fP', '1')"
+.br
+.ti -1c
+.RI "#define \fBmp2_MARKER\fP   MAKE_MARKER ('\&.', '\fBm\fP', '\fBp\fP', '2')"
+.br
+.ti -1c
+.RI "#define \fBmp3_MARKER\fP   MAKE_MARKER ('\&.', '\fBm\fP', '\fBp\fP', '3')"
+.br
+.ti -1c
+.RI "#define \fBovvw_MARKER\fP   MAKE_MARKER ('o', 'v', 'v', 'w')"
+.br
+.ti -1c
+.RI "#define \fBpakt_MARKER\fP   MAKE_MARKER ('\fBp\fP', '\fBa\fP', '\fBk\fP', '\fBt\fP')"
+.br
+.ti -1c
+.RI "#define \fBpeak_MARKER\fP   MAKE_MARKER ('\fBp\fP', 'e', '\fBa\fP', '\fBk\fP')"
+.br
+.ti -1c
+.RI "#define \fBregn_MARKER\fP   MAKE_MARKER ('r', 'e', 'g', 'n')"
+.br
+.ti -1c
+.RI "#define \fBstrg_MARKER\fP   MAKE_MARKER ('\fBs\fP', '\fBt\fP', 'r', 'g')"
+.br
+.ti -1c
+.RI "#define \fBumid_MARKER\fP   MAKE_MARKER ('u', '\fBm\fP', '\fBi\fP', '\fBd\fP')"
+.br
+.ti -1c
+.RI "#define \fBuuid_MARKER\fP   MAKE_MARKER ('u', 'u', '\fBi\fP', '\fBd\fP')"
+.br
+.ti -1c
+.RI "#define \fBulaw_MARKER\fP   MAKE_MARKER ('u', '\fBl\fP', '\fBa\fP', 'w')"
+.br
+.ti -1c
+.RI "#define \fBMAC3_MARKER\fP   MAKE_MARKER ('\fBM\fP', '\fBA\fP', 'C', '3')"
+.br
+.ti -1c
+.RI "#define \fBMAC6_MARKER\fP   MAKE_MARKER ('\fBM\fP', '\fBA\fP', 'C', '6')"
+.br
+.ti -1c
+.RI "#define \fBCAF_PEAK_CHUNK_SIZE\fP(ch)   ((\fBint\fP) (sizeof (\fBint\fP) + ch * (sizeof (float) + 8)))"
+.br
+.ti -1c
+.RI "#define \fBSFE_CAF_NOT_CAF\fP   666"
+.br
+.ti -1c
+.RI "#define \fBSFE_CAF_NO_DESC\fP   667"
+.br
+.ti -1c
+.RI "#define \fBSFE_CAF_BAD_PEAK\fP   668"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBint\fP \fBcaf_open\fP (\fBSF_PRIVATE\fP *psf)"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define aac_MARKER   MAKE_MARKER ('\fBa\fP', '\fBa\fP', '\fBc\fP', ' ')"
+
+.PP
+Definition at line 37 of file caf\&.c\&.
+.SS "#define alac_MARKER   MAKE_MARKER ('\fBa\fP', '\fBl\fP', '\fBa\fP', '\fBc\fP')"
+
+.PP
+Definition at line 38 of file caf\&.c\&.
+.SS "#define alaw_MARKER   MAKE_MARKER ('\fBa\fP', '\fBl\fP', '\fBa\fP', 'w')"
+
+.PP
+Definition at line 39 of file caf\&.c\&.
+.SS "#define CAF_PEAK_CHUNK_SIZE(ch)   ((\fBint\fP) (sizeof (\fBint\fP) + ch * (sizeof (float) + 8)))"
+
+.PP
+Definition at line 67 of file caf\&.c\&.
+.SS "#define caff_MARKER   MAKE_MARKER ('\fBc\fP', '\fBa\fP', '\fBf\fP', '\fBf\fP')"
+
+.PP
+Definition at line 40 of file caf\&.c\&.
+.SS "#define chan_MARKER   MAKE_MARKER ('\fBc\fP', 'h', '\fBa\fP', 'n')"
+
+.PP
+Definition at line 41 of file caf\&.c\&.
+.SS "#define data_MARKER   MAKE_MARKER ('\fBd\fP', '\fBa\fP', '\fBt\fP', '\fBa\fP')"
+
+.PP
+Definition at line 42 of file caf\&.c\&.
+.SS "#define desc_MARKER   MAKE_MARKER ('\fBd\fP', 'e', '\fBs\fP', '\fBc\fP')"
+
+.PP
+Definition at line 43 of file caf\&.c\&.
+.SS "#define edct_MARKER   MAKE_MARKER ('e', '\fBd\fP', '\fBc\fP', '\fBt\fP')"
+
+.PP
+Definition at line 44 of file caf\&.c\&.
+.SS "#define free_MARKER   MAKE_MARKER ('\fBf\fP', 'r', 'e', 'e')"
+
+.PP
+Definition at line 45 of file caf\&.c\&.
+.SS "#define ima4_MARKER   MAKE_MARKER ('\fBi\fP', '\fBm\fP', '\fBa\fP', '4')"
+
+.PP
+Definition at line 46 of file caf\&.c\&.
+.SS "#define info_MARKER   MAKE_MARKER ('\fBi\fP', 'n', '\fBf\fP', 'o')"
+
+.PP
+Definition at line 47 of file caf\&.c\&.
+.SS "#define inst_MARKER   MAKE_MARKER ('\fBi\fP', 'n', '\fBs\fP', '\fBt\fP')"
+
+.PP
+Definition at line 48 of file caf\&.c\&.
+.SS "#define kuki_MARKER   MAKE_MARKER ('\fBk\fP', 'u', '\fBk\fP', '\fBi\fP')"
+
+.PP
+Definition at line 49 of file caf\&.c\&.
+.SS "#define lpcm_MARKER   MAKE_MARKER ('\fBl\fP', '\fBp\fP', '\fBc\fP', '\fBm\fP')"
+
+.PP
+Definition at line 50 of file caf\&.c\&.
+.SS "#define MAC3_MARKER   MAKE_MARKER ('\fBM\fP', '\fBA\fP', 'C', '3')"
+
+.PP
+Definition at line 64 of file caf\&.c\&.
+.SS "#define MAC6_MARKER   MAKE_MARKER ('\fBM\fP', '\fBA\fP', 'C', '6')"
+
+.PP
+Definition at line 65 of file caf\&.c\&.
+.SS "#define mark_MARKER   MAKE_MARKER ('\fBm\fP', '\fBa\fP', 'r', '\fBk\fP')"
+
+.PP
+Definition at line 51 of file caf\&.c\&.
+.SS "#define midi_MARKER   MAKE_MARKER ('\fBm\fP', '\fBi\fP', '\fBd\fP', '\fBi\fP')"
+
+.PP
+Definition at line 52 of file caf\&.c\&.
+.SS "#define mp1_MARKER   MAKE_MARKER ('\&.', '\fBm\fP', '\fBp\fP', '1')"
+
+.PP
+Definition at line 53 of file caf\&.c\&.
+.SS "#define mp2_MARKER   MAKE_MARKER ('\&.', '\fBm\fP', '\fBp\fP', '2')"
+
+.PP
+Definition at line 54 of file caf\&.c\&.
+.SS "#define mp3_MARKER   MAKE_MARKER ('\&.', '\fBm\fP', '\fBp\fP', '3')"
+
+.PP
+Definition at line 55 of file caf\&.c\&.
+.SS "#define ovvw_MARKER   MAKE_MARKER ('o', 'v', 'v', 'w')"
+
+.PP
+Definition at line 56 of file caf\&.c\&.
+.SS "#define pakt_MARKER   MAKE_MARKER ('\fBp\fP', '\fBa\fP', '\fBk\fP', '\fBt\fP')"
+
+.PP
+Definition at line 57 of file caf\&.c\&.
+.SS "#define peak_MARKER   MAKE_MARKER ('\fBp\fP', 'e', '\fBa\fP', '\fBk\fP')"
+
+.PP
+Definition at line 58 of file caf\&.c\&.
+.SS "#define regn_MARKER   MAKE_MARKER ('r', 'e', 'g', 'n')"
+
+.PP
+Definition at line 59 of file caf\&.c\&.
+.SS "#define SFE_CAF_BAD_PEAK   668"
+
+.PP
+Definition at line 71 of file caf\&.c\&.
+.SS "#define SFE_CAF_NO_DESC   667"
+
+.PP
+Definition at line 70 of file caf\&.c\&.
+.SS "#define SFE_CAF_NOT_CAF   666"
+
+.PP
+Definition at line 69 of file caf\&.c\&.
+.SS "#define strg_MARKER   MAKE_MARKER ('\fBs\fP', '\fBt\fP', 'r', 'g')"
+
+.PP
+Definition at line 60 of file caf\&.c\&.
+.SS "#define ulaw_MARKER   MAKE_MARKER ('u', '\fBl\fP', '\fBa\fP', 'w')"
+
+.PP
+Definition at line 63 of file caf\&.c\&.
+.SS "#define umid_MARKER   MAKE_MARKER ('u', '\fBm\fP', '\fBi\fP', '\fBd\fP')"
+
+.PP
+Definition at line 61 of file caf\&.c\&.
+.SS "#define uuid_MARKER   MAKE_MARKER ('u', 'u', '\fBi\fP', '\fBd\fP')"
+
+.PP
+Definition at line 62 of file caf\&.c\&.
+.SH "Function Documentation"
+.PP 
+.SS "\fBint\fP caf_open (\fBSF_PRIVATE\fP * psf)"
+
+.PP
+Definition at line 106 of file caf\&.c\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

@@ -1,0 +1,71 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/lib-src/libsoxr/src/data-io.c" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/lib-src/libsoxr/src/data-io.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <limits\&.h>\fP
+.br
+\fC#include <math\&.h>\fP
+.br
+\fC#include <string\&.h>\fP
+.br
+\fC#include 'data\-io\&.h'\fP
+.br
+\fC#include 'internal\&.h'\fP
+.br
+\fC#include 'rint\&.h'\fP
+.br
+
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBDEINTERLEAVE_FROM\fP(\fBT\fP,  flag)"
+.br
+.ti -1c
+.RI "#define \fBINTERLEAVE_TO\fP(\fBT\fP,  flag)"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define DEINTERLEAVE_FROM(\fBT\fP, flag)"
+\fBValue:\fP
+.PP
+.nf
+do { \
+  unsigned i; \
+  size_t j; \
+  T const * src = *src0; \\
+  if (ch > 1) \
+    for (j = 0; j < n; ++j) for (i = 0; i < ch; ++i) dest[i][j] = (DEINTERLEAVE_TO)*src++; \
+  else if (flag) memcpy(dest[0], src, n * sizeof(T)), src = &src[n]; \
+  else for (j = 0; j < n; dest[0][j++] = (DEINTERLEAVE_TO)*src++); \
+  *src0 = src; \
+} while (0)
+.fi
+.PP
+Definition at line 13 of file data\-io\&.c\&.
+.SS "#define INTERLEAVE_TO(\fBT\fP, flag)"
+\fBValue:\fP
+.PP
+.nf
+do { \
+  unsigned i; \
+  size_t j; \
+  T * dest = *dest0; \\
+  if (ch > 1) \\
+  for (j = 0; j < n; ++j) for (i = 0; i < ch; ++i) *dest++ = (T)src[i][j]; \
+  else if (flag) memcpy(dest, src[0], n * sizeof(T)), dest = &dest[n]; \
+  else for (j = 0; j < n; *dest++ = (T)src[0][j++]); \
+  *dest0 = dest; \
+  return 0; \
+} while (0)
+.fi
+.PP
+Definition at line 190 of file data\-io\&.c\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

@@ -1,0 +1,283 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/lib-src/lv2/lilv/test/lilv_test.c" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/lib-src/lv2/lilv/test/lilv_test.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <assert\&.h>\fP
+.br
+\fC#include <ctype\&.h>\fP
+.br
+\fC#include <errno\&.h>\fP
+.br
+\fC#include <float\&.h>\fP
+.br
+\fC#include <limits\&.h>\fP
+.br
+\fC#include <math\&.h>\fP
+.br
+\fC#include <stdio\&.h>\fP
+.br
+\fC#include <stdlib\&.h>\fP
+.br
+\fC#include <string\&.h>\fP
+.br
+\fC#include <sys/stat\&.h>\fP
+.br
+\fC#include <dirent\&.h>\fP
+.br
+\fC#include <unistd\&.h>\fP
+.br
+\fC#include 'lilv/lilv\&.h'\fP
+.br
+\fC#include '\&.\&./src/lilv_internal\&.h'\fP
+.br
+\fC#include 'lv2/lv2plug\&.in/ns/ext/presets/presets\&.h'\fP
+.br
+\fC#include 'lv2/lv2plug\&.in/ns/ext/state/state\&.h'\fP
+.br
+\fC#include 'lv2/lv2plug\&.in/ns/ext/urid/urid\&.h'\fP
+.br
+
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "struct \fBTestCase\fP"
+.br
+.in -1c
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fB_POSIX_C_SOURCE\fP   200112L /* for setenv */"
+.br
+.ti -1c
+.RI "#define \fBTEST_PATH_MAX\fP   1024"
+.br
+.ti -1c
+.RI "#define \fBSHLIB_EXT\fP   '\&.so'"
+.br
+.ti -1c
+.RI "#define \fBTEST_CASE\fP(\fBname\fP)   { #\fBname\fP, test_##\fBname\fP }"
+.br
+.ti -1c
+.RI "#define \fBTEST_ASSERT\fP(check)"
+.br
+.ti -1c
+.RI "#define \fBPREFIX_ATOM\fP   '@prefix atom: <http://\fBlv2plug\&.in\fP/\fBns\fP/ext/atom#> \&. \\n'"
+.br
+.ti -1c
+.RI "#define \fBPREFIX_LINE\fP   '@prefix : <http://example\&.org/> \&.\\n'"
+.br
+.ti -1c
+.RI "#define \fBPREFIX_LV2\fP   '@prefix lv2: <http://\fBlv2plug\&.in\fP/\fBns\fP/lv2core#> \&.\\n'"
+.br
+.ti -1c
+.RI "#define \fBPREFIX_LV2EV\fP   '@prefix lv2ev: <http://\fBlv2plug\&.in\fP/\fBns\fP/ext/event#> \&. \\n'"
+.br
+.ti -1c
+.RI "#define \fBPREFIX_LV2UI\fP   '@prefix lv2ui: <http://\fBlv2plug\&.in\fP/\fBns\fP/extensions/ui#> \&.\\n'"
+.br
+.ti -1c
+.RI "#define \fBPREFIX_RDF\fP   '@prefix rdf:  <http://www\&.w3\&.org/1999/02/22\-rdf\-\fBsyntax\fP\-\fBns\fP#> \&.\\n'"
+.br
+.ti -1c
+.RI "#define \fBPREFIX_RDFS\fP   '@prefix rdfs: <http://www\&.w3\&.org/2000/01/rdf\-schema#> \&.\\n'"
+.br
+.ti -1c
+.RI "#define \fBPREFIX_FOAF\fP   '@prefix foaf: <http://xmlns\&.com/foaf/0\&.1/> \&.\\n'"
+.br
+.ti -1c
+.RI "#define \fBPREFIX_DOAP\fP   '@prefix doap: <http://usefulinc\&.com/\fBns\fP/doap#> \&.\\n'"
+.br
+.ti -1c
+.RI "#define \fBPREFIX_PSET\fP   '@prefix pset: <http://\fBlv2plug\&.in\fP/\fBns\fP/ext/presets#> \&.\\n'"
+.br
+.ti -1c
+.RI "#define \fBMANIFEST_PREFIXES\fP   \fBPREFIX_LINE\fP \fBPREFIX_LV2\fP \fBPREFIX_RDFS\fP"
+.br
+.ti -1c
+.RI "#define \fBBUNDLE_PREFIXES\fP   \fBPREFIX_ATOM\fP \fBPREFIX_LINE\fP \fBPREFIX_LV2\fP \fBPREFIX_RDF\fP \fBPREFIX_RDFS\fP \fBPREFIX_FOAF\fP \fBPREFIX_DOAP\fP \fBPREFIX_PSET\fP"
+.br
+.ti -1c
+.RI "#define \fBPLUGIN_NAME\fP(\fBname\fP)   'doap:name \\'' \fBname\fP '\\''"
+.br
+.ti -1c
+.RI "#define \fBLICENSE_GPL\fP   'doap:license <http://usefulinc\&.com/doap/licenses/gpl>'"
+.br
+.in -1c
+.SS "Typedefs"
+
+.in +1c
+.ti -1c
+.RI "typedef \fBint\fP(* \fBTestFunc\fP) (\fBvoid\fP)"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBint\fP \fBmain\fP (\fBint\fP \fBargc\fP, char *\fBargv\fP[])"
+.br
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "\fBint\fP \fBtest_count\fP = 0"
+.br
+.ti -1c
+.RI "\fBint\fP \fBerror_count\fP = 0"
+.br
+.ti -1c
+.RI "\fBuint32_t\fP \fBatom_Float\fP = 0"
+.br
+.ti -1c
+.RI "float \fBin\fP = 1\&.0"
+.br
+.ti -1c
+.RI "float \fBout\fP = 42\&.0"
+.br
+.ti -1c
+.RI "char ** \fBuris\fP = \fBNULL\fP"
+.br
+.ti -1c
+.RI "size_t \fBn_uris\fP = 0"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define _POSIX_C_SOURCE   200112L /* for setenv */"
+
+.PP
+Definition at line 18 of file lilv_test\&.c\&.
+.SS "#define BUNDLE_PREFIXES   \fBPREFIX_ATOM\fP \fBPREFIX_LINE\fP \fBPREFIX_LV2\fP \fBPREFIX_RDF\fP \fBPREFIX_RDFS\fP \fBPREFIX_FOAF\fP \fBPREFIX_DOAP\fP \fBPREFIX_PSET\fP"
+
+.PP
+Definition at line 186 of file lilv_test\&.c\&.
+.SS "#define LICENSE_GPL   'doap:license <http://usefulinc\&.com/doap/licenses/gpl>'"
+
+.PP
+Definition at line 188 of file lilv_test\&.c\&.
+.SS "#define MANIFEST_PREFIXES   \fBPREFIX_LINE\fP \fBPREFIX_LV2\fP \fBPREFIX_RDFS\fP"
+
+.PP
+Definition at line 185 of file lilv_test\&.c\&.
+.SS "#define PLUGIN_NAME(\fBname\fP)   'doap:name \\'' \fBname\fP '\\''"
+
+.PP
+Definition at line 187 of file lilv_test\&.c\&.
+.SS "#define PREFIX_ATOM   '@prefix atom: <http://\fBlv2plug\&.in\fP/\fBns\fP/ext/atom#> \&. \\n'"
+
+.PP
+Definition at line 174 of file lilv_test\&.c\&.
+.SS "#define PREFIX_DOAP   '@prefix doap: <http://usefulinc\&.com/\fBns\fP/doap#> \&.\\n'"
+
+.PP
+Definition at line 182 of file lilv_test\&.c\&.
+.SS "#define PREFIX_FOAF   '@prefix foaf: <http://xmlns\&.com/foaf/0\&.1/> \&.\\n'"
+
+.PP
+Definition at line 181 of file lilv_test\&.c\&.
+.SS "#define PREFIX_LINE   '@prefix : <http://example\&.org/> \&.\\n'"
+
+.PP
+Definition at line 175 of file lilv_test\&.c\&.
+.SS "#define PREFIX_LV2   '@prefix lv2: <http://\fBlv2plug\&.in\fP/\fBns\fP/lv2core#> \&.\\n'"
+
+.PP
+Definition at line 176 of file lilv_test\&.c\&.
+.SS "#define PREFIX_LV2EV   '@prefix lv2ev: <http://\fBlv2plug\&.in\fP/\fBns\fP/ext/event#> \&. \\n'"
+
+.PP
+Definition at line 177 of file lilv_test\&.c\&.
+.SS "#define PREFIX_LV2UI   '@prefix lv2ui: <http://\fBlv2plug\&.in\fP/\fBns\fP/extensions/ui#> \&.\\n'"
+
+.PP
+Definition at line 178 of file lilv_test\&.c\&.
+.SS "#define PREFIX_PSET   '@prefix pset: <http://\fBlv2plug\&.in\fP/\fBns\fP/ext/presets#> \&.\\n'"
+
+.PP
+Definition at line 183 of file lilv_test\&.c\&.
+.SS "#define PREFIX_RDF   '@prefix rdf:  <http://www\&.w3\&.org/1999/02/22\-rdf\-\fBsyntax\fP\-\fBns\fP#> \&.\\n'"
+
+.PP
+Definition at line 179 of file lilv_test\&.c\&.
+.SS "#define PREFIX_RDFS   '@prefix rdfs: <http://www\&.w3\&.org/2000/01/rdf\-schema#> \&.\\n'"
+
+.PP
+Definition at line 180 of file lilv_test\&.c\&.
+.SS "#define SHLIB_EXT   '\&.so'"
+
+.PP
+Definition at line 55 of file lilv_test\&.c\&.
+.SS "#define TEST_ASSERT(check)"
+\fBValue:\fP
+.PP
+.nf
+do {\\
+	test_count++;\\
+	if (!(check)) {\\
+		error_count++;\
+        fprintf(stderr, "lilv_test\&.c:%d: error: %s\n", __LINE__, #check);\
+    }\
+} while (0)
+.fi
+.PP
+Definition at line 159 of file lilv_test\&.c\&.
+.SS "#define TEST_CASE(\fBname\fP)   { #\fBname\fP, test_##\fBname\fP }"
+
+.PP
+Definition at line 158 of file lilv_test\&.c\&.
+.SS "#define TEST_PATH_MAX   1024"
+
+.PP
+Definition at line 48 of file lilv_test\&.c\&.
+.SH "Typedef Documentation"
+.PP 
+.SS "typedef \fBint\fP(* TestFunc) (\fBvoid\fP)"
+
+.PP
+Definition at line 167 of file lilv_test\&.c\&.
+.SH "Function Documentation"
+.PP 
+.SS "\fBint\fP main (\fBint\fP argc, char * argv[])"
+
+.PP
+Definition at line 1910 of file lilv_test\&.c\&.
+.SH "Variable Documentation"
+.PP 
+.SS "\fBuint32_t\fP atom_Float = 0"
+
+.PP
+Definition at line 1394 of file lilv_test\&.c\&.
+.SS "\fBint\fP error_count = 0"
+
+.PP
+Definition at line 66 of file lilv_test\&.c\&.
+.SS "float in = 1\&.0"
+
+.PP
+Definition at line 1395 of file lilv_test\&.c\&.
+.SS "size_t n_uris = 0"
+
+.PP
+Definition at line 1438 of file lilv_test\&.c\&.
+.SS "float out = 42\&.0"
+
+.PP
+Definition at line 1396 of file lilv_test\&.c\&.
+.SS "\fBint\fP test_count = 0"
+
+.PP
+Definition at line 65 of file lilv_test\&.c\&.
+.SS "char** uris = \fBNULL\fP"
+
+.PP
+Definition at line 1437 of file lilv_test\&.c\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

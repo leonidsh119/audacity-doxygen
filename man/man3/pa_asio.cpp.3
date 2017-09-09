@@ -1,0 +1,320 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/lib-src/portaudio-v19/src/hostapi/asio/pa_asio.cpp" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/lib-src/portaudio-v19/src/hostapi/asio/pa_asio.cpp \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <stdio\&.h>\fP
+.br
+\fC#include <assert\&.h>\fP
+.br
+\fC#include <string\&.h>\fP
+.br
+\fC#include <new>\fP
+.br
+\fC#include <windows\&.h>\fP
+.br
+\fC#include <mmsystem\&.h>\fP
+.br
+\fC#include 'portaudio\&.h'\fP
+.br
+\fC#include 'pa_asio\&.h'\fP
+.br
+\fC#include 'pa_util\&.h'\fP
+.br
+\fC#include 'pa_allocation\&.h'\fP
+.br
+\fC#include 'pa_hostapi\&.h'\fP
+.br
+\fC#include 'pa_stream\&.h'\fP
+.br
+\fC#include 'pa_cpuload\&.h'\fP
+.br
+\fC#include 'pa_process\&.h'\fP
+.br
+\fC#include 'pa_debugprint\&.h'\fP
+.br
+\fC#include 'pa_ringbuffer\&.h'\fP
+.br
+\fC#include 'pa_win_coinitialize\&.h'\fP
+.br
+\fC#include 'asiosys\&.h'\fP
+.br
+\fC#include 'asio\&.h'\fP
+.br
+\fC#include 'asiodrivers\&.h'\fP
+.br
+\fC#include 'iasiothiscallresolver\&.h'\fP
+.br
+
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "struct \fBPaAsioDriverInfo\fP"
+.br
+.ti -1c
+.RI "struct \fBPaAsioHostApiRepresentation\fP"
+.br
+.ti -1c
+.RI "struct \fBPaAsioDeviceInfo\fP"
+.br
+.ti -1c
+.RI "struct \fBPaAsioStreamBlockingState\fP"
+.br
+.ti -1c
+.RI "struct \fBPaAsioStream\fP"
+.br
+.in -1c
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBWIN32\fP"
+.br
+.ti -1c
+.RI "#define \fBCARBON_COMPATIBLE\fP   (0)"
+.br
+.ti -1c
+.RI "#define \fBPA_ASIO_SET_LAST_HOST_ERROR\fP(\fBerrorCode\fP,  errorText)   \fBPaUtil_SetLastHostErrorInfo\fP( \fBpaASIO\fP, \fBerrorCode\fP, errorText )"
+.br
+.ti -1c
+.RI "#define \fBPA_ASIO_SET_LAST_SYSTEM_ERROR\fP(\fBerrorCode\fP)   PaAsio_SetLastSystemError( \fBerrorCode\fP )"
+.br
+.ti -1c
+.RI "#define \fBPA_ASIO_SET_LAST_ASIO_ERROR\fP(asioError)   \fBPaUtil_SetLastHostErrorInfo\fP( \fBpaASIO\fP, asioError, PaAsio_GetAsioErrorText( asioError ) )"
+.br
+.ti -1c
+.RI "#define \fBPA_SWAP32_\fP(x)   ((x>>24) | ((x>>8)&0xFF00) | ((x<<8)&0xFF0000) | (x<<24));"
+.br
+.ti -1c
+.RI "#define \fBPA_SWAP_\fP(x,  y)   temp=x; x = y; y = temp;"
+.br
+.ti -1c
+.RI "#define \fBPA_DEFAULTSAMPLERATESEARCHORDER_COUNT_\fP   13   /* must be \fBthe\fP same number \fBof\fP elements as \fBin\fP \fBthe\fP array below */"
+.br
+.ti -1c
+.RI "#define \fBASIO64toDouble\fP(\fBa\fP)   ((\fBa\fP)\&.lo + (\fBa\fP)\&.hi * \fBtwoRaisedTo32\fP)"
+.br
+.in -1c
+.SS "Typedefs"
+
+.in +1c
+.ti -1c
+.RI "typedef struct \fBPaAsioDriverInfo\fP \fBPaAsioDriverInfo\fP"
+.br
+.ti -1c
+.RI "typedef \fBvoid\fP \fBPaAsioBufferConverter\fP(\fBvoid\fP *, long, long)"
+.br
+.ti -1c
+.RI "typedef struct \fBPaAsioDeviceInfo\fP \fBPaAsioDeviceInfo\fP"
+.br
+.ti -1c
+.RI "typedef \fBBOOL\fP(\fBWINAPI\fP * \fBIsDebuggerPresentPtr\fP) (VOID)"
+.br
+.ti -1c
+.RI "typedef struct \fBPaAsioStreamBlockingState\fP \fBPaAsioStreamBlockingState\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBPaAsioStream\fP \fBPaAsioStream\fP"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBPaError\fP \fBPaAsio_Initialize\fP (\fBPaUtilHostApiRepresentation\fP **hostApi, \fBPaHostApiIndex\fP hostApiIndex)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBAsioSampleTypeLOG\fP (ASIOSampleType type)"
+.br
+.ti -1c
+.RI "\fBPaError\fP \fBPaAsio_GetAvailableBufferSizes\fP (\fBPaDeviceIndex\fP device, long *minBufferSizeFrames, long *maxBufferSizeFrames, long *preferredBufferSizeFrames, long *granularity)"
+.br
+.ti -1c
+.RI "\fBPaError\fP \fBPaAsio_ShowControlPanel\fP (\fBPaDeviceIndex\fP device, \fBvoid\fP *systemSpecific)"
+.br
+.ti -1c
+.RI "\fBPaError\fP \fBPaAsio_GetInputChannelName\fP (\fBPaDeviceIndex\fP device, \fBint\fP channelIndex, \fBconst\fP char **channelName)"
+.br
+.ti -1c
+.RI "\fBPaError\fP \fBPaAsio_GetOutputChannelName\fP (\fBPaDeviceIndex\fP device, \fBint\fP channelIndex, \fBconst\fP char **channelName)"
+.br
+.ti -1c
+.RI "\fBPaError\fP \fBPaAsio_SetStreamSampleRate\fP (\fBPaStream\fP *\fBs\fP, double sampleRate)"
+.br
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "AsioDrivers * \fBasioDrivers\fP"
+.br
+.ti -1c
+.RI "\fBIsDebuggerPresentPtr\fP \fBIsDebuggerPresent_\fP = 0"
+.br
+.ti -1c
+.RI "\fBconst\fP double \fBtwoRaisedTo32\fP = 4294967296\&."
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Note that specific support for paInputUnderflow, paOutputOverflow and paNeverDropInput is not necessary or possible with this driver due to the synchronous full duplex double-buffered architecture of ASIO\&. 
+.PP
+Definition in file \fBpa_asio\&.cpp\fP\&.
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define ASIO64toDouble(\fBa\fP)   ((\fBa\fP)\&.lo + (\fBa\fP)\&.hi * \fBtwoRaisedTo32\fP)"
+
+.PP
+Definition at line 2901 of file pa_asio\&.cpp\&.
+.SS "#define CARBON_COMPATIBLE   (0)"
+
+.PP
+Definition at line 159 of file pa_asio\&.cpp\&.
+.SS "#define PA_ASIO_SET_LAST_ASIO_ERROR(asioError)   \fBPaUtil_SetLastHostErrorInfo\fP( \fBpaASIO\fP, asioError, PaAsio_GetAsioErrorText( asioError ) )"
+
+.PP
+Definition at line 256 of file pa_asio\&.cpp\&.
+.SS "#define PA_ASIO_SET_LAST_HOST_ERROR(\fBerrorCode\fP, errorText)   \fBPaUtil_SetLastHostErrorInfo\fP( \fBpaASIO\fP, \fBerrorCode\fP, errorText )"
+
+.PP
+Definition at line 211 of file pa_asio\&.cpp\&.
+.SS "#define PA_ASIO_SET_LAST_SYSTEM_ERROR(\fBerrorCode\fP)   PaAsio_SetLastSystemError( \fBerrorCode\fP )"
+
+.PP
+Definition at line 231 of file pa_asio\&.cpp\&.
+.SS "#define PA_DEFAULTSAMPLERATESEARCHORDER_COUNT_   13   /* must be \fBthe\fP same number \fBof\fP elements as \fBin\fP \fBthe\fP array below */"
+
+.PP
+Definition at line 1016 of file pa_asio\&.cpp\&.
+.SS "#define PA_SWAP32_(x)   ((x>>24) | ((x>>8)&0xFF00) | ((x<<8)&0xFF0000) | (x<<24));"
+
+.PP
+Definition at line 468 of file pa_asio\&.cpp\&.
+.SS "#define PA_SWAP_(x, y)   temp=x; x = y; y = temp;"
+
+.PP
+Definition at line 532 of file pa_asio\&.cpp\&.
+.SS "#define WIN32"
+
+.PP
+Definition at line 112 of file pa_asio\&.cpp\&.
+.SH "Typedef Documentation"
+.PP 
+.SS "typedef \fBBOOL\fP(\fBWINAPI\fP * IsDebuggerPresentPtr) (VOID)"
+
+.PP
+Definition at line 1166 of file pa_asio\&.cpp\&.
+.SS "typedef \fBvoid\fP PaAsioBufferConverter(\fBvoid\fP *, long, long)"
+
+.PP
+Definition at line 606 of file pa_asio\&.cpp\&.
+.SS "typedef struct \fBPaAsioDeviceInfo\fP
+ \fBPaAsioDeviceInfo\fP"
+
+.SS "typedef struct \fBPaAsioDriverInfo\fP
+ \fBPaAsioDriverInfo\fP"
+
+.SS "typedef struct \fBPaAsioStream\fP
+ \fBPaAsioStream\fP"
+
+.SS "typedef struct \fBPaAsioStreamBlockingState\fP
+ \fBPaAsioStreamBlockingState\fP"
+A data structure specifically for storing blocking i/o related data\&. 
+.SH "Function Documentation"
+.PP 
+.SS "\fBvoid\fP AsioSampleTypeLOG (ASIOSampleType type)"
+
+.PP
+Definition at line 379 of file pa_asio\&.cpp\&.
+.SS "\fBPaError\fP PaAsio_GetAvailableBufferSizes (\fBPaDeviceIndex\fP device, long * minBufferSizeFrames, long * maxBufferSizeFrames, long * preferredBufferSizeFrames, long * granularity)"
+Retrieve legal native buffer sizes for the specificed device, in sample frames\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdevice\fP The global index of the device about which the query is being made\&. 
+.br
+\fIminBufferSizeFrames\fP A pointer to the location which will receive the minimum buffer size value\&. 
+.br
+\fImaxBufferSizeFrames\fP A pointer to the location which will receive the maximum buffer size value\&. 
+.br
+\fIpreferredBufferSizeFrames\fP A pointer to the location which will receive the preferred buffer size value\&. 
+.br
+\fIgranularity\fP A pointer to the location which will receive the 'granularity'\&. This value determines the step size used to compute the legal values between minBufferSizeFrames and maxBufferSizeFrames\&. If granularity is -1 then available buffer size values are powers of two\&.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+ASIOGetBufferSize \fBin\fP \fBthe\fP ASIO SDK\&.
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+: this function used to be called PaAsio_GetAvailableLatencyValues\&. There is a #define that maps PaAsio_GetAvailableLatencyValues to this function for backwards compatibility\&. 
+.RE
+.PP
+
+.PP
+Definition at line 913 of file pa_asio\&.cpp\&.
+.SS "\fBPaError\fP PaAsio_GetInputChannelName (\fBPaDeviceIndex\fP device, \fBint\fP channelIndex, \fBconst\fP char ** channelName)"
+Retrieve a pointer to a string containing the name of the specified input channel\&. The string is valid until Pa_Terminate is called\&.
+.PP
+The string will be no longer than 32 characters including the null terminator\&. 
+.PP
+Definition at line 4137 of file pa_asio\&.cpp\&.
+.SS "\fBPaError\fP PaAsio_GetOutputChannelName (\fBPaDeviceIndex\fP device, \fBint\fP channelIndex, \fBconst\fP char ** channelName)"
+Retrieve a pointer to a string containing the name of the specified input channel\&. The string is valid until Pa_Terminate is called\&.
+.PP
+The string will be no longer than 32 characters including the null terminator\&. 
+.PP
+Definition at line 4170 of file pa_asio\&.cpp\&.
+.SS "\fBPaError\fP PaAsio_Initialize (\fBPaUtilHostApiRepresentation\fP ** hostApi, \fBPaHostApiIndex\fP hostApiIndex)"
+
+.PP
+Definition at line 1170 of file pa_asio\&.cpp\&.
+.SS "\fBPaError\fP PaAsio_SetStreamSampleRate (\fBPaStream\fP * stream, double sampleRate)"
+Set the sample rate of an open paASIO stream\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIstream\fP The stream to operate on\&. 
+.br
+\fIsampleRate\fP The new sample rate\&.
+.RE
+.PP
+Note that this function may fail if the stream is alredy running and the ASIO driver does not support switching the sample rate of a running stream\&.
+.PP
+Returns paIncompatibleStreamHostApi if stream is not a paASIO stream\&. 
+.PP
+Definition at line 4239 of file pa_asio\&.cpp\&.
+.SS "\fBPaError\fP PaAsio_ShowControlPanel (\fBPaDeviceIndex\fP device, \fBvoid\fP * systemSpecific)"
+Display the ASIO control panel for the specified device\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdevice\fP The global index of the device whose control panel is to be displayed\&. 
+.br
+\fIsystemSpecific\fP On Windows, the calling application's main window handle, on Macintosh this value should be zero\&. 
+.RE
+.PP
+
+.PP
+Definition at line 4031 of file pa_asio\&.cpp\&.
+.SH "Variable Documentation"
+.PP 
+.SS "AsioDrivers* asioDrivers"
+
+.SS "\fBIsDebuggerPresentPtr\fP IsDebuggerPresent_ = 0"
+
+.PP
+Definition at line 1167 of file pa_asio\&.cpp\&.
+.SS "\fBconst\fP double twoRaisedTo32 = 4294967296\&."
+
+.PP
+Definition at line 2900 of file pa_asio\&.cpp\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

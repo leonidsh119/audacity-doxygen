@@ -1,0 +1,277 @@
+.TH "EffectManager" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+EffectManager \- \fBEffectManager\fP is the class that handles effects and effect categories\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <EffectManager\&.h>\fP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBEffectManager\fP ()"
+.br
+.ti -1c
+.RI "virtual \fB~EffectManager\fP ()"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBPluginID\fP & \fBRegisterEffect\fP (\fBEffect\fP *\fBf\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBUnregisterEffect\fP (\fBconst\fP \fBPluginID\fP &ID)"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBDoEffect\fP (\fBconst\fP \fBPluginID\fP &ID, wxWindow *parent, double projectRate, \fBTrackList\fP *list, \fBTrackFactory\fP *factory, \fBSelectedRegion\fP *selectedRegion, \fBbool\fP shouldPrompt=\fBtrue\fP)"
+.br
+.ti -1c
+.RI "wxString \fBGetEffectName\fP (\fBconst\fP \fBPluginID\fP &ID)"
+.br
+.ti -1c
+.RI "wxString \fBGetEffectIdentifier\fP (\fBconst\fP \fBPluginID\fP &ID)"
+.br
+.ti -1c
+.RI "wxString \fBGetEffectDescription\fP (\fBconst\fP \fBPluginID\fP &ID)"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBIsHidden\fP (\fBconst\fP \fBPluginID\fP &ID)"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBSupportsAutomation\fP (\fBconst\fP \fBPluginID\fP &ID)"
+.br
+.ti -1c
+.RI "wxString \fBGetEffectParameters\fP (\fBconst\fP \fBPluginID\fP &ID)"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBSetEffectParameters\fP (\fBconst\fP \fBPluginID\fP &ID, \fBconst\fP wxString &\fBparams\fP)"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBPromptUser\fP (\fBconst\fP \fBPluginID\fP &ID, wxWindow *parent)"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBHasPresets\fP (\fBconst\fP \fBPluginID\fP &ID)"
+.br
+.ti -1c
+.RI "wxString \fBGetPreset\fP (\fBconst\fP \fBPluginID\fP &ID, \fBconst\fP wxString &\fBparams\fP, wxWindow *parent)"
+.br
+.ti -1c
+.RI "wxString \fBGetDefaultPreset\fP (\fBconst\fP \fBPluginID\fP &ID)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBSetBatchProcessing\fP (\fBconst\fP \fBPluginID\fP &ID, \fBbool\fP \fBstart\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBSetSkipStateFlag\fP (\fBbool\fP flag)"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBGetSkipStateFlag\fP ()"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBRealtimeIsActive\fP ()"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBRealtimeIsSuspended\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBRealtimeAddEffect\fP (\fBEffect\fP *effect)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBRealtimeRemoveEffect\fP (\fBEffect\fP *effect)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBRealtimeSetEffects\fP (\fBconst\fP EffectArray &mActive)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBRealtimeInitialize\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBRealtimeAddProcessor\fP (\fBint\fP group, \fBint\fP chans, float \fBrate\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBRealtimeFinalize\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBRealtimeSuspend\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBRealtimeResume\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBRealtimeProcessStart\fP ()"
+.br
+.ti -1c
+.RI "\fBsampleCount\fP \fBRealtimeProcess\fP (\fBint\fP group, \fBint\fP chans, float **buffers, \fBsampleCount\fP numSamples)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBRealtimeProcessEnd\fP ()"
+.br
+.ti -1c
+.RI "\fBint\fP \fBGetRealtimeLatency\fP ()"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBPluginID\fP & \fBGetEffectByIdentifier\fP (\fBconst\fP wxString &strTarget)"
+.br
+.in -1c
+.SS "Static Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "static \fBEffectManager\fP & \fBGet\fP ()"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+\fBEffectManager\fP is the class that handles effects and effect categories\&. 
+
+It maintains a graph of effect categories and subcategories, registers and unregisters effects and can return filtered lists of effects\&. 
+.PP
+Definition at line 43 of file EffectManager\&.h\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "EffectManager::EffectManager ()"
+
+.PP
+Definition at line 38 of file EffectManager\&.cpp\&.
+.SS "EffectManager::~EffectManager ()\fC [virtual]\fP"
+
+.PP
+Definition at line 52 of file EffectManager\&.cpp\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "\fBbool\fP EffectManager::DoEffect (\fBconst\fP \fBPluginID\fP & ID, wxWindow * parent, double projectRate, \fBTrackList\fP * list, \fBTrackFactory\fP * factory, \fBSelectedRegion\fP * selectedRegion, \fBbool\fP shouldPrompt = \fC\fBtrue\fP\fP)"
+Run an effect given the plugin ID 
+.PP
+Definition at line 87 of file EffectManager\&.cpp\&.
+.SS "\fBEffectManager\fP & EffectManager::Get ()\fC [static]\fP"
+Get the singleton instance of the \fBEffectManager\fP\&. Probably not safe for multi-thread use\&. 
+.PP
+Definition at line 32 of file EffectManager\&.cpp\&.
+.SS "wxString EffectManager::GetDefaultPreset (\fBconst\fP \fBPluginID\fP & ID)"
+
+.PP
+Definition at line 298 of file EffectManager\&.cpp\&.
+.SS "\fBconst\fP \fBPluginID\fP & EffectManager::GetEffectByIdentifier (\fBconst\fP wxString & strTarget)"
+
+.PP
+Definition at line 764 of file EffectManager\&.cpp\&.
+.SS "wxString EffectManager::GetEffectDescription (\fBconst\fP \fBPluginID\fP & ID)"
+
+.PP
+Definition at line 152 of file EffectManager\&.cpp\&.
+.SS "wxString EffectManager::GetEffectIdentifier (\fBconst\fP \fBPluginID\fP & ID)"
+
+.PP
+Definition at line 126 of file EffectManager\&.cpp\&.
+.SS "wxString EffectManager::GetEffectName (\fBconst\fP \fBPluginID\fP & ID)"
+
+.PP
+Definition at line 121 of file EffectManager\&.cpp\&.
+.SS "wxString EffectManager::GetEffectParameters (\fBconst\fP \fBPluginID\fP & ID)"
+
+.PP
+Definition at line 197 of file EffectManager\&.cpp\&.
+.SS "wxString EffectManager::GetPreset (\fBconst\fP \fBPluginID\fP & ID, \fBconst\fP wxString & params, wxWindow * parent)"
+
+.PP
+Definition at line 267 of file EffectManager\&.cpp\&.
+.SS "\fBint\fP EffectManager::GetRealtimeLatency ()"
+
+.PP
+Definition at line 710 of file EffectManager\&.cpp\&.
+.SS "\fBbool\fP EffectManager::GetSkipStateFlag ()"
+
+.PP
+Definition at line 181 of file EffectManager\&.cpp\&.
+.SS "\fBbool\fP EffectManager::HasPresets (\fBconst\fP \fBPluginID\fP & ID)"
+
+.PP
+Definition at line 252 of file EffectManager\&.cpp\&.
+.SS "\fBbool\fP EffectManager::IsHidden (\fBconst\fP \fBPluginID\fP & ID)"
+
+.PP
+Definition at line 164 of file EffectManager\&.cpp\&.
+.SS "\fBbool\fP EffectManager::PromptUser (\fBconst\fP \fBPluginID\fP & ID, wxWindow * parent)"
+
+.PP
+Definition at line 239 of file EffectManager\&.cpp\&.
+.SS "\fBvoid\fP EffectManager::RealtimeAddEffect (\fBEffect\fP * effect)"
+
+.PP
+Definition at line 442 of file EffectManager\&.cpp\&.
+.SS "\fBvoid\fP EffectManager::RealtimeAddProcessor (\fBint\fP group, \fBint\fP chans, float rate)"
+
+.PP
+Definition at line 508 of file EffectManager\&.cpp\&.
+.SS "\fBvoid\fP EffectManager::RealtimeFinalize ()"
+
+.PP
+Definition at line 519 of file EffectManager\&.cpp\&.
+.SS "\fBvoid\fP EffectManager::RealtimeInitialize ()"
+
+.PP
+Definition at line 485 of file EffectManager\&.cpp\&.
+.SS "\fBbool\fP EffectManager::RealtimeIsActive ()"
+
+.PP
+Definition at line 432 of file EffectManager\&.cpp\&.
+.SS "\fBbool\fP EffectManager::RealtimeIsSuspended ()"
+
+.PP
+Definition at line 437 of file EffectManager\&.cpp\&.
+.SS "\fBsampleCount\fP EffectManager::RealtimeProcess (\fBint\fP group, \fBint\fP chans, float ** buffers, \fBsampleCount\fP numSamples)"
+
+.PP
+Definition at line 614 of file EffectManager\&.cpp\&.
+.SS "\fBvoid\fP EffectManager::RealtimeProcessEnd ()"
+
+.PP
+Definition at line 689 of file EffectManager\&.cpp\&.
+.SS "\fBvoid\fP EffectManager::RealtimeProcessStart ()"
+
+.PP
+Definition at line 590 of file EffectManager\&.cpp\&.
+.SS "\fBvoid\fP EffectManager::RealtimeRemoveEffect (\fBEffect\fP * effect)"
+
+.PP
+Definition at line 467 of file EffectManager\&.cpp\&.
+.SS "\fBvoid\fP EffectManager::RealtimeResume ()"
+
+.PP
+Definition at line 564 of file EffectManager\&.cpp\&.
+.SS "\fBvoid\fP EffectManager::RealtimeSetEffects (\fBconst\fP EffectArray & mActive)"
+
+.SS "\fBvoid\fP EffectManager::RealtimeSuspend ()"
+
+.PP
+Definition at line 541 of file EffectManager\&.cpp\&.
+.SS "\fBconst\fP \fBPluginID\fP & EffectManager::RegisterEffect (\fBEffect\fP * f)"
+(Un)Register an effect so it can be executed\&. 
+.PP
+Definition at line 69 of file EffectManager\&.cpp\&.
+.SS "\fBvoid\fP EffectManager::SetBatchProcessing (\fBconst\fP \fBPluginID\fP & ID, \fBbool\fP start)"
+
+.PP
+Definition at line 328 of file EffectManager\&.cpp\&.
+.SS "\fBbool\fP EffectManager::SetEffectParameters (\fBconst\fP \fBPluginID\fP & ID, \fBconst\fP wxString & params)"
+
+.PP
+Definition at line 220 of file EffectManager\&.cpp\&.
+.SS "\fBvoid\fP EffectManager::SetSkipStateFlag (\fBbool\fP flag)"
+Allow effects to disable saving the state at run time 
+.PP
+Definition at line 176 of file EffectManager\&.cpp\&.
+.SS "\fBbool\fP EffectManager::SupportsAutomation (\fBconst\fP \fBPluginID\fP & ID)"
+Support for batch commands 
+.PP
+Definition at line 186 of file EffectManager\&.cpp\&.
+.SS "\fBvoid\fP EffectManager::UnregisterEffect (\fBconst\fP \fBPluginID\fP & ID)"
+
+.PP
+Definition at line 80 of file EffectManager\&.cpp\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

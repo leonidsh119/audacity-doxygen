@@ -1,0 +1,414 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/lib-src/libsoxr/src/vr32.c" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/lib-src/libsoxr/src/vr32.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <assert\&.h>\fP
+.br
+\fC#include <math\&.h>\fP
+.br
+\fC#include <string\&.h>\fP
+.br
+\fC#include <stdlib\&.h>\fP
+.br
+\fC#include 'internal\&.h'\fP
+.br
+\fC#include 'fifo\&.h'\fP
+.br
+
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "struct \fBhalf_iir_t\fP"
+.br
+.ti -1c
+.RI "struct \fBstream_t\fP"
+.br
+.ti -1c
+.RI "struct \fBstage_t\fP"
+.br
+.ti -1c
+.RI "struct \fBrate_t\fP"
+.br
+.in -1c
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBM_PI\fP   3\&.14159265358979323846"
+.br
+.ti -1c
+.RI "#define \fBM_LN2\fP   0\&.69314718055994530942"
+.br
+.ti -1c
+.RI "#define \fBFIFO_SIZE_T\fP   \fBint\fP"
+.br
+.ti -1c
+.RI "#define \fBFIFO_MIN\fP   0x8000"
+.br
+.ti -1c
+.RI "#define \fBFADE_LEN_BITS\fP   9"
+.br
+.ti -1c
+.RI "#define \fBPHASE_BITS_D\fP   (8 + \fBPHASE_MORE\fP)"
+.br
+.ti -1c
+.RI "#define \fBPHASE_BITS_U\fP   (7 + \fBPHASE_MORE\fP)"
+.br
+.ti -1c
+.RI "#define \fBPHASE_MORE\fP   0 /* 2 improves small \fBint\fP, and large u, ratios\&. */"
+.br
+.ti -1c
+.RI "#define \fBPHASES0_D\fP   12"
+.br
+.ti -1c
+.RI "#define \fBPOLY_FIR_LEN_D\fP   20"
+.br
+.ti -1c
+.RI "#define \fBPHASES0_U\fP   6"
+.br
+.ti -1c
+.RI "#define \fBPOLY_FIR_LEN_U\fP   12"
+.br
+.ti -1c
+.RI "#define \fBMULT32\fP   (65536\&. * 65536\&.)"
+.br
+.ti -1c
+.RI "#define \fBPHASES_D\fP   (1 << \fBPHASE_BITS_D\fP)"
+.br
+.ti -1c
+.RI "#define \fBPHASES_U\fP   (1 << \fBPHASE_BITS_U\fP)"
+.br
+.ti -1c
+.RI "#define \fBCONVOLVE\fP"
+.br
+.ti -1c
+.RI "#define \fBHALF_FIR_LEN_2\fP   (\fBiAL\fP(half_fir_coefs) \- 1)"
+.br
+.ti -1c
+.RI "#define \fBHALF_FIR_LEN_4\fP   (\fBHALF_FIR_LEN_2\fP / 2)"
+.br
+.ti -1c
+.RI "#define \fB_\fP   sum += (input[\-\fBi\fP] + input[\fBi\fP]) * half_fir_coefs[\fBi\fP], ++\fBi\fP;"
+.br
+.ti -1c
+.RI "#define \fB_\fP   sum += (input[\-\fBi\fP] + input[\fBi\fP]) * half_fir_coefs[2*\fBi\fP], ++\fBi\fP;"
+.br
+.ti -1c
+.RI "#define \fB_\fP   sum += (input[\-\fBi\fP] + input[1+\fBi\fP]) * half_fir_coefs[2*\fBi\fP+1], ++\fBi\fP;"
+.br
+.ti -1c
+.RI "#define \fB_\fP   sum += (input[\-(2*\fBi\fP+1)] + input[2*\fBi\fP+1]) * coefs[\fBi\fP], ++\fBi\fP;"
+.br
+.ti -1c
+.RI "#define \fBIIR_FILTER\fP   \fB_\fP \fB_\fP \fB_\fP \fB_\fP \fB_\fP \fB_\fP \fB_\fP"
+.br
+.ti -1c
+.RI "#define \fB_\fP"
+.br
+.ti -1c
+.RI "#define \fB_\fP   \fBp\fP\->y[\fBi\fP] += small_normal, \fBi\fP += 2;"
+.br
+.ti -1c
+.RI "#define \fB_\fP   \fBp\fP\->y[\fBi\fP] \-= small_normal, \fBi\fP += 2;"
+.br
+.ti -1c
+.RI "#define \fBraw_coef_t\fP   float"
+.br
+.ti -1c
+.RI "#define \fBcoef\fP(coef_p,  interp_order,  fir_len,  phase_num,  coef_interp_num,  fir_coef_num)"
+.br
+.ti -1c
+.RI "#define \fBCOEF\fP(h,  \fBl\fP,  \fBi\fP)   ((\fBi\fP)<0||(\fBi\fP)>=(\fBl\fP)?0:(h)[(\fBi\fP)>(\fBl\fP)/2?(\fBl\fP)\-(\fBi\fP):(\fBi\fP)])"
+.br
+.ti -1c
+.RI "#define \fB_\fP   sum += (\fBb\fP *x + \fBa\fP)*input[\fBi\fP], ++\fBi\fP;"
+.br
+.ti -1c
+.RI "#define \fBa\fP   (\fBcoef\fP(poly_fir_coefs_d, 1, \fBPOLY_FIR_LEN_D\fP, phase, 0,\fBi\fP))"
+.br
+.ti -1c
+.RI "#define \fBb\fP   (\fBcoef\fP(poly_fir_coefs_d, 1, \fBPOLY_FIR_LEN_D\fP, phase, 1,\fBi\fP))"
+.br
+.ti -1c
+.RI "#define \fBa\fP   (\fBcoef\fP(poly_fir_coefs_u, 1, \fBPOLY_FIR_LEN_U\fP, phase, 0,\fBi\fP))"
+.br
+.ti -1c
+.RI "#define \fBb\fP   (\fBcoef\fP(poly_fir_coefs_u, 1, \fBPOLY_FIR_LEN_U\fP, phase, 1,\fBi\fP))"
+.br
+.ti -1c
+.RI "#define \fBADD_TO\fP(x,  y)                     x\&.all += y\&.all"
+.br
+.ti -1c
+.RI "#define \fBSUBTRACT_FROM\fP(x,  y)       x\&.all \-= y\&.all"
+.br
+.ti -1c
+.RI "#define \fBFRAC\fP(x)                             x\&.part\&.frac"
+.br
+.ti -1c
+.RI "#define \fBINT\fP(x)                               \fBx\&.part\&.integer\fP"
+.br
+.ti -1c
+.RI "#define \fBshiftr\fP(x,  by)   ((by) < 0? (x) << (\-(by)) : (x) >> (by))"
+.br
+.ti -1c
+.RI "#define \fBshiftl\fP(x,  by)   \fBshiftr\fP(x,\-(by))"
+.br
+.ti -1c
+.RI "#define \fBstage_occupancy\fP(\fBs\fP)   (fifo_occupancy(&(\fBs\fP)\->fifo) \- 4*\fBHALF_FIR_LEN_2\fP)"
+.br
+.ti -1c
+.RI "#define \fBstage_read_p\fP(\fBs\fP)   ((float *)\fBfifo_read_ptr\fP(&(\fBs\fP)\->fifo) + 2*\fBHALF_FIR_LEN_2\fP)"
+.br
+.ti -1c
+.RI "#define \fBstage_preload\fP(\fBs\fP)"
+.br
+.ti -1c
+.RI "#define \fBlshift\fP(x,  by)   (x)=(by)>0?(x)<<(by):(x)>>\-(by)"
+.br
+.in -1c
+.SS "Typedefs"
+
+.in +1c
+.ti -1c
+.RI "typedef \fBvoid\fP(* \fBfn_t\fP) (\fBvoid\fP)"
+.br
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "\fBfn_t\fP \fB_soxr_vr32_cb\fP []"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define _   sum += (input[\-\fBi\fP] + input[\fBi\fP]) * half_fir_coefs[\fBi\fP], ++\fBi\fP;"
+
+.PP
+Definition at line 275 of file vr32\&.c\&.
+.SS "#define _   sum += (input[\-\fBi\fP] + input[\fBi\fP]) * half_fir_coefs[2*\fBi\fP], ++\fBi\fP;"
+
+.PP
+Definition at line 275 of file vr32\&.c\&.
+.SS "#define _   sum += (input[\-\fBi\fP] + input[1+\fBi\fP]) * half_fir_coefs[2*\fBi\fP+1], ++\fBi\fP;"
+
+.PP
+Definition at line 275 of file vr32\&.c\&.
+.SS "#define _   sum += (input[\-(2*\fBi\fP+1)] + input[2*\fBi\fP+1]) * coefs[\fBi\fP], ++\fBi\fP;"
+
+.PP
+Definition at line 275 of file vr32\&.c\&.
+.SS "#define _"
+\fBValue:\fP
+.PP
+.nf
+in1=(in1-p->y[i])*iir_coefs[i]+tmp1;tmp1=p->y[i],p->y[i]=in1;++i;\
+          in0=(in0-p->y[i])*iir_coefs[i]+tmp0;tmp0=p->y[i],p->y[i]=in0;++i;
+.fi
+.PP
+Definition at line 275 of file vr32\&.c\&.
+.SS "#define _   \fBp\fP\->y[\fBi\fP] += small_normal, \fBi\fP += 2;"
+
+.PP
+Definition at line 275 of file vr32\&.c\&.
+.SS "#define _   \fBp\fP\->y[\fBi\fP] \-= small_normal, \fBi\fP += 2;"
+
+.PP
+Definition at line 275 of file vr32\&.c\&.
+.SS "#define _   sum += (\fBb\fP *x + \fBa\fP)*input[\fBi\fP], ++\fBi\fP;"
+
+.PP
+Definition at line 275 of file vr32\&.c\&.
+.SS "#define a   (\fBcoef\fP(poly_fir_coefs_d, 1, \fBPOLY_FIR_LEN_D\fP, phase, 0,\fBi\fP))"
+
+.PP
+Definition at line 290 of file vr32\&.c\&.
+.SS "#define a   (\fBcoef\fP(poly_fir_coefs_u, 1, \fBPOLY_FIR_LEN_U\fP, phase, 0,\fBi\fP))"
+
+.PP
+Definition at line 290 of file vr32\&.c\&.
+.SS "#define ADD_TO(x, y)   x\&.all += y\&.all"
+
+.PP
+Definition at line 306 of file vr32\&.c\&.
+.SS "#define b   (\fBcoef\fP(poly_fir_coefs_d, 1, \fBPOLY_FIR_LEN_D\fP, phase, 1,\fBi\fP))"
+
+.PP
+Definition at line 291 of file vr32\&.c\&.
+.SS "#define b   (\fBcoef\fP(poly_fir_coefs_u, 1, \fBPOLY_FIR_LEN_U\fP, phase, 1,\fBi\fP))"
+
+.PP
+Definition at line 291 of file vr32\&.c\&.
+.SS "#define coef(coef_p, interp_order, fir_len, phase_num, coef_interp_num, fir_coef_num)"
+\fBValue:\fP
+.PP
+.nf
+coef_p[(fir_len) * ((interp_order) + 1) * (phase_num) + \
+    ((interp_order) + 1) * (fir_coef_num) + (interp_order - coef_interp_num)]
+.fi
+.PP
+Definition at line 237 of file vr32\&.c\&.
+.SS "#define COEF(h, \fBl\fP, \fBi\fP)   ((\fBi\fP)<0||(\fBi\fP)>=(\fBl\fP)?0:(h)[(\fBi\fP)>(\fBl\fP)/2?(\fBl\fP)\-(\fBi\fP):(\fBi\fP)])"
+
+.PP
+Definition at line 241 of file vr32\&.c\&.
+.SS "#define CONVOLVE"
+\fBValue:\fP
+.PP
+.nf
+_ _ _ _ _ _ _ _ _ _  _ _ _ _ _ _ _ _ _ _ \
+    _ _ _ _ _ _ _ _ _ _  _ _ _ _ _ _ _ _ _ _ \
+    _ _ _ _ _ _ _ _ _ _  _ _ _ _ _ _ _ _ _ _
+.fi
+.PP
+Definition at line 79 of file vr32\&.c\&.
+.SS "#define FADE_LEN_BITS   9"
+
+.PP
+Definition at line 21 of file vr32\&.c\&.
+.SS "#define FIFO_MIN   0x8000"
+
+.PP
+Definition at line 18 of file vr32\&.c\&.
+.SS "#define FIFO_SIZE_T   \fBint\fP"
+
+.PP
+Definition at line 17 of file vr32\&.c\&.
+.SS "#define FRAC(x)   x\&.part\&.frac"
+
+.PP
+Definition at line 308 of file vr32\&.c\&.
+.SS "#define HALF_FIR_LEN_2   (\fBiAL\fP(half_fir_coefs) \- 1)"
+
+.PP
+Definition at line 84 of file vr32\&.c\&.
+.SS "#define HALF_FIR_LEN_4   (\fBHALF_FIR_LEN_2\fP / 2)"
+
+.PP
+Definition at line 85 of file vr32\&.c\&.
+.SS "#define IIR_FILTER   \fB_\fP \fB_\fP \fB_\fP \fB_\fP \fB_\fP \fB_\fP \fB_\fP"
+
+.PP
+Definition at line 141 of file vr32\&.c\&.
+.SS "#define INT(x)   \fBx\&.part\&.integer\fP"
+
+.PP
+Definition at line 309 of file vr32\&.c\&.
+.SS "#define lshift(x, by)   (x)=(by)>0?(x)<<(by):(x)>>\-(by)"
+
+.SS "#define M_LN2   0\&.69314718055994530942"
+
+.PP
+Definition at line 12 of file vr32\&.c\&.
+.SS "#define M_PI   3\&.14159265358979323846"
+
+.PP
+Definition at line 9 of file vr32\&.c\&.
+.SS "#define MULT32   (65536\&. * 65536\&.)"
+
+.PP
+Definition at line 31 of file vr32\&.c\&.
+.SS "#define PHASE_BITS_D   (8 + \fBPHASE_MORE\fP)"
+
+.PP
+Definition at line 22 of file vr32\&.c\&.
+.SS "#define PHASE_BITS_U   (7 + \fBPHASE_MORE\fP)"
+
+.PP
+Definition at line 23 of file vr32\&.c\&.
+.SS "#define PHASE_MORE   0 /* 2 improves small \fBint\fP, and large u, ratios\&. */"
+
+.PP
+Definition at line 24 of file vr32\&.c\&.
+.SS "#define PHASES0_D   12"
+
+.PP
+Definition at line 26 of file vr32\&.c\&.
+.SS "#define PHASES0_U   6"
+
+.PP
+Definition at line 28 of file vr32\&.c\&.
+.SS "#define PHASES_D   (1 << \fBPHASE_BITS_D\fP)"
+
+.PP
+Definition at line 32 of file vr32\&.c\&.
+.SS "#define PHASES_U   (1 << \fBPHASE_BITS_U\fP)"
+
+.PP
+Definition at line 33 of file vr32\&.c\&.
+.SS "#define POLY_FIR_LEN_D   20"
+
+.PP
+Definition at line 27 of file vr32\&.c\&.
+.SS "#define POLY_FIR_LEN_U   12"
+
+.PP
+Definition at line 29 of file vr32\&.c\&.
+.SS "#define raw_coef_t   float"
+
+.PP
+Definition at line 178 of file vr32\&.c\&.
+.SS "#define shiftl(x, by)   \fBshiftr\fP(x,\-(by))"
+
+.PP
+Definition at line 389 of file vr32\&.c\&.
+.SS "#define shiftr(x, by)   ((by) < 0? (x) << (\-(by)) : (x) >> (by))"
+
+.PP
+Definition at line 388 of file vr32\&.c\&.
+.SS "#define stage_occupancy(\fBs\fP)   (fifo_occupancy(&(\fBs\fP)\->fifo) \- 4*\fBHALF_FIR_LEN_2\fP)"
+
+.PP
+Definition at line 390 of file vr32\&.c\&.
+.SS "#define stage_preload(\fBs\fP)"
+\fBValue:\fP
+.PP
+.nf
+memset(fifo_reserve(&(s)->fifo, (s)->preload), \
+    0, sizeof(float) * (size_t)(s)->preload);
+.fi
+.PP
+Definition at line 392 of file vr32\&.c\&.
+.SS "#define stage_read_p(\fBs\fP)   ((float *)\fBfifo_read_ptr\fP(&(\fBs\fP)\->fifo) + 2*\fBHALF_FIR_LEN_2\fP)"
+
+.PP
+Definition at line 391 of file vr32\&.c\&.
+.SS "#define SUBTRACT_FROM(x, y)   x\&.all \-= y\&.all"
+
+.PP
+Definition at line 307 of file vr32\&.c\&.
+.SH "Typedef Documentation"
+.PP 
+.SS "typedef \fBvoid\fP(*  fn_t) (\fBvoid\fP)"
+
+.PP
+Definition at line 759 of file vr32\&.c\&.
+.SH "Variable Documentation"
+.PP 
+.SS "\fBfn_t\fP _soxr_vr32_cb[]"
+\fBInitial value:\fP
+.PP
+.nf
+= {
+  (fn_t)vr_input,
+  (fn_t)vr_process,
+  (fn_t)vr_output,
+  (fn_t)vr_flush,
+  (fn_t)vr_close,
+  (fn_t)vr_delay,
+  (fn_t)vr_sizes,
+  (fn_t)vr_create,
+  (fn_t)vr_set_io_ratio,
+  (fn_t)vr_id,
+}
+.fi
+.PP
+Definition at line 760 of file vr32\&.c\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

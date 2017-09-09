@@ -1,0 +1,373 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/lib-src/libnyquist/nyquist/cmt/midimgr.c" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/lib-src/libnyquist/nyquist/cmt/midimgr.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include 'cext\&.h'\fP
+.br
+\fC#include 'stdio\&.h'\fP
+.br
+\fC#include 'userio\&.h'\fP
+.br
+\fC#include 'MIDI\&.h'\fP
+.br
+\fC#include 'midifns\&.h'\fP
+.br
+\fC#include 'midibuff\&.h'\fP
+.br
+\fC#include 'midierr\&.h'\fP
+.br
+\fC#include 'midimgr\&.h'\fP
+.br
+\fC#include 'midicode\&.h'\fP
+.br
+\fC#include 'cmdline\&.h'\fP
+.br
+\fC#include <toolutils\&.h>\fP
+.br
+\fC#include <AppleEvents\&.h>\fP
+.br
+\fC#include <EPPC\&.h>\fP
+.br
+\fC#include <Gestalt\&.h>\fP
+.br
+\fC#include <PPCToolbox\&.h>\fP
+.br
+\fC#include <Processes\&.h>\fP
+.br
+\fC#include <Sound\&.h>\fP
+.br
+
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBCMTclientID\fP   'CMT '"
+.br
+.ti -1c
+.RI "#define \fBtimePortID\fP   'Atim'"
+.br
+.ti -1c
+.RI "#define \fBinputPortID\fP   'Bin '"
+.br
+.ti -1c
+.RI "#define \fBoutputPortID\fP   'Cout'"
+.br
+.ti -1c
+.RI "#define \fBnoClient\fP   '    '"
+.br
+.ti -1c
+.RI "#define \fBnoTimeBaseRefNum\fP   0"
+.br
+.ti -1c
+.RI "#define \fBnoReadHook\fP   0L"
+.br
+.ti -1c
+.RI "#define \fBzeroTime\fP   0L"
+.br
+.ti -1c
+.RI "#define \fBtimePortBuffSize\fP   0L"
+.br
+.ti -1c
+.RI "#define \fBinputPortBuffSize\fP   2048"
+.br
+.ti -1c
+.RI "#define \fBoutputPortBuffSize\fP   0L"
+.br
+.ti -1c
+.RI "#define \fBrefCon0\fP   0L"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "pascal short \fBCMTreader\fP (MIDIPacket *ThePacketPtr, long TheRefCon)"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBvoid\fP \fBset_error\fP (\fBint\fP bit)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBPatchPorts\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBSavePatch\fP (OSType PortID, short PortInfoResID, char *PortInfoResName)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBmidi_flush\fP ()"
+.br
+.ti -1c
+.RI "char * \fBStdMacVerNumToStr\fP (long VerNum, char *VerStr)"
+.br
+.ti -1c
+.RI "char * \fBC2PStrCpy\fP (char *Cstr, Str255 Pstr)"
+.br
+.ti -1c
+.RI "\fBboolean\fP \fBThinkCRunning\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBKillEverybody\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBsetup_midimgr\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBsysex_insert\fP (unsigned char \fBdata\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBfinish_midimgr\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBReportResError\fP (char *Msg)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBmidi_show_errors\fP ()"
+.br
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "\fBprivate\fP \fBboolean\fP \fBpatch_flag\fP"
+.br
+.ti -1c
+.RI "\fBboolean\fP \fBctrlFilter\fP"
+.br
+.ti -1c
+.RI "\fBboolean\fP \fBexclFilter\fP"
+.br
+.ti -1c
+.RI "\fBboolean\fP \fBrealFilter\fP"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBmidi_read_lock\fP = \fBfalse\fP"
+.br
+.ti -1c
+.RI "\fBpublic\fP short \fBInputRefNum\fP"
+.br
+.ti -1c
+.RI "\fBpublic\fP short \fBOutputRefNum\fP"
+.br
+.ti -1c
+.RI "\fBpublic\fP short \fBTimeRefNum\fP"
+.br
+.ti -1c
+.RI "Boolean \fBGManualPatch\fP"
+.br
+.ti -1c
+.RI "long \fBbuff\fP [\fBBUFF_SIZE\fP/4]"
+.br
+.ti -1c
+.RI "\fBint\fP \fBbuffhead\fP = 0"
+.br
+.ti -1c
+.RI "\fBint\fP \fBbufftail\fP = 0"
+.br
+.ti -1c
+.RI "byte * \fBxbuff\fP = \fBNULL\fP"
+.br
+.ti -1c
+.RI "\fBpublic\fP long \fBxbufmask\fP"
+.br
+.ti -1c
+.RI "long \fBxbufhead\fP = 0"
+.br
+.ti -1c
+.RI "long \fBxbuftail\fP = 0"
+.br
+.ti -1c
+.RI "\fBboolean\fP \fBxbuf_flush\fP = \fBtrue\fP"
+.br
+.ti -1c
+.RI "char \fBsave_sysex_head\fP [4]"
+.br
+.ti -1c
+.RI "\fBint\fP \fBsave_sysex_head_x\fP = 0"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define CMTclientID   'CMT '"
+
+.PP
+Definition at line 42 of file midimgr\&.c\&.
+.SS "#define inputPortBuffSize   2048"
+
+.PP
+Definition at line 53 of file midimgr\&.c\&.
+.SS "#define inputPortID   'Bin '"
+
+.PP
+Definition at line 45 of file midimgr\&.c\&.
+.SS "#define noClient   '    '"
+
+.PP
+Definition at line 47 of file midimgr\&.c\&.
+.SS "#define noReadHook   0L"
+
+.PP
+Definition at line 50 of file midimgr\&.c\&.
+.SS "#define noTimeBaseRefNum   0"
+
+.PP
+Definition at line 49 of file midimgr\&.c\&.
+.SS "#define outputPortBuffSize   0L"
+
+.PP
+Definition at line 54 of file midimgr\&.c\&.
+.SS "#define outputPortID   'Cout'"
+
+.PP
+Definition at line 46 of file midimgr\&.c\&.
+.SS "#define refCon0   0L"
+
+.PP
+Definition at line 55 of file midimgr\&.c\&.
+.SS "#define timePortBuffSize   0L"
+
+.PP
+Definition at line 52 of file midimgr\&.c\&.
+.SS "#define timePortID   'Atim'"
+
+.PP
+Definition at line 44 of file midimgr\&.c\&.
+.SS "#define zeroTime   0L"
+
+.PP
+Definition at line 51 of file midimgr\&.c\&.
+.SH "Function Documentation"
+.PP 
+.SS "char* C2PStrCpy (char * Cstr, Str255 Pstr)"
+
+.PP
+Definition at line 184 of file midimgr\&.c\&.
+.SS "pascal short CMTreader (MIDIPacket * ThePacketPtr, long TheRefCon)"
+
+.PP
+Definition at line 447 of file midimgr\&.c\&.
+.SS "\fBvoid\fP finish_midimgr (\fBvoid\fP)"
+
+.PP
+Definition at line 546 of file midimgr\&.c\&.
+.SS "\fBvoid\fP KillEverybody (\fBvoid\fP)"
+
+.PP
+Definition at line 222 of file midimgr\&.c\&.
+.SS "\fBvoid\fP midi_flush ()"
+
+.PP
+Definition at line 110 of file midimgr\&.c\&.
+.SS "\fBvoid\fP midi_show_errors (\fBvoid\fP)"
+
+.PP
+Definition at line 588 of file midimgr\&.c\&.
+.SS "\fBvoid\fP PatchPorts (\fBvoid\fP)"
+
+.PP
+Definition at line 609 of file midimgr\&.c\&.
+.SS "\fBvoid\fP ReportResError (char * Msg)"
+
+.PP
+Definition at line 560 of file midimgr\&.c\&.
+.SS "\fBvoid\fP SavePatch (OSType PortID, short PortInfoResID, char * PortInfoResName)"
+
+.PP
+Definition at line 742 of file midimgr\&.c\&.
+.SS "\fBprivate\fP \fBvoid\fP set_error (\fBint\fP bit)"
+
+.PP
+Definition at line 582 of file midimgr\&.c\&.
+.SS "\fBvoid\fP setup_midimgr (\fBvoid\fP)"
+
+.PP
+Definition at line 308 of file midimgr\&.c\&.
+.SS "char* StdMacVerNumToStr (long VerNum, char * VerStr)"
+
+.PP
+Definition at line 126 of file midimgr\&.c\&.
+.SS "\fBvoid\fP sysex_insert (unsigned char data)"
+
+.PP
+Definition at line 427 of file midimgr\&.c\&.
+.SS "\fBboolean\fP ThinkCRunning (\fBvoid\fP)"
+
+.PP
+Definition at line 196 of file midimgr\&.c\&.
+.SH "Variable Documentation"
+.PP 
+.SS "long buff[\fBBUFF_SIZE\fP/4]"
+
+.PP
+Definition at line 89 of file midimgr\&.c\&.
+.SS "\fBint\fP buffhead = 0"
+
+.PP
+Definition at line 90 of file midimgr\&.c\&.
+.SS "\fBint\fP bufftail = 0"
+
+.PP
+Definition at line 91 of file midimgr\&.c\&.
+.SS "\fBboolean\fP ctrlFilter"
+
+.SS "\fBboolean\fP exclFilter"
+
+.SS "Boolean GManualPatch"
+
+.PP
+Definition at line 80 of file midimgr\&.c\&.
+.SS "\fBpublic\fP short InputRefNum"
+
+.PP
+Definition at line 76 of file midimgr\&.c\&.
+.SS "\fBprivate\fP midi_read_lock = \fBfalse\fP"
+
+.PP
+Definition at line 67 of file midimgr\&.c\&.
+.SS "\fBpublic\fP short OutputRefNum"
+
+.PP
+Definition at line 77 of file midimgr\&.c\&.
+.SS "\fBprivate\fP \fBboolean\fP patch_flag"
+
+.PP
+Definition at line 62 of file midimgr\&.c\&.
+.SS "\fBboolean\fP realFilter"
+
+.SS "char save_sysex_head[4]"
+
+.PP
+Definition at line 424 of file midimgr\&.c\&.
+.SS "\fBint\fP save_sysex_head_x = 0"
+
+.PP
+Definition at line 425 of file midimgr\&.c\&.
+.SS "\fBpublic\fP short TimeRefNum"
+
+.PP
+Definition at line 78 of file midimgr\&.c\&.
+.SS "\fBboolean\fP xbuf_flush = \fBtrue\fP"
+
+.PP
+Definition at line 98 of file midimgr\&.c\&.
+.SS "byte* xbuff = \fBNULL\fP"
+
+.PP
+Definition at line 94 of file midimgr\&.c\&.
+.SS "long xbufhead = 0"
+
+.PP
+Definition at line 96 of file midimgr\&.c\&.
+.SS "\fBpublic\fP long xbufmask"
+
+.PP
+Definition at line 95 of file midimgr\&.c\&.
+.SS "long xbuftail = 0"
+
+.PP
+Definition at line 97 of file midimgr\&.c\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

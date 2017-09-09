@@ -1,0 +1,192 @@
+.TH "AliasBlockFile" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+AliasBlockFile \- A \fBBlockFile\fP that refers to data in an existing file\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <BlockFile\&.h>\fP
+.PP
+Inherits \fBBlockFile\fP\&.
+.PP
+Inherited by \fBPCMAliasBlockFile\fP\&.
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBAliasBlockFile\fP (wxFileName baseFileName, wxFileName aliasedFileName, \fBsampleCount\fP aliasStart, \fBsampleCount\fP aliasLen, \fBint\fP aliasChannel)"
+.br
+.RI "\fIConstructs an \fBAliasBlockFile\fP\&. \fP"
+.ti -1c
+.RI "\fBAliasBlockFile\fP (wxFileName existingSummaryFileName, wxFileName aliasedFileName, \fBsampleCount\fP aliasStart, \fBsampleCount\fP aliasLen, \fBint\fP aliasChannel, float \fBmin\fP, float \fBmax\fP, float RMS)"
+.br
+.ti -1c
+.RI "virtual \fB~AliasBlockFile\fP ()"
+.br
+.ti -1c
+.RI "wxLongLong \fBGetSpaceUsage\fP () override"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBSilenceAliasLog\fP ()"
+.br
+.RI "\fIas SilentLog (which would affect Summary data access), but \fP"
+.ti -1c
+.RI "wxFileName \fBGetAliasedFileName\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBChangeAliasedFileName\fP (wxFileName newAliasedFile)"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBIsAlias\fP () override"
+.br
+.RI "\fIReturns TRUE if this block references another disk file\&. \fP"
+.in -1c
+.SS "Protected Member Functions"
+
+.in +1c
+.ti -1c
+.RI "virtual \fBvoid\fP \fBWriteSummary\fP ()"
+.br
+.RI "\fIWrite the summary to disk, using the derived \fBReadData()\fP to get the data\&. \fP"
+.ti -1c
+.RI "\fBbool\fP \fBReadSummary\fP (\fBvoid\fP *\fBdata\fP) override"
+.br
+.RI "\fIRead the summary into a buffer\&. \fP"
+.in -1c
+.SS "Protected Attributes"
+
+.in +1c
+.ti -1c
+.RI "wxFileName \fBmAliasedFileName\fP"
+.br
+.ti -1c
+.RI "\fBsampleCount\fP \fBmAliasStart\fP"
+.br
+.ti -1c
+.RI "\fBint\fP \fBmAliasChannel\fP"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBmSilentAliasLog\fP"
+.br
+.in -1c
+.SS "Additional Inherited Members"
+.SH "Detailed Description"
+.PP 
+A \fBBlockFile\fP that refers to data in an existing file\&. 
+
+An \fBAliasBlockFile\fP references an existing disk file for its storage instead of copying the data\&. It still writes a file to disk, but only stores summary data in it\&.
+.PP
+This is a common base class for all alias block files\&. It handles reading and writing summary data, leaving very little for derived classes to need to implement\&. 
+.PP
+Definition at line 181 of file BlockFile\&.h\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "AliasBlockFile::AliasBlockFile (wxFileName baseFileName, wxFileName aliasedFileName, \fBsampleCount\fP aliasStart, \fBsampleCount\fP aliasLen, \fBint\fP aliasChannel)"
+
+.PP
+Constructs an \fBAliasBlockFile\fP\&. Constructs an \fBAliasBlockFile\fP based on the given information about the aliased file\&.
+.PP
+Note that derived classes /must/ call \fBAliasBlockFile::WriteSummary()\fP in their constructors for the summary file to be correctly written to disk\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIbaseFileName\fP The name of the summary file to be written, but without an extension\&. This constructor will add the appropriate extension before passing it to \fBBlockFile::BlockFile\fP 
+.br
+\fIaliasedFileName\fP The name of the file where the audio data for this block actually exists\&. 
+.br
+\fIaliasStart\fP The offset in the aliased file where this block's data begins 
+.br
+\fIaliasLen\fP The length of this block's data in the aliased file\&. 
+.br
+\fIaliasChannel\fP The channel where this block's data is located in the aliased file 
+.RE
+.PP
+
+.PP
+Definition at line 528 of file BlockFile\&.cpp\&.
+.SS "AliasBlockFile::AliasBlockFile (wxFileName existingSummaryFileName, wxFileName aliasedFileName, \fBsampleCount\fP aliasStart, \fBsampleCount\fP aliasLen, \fBint\fP aliasChannel, float min, float max, float RMS)"
+
+.PP
+Definition at line 540 of file BlockFile\&.cpp\&.
+.SS "AliasBlockFile::~AliasBlockFile ()\fC [virtual]\fP"
+
+.PP
+Definition at line 589 of file BlockFile\&.cpp\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "\fBvoid\fP AliasBlockFile::ChangeAliasedFileName (wxFileName newAliasedFile)"
+Modify this block to point at a different file\&. This is generally looked down on, but it is necessary in one case: see \fBDirManager::EnsureSafeFilename()\fP\&. 
+.PP
+Definition at line 633 of file BlockFile\&.cpp\&.
+.SS "wxFileName AliasBlockFile::GetAliasedFileName ()\fC [inline]\fP"
+
+.PP
+Definition at line 208 of file BlockFile\&.h\&.
+.SS "wxLongLong AliasBlockFile::GetSpaceUsage ()\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Implements \fBBlockFile\fP\&.
+.PP
+Definition at line 638 of file BlockFile\&.cpp\&.
+.SS "\fBbool\fP AliasBlockFile::IsAlias ()\fC [inline]\fP, \fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Returns TRUE if this block references another disk file\&. 
+.PP
+Reimplemented from \fBBlockFile\fP\&.
+.PP
+Definition at line 210 of file BlockFile\&.h\&.
+.SS "\fBbool\fP AliasBlockFile::ReadSummary (\fBvoid\fP * data)\fC [override]\fP, \fC [protected]\fP, \fC [virtual]\fP"
+
+.PP
+Read the summary into a buffer\&. Read the summary of this alias block from disk\&. Since the audio data is elsewhere, this consists of reading the entire summary file\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fI*data\fP The buffer where the summary data will be stored\&. It must be at least mSummaryInfo\&.totalSummaryBytes long\&. 
+.RE
+.PP
+
+.PP
+Implements \fBBlockFile\fP\&.
+.PP
+Definition at line 598 of file BlockFile\&.cpp\&.
+.SS "\fBvoid\fP AliasBlockFile::SilenceAliasLog ()\fC [inline]\fP"
+
+.PP
+as SilentLog (which would affect Summary data access), but 
+.PP
+Definition at line 203 of file BlockFile\&.h\&.
+.SS "\fBvoid\fP AliasBlockFile::WriteSummary ()\fC [protected]\fP, \fC [virtual]\fP"
+
+.PP
+Write the summary to disk, using the derived \fBReadData()\fP to get the data\&. Write the summary to disk\&. Derived classes must call this method from their constructors for the summary to be correctly written\&. It uses the derived class's \fBReadData()\fP to retrieve the data to summarize\&. 
+.PP
+Reimplemented in \fBODPCMAliasBlockFile\fP\&.
+.PP
+Definition at line 560 of file BlockFile\&.cpp\&.
+.SH "Member Data Documentation"
+.PP 
+.SS "\fBint\fP AliasBlockFile::mAliasChannel\fC [protected]\fP"
+
+.PP
+Definition at line 221 of file BlockFile\&.h\&.
+.SS "wxFileName AliasBlockFile::mAliasedFileName\fC [protected]\fP"
+
+.PP
+Definition at line 219 of file BlockFile\&.h\&.
+.SS "\fBsampleCount\fP AliasBlockFile::mAliasStart\fC [protected]\fP"
+
+.PP
+Definition at line 220 of file BlockFile\&.h\&.
+.SS "\fBbool\fP AliasBlockFile::mSilentAliasLog\fC [protected]\fP"
+
+.PP
+Definition at line 222 of file BlockFile\&.h\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

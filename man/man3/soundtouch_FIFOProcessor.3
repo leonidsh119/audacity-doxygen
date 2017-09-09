@@ -1,0 +1,186 @@
+.TH "soundtouch::FIFOProcessor" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+soundtouch::FIFOProcessor \- 
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <FIFOSamplePipe\&.h>\fP
+.PP
+Inherits \fBsoundtouch::FIFOSamplePipe\fP\&.
+.PP
+Inherited by \fBsoundtouch::RateTransposer\fP, \fBsoundtouch::SoundTouch\fP, and \fBsoundtouch::TDStretch\fP\&.
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "virtual \fBuint\fP \fBreceiveSamples\fP (\fBSAMPLETYPE\fP *outBuffer, \fBuint\fP maxSamples)"
+.br
+.ti -1c
+.RI "virtual \fBuint\fP \fBreceiveSamples\fP (\fBuint\fP maxSamples)"
+.br
+.ti -1c
+.RI "virtual \fBuint\fP \fBnumSamples\fP () \fBconst\fP "
+.br
+.RI "\fIReturns number of samples currently available\&. \fP"
+.ti -1c
+.RI "virtual \fBint\fP \fBisEmpty\fP () \fBconst\fP "
+.br
+.RI "\fIReturns nonzero if there aren't any samples available for outputting\&. \fP"
+.ti -1c
+.RI "virtual \fBuint\fP \fBadjustAmountOfSamples\fP (\fBuint\fP \fBnumSamples\fP)"
+.br
+.in -1c
+.SS "Protected Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBvoid\fP \fBsetOutPipe\fP (\fBFIFOSamplePipe\fP *pOutput)"
+.br
+.RI "\fISets output pipe\&. \fP"
+.ti -1c
+.RI "\fBFIFOProcessor\fP ()"
+.br
+.ti -1c
+.RI "\fBFIFOProcessor\fP (\fBFIFOSamplePipe\fP *pOutput)"
+.br
+.RI "\fIConstructor\&. Configures output pipe\&. \fP"
+.ti -1c
+.RI "virtual \fB~FIFOProcessor\fP ()"
+.br
+.RI "\fIDestructor\&. \fP"
+.ti -1c
+.RI "virtual \fBSAMPLETYPE\fP * \fBptrBegin\fP ()"
+.br
+.in -1c
+.SS "Protected Attributes"
+
+.in +1c
+.ti -1c
+.RI "\fBFIFOSamplePipe\fP * \fBoutput\fP"
+.br
+.RI "\fIInternal pipe where processed samples are put\&. \fP"
+.in -1c
+.SH "Detailed Description"
+.PP 
+Base-class for sound processing routines working in FIFO principle\&. With this base class it's easy to implement sound processing stages that can be chained together, so that samples that are fed into beginning of the pipe automatically go through all the processing stages\&.
+.PP
+When samples are input to this class, they're first processed and then put to the FIFO pipe that's defined as output of this class\&. This output pipe can be either other processing stage or a FIFO sample buffer\&. 
+.PP
+Definition at line 134 of file FIFOSamplePipe\&.h\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "soundtouch::FIFOProcessor::FIFOProcessor ()\fC [inline]\fP, \fC [protected]\fP"
+Constructor\&. Doesn't define output pipe; it has to be set be 'setOutPipe' function\&. 
+.PP
+Definition at line 151 of file FIFOSamplePipe\&.h\&.
+.SS "soundtouch::FIFOProcessor::FIFOProcessor (\fBFIFOSamplePipe\fP * pOutput)\fC [inline]\fP, \fC [protected]\fP"
+
+.PP
+Constructor\&. Configures output pipe\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIpOutput\fP Output pipe\&. 
+.RE
+.PP
+
+.PP
+Definition at line 158 of file FIFOSamplePipe\&.h\&.
+.SS "virtual soundtouch::FIFOProcessor::~FIFOProcessor ()\fC [inline]\fP, \fC [protected]\fP, \fC [virtual]\fP"
+
+.PP
+Destructor\&. 
+.PP
+Definition at line 166 of file FIFOSamplePipe\&.h\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "virtual \fBuint\fP soundtouch::FIFOProcessor::adjustAmountOfSamples (\fBuint\fP numSamples)\fC [inline]\fP, \fC [virtual]\fP"
+allow trimming (downwards) amount of samples in pipeline\&. Returns adjusted amount of samples 
+.PP
+Implements \fBsoundtouch::FIFOSamplePipe\fP\&.
+.PP
+Definition at line 225 of file FIFOSamplePipe\&.h\&.
+.SS "virtual \fBint\fP soundtouch::FIFOProcessor::isEmpty () const\fC [inline]\fP, \fC [virtual]\fP"
+
+.PP
+Returns nonzero if there aren't any samples available for outputting\&. 
+.PP
+Implements \fBsoundtouch::FIFOSamplePipe\fP\&.
+.PP
+Reimplemented in \fBsoundtouch::RateTransposer\fP\&.
+.PP
+Definition at line 218 of file FIFOSamplePipe\&.h\&.
+.SS "virtual \fBuint\fP soundtouch::FIFOProcessor::numSamples () const\fC [inline]\fP, \fC [virtual]\fP"
+
+.PP
+Returns number of samples currently available\&. 
+.PP
+Implements \fBsoundtouch::FIFOSamplePipe\fP\&.
+.PP
+Definition at line 211 of file FIFOSamplePipe\&.h\&.
+.SS "virtual \fBSAMPLETYPE\fP* soundtouch::FIFOProcessor::ptrBegin ()\fC [inline]\fP, \fC [protected]\fP, \fC [virtual]\fP"
+Returns a pointer to the beginning of the output samples\&. This function is provided for accessing the output samples directly\&. Please be careful for not to corrupt the book-keeping!
+.PP
+When using this function to output samples, also remember to 'remove' the output samples from the buffer by calling the 'receiveSamples(numSamples)' function 
+.PP
+Implements \fBsoundtouch::FIFOSamplePipe\fP\&.
+.PP
+Definition at line 178 of file FIFOSamplePipe\&.h\&.
+.SS "virtual \fBuint\fP soundtouch::FIFOProcessor::receiveSamples (\fBSAMPLETYPE\fP * outBuffer, \fBuint\fP maxSamples)\fC [inline]\fP, \fC [virtual]\fP"
+Output samples from beginning of the sample buffer\&. Copies requested samples to output buffer and removes them from the sample buffer\&. If there are less than 'numsample' samples in the buffer, returns all that available\&.
+.PP
+\fBReturns:\fP
+.RS 4
+Number of samples returned\&. 
+.RE
+.PP
+
+.PP
+\fBParameters:\fP
+.RS 4
+\fIoutBuffer\fP Buffer where to copy output samples\&. 
+.br
+\fImaxSamples\fP How many samples to receive at max\&. 
+.RE
+.PP
+
+.PP
+Implements \fBsoundtouch::FIFOSamplePipe\fP\&.
+.PP
+Definition at line 190 of file FIFOSamplePipe\&.h\&.
+.SS "virtual \fBuint\fP soundtouch::FIFOProcessor::receiveSamples (\fBuint\fP maxSamples)\fC [inline]\fP, \fC [virtual]\fP"
+Adjusts book-keeping so that given number of samples are removed from beginning of the sample buffer without copying them anywhere\&.
+.PP
+Used to reduce the number of samples in the buffer when accessing the sample buffer directly with 'ptrBegin' function\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fImaxSamples\fP Remove this many samples from the beginning of pipe\&. 
+.RE
+.PP
+
+.PP
+Implements \fBsoundtouch::FIFOSamplePipe\fP\&.
+.PP
+Definition at line 203 of file FIFOSamplePipe\&.h\&.
+.SS "\fBvoid\fP soundtouch::FIFOProcessor::setOutPipe (\fBFIFOSamplePipe\fP * pOutput)\fC [inline]\fP, \fC [protected]\fP"
+
+.PP
+Sets output pipe\&. 
+.PP
+Definition at line 141 of file FIFOSamplePipe\&.h\&.
+.SH "Member Data Documentation"
+.PP 
+.SS "\fBFIFOSamplePipe\fP* soundtouch::FIFOProcessor::output\fC [protected]\fP"
+
+.PP
+Internal pipe where processed samples are put\&. 
+.PP
+Definition at line 138 of file FIFOSamplePipe\&.h\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

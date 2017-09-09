@@ -1,0 +1,453 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/lib-src/portaudio-v19/src/hostapi/wdmks/pa_win_wdmks.c" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/lib-src/portaudio-v19/src/hostapi/wdmks/pa_win_wdmks.c \- Portaudio WDM-KS host API\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <stdio\&.h>\fP
+.br
+\fC#include <string\&.h>\fP
+.br
+\fC#include <assert\&.h>\fP
+.br
+\fC#include <wchar\&.h>\fP
+.br
+\fC#include 'pa_util\&.h'\fP
+.br
+\fC#include 'pa_allocation\&.h'\fP
+.br
+\fC#include 'pa_hostapi\&.h'\fP
+.br
+\fC#include 'pa_stream\&.h'\fP
+.br
+\fC#include 'pa_cpuload\&.h'\fP
+.br
+\fC#include 'pa_process\&.h'\fP
+.br
+\fC#include 'portaudio\&.h'\fP
+.br
+\fC#include 'pa_debugprint\&.h'\fP
+.br
+\fC#include 'pa_memorybarrier\&.h'\fP
+.br
+\fC#include 'pa_ringbuffer\&.h'\fP
+.br
+\fC#include 'pa_trace\&.h'\fP
+.br
+\fC#include 'pa_win_waveformat\&.h'\fP
+.br
+\fC#include 'pa_win_wdmks\&.h'\fP
+.br
+\fC#include <windows\&.h>\fP
+.br
+\fC#include <winioctl\&.h>\fP
+.br
+\fC#include <process\&.h>\fP
+.br
+\fC#include <math\&.h>\fP
+.br
+\fC#include <setupapi\&.h>\fP
+.br
+\fC#include <mmreg\&.h>\fP
+.br
+\fC#include <ks\&.h>\fP
+.br
+\fC#include <ksmedia\&.h>\fP
+.br
+
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "struct \fBPaWinWDMKSAvRtEntryPoints\fP"
+.br
+.ti -1c
+.RI "struct \fB__PaWinWdmMuxedInput\fP"
+.br
+.ti -1c
+.RI "struct \fB__PaWinWdmPin\fP"
+.br
+.ti -1c
+.RI "struct \fB__PaWinWdmFilter\fP"
+.br
+.ti -1c
+.RI "struct \fB__PaWinWdmDeviceInfo\fP"
+.br
+.ti -1c
+.RI "struct \fB__PaWinWdmHostApiRepresentation\fP"
+.br
+.ti -1c
+.RI "struct \fB__DATAPACKET\fP"
+.br
+.ti -1c
+.RI "struct \fB__PaIOPacket\fP"
+.br
+.ti -1c
+.RI "struct \fB__PaWinWdmIOInfo\fP"
+.br
+.ti -1c
+.RI "struct \fB__PaWinWdmStream\fP"
+.br
+.ti -1c
+.RI "struct \fB__PaProcessThreadInfo\fP"
+.br
+.ti -1c
+.RI "struct \fB__PaWinWDMScanDeviceInfosResults\fP"
+.br
+.ti -1c
+.RI "struct \fB__PaUsbTerminalGUIDToName\fP"
+.br
+.ti -1c
+.RI "struct \fBPaNameHashIndex\fP"
+.br
+.ti -1c
+.RI "struct \fBPaNameHashObject\fP"
+.br
+.in -1c
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBPA_LOGE_\fP"
+.br
+.ti -1c
+.RI "#define \fBPA_LOGL_\fP"
+.br
+.ti -1c
+.RI "#define \fBDRV_QUERYDEVICEINTERFACE\fP   (\fBDRV_RESERVED\fP + 12)"
+.br
+.ti -1c
+.RI "#define \fBDRV_QUERYDEVICEINTERFACESIZE\fP   (\fBDRV_RESERVED\fP + 13)"
+.br
+.ti -1c
+.RI "#define \fBPA_HP_TRACE\fP(x)   \fBPaUtil_AddHighSpeedLogMessage\fP x ;"
+.br
+.ti -1c
+.RI "#define \fBPA_WDMKS_USE_CATEGORY_FOR_PIN_NAMES\fP   1"
+.br
+.ti -1c
+.RI "#define \fBCREATE_THREAD_FUNCTION\fP   (\fBHANDLE\fP)_beginthreadex"
+.br
+.ti -1c
+.RI "#define \fBPA_THREAD_FUNC\fP   static unsigned \fBWINAPI\fP"
+.br
+.ti -1c
+.RI "#define \fBEXTERN_C\fP   extern"
+.br
+.ti -1c
+.RI "#define \fBMAXIMUM_NUMBER_OF_CHANNELS\fP   256"
+.br
+.in -1c
+.SS "Typedefs"
+
+.in +1c
+.ti -1c
+.RI "typedef \fBDWORD\fP \fBWINAPI\fP \fBKSCREATEPIN\fP(\fBHANDLE\fP, \fBPKSPIN_CONNECT\fP, ACCESS_MASK, PHANDLE)"
+.br
+.ti -1c
+.RI "typedef enum \fB_PA_AVRT_PRIORITY\fP \fBPA_AVRT_PRIORITY\fP"
+.br
+.ti -1c
+.RI "typedef enum \fB_PA_AVRT_PRIORITY\fP * \fBPPA_AVRT_PRIORITY\fP"
+.br
+.ti -1c
+.RI "typedef struct \fB__PaWinWdmFilter\fP \fBPaWinWdmFilter\fP"
+.br
+.ti -1c
+.RI "typedef struct \fB__PaWinWdmPin\fP \fBPaWinWdmPin\fP"
+.br
+.ti -1c
+.RI "typedef struct \fB__PaWinWdmStream\fP \fBPaWinWdmStream\fP"
+.br
+.ti -1c
+.RI "typedef \fBPaError\fP(* \fBFunctionGetPinAudioPosition\fP) (\fBPaWinWdmPin\fP *, unsigned long *)"
+.br
+.ti -1c
+.RI "typedef \fBvoid\fP(* \fBFunctionMemoryBarrier\fP) (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "typedef struct \fB__PaProcessThreadInfo\fP \fBPaProcessThreadInfo\fP"
+.br
+.ti -1c
+.RI "typedef \fBPaError\fP(* \fBFunctionPinHandler\fP) (\fBPaProcessThreadInfo\fP *pInfo, unsigned eventIndex)"
+.br
+.ti -1c
+.RI "typedef enum \fB__PaStreamStartEnum\fP \fBPaStreamStartEnum\fP"
+.br
+.ti -1c
+.RI "typedef struct \fB__PaWinWdmMuxedInput\fP \fBPaWinWdmMuxedInput\fP"
+.br
+.ti -1c
+.RI "typedef struct \fB__PaWinWdmDeviceInfo\fP \fBPaWinWdmDeviceInfo\fP"
+.br
+.ti -1c
+.RI "typedef struct \fB__PaWinWdmHostApiRepresentation\fP \fBPaWinWdmHostApiRepresentation\fP"
+.br
+.ti -1c
+.RI "typedef struct \fB__DATAPACKET\fP \fBDATAPACKET\fP"
+.br
+.ti -1c
+.RI "typedef struct \fB__PaIOPacket\fP \fBPaIOPacket\fP"
+.br
+.ti -1c
+.RI "typedef struct \fB__PaWinWdmIOInfo\fP \fBPaWinWdmIOInfo\fP"
+.br
+.ti -1c
+.RI "typedef struct \fB__PaWinWDMScanDeviceInfosResults\fP \fBPaWinWDMScanDeviceInfosResults\fP"
+.br
+.ti -1c
+.RI "typedef \fBconst\fP \fBKSTOPOLOGY_CONNECTION\fP *(* \fBTFnGetConnection\fP) (\fBconst\fP \fBKSTOPOLOGY_CONNECTION\fP *, \fBPaWinWdmFilter\fP *, \fBint\fP)"
+.br
+.ti -1c
+.RI "typedef struct \fB__PaUsbTerminalGUIDToName\fP \fBPaUsbTerminalGUIDToName\fP"
+.br
+.ti -1c
+.RI "typedef enum \fB_tag_EAlias\fP \fBEAlias\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBPaNameHashIndex\fP \fBPaNameHashIndex\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBPaNameHashObject\fP \fBPaNameHashObject\fP"
+.br
+.ti -1c
+.RI "typedef \fBvoid\fP(* \fBTSetInputFrameCount\fP) (\fBPaUtilBufferProcessor\fP *, unsigned long)"
+.br
+.ti -1c
+.RI "typedef \fBvoid\fP(* \fBTSetInputChannel\fP) (\fBPaUtilBufferProcessor\fP *, unsigned \fBint\fP, \fBvoid\fP *, unsigned \fBint\fP)"
+.br
+.in -1c
+.SS "Enumerations"
+
+.in +1c
+.ti -1c
+.RI "enum \fB_PA_AVRT_PRIORITY\fP { \fBPA_AVRT_PRIORITY_LOW\fP = -1, \fBPA_AVRT_PRIORITY_NORMAL\fP, \fBPA_AVRT_PRIORITY_HIGH\fP, \fBPA_AVRT_PRIORITY_CRITICAL\fP }"
+.br
+.ti -1c
+.RI "enum \fB__PaStreamStartEnum\fP { \fBStreamStart_kOk\fP, \fBStreamStart_kFailed\fP, \fBStreamStart_kCnt\fP }"
+.br
+.ti -1c
+.RI "enum \fB_tag_EAlias\fP { \fBAlias_kRender\fP = (1<<0), \fBAlias_kCapture\fP = (1<<1), \fBAlias_kRealtime\fP = (1<<2) }"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBPaError\fP \fBPaWinWdm_Initialize\fP (\fBPaUtilHostApiRepresentation\fP **hostApi, \fBPaHostApiIndex\fP index)"
+.br
+.ti -1c
+.RI "\fBPA_THREAD_FUNC\fP \fBProcessingThread\fP (\fBvoid\fP *)"
+.br
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "HMODULE \fBDllKsUser\fP = \fBNULL\fP"
+.br
+.ti -1c
+.RI "\fBKSCREATEPIN\fP * \fBFunctionKsCreatePin\fP = \fBNULL\fP"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Portaudio WDM-KS host API\&. 
+
+
+.PP
+\fBNote:\fP
+.RS 4
+This is the implementation of the Portaudio host API using the Windows WDM/Kernel Streaming API in order to enable very low latency playback and recording on all modern Windows platforms (e\&.g\&. 2K, XP, Vista, Win7) Note: This API accesses the device drivers below the usual KMIXER component which is normally used to enable multi-client mixing and format conversion\&. That means that it will lock out all other users of a device for the duration of active stream using those devices 
+.RE
+.PP
+
+.PP
+Definition in file \fBpa_win_wdmks\&.c\fP\&.
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define CREATE_THREAD_FUNCTION   (\fBHANDLE\fP)_beginthreadex"
+
+.PP
+Definition at line 152 of file pa_win_wdmks\&.c\&.
+.SS "#define DRV_QUERYDEVICEINTERFACE   (\fBDRV_RESERVED\fP + 12)"
+
+.PP
+Definition at line 90 of file pa_win_wdmks\&.c\&.
+.SS "#define DRV_QUERYDEVICEINTERFACESIZE   (\fBDRV_RESERVED\fP + 13)"
+
+.PP
+Definition at line 93 of file pa_win_wdmks\&.c\&.
+.SS "#define EXTERN_C   extern"
+
+.PP
+Definition at line 172 of file pa_win_wdmks\&.c\&.
+.SS "#define MAXIMUM_NUMBER_OF_CHANNELS   256"
+
+.PP
+Definition at line 225 of file pa_win_wdmks\&.c\&.
+.SS "#define PA_HP_TRACE(x)   \fBPaUtil_AddHighSpeedLogMessage\fP x ;"
+
+.PP
+Definition at line 110 of file pa_win_wdmks\&.c\&.
+.SS "#define PA_LOGE_"
+
+.PP
+Definition at line 61 of file pa_win_wdmks\&.c\&.
+.SS "#define PA_LOGL_"
+
+.PP
+Definition at line 62 of file pa_win_wdmks\&.c\&.
+.SS "#define PA_THREAD_FUNC   static unsigned \fBWINAPI\fP"
+
+.PP
+Definition at line 153 of file pa_win_wdmks\&.c\&.
+.SS "#define PA_WDMKS_USE_CATEGORY_FOR_PIN_NAMES   1"
+
+.PP
+Definition at line 120 of file pa_win_wdmks\&.c\&.
+.SH "Typedef Documentation"
+.PP 
+.SS "typedef struct \fB__DATAPACKET\fP  \fBDATAPACKET\fP"
+
+.SS "typedef enum \fB_tag_EAlias\fP  \fBEAlias\fP"
+
+.SS "typedef \fBPaError\fP(* FunctionGetPinAudioPosition) (\fBPaWinWdmPin\fP *, unsigned long *)"
+
+.PP
+Definition at line 238 of file pa_win_wdmks\&.c\&.
+.SS "typedef \fBvoid\fP(* FunctionMemoryBarrier) (\fBvoid\fP)"
+
+.PP
+Definition at line 241 of file pa_win_wdmks\&.c\&.
+.SS "typedef \fBPaError\fP(* FunctionPinHandler) (\fBPaProcessThreadInfo\fP *pInfo, unsigned eventIndex)"
+
+.PP
+Definition at line 246 of file pa_win_wdmks\&.c\&.
+.SS "typedef \fBDWORD\fP \fBWINAPI\fP KSCREATEPIN(\fBHANDLE\fP, \fBPKSPIN_CONNECT\fP, ACCESS_MASK, PHANDLE)"
+
+.PP
+Definition at line 199 of file pa_win_wdmks\&.c\&.
+.SS "typedef enum \fB_PA_AVRT_PRIORITY\fP  \fBPA_AVRT_PRIORITY\fP"
+
+.SS "typedef struct \fB__PaIOPacket\fP  \fBPaIOPacket\fP"
+
+.SS "typedef struct \fBPaNameHashIndex\fP  \fBPaNameHashIndex\fP"
+
+.SS "typedef struct \fBPaNameHashObject\fP  \fBPaNameHashObject\fP"
+
+.SS "typedef struct \fB__PaProcessThreadInfo\fP \fBPaProcessThreadInfo\fP"
+
+.PP
+Definition at line 244 of file pa_win_wdmks\&.c\&.
+.SS "typedef enum \fB__PaStreamStartEnum\fP  \fBPaStreamStartEnum\fP"
+
+.SS "typedef struct \fB__PaUsbTerminalGUIDToName\fP  \fBPaUsbTerminalGUIDToName\fP"
+
+.SS "typedef struct \fB__PaWinWdmDeviceInfo\fP
+ \fBPaWinWdmDeviceInfo\fP"
+
+.SS "typedef struct \fB__PaWinWdmFilter\fP \fBPaWinWdmFilter\fP"
+
+.PP
+Definition at line 229 of file pa_win_wdmks\&.c\&.
+.SS "typedef struct \fB__PaWinWdmHostApiRepresentation\fP
+ \fBPaWinWdmHostApiRepresentation\fP"
+
+.SS "typedef struct \fB__PaWinWdmIOInfo\fP  \fBPaWinWdmIOInfo\fP"
+
+.SS "typedef struct \fB__PaWinWdmMuxedInput\fP  \fBPaWinWdmMuxedInput\fP"
+
+.SS "typedef struct \fB__PaWinWdmPin\fP \fBPaWinWdmPin\fP"
+
+.PP
+Definition at line 232 of file pa_win_wdmks\&.c\&.
+.SS "typedef struct \fB__PaWinWDMScanDeviceInfosResults\fP  \fBPaWinWDMScanDeviceInfosResults\fP"
+
+.SS "typedef struct \fB__PaWinWdmStream\fP \fBPaWinWdmStream\fP"
+
+.PP
+Definition at line 235 of file pa_win_wdmks\&.c\&.
+.SS "typedef enum \fB_PA_AVRT_PRIORITY\fP * \fBPPA_AVRT_PRIORITY\fP"
+
+.SS "typedef \fBconst\fP \fBKSTOPOLOGY_CONNECTION\fP*(* TFnGetConnection) (\fBconst\fP \fBKSTOPOLOGY_CONNECTION\fP *, \fBPaWinWdmFilter\fP *, \fBint\fP)"
+
+.PP
+Definition at line 1041 of file pa_win_wdmks\&.c\&.
+.SS "typedef \fBvoid\fP(* TSetInputChannel) (\fBPaUtilBufferProcessor\fP *, unsigned \fBint\fP, \fBvoid\fP *, unsigned \fBint\fP)"
+
+.PP
+Definition at line 5682 of file pa_win_wdmks\&.c\&.
+.SS "typedef \fBvoid\fP(* TSetInputFrameCount) (\fBPaUtilBufferProcessor\fP *, unsigned long)"
+
+.PP
+Definition at line 5681 of file pa_win_wdmks\&.c\&.
+.SH "Enumeration Type Documentation"
+.PP 
+.SS "enum \fB__PaStreamStartEnum\fP"
+
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fIStreamStart_kOk \fP\fP
+.TP
+\fB\fIStreamStart_kFailed \fP\fP
+.TP
+\fB\fIStreamStart_kCnt \fP\fP
+.PP
+Definition at line 248 of file pa_win_wdmks\&.c\&.
+.SS "enum \fB_PA_AVRT_PRIORITY\fP"
+
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fIPA_AVRT_PRIORITY_LOW \fP\fP
+.TP
+\fB\fIPA_AVRT_PRIORITY_NORMAL \fP\fP
+.TP
+\fB\fIPA_AVRT_PRIORITY_HIGH \fP\fP
+.TP
+\fB\fIPA_AVRT_PRIORITY_CRITICAL \fP\fP
+.PP
+Definition at line 204 of file pa_win_wdmks\&.c\&.
+.SS "enum \fB_tag_EAlias\fP"
+
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fIAlias_kRender \fP\fP
+.TP
+\fB\fIAlias_kCapture \fP\fP
+.TP
+\fB\fIAlias_kRealtime \fP\fP
+.PP
+Definition at line 3016 of file pa_win_wdmks\&.c\&.
+.SH "Function Documentation"
+.PP 
+.SS "\fBPaError\fP PaWinWdm_Initialize (\fBPaUtilHostApiRepresentation\fP ** hostApi, \fBPaHostApiIndex\fP index)"
+
+.PP
+Definition at line 3778 of file pa_win_wdmks\&.c\&.
+.SS "\fBPA_THREAD_FUNC\fP ProcessingThread (\fBvoid\fP * pParam)"
+
+.PP
+Definition at line 5867 of file pa_win_wdmks\&.c\&.
+.SH "Variable Documentation"
+.PP 
+.SS "HMODULE DllKsUser = \fBNULL\fP"
+
+.PP
+Definition at line 437 of file pa_win_wdmks\&.c\&.
+.SS "\fBKSCREATEPIN\fP * FunctionKsCreatePin = \fBNULL\fP"
+
+.PP
+Definition at line 438 of file pa_win_wdmks\&.c\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

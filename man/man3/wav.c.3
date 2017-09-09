@@ -1,0 +1,503 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/lib-src/libsndfile/src/wav.c" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/lib-src/libsndfile/src/wav.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include 'sfconfig\&.h'\fP
+.br
+\fC#include <stdio\&.h>\fP
+.br
+\fC#include <stdlib\&.h>\fP
+.br
+\fC#include <string\&.h>\fP
+.br
+\fC#include <ctype\&.h>\fP
+.br
+\fC#include <time\&.h>\fP
+.br
+\fC#include <inttypes\&.h>\fP
+.br
+\fC#include 'sndfile\&.h'\fP
+.br
+\fC#include 'sfendian\&.h'\fP
+.br
+\fC#include 'common\&.h'\fP
+.br
+\fC#include 'wav_w64\&.h'\fP
+.br
+
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBRIFF_MARKER\fP   (MAKE_MARKER ('R', 'I', '\fBF\fP', '\fBF\fP'))"
+.br
+.ti -1c
+.RI "#define \fBRIFX_MARKER\fP   (MAKE_MARKER ('R', 'I', '\fBF\fP', 'X'))"
+.br
+.ti -1c
+.RI "#define \fBWAVE_MARKER\fP   (MAKE_MARKER ('W', '\fBA\fP', '\fBV\fP', '\fBE\fP'))"
+.br
+.ti -1c
+.RI "#define \fBfmt_MARKER\fP   (MAKE_MARKER ('\fBf\fP', '\fBm\fP', '\fBt\fP', ' '))"
+.br
+.ti -1c
+.RI "#define \fBdata_MARKER\fP   (MAKE_MARKER ('\fBd\fP', '\fBa\fP', '\fBt\fP', '\fBa\fP'))"
+.br
+.ti -1c
+.RI "#define \fBfact_MARKER\fP   (MAKE_MARKER ('\fBf\fP', '\fBa\fP', '\fBc\fP', '\fBt\fP'))"
+.br
+.ti -1c
+.RI "#define \fBPEAK_MARKER\fP   (MAKE_MARKER ('P', '\fBE\fP', '\fBA\fP', 'K'))"
+.br
+.ti -1c
+.RI "#define \fBcue_MARKER\fP   (MAKE_MARKER ('\fBc\fP', 'u', 'e', ' '))"
+.br
+.ti -1c
+.RI "#define \fBLIST_MARKER\fP   (MAKE_MARKER ('L', 'I', '\fBS\fP', '\fBT\fP'))"
+.br
+.ti -1c
+.RI "#define \fBslnt_MARKER\fP   (MAKE_MARKER ('\fBs\fP', '\fBl\fP', 'n', '\fBt\fP'))"
+.br
+.ti -1c
+.RI "#define \fBwavl_MARKER\fP   (MAKE_MARKER ('w', '\fBa\fP', 'v', '\fBl\fP'))"
+.br
+.ti -1c
+.RI "#define \fBINFO_MARKER\fP   (MAKE_MARKER ('I', '\fBN\fP', '\fBF\fP', 'O'))"
+.br
+.ti -1c
+.RI "#define \fBplst_MARKER\fP   (MAKE_MARKER ('\fBp\fP', '\fBl\fP', '\fBs\fP', '\fBt\fP'))"
+.br
+.ti -1c
+.RI "#define \fBadtl_MARKER\fP   (MAKE_MARKER ('\fBa\fP', '\fBd\fP', '\fBt\fP', '\fBl\fP'))"
+.br
+.ti -1c
+.RI "#define \fBlabl_MARKER\fP   (MAKE_MARKER ('\fBl\fP', '\fBa\fP', '\fBb\fP', '\fBl\fP'))"
+.br
+.ti -1c
+.RI "#define \fBltxt_MARKER\fP   (MAKE_MARKER ('\fBl\fP', '\fBt\fP', 'x', '\fBt\fP'))"
+.br
+.ti -1c
+.RI "#define \fBnote_MARKER\fP   (MAKE_MARKER ('n', 'o', '\fBt\fP', 'e'))"
+.br
+.ti -1c
+.RI "#define \fBsmpl_MARKER\fP   (MAKE_MARKER ('\fBs\fP', '\fBm\fP', '\fBp\fP', '\fBl\fP'))"
+.br
+.ti -1c
+.RI "#define \fBbext_MARKER\fP   (MAKE_MARKER ('\fBb\fP', 'e', 'x', '\fBt\fP'))"
+.br
+.ti -1c
+.RI "#define \fBiXML_MARKER\fP   (MAKE_MARKER ('\fBi\fP', 'X', '\fBM\fP', 'L'))"
+.br
+.ti -1c
+.RI "#define \fBlevl_MARKER\fP   (MAKE_MARKER ('\fBl\fP', 'e', 'v', '\fBl\fP'))"
+.br
+.ti -1c
+.RI "#define \fBMEXT_MARKER\fP   (MAKE_MARKER ('\fBM\fP', '\fBE\fP', 'X', '\fBT\fP'))"
+.br
+.ti -1c
+.RI "#define \fBDISP_MARKER\fP   (MAKE_MARKER ('\fBD\fP', 'I', '\fBS\fP', 'P'))"
+.br
+.ti -1c
+.RI "#define \fBacid_MARKER\fP   (MAKE_MARKER ('\fBa\fP', '\fBc\fP', '\fBi\fP', '\fBd\fP'))"
+.br
+.ti -1c
+.RI "#define \fBstrc_MARKER\fP   (MAKE_MARKER ('\fBs\fP', '\fBt\fP', 'r', '\fBc\fP'))"
+.br
+.ti -1c
+.RI "#define \fBPAD_MARKER\fP   (MAKE_MARKER ('P', '\fBA\fP', '\fBD\fP', ' '))"
+.br
+.ti -1c
+.RI "#define \fBafsp_MARKER\fP   (MAKE_MARKER ('\fBa\fP', '\fBf\fP', '\fBs\fP', '\fBp\fP'))"
+.br
+.ti -1c
+.RI "#define \fBclm_MARKER\fP   (MAKE_MARKER ('\fBc\fP', '\fBl\fP', '\fBm\fP', ' '))"
+.br
+.ti -1c
+.RI "#define \fBelmo_MARKER\fP   (MAKE_MARKER ('e', '\fBl\fP', '\fBm\fP', 'o'))"
+.br
+.ti -1c
+.RI "#define \fBcart_MARKER\fP   (MAKE_MARKER ('\fBc\fP', '\fBa\fP', 'r', '\fBt\fP'))"
+.br
+.ti -1c
+.RI "#define \fBexif_MARKER\fP   (MAKE_MARKER ('e', 'x', '\fBi\fP', '\fBf\fP'))"
+.br
+.ti -1c
+.RI "#define \fBever_MARKER\fP   (MAKE_MARKER ('e', 'v', 'e', 'r'))"
+.br
+.ti -1c
+.RI "#define \fBetim_MARKER\fP   (MAKE_MARKER ('e', '\fBt\fP', '\fBi\fP', '\fBm\fP'))"
+.br
+.ti -1c
+.RI "#define \fBecor_MARKER\fP   (MAKE_MARKER ('e', '\fBc\fP', 'o', 'r'))"
+.br
+.ti -1c
+.RI "#define \fBemdl_MARKER\fP   (MAKE_MARKER ('e', '\fBm\fP', '\fBd\fP', '\fBl\fP'))"
+.br
+.ti -1c
+.RI "#define \fBemnt_MARKER\fP   (MAKE_MARKER ('e', '\fBm\fP', 'n', '\fBt\fP'))"
+.br
+.ti -1c
+.RI "#define \fBerel_MARKER\fP   (MAKE_MARKER ('e', 'r', 'e', '\fBl\fP'))"
+.br
+.ti -1c
+.RI "#define \fBeucm_MARKER\fP   (MAKE_MARKER ('e', 'u', '\fBc\fP', '\fBm\fP'))"
+.br
+.ti -1c
+.RI "#define \fBISFT_MARKER\fP   (MAKE_MARKER ('I', '\fBS\fP', '\fBF\fP', '\fBT\fP'))"
+.br
+.ti -1c
+.RI "#define \fBICRD_MARKER\fP   (MAKE_MARKER ('I', 'C', 'R', '\fBD\fP'))"
+.br
+.ti -1c
+.RI "#define \fBICOP_MARKER\fP   (MAKE_MARKER ('I', 'C', 'O', 'P'))"
+.br
+.ti -1c
+.RI "#define \fBIARL_MARKER\fP   (MAKE_MARKER ('I', '\fBA\fP', 'R', 'L'))"
+.br
+.ti -1c
+.RI "#define \fBIART_MARKER\fP   (MAKE_MARKER ('I', '\fBA\fP', 'R', '\fBT\fP'))"
+.br
+.ti -1c
+.RI "#define \fBINAM_MARKER\fP   (MAKE_MARKER ('I', '\fBN\fP', '\fBA\fP', '\fBM\fP'))"
+.br
+.ti -1c
+.RI "#define \fBIENG_MARKER\fP   (MAKE_MARKER ('I', '\fBE\fP', '\fBN\fP', 'G'))"
+.br
+.ti -1c
+.RI "#define \fBIGNR_MARKER\fP   (MAKE_MARKER ('I', 'G', '\fBN\fP', 'R'))"
+.br
+.ti -1c
+.RI "#define \fBICOP_MARKER\fP   (MAKE_MARKER ('I', 'C', 'O', 'P'))"
+.br
+.ti -1c
+.RI "#define \fBIPRD_MARKER\fP   (MAKE_MARKER ('I', 'P', 'R', '\fBD\fP'))"
+.br
+.ti -1c
+.RI "#define \fBISRC_MARKER\fP   (MAKE_MARKER ('I', '\fBS\fP', 'R', 'C'))"
+.br
+.ti -1c
+.RI "#define \fBISBJ_MARKER\fP   (MAKE_MARKER ('I', '\fBS\fP', '\fBB\fP', 'J'))"
+.br
+.ti -1c
+.RI "#define \fBICMT_MARKER\fP   (MAKE_MARKER ('I', 'C', '\fBM\fP', '\fBT\fP'))"
+.br
+.ti -1c
+.RI "#define \fBIAUT_MARKER\fP   (MAKE_MARKER ('I', '\fBA\fP', 'U', '\fBT\fP'))"
+.br
+.ti -1c
+.RI "#define \fBITRK_MARKER\fP   (MAKE_MARKER ('I', '\fBT\fP', 'R', 'K'))"
+.br
+.ti -1c
+.RI "#define \fBwvpk_MARKER\fP   (MAKE_MARKER ('w', 'v', '\fBp\fP', '\fBk\fP'))"
+.br
+.ti -1c
+.RI "#define \fBOggS_MARKER\fP   (MAKE_MARKER ('O', 'g', 'g', '\fBS\fP'))"
+.br
+.ti -1c
+.RI "#define \fBWAV_PEAK_CHUNK_SIZE\fP(ch)   (2 * sizeof (\fBint\fP) + ch * (sizeof (float) + sizeof (\fBint\fP)))"
+.br
+.ti -1c
+.RI "#define \fBWAV_BEXT_MIN_CHUNK_SIZE\fP   602"
+.br
+.ti -1c
+.RI "#define \fBWAV_BEXT_MAX_CHUNK_SIZE\fP   (10 * 1024)"
+.br
+.in -1c
+.SS "Enumerations"
+
+.in +1c
+.ti -1c
+.RI "enum { \fBHAVE_RIFF\fP = 0x01, \fBHAVE_WAVE\fP = 0x02, \fBHAVE_fmt\fP = 0x04, \fBHAVE_fact\fP = 0x08, \fBHAVE_PEAK\fP = 0x10, \fBHAVE_data\fP = 0x20, \fBHAVE_other\fP = 0x80000000 }"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBint\fP \fBwav_open\fP (\fBSF_PRIVATE\fP *psf)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBwav_read_bext_chunk\fP (\fBSF_PRIVATE\fP *psf, unsigned \fBint\fP chunksize)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBwav_write_bext_chunk\fP (\fBSF_PRIVATE\fP *psf)"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define acid_MARKER   (MAKE_MARKER ('\fBa\fP', '\fBc\fP', '\fBi\fP', '\fBd\fP'))"
+
+.PP
+Definition at line 62 of file wav\&.c\&.
+.SS "#define adtl_MARKER   (MAKE_MARKER ('\fBa\fP', '\fBd\fP', '\fBt\fP', '\fBl\fP'))"
+
+.PP
+Definition at line 52 of file wav\&.c\&.
+.SS "#define afsp_MARKER   (MAKE_MARKER ('\fBa\fP', '\fBf\fP', '\fBs\fP', '\fBp\fP'))"
+
+.PP
+Definition at line 65 of file wav\&.c\&.
+.SS "#define bext_MARKER   (MAKE_MARKER ('\fBb\fP', 'e', 'x', '\fBt\fP'))"
+
+.PP
+Definition at line 57 of file wav\&.c\&.
+.SS "#define cart_MARKER   (MAKE_MARKER ('\fBc\fP', '\fBa\fP', 'r', '\fBt\fP'))"
+
+.PP
+Definition at line 68 of file wav\&.c\&.
+.SS "#define clm_MARKER   (MAKE_MARKER ('\fBc\fP', '\fBl\fP', '\fBm\fP', ' '))"
+
+.PP
+Definition at line 66 of file wav\&.c\&.
+.SS "#define cue_MARKER   (MAKE_MARKER ('\fBc\fP', 'u', 'e', ' '))"
+
+.PP
+Definition at line 46 of file wav\&.c\&.
+.SS "#define data_MARKER   (MAKE_MARKER ('\fBd\fP', '\fBa\fP', '\fBt\fP', '\fBa\fP'))"
+
+.PP
+Definition at line 42 of file wav\&.c\&.
+.SS "#define DISP_MARKER   (MAKE_MARKER ('\fBD\fP', 'I', '\fBS\fP', 'P'))"
+
+.PP
+Definition at line 61 of file wav\&.c\&.
+.SS "#define ecor_MARKER   (MAKE_MARKER ('e', '\fBc\fP', 'o', 'r'))"
+
+.PP
+Definition at line 73 of file wav\&.c\&.
+.SS "#define elmo_MARKER   (MAKE_MARKER ('e', '\fBl\fP', '\fBm\fP', 'o'))"
+
+.PP
+Definition at line 67 of file wav\&.c\&.
+.SS "#define emdl_MARKER   (MAKE_MARKER ('e', '\fBm\fP', '\fBd\fP', '\fBl\fP'))"
+
+.PP
+Definition at line 74 of file wav\&.c\&.
+.SS "#define emnt_MARKER   (MAKE_MARKER ('e', '\fBm\fP', 'n', '\fBt\fP'))"
+
+.PP
+Definition at line 75 of file wav\&.c\&.
+.SS "#define erel_MARKER   (MAKE_MARKER ('e', 'r', 'e', '\fBl\fP'))"
+
+.PP
+Definition at line 76 of file wav\&.c\&.
+.SS "#define etim_MARKER   (MAKE_MARKER ('e', '\fBt\fP', '\fBi\fP', '\fBm\fP'))"
+
+.PP
+Definition at line 72 of file wav\&.c\&.
+.SS "#define eucm_MARKER   (MAKE_MARKER ('e', 'u', '\fBc\fP', '\fBm\fP'))"
+
+.PP
+Definition at line 77 of file wav\&.c\&.
+.SS "#define ever_MARKER   (MAKE_MARKER ('e', 'v', 'e', 'r'))"
+
+.PP
+Definition at line 71 of file wav\&.c\&.
+.SS "#define exif_MARKER   (MAKE_MARKER ('e', 'x', '\fBi\fP', '\fBf\fP'))"
+
+.PP
+Definition at line 70 of file wav\&.c\&.
+.SS "#define fact_MARKER   (MAKE_MARKER ('\fBf\fP', '\fBa\fP', '\fBc\fP', '\fBt\fP'))"
+
+.PP
+Definition at line 43 of file wav\&.c\&.
+.SS "#define fmt_MARKER   (MAKE_MARKER ('\fBf\fP', '\fBm\fP', '\fBt\fP', ' '))"
+
+.PP
+Definition at line 41 of file wav\&.c\&.
+.SS "#define IARL_MARKER   (MAKE_MARKER ('I', '\fBA\fP', 'R', 'L'))"
+
+.PP
+Definition at line 82 of file wav\&.c\&.
+.SS "#define IART_MARKER   (MAKE_MARKER ('I', '\fBA\fP', 'R', '\fBT\fP'))"
+
+.PP
+Definition at line 83 of file wav\&.c\&.
+.SS "#define IAUT_MARKER   (MAKE_MARKER ('I', '\fBA\fP', 'U', '\fBT\fP'))"
+
+.PP
+Definition at line 92 of file wav\&.c\&.
+.SS "#define ICMT_MARKER   (MAKE_MARKER ('I', 'C', '\fBM\fP', '\fBT\fP'))"
+
+.PP
+Definition at line 91 of file wav\&.c\&.
+.SS "#define ICOP_MARKER   (MAKE_MARKER ('I', 'C', 'O', 'P'))"
+
+.PP
+Definition at line 87 of file wav\&.c\&.
+.SS "#define ICOP_MARKER   (MAKE_MARKER ('I', 'C', 'O', 'P'))"
+
+.PP
+Definition at line 87 of file wav\&.c\&.
+.SS "#define ICRD_MARKER   (MAKE_MARKER ('I', 'C', 'R', '\fBD\fP'))"
+
+.PP
+Definition at line 80 of file wav\&.c\&.
+.SS "#define IENG_MARKER   (MAKE_MARKER ('I', '\fBE\fP', '\fBN\fP', 'G'))"
+
+.PP
+Definition at line 85 of file wav\&.c\&.
+.SS "#define IGNR_MARKER   (MAKE_MARKER ('I', 'G', '\fBN\fP', 'R'))"
+
+.PP
+Definition at line 86 of file wav\&.c\&.
+.SS "#define INAM_MARKER   (MAKE_MARKER ('I', '\fBN\fP', '\fBA\fP', '\fBM\fP'))"
+
+.PP
+Definition at line 84 of file wav\&.c\&.
+.SS "#define INFO_MARKER   (MAKE_MARKER ('I', '\fBN\fP', '\fBF\fP', 'O'))"
+
+.PP
+Definition at line 50 of file wav\&.c\&.
+.SS "#define IPRD_MARKER   (MAKE_MARKER ('I', 'P', 'R', '\fBD\fP'))"
+
+.PP
+Definition at line 88 of file wav\&.c\&.
+.SS "#define ISBJ_MARKER   (MAKE_MARKER ('I', '\fBS\fP', '\fBB\fP', 'J'))"
+
+.PP
+Definition at line 90 of file wav\&.c\&.
+.SS "#define ISFT_MARKER   (MAKE_MARKER ('I', '\fBS\fP', '\fBF\fP', '\fBT\fP'))"
+
+.PP
+Definition at line 79 of file wav\&.c\&.
+.SS "#define ISRC_MARKER   (MAKE_MARKER ('I', '\fBS\fP', 'R', 'C'))"
+
+.PP
+Definition at line 89 of file wav\&.c\&.
+.SS "#define ITRK_MARKER   (MAKE_MARKER ('I', '\fBT\fP', 'R', 'K'))"
+
+.PP
+Definition at line 93 of file wav\&.c\&.
+.SS "#define iXML_MARKER   (MAKE_MARKER ('\fBi\fP', 'X', '\fBM\fP', 'L'))"
+
+.PP
+Definition at line 58 of file wav\&.c\&.
+.SS "#define labl_MARKER   (MAKE_MARKER ('\fBl\fP', '\fBa\fP', '\fBb\fP', '\fBl\fP'))"
+
+.PP
+Definition at line 53 of file wav\&.c\&.
+.SS "#define levl_MARKER   (MAKE_MARKER ('\fBl\fP', 'e', 'v', '\fBl\fP'))"
+
+.PP
+Definition at line 59 of file wav\&.c\&.
+.SS "#define LIST_MARKER   (MAKE_MARKER ('L', 'I', '\fBS\fP', '\fBT\fP'))"
+
+.PP
+Definition at line 47 of file wav\&.c\&.
+.SS "#define ltxt_MARKER   (MAKE_MARKER ('\fBl\fP', '\fBt\fP', 'x', '\fBt\fP'))"
+
+.PP
+Definition at line 54 of file wav\&.c\&.
+.SS "#define MEXT_MARKER   (MAKE_MARKER ('\fBM\fP', '\fBE\fP', 'X', '\fBT\fP'))"
+
+.PP
+Definition at line 60 of file wav\&.c\&.
+.SS "#define note_MARKER   (MAKE_MARKER ('n', 'o', '\fBt\fP', 'e'))"
+
+.PP
+Definition at line 55 of file wav\&.c\&.
+.SS "#define OggS_MARKER   (MAKE_MARKER ('O', 'g', 'g', '\fBS\fP'))"
+
+.PP
+Definition at line 97 of file wav\&.c\&.
+.SS "#define PAD_MARKER   (MAKE_MARKER ('P', '\fBA\fP', '\fBD\fP', ' '))"
+
+.PP
+Definition at line 64 of file wav\&.c\&.
+.SS "#define PEAK_MARKER   (MAKE_MARKER ('P', '\fBE\fP', '\fBA\fP', 'K'))"
+
+.PP
+Definition at line 44 of file wav\&.c\&.
+.SS "#define plst_MARKER   (MAKE_MARKER ('\fBp\fP', '\fBl\fP', '\fBs\fP', '\fBt\fP'))"
+
+.PP
+Definition at line 51 of file wav\&.c\&.
+.SS "#define RIFF_MARKER   (MAKE_MARKER ('R', 'I', '\fBF\fP', '\fBF\fP'))"
+
+.PP
+Definition at line 38 of file wav\&.c\&.
+.SS "#define RIFX_MARKER   (MAKE_MARKER ('R', 'I', '\fBF\fP', 'X'))"
+
+.PP
+Definition at line 39 of file wav\&.c\&.
+.SS "#define slnt_MARKER   (MAKE_MARKER ('\fBs\fP', '\fBl\fP', 'n', '\fBt\fP'))"
+
+.PP
+Definition at line 48 of file wav\&.c\&.
+.SS "#define smpl_MARKER   (MAKE_MARKER ('\fBs\fP', '\fBm\fP', '\fBp\fP', '\fBl\fP'))"
+
+.PP
+Definition at line 56 of file wav\&.c\&.
+.SS "#define strc_MARKER   (MAKE_MARKER ('\fBs\fP', '\fBt\fP', 'r', '\fBc\fP'))"
+
+.PP
+Definition at line 63 of file wav\&.c\&.
+.SS "#define WAV_BEXT_MAX_CHUNK_SIZE   (10 * 1024)"
+
+.PP
+Definition at line 101 of file wav\&.c\&.
+.SS "#define WAV_BEXT_MIN_CHUNK_SIZE   602"
+
+.PP
+Definition at line 100 of file wav\&.c\&.
+.SS "#define WAV_PEAK_CHUNK_SIZE(ch)   (2 * sizeof (\fBint\fP) + ch * (sizeof (float) + sizeof (\fBint\fP)))"
+
+.PP
+Definition at line 99 of file wav\&.c\&.
+.SS "#define WAVE_MARKER   (MAKE_MARKER ('W', '\fBA\fP', '\fBV\fP', '\fBE\fP'))"
+
+.PP
+Definition at line 40 of file wav\&.c\&.
+.SS "#define wavl_MARKER   (MAKE_MARKER ('w', '\fBa\fP', 'v', '\fBl\fP'))"
+
+.PP
+Definition at line 49 of file wav\&.c\&.
+.SS "#define wvpk_MARKER   (MAKE_MARKER ('w', 'v', '\fBp\fP', '\fBk\fP'))"
+
+.PP
+Definition at line 96 of file wav\&.c\&.
+.SH "Enumeration Type Documentation"
+.PP 
+.SS "anonymous enum"
+
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fIHAVE_RIFF \fP\fP
+.TP
+\fB\fIHAVE_WAVE \fP\fP
+.TP
+\fB\fIHAVE_fmt \fP\fP
+.TP
+\fB\fIHAVE_fact \fP\fP
+.TP
+\fB\fIHAVE_PEAK \fP\fP
+.TP
+\fB\fIHAVE_data \fP\fP
+.TP
+\fB\fIHAVE_other \fP\fP
+.PP
+Definition at line 103 of file wav\&.c\&.
+.SH "Function Documentation"
+.PP 
+.SS "\fBint\fP wav_open (\fBSF_PRIVATE\fP * psf)"
+
+.PP
+Definition at line 179 of file wav\&.c\&.
+.SS "\fBint\fP wav_read_bext_chunk (\fBSF_PRIVATE\fP * psf, unsigned \fBint\fP chunksize)"
+
+.PP
+Definition at line 1670 of file wav\&.c\&.
+.SS "\fBint\fP wav_write_bext_chunk (\fBSF_PRIVATE\fP * psf)"
+
+.PP
+Definition at line 1726 of file wav\&.c\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

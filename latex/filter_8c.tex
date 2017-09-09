@@ -1,0 +1,259 @@
+\hypertarget{filter_8c}{}\section{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/libsoxr/src/filter.c File Reference}
+\label{filter_8c}\index{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/libsoxr/src/filter.\+c@{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/libsoxr/src/filter.\+c}}
+{\ttfamily \#include \char`\"{}filter.\+h\char`\"{}}\\*
+{\ttfamily \#include $<$math.\+h$>$}\\*
+{\ttfamily \#include $<$assert.\+h$>$}\\*
+{\ttfamily \#include $<$string.\+h$>$}\\*
+{\ttfamily \#include $<$stdlib.\+h$>$}\\*
+{\ttfamily \#include \char`\"{}fft4g.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}ccrw2.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}fft4g\+\_\+cache.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}rdft.\+h\char`\"{}}\\*
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{filter_8c_ae71449b1cc6e6250b91f539153a7a0d3}{M\+\_\+\+PI}~3.\+14159265358979323846
+\item 
+\#define \hyperlink{filter_8c_a65ac1b834fa43249302c9aece9f6aed5}{D\+F\+T\+\_\+\+F\+L\+O\+AT}~double
+\item 
+\#define \hyperlink{filter_8c_a39a936ffbd0a44016b01a92e27356011}{D\+O\+N\+E\+\_\+\+W\+I\+T\+H\+\_\+\+F\+F\+T\+\_\+\+C\+A\+C\+HE}~done\+\_\+with\+\_\+fft\+\_\+cache
+\item 
+\#define \hyperlink{filter_8c_a6883d50d099fdd0e5c69cddbcb835c5b}{F\+F\+T\+\_\+\+C\+A\+C\+H\+E\+\_\+\+C\+C\+RW}~fft\+\_\+cache\+\_\+ccrw
+\item 
+\#define \hyperlink{filter_8c_ac979f1394ce025277fae6be925cf46a8}{F\+F\+T\+\_\+\+L\+EN}~fft\+\_\+len
+\item 
+\#define \hyperlink{filter_8c_aa4ed0cae8f0c001ed340cdcf5bed2345}{L\+S\+X\+\_\+\+C\+D\+FT}~\hyperlink{fft4g_8h_ad3cdabfc14d8b46d62f2258c19e28311}{lsx\+\_\+cdft}
+\item 
+\#define \hyperlink{filter_8c_af22da1abf7c645d65048737ceaac705c}{L\+S\+X\+\_\+\+C\+L\+E\+A\+R\+\_\+\+F\+F\+T\+\_\+\+C\+A\+C\+HE}~\hyperlink{libsoxr_2src_2_filter_8h_ade2935709809730767f142390d6dfe28}{lsx\+\_\+clear\+\_\+fft\+\_\+cache}
+\item 
+\#define \hyperlink{filter_8c_a3a1338f249ca28fe6f5946b4791478af}{L\+S\+X\+\_\+\+F\+F\+T\+\_\+\+BR}~lsx\+\_\+fft\+\_\+br
+\item 
+\#define \hyperlink{filter_8c_ae5f1581f200f67afd5ba263099e913af}{L\+S\+X\+\_\+\+F\+F\+T\+\_\+\+SC}~lsx\+\_\+fft\+\_\+sc
+\item 
+\#define \hyperlink{filter_8c_a3e3f4b0884cdb2cec35fd2b652d3ac4e}{L\+S\+X\+\_\+\+I\+N\+I\+T\+\_\+\+F\+F\+T\+\_\+\+C\+A\+C\+HE}~\hyperlink{libsoxr_2src_2_filter_8h_a157ce598bb962071a2174a691d402ede}{lsx\+\_\+init\+\_\+fft\+\_\+cache}
+\item 
+\#define \hyperlink{filter_8c_a7c73a4a36e2afb067be8f8a67ee5f056}{L\+S\+X\+\_\+\+R\+D\+FT}~\hyperlink{fft4g_8h_a0ef71235f395ad57a69ae95d7d45a676}{lsx\+\_\+rdft}
+\item 
+\#define \hyperlink{filter_8c_a06711e3693936f31a90af171fae73d99}{L\+S\+X\+\_\+\+S\+A\+F\+E\+\_\+\+C\+D\+FT}~\hyperlink{libsoxr_2src_2_filter_8h_a77ea354618b120264142f2c30283a0d9}{lsx\+\_\+safe\+\_\+cdft}
+\item 
+\#define \hyperlink{filter_8c_ac016927606ec1a2bed434a1a773a1b20}{L\+S\+X\+\_\+\+S\+A\+F\+E\+\_\+\+R\+D\+FT}~\hyperlink{libsoxr_2src_2_filter_8h_a9c22ba7a1ec1d6ceebe5ce0dddc3cc10}{lsx\+\_\+safe\+\_\+rdft}
+\item 
+\#define \hyperlink{filter_8c_a4bd289731fb831f32d3794538244a27d}{U\+P\+D\+A\+T\+E\+\_\+\+F\+F\+T\+\_\+\+C\+A\+C\+HE}~update\+\_\+fft\+\_\+cache
+\item 
+\#define \hyperlink{filter_8c_a65ac1b834fa43249302c9aece9f6aed5}{D\+F\+T\+\_\+\+F\+L\+O\+AT}~double
+\item 
+\#define \hyperlink{filter_8c_a3d1baad9244a07281953b29ac37adfea}{O\+R\+D\+E\+R\+E\+D\+\_\+\+C\+O\+N\+V\+O\+L\+VE}~\hyperlink{libsoxr_2src_2_filter_8h_ad3db92a4ca348f297d4c4e3559df9800}{lsx\+\_\+ordered\+\_\+convolve}
+\item 
+\#define \hyperlink{filter_8c_a46d226628aa993da1749471f0a0d4fe1}{O\+R\+D\+E\+R\+E\+D\+\_\+\+P\+A\+R\+T\+I\+A\+L\+\_\+\+C\+O\+N\+V\+O\+L\+VE}~\hyperlink{libsoxr_2src_2_filter_8h_adf5faf19a94df1a0a1e6637dd5174200}{lsx\+\_\+ordered\+\_\+partial\+\_\+convolve}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+double \hyperlink{filter_8c_a1380e44ed098c719f0b564253007ec48}{lsx\+\_\+kaiser\+\_\+beta} (double \hyperlink{filters_8h_a6cbe32dd86cefd1a8b182b3ee652e9bf}{att}, double tr\+\_\+bw)
+\item 
+double $\ast$ \hyperlink{filter_8c_a66649ae10e9f0656c1d57300b43fd532}{lsx\+\_\+make\+\_\+lpf} (\hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} num\+\_\+taps, double Fc, double beta, double rho, double \hyperlink{seqread_8h_a26a42c039941e1d6aa8616c6d7b32541}{scale})
+\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{filter_8c_a757d3e4ac0fdbc7ea96df65d2f8a1bb4}{lsx\+\_\+kaiser\+\_\+params} (double \hyperlink{filters_8h_a6cbe32dd86cefd1a8b182b3ee652e9bf}{att}, double Fc, double tr\+\_\+bw, double $\ast$beta, \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} $\ast$num\+\_\+taps)
+\item 
+double $\ast$ \hyperlink{filter_8c_a022b42ac35e0ed161ff47a41e55c1dce}{lsx\+\_\+design\+\_\+lpf} (double Fp, double Fs, double Fn, double \hyperlink{filters_8h_a6cbe32dd86cefd1a8b182b3ee652e9bf}{att}, \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} $\ast$num\+\_\+taps, \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{rfft2d_test_m_l_8m_adc468c70fb574ebd07287b38d0d0676d}{k}, double beta)
+\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{filter_8c_a76e7cd2b243099c94f0b0d21cb6a77b8}{lsx\+\_\+fir\+\_\+to\+\_\+phase} (double $\ast$$\ast$h, \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} $\ast$\hyperlink{lib_2expat_8h_af86d325fecfc8f47b61fbf5a5146f582}{len}, \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} $\ast$post\+\_\+len, double phase)
+\end{DoxyCompactItemize}
+
+
+\subsection{Macro Definition Documentation}
+\index{filter.\+c@{filter.\+c}!D\+F\+T\+\_\+\+F\+L\+O\+AT@{D\+F\+T\+\_\+\+F\+L\+O\+AT}}
+\index{D\+F\+T\+\_\+\+F\+L\+O\+AT@{D\+F\+T\+\_\+\+F\+L\+O\+AT}!filter.\+c@{filter.\+c}}
+\subsubsection[{\texorpdfstring{D\+F\+T\+\_\+\+F\+L\+O\+AT}{DFT_FLOAT}}]{\setlength{\rightskip}{0pt plus 5cm}\#define D\+F\+T\+\_\+\+F\+L\+O\+AT~double}\hypertarget{filter_8c_a65ac1b834fa43249302c9aece9f6aed5}{}\label{filter_8c_a65ac1b834fa43249302c9aece9f6aed5}
+
+
+Definition at line 52 of file filter.\+c.
+
+\index{filter.\+c@{filter.\+c}!D\+F\+T\+\_\+\+F\+L\+O\+AT@{D\+F\+T\+\_\+\+F\+L\+O\+AT}}
+\index{D\+F\+T\+\_\+\+F\+L\+O\+AT@{D\+F\+T\+\_\+\+F\+L\+O\+AT}!filter.\+c@{filter.\+c}}
+\subsubsection[{\texorpdfstring{D\+F\+T\+\_\+\+F\+L\+O\+AT}{DFT_FLOAT}}]{\setlength{\rightskip}{0pt plus 5cm}\#define D\+F\+T\+\_\+\+F\+L\+O\+AT~double}\hypertarget{filter_8c_a65ac1b834fa43249302c9aece9f6aed5}{}\label{filter_8c_a65ac1b834fa43249302c9aece9f6aed5}
+
+
+Definition at line 52 of file filter.\+c.
+
+\index{filter.\+c@{filter.\+c}!D\+O\+N\+E\+\_\+\+W\+I\+T\+H\+\_\+\+F\+F\+T\+\_\+\+C\+A\+C\+HE@{D\+O\+N\+E\+\_\+\+W\+I\+T\+H\+\_\+\+F\+F\+T\+\_\+\+C\+A\+C\+HE}}
+\index{D\+O\+N\+E\+\_\+\+W\+I\+T\+H\+\_\+\+F\+F\+T\+\_\+\+C\+A\+C\+HE@{D\+O\+N\+E\+\_\+\+W\+I\+T\+H\+\_\+\+F\+F\+T\+\_\+\+C\+A\+C\+HE}!filter.\+c@{filter.\+c}}
+\subsubsection[{\texorpdfstring{D\+O\+N\+E\+\_\+\+W\+I\+T\+H\+\_\+\+F\+F\+T\+\_\+\+C\+A\+C\+HE}{DONE_WITH_FFT_CACHE}}]{\setlength{\rightskip}{0pt plus 5cm}\#define D\+O\+N\+E\+\_\+\+W\+I\+T\+H\+\_\+\+F\+F\+T\+\_\+\+C\+A\+C\+HE~done\+\_\+with\+\_\+fft\+\_\+cache}\hypertarget{filter_8c_a39a936ffbd0a44016b01a92e27356011}{}\label{filter_8c_a39a936ffbd0a44016b01a92e27356011}
+
+
+Definition at line 19 of file filter.\+c.
+
+\index{filter.\+c@{filter.\+c}!F\+F\+T\+\_\+\+C\+A\+C\+H\+E\+\_\+\+C\+C\+RW@{F\+F\+T\+\_\+\+C\+A\+C\+H\+E\+\_\+\+C\+C\+RW}}
+\index{F\+F\+T\+\_\+\+C\+A\+C\+H\+E\+\_\+\+C\+C\+RW@{F\+F\+T\+\_\+\+C\+A\+C\+H\+E\+\_\+\+C\+C\+RW}!filter.\+c@{filter.\+c}}
+\subsubsection[{\texorpdfstring{F\+F\+T\+\_\+\+C\+A\+C\+H\+E\+\_\+\+C\+C\+RW}{FFT_CACHE_CCRW}}]{\setlength{\rightskip}{0pt plus 5cm}\#define F\+F\+T\+\_\+\+C\+A\+C\+H\+E\+\_\+\+C\+C\+RW~fft\+\_\+cache\+\_\+ccrw}\hypertarget{filter_8c_a6883d50d099fdd0e5c69cddbcb835c5b}{}\label{filter_8c_a6883d50d099fdd0e5c69cddbcb835c5b}
+
+
+Definition at line 20 of file filter.\+c.
+
+\index{filter.\+c@{filter.\+c}!F\+F\+T\+\_\+\+L\+EN@{F\+F\+T\+\_\+\+L\+EN}}
+\index{F\+F\+T\+\_\+\+L\+EN@{F\+F\+T\+\_\+\+L\+EN}!filter.\+c@{filter.\+c}}
+\subsubsection[{\texorpdfstring{F\+F\+T\+\_\+\+L\+EN}{FFT_LEN}}]{\setlength{\rightskip}{0pt plus 5cm}\#define F\+F\+T\+\_\+\+L\+EN~fft\+\_\+len}\hypertarget{filter_8c_ac979f1394ce025277fae6be925cf46a8}{}\label{filter_8c_ac979f1394ce025277fae6be925cf46a8}
+
+
+Definition at line 21 of file filter.\+c.
+
+\index{filter.\+c@{filter.\+c}!L\+S\+X\+\_\+\+C\+D\+FT@{L\+S\+X\+\_\+\+C\+D\+FT}}
+\index{L\+S\+X\+\_\+\+C\+D\+FT@{L\+S\+X\+\_\+\+C\+D\+FT}!filter.\+c@{filter.\+c}}
+\subsubsection[{\texorpdfstring{L\+S\+X\+\_\+\+C\+D\+FT}{LSX_CDFT}}]{\setlength{\rightskip}{0pt plus 5cm}\#define L\+S\+X\+\_\+\+C\+D\+FT~{\bf lsx\+\_\+cdft}}\hypertarget{filter_8c_aa4ed0cae8f0c001ed340cdcf5bed2345}{}\label{filter_8c_aa4ed0cae8f0c001ed340cdcf5bed2345}
+
+
+Definition at line 22 of file filter.\+c.
+
+\index{filter.\+c@{filter.\+c}!L\+S\+X\+\_\+\+C\+L\+E\+A\+R\+\_\+\+F\+F\+T\+\_\+\+C\+A\+C\+HE@{L\+S\+X\+\_\+\+C\+L\+E\+A\+R\+\_\+\+F\+F\+T\+\_\+\+C\+A\+C\+HE}}
+\index{L\+S\+X\+\_\+\+C\+L\+E\+A\+R\+\_\+\+F\+F\+T\+\_\+\+C\+A\+C\+HE@{L\+S\+X\+\_\+\+C\+L\+E\+A\+R\+\_\+\+F\+F\+T\+\_\+\+C\+A\+C\+HE}!filter.\+c@{filter.\+c}}
+\subsubsection[{\texorpdfstring{L\+S\+X\+\_\+\+C\+L\+E\+A\+R\+\_\+\+F\+F\+T\+\_\+\+C\+A\+C\+HE}{LSX_CLEAR_FFT_CACHE}}]{\setlength{\rightskip}{0pt plus 5cm}\#define L\+S\+X\+\_\+\+C\+L\+E\+A\+R\+\_\+\+F\+F\+T\+\_\+\+C\+A\+C\+HE~{\bf lsx\+\_\+clear\+\_\+fft\+\_\+cache}}\hypertarget{filter_8c_af22da1abf7c645d65048737ceaac705c}{}\label{filter_8c_af22da1abf7c645d65048737ceaac705c}
+
+
+Definition at line 23 of file filter.\+c.
+
+\index{filter.\+c@{filter.\+c}!L\+S\+X\+\_\+\+F\+F\+T\+\_\+\+BR@{L\+S\+X\+\_\+\+F\+F\+T\+\_\+\+BR}}
+\index{L\+S\+X\+\_\+\+F\+F\+T\+\_\+\+BR@{L\+S\+X\+\_\+\+F\+F\+T\+\_\+\+BR}!filter.\+c@{filter.\+c}}
+\subsubsection[{\texorpdfstring{L\+S\+X\+\_\+\+F\+F\+T\+\_\+\+BR}{LSX_FFT_BR}}]{\setlength{\rightskip}{0pt plus 5cm}\#define L\+S\+X\+\_\+\+F\+F\+T\+\_\+\+BR~lsx\+\_\+fft\+\_\+br}\hypertarget{filter_8c_a3a1338f249ca28fe6f5946b4791478af}{}\label{filter_8c_a3a1338f249ca28fe6f5946b4791478af}
+
+
+Definition at line 24 of file filter.\+c.
+
+\index{filter.\+c@{filter.\+c}!L\+S\+X\+\_\+\+F\+F\+T\+\_\+\+SC@{L\+S\+X\+\_\+\+F\+F\+T\+\_\+\+SC}}
+\index{L\+S\+X\+\_\+\+F\+F\+T\+\_\+\+SC@{L\+S\+X\+\_\+\+F\+F\+T\+\_\+\+SC}!filter.\+c@{filter.\+c}}
+\subsubsection[{\texorpdfstring{L\+S\+X\+\_\+\+F\+F\+T\+\_\+\+SC}{LSX_FFT_SC}}]{\setlength{\rightskip}{0pt plus 5cm}\#define L\+S\+X\+\_\+\+F\+F\+T\+\_\+\+SC~lsx\+\_\+fft\+\_\+sc}\hypertarget{filter_8c_ae5f1581f200f67afd5ba263099e913af}{}\label{filter_8c_ae5f1581f200f67afd5ba263099e913af}
+
+
+Definition at line 25 of file filter.\+c.
+
+\index{filter.\+c@{filter.\+c}!L\+S\+X\+\_\+\+I\+N\+I\+T\+\_\+\+F\+F\+T\+\_\+\+C\+A\+C\+HE@{L\+S\+X\+\_\+\+I\+N\+I\+T\+\_\+\+F\+F\+T\+\_\+\+C\+A\+C\+HE}}
+\index{L\+S\+X\+\_\+\+I\+N\+I\+T\+\_\+\+F\+F\+T\+\_\+\+C\+A\+C\+HE@{L\+S\+X\+\_\+\+I\+N\+I\+T\+\_\+\+F\+F\+T\+\_\+\+C\+A\+C\+HE}!filter.\+c@{filter.\+c}}
+\subsubsection[{\texorpdfstring{L\+S\+X\+\_\+\+I\+N\+I\+T\+\_\+\+F\+F\+T\+\_\+\+C\+A\+C\+HE}{LSX_INIT_FFT_CACHE}}]{\setlength{\rightskip}{0pt plus 5cm}\#define L\+S\+X\+\_\+\+I\+N\+I\+T\+\_\+\+F\+F\+T\+\_\+\+C\+A\+C\+HE~{\bf lsx\+\_\+init\+\_\+fft\+\_\+cache}}\hypertarget{filter_8c_a3e3f4b0884cdb2cec35fd2b652d3ac4e}{}\label{filter_8c_a3e3f4b0884cdb2cec35fd2b652d3ac4e}
+
+
+Definition at line 26 of file filter.\+c.
+
+\index{filter.\+c@{filter.\+c}!L\+S\+X\+\_\+\+R\+D\+FT@{L\+S\+X\+\_\+\+R\+D\+FT}}
+\index{L\+S\+X\+\_\+\+R\+D\+FT@{L\+S\+X\+\_\+\+R\+D\+FT}!filter.\+c@{filter.\+c}}
+\subsubsection[{\texorpdfstring{L\+S\+X\+\_\+\+R\+D\+FT}{LSX_RDFT}}]{\setlength{\rightskip}{0pt plus 5cm}\#define L\+S\+X\+\_\+\+R\+D\+FT~{\bf lsx\+\_\+rdft}}\hypertarget{filter_8c_a7c73a4a36e2afb067be8f8a67ee5f056}{}\label{filter_8c_a7c73a4a36e2afb067be8f8a67ee5f056}
+
+
+Definition at line 27 of file filter.\+c.
+
+\index{filter.\+c@{filter.\+c}!L\+S\+X\+\_\+\+S\+A\+F\+E\+\_\+\+C\+D\+FT@{L\+S\+X\+\_\+\+S\+A\+F\+E\+\_\+\+C\+D\+FT}}
+\index{L\+S\+X\+\_\+\+S\+A\+F\+E\+\_\+\+C\+D\+FT@{L\+S\+X\+\_\+\+S\+A\+F\+E\+\_\+\+C\+D\+FT}!filter.\+c@{filter.\+c}}
+\subsubsection[{\texorpdfstring{L\+S\+X\+\_\+\+S\+A\+F\+E\+\_\+\+C\+D\+FT}{LSX_SAFE_CDFT}}]{\setlength{\rightskip}{0pt plus 5cm}\#define L\+S\+X\+\_\+\+S\+A\+F\+E\+\_\+\+C\+D\+FT~{\bf lsx\+\_\+safe\+\_\+cdft}}\hypertarget{filter_8c_a06711e3693936f31a90af171fae73d99}{}\label{filter_8c_a06711e3693936f31a90af171fae73d99}
+
+
+Definition at line 28 of file filter.\+c.
+
+\index{filter.\+c@{filter.\+c}!L\+S\+X\+\_\+\+S\+A\+F\+E\+\_\+\+R\+D\+FT@{L\+S\+X\+\_\+\+S\+A\+F\+E\+\_\+\+R\+D\+FT}}
+\index{L\+S\+X\+\_\+\+S\+A\+F\+E\+\_\+\+R\+D\+FT@{L\+S\+X\+\_\+\+S\+A\+F\+E\+\_\+\+R\+D\+FT}!filter.\+c@{filter.\+c}}
+\subsubsection[{\texorpdfstring{L\+S\+X\+\_\+\+S\+A\+F\+E\+\_\+\+R\+D\+FT}{LSX_SAFE_RDFT}}]{\setlength{\rightskip}{0pt plus 5cm}\#define L\+S\+X\+\_\+\+S\+A\+F\+E\+\_\+\+R\+D\+FT~{\bf lsx\+\_\+safe\+\_\+rdft}}\hypertarget{filter_8c_ac016927606ec1a2bed434a1a773a1b20}{}\label{filter_8c_ac016927606ec1a2bed434a1a773a1b20}
+
+
+Definition at line 29 of file filter.\+c.
+
+\index{filter.\+c@{filter.\+c}!M\+\_\+\+PI@{M\+\_\+\+PI}}
+\index{M\+\_\+\+PI@{M\+\_\+\+PI}!filter.\+c@{filter.\+c}}
+\subsubsection[{\texorpdfstring{M\+\_\+\+PI}{M_PI}}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+\_\+\+PI~3.\+14159265358979323846}\hypertarget{filter_8c_ae71449b1cc6e6250b91f539153a7a0d3}{}\label{filter_8c_ae71449b1cc6e6250b91f539153a7a0d3}
+
+
+Definition at line 8 of file filter.\+c.
+
+\index{filter.\+c@{filter.\+c}!O\+R\+D\+E\+R\+E\+D\+\_\+\+C\+O\+N\+V\+O\+L\+VE@{O\+R\+D\+E\+R\+E\+D\+\_\+\+C\+O\+N\+V\+O\+L\+VE}}
+\index{O\+R\+D\+E\+R\+E\+D\+\_\+\+C\+O\+N\+V\+O\+L\+VE@{O\+R\+D\+E\+R\+E\+D\+\_\+\+C\+O\+N\+V\+O\+L\+VE}!filter.\+c@{filter.\+c}}
+\subsubsection[{\texorpdfstring{O\+R\+D\+E\+R\+E\+D\+\_\+\+C\+O\+N\+V\+O\+L\+VE}{ORDERED_CONVOLVE}}]{\setlength{\rightskip}{0pt plus 5cm}\#define O\+R\+D\+E\+R\+E\+D\+\_\+\+C\+O\+N\+V\+O\+L\+VE~{\bf lsx\+\_\+ordered\+\_\+convolve}}\hypertarget{filter_8c_a3d1baad9244a07281953b29ac37adfea}{}\label{filter_8c_a3d1baad9244a07281953b29ac37adfea}
+
+
+Definition at line 53 of file filter.\+c.
+
+\index{filter.\+c@{filter.\+c}!O\+R\+D\+E\+R\+E\+D\+\_\+\+P\+A\+R\+T\+I\+A\+L\+\_\+\+C\+O\+N\+V\+O\+L\+VE@{O\+R\+D\+E\+R\+E\+D\+\_\+\+P\+A\+R\+T\+I\+A\+L\+\_\+\+C\+O\+N\+V\+O\+L\+VE}}
+\index{O\+R\+D\+E\+R\+E\+D\+\_\+\+P\+A\+R\+T\+I\+A\+L\+\_\+\+C\+O\+N\+V\+O\+L\+VE@{O\+R\+D\+E\+R\+E\+D\+\_\+\+P\+A\+R\+T\+I\+A\+L\+\_\+\+C\+O\+N\+V\+O\+L\+VE}!filter.\+c@{filter.\+c}}
+\subsubsection[{\texorpdfstring{O\+R\+D\+E\+R\+E\+D\+\_\+\+P\+A\+R\+T\+I\+A\+L\+\_\+\+C\+O\+N\+V\+O\+L\+VE}{ORDERED_PARTIAL_CONVOLVE}}]{\setlength{\rightskip}{0pt plus 5cm}\#define O\+R\+D\+E\+R\+E\+D\+\_\+\+P\+A\+R\+T\+I\+A\+L\+\_\+\+C\+O\+N\+V\+O\+L\+VE~{\bf lsx\+\_\+ordered\+\_\+partial\+\_\+convolve}}\hypertarget{filter_8c_a46d226628aa993da1749471f0a0d4fe1}{}\label{filter_8c_a46d226628aa993da1749471f0a0d4fe1}
+
+
+Definition at line 54 of file filter.\+c.
+
+\index{filter.\+c@{filter.\+c}!U\+P\+D\+A\+T\+E\+\_\+\+F\+F\+T\+\_\+\+C\+A\+C\+HE@{U\+P\+D\+A\+T\+E\+\_\+\+F\+F\+T\+\_\+\+C\+A\+C\+HE}}
+\index{U\+P\+D\+A\+T\+E\+\_\+\+F\+F\+T\+\_\+\+C\+A\+C\+HE@{U\+P\+D\+A\+T\+E\+\_\+\+F\+F\+T\+\_\+\+C\+A\+C\+HE}!filter.\+c@{filter.\+c}}
+\subsubsection[{\texorpdfstring{U\+P\+D\+A\+T\+E\+\_\+\+F\+F\+T\+\_\+\+C\+A\+C\+HE}{UPDATE_FFT_CACHE}}]{\setlength{\rightskip}{0pt plus 5cm}\#define U\+P\+D\+A\+T\+E\+\_\+\+F\+F\+T\+\_\+\+C\+A\+C\+HE~update\+\_\+fft\+\_\+cache}\hypertarget{filter_8c_a4bd289731fb831f32d3794538244a27d}{}\label{filter_8c_a4bd289731fb831f32d3794538244a27d}
+
+
+Definition at line 30 of file filter.\+c.
+
+
+
+\subsection{Function Documentation}
+\index{filter.\+c@{filter.\+c}!lsx\+\_\+design\+\_\+lpf@{lsx\+\_\+design\+\_\+lpf}}
+\index{lsx\+\_\+design\+\_\+lpf@{lsx\+\_\+design\+\_\+lpf}!filter.\+c@{filter.\+c}}
+\subsubsection[{\texorpdfstring{lsx\+\_\+design\+\_\+lpf(double Fp, double Fs, double Fn, double att, int $\ast$num\+\_\+taps, int k, double beta)}{lsx_design_lpf(double Fp, double Fs, double Fn, double att, int *num_taps, int k, double beta)}}]{\setlength{\rightskip}{0pt plus 5cm}double$\ast$ lsx\+\_\+design\+\_\+lpf (
+\begin{DoxyParamCaption}
+\item[{double}]{Fp, }
+\item[{double}]{Fs, }
+\item[{double}]{Fn, }
+\item[{double}]{att, }
+\item[{{\bf int} $\ast$}]{num\+\_\+taps, }
+\item[{{\bf int}}]{k, }
+\item[{double}]{beta}
+\end{DoxyParamCaption}
+)}\hypertarget{filter_8c_a022b42ac35e0ed161ff47a41e55c1dce}{}\label{filter_8c_a022b42ac35e0ed161ff47a41e55c1dce}
+
+
+Definition at line 120 of file filter.\+c.
+
+\index{filter.\+c@{filter.\+c}!lsx\+\_\+fir\+\_\+to\+\_\+phase@{lsx\+\_\+fir\+\_\+to\+\_\+phase}}
+\index{lsx\+\_\+fir\+\_\+to\+\_\+phase@{lsx\+\_\+fir\+\_\+to\+\_\+phase}!filter.\+c@{filter.\+c}}
+\subsubsection[{\texorpdfstring{lsx\+\_\+fir\+\_\+to\+\_\+phase(double $\ast$$\ast$h, int $\ast$len, int $\ast$post\+\_\+len, double phase)}{lsx_fir_to_phase(double **h, int *len, int *post_len, double phase)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} lsx\+\_\+fir\+\_\+to\+\_\+phase (
+\begin{DoxyParamCaption}
+\item[{double $\ast$$\ast$}]{h, }
+\item[{{\bf int} $\ast$}]{len, }
+\item[{{\bf int} $\ast$}]{post\+\_\+len, }
+\item[{double}]{phase}
+\end{DoxyParamCaption}
+)}\hypertarget{filter_8c_a76e7cd2b243099c94f0b0d21cb6a77b8}{}\label{filter_8c_a76e7cd2b243099c94f0b0d21cb6a77b8}
+
+
+Definition at line 154 of file filter.\+c.
+
+\index{filter.\+c@{filter.\+c}!lsx\+\_\+kaiser\+\_\+beta@{lsx\+\_\+kaiser\+\_\+beta}}
+\index{lsx\+\_\+kaiser\+\_\+beta@{lsx\+\_\+kaiser\+\_\+beta}!filter.\+c@{filter.\+c}}
+\subsubsection[{\texorpdfstring{lsx\+\_\+kaiser\+\_\+beta(double att, double tr\+\_\+bw)}{lsx_kaiser_beta(double att, double tr_bw)}}]{\setlength{\rightskip}{0pt plus 5cm}double lsx\+\_\+kaiser\+\_\+beta (
+\begin{DoxyParamCaption}
+\item[{double}]{att, }
+\item[{double}]{tr\+\_\+bw}
+\end{DoxyParamCaption}
+)}\hypertarget{filter_8c_a1380e44ed098c719f0b564253007ec48}{}\label{filter_8c_a1380e44ed098c719f0b564253007ec48}
+
+
+Definition at line 65 of file filter.\+c.
+
+\index{filter.\+c@{filter.\+c}!lsx\+\_\+kaiser\+\_\+params@{lsx\+\_\+kaiser\+\_\+params}}
+\index{lsx\+\_\+kaiser\+\_\+params@{lsx\+\_\+kaiser\+\_\+params}!filter.\+c@{filter.\+c}}
+\subsubsection[{\texorpdfstring{lsx\+\_\+kaiser\+\_\+params(double att, double Fc, double tr\+\_\+bw, double $\ast$beta, int $\ast$num\+\_\+taps)}{lsx_kaiser_params(double att, double Fc, double tr_bw, double *beta, int *num_taps)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} lsx\+\_\+kaiser\+\_\+params (
+\begin{DoxyParamCaption}
+\item[{double}]{att, }
+\item[{double}]{Fc, }
+\item[{double}]{tr\+\_\+bw, }
+\item[{double $\ast$}]{beta, }
+\item[{{\bf int} $\ast$}]{num\+\_\+taps}
+\end{DoxyParamCaption}
+)}\hypertarget{filter_8c_a757d3e4ac0fdbc7ea96df65d2f8a1bb4}{}\label{filter_8c_a757d3e4ac0fdbc7ea96df65d2f8a1bb4}
+
+
+Definition at line 112 of file filter.\+c.
+
+\index{filter.\+c@{filter.\+c}!lsx\+\_\+make\+\_\+lpf@{lsx\+\_\+make\+\_\+lpf}}
+\index{lsx\+\_\+make\+\_\+lpf@{lsx\+\_\+make\+\_\+lpf}!filter.\+c@{filter.\+c}}
+\subsubsection[{\texorpdfstring{lsx\+\_\+make\+\_\+lpf(int num\+\_\+taps, double Fc, double beta, double rho, double scale)}{lsx_make_lpf(int num_taps, double Fc, double beta, double rho, double scale)}}]{\setlength{\rightskip}{0pt plus 5cm}double$\ast$ lsx\+\_\+make\+\_\+lpf (
+\begin{DoxyParamCaption}
+\item[{{\bf int}}]{num\+\_\+taps, }
+\item[{double}]{Fc, }
+\item[{double}]{beta, }
+\item[{double}]{rho, }
+\item[{double}]{scale}
+\end{DoxyParamCaption}
+)}\hypertarget{filter_8c_a66649ae10e9f0656c1d57300b43fd532}{}\label{filter_8c_a66649ae10e9f0656c1d57300b43fd532}
+
+
+Definition at line 92 of file filter.\+c.
+

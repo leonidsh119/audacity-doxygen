@@ -1,0 +1,157 @@
+.TH "api_overview" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+api_overview \- PortAudio API Overview 
+This page provides a top-down overview of the entire PortAudio API\&. It describes how all of the PortAudio data types and functions fit together\&. It provides links to the documentation for each function and data type\&. You can find all of the detailed documentation for each API function and data type on the \fBportaudio\&.h\fP page\&.
+.SH "Introduction"
+.PP
+PortAudio provides a uniform application programming interface (API) across all supported platforms\&. You can think of the PortAudio library as a wrapper that converts calls to the PortAudio API into calls to platform-specific native audio APIs\&. Operating systems often offer more than one native audio API and some APIs (such as JACK) may be available on multiple target operating systems\&. PortAudio supports all the major native audio APIs on each supported platform\&. The diagram below illustrates the relationship between your application, PortAudio, and the supported native audio APIs:
+.PP
+.PP
+PortAudio provides a uniform interface to native audio APIs\&. However, it doesn't always provide totally uniform functionality\&. There are cases where PortAudio is limited by the capabilities of the underlying native audio API\&. For example, PortAudio doesn't provide sample rate conversion if you request a sample rate that is not supported by the native audio API\&. Another example is that the ASIO SDK only allows one device to be open at a time, so PortAudio/ASIO doesn't currently support opening multiple ASIO devices simultaneously\&.
+.SH "Key abstractions: Host APIs, Devices and Streams"
+.PP
+The PortAudio processing model includes three main abstractions: \fIHost APIs\fP, audio \fIDevices\fP and audio \fIStreams\fP\&.
+.PP
+Host APIs represent platform-specific native audio APIs\&. Some examples of Host APIs are Core Audio on Mac OS, WMME and DirectSound on Windows and OSS and ALSA on Linux\&. The diagram in the previous section shows many of the supported native APIs\&. Sometimes it's useful to know which Host APIs you're dealing with, but it is easy to use PortAudio without ever interacting directly with the Host API abstraction\&.
+.PP
+Devices represent individual hardware audio interfaces or audio ports on the host platform\&. Devices have names and certain capabilities such as supported sample rates and the number of supported input and output channels\&. PortAudio provides functions to enumerate available Devices and to query for Device capabilities\&.
+.PP
+Streams manage active audio input and output from and to Devices\&. Streams may be half duplex (input or output) or full duplex (simultaneous input and output)\&. Streams operate at a specific sample rate with particular sample formats, buffer sizes and internal buffering latencies\&. You specify these parameters when you open the Stream\&. Audio data is communicated between a Stream and your application via a user provided asynchronous callback function or by invoking synchronous read and write functions\&.
+.PP
+PortAudio supports audio input and output in a variety of sample formats: 8, 16, 24 and 32 bit integer formats and 32 bit floating point, irrespective of the formats supported by the native audio API\&. PortAudio also supports multichannel buffers in both interleaved and non-interleaved (separate buffer per channel) formats and automatically performs conversion when necessary\&. If requested, PortAudio can clamp out-of range samples and/or dither to a native format\&.
+.PP
+The PortAudio API offers the following functionality:
+.IP "\(bu" 2
+Initialize and terminate the library
+.IP "\(bu" 2
+Enumerate available Host APIs
+.IP "\(bu" 2
+Enumerate available Devices either globally, or within each Host API
+.IP "\(bu" 2
+Discover default or recommended Devices and Device settings
+.IP "\(bu" 2
+Discover Device capabilities such as supported audio data formats and sample rates
+.IP "\(bu" 2
+Create and control audio Streams to acquire audio from and output audio to Devices
+.IP "\(bu" 2
+Provide Stream timing information to support synchronising audio with other parts of your application
+.IP "\(bu" 2
+Retrieve version and error information\&.
+.PP
+.PP
+These functions are described in more detail below\&.
+.SH "Initialization, termination and utility functions"
+.PP
+The PortAudio library must be initialized before it can be used and terminated to clean up afterwards\&. You initialize PortAudio by calling \fBPa_Initialize()\fP and clean up by calling \fBPa_Terminate()\fP\&.
+.PP
+You can query PortAudio for version information using \fBPa_GetVersion()\fP to get a numeric version number and \fBPa_GetVersionText()\fP to get a string\&.
+.PP
+The size in bytes of the various sample formats represented by the \fBPaSampleFormat\fP enumeration can be obtained using \fBPa_GetSampleSize()\fP\&.
+.PP
+\fBPa_Sleep()\fP sleeps for a specified number of milliseconds\&. This isn't intended for use in production systems; it's provided only as a simple portable way to implement tests and examples where the main thread sleeps while audio is acquired or played by an asynchronous callback function\&.
+.SH "Host APIs"
+.PP
+A Host API acts as a top-level grouping for all of the Devices offered by a single native platform audio API\&. Each Host API has a unique type identifier, a name, zero or more Devices, and nominated default input and output Devices\&.
+.PP
+Host APIs are usually referenced by index: an integer of type \fBPaHostApiIndex\fP that ranges between zero and \fBPa_GetHostApiCount()\fP - 1\&. You can enumerate all available Host APIs by counting across this range\&.
+.PP
+You can retrieve the index of the default Host API by calling \fBPa_GetDefaultHostApi()\fP\&.
+.PP
+Information about a Host API, such as it's name and default devices, is stored in a \fBPaHostApiInfo\fP structure\&. You can retrieve a pointer to a particular Host API's \fBPaHostApiInfo\fP structure by calling \fBPa_GetHostApiInfo()\fP with the Host API's index as a parameter\&.
+.PP
+Most PortAudio functions reference Host APIs by \fBPaHostApiIndex\fP indices\&. Each Host API also has a unique type identifier defined in the \fBPaHostApiTypeId\fP enumeration\&. You can call \fBPa_HostApiTypeIdToHostApiIndex()\fP to retrieve the current \fBPaHostApiIndex\fP for a particular \fBPaHostApiTypeId\fP\&.
+.SH "Devices"
+.PP
+A Device represents an audio endpoint provided by a particular native audio API\&. This usually corresponds to a specific input or output port on a hardware audio interface, or to the interface as a whole\&. Each Host API operates independently, so a single physical audio port may be addressable via different Devices exposed by different Host APIs\&.
+.PP
+A Device has a name, is associated with a Host API, and has a maximum number of supported input and output channels\&. PortAudio provides recommended default latency values and a default sample rate for each Device\&. To obtain more detailed information about device capabilities you can call \fBPa_IsFormatSupported()\fP to query whether it is possible to open a Stream using particular Devices, parameters and sample rate\&.
+.PP
+Although each Device conceptually belongs to a specific Host API, most PortAudio functions and data structures refer to Devices using a global, Host API-independent index of type \fBPaDeviceIndex\fP -- an integer of that ranges between zero and \fBPa_GetDeviceCount()\fP - 1\&. The reasons for this are partly historical but it also makes it easy for applications to ignore the Host API abstraction and just work with Devices and Streams\&.
+.PP
+If you want to enumerate Devices belonging to a particular Host API you can count between 0 and \fBPaHostApiInfo::deviceCount\fP - 1\&. You can convert this Host API-specific index value to a global \fBPaDeviceIndex\fP value by calling \fBPa_HostApiDeviceIndexToDeviceIndex()\fP\&.
+.PP
+Information about a Device is stored in a \fBPaDeviceInfo\fP structure\&. You can retrieve a pointer to a Devices's \fBPaDeviceInfo\fP structure by calling \fBPa_GetDeviceInfo()\fP with the Device's index as a parameter\&.
+.PP
+You can retrieve the indices of the global default input and output devices using \fBPa_GetDefaultInputDevice()\fP and \fBPa_GetDefaultOutputDevice()\fP\&. Default Devices for each Host API are stored in the Host API's \fBPaHostApiInfo\fP structures\&.
+.PP
+For an example of enumerating devices and printing information about their capabilities see the pa_devs\&.c program in the test directory of the PortAudio distribution\&.
+.SH "Streams"
+.PP
+A Stream represents an active flow of audio data between your application and one or more audio Devices\&. A Stream operates at a specific sample rate with specific sample formats and buffer sizes\&.
+.SS "I/O Methods: callback and read/write"
+PortAudio offers two methods for communicating audio data between an open Stream and your Application: (1) an asynchronous callback interface, where PortAudio calls a user defined callback function when new audio data is available or required, and (2) synchronous read and write functions which can be used in a blocking or non-blocking manner\&. You choose between the two methods when you open a Stream\&. The two methods are discussed in more detail below\&.
+.SS "Opening and Closing Streams"
+You call \fBPa_OpenStream()\fP to open a Stream, specifying the Device(s) to use, the number of input and output channels, sample formats, suggested latency values and flags that control dithering, clipping and overflow handling\&. You specify many of these parameters in two \fBPaStreamParameters\fP structures, one for input and one for output\&. If you're using the callback I/O method you also pass a callback buffer size, callback function pointer and user data pointer\&.
+.PP
+Devices may be full duplex (supporting simultaneous input and output) or half duplex (supporting input or output) -- usually this reflects the structure of the underlying native audio API\&. When opening a Stream you can specify one full duplex Device for both input and output, or two different Devices for input and output\&. Some Host APIs only support full-duplex operation with a full-duplex device (e\&.g\&. ASIO) but most are able to aggregate two half duplex devices into a full duplex Stream\&. PortAudio requires that all devices specified in a call to \fBPa_OpenStream()\fP belong to the same Host API\&.
+.PP
+A successful call to \fBPa_OpenStream()\fP creates a pointer to a \fBPaStream\fP -- an opaque handle representing the open Stream\&. All PortAudio API functions that operate on open Streams take a pointer to a \fBPaStream\fP as their first parameter\&.
+.PP
+PortAudio also provides \fBPa_OpenDefaultStream()\fP -- a simpler alternative to \fBPa_OpenStream()\fP which you can use when you want to open the default audio Device(s) with default latency parameters\&.
+.PP
+You call \fBPa_CloseStream()\fP to close a Stream when you've finished using it\&.
+.SS "Starting and Stopping Streams"
+Newly opened Streams are initially stopped\&. You call \fBPa_StartStream()\fP to start a Stream\&. You can stop a running Stream using \fBPa_StopStream()\fP or \fBPa_AbortStream()\fP (the Stop function plays out all internally queued audio data, while Abort tries to stop as quickly as possible)\&. An open Stream can be started and stopped multiple times\&. You can call \fBPa_IsStreamStopped()\fP to query whether a Stream is running or stopped\&.
+.PP
+By calling \fBPa_SetStreamFinishedCallback()\fP it is possible to register a special \fBPaStreamFinishedCallback\fP that will be called when the Stream has completed playing any internally queued buffers\&. This can be used in conjunction with the \fBpaComplete\fP stream callback return value (see below) to avoid blocking on a call to \fBPa_StopStream()\fP while queued audio data is still playing\&.
+.SS "The Callback I/O Method"
+So-called 'callback Streams' operate by periodically invoking a callback function you supply to \fBPa_OpenStream()\fP\&. The callback function must implement the \fBPaStreamCallback\fP signature\&. It gets called by PortAudio every time PortAudio needs your application to consume or produce audio data\&. The callback is passed pointers to buffers containing the audio to process\&. The format (interleave, sample data type) and size of these buffers is determined by the parameters passed to \fBPa_OpenStream()\fP when the Stream was opened\&.
+.PP
+Stream callbacks usually return \fBpaContinue\fP to indicate that PortAudio should keep the stream running\&. It is possible to deactivate a Stream from the stream callback by returning either \fBpaComplete\fP or \fBpaAbort\fP\&. In this case the Stream enters a deactivated state after the last buffer has finished playing (\fBpaComplete\fP) or as soon as possible (\fBpaAbort\fP)\&. You can detect the deactivated state by calling \fBPa_IsStreamActive()\fP or by using \fBPa_SetStreamFinishedCallback()\fP to subscribe to a stream finished notification\&. Note that even if the stream callback returns \fBpaComplete\fP it's still necessary to call \fBPa_StopStream()\fP or \fBPa_AbortStream()\fP to enter the stopped state\&.
+.PP
+Many of the tests in the /tests directory of the PortAudio distribution implement PortAudio stream callbacks\&. For example see: patest_sine\&.c (audio output), patest_record\&.c (audio input), patest_wire\&.c (audio pass-through) and pa_fuzz\&.c (simple audio effects processing)\&.
+.PP
+\fBIMPORTANT:\fP The stream callback function often needs to operate with very high or real-time priority\&. As a result there are strict requirements placed on the type of code that can be executed in a stream callback\&. In general this means avoiding any code that might block, including: acquiring locks, calling OS API functions including allocating memory\&. With the exception of \fBPa_GetStreamCpuLoad()\fP you may not call PortAudio API functions from within the stream callback\&.
+.SS "The Read/Write I/O Method"
+As an alternative to the callback I/O method, PortAudio provides a synchronous read/write interface for acquiring and playing audio\&. This can be useful for applications that don't require the lowest possibly latency, or don't warrant the increased complexity of synchronising with an asynchronous callback funciton\&. This I/O method is also useful when calling PortAudio from programming languages that don't support asynchronous callbacks\&.
+.PP
+To open a Stream in read/write mode you pass a NULL stream callback function pointer to \fBPa_OpenStream()\fP\&.
+.PP
+To write audio data to a Stream call \fBPa_WriteStream()\fP and to read data call \fBPa_ReadStream()\fP\&. These functions will block if the internal buffers are full, making them safe to call in a tight loop\&. If you want to avoid blocking you can query the amount of available read or write space using \fBPa_GetStreamReadAvailable()\fP or \fBPa_GetStreamWriteAvailable()\fP and use the returned values to limit the amount of data you read or write\&.
+.PP
+For examples of the read/write I/O method see the following examples in the /tests directory of the PortAudio distribution: patest_read_record\&.c (audio input), patest_write_sine\&.c (audio output), patest_read_write_wire\&.c (audio pass-through)\&.
+.SS "Retrieving Stream Information"
+You can retrieve information about an open Stream by calling \fBPa_GetStreamInfo()\fP\&. This returns a \fBPaStreamInfo\fP structure containing the actual input and output latency and sample rate of the stream\&. It's possible for these values to be different from the suggested values passed to \fBPa_OpenStream()\fP\&.
+.PP
+When using a callback stream you can call \fBPa_GetStreamCpuLoad()\fP to retrieve a rough estimate of the amount of CPU time your callback function is using\&.
+.SS "Stream Timing Information"
+When using the callback I/O method your stream callback function receives timing information via a pointer to a \fBPaStreamCallbackTimeInfo\fP structure\&. This structure contains the current time along with the estimated hardware capture and playback time of the first sample of the input and output buffers\&. All times are measured in seconds relative to a Stream-specific clock\&. The current Stream clock time can be retrieved using \fBPa_GetStreamTime()\fP\&.
+.PP
+You can use the stream callback \fBPaStreamCallbackTimeInfo\fP times in conjunction with timestamps returned by \fBPa_GetStreamTime()\fP to implement time synchronization schemes such as time aligning your GUI display with rendered audio, or maintaining synchronization between MIDI and audio playback\&.
+.SH "Error Handling"
+.PP
+Most PortAudio functions return error codes using values from the \fBPaError\fP enumeration\&. All error codes are negative values\&. Some functions return values greater than or equal to zero for normal results and a negative error code in case of error\&.
+.PP
+You can convert \fBPaError\fP error codes to human readable text by calling \fBPa_GetErrorText()\fP\&.
+.PP
+PortAudio usually tries to translate error conditions into portable \fBPaError\fP error codes\&. However if an unexpected error is encountered the \fBpaUnanticipatedHostError\fP code may be returned\&. In this case a further mechanism is provided to query for Host API-specific error information\&. If PortAudio returns \fBpaUnanticipatedHostError\fP you can call \fBPa_GetLastHostErrorInfo()\fP to retrieve a pointer to a \fBPaHostErrorInfo\fP structure that provides more information, including the Host API that encountered the error, a native API error code and error text\&.
+.SH "Host API and Platform-specific Extensions"
+.PP
+The public PortAudio API only exposes functionality that can be provided across all target platforms\&. In some cases individual native audio APIs offer unique functionality\&. Some PortAudio Host APIs expose this functionality via Host API-specific extensions\&. Examples include access to low-level buffering and priority parameters, opening a Stream with only a subset of a Device's channels, or accessing channel metadata such as channel names\&.
+.PP
+Host API-specific extensions are provided in the form of additional functions and data structures defined in Host API-specific header files found in the /include directory\&.
+.PP
+The \fBPaStreamParameters\fP structure passed to \fBPa_IsFormatSupported()\fP and \fBPa_OpenStream()\fP has a field named \fBPaStreamParameters::hostApiSpecificStreamInfo\fP that is sometimes used to pass low level information when opening a Stream\&.
+.PP
+See the documentation for the individual Host API-specific header files for details of the extended functionality they expose:
+.PP
+.IP "\(bu" 2
+\fBpa_asio\&.h\fP
+.IP "\(bu" 2
+\fBpa_jack\&.h\fP
+.IP "\(bu" 2
+\fBpa_linux_alsa\&.h\fP
+.IP "\(bu" 2
+\fBpa_mac_core\&.h\fP
+.IP "\(bu" 2
+\fBpa_win_ds\&.h\fP
+.IP "\(bu" 2
+\fBpa_win_wasapi\&.h\fP
+.IP "\(bu" 2
+\fBpa_win_wmme\&.h\fP
+.IP "\(bu" 2
+\fBpa_win_waveformat\&.h\fP 
+.PP
+

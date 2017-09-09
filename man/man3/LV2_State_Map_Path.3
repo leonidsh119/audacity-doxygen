@@ -1,0 +1,80 @@
+.TH "LV2_State_Map_Path" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+LV2_State_Map_Path \- 
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <state\&.h>\fP
+.SS "Public Attributes"
+
+.in +1c
+.ti -1c
+.RI "\fBLV2_State_Map_Path_Handle\fP \fBhandle\fP"
+.br
+.ti -1c
+.RI "char *(* \fBabstract_path\fP )(\fBLV2_State_Map_Path_Handle\fP \fBhandle\fP, \fBconst\fP char *\fBabsolute_path\fP)"
+.br
+.ti -1c
+.RI "char *(* \fBabsolute_path\fP )(\fBLV2_State_Map_Path_Handle\fP \fBhandle\fP, \fBconst\fP char *\fBabstract_path\fP)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Feature data for state:mapPath (\fBLV2_STATE__mapPath\fP)\&. 
+.PP
+Definition at line 267 of file state\&.h\&.
+.SH "Member Data Documentation"
+.PP 
+.SS "char*(* LV2_State_Map_Path::absolute_path) (\fBLV2_State_Map_Path_Handle\fP \fBhandle\fP, \fBconst\fP char *\fBabstract_path\fP)"
+Map an abstract path from plugin state to an absolute path\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIhandle\fP MUST be the \fChandle\fP member of this struct\&. 
+.br
+\fIabstract_path\fP An abstract path (e\&.g\&. a path from plugin state)\&. 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+An absolute file system path\&.
+.RE
+.PP
+The plugin MUST use this function in order to actually open or otherwise use any paths loaded from plugin state\&.
+.PP
+This function may only be called within the context of LV2_State_Interface methods\&. The caller is responsible for freeing the returned value with free()\&. 
+.PP
+Definition at line 308 of file state\&.h\&.
+.SS "char*(* LV2_State_Map_Path::abstract_path) (\fBLV2_State_Map_Path_Handle\fP \fBhandle\fP, \fBconst\fP char *\fBabsolute_path\fP)"
+Map an absolute path to an abstract path for use in plugin state\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIhandle\fP MUST be the \fChandle\fP member of this struct\&. 
+.br
+\fIabsolute_path\fP The absolute path of a file\&. 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+An abstract path suitable for use in plugin state\&.
+.RE
+.PP
+The plugin MUST use this function to map any paths that will be stored in plugin state\&. The returned value is an abstract path which MAY not be an actual file system path; \fBabsolute_path()\fP MUST be used to map it to an actual path in order to use the file\&.
+.PP
+Plugins MUST NOT make any assumptions about abstract paths except that they can be mapped back to the absolute path of the 'same' file (though not necessarily the same original path) using \fBabsolute_path()\fP\&.
+.PP
+This function may only be called within the context of LV2_State_Interface methods\&. The caller is responsible for freeing the returned value with free()\&. 
+.PP
+Definition at line 292 of file state\&.h\&.
+.SS "\fBLV2_State_Map_Path_Handle\fP LV2_State_Map_Path::handle"
+Opaque host data\&. 
+.PP
+Definition at line 271 of file state\&.h\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

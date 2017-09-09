@@ -1,0 +1,91 @@
+.TH "_LV2UI_Descriptor" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+_LV2UI_Descriptor \- 
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <ui\&.h>\fP
+.SS "Public Attributes"
+
+.in +1c
+.ti -1c
+.RI "\fBconst\fP char * \fBURI\fP"
+.br
+.ti -1c
+.RI "\fBLV2UI_Handle\fP(* \fBinstantiate\fP )(\fBconst\fP struct \fB_LV2UI_Descriptor\fP *descriptor, \fBconst\fP char *plugin_uri, \fBconst\fP char *bundle_path, \fBLV2UI_Write_Function\fP write_function, \fBLV2UI_Controller\fP controller, \fBLV2UI_Widget\fP *widget, \fBconst\fP \fBLV2_Feature\fP *\fBconst\fP *features)"
+.br
+.ti -1c
+.RI "\fBvoid\fP(* \fBcleanup\fP )(\fBLV2UI_Handle\fP ui)"
+.br
+.ti -1c
+.RI "\fBvoid\fP(* \fBport_event\fP )(\fBLV2UI_Handle\fP ui, \fBuint32_t\fP port_index, \fBuint32_t\fP buffer_size, \fBuint32_t\fP \fBformat\fP, \fBconst\fP \fBvoid\fP *\fBbuffer\fP)"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBvoid\fP *(* \fBextension_data\fP )(\fBconst\fP char *\fBuri\fP)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+A plugin UI\&.
+.PP
+A pointer to an object of this type is returned by the \fBlv2ui_descriptor()\fP function\&. 
+.PP
+Definition at line 129 of file ui\&.h\&.
+.SH "Member Data Documentation"
+.PP 
+.SS "\fBvoid\fP(* _LV2UI_Descriptor::cleanup) (\fBLV2UI_Handle\fP ui)"
+Destroy the UI\&. The host must not try to access the widget after calling this function\&. 
+.PP
+Definition at line 174 of file ui\&.h\&.
+.SS "\fBconst\fP \fBvoid\fP*(* _LV2UI_Descriptor::extension_data) (\fBconst\fP char *\fBuri\fP)"
+Return a data structure associated with an extension URI, typically an interface struct with additional function pointers
+.PP
+This member may be set to NULL if the UI is not interested in supporting any extensions\&. This is similar to \fBLV2_Descriptor::extension_data()\fP\&. 
+.PP
+Definition at line 209 of file ui\&.h\&.
+.SS "\fBLV2UI_Handle\fP(* _LV2UI_Descriptor::instantiate) (\fBconst\fP struct \fB_LV2UI_Descriptor\fP *descriptor, \fBconst\fP char *plugin_uri, \fBconst\fP char *bundle_path, \fBLV2UI_Write_Function\fP write_function, \fBLV2UI_Controller\fP controller, \fBLV2UI_Widget\fP *widget, \fBconst\fP \fBLV2_Feature\fP *\fBconst\fP *features)"
+Create a new UI and return a handle to it\&. This function works similarly to \fBLV2_Descriptor::instantiate()\fP\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdescriptor\fP The descriptor for the UI to instantiate\&.
+.br
+\fIplugin_uri\fP The URI of the plugin that this UI will control\&.
+.br
+\fIbundle_path\fP The path to the bundle containing this UI, including the trailing directory separator\&.
+.br
+\fIwrite_function\fP A function that the UI can use to send data to the plugin's input ports\&.
+.br
+\fIcontroller\fP A handle for the UI instance to be passed as the first parameter of UI methods\&.
+.br
+\fIwidget\fP (output) widget pointer\&. The UI points this at its main widget, which has the type defined by the UI type in the data file\&.
+.br
+\fIfeatures\fP An array of LV2_Feature pointers\&. The host must pass all feature \fBURIs\fP that it and the UI supports and any additional data, as in \fBLV2_Descriptor::instantiate()\fP\&. Note that UI features and plugin features are not necessarily the same\&. 
+.RE
+.PP
+
+.PP
+Definition at line 161 of file ui\&.h\&.
+.SS "\fBvoid\fP(* _LV2UI_Descriptor::port_event) (\fBLV2UI_Handle\fP ui, \fBuint32_t\fP port_index, \fBuint32_t\fP buffer_size, \fBuint32_t\fP \fBformat\fP, \fBconst\fP \fBvoid\fP *\fBbuffer\fP)"
+Tell the UI that something interesting has happened at a plugin port\&.
+.PP
+What is 'interesting' and how it is written to \fCbuffer\fP is defined by \fCformat\fP, which has the same meaning as in \fBLV2UI_Write_Function()\fP\&. \fBFormat\fP 0 is a special case for lv2:ControlPort, where this function should be called when the port value changes (but not necessarily for every change), \fCbuffer_size\fP must be sizeof(float), and \fCbuffer\fP points to a single IEEE-754 float\&.
+.PP
+By default, the host should only call this function for lv2:ControlPort inputs\&. However, the UI can request updates for other ports statically with ui:portNotification or dynamicaly with ui:portSubscribe\&.
+.PP
+The UI MUST NOT retain any reference to \fCbuffer\fP after this function returns, it is only valid for the duration of the call\&.
+.PP
+This member may be NULL if the UI is not interested in any port events\&. 
+.PP
+Definition at line 195 of file ui\&.h\&.
+.SS "\fBconst\fP char* _LV2UI_Descriptor::URI"
+The URI for this UI (not for the plugin it controls)\&. 
+.PP
+Definition at line 133 of file ui\&.h\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

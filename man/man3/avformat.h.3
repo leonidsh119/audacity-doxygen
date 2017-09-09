@@ -1,0 +1,1085 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/lib-src/ffmpeg/libavformat/avformat.h" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/lib-src/ffmpeg/libavformat/avformat.h \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <time\&.h>\fP
+.br
+\fC#include <stdio\&.h>\fP
+.br
+\fC#include 'libavcodec/avcodec\&.h'\fP
+.br
+\fC#include 'libavutil/dict\&.h'\fP
+.br
+\fC#include 'libavutil/log\&.h'\fP
+.br
+\fC#include 'avio\&.h'\fP
+.br
+\fC#include 'libavformat/version\&.h'\fP
+.br
+
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "struct \fBAVFrac\fP"
+.br
+.ti -1c
+.RI "struct \fBAVProbeData\fP"
+.br
+.ti -1c
+.RI "struct \fBAVOutputFormat\fP"
+.br
+.ti -1c
+.RI "struct \fBAVInputFormat\fP"
+.br
+.ti -1c
+.RI "struct \fBAVIndexEntry\fP"
+.br
+.ti -1c
+.RI "struct \fBAVStream\fP"
+.br
+.ti -1c
+.RI "struct \fBAVProgram\fP"
+.br
+.ti -1c
+.RI "struct \fBAVChapter\fP"
+.br
+.ti -1c
+.RI "struct \fBAVFormatContext\fP"
+.br
+.ti -1c
+.RI "struct \fBAVPacketList\fP"
+.br
+.in -1c
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBAVPROBE_SCORE_RETRY\fP   (\fBAVPROBE_SCORE_MAX\fP/4)"
+.br
+.ti -1c
+.RI "#define \fBAVPROBE_SCORE_STREAM_RETRY\fP   (\fBAVPROBE_SCORE_MAX\fP/4\-1)"
+.br
+.ti -1c
+.RI "#define \fBAVPROBE_SCORE_EXTENSION\fP   50"
+.br
+.RI "\fIscore for file extension \fP"
+.ti -1c
+.RI "#define \fBAVPROBE_SCORE_MAX\fP   100"
+.br
+.RI "\fImaximum score \fP"
+.ti -1c
+.RI "#define \fBAVPROBE_PADDING_SIZE\fP   32"
+.br
+.RI "\fIextra allocated bytes at the end of the probe buffer \fP"
+.ti -1c
+.RI "#define \fBAVFMT_NOFILE\fP   0x0001"
+.br
+.RI "\fIDemuxer will use avio_open, no opened file should be provided by the caller\&. \fP"
+.ti -1c
+.RI "#define \fBAVFMT_NEEDNUMBER\fP   0x0002"
+.br
+.ti -1c
+.RI "#define \fBAVFMT_SHOW_IDS\fP   0x0008"
+.br
+.ti -1c
+.RI "#define \fBAVFMT_RAWPICTURE\fP   0x0020"
+.br
+.ti -1c
+.RI "#define \fBAVFMT_GLOBALHEADER\fP   0x0040"
+.br
+.ti -1c
+.RI "#define \fBAVFMT_NOTIMESTAMPS\fP   0x0080"
+.br
+.ti -1c
+.RI "#define \fBAVFMT_GENERIC_INDEX\fP   0x0100"
+.br
+.ti -1c
+.RI "#define \fBAVFMT_TS_DISCONT\fP   0x0200"
+.br
+.ti -1c
+.RI "#define \fBAVFMT_VARIABLE_FPS\fP   0x0400"
+.br
+.ti -1c
+.RI "#define \fBAVFMT_NODIMENSIONS\fP   0x0800"
+.br
+.ti -1c
+.RI "#define \fBAVFMT_NOSTREAMS\fP   0x1000"
+.br
+.ti -1c
+.RI "#define \fBAVFMT_NOBINSEARCH\fP   0x2000"
+.br
+.ti -1c
+.RI "#define \fBAVFMT_NOGENSEARCH\fP   0x4000"
+.br
+.ti -1c
+.RI "#define \fBAVFMT_NO_BYTE_SEEK\fP   0x8000"
+.br
+.ti -1c
+.RI "#define \fBAVFMT_ALLOW_FLUSH\fP   0x10000"
+.br
+.ti -1c
+.RI "#define \fBAVFMT_TS_NONSTRICT\fP   0x8020000"
+.br
+.ti -1c
+.RI "#define \fBAVFMT_TS_NEGATIVE\fP   0x40000"
+.br
+.ti -1c
+.RI "#define \fBAVFMT_SEEK_TO_PTS\fP   0x4000000"
+.br
+.ti -1c
+.RI "#define \fBAVINDEX_KEYFRAME\fP   0x0001"
+.br
+.ti -1c
+.RI "#define \fBAV_DISPOSITION_DEFAULT\fP   0x0001"
+.br
+.ti -1c
+.RI "#define \fBAV_DISPOSITION_DUB\fP   0x0002"
+.br
+.ti -1c
+.RI "#define \fBAV_DISPOSITION_ORIGINAL\fP   0x0004"
+.br
+.ti -1c
+.RI "#define \fBAV_DISPOSITION_COMMENT\fP   0x0008"
+.br
+.ti -1c
+.RI "#define \fBAV_DISPOSITION_LYRICS\fP   0x0010"
+.br
+.ti -1c
+.RI "#define \fBAV_DISPOSITION_KARAOKE\fP   0x0020"
+.br
+.ti -1c
+.RI "#define \fBAV_DISPOSITION_FORCED\fP   0x0040"
+.br
+.ti -1c
+.RI "#define \fBAV_DISPOSITION_HEARING_IMPAIRED\fP   0x0080"
+.br
+.ti -1c
+.RI "#define \fBAV_DISPOSITION_VISUAL_IMPAIRED\fP   0x0100"
+.br
+.ti -1c
+.RI "#define \fBAV_DISPOSITION_CLEAN_EFFECTS\fP   0x0200"
+.br
+.ti -1c
+.RI "#define \fBAV_DISPOSITION_ATTACHED_PIC\fP   0x0400"
+.br
+.ti -1c
+.RI "#define \fBAV_DISPOSITION_CAPTIONS\fP   0x10000"
+.br
+.ti -1c
+.RI "#define \fBAV_DISPOSITION_DESCRIPTIONS\fP   0x20000"
+.br
+.ti -1c
+.RI "#define \fBAV_DISPOSITION_METADATA\fP   0x40000"
+.br
+.ti -1c
+.RI "#define \fBAV_PTS_WRAP_IGNORE\fP   0"
+.br
+.RI "\fIignore the wrap \fP"
+.ti -1c
+.RI "#define \fBAV_PTS_WRAP_ADD_OFFSET\fP   1"
+.br
+.RI "\fIadd the format specific offset on wrap detection \fP"
+.ti -1c
+.RI "#define \fBAV_PTS_WRAP_SUB_OFFSET\fP   \-1"
+.br
+.RI "\fIsubtract the format specific offset on wrap detection \fP"
+.ti -1c
+.RI "#define \fBMAX_STD_TIMEBASES\fP   (60*12+6)"
+.br
+.ti -1c
+.RI "#define \fBMAX_PROBE_PACKETS\fP   2500"
+.br
+.ti -1c
+.RI "#define \fBMAX_REORDER_DELAY\fP   16"
+.br
+.ti -1c
+.RI "#define \fBAV_PROGRAM_RUNNING\fP   1"
+.br
+.ti -1c
+.RI "#define \fBAVFMTCTX_NOHEADER\fP   0x0001"
+.br
+.ti -1c
+.RI "#define \fBAVFMT_FLAG_GENPTS\fP   0x0001"
+.br
+.RI "\fIGenerate missing pts even if it requires parsing future frames\&. \fP"
+.ti -1c
+.RI "#define \fBAVFMT_FLAG_IGNIDX\fP   0x0002"
+.br
+.RI "\fIIgnore index\&. \fP"
+.ti -1c
+.RI "#define \fBAVFMT_FLAG_NONBLOCK\fP   0x0004"
+.br
+.RI "\fIDo not block when reading packets from input\&. \fP"
+.ti -1c
+.RI "#define \fBAVFMT_FLAG_IGNDTS\fP   0x0008"
+.br
+.RI "\fIIgnore DTS on frames that contain both DTS & PTS\&. \fP"
+.ti -1c
+.RI "#define \fBAVFMT_FLAG_NOFILLIN\fP   0x0010"
+.br
+.RI "\fIDo not infer any values from other values, just return what is stored in the container\&. \fP"
+.ti -1c
+.RI "#define \fBAVFMT_FLAG_NOPARSE\fP   0x0020"
+.br
+.RI "\fIDo not use AVParsers, you also must set AVFMT_FLAG_NOFILLIN as the fillin code works on frames and no parsing -> no frames\&. Also seeking to frames can not work if parsing to find frame boundaries has been disabled\&. \fP"
+.ti -1c
+.RI "#define \fBAVFMT_FLAG_NOBUFFER\fP   0x0040"
+.br
+.RI "\fIDo not buffer frames when possible\&. \fP"
+.ti -1c
+.RI "#define \fBAVFMT_FLAG_CUSTOM_IO\fP   0x0080"
+.br
+.RI "\fIThe caller has supplied a custom \fBAVIOContext\fP, don't \fBavio_close()\fP it\&. \fP"
+.ti -1c
+.RI "#define \fBAVFMT_FLAG_DISCARD_CORRUPT\fP   0x0100"
+.br
+.RI "\fIDiscard frames marked corrupted\&. \fP"
+.ti -1c
+.RI "#define \fBAVFMT_FLAG_FLUSH_PACKETS\fP   0x0200"
+.br
+.RI "\fIFlush the \fBAVIOContext\fP every packet\&. \fP"
+.ti -1c
+.RI "#define \fBAVFMT_FLAG_MP4A_LATM\fP   0x8000"
+.br
+.RI "\fIEnable RTP MP4A-LATM payload\&. \fP"
+.ti -1c
+.RI "#define \fBAVFMT_FLAG_SORT_DTS\fP   0x10000"
+.br
+.RI "\fItry to interleave outputted packets by dts (using this flag can slow demuxing down) \fP"
+.ti -1c
+.RI "#define \fBAVFMT_FLAG_PRIV_OPT\fP   0x20000"
+.br
+.RI "\fIEnable use of private options by delaying codec open (this could be made default once all code is converted) \fP"
+.ti -1c
+.RI "#define \fBAVFMT_FLAG_KEEP_SIDE_DATA\fP   0x40000"
+.br
+.RI "\fIDon't merge side data but keep it separate\&. \fP"
+.ti -1c
+.RI "#define \fBFF_FDEBUG_TS\fP   0x0001"
+.br
+.ti -1c
+.RI "#define \fBRAW_PACKET_BUFFER_SIZE\fP   2500000"
+.br
+.ti -1c
+.RI "#define \fBAVSEEK_FLAG_BACKWARD\fP   1"
+.br
+.RI "\fIseek backward \fP"
+.ti -1c
+.RI "#define \fBAVSEEK_FLAG_BYTE\fP   2"
+.br
+.RI "\fIseeking based on position in bytes \fP"
+.ti -1c
+.RI "#define \fBAVSEEK_FLAG_ANY\fP   4"
+.br
+.RI "\fIseek to any frame, even non-keyframes \fP"
+.ti -1c
+.RI "#define \fBAVSEEK_FLAG_FRAME\fP   8"
+.br
+.RI "\fIseeking based on frame number \fP"
+.in -1c
+.SS "Typedefs"
+
+.in +1c
+.ti -1c
+.RI "typedef struct \fBAVFrac\fP \fBAVFrac\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBAVProbeData\fP \fBAVProbeData\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBAVOutputFormat\fP \fBAVOutputFormat\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBAVInputFormat\fP \fBAVInputFormat\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBAVIndexEntry\fP \fBAVIndexEntry\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBAVStream\fP \fBAVStream\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBAVProgram\fP \fBAVProgram\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBAVChapter\fP \fBAVChapter\fP"
+.br
+.ti -1c
+.RI "typedef \fBint\fP(* \fBav_format_control_message\fP) (struct \fBAVFormatContext\fP *\fBs\fP, \fBint\fP type, \fBvoid\fP *\fBdata\fP, size_t data_size)"
+.br
+.ti -1c
+.RI "typedef struct \fBAVFormatInternal\fP \fBAVFormatInternal\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBAVFormatContext\fP \fBAVFormatContext\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBAVPacketList\fP \fBAVPacketList\fP"
+.br
+.in -1c
+.SS "Enumerations"
+
+.in +1c
+.ti -1c
+.RI "enum \fBAVStreamParseType\fP { \fBAVSTREAM_PARSE_NONE\fP, \fBAVSTREAM_PARSE_FULL\fP, \fBAVSTREAM_PARSE_HEADERS\fP, \fBAVSTREAM_PARSE_TIMESTAMPS\fP, \fBAVSTREAM_PARSE_FULL_ONCE\fP, \fBAVSTREAM_PARSE_FULL_RAW\fP =MKTAG(0,'R','A','W') }"
+.br
+.ti -1c
+.RI "enum \fBAVDurationEstimationMethod\fP { \fBAVFMT_DURATION_FROM_PTS\fP, \fBAVFMT_DURATION_FROM_STREAM\fP, \fBAVFMT_DURATION_FROM_BITRATE\fP }"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBint\fP \fBav_get_packet\fP (\fBAVIOContext\fP *\fBs\fP, \fBAVPacket\fP *pkt, \fBint\fP \fBsize\fP)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_append_packet\fP (\fBAVIOContext\fP *\fBs\fP, \fBAVPacket\fP *pkt, \fBint\fP \fBsize\fP)"
+.br
+.ti -1c
+.RI "\fBAVRational\fP \fBav_stream_get_r_frame_rate\fP (\fBconst\fP \fBAVStream\fP *\fBs\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBav_stream_set_r_frame_rate\fP (\fBAVStream\fP *\fBs\fP, \fBAVRational\fP r)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_format_get_probe_score\fP (\fBconst\fP \fBAVFormatContext\fP *\fBs\fP)"
+.br
+.ti -1c
+.RI "\fBAVCodec\fP * \fBav_format_get_video_codec\fP (\fBconst\fP \fBAVFormatContext\fP *\fBs\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBav_format_set_video_codec\fP (\fBAVFormatContext\fP *\fBs\fP, \fBAVCodec\fP *\fBc\fP)"
+.br
+.ti -1c
+.RI "\fBAVCodec\fP * \fBav_format_get_audio_codec\fP (\fBconst\fP \fBAVFormatContext\fP *\fBs\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBav_format_set_audio_codec\fP (\fBAVFormatContext\fP *\fBs\fP, \fBAVCodec\fP *\fBc\fP)"
+.br
+.ti -1c
+.RI "\fBAVCodec\fP * \fBav_format_get_subtitle_codec\fP (\fBconst\fP \fBAVFormatContext\fP *\fBs\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBav_format_set_subtitle_codec\fP (\fBAVFormatContext\fP *\fBs\fP, \fBAVCodec\fP *\fBc\fP)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_format_get_metadata_header_padding\fP (\fBconst\fP \fBAVFormatContext\fP *\fBs\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBav_format_set_metadata_header_padding\fP (\fBAVFormatContext\fP *\fBs\fP, \fBint\fP \fBc\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP * \fBav_format_get_opaque\fP (\fBconst\fP \fBAVFormatContext\fP *\fBs\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBav_format_set_opaque\fP (\fBAVFormatContext\fP *\fBs\fP, \fBvoid\fP *opaque)"
+.br
+.ti -1c
+.RI "\fBav_format_control_message\fP \fBav_format_get_control_message_cb\fP (\fBconst\fP \fBAVFormatContext\fP *\fBs\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBav_format_set_control_message_cb\fP (\fBAVFormatContext\fP *\fBs\fP, \fBav_format_control_message\fP callback)"
+.br
+.ti -1c
+.RI "enum \fBAVDurationEstimationMethod\fP \fBav_fmt_ctx_get_duration_estimation_method\fP (\fBconst\fP \fBAVFormatContext\fP *ctx)"
+.br
+.ti -1c
+.RI "unsigned \fBavformat_version\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBconst\fP char * \fBavformat_configuration\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBconst\fP char * \fBavformat_license\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBav_register_all\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBav_register_input_format\fP (\fBAVInputFormat\fP *\fBformat\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBav_register_output_format\fP (\fBAVOutputFormat\fP *\fBformat\fP)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBavformat_network_init\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBavformat_network_deinit\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBAVInputFormat\fP * \fBav_iformat_next\fP (\fBAVInputFormat\fP *\fBf\fP)"
+.br
+.ti -1c
+.RI "\fBAVOutputFormat\fP * \fBav_oformat_next\fP (\fBAVOutputFormat\fP *\fBf\fP)"
+.br
+.ti -1c
+.RI "\fBAVFormatContext\fP * \fBavformat_alloc_context\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBavformat_free_context\fP (\fBAVFormatContext\fP *\fBs\fP)"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBAVClass\fP * \fBavformat_get_class\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBAVStream\fP * \fBavformat_new_stream\fP (\fBAVFormatContext\fP *\fBs\fP, \fBconst\fP \fBAVCodec\fP *\fBc\fP)"
+.br
+.ti -1c
+.RI "\fBAVProgram\fP * \fBav_new_program\fP (\fBAVFormatContext\fP *\fBs\fP, \fBint\fP id)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBavformat_alloc_output_context2\fP (\fBAVFormatContext\fP **ctx, \fBAVOutputFormat\fP *oformat, \fBconst\fP char *format_name, \fBconst\fP char *\fBfilename\fP)"
+.br
+.ti -1c
+.RI "\fBAVInputFormat\fP * \fBav_find_input_format\fP (\fBconst\fP char *short_name)"
+.br
+.ti -1c
+.RI "\fBAVInputFormat\fP * \fBav_probe_input_format\fP (\fBAVProbeData\fP *pd, \fBint\fP is_opened)"
+.br
+.ti -1c
+.RI "\fBAVInputFormat\fP * \fBav_probe_input_format2\fP (\fBAVProbeData\fP *pd, \fBint\fP is_opened, \fBint\fP *score_max)"
+.br
+.ti -1c
+.RI "\fBAVInputFormat\fP * \fBav_probe_input_format3\fP (\fBAVProbeData\fP *pd, \fBint\fP is_opened, \fBint\fP *score_ret)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_probe_input_buffer2\fP (\fBAVIOContext\fP *pb, \fBAVInputFormat\fP **fmt, \fBconst\fP char *\fBfilename\fP, \fBvoid\fP *logctx, unsigned \fBint\fP \fBoffset\fP, unsigned \fBint\fP max_probe_size)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_probe_input_buffer\fP (\fBAVIOContext\fP *pb, \fBAVInputFormat\fP **fmt, \fBconst\fP char *\fBfilename\fP, \fBvoid\fP *logctx, unsigned \fBint\fP \fBoffset\fP, unsigned \fBint\fP max_probe_size)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBavformat_open_input\fP (\fBAVFormatContext\fP **ps, \fBconst\fP char *\fBfilename\fP, \fBAVInputFormat\fP *fmt, \fBAVDictionary\fP **options)"
+.br
+.ti -1c
+.RI "\fBattribute_deprecated\fP \fBint\fP \fBav_demuxer_open\fP (\fBAVFormatContext\fP *ic)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBavformat_find_stream_info\fP (\fBAVFormatContext\fP *ic, \fBAVDictionary\fP **options)"
+.br
+.ti -1c
+.RI "\fBAVProgram\fP * \fBav_find_program_from_stream\fP (\fBAVFormatContext\fP *ic, \fBAVProgram\fP *\fBlast\fP, \fBint\fP \fBs\fP)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_find_best_stream\fP (\fBAVFormatContext\fP *ic, enum \fBAVMediaType\fP type, \fBint\fP wanted_stream_nb, \fBint\fP related_stream, \fBAVCodec\fP **decoder_ret, \fBint\fP flags)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_read_frame\fP (\fBAVFormatContext\fP *\fBs\fP, \fBAVPacket\fP *pkt)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_seek_frame\fP (\fBAVFormatContext\fP *\fBs\fP, \fBint\fP stream_index, \fBint64_t\fP timestamp, \fBint\fP flags)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBavformat_seek_file\fP (\fBAVFormatContext\fP *\fBs\fP, \fBint\fP stream_index, \fBint64_t\fP min_ts, \fBint64_t\fP ts, \fBint64_t\fP max_ts, \fBint\fP flags)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_read_play\fP (\fBAVFormatContext\fP *\fBs\fP)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_read_pause\fP (\fBAVFormatContext\fP *\fBs\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBavformat_close_input\fP (\fBAVFormatContext\fP **\fBs\fP)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBavformat_write_header\fP (\fBAVFormatContext\fP *\fBs\fP, \fBAVDictionary\fP **options)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_write_frame\fP (\fBAVFormatContext\fP *\fBs\fP, \fBAVPacket\fP *pkt)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_interleaved_write_frame\fP (\fBAVFormatContext\fP *\fBs\fP, \fBAVPacket\fP *pkt)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_write_uncoded_frame\fP (\fBAVFormatContext\fP *\fBs\fP, \fBint\fP stream_index, \fBAVFrame\fP *frame)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_interleaved_write_uncoded_frame\fP (\fBAVFormatContext\fP *\fBs\fP, \fBint\fP stream_index, \fBAVFrame\fP *frame)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_write_uncoded_frame_query\fP (\fBAVFormatContext\fP *\fBs\fP, \fBint\fP stream_index)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_write_trailer\fP (\fBAVFormatContext\fP *\fBs\fP)"
+.br
+.ti -1c
+.RI "\fBAVOutputFormat\fP * \fBav_guess_format\fP (\fBconst\fP char *short_name, \fBconst\fP char *\fBfilename\fP, \fBconst\fP char *mime_type)"
+.br
+.ti -1c
+.RI "enum \fBAVCodecID\fP \fBav_guess_codec\fP (\fBAVOutputFormat\fP *fmt, \fBconst\fP char *short_name, \fBconst\fP char *\fBfilename\fP, \fBconst\fP char *mime_type, enum \fBAVMediaType\fP type)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_get_output_timestamp\fP (struct \fBAVFormatContext\fP *\fBs\fP, \fBint\fP stream, \fBint64_t\fP *dts, \fBint64_t\fP *wall)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBav_hex_dump\fP (FILE *\fBf\fP, \fBconst\fP \fBuint8_t\fP *\fBbuf\fP, \fBint\fP \fBsize\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBav_hex_dump_log\fP (\fBvoid\fP *avcl, \fBint\fP level, \fBconst\fP \fBuint8_t\fP *\fBbuf\fP, \fBint\fP \fBsize\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBav_pkt_dump2\fP (FILE *\fBf\fP, \fBAVPacket\fP *pkt, \fBint\fP dump_payload, \fBAVStream\fP *st)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBav_pkt_dump_log2\fP (\fBvoid\fP *avcl, \fBint\fP level, \fBAVPacket\fP *pkt, \fBint\fP dump_payload, \fBAVStream\fP *st)"
+.br
+.ti -1c
+.RI "enum \fBAVCodecID\fP \fBav_codec_get_id\fP (\fBconst\fP struct AVCodecTag *\fBconst\fP *tags, unsigned \fBint\fP \fBtag\fP)"
+.br
+.ti -1c
+.RI "unsigned \fBint\fP \fBav_codec_get_tag\fP (\fBconst\fP struct AVCodecTag *\fBconst\fP *tags, enum \fBAVCodecID\fP id)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_codec_get_tag2\fP (\fBconst\fP struct AVCodecTag *\fBconst\fP *tags, enum \fBAVCodecID\fP id, unsigned \fBint\fP *\fBtag\fP)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_find_default_stream_index\fP (\fBAVFormatContext\fP *\fBs\fP)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_index_search_timestamp\fP (\fBAVStream\fP *st, \fBint64_t\fP timestamp, \fBint\fP flags)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_add_index_entry\fP (\fBAVStream\fP *st, \fBint64_t\fP pos, \fBint64_t\fP timestamp, \fBint\fP \fBsize\fP, \fBint\fP distance, \fBint\fP flags)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBav_url_split\fP (char *proto, \fBint\fP proto_size, char *authorization, \fBint\fP authorization_size, char *hostname, \fBint\fP hostname_size, \fBint\fP *port_ptr, char *path, \fBint\fP path_size, \fBconst\fP char *url)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBav_dump_format\fP (\fBAVFormatContext\fP *ic, \fBint\fP index, \fBconst\fP char *url, \fBint\fP is_output)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_get_frame_filename\fP (char *\fBbuf\fP, \fBint\fP buf_size, \fBconst\fP char *path, \fBint\fP number)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_filename_number_test\fP (\fBconst\fP char *\fBfilename\fP)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_sdp_create\fP (\fBAVFormatContext\fP *ac[], \fBint\fP n_files, char *\fBbuf\fP, \fBint\fP \fBsize\fP)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_match_ext\fP (\fBconst\fP char *\fBfilename\fP, \fBconst\fP char *extensions)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBavformat_query_codec\fP (\fBAVOutputFormat\fP *ofmt, enum \fBAVCodecID\fP codec_id, \fBint\fP std_compliance)"
+.br
+.ti -1c
+.RI "\fBconst\fP struct AVCodecTag * \fBavformat_get_riff_video_tags\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBconst\fP struct AVCodecTag * \fBavformat_get_riff_audio_tags\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBconst\fP struct AVCodecTag * \fBavformat_get_mov_video_tags\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBconst\fP struct AVCodecTag * \fBavformat_get_mov_audio_tags\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBAVRational\fP \fBav_guess_sample_aspect_ratio\fP (\fBAVFormatContext\fP *\fBformat\fP, \fBAVStream\fP *stream, \fBAVFrame\fP *frame)"
+.br
+.ti -1c
+.RI "\fBAVRational\fP \fBav_guess_frame_rate\fP (\fBAVFormatContext\fP *ctx, \fBAVStream\fP *stream, \fBAVFrame\fP *frame)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBavformat_match_stream_specifier\fP (\fBAVFormatContext\fP *\fBs\fP, \fBAVStream\fP *st, \fBconst\fP char *spec)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBavformat_queue_attached_pictures\fP (\fBAVFormatContext\fP *\fBs\fP)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Main libavformat public API header 
+.PP
+Definition in file \fBavformat\&.h\fP\&.
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define AV_DISPOSITION_ATTACHED_PIC   0x0400"
+The stream is stored in the file as an attached picture/'cover art' (e\&.g\&. APIC frame in ID3v2)\&. The single packet associated with it will be returned among the first few packets read from the file unless seeking takes place\&. It can also be accessed at any time in \fBAVStream\&.attached_pic\fP\&. 
+.PP
+Definition at line 728 of file avformat\&.h\&.
+.SS "#define AV_DISPOSITION_CAPTIONS   0x10000"
+To specify text track kind (different from subtitles default)\&. 
+.PP
+Definition at line 733 of file avformat\&.h\&.
+.SS "#define AV_DISPOSITION_CLEAN_EFFECTS   0x0200"
+stream without voice 
+.PP
+Definition at line 721 of file avformat\&.h\&.
+.SS "#define AV_DISPOSITION_COMMENT   0x0008"
+
+.PP
+Definition at line 709 of file avformat\&.h\&.
+.SS "#define AV_DISPOSITION_DEFAULT   0x0001"
+
+.PP
+Definition at line 706 of file avformat\&.h\&.
+.SS "#define AV_DISPOSITION_DESCRIPTIONS   0x20000"
+
+.PP
+Definition at line 734 of file avformat\&.h\&.
+.SS "#define AV_DISPOSITION_DUB   0x0002"
+
+.PP
+Definition at line 707 of file avformat\&.h\&.
+.SS "#define AV_DISPOSITION_FORCED   0x0040"
+\fBTrack\fP should be used during playback by default\&. Useful for subtitle track that should be displayed even when user did not explicitly ask for subtitles\&. 
+.PP
+Definition at line 718 of file avformat\&.h\&.
+.SS "#define AV_DISPOSITION_HEARING_IMPAIRED   0x0080"
+stream for hearing impaired audiences 
+.PP
+Definition at line 719 of file avformat\&.h\&.
+.SS "#define AV_DISPOSITION_KARAOKE   0x0020"
+
+.PP
+Definition at line 711 of file avformat\&.h\&.
+.SS "#define AV_DISPOSITION_LYRICS   0x0010"
+
+.PP
+Definition at line 710 of file avformat\&.h\&.
+.SS "#define AV_DISPOSITION_METADATA   0x40000"
+
+.PP
+Definition at line 735 of file avformat\&.h\&.
+.SS "#define AV_DISPOSITION_ORIGINAL   0x0004"
+
+.PP
+Definition at line 708 of file avformat\&.h\&.
+.SS "#define AV_DISPOSITION_VISUAL_IMPAIRED   0x0100"
+stream for visual impaired audiences 
+.PP
+Definition at line 720 of file avformat\&.h\&.
+.SS "#define AV_PROGRAM_RUNNING   1"
+
+.PP
+Definition at line 1017 of file avformat\&.h\&.
+.SS "#define AV_PTS_WRAP_ADD_OFFSET   1"
+
+.PP
+add the format specific offset on wrap detection 
+.PP
+Definition at line 741 of file avformat\&.h\&.
+.SS "#define AV_PTS_WRAP_IGNORE   0"
+
+.PP
+ignore the wrap Options for behavior on timestamp wrap detection\&. 
+.PP
+Definition at line 740 of file avformat\&.h\&.
+.SS "#define AV_PTS_WRAP_SUB_OFFSET   \-1"
+
+.PP
+subtract the format specific offset on wrap detection 
+.PP
+Definition at line 742 of file avformat\&.h\&.
+.SS "#define AVFMT_ALLOW_FLUSH   0x10000"
+\fBFormat\fP allows flushing\&. If not set, the muxer will not receive a NULL packet in the write_packet function\&. 
+.PP
+Definition at line 420 of file avformat\&.h\&.
+.SS "#define AVFMT_FLAG_CUSTOM_IO   0x0080"
+
+.PP
+The caller has supplied a custom \fBAVIOContext\fP, don't \fBavio_close()\fP it\&. 
+.PP
+Definition at line 1201 of file avformat\&.h\&.
+.SS "#define AVFMT_FLAG_DISCARD_CORRUPT   0x0100"
+
+.PP
+Discard frames marked corrupted\&. 
+.PP
+Definition at line 1202 of file avformat\&.h\&.
+.SS "#define AVFMT_FLAG_FLUSH_PACKETS   0x0200"
+
+.PP
+Flush the \fBAVIOContext\fP every packet\&. 
+.PP
+Definition at line 1203 of file avformat\&.h\&.
+.SS "#define AVFMT_FLAG_GENPTS   0x0001"
+
+.PP
+Generate missing pts even if it requires parsing future frames\&. 
+.PP
+Definition at line 1194 of file avformat\&.h\&.
+.SS "#define AVFMT_FLAG_IGNDTS   0x0008"
+
+.PP
+Ignore DTS on frames that contain both DTS & PTS\&. 
+.PP
+Definition at line 1197 of file avformat\&.h\&.
+.SS "#define AVFMT_FLAG_IGNIDX   0x0002"
+
+.PP
+Ignore index\&. 
+.PP
+Definition at line 1195 of file avformat\&.h\&.
+.SS "#define AVFMT_FLAG_KEEP_SIDE_DATA   0x40000"
+
+.PP
+Don't merge side data but keep it separate\&. 
+.PP
+Definition at line 1207 of file avformat\&.h\&.
+.SS "#define AVFMT_FLAG_MP4A_LATM   0x8000"
+
+.PP
+Enable RTP MP4A-LATM payload\&. 
+.PP
+Definition at line 1204 of file avformat\&.h\&.
+.SS "#define AVFMT_FLAG_NOBUFFER   0x0040"
+
+.PP
+Do not buffer frames when possible\&. 
+.PP
+Definition at line 1200 of file avformat\&.h\&.
+.SS "#define AVFMT_FLAG_NOFILLIN   0x0010"
+
+.PP
+Do not infer any values from other values, just return what is stored in the container\&. 
+.PP
+Definition at line 1198 of file avformat\&.h\&.
+.SS "#define AVFMT_FLAG_NONBLOCK   0x0004"
+
+.PP
+Do not block when reading packets from input\&. 
+.PP
+Definition at line 1196 of file avformat\&.h\&.
+.SS "#define AVFMT_FLAG_NOPARSE   0x0020"
+
+.PP
+Do not use AVParsers, you also must set AVFMT_FLAG_NOFILLIN as the fillin code works on frames and no parsing -> no frames\&. Also seeking to frames can not work if parsing to find frame boundaries has been disabled\&. 
+.PP
+Definition at line 1199 of file avformat\&.h\&.
+.SS "#define AVFMT_FLAG_PRIV_OPT   0x20000"
+
+.PP
+Enable use of private options by delaying codec open (this could be made default once all code is converted) 
+.PP
+Definition at line 1206 of file avformat\&.h\&.
+.SS "#define AVFMT_FLAG_SORT_DTS   0x10000"
+
+.PP
+try to interleave outputted packets by dts (using this flag can slow demuxing down) 
+.PP
+Definition at line 1205 of file avformat\&.h\&.
+.SS "#define AVFMT_GENERIC_INDEX   0x0100"
+Use generic index building code\&. 
+.PP
+Definition at line 412 of file avformat\&.h\&.
+.SS "#define AVFMT_GLOBALHEADER   0x0040"
+\fBFormat\fP wants global header\&. 
+.PP
+Definition at line 410 of file avformat\&.h\&.
+.SS "#define AVFMT_NEEDNUMBER   0x0002"
+Needs 'd' in filename\&. 
+.PP
+Definition at line 405 of file avformat\&.h\&.
+.SS "#define AVFMT_NO_BYTE_SEEK   0x8000"
+\fBFormat\fP does not allow seeking by bytes 
+.PP
+Definition at line 419 of file avformat\&.h\&.
+.SS "#define AVFMT_NOBINSEARCH   0x2000"
+\fBFormat\fP does not allow to fall back on binary search via read_timestamp 
+.PP
+Definition at line 417 of file avformat\&.h\&.
+.SS "#define AVFMT_NODIMENSIONS   0x0800"
+\fBFormat\fP does not need width/height 
+.PP
+Definition at line 415 of file avformat\&.h\&.
+.SS "#define AVFMT_NOFILE   0x0001"
+
+.PP
+Demuxer will use avio_open, no opened file should be provided by the caller\&. 
+.PP
+Definition at line 404 of file avformat\&.h\&.
+.SS "#define AVFMT_NOGENSEARCH   0x4000"
+\fBFormat\fP does not allow to fall back on generic search 
+.PP
+Definition at line 418 of file avformat\&.h\&.
+.SS "#define AVFMT_NOSTREAMS   0x1000"
+\fBFormat\fP does not require any streams 
+.PP
+Definition at line 416 of file avformat\&.h\&.
+.SS "#define AVFMT_NOTIMESTAMPS   0x0080"
+\fBFormat\fP does not need / have any timestamps\&. 
+.PP
+Definition at line 411 of file avformat\&.h\&.
+.SS "#define AVFMT_RAWPICTURE   0x0020"
+\fBFormat\fP wants \fBAVPicture\fP structure for raw picture data\&. 
+.PP
+Definition at line 407 of file avformat\&.h\&.
+.SS "#define AVFMT_SEEK_TO_PTS   0x4000000"
+Seeking is based on PTS 
+.PP
+Definition at line 445 of file avformat\&.h\&.
+.SS "#define AVFMT_SHOW_IDS   0x0008"
+Show format stream IDs numbers\&. 
+.PP
+Definition at line 406 of file avformat\&.h\&.
+.SS "#define AVFMT_TS_DISCONT   0x0200"
+\fBFormat\fP allows timestamp discontinuities\&. Note, muxers always require valid (monotone) timestamps 
+.PP
+Definition at line 413 of file avformat\&.h\&.
+.SS "#define AVFMT_TS_NEGATIVE   0x40000"
+\fBFormat\fP allows muxing negative timestamps\&. If not set the timestamp will be shifted in av_write_frame and av_interleaved_write_frame so they start from 0\&. The user or muxer can override this through \fBAVFormatContext\&.avoid_negative_ts\fP 
+.PP
+Definition at line 429 of file avformat\&.h\&.
+.SS "#define AVFMT_TS_NONSTRICT   0x8020000"
+\fBFormat\fP does not require strictly increasing timestamps, but they must still be monotonic 
+.PP
+Definition at line 422 of file avformat\&.h\&.
+.SS "#define AVFMT_VARIABLE_FPS   0x0400"
+\fBFormat\fP allows variable fps\&. 
+.PP
+Definition at line 414 of file avformat\&.h\&.
+.SS "#define AVFMTCTX_NOHEADER   0x0001"
+signal that no header is present (streams are added dynamically) 
+.PP
+Definition at line 1051 of file avformat\&.h\&.
+.SS "#define AVINDEX_KEYFRAME   0x0001"
+
+.PP
+Definition at line 700 of file avformat\&.h\&.
+.SS "#define AVPROBE_PADDING_SIZE   32"
+
+.PP
+extra allocated bytes at the end of the probe buffer 
+.PP
+Definition at line 401 of file avformat\&.h\&.
+.SS "#define AVPROBE_SCORE_EXTENSION   50"
+
+.PP
+score for file extension 
+.PP
+Definition at line 398 of file avformat\&.h\&.
+.SS "#define AVPROBE_SCORE_MAX   100"
+
+.PP
+maximum score 
+.PP
+Definition at line 399 of file avformat\&.h\&.
+.SS "#define AVPROBE_SCORE_RETRY   (\fBAVPROBE_SCORE_MAX\fP/4)"
+
+.PP
+Definition at line 395 of file avformat\&.h\&.
+.SS "#define AVPROBE_SCORE_STREAM_RETRY   (\fBAVPROBE_SCORE_MAX\fP/4\-1)"
+
+.PP
+Definition at line 396 of file avformat\&.h\&.
+.SS "#define AVSEEK_FLAG_ANY   4"
+
+.PP
+seek to any frame, even non-keyframes 
+.PP
+Definition at line 2060 of file avformat\&.h\&.
+.SS "#define AVSEEK_FLAG_BACKWARD   1"
+
+.PP
+seek backward 
+.PP
+Definition at line 2058 of file avformat\&.h\&.
+.SS "#define AVSEEK_FLAG_BYTE   2"
+
+.PP
+seeking based on position in bytes 
+.PP
+Definition at line 2059 of file avformat\&.h\&.
+.SS "#define AVSEEK_FLAG_FRAME   8"
+
+.PP
+seeking based on frame number 
+.PP
+Definition at line 2061 of file avformat\&.h\&.
+.SS "#define FF_FDEBUG_TS   0x0001"
+
+.PP
+Definition at line 1326 of file avformat\&.h\&.
+.SS "#define MAX_PROBE_PACKETS   2500"
+Number of packets to buffer for codec probing 
+.PP
+Definition at line 898 of file avformat\&.h\&.
+.SS "#define MAX_REORDER_DELAY   16"
+
+.PP
+Definition at line 915 of file avformat\&.h\&.
+.SS "#define MAX_STD_TIMEBASES   (60*12+6)"
+Stream information used internally by av_find_stream_info() 
+.PP
+Definition at line 846 of file avformat\&.h\&.
+.SS "#define RAW_PACKET_BUFFER_SIZE   2500000"
+Remaining size available for raw_packet_buffer, in bytes\&. 
+.PP
+Definition at line 1482 of file avformat\&.h\&.
+.SH "Typedef Documentation"
+.PP 
+.SS "typedef \fBint\fP(* av_format_control_message) (struct \fBAVFormatContext\fP *\fBs\fP, \fBint\fP type, \fBvoid\fP *\fBdata\fP, size_t data_size)"
+\fBCallback\fP used by devices to communicate with application\&. 
+.PP
+Definition at line 1066 of file avformat\&.h\&.
+.SS "typedef struct \fBAVChapter\fP  \fBAVChapter\fP"
+
+.SS "typedef struct \fBAVFormatContext\fP  \fBAVFormatContext\fP"
+\fBFormat\fP I/O context\&. New fields can be added to the end with minor version bumps\&. Removal, reordering and changes to existing fields require a major version bump\&. sizeof(AVFormatContext) must not be used outside libav*, use \fBavformat_alloc_context()\fP to create an \fBAVFormatContext\fP\&. 
+.SS "typedef struct \fBAVFormatInternal\fP \fBAVFormatInternal\fP"
+
+.PP
+Definition at line 1080 of file avformat\&.h\&.
+.SS "typedef struct \fBAVFrac\fP  \fBAVFrac\fP"
+The exact value of the fractional number is: 'val + num / den'\&. num is assumed to be 0 <= num < den\&. 
+.SS "typedef struct \fBAVIndexEntry\fP  \fBAVIndexEntry\fP"
+
+.SS "typedef struct \fBAVPacketList\fP  \fBAVPacketList\fP"
+
+.SS "typedef struct \fBAVProbeData\fP  \fBAVProbeData\fP"
+This structure contains the data a format has to probe a file\&. 
+.SS "typedef struct \fBAVProgram\fP  \fBAVProgram\fP"
+New fields can be added to the end with minor version bumps\&. Removal, reordering and changes to existing fields require a major version bump\&. sizeof(AVProgram) must not be used outside libav*\&. 
+.SS "typedef struct \fBAVStream\fP  \fBAVStream\fP"
+Stream structure\&. New fields can be added to the end with minor version bumps\&. Removal, reordering and changes to existing fields require a major version bump\&. sizeof(AVStream) must not be used outside libav*\&. 
+.SH "Enumeration Type Documentation"
+.PP 
+.SS "enum \fBAVDurationEstimationMethod\fP"
+The duration of a video can be estimated through various ways, and this enum can be used to know how the duration was estimated\&. 
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fIAVFMT_DURATION_FROM_PTS \fP\fP
+Duration accurately estimated from PTSes\&. 
+.TP
+\fB\fIAVFMT_DURATION_FROM_STREAM \fP\fP
+Duration estimated from a stream with a known duration\&. 
+.TP
+\fB\fIAVFMT_DURATION_FROM_BITRATE \fP\fP
+Duration estimated from bitrate (less accurate) 
+.PP
+Definition at line 1074 of file avformat\&.h\&.
+.SS "enum \fBAVStreamParseType\fP"
+
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fIAVSTREAM_PARSE_NONE \fP\fP
+.TP
+\fB\fIAVSTREAM_PARSE_FULL \fP\fP
+full parsing and repack 
+.TP
+\fB\fIAVSTREAM_PARSE_HEADERS \fP\fP
+Only parse headers, do not repack\&. 
+.TP
+\fB\fIAVSTREAM_PARSE_TIMESTAMPS \fP\fP
+full parsing and interpolation of timestamps for frames not starting on a packet boundary 
+.TP
+\fB\fIAVSTREAM_PARSE_FULL_ONCE \fP\fP
+full parsing and repack of the first frame only, only implemented for H\&.264 currently 
+.TP
+\fB\fIAVSTREAM_PARSE_FULL_RAW \fP\fP
+full parsing and repack with timestamp and position generation by parser for raw this assumes that each packet in the file contains no demuxer level headers and just codec level data, otherwise position generation would fail 
+.PP
+Definition at line 681 of file avformat\&.h\&.
+.SH "Function Documentation"
+.PP 
+.SS "\fBint\fP av_append_packet (\fBAVIOContext\fP * s, \fBAVPacket\fP * pkt, \fBint\fP size)"
+Read data and append it to the current content of the \fBAVPacket\fP\&. If pkt->size is 0 this is identical to av_get_packet\&. Note that this uses av_grow_packet and thus involves a realloc which is inefficient\&. Thus this function should only be used when there is no reasonable way to know (an upper bound of) the final size\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIs\fP associated IO context 
+.br
+\fIpkt\fP packet 
+.br
+\fIsize\fP amount of data to read 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+>0 (read size) if OK, AVERROR_xxx otherwise, previous data will not be lost even if an error occurs\&. 
+.RE
+.PP
+
+.SS "enum \fBAVDurationEstimationMethod\fP av_fmt_ctx_get_duration_estimation_method (\fBconst\fP \fBAVFormatContext\fP * ctx)"
+Returns the method used to set ctx->duration\&.
+.PP
+\fBReturns:\fP
+.RS 4
+AVFMT_DURATION_FROM_PTS, AVFMT_DURATION_FROM_STREAM, or AVFMT_DURATION_FROM_BITRATE\&. 
+.RE
+.PP
+
+.SS "\fBAVCodec\fP* av_format_get_audio_codec (\fBconst\fP \fBAVFormatContext\fP * s)"
+
+.SS "\fBav_format_control_message\fP av_format_get_control_message_cb (\fBconst\fP \fBAVFormatContext\fP * s)"
+
+.SS "\fBint\fP av_format_get_metadata_header_padding (\fBconst\fP \fBAVFormatContext\fP * s)"
+
+.SS "\fBvoid\fP* av_format_get_opaque (\fBconst\fP \fBAVFormatContext\fP * s)"
+
+.SS "\fBint\fP av_format_get_probe_score (\fBconst\fP \fBAVFormatContext\fP * s)"
+
+.SS "\fBAVCodec\fP* av_format_get_subtitle_codec (\fBconst\fP \fBAVFormatContext\fP * s)"
+
+.SS "\fBAVCodec\fP* av_format_get_video_codec (\fBconst\fP \fBAVFormatContext\fP * s)"
+
+.SS "\fBvoid\fP av_format_set_audio_codec (\fBAVFormatContext\fP * s, \fBAVCodec\fP * c)"
+
+.SS "\fBvoid\fP av_format_set_control_message_cb (\fBAVFormatContext\fP * s, \fBav_format_control_message\fP callback)"
+
+.SS "\fBvoid\fP av_format_set_metadata_header_padding (\fBAVFormatContext\fP * s, \fBint\fP c)"
+
+.SS "\fBvoid\fP av_format_set_opaque (\fBAVFormatContext\fP * s, \fBvoid\fP * opaque)"
+
+.SS "\fBvoid\fP av_format_set_subtitle_codec (\fBAVFormatContext\fP * s, \fBAVCodec\fP * c)"
+
+.SS "\fBvoid\fP av_format_set_video_codec (\fBAVFormatContext\fP * s, \fBAVCodec\fP * c)"
+
+.SS "\fBint\fP av_get_packet (\fBAVIOContext\fP * s, \fBAVPacket\fP * pkt, \fBint\fP size)"
+Allocate and read the payload of a packet and initialize its fields with default values\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIs\fP associated IO context 
+.br
+\fIpkt\fP packet 
+.br
+\fIsize\fP desired payload size 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+>0 (read size) if OK, AVERROR_xxx otherwise 
+.RE
+.PP
+
+.SS "\fBAVRational\fP av_stream_get_r_frame_rate (\fBconst\fP \fBAVStream\fP * s)"
+
+.SS "\fBvoid\fP av_stream_set_r_frame_rate (\fBAVStream\fP * s, \fBAVRational\fP r)"
+
+.SS "\fBint\fP avformat_alloc_output_context2 (\fBAVFormatContext\fP ** ctx, \fBAVOutputFormat\fP * oformat, \fBconst\fP char * format_name, \fBconst\fP char * filename)"
+Allocate an \fBAVFormatContext\fP for an output format\&. \fBavformat_free_context()\fP can be used to free the context and everything allocated by the framework within it\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fI*ctx\fP is set to the created format context, or to NULL in case of failure 
+.br
+\fIoformat\fP format to use for allocating the context, if NULL format_name and filename are used instead 
+.br
+\fIformat_name\fP the name of output format to use for allocating the context, if NULL filename is used instead 
+.br
+\fIfilename\fP the name of the filename to use for allocating the context, may be NULL 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+>= 0 in case of success, a negative AVERROR code in case of failure 
+.RE
+.PP
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

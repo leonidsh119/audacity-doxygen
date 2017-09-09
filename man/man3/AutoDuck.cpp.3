@@ -1,0 +1,168 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/src/effects/AutoDuck.cpp" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/src/effects/AutoDuck.cpp \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include '\&.\&./Audacity\&.h'\fP
+.br
+\fC#include 'AutoDuck\&.h'\fP
+.br
+\fC#include <math\&.h>\fP
+.br
+\fC#include <float\&.h>\fP
+.br
+\fC#include <wx/dcclient\&.h>\fP
+.br
+\fC#include <wx/dcmemory\&.h>\fP
+.br
+\fC#include <wx/dynarray\&.h>\fP
+.br
+\fC#include <wx/intl\&.h>\fP
+.br
+\fC#include <wx/msgdlg\&.h>\fP
+.br
+\fC#include '\&.\&./AColor\&.h'\fP
+.br
+\fC#include '\&.\&./AllThemeResources\&.h'\fP
+.br
+\fC#include '\&.\&./Internat\&.h'\fP
+.br
+\fC#include '\&.\&./Prefs\&.h'\fP
+.br
+\fC#include '\&.\&./ShuttleGui\&.h'\fP
+.br
+\fC#include '\&.\&./Theme\&.h'\fP
+.br
+\fC#include '\&.\&./widgets/valnum\&.h'\fP
+.br
+\fC#include '\&.\&./WaveTrack\&.h'\fP
+.br
+\fC#include <wx/arrimpl\&.cpp>\fP
+.br
+
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "struct \fBAutoDuckRegion\fP"
+.br
+.in -1c
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBCONTROL_POINT_REGION\fP   10"
+.br
+.ti -1c
+.RI "#define \fBCONTROL_POINT_MIN_MOVE\fP   5"
+.br
+.ti -1c
+.RI "#define \fBTEXT_DISTANCE\fP   15"
+.br
+.ti -1c
+.RI "#define \fBFADE_DOWN_START\fP   150"
+.br
+.ti -1c
+.RI "#define \fBFADE_UP_START\fP   450"
+.br
+.ti -1c
+.RI "#define \fBDUCK_AMOUNT_START\fP   50"
+.br
+.ti -1c
+.RI "#define \fBFADE_SCALE\fP   40"
+.br
+.ti -1c
+.RI "#define \fBDUCK_AMOUNT_SCALE\fP   8"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBParam\fP (DuckAmountDb, double, \fBXO\fP('DuckAmountDb'),\-12\&.0,\-24\&.0, 0\&.0, 1)"
+.br
+.ti -1c
+.RI "\fBParam\fP (InnerFadeDownLen, double, \fBXO\fP('InnerFadeDownLen'), 0\&.0, 0\&.0, 3\&.0, 1)"
+.br
+.ti -1c
+.RI "\fBParam\fP (InnerFadeUpLen, double, \fBXO\fP('InnerFadeUpLen'), 0\&.0, 0\&.0, 3\&.0, 1)"
+.br
+.ti -1c
+.RI "\fBParam\fP (OuterFadeDownLen, double, \fBXO\fP('OuterFadeDownLen'), 0\&.5, 0\&.0, 3\&.0, 1)"
+.br
+.ti -1c
+.RI "\fBParam\fP (OuterFadeUpLen, double, \fBXO\fP('OuterFadeUpLen'), 0\&.5, 0\&.0, 3\&.0, 1)"
+.br
+.ti -1c
+.RI "\fBParam\fP (ThresholdDb, double, \fBXO\fP('ThresholdDb'),\-30\&.0,\-100\&.0, 0\&.0, 1)"
+.br
+.ti -1c
+.RI "\fBParam\fP (MaximumPause, double, \fBXO\fP('MaximumPause'), 1\&.0, 0\&.0, DBL_MAX, 1)"
+.br
+.ti -1c
+.RI "\fBWX_DECLARE_OBJARRAY\fP (\fBAutoDuckRegion\fP, AutoDuckRegionArray)"
+.br
+.ti -1c
+.RI "\fBWX_DEFINE_OBJARRAY\fP (AutoDuckRegionArray)"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define CONTROL_POINT_MIN_MOVE   5"
+
+.PP
+Definition at line 589 of file AutoDuck\&.cpp\&.
+.SS "#define CONTROL_POINT_REGION   10"
+
+.PP
+Definition at line 588 of file AutoDuck\&.cpp\&.
+.SS "#define DUCK_AMOUNT_SCALE   8"
+
+.PP
+Definition at line 598 of file AutoDuck\&.cpp\&.
+.SS "#define DUCK_AMOUNT_START   50"
+
+.PP
+Definition at line 595 of file AutoDuck\&.cpp\&.
+.SS "#define FADE_DOWN_START   150"
+
+.PP
+Definition at line 593 of file AutoDuck\&.cpp\&.
+.SS "#define FADE_SCALE   40"
+
+.PP
+Definition at line 597 of file AutoDuck\&.cpp\&.
+.SS "#define FADE_UP_START   450"
+
+.PP
+Definition at line 594 of file AutoDuck\&.cpp\&.
+.SS "#define TEXT_DISTANCE   15"
+
+.PP
+Definition at line 591 of file AutoDuck\&.cpp\&.
+.SH "Function Documentation"
+.PP 
+.SS "Param (DuckAmountDb, double, \fBXO\fP('DuckAmountDb'), \-12\&. 0, \-24\&. 0, 0\&. 0, 1)"
+
+.SS "Param (InnerFadeDownLen, double, \fBXO\fP('InnerFadeDownLen'), 0\&. 0, 0\&. 0, 3\&. 0, 1)"
+
+.SS "Param (InnerFadeUpLen, double, \fBXO\fP('InnerFadeUpLen'), 0\&. 0, 0\&. 0, 3\&. 0, 1)"
+
+.SS "Param (OuterFadeDownLen, double, \fBXO\fP('OuterFadeDownLen'), 0\&. 5, 0\&. 0, 3\&. 0, 1)"
+
+.SS "Param (OuterFadeUpLen, double, \fBXO\fP('OuterFadeUpLen'), 0\&. 5, 0\&. 0, 3\&. 0, 1)"
+
+.SS "Param (ThresholdDb, double, \fBXO\fP('ThresholdDb'), \-30\&. 0, \-100\&. 0, 0\&. 0, 1)"
+
+.SS "Param (MaximumPause, double, \fBXO\fP('MaximumPause'), 1\&. 0, 0\&. 0, DBL_MAX, 1)"
+
+.SS "WX_DECLARE_OBJARRAY (\fBAutoDuckRegion\fP, AutoDuckRegionArray)"
+
+.SS "WX_DEFINE_OBJARRAY (AutoDuckRegionArray)"
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

@@ -1,0 +1,232 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/lib-src/portaudio-v19/src/hostapi/jack/pa_jack.c" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/lib-src/portaudio-v19/src/hostapi/jack/pa_jack.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <string\&.h>\fP
+.br
+\fC#include <stdlib\&.h>\fP
+.br
+\fC#include <stdio\&.h>\fP
+.br
+\fC#include <assert\&.h>\fP
+.br
+\fC#include <sys/types\&.h>\fP
+.br
+\fC#include <unistd\&.h>\fP
+.br
+\fC#include <errno\&.h>\fP
+.br
+\fC#include <signal\&.h>\fP
+.br
+\fC#include <math\&.h>\fP
+.br
+\fC#include <semaphore\&.h>\fP
+.br
+\fC#include <pthread\&.h>\fP
+.br
+\fC#include <jack/types\&.h>\fP
+.br
+\fC#include <jack/jack\&.h>\fP
+.br
+\fC#include 'pa_util\&.h'\fP
+.br
+\fC#include 'pa_hostapi\&.h'\fP
+.br
+\fC#include 'pa_stream\&.h'\fP
+.br
+\fC#include 'pa_process\&.h'\fP
+.br
+\fC#include 'pa_allocation\&.h'\fP
+.br
+\fC#include 'pa_cpuload\&.h'\fP
+.br
+\fC#include 'pa_ringbuffer\&.h'\fP
+.br
+\fC#include 'pa_debugprint\&.h'\fP
+.br
+\fC#include 'pa_jack_dynload\&.h'\fP
+.br
+
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "struct \fBPaJackHostApiRepresentation\fP"
+.br
+.ti -1c
+.RI "struct \fBPaJackStream\fP"
+.br
+.in -1c
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBSTRINGIZE_HELPER\fP(expr)   #expr"
+.br
+.ti -1c
+.RI "#define \fBSTRINGIZE\fP(expr)   \fBSTRINGIZE_HELPER\fP(expr)"
+.br
+.ti -1c
+.RI "#define \fBENSURE_PA\fP(expr)"
+.br
+.ti -1c
+.RI "#define \fBUNLESS\fP(expr,  code)"
+.br
+.ti -1c
+.RI "#define \fBASSERT_CALL\fP(expr,  success)"
+.br
+.ti -1c
+.RI "#define \fBJACK_PORT_TYPE_FILTER\fP   'audio'"
+.br
+.ti -1c
+.RI "#define \fBTRUE\fP   1"
+.br
+.ti -1c
+.RI "#define \fBFALSE\fP   0"
+.br
+.ti -1c
+.RI "#define \fBABS\fP(x)   ( (x) > 0 ? (x) : \-(x) )"
+.br
+.ti -1c
+.RI "#define \fBABS\fP(x)   ( (x) > 0 ? (x) : \-(x) )"
+.br
+.in -1c
+.SS "Typedefs"
+
+.in +1c
+.ti -1c
+.RI "typedef struct \fBPaJackStream\fP \fBPaJackStream\fP"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBPaError\fP \fBPaJack_Initialize\fP (\fBPaUtilHostApiRepresentation\fP **hostApi, \fBPaHostApiIndex\fP hostApiIndex)"
+.br
+.ti -1c
+.RI "\fBPaError\fP \fBPaJack_SetClientName\fP (\fBconst\fP char *\fBname\fP)"
+.br
+.ti -1c
+.RI "\fBPaError\fP \fBPaJack_GetClientName\fP (\fBconst\fP char **clientName)"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define ABS(x)   ( (x) > 0 ? (x) : \-(x) )"
+
+.SS "#define ABS(x)   ( (x) > 0 ? (x) : \-(x) )"
+
+.SS "#define ASSERT_CALL(expr, success)"
+\fBValue:\fP
+.PP
+.nf
+do { \
+        int err = (expr); \
+        assert( err == success ); \
+    } while( 0 )
+.fi
+.PP
+Definition at line 127 of file pa_jack\&.c\&.
+.SS "#define ENSURE_PA(expr)"
+\fBValue:\fP
+.PP
+.nf
+do { \
+        PaError paErr; \
+        if( (paErr = (expr)) < paNoError ) \
+        { \
+            if( (paErr) == paUnanticipatedHostError && PaJack_IsOnMainThread() ) \
+            { \
+                const char *err = jackErr_; \
+                if (! err ) err = "unknown error"; \
+                PaUtil_SetLastHostErrorInfo( paJACK, -1, err ); \
+            } \
+            PaUtil_DebugPrint(( "Expression '" #expr "' failed in '" __FILE__ "', line: " STRINGIZE( __LINE__ ) "\n" )); \
+            result = paErr; \
+            goto error; \
+        } \
+    } while( 0 )
+.fi
+.PP
+Definition at line 94 of file pa_jack\&.c\&.
+.SS "#define FALSE   0"
+
+.PP
+Definition at line 261 of file pa_jack\&.c\&.
+.SS "#define JACK_PORT_TYPE_FILTER   'audio'"
+
+.PP
+Definition at line 258 of file pa_jack\&.c\&.
+.SS "#define STRINGIZE(expr)   \fBSTRINGIZE_HELPER\fP(expr)"
+
+.PP
+Definition at line 91 of file pa_jack\&.c\&.
+.SS "#define STRINGIZE_HELPER(expr)   #expr"
+
+.PP
+Definition at line 90 of file pa_jack\&.c\&.
+.SS "#define TRUE   1"
+
+.PP
+Definition at line 260 of file pa_jack\&.c\&.
+.SS "#define UNLESS(expr, code)"
+\fBValue:\fP
+.PP
+.nf
+do { \
+        if( (expr) == 0 ) \
+        { \
+            if( (code) == paUnanticipatedHostError && PaJack_IsOnMainThread() ) \
+            { \
+                const char *err = jackErr_; \
+                if (!err) err = "unknown error"; \
+                PaUtil_SetLastHostErrorInfo( paJACK, -1, err ); \
+            } \
+            PaUtil_DebugPrint(( "Expression '" #expr "' failed in '" __FILE__ "', line: " STRINGIZE( __LINE__ ) "\n" )); \
+            result = (code); \
+            goto error; \
+        } \
+    } while( 0 )
+.fi
+.PP
+Definition at line 111 of file pa_jack\&.c\&.
+.SH "Typedef Documentation"
+.PP 
+.SS "typedef struct \fBPaJackStream\fP
+ \fBPaJackStream\fP"
+
+.SH "Function Documentation"
+.PP 
+.SS "\fBPaError\fP PaJack_GetClientName (\fBconst\fP char ** clientName)"
+Get the JACK client name used by PA JACK\&.
+.PP
+The caller is responsible for freeing the returned pointer\&. 
+.PP
+Definition at line 1932 of file pa_jack\&.c\&.
+.SS "\fBPaError\fP PaJack_Initialize (\fBPaUtilHostApiRepresentation\fP ** hostApi, \fBPaHostApiIndex\fP hostApiIndex)"
+
+.PP
+Definition at line 895 of file pa_jack\&.c\&.
+.SS "\fBPaError\fP PaJack_SetClientName (\fBconst\fP char * name)"
+Set the JACK client name\&.
+.PP
+During Pa_Initialize, When PA JACK connects as a client of the JACK server, it requests a certain name, which is for instance prepended to port names\&. By default this name is 'PortAudio'\&. The JACK server may append a suffix to the client name, in order to avoid clashes among clients that try to connect with the same name (e\&.g\&., different PA JACK clients)\&.
+.PP
+This function must be called before Pa_Initialize, otherwise it won't have any effect\&. Note that the string is not copied, but instead referenced directly, so it must not be freed for as long as PA might need it\&. 
+.PP
+\fBSee also:\fP
+.RS 4
+\fBPaJack_GetClientName\fP 
+.RE
+.PP
+
+.PP
+Definition at line 1921 of file pa_jack\&.c\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

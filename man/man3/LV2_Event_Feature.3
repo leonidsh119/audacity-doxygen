@@ -1,0 +1,72 @@
+.TH "LV2_Event_Feature" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+LV2_Event_Feature \- 
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <event\&.h>\fP
+.SS "Public Attributes"
+
+.in +1c
+.ti -1c
+.RI "\fBLV2_Event_Callback_Data\fP \fBcallback_data\fP"
+.br
+.ti -1c
+.RI "\fBuint32_t\fP(* \fBlv2_event_ref\fP )(\fBLV2_Event_Callback_Data\fP \fBcallback_data\fP, \fBLV2_Event\fP *event)"
+.br
+.ti -1c
+.RI "\fBuint32_t\fP(* \fBlv2_event_unref\fP )(\fBLV2_Event_Callback_Data\fP \fBcallback_data\fP, \fBLV2_Event\fP *event)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Non-POD events feature\&.
+.PP
+To support this feature the host must pass an LV2_Feature struct to the plugin's instantiate method with URI 'http://lv2plug\&.in/ns/ext/event' and data pointed to an instance of this struct\&. Note this feature is not mandatory to support the event extension\&. 
+.PP
+Definition at line 232 of file event\&.h\&.
+.SH "Member Data Documentation"
+.PP 
+.SS "\fBLV2_Event_Callback_Data\fP LV2_Event_Feature::callback_data"
+Opaque pointer to host data\&.
+.PP
+The plugin MUST pass this to any call to functions in this struct\&. Otherwise, it must not be interpreted in any way\&. 
+.PP
+Definition at line 239 of file event\&.h\&.
+.SS "\fBuint32_t\fP(* LV2_Event_Feature::lv2_event_ref) (\fBLV2_Event_Callback_Data\fP \fBcallback_data\fP, \fBLV2_Event\fP *event)"
+Take a reference to a non-POD event\&.
+.PP
+If a plugin receives an event with type 0, it means the event is a pointer to some object in memory and not a flat sequence of bytes in the buffer\&. When receiving a non-POD event, the plugin already has an implicit reference to the event\&. If the event is stored AND passed to an output, lv2_event_ref MUST be called on that event\&. If the event is only stored OR passed through, this is not necessary (as the plugin already has 1 implicit reference)\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIevent\fP An event received at an input that will not be copied to an output or stored in any way\&.
+.br
+\fIcontext\fP The calling context\&. Like event types, this is a mapped URI, see lv2_context\&.h\&. Simple plugin with just a \fBrun()\fP method should pass 0 here (the ID of the 'standard' LV2 run context)\&. The host guarantees that this function is realtime safe iff the context is realtime safe\&.
+.RE
+.PP
+PLUGINS THAT VIOLATE THESE RULES MAY CAUSE CRASHES AND MEMORY LEAKS\&. 
+.PP
+Definition at line 263 of file event\&.h\&.
+.SS "\fBuint32_t\fP(* LV2_Event_Feature::lv2_event_unref) (\fBLV2_Event_Callback_Data\fP \fBcallback_data\fP, \fBLV2_Event\fP *event)"
+Drop a reference to a non-POD event\&.
+.PP
+If a plugin receives an event with type 0, it means the event is a pointer to some object in memory and not a flat sequence of bytes in the buffer\&. If the plugin does not pass the event through to an output or store it internally somehow, it MUST call this function on the event (more information on using non-POD events below)\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIevent\fP An event received at an input that will not be copied to an output or stored in any way\&.
+.br
+\fIcontext\fP The calling context\&. Like event types, this is a mapped URI, see lv2_context\&.h\&. Simple plugin with just a \fBrun()\fP method should pass 0 here (the ID of the 'standard' LV2 run context)\&. The host guarantees that this function is realtime safe iff the context is realtime safe\&.
+.RE
+.PP
+PLUGINS THAT VIOLATE THESE RULES MAY CAUSE CRASHES AND MEMORY LEAKS\&. 
+.PP
+Definition at line 286 of file event\&.h\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

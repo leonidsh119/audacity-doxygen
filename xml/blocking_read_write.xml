@@ -1,0 +1,61 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="blocking_read_write" kind="page">
+    <compoundname>blocking_read_write</compoundname>
+    <title>Blocking Read/Write Functions</title>
+    <detaileddescription>
+<para>PortAudio V19 adds a huge advance over previous versions with a feature called Blocking I/O. Although it may have lower performance that the callback method described earlier in this tutorial, blocking I/O is easier to understand and is, in some cases, more compatible with third party systems than the callback method. Most people starting audio programming also find Blocking I/O easier to learn.</para><para>Blocking I/O works in much the same way as the callback method except that instead of providing a function to provide (or consume) audio data, you must feed data to (or consume data from) PortAudio at regular intervals, usually inside a loop. The example below, excepted from patest_read_write_wire.c, shows how to open the default device, and pass data from its input to its output for a set period of time. Note that we use the default high latency values to help avoid underruns since we are usually reading and writing audio data from a relatively low priority thread, and there is usually extra buffering required to make blocking I/O work.</para><para>Note that not all API&apos;s implement Blocking I/O at this point, so for maximum portability or performance, you&apos;ll still want to use callbacks.</para><para><programlisting><codeline><highlight class="normal">/*<sp/>--<sp/>initialize<sp/>PortAudio<sp/>--<sp/>*/</highlight></codeline>
+<codeline><highlight class="normal">err<sp/>=<sp/>Pa_Initialize();</highlight></codeline>
+<codeline><highlight class="normal">if(<sp/>err<sp/>!=<sp/>paNoError<sp/>)<sp/>goto<sp/>error;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">/*<sp/>--<sp/>setup<sp/>input<sp/>and<sp/>output<sp/>--<sp/>*/</highlight></codeline>
+<codeline><highlight class="normal">inputParameters.device<sp/>=<sp/>Pa_GetDefaultInputDevice();<sp/>/*<sp/>default<sp/>input<sp/>device<sp/>*/</highlight></codeline>
+<codeline><highlight class="normal">inputParameters.channelCount<sp/>=<sp/>NUM_CHANNELS;</highlight></codeline>
+<codeline><highlight class="normal">inputParameters.sampleFormat<sp/>=<sp/>PA_SAMPLE_TYPE;</highlight></codeline>
+<codeline><highlight class="normal">inputParameters.suggestedLatency<sp/>=<sp/>Pa_GetDeviceInfo(<sp/>inputParameters.device<sp/>)-&gt;defaultHighInputLatency<sp/>;</highlight></codeline>
+<codeline><highlight class="normal">inputParameters.hostApiSpecificStreamInfo<sp/>=<sp/>NULL;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">outputParameters.device<sp/>=<sp/>Pa_GetDefaultOutputDevice();<sp/>/*<sp/>default<sp/>output<sp/>device<sp/>*/</highlight></codeline>
+<codeline><highlight class="normal">outputParameters.channelCount<sp/>=<sp/>NUM_CHANNELS;</highlight></codeline>
+<codeline><highlight class="normal">outputParameters.sampleFormat<sp/>=<sp/>PA_SAMPLE_TYPE;</highlight></codeline>
+<codeline><highlight class="normal">outputParameters.suggestedLatency<sp/>=<sp/>Pa_GetDeviceInfo(<sp/>outputParameters.device<sp/>)-&gt;defaultHighOutputLatency;</highlight></codeline>
+<codeline><highlight class="normal">outputParameters.hostApiSpecificStreamInfo<sp/>=<sp/>NULL;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">/*<sp/>--<sp/>setup<sp/>stream<sp/>--<sp/>*/</highlight></codeline>
+<codeline><highlight class="normal">err<sp/>=<sp/>Pa_OpenStream(</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&amp;stream,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&amp;inputParameters,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&amp;outputParameters,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>SAMPLE_RATE,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>FRAMES_PER_BUFFER,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>paClipOff,<sp/><sp/><sp/><sp/><sp/><sp/>/*<sp/>we<sp/>won&apos;t<sp/>output<sp/>out<sp/>of<sp/>range<sp/>samples<sp/>so<sp/>don&apos;t<sp/>bother<sp/>clipping<sp/>them<sp/>*/</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>NULL,<sp/>/*<sp/>no<sp/>callback,<sp/>use<sp/>blocking<sp/>API<sp/>*/</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>NULL<sp/>);<sp/>/*<sp/>no<sp/>callback,<sp/>so<sp/>no<sp/>callback<sp/>userData<sp/>*/</highlight></codeline>
+<codeline><highlight class="normal">if(<sp/>err<sp/>!=<sp/>paNoError<sp/>)<sp/>goto<sp/>error;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">/*<sp/>--<sp/>start<sp/>stream<sp/>--<sp/>*/</highlight></codeline>
+<codeline><highlight class="normal">err<sp/>=<sp/>Pa_StartStream(<sp/>stream<sp/>);</highlight></codeline>
+<codeline><highlight class="normal">if(<sp/>err<sp/>!=<sp/>paNoError<sp/>)<sp/>goto<sp/>error;</highlight></codeline>
+<codeline><highlight class="normal">printf(&quot;Wire<sp/>on.<sp/>Will<sp/>run<sp/>one<sp/>minute.\n&quot;);<sp/>fflush(stdout);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">/*<sp/>--<sp/>Here&apos;s<sp/>the<sp/>loop<sp/>where<sp/>we<sp/>pass<sp/>data<sp/>from<sp/>input<sp/>to<sp/>output<sp/>--<sp/>*/</highlight></codeline>
+<codeline><highlight class="normal">for(<sp/>i=0;<sp/>i&lt;(60*SAMPLE_RATE)/FRAMES_PER_BUFFER;<sp/>++i<sp/>)</highlight></codeline>
+<codeline><highlight class="normal">{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/>err<sp/>=<sp/>Pa_WriteStream(<sp/>stream,<sp/>sampleBlock,<sp/>FRAMES_PER_BUFFER<sp/>);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/>if(<sp/>err<sp/>)<sp/>goto<sp/>xrun;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/>err<sp/>=<sp/>Pa_ReadStream(<sp/>stream,<sp/>sampleBlock,<sp/>FRAMES_PER_BUFFER<sp/>);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/>if(<sp/>err<sp/>)<sp/>goto<sp/>xrun;</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline><highlight class="normal">/*<sp/>--<sp/>Now<sp/>we<sp/>stop<sp/>the<sp/>stream<sp/>--<sp/>*/</highlight></codeline>
+<codeline><highlight class="normal">err<sp/>=<sp/>Pa_StopStream(<sp/>stream<sp/>);</highlight></codeline>
+<codeline><highlight class="normal">if(<sp/>err<sp/>!=<sp/>paNoError<sp/>)<sp/>goto<sp/>error;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">/*<sp/>--<sp/>don&apos;t<sp/>forget<sp/>to<sp/>cleanup!<sp/>--<sp/>*/</highlight></codeline>
+<codeline><highlight class="normal">err<sp/>=<sp/>Pa_CloseStream(<sp/>stream<sp/>);</highlight></codeline>
+<codeline><highlight class="normal">if(<sp/>err<sp/>!=<sp/>paNoError<sp/>)<sp/>goto<sp/>error;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Pa_Terminate();</highlight></codeline>
+<codeline><highlight class="normal">return<sp/>0;</highlight></codeline>
+</programlisting></para><para>Previous: <ref refid="querying_devices" kindref="compound">Enumerating and Querying PortAudio Devices</ref> | Next: <ref refid="exploring" kindref="compound">Exploring PortAudio</ref> </para>    </detaileddescription>
+  </compounddef>
+</doxygen>

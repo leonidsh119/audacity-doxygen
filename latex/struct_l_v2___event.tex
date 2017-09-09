@@ -1,0 +1,66 @@
+\hypertarget{struct_l_v2___event}{}\section{L\+V2\+\_\+\+Event Struct Reference}
+\label{struct_l_v2___event}\index{L\+V2\+\_\+\+Event@{L\+V2\+\_\+\+Event}}
+
+
+{\ttfamily \#include $<$event.\+h$>$}
+
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{lib-src_2ffmpeg_2win32_2stdint_8h_a6eb1e68cc391dd753bc8ce896dbb8315}{uint32\+\_\+t} \hyperlink{struct_l_v2___event_ab7de52fc53223b6fe231f4bde89c563d}{frames}
+\item 
+\hyperlink{lib-src_2ffmpeg_2win32_2stdint_8h_a6eb1e68cc391dd753bc8ce896dbb8315}{uint32\+\_\+t} \hyperlink{struct_l_v2___event_ab6083a09d5433f704de0c94ca4332581}{subframes}
+\item 
+\hyperlink{lib-src_2ffmpeg_2win32_2stdint_8h_a30af71eaf40c925c9832eb289a48da35}{uint16\+\_\+t} \hyperlink{struct_l_v2___event_a65c8311c5c37ada6b44730e259131f37}{type}
+\item 
+\hyperlink{lib-src_2ffmpeg_2win32_2stdint_8h_a30af71eaf40c925c9832eb289a48da35}{uint16\+\_\+t} \hyperlink{struct_l_v2___event_a2036cca2f4ebb4f4010f187a78af3f57}{size}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+An L\+V2 event (header only).
+
+L\+V2 events are generic time-\/stamped containers for any type of event. The type field defines the format of a given event\textquotesingle{}s contents.
+
+This struct defines the header of an L\+V2 event. An L\+V2 event is a single chunk of P\+OD (plain old data), usually contained in a flat buffer (see L\+V2\+\_\+\+Event\+Buffer below). Unless a required feature says otherwise, hosts may assume a deep copy of an L\+V2 event can be created safely using a simple\+:
+
+memcpy(ev\+\_\+copy, ev, sizeof(\+L\+V2\+\_\+\+Event) + ev-\/$>$size); (or equivalent) 
+
+Definition at line 78 of file event.\+h.
+
+
+
+\subsection{Member Data Documentation}
+\index{L\+V2\+\_\+\+Event@{L\+V2\+\_\+\+Event}!frames@{frames}}
+\index{frames@{frames}!L\+V2\+\_\+\+Event@{L\+V2\+\_\+\+Event}}
+\subsubsection[{\texorpdfstring{frames}{frames}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint32\+\_\+t} L\+V2\+\_\+\+Event\+::frames}\hypertarget{struct_l_v2___event_ab7de52fc53223b6fe231f4bde89c563d}{}\label{struct_l_v2___event_ab7de52fc53223b6fe231f4bde89c563d}
+The frames portion of timestamp. The units used here can optionally be set for a port (with the lv2ev\+:time\+Units property), otherwise this is audio frames, corresponding to the sample\+\_\+count parameter of the L\+V2 run method (e.\+g. frame 0 is the first frame for that call to run). 
+
+Definition at line 85 of file event.\+h.
+
+\index{L\+V2\+\_\+\+Event@{L\+V2\+\_\+\+Event}!size@{size}}
+\index{size@{size}!L\+V2\+\_\+\+Event@{L\+V2\+\_\+\+Event}}
+\subsubsection[{\texorpdfstring{size}{size}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint16\+\_\+t} L\+V2\+\_\+\+Event\+::size}\hypertarget{struct_l_v2___event_a2036cca2f4ebb4f4010f187a78af3f57}{}\label{struct_l_v2___event_a2036cca2f4ebb4f4010f187a78af3f57}
+The size of the data portion of this event in bytes, which immediately follows. The header size (12 bytes) is not included in this value. 
+
+Definition at line 116 of file event.\+h.
+
+\index{L\+V2\+\_\+\+Event@{L\+V2\+\_\+\+Event}!subframes@{subframes}}
+\index{subframes@{subframes}!L\+V2\+\_\+\+Event@{L\+V2\+\_\+\+Event}}
+\subsubsection[{\texorpdfstring{subframes}{subframes}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint32\+\_\+t} L\+V2\+\_\+\+Event\+::subframes}\hypertarget{struct_l_v2___event_ab6083a09d5433f704de0c94ca4332581}{}\label{struct_l_v2___event_ab6083a09d5433f704de0c94ca4332581}
+The sub-\/frames portion of timestamp. The units used here can optionally be set for a port (with the lv2ev\+:time\+Units property), otherwise this is 1/(2$^\wedge$32) of an audio frame. 
+
+Definition at line 92 of file event.\+h.
+
+\index{L\+V2\+\_\+\+Event@{L\+V2\+\_\+\+Event}!type@{type}}
+\index{type@{type}!L\+V2\+\_\+\+Event@{L\+V2\+\_\+\+Event}}
+\subsubsection[{\texorpdfstring{type}{type}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint16\+\_\+t} L\+V2\+\_\+\+Event\+::type}\hypertarget{struct_l_v2___event_a65c8311c5c37ada6b44730e259131f37}{}\label{struct_l_v2___event_a65c8311c5c37ada6b44730e259131f37}
+The type of this event, as a number which represents some U\+RI defining an event type. This value M\+U\+ST be some value previously returned from a call to the uri\+\_\+to\+\_\+id function defined in the L\+V2 U\+RI map extension (see lv2\+\_\+uri\+\_\+map.\+h). There are special rules which must be followed depending on the type of an event. If the plugin recognizes an event type, the definition of that event type will describe how to interpret the event, and any required behaviour. Otherwise, if the type is 0, this event is a non-\/\+P\+OD event and lv2\+\_\+event\+\_\+unref M\+U\+ST be called if the event is \textquotesingle{}dropped\textquotesingle{} (see above). Even if the plugin does not understand an event, it may pass the event through to an output by simply copying (and N\+OT calling lv2\+\_\+event\+\_\+unref). These rules are designed to allow for generic event handling plugins and large non-\/\+P\+OD events, but with minimal hassle on simple plugins that \char`\"{}don\textquotesingle{}t care\char`\"{} about these more advanced features. 
+
+Definition at line 110 of file event.\+h.
+
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/lv2/lv2/lv2/lv2plug.\+in/ns/ext/event/\hyperlink{event_8h}{event.\+h}\end{DoxyCompactItemize}

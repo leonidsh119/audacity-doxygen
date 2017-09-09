@@ -1,0 +1,1250 @@
+\hypertarget{xmltok_8c}{}\section{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/expat/lib/xmltok.c File Reference}
+\label{xmltok_8c}\index{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/expat/lib/xmltok.\+c@{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/expat/lib/xmltok.\+c}}
+{\ttfamily \#include $<$stddef.\+h$>$}\\*
+{\ttfamily \#include \char`\"{}expat\+\_\+external.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}internal.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}xmltok.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}nametab.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}xmltok\+\_\+impl.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}ascii.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}xmltok\+\_\+impl.\+c\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}asciitab.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}utf8tab.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}iasciitab.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}latin1tab.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}xmltok\+\_\+ns.\+c\char`\"{}}\\*
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structnormal__encoding}{normal\+\_\+encoding}
+\item 
+struct \hyperlink{structunknown__encoding}{unknown\+\_\+encoding}
+\end{DoxyCompactItemize}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{xmltok_8c_a16f3efc6d3a2792acf7e4c917d260adc}{I\+G\+N\+O\+R\+E\+\_\+\+S\+E\+C\+T\+I\+O\+N\+\_\+\+T\+O\+K\+\_\+\+V\+T\+A\+B\+LE}~/$\ast$ as nothing $\ast$/
+\item 
+\#define \hyperlink{xmltok_8c_a0e414f9ad2147e44c943c0456234c529}{V\+T\+A\+B\+L\+E1}
+\item 
+\#define \hyperlink{xmltok_8c_aa4a137442c139400b647ac62b40ea51a}{V\+T\+A\+B\+LE}~\hyperlink{xmltok_8c_a0e414f9ad2147e44c943c0456234c529}{V\+T\+A\+B\+L\+E1}, \hyperlink{xmlparse_8c_aa3f98fd58683acd364daca2ddc737491}{P\+R\+E\+F\+IX}(to\+Utf8), \hyperlink{xmlparse_8c_aa3f98fd58683acd364daca2ddc737491}{P\+R\+E\+F\+IX}(to\+Utf16)
+\item 
+\#define \hyperlink{xmltok_8c_ad84d58bf17e92b57516106f68fb4ca03}{U\+C\+S2\+\_\+\+G\+E\+T\+\_\+\+N\+A\+M\+I\+NG}(pages,  hi,  lo)~(naming\+Bitmap\mbox{[}(pages\mbox{[}hi\mbox{]} $<$$<$ 3) + ((lo) $>$$>$ 5)\mbox{]} \& (1 $<$$<$ ((lo) \& 0x1\+F)))
+\item 
+\#define \hyperlink{xmltok_8c_adaca69017a970dff47a1616105fcd190}{U\+T\+F8\+\_\+\+G\+E\+T\+\_\+\+N\+A\+M\+I\+N\+G2}(pages,  byte)
+\item 
+\#define \hyperlink{xmltok_8c_a1d082b430fb0f6e4e88bb54b18854fa3}{U\+T\+F8\+\_\+\+G\+E\+T\+\_\+\+N\+A\+M\+I\+N\+G3}(pages,  byte)
+\item 
+\#define \hyperlink{xmltok_8c_a3597134ecd2f0180f7f6054eedd855e2}{U\+T\+F8\+\_\+\+G\+E\+T\+\_\+\+N\+A\+M\+I\+NG}(pages,  \hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p},  n)
+\item 
+\#define \hyperlink{xmltok_8c_a92b3df08bd25bfa9805a3b8998125ad7}{U\+T\+F8\+\_\+\+I\+N\+V\+A\+L\+I\+D2}(\hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p})~(($\ast$\hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p}) $<$ 0x\+C2 $\vert$$\vert$ ((p)\mbox{[}1\mbox{]} \& 0x80) == 0 $\vert$$\vert$ ((p)\mbox{[}1\mbox{]} \& 0x\+C0) == 0x\+C0)
+\item 
+\#define \hyperlink{xmltok_8c_ae52313e00ac70d98fdb894cefe7ad851}{U\+T\+F8\+\_\+\+I\+N\+V\+A\+L\+I\+D3}(\hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p})
+\item 
+\#define \hyperlink{xmltok_8c_ac7146407dd40e78b07b238dd6550075c}{U\+T\+F8\+\_\+\+I\+N\+V\+A\+L\+I\+D4}(\hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p})
+\item 
+\#define \hyperlink{xmltok_8c_a2d1b1e0e2401a0271f56d126f712a62a}{utf8\+\_\+is\+Name4}~is\+Never
+\item 
+\#define \hyperlink{xmltok_8c_a1da5db8634e941c529d70e65c40d05ed}{utf8\+\_\+is\+Nmstrt4}~is\+Never
+\item 
+\#define \hyperlink{xmltok_8c_abff2a2011e52a0b42103850488eb5405}{A\+S\+\_\+\+N\+O\+R\+M\+A\+L\+\_\+\+E\+N\+C\+O\+D\+I\+NG}(enc)  ~((\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} struct \hyperlink{structnormal__encoding}{normal\+\_\+encoding} $\ast$) (enc))
+\item 
+\#define \hyperlink{xmltok_8c_a08a659495975650900f980413527b371}{S\+T\+A\+N\+D\+A\+R\+D\+\_\+\+V\+T\+A\+B\+LE}(\hyperlink{twolame_2libtwolame_2common_8h_a07484107e6d9fdf38b53edf631d6511d}{E})~/$\ast$ as nothing $\ast$/
+\item 
+\#define \hyperlink{xmltok_8c_a5d31098ce53360e3b57dddbca8cc4d30}{N\+O\+R\+M\+A\+L\+\_\+\+V\+T\+A\+B\+LE}(\hyperlink{twolame_2libtwolame_2common_8h_a07484107e6d9fdf38b53edf631d6511d}{E})
+\item 
+\#define \hyperlink{xmltok_8c_a10dc99867769531ae008e676b7298238}{M\+I\+N\+B\+PC}(enc)~1
+\item 
+\#define \hyperlink{xmltok_8c_aa3d3a62657be003bc07c01d3debb3485}{S\+B\+\_\+\+B\+Y\+T\+E\+\_\+\+T\+Y\+PE}(enc,  \hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p})~(((struct \hyperlink{structnormal__encoding}{normal\+\_\+encoding} $\ast$)(enc))-\/$>$type\mbox{[}(unsigned char)$\ast$(\hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p})\mbox{]})
+\item 
+\#define \hyperlink{xmltok_8c_a5858621ad07123547f8171d7f2a05554}{B\+Y\+T\+E\+\_\+\+T\+Y\+PE}(enc,  \hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p})~\hyperlink{xmltok_8c_aa3d3a62657be003bc07c01d3debb3485}{S\+B\+\_\+\+B\+Y\+T\+E\+\_\+\+T\+Y\+PE}(enc, \hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p})
+\item 
+\#define \hyperlink{xmltok_8c_aa1f9102f99142da53ab1c754472764ec}{B\+Y\+T\+E\+\_\+\+T\+O\+\_\+\+A\+S\+C\+II}(enc,  \hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p})~($\ast$(\hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p}))
+\item 
+\#define \hyperlink{xmltok_8c_a812d39ddd8702515ffb6b20ca8a7af2e}{I\+S\+\_\+\+N\+A\+M\+E\+\_\+\+C\+H\+AR}(enc,  \hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p},  n)~(\hyperlink{xmltok_8c_abff2a2011e52a0b42103850488eb5405}{A\+S\+\_\+\+N\+O\+R\+M\+A\+L\+\_\+\+E\+N\+C\+O\+D\+I\+NG}(enc)-\/$>$is\+Name \#\# n(enc, \hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p}))
+\item 
+\#define \hyperlink{xmltok_8c_a045ba451fab004ca1e63fbcac6933359}{I\+S\+\_\+\+N\+M\+S\+T\+R\+T\+\_\+\+C\+H\+AR}(enc,  \hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p},  n)~(\hyperlink{xmltok_8c_abff2a2011e52a0b42103850488eb5405}{A\+S\+\_\+\+N\+O\+R\+M\+A\+L\+\_\+\+E\+N\+C\+O\+D\+I\+NG}(enc)-\/$>$is\+Nmstrt \#\# n(enc, \hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p}))
+\item 
+\#define \hyperlink{xmltok_8c_af4a439ecc8c32e3d3ca79edd8d19f35e}{I\+S\+\_\+\+I\+N\+V\+A\+L\+I\+D\+\_\+\+C\+H\+AR}(enc,  \hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p},  n)~(\hyperlink{xmltok_8c_abff2a2011e52a0b42103850488eb5405}{A\+S\+\_\+\+N\+O\+R\+M\+A\+L\+\_\+\+E\+N\+C\+O\+D\+I\+NG}(enc)-\/$>$is\+Invalid \#\# n(enc, \hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p}))
+\item 
+\#define \hyperlink{xmltok_8c_a5836087b0358204c2cffdb6fc10d93d3}{I\+S\+\_\+\+N\+A\+M\+E\+\_\+\+C\+H\+A\+R\+\_\+\+M\+I\+N\+B\+PC}(enc,  \hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p})~(0)
+\item 
+\#define \hyperlink{xmltok_8c_aefdcf2e917e29be31114f8ed8a020942}{I\+S\+\_\+\+N\+M\+S\+T\+R\+T\+\_\+\+C\+H\+A\+R\+\_\+\+M\+I\+N\+B\+PC}(enc,  \hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p})~(0)
+\item 
+\#define \hyperlink{xmltok_8c_a2fdbcc8ba570d5141133e05a04e44eb2}{C\+H\+A\+R\+\_\+\+M\+A\+T\+C\+H\+ES}(enc,  \hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p},  \hyperlink{rfft2d_test_m_l_8m_ae0323a9039add2978bf5b49550572c7c}{c})~($\ast$(\hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p}) == \hyperlink{rfft2d_test_m_l_8m_ae0323a9039add2978bf5b49550572c7c}{c})
+\item 
+\#define \hyperlink{xmltok_8c_a3c81563b8124715ddef3c493850bf822}{P\+R\+E\+F\+IX}(ident)~normal\+\_\+ \#\# ident
+\item 
+\#define \hyperlink{xmltok_8c_a23c348e434463ae32dd10b4c672a7361}{X\+M\+L\+\_\+\+T\+O\+K\+\_\+\+I\+M\+P\+L\+\_\+C}
+\item 
+\#define \hyperlink{xmltok_8c_ac4d6338aebdfb87cb31abe1e438521b5}{B\+T\+\_\+\+C\+O\+L\+ON}~\hyperlink{xmltok__impl_8h_abc6126af1d45847bc59afa0aa3216b04aa972422ebb0aeceea7affe39b0199fef}{B\+T\+\_\+\+N\+M\+S\+T\+RT}
+\item 
+\#define \hyperlink{xmltok_8c_ac4d6338aebdfb87cb31abe1e438521b5}{B\+T\+\_\+\+C\+O\+L\+ON}~\hyperlink{xmltok__impl_8h_abc6126af1d45847bc59afa0aa3216b04aa972422ebb0aeceea7affe39b0199fef}{B\+T\+\_\+\+N\+M\+S\+T\+RT}
+\item 
+\#define \hyperlink{xmltok_8c_ac4d6338aebdfb87cb31abe1e438521b5}{B\+T\+\_\+\+C\+O\+L\+ON}~\hyperlink{xmltok__impl_8h_abc6126af1d45847bc59afa0aa3216b04aa972422ebb0aeceea7affe39b0199fef}{B\+T\+\_\+\+N\+M\+S\+T\+RT}
+\item 
+\#define \hyperlink{xmltok_8c_ac4d6338aebdfb87cb31abe1e438521b5}{B\+T\+\_\+\+C\+O\+L\+ON}~\hyperlink{xmltok__impl_8h_abc6126af1d45847bc59afa0aa3216b04aa972422ebb0aeceea7affe39b0199fef}{B\+T\+\_\+\+N\+M\+S\+T\+RT}
+\item 
+\#define \hyperlink{xmltok_8c_a31e943f699d48878210dba7bda3ac319}{D\+E\+F\+I\+N\+E\+\_\+\+U\+T\+F16\+\_\+\+T\+O\+\_\+\+U\+T\+F8}(\hyperlink{twolame_2libtwolame_2common_8h_a07484107e6d9fdf38b53edf631d6511d}{E})
+\item 
+\#define \hyperlink{xmltok_8c_ae7b4a58a0c7cc0d19bad2984d7572870}{D\+E\+F\+I\+N\+E\+\_\+\+U\+T\+F16\+\_\+\+T\+O\+\_\+\+U\+T\+F16}(\hyperlink{twolame_2libtwolame_2common_8h_a07484107e6d9fdf38b53edf631d6511d}{E})
+\item 
+\#define \hyperlink{xmltok_8c_ab85f3a62f3c9d398df131330a7021b90}{S\+E\+T2}(ptr,  ch)~(((ptr)\mbox{[}0\mbox{]} = ((ch) \& 0xff)), ((ptr)\mbox{[}1\mbox{]} = ((ch) $>$$>$ 8)))
+\item 
+\#define \hyperlink{xmltok_8c_a81faca3f8c491f3d0815438b8b5e7f85}{G\+E\+T\+\_\+\+LO}(ptr)~((unsigned char)(ptr)\mbox{[}0\mbox{]})
+\item 
+\#define \hyperlink{xmltok_8c_a022e25267c1def84445b583203bc5c3d}{G\+E\+T\+\_\+\+HI}(ptr)~((unsigned char)(ptr)\mbox{[}1\mbox{]})
+\item 
+\#define \hyperlink{xmltok_8c_ab85f3a62f3c9d398df131330a7021b90}{S\+E\+T2}(ptr,  ch)~(((ptr)\mbox{[}0\mbox{]} = ((ch) $>$$>$ 8)), ((ptr)\mbox{[}1\mbox{]} = ((ch) \& 0x\+F\+F)))
+\item 
+\#define \hyperlink{xmltok_8c_a81faca3f8c491f3d0815438b8b5e7f85}{G\+E\+T\+\_\+\+LO}(ptr)~((unsigned char)(ptr)\mbox{[}1\mbox{]})
+\item 
+\#define \hyperlink{xmltok_8c_a022e25267c1def84445b583203bc5c3d}{G\+E\+T\+\_\+\+HI}(ptr)~((unsigned char)(ptr)\mbox{[}0\mbox{]})
+\item 
+\#define \hyperlink{xmltok_8c_ac30c78ed4701a81af657b02dd4cf91b4}{L\+I\+T\+T\+L\+E2\+\_\+\+B\+Y\+T\+E\+\_\+\+T\+Y\+PE}(enc,  \hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p})
+\item 
+\#define \hyperlink{xmltok_8c_ae2f95554982b44b53fc1048bfbb66ba5}{L\+I\+T\+T\+L\+E2\+\_\+\+B\+Y\+T\+E\+\_\+\+T\+O\+\_\+\+A\+S\+C\+II}(enc,  \hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p})~((\hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p})\mbox{[}1\mbox{]} == 0 ? (\hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p})\mbox{[}0\mbox{]} \+: -\/1)
+\item 
+\#define \hyperlink{xmltok_8c_aadf1bccd8fc3d3315743603dfe06b3e0}{L\+I\+T\+T\+L\+E2\+\_\+\+C\+H\+A\+R\+\_\+\+M\+A\+T\+C\+H\+ES}(enc,  \hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p},  \hyperlink{rfft2d_test_m_l_8m_ae0323a9039add2978bf5b49550572c7c}{c})~((\hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p})\mbox{[}1\mbox{]} == 0 \&\& (\hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p})\mbox{[}0\mbox{]} == \hyperlink{rfft2d_test_m_l_8m_ae0323a9039add2978bf5b49550572c7c}{c})
+\item 
+\#define \hyperlink{xmltok_8c_acadb074b0c1aa1b3d809debfbd29ed5e}{L\+I\+T\+T\+L\+E2\+\_\+\+I\+S\+\_\+\+N\+A\+M\+E\+\_\+\+C\+H\+A\+R\+\_\+\+M\+I\+N\+B\+PC}(enc,  \hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p})~\hyperlink{xmltok_8c_ad84d58bf17e92b57516106f68fb4ca03}{U\+C\+S2\+\_\+\+G\+E\+T\+\_\+\+N\+A\+M\+I\+NG}(name\+Pages, (unsigned char)\hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p}\mbox{[}1\mbox{]}, (unsigned char)\hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p}\mbox{[}0\mbox{]})
+\item 
+\#define \hyperlink{xmltok_8c_af232a139c838c1e4c446b985f2aa0a78}{L\+I\+T\+T\+L\+E2\+\_\+\+I\+S\+\_\+\+N\+M\+S\+T\+R\+T\+\_\+\+C\+H\+A\+R\+\_\+\+M\+I\+N\+B\+PC}(enc,  \hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p})~\hyperlink{xmltok_8c_ad84d58bf17e92b57516106f68fb4ca03}{U\+C\+S2\+\_\+\+G\+E\+T\+\_\+\+N\+A\+M\+I\+NG}(nmstrt\+Pages, (unsigned char)\hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p}\mbox{[}1\mbox{]}, (unsigned char)\hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p}\mbox{[}0\mbox{]})
+\item 
+\#define \hyperlink{xmltok_8c_a3c81563b8124715ddef3c493850bf822}{P\+R\+E\+F\+IX}(ident)~little2\+\_\+ \#\# ident
+\item 
+\#define \hyperlink{xmltok_8c_a10dc99867769531ae008e676b7298238}{M\+I\+N\+B\+PC}(enc)~2
+\item 
+\#define \hyperlink{xmltok_8c_a5858621ad07123547f8171d7f2a05554}{B\+Y\+T\+E\+\_\+\+T\+Y\+PE}(enc,  \hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p})~\hyperlink{xmltok_8c_ac30c78ed4701a81af657b02dd4cf91b4}{L\+I\+T\+T\+L\+E2\+\_\+\+B\+Y\+T\+E\+\_\+\+T\+Y\+PE}(enc, \hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p})
+\item 
+\#define \hyperlink{xmltok_8c_aa1f9102f99142da53ab1c754472764ec}{B\+Y\+T\+E\+\_\+\+T\+O\+\_\+\+A\+S\+C\+II}(enc,  \hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p})~\hyperlink{xmltok_8c_ae2f95554982b44b53fc1048bfbb66ba5}{L\+I\+T\+T\+L\+E2\+\_\+\+B\+Y\+T\+E\+\_\+\+T\+O\+\_\+\+A\+S\+C\+II}(enc, \hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p})
+\item 
+\#define \hyperlink{xmltok_8c_a2fdbcc8ba570d5141133e05a04e44eb2}{C\+H\+A\+R\+\_\+\+M\+A\+T\+C\+H\+ES}(enc,  \hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p},  \hyperlink{rfft2d_test_m_l_8m_ae0323a9039add2978bf5b49550572c7c}{c})~\hyperlink{xmltok_8c_aadf1bccd8fc3d3315743603dfe06b3e0}{L\+I\+T\+T\+L\+E2\+\_\+\+C\+H\+A\+R\+\_\+\+M\+A\+T\+C\+H\+ES}(enc, \hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p}, \hyperlink{rfft2d_test_m_l_8m_ae0323a9039add2978bf5b49550572c7c}{c})
+\item 
+\#define \hyperlink{xmltok_8c_a812d39ddd8702515ffb6b20ca8a7af2e}{I\+S\+\_\+\+N\+A\+M\+E\+\_\+\+C\+H\+AR}(enc,  \hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p},  n)~0
+\item 
+\#define \hyperlink{xmltok_8c_a5836087b0358204c2cffdb6fc10d93d3}{I\+S\+\_\+\+N\+A\+M\+E\+\_\+\+C\+H\+A\+R\+\_\+\+M\+I\+N\+B\+PC}(enc,  \hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p})~\hyperlink{xmltok_8c_acadb074b0c1aa1b3d809debfbd29ed5e}{L\+I\+T\+T\+L\+E2\+\_\+\+I\+S\+\_\+\+N\+A\+M\+E\+\_\+\+C\+H\+A\+R\+\_\+\+M\+I\+N\+B\+PC}(enc, \hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p})
+\item 
+\#define \hyperlink{xmltok_8c_a045ba451fab004ca1e63fbcac6933359}{I\+S\+\_\+\+N\+M\+S\+T\+R\+T\+\_\+\+C\+H\+AR}(enc,  \hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p},  n)~(0)
+\item 
+\#define \hyperlink{xmltok_8c_aefdcf2e917e29be31114f8ed8a020942}{I\+S\+\_\+\+N\+M\+S\+T\+R\+T\+\_\+\+C\+H\+A\+R\+\_\+\+M\+I\+N\+B\+PC}(enc,  \hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p})~\hyperlink{xmltok_8c_af232a139c838c1e4c446b985f2aa0a78}{L\+I\+T\+T\+L\+E2\+\_\+\+I\+S\+\_\+\+N\+M\+S\+T\+R\+T\+\_\+\+C\+H\+A\+R\+\_\+\+M\+I\+N\+B\+PC}(enc, \hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p})
+\item 
+\#define \hyperlink{xmltok_8c_a23c348e434463ae32dd10b4c672a7361}{X\+M\+L\+\_\+\+T\+O\+K\+\_\+\+I\+M\+P\+L\+\_\+C}
+\item 
+\#define \hyperlink{xmltok_8c_ac4d6338aebdfb87cb31abe1e438521b5}{B\+T\+\_\+\+C\+O\+L\+ON}~\hyperlink{xmltok__impl_8h_abc6126af1d45847bc59afa0aa3216b04aa972422ebb0aeceea7affe39b0199fef}{B\+T\+\_\+\+N\+M\+S\+T\+RT}
+\item 
+\#define \hyperlink{xmltok_8c_ac4d6338aebdfb87cb31abe1e438521b5}{B\+T\+\_\+\+C\+O\+L\+ON}~\hyperlink{xmltok__impl_8h_abc6126af1d45847bc59afa0aa3216b04aa972422ebb0aeceea7affe39b0199fef}{B\+T\+\_\+\+N\+M\+S\+T\+RT}
+\item 
+\#define \hyperlink{xmltok_8c_a395e3404f7abdc606ad219d8ab7c0b94}{B\+I\+G2\+\_\+\+B\+Y\+T\+E\+\_\+\+T\+Y\+PE}(enc,  \hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p})
+\item 
+\#define \hyperlink{xmltok_8c_a0053be2456361e778508cbcaac362904}{B\+I\+G2\+\_\+\+B\+Y\+T\+E\+\_\+\+T\+O\+\_\+\+A\+S\+C\+II}(enc,  \hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p})~((\hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p})\mbox{[}0\mbox{]} == 0 ? (\hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p})\mbox{[}1\mbox{]} \+: -\/1)
+\item 
+\#define \hyperlink{xmltok_8c_ae87820669540e159d820f9bec12aaadd}{B\+I\+G2\+\_\+\+C\+H\+A\+R\+\_\+\+M\+A\+T\+C\+H\+ES}(enc,  \hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p},  \hyperlink{rfft2d_test_m_l_8m_ae0323a9039add2978bf5b49550572c7c}{c})~((\hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p})\mbox{[}0\mbox{]} == 0 \&\& (\hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p})\mbox{[}1\mbox{]} == \hyperlink{rfft2d_test_m_l_8m_ae0323a9039add2978bf5b49550572c7c}{c})
+\item 
+\#define \hyperlink{xmltok_8c_a28afd07284c6409a37ce572b55154993}{B\+I\+G2\+\_\+\+I\+S\+\_\+\+N\+A\+M\+E\+\_\+\+C\+H\+A\+R\+\_\+\+M\+I\+N\+B\+PC}(enc,  \hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p})~\hyperlink{xmltok_8c_ad84d58bf17e92b57516106f68fb4ca03}{U\+C\+S2\+\_\+\+G\+E\+T\+\_\+\+N\+A\+M\+I\+NG}(name\+Pages, (unsigned char)\hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p}\mbox{[}0\mbox{]}, (unsigned char)\hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p}\mbox{[}1\mbox{]})
+\item 
+\#define \hyperlink{xmltok_8c_abdd6cf0e917ca2e51eb89a7bfff5d409}{B\+I\+G2\+\_\+\+I\+S\+\_\+\+N\+M\+S\+T\+R\+T\+\_\+\+C\+H\+A\+R\+\_\+\+M\+I\+N\+B\+PC}(enc,  \hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p})~\hyperlink{xmltok_8c_ad84d58bf17e92b57516106f68fb4ca03}{U\+C\+S2\+\_\+\+G\+E\+T\+\_\+\+N\+A\+M\+I\+NG}(nmstrt\+Pages, (unsigned char)\hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p}\mbox{[}0\mbox{]}, (unsigned char)\hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p}\mbox{[}1\mbox{]})
+\item 
+\#define \hyperlink{xmltok_8c_a3c81563b8124715ddef3c493850bf822}{P\+R\+E\+F\+IX}(ident)~big2\+\_\+ \#\# ident
+\item 
+\#define \hyperlink{xmltok_8c_a10dc99867769531ae008e676b7298238}{M\+I\+N\+B\+PC}(enc)~2
+\item 
+\#define \hyperlink{xmltok_8c_a5858621ad07123547f8171d7f2a05554}{B\+Y\+T\+E\+\_\+\+T\+Y\+PE}(enc,  \hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p})~\hyperlink{xmltok_8c_a395e3404f7abdc606ad219d8ab7c0b94}{B\+I\+G2\+\_\+\+B\+Y\+T\+E\+\_\+\+T\+Y\+PE}(enc, \hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p})
+\item 
+\#define \hyperlink{xmltok_8c_aa1f9102f99142da53ab1c754472764ec}{B\+Y\+T\+E\+\_\+\+T\+O\+\_\+\+A\+S\+C\+II}(enc,  \hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p})~\hyperlink{xmltok_8c_a0053be2456361e778508cbcaac362904}{B\+I\+G2\+\_\+\+B\+Y\+T\+E\+\_\+\+T\+O\+\_\+\+A\+S\+C\+II}(enc, \hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p})
+\item 
+\#define \hyperlink{xmltok_8c_a2fdbcc8ba570d5141133e05a04e44eb2}{C\+H\+A\+R\+\_\+\+M\+A\+T\+C\+H\+ES}(enc,  \hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p},  \hyperlink{rfft2d_test_m_l_8m_ae0323a9039add2978bf5b49550572c7c}{c})~\hyperlink{xmltok_8c_ae87820669540e159d820f9bec12aaadd}{B\+I\+G2\+\_\+\+C\+H\+A\+R\+\_\+\+M\+A\+T\+C\+H\+ES}(enc, \hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p}, \hyperlink{rfft2d_test_m_l_8m_ae0323a9039add2978bf5b49550572c7c}{c})
+\item 
+\#define \hyperlink{xmltok_8c_a812d39ddd8702515ffb6b20ca8a7af2e}{I\+S\+\_\+\+N\+A\+M\+E\+\_\+\+C\+H\+AR}(enc,  \hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p},  n)~0
+\item 
+\#define \hyperlink{xmltok_8c_a5836087b0358204c2cffdb6fc10d93d3}{I\+S\+\_\+\+N\+A\+M\+E\+\_\+\+C\+H\+A\+R\+\_\+\+M\+I\+N\+B\+PC}(enc,  \hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p})~\hyperlink{xmltok_8c_a28afd07284c6409a37ce572b55154993}{B\+I\+G2\+\_\+\+I\+S\+\_\+\+N\+A\+M\+E\+\_\+\+C\+H\+A\+R\+\_\+\+M\+I\+N\+B\+PC}(enc, \hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p})
+\item 
+\#define \hyperlink{xmltok_8c_a045ba451fab004ca1e63fbcac6933359}{I\+S\+\_\+\+N\+M\+S\+T\+R\+T\+\_\+\+C\+H\+AR}(enc,  \hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p},  n)~(0)
+\item 
+\#define \hyperlink{xmltok_8c_aefdcf2e917e29be31114f8ed8a020942}{I\+S\+\_\+\+N\+M\+S\+T\+R\+T\+\_\+\+C\+H\+A\+R\+\_\+\+M\+I\+N\+B\+PC}(enc,  \hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p})~\hyperlink{xmltok_8c_abdd6cf0e917ca2e51eb89a7bfff5d409}{B\+I\+G2\+\_\+\+I\+S\+\_\+\+N\+M\+S\+T\+R\+T\+\_\+\+C\+H\+A\+R\+\_\+\+M\+I\+N\+B\+PC}(enc, \hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p})
+\item 
+\#define \hyperlink{xmltok_8c_a23c348e434463ae32dd10b4c672a7361}{X\+M\+L\+\_\+\+T\+O\+K\+\_\+\+I\+M\+P\+L\+\_\+C}
+\item 
+\#define \hyperlink{xmltok_8c_ac4d6338aebdfb87cb31abe1e438521b5}{B\+T\+\_\+\+C\+O\+L\+ON}~\hyperlink{xmltok__impl_8h_abc6126af1d45847bc59afa0aa3216b04aa972422ebb0aeceea7affe39b0199fef}{B\+T\+\_\+\+N\+M\+S\+T\+RT}
+\item 
+\#define \hyperlink{xmltok_8c_ac4d6338aebdfb87cb31abe1e438521b5}{B\+T\+\_\+\+C\+O\+L\+ON}~\hyperlink{xmltok__impl_8h_abc6126af1d45847bc59afa0aa3216b04aa972422ebb0aeceea7affe39b0199fef}{B\+T\+\_\+\+N\+M\+S\+T\+RT}
+\item 
+\#define \hyperlink{xmltok_8c_acfd95318da5995d028121541e1cde260}{A\+S\+\_\+\+U\+N\+K\+N\+O\+W\+N\+\_\+\+E\+N\+C\+O\+D\+I\+NG}(enc)~((\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} struct \hyperlink{structunknown__encoding}{unknown\+\_\+encoding} $\ast$) (enc))
+\item 
+\#define \hyperlink{xmltok_8c_a68f7c1c3da15a1bb3844eb28bc572907}{I\+N\+I\+T\+\_\+\+E\+N\+C\+\_\+\+I\+N\+D\+EX}(enc)~((\hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int})(enc)-\/$>$init\+Enc.\+is\+Utf16)
+\item 
+\#define \hyperlink{xmltok_8c_aca6ad11aa35dbb980967340905bac3e4}{S\+E\+T\+\_\+\+I\+N\+I\+T\+\_\+\+E\+N\+C\+\_\+\+I\+N\+D\+EX}(enc,  \hyperlink{checksum_8c_ab80e330a3bc9e38c1297fe17381e92b4}{i})~((enc)-\/$>$init\+Enc.\+is\+Utf16 = (char)\hyperlink{checksum_8c_ab80e330a3bc9e38c1297fe17381e92b4}{i})
+\item 
+\#define \hyperlink{xmltok_8c_a3e797486ea8dd3e564d65a537c67f0c5}{NS}(x)~x
+\item 
+\#define \hyperlink{xmltok_8c_ab6aec1346fb6c7b2733f0f73c9536ad2}{ns}(x)~x
+\item 
+\#define \hyperlink{xmltok_8c_a07cab1fdd4935685d882c7ff421935a7}{X\+M\+L\+\_\+\+T\+O\+K\+\_\+\+N\+S\+\_\+C}
+\end{DoxyCompactItemize}
+\subsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \{ \hyperlink{xmltok_8c_adf764cbdea00d65edcd07bb9953ad2b7aa178fa0d4471a87df9f098c3d4d5bfaf}{U\+T\+F8\+\_\+cval1} = 0x00, 
+\hyperlink{xmltok_8c_adf764cbdea00d65edcd07bb9953ad2b7ab9de40520f12e745e305de6cbaae89aa}{U\+T\+F8\+\_\+cval2} = 0xc0, 
+\hyperlink{xmltok_8c_adf764cbdea00d65edcd07bb9953ad2b7ae5c645f459c8b1198b8cf357679b3e25}{U\+T\+F8\+\_\+cval3} = 0xe0, 
+\hyperlink{xmltok_8c_adf764cbdea00d65edcd07bb9953ad2b7a3bb425f865be325cf7805ae568063409}{U\+T\+F8\+\_\+cval4} = 0xf0
+ \}
+\item 
+enum \{ \\*
+\hyperlink{xmltok_8c_a99fb83031ce9923c84392b4e92f956b5a7ebb1f3e154cf1ec4ea6d2df2d32d7a1}{U\+N\+K\+N\+O\+W\+N\+\_\+\+E\+NC} = -\/1, 
+\hyperlink{xmltok_8c_a99fb83031ce9923c84392b4e92f956b5a2f5e6cab5c293aa8f8f7587e7857b02d}{I\+S\+O\+\_\+8859\+\_\+1\+\_\+\+E\+NC} = 0, 
+\hyperlink{xmltok_8c_a99fb83031ce9923c84392b4e92f956b5a27c4bf314a7c0605785316594381be58}{U\+S\+\_\+\+A\+S\+C\+I\+I\+\_\+\+E\+NC}, 
+\hyperlink{xmltok_8c_a99fb83031ce9923c84392b4e92f956b5a46f663e9f48222664eee117b68c13999}{U\+T\+F\+\_\+8\+\_\+\+E\+NC}, 
+\\*
+\hyperlink{xmltok_8c_a99fb83031ce9923c84392b4e92f956b5a518bab58caf7f653a902d34c941bb790}{U\+T\+F\+\_\+16\+\_\+\+E\+NC}, 
+\hyperlink{xmltok_8c_a99fb83031ce9923c84392b4e92f956b5a8399af631a29e3f4e74df22504d45b5a}{U\+T\+F\+\_\+16\+B\+E\+\_\+\+E\+NC}, 
+\hyperlink{xmltok_8c_a99fb83031ce9923c84392b4e92f956b5abda1f037886224aa8e5bc5a235d8f4ec}{U\+T\+F\+\_\+16\+L\+E\+\_\+\+E\+NC}, 
+\hyperlink{xmltok_8c_a99fb83031ce9923c84392b4e92f956b5a19e41dd21dcd20b0051b8e436501d5dc}{N\+O\+\_\+\+E\+NC}
+ \}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{expat_2lib_2internal_8h_a6f671bc94a3e87fcef3b36ec87d34bff}{F\+A\+S\+T\+C\+A\+LL} \hyperlink{xmltok_8c_afb9948e7ab79ffca787166b7a2f8f7ec}{Xml\+Utf8\+Encode} (\hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{rfft2d_test_m_l_8m_ae0323a9039add2978bf5b49550572c7c}{c}, char $\ast$\hyperlink{xlstr_8c_a781718f5b53a876fe91c424c4607fa8f}{buf})
+\item 
+\hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{expat_2lib_2internal_8h_a6f671bc94a3e87fcef3b36ec87d34bff}{F\+A\+S\+T\+C\+A\+LL} \hyperlink{xmltok_8c_adc07edbd5e6dee6d65bff7a183b54beb}{Xml\+Utf16\+Encode} (\hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} char\+Num, unsigned short $\ast$\hyperlink{xlstr_8c_a781718f5b53a876fe91c424c4607fa8f}{buf})
+\item 
+\hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{xmltok_8c_a8671b08cbc73ee001e696f02404e878f}{Xml\+Size\+Of\+Unknown\+Encoding} (\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void})
+\item 
+\hyperlink{xmltok_8h_a46834e73898ebab478b38f817a8c6fc0}{E\+N\+C\+O\+D\+I\+NG} $\ast$ \hyperlink{xmltok_8c_a7bd2980a71390ec11b4039e2f10a41da}{Xml\+Init\+Unknown\+Encoding} (\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} $\ast$mem, \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} $\ast$table, C\+O\+N\+V\+E\+R\+T\+ER convert, \hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} $\ast$\hyperlink{xmlparse_8c_a4b666535c828e23ccd16510a0a1a1943}{user\+Data})
+\end{DoxyCompactItemize}
+
+
+\subsection{Macro Definition Documentation}
+\index{xmltok.\+c@{xmltok.\+c}!A\+S\+\_\+\+N\+O\+R\+M\+A\+L\+\_\+\+E\+N\+C\+O\+D\+I\+NG@{A\+S\+\_\+\+N\+O\+R\+M\+A\+L\+\_\+\+E\+N\+C\+O\+D\+I\+NG}}
+\index{A\+S\+\_\+\+N\+O\+R\+M\+A\+L\+\_\+\+E\+N\+C\+O\+D\+I\+NG@{A\+S\+\_\+\+N\+O\+R\+M\+A\+L\+\_\+\+E\+N\+C\+O\+D\+I\+NG}!xmltok.\+c@{xmltok.\+c}}
+\subsubsection[{\texorpdfstring{A\+S\+\_\+\+N\+O\+R\+M\+A\+L\+\_\+\+E\+N\+C\+O\+D\+I\+NG}{AS_NORMAL_ENCODING}}]{\setlength{\rightskip}{0pt plus 5cm}\#define A\+S\+\_\+\+N\+O\+R\+M\+A\+L\+\_\+\+E\+N\+C\+O\+D\+I\+NG(
+\begin{DoxyParamCaption}
+\item[{}]{enc}
+\end{DoxyParamCaption}
+)~(({\bf const} struct {\bf normal\+\_\+encoding} $\ast$) (enc))}\hypertarget{xmltok_8c_abff2a2011e52a0b42103850488eb5405}{}\label{xmltok_8c_abff2a2011e52a0b42103850488eb5405}
+
+
+Definition at line 197 of file xmltok.\+c.
+
+\index{xmltok.\+c@{xmltok.\+c}!A\+S\+\_\+\+U\+N\+K\+N\+O\+W\+N\+\_\+\+E\+N\+C\+O\+D\+I\+NG@{A\+S\+\_\+\+U\+N\+K\+N\+O\+W\+N\+\_\+\+E\+N\+C\+O\+D\+I\+NG}}
+\index{A\+S\+\_\+\+U\+N\+K\+N\+O\+W\+N\+\_\+\+E\+N\+C\+O\+D\+I\+NG@{A\+S\+\_\+\+U\+N\+K\+N\+O\+W\+N\+\_\+\+E\+N\+C\+O\+D\+I\+NG}!xmltok.\+c@{xmltok.\+c}}
+\subsubsection[{\texorpdfstring{A\+S\+\_\+\+U\+N\+K\+N\+O\+W\+N\+\_\+\+E\+N\+C\+O\+D\+I\+NG}{AS_UNKNOWN_ENCODING}}]{\setlength{\rightskip}{0pt plus 5cm}\#define A\+S\+\_\+\+U\+N\+K\+N\+O\+W\+N\+\_\+\+E\+N\+C\+O\+D\+I\+NG(
+\begin{DoxyParamCaption}
+\item[{}]{enc}
+\end{DoxyParamCaption}
+)~(({\bf const} struct {\bf unknown\+\_\+encoding} $\ast$) (enc))}\hypertarget{xmltok_8c_acfd95318da5995d028121541e1cde260}{}\label{xmltok_8c_acfd95318da5995d028121541e1cde260}
+
+
+Definition at line 1255 of file xmltok.\+c.
+
+\index{xmltok.\+c@{xmltok.\+c}!B\+I\+G2\+\_\+\+B\+Y\+T\+E\+\_\+\+T\+O\+\_\+\+A\+S\+C\+II@{B\+I\+G2\+\_\+\+B\+Y\+T\+E\+\_\+\+T\+O\+\_\+\+A\+S\+C\+II}}
+\index{B\+I\+G2\+\_\+\+B\+Y\+T\+E\+\_\+\+T\+O\+\_\+\+A\+S\+C\+II@{B\+I\+G2\+\_\+\+B\+Y\+T\+E\+\_\+\+T\+O\+\_\+\+A\+S\+C\+II}!xmltok.\+c@{xmltok.\+c}}
+\subsubsection[{\texorpdfstring{B\+I\+G2\+\_\+\+B\+Y\+T\+E\+\_\+\+T\+O\+\_\+\+A\+S\+C\+II}{BIG2_BYTE_TO_ASCII}}]{\setlength{\rightskip}{0pt plus 5cm}\#define B\+I\+G2\+\_\+\+B\+Y\+T\+E\+\_\+\+T\+O\+\_\+\+A\+S\+C\+II(
+\begin{DoxyParamCaption}
+\item[{}]{enc, }
+\item[{}]{{\bf p}}
+\end{DoxyParamCaption}
+)~(({\bf p})\mbox{[}0\mbox{]} == 0 ? ({\bf p})\mbox{[}1\mbox{]} \+: -\/1)}\hypertarget{xmltok_8c_a0053be2456361e778508cbcaac362904}{}\label{xmltok_8c_a0053be2456361e778508cbcaac362904}
+
+
+Definition at line 784 of file xmltok.\+c.
+
+\index{xmltok.\+c@{xmltok.\+c}!B\+I\+G2\+\_\+\+B\+Y\+T\+E\+\_\+\+T\+Y\+PE@{B\+I\+G2\+\_\+\+B\+Y\+T\+E\+\_\+\+T\+Y\+PE}}
+\index{B\+I\+G2\+\_\+\+B\+Y\+T\+E\+\_\+\+T\+Y\+PE@{B\+I\+G2\+\_\+\+B\+Y\+T\+E\+\_\+\+T\+Y\+PE}!xmltok.\+c@{xmltok.\+c}}
+\subsubsection[{\texorpdfstring{B\+I\+G2\+\_\+\+B\+Y\+T\+E\+\_\+\+T\+Y\+PE}{BIG2_BYTE_TYPE}}]{\setlength{\rightskip}{0pt plus 5cm}\#define B\+I\+G2\+\_\+\+B\+Y\+T\+E\+\_\+\+T\+Y\+PE(
+\begin{DoxyParamCaption}
+\item[{}]{enc, }
+\item[{}]{{\bf p}}
+\end{DoxyParamCaption}
+)}\hypertarget{xmltok_8c_a395e3404f7abdc606ad219d8ab7c0b94}{}\label{xmltok_8c_a395e3404f7abdc606ad219d8ab7c0b94}
+{\bfseries Value\+:}
+\begin{DoxyCode}
+((\hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p})[0] == 0 \(\backslash\)
+  ? ((\textcolor{keyword}{struct} \hyperlink{structnormal__encoding}{normal\_encoding} *)(enc))->type[(\textcolor{keywordtype}{unsigned} char)(\hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p})[1]] \(\backslash\)
+  : unicode\_byte\_type((\hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p})[0], (\hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p})[1]))
+\end{DoxyCode}
+
+
+Definition at line 780 of file xmltok.\+c.
+
+\index{xmltok.\+c@{xmltok.\+c}!B\+I\+G2\+\_\+\+C\+H\+A\+R\+\_\+\+M\+A\+T\+C\+H\+ES@{B\+I\+G2\+\_\+\+C\+H\+A\+R\+\_\+\+M\+A\+T\+C\+H\+ES}}
+\index{B\+I\+G2\+\_\+\+C\+H\+A\+R\+\_\+\+M\+A\+T\+C\+H\+ES@{B\+I\+G2\+\_\+\+C\+H\+A\+R\+\_\+\+M\+A\+T\+C\+H\+ES}!xmltok.\+c@{xmltok.\+c}}
+\subsubsection[{\texorpdfstring{B\+I\+G2\+\_\+\+C\+H\+A\+R\+\_\+\+M\+A\+T\+C\+H\+ES}{BIG2_CHAR_MATCHES}}]{\setlength{\rightskip}{0pt plus 5cm}\#define B\+I\+G2\+\_\+\+C\+H\+A\+R\+\_\+\+M\+A\+T\+C\+H\+ES(
+\begin{DoxyParamCaption}
+\item[{}]{enc, }
+\item[{}]{{\bf p}, }
+\item[{}]{{\bf c}}
+\end{DoxyParamCaption}
+)~(({\bf p})\mbox{[}0\mbox{]} == 0 \&\& ({\bf p})\mbox{[}1\mbox{]} == {\bf c})}\hypertarget{xmltok_8c_ae87820669540e159d820f9bec12aaadd}{}\label{xmltok_8c_ae87820669540e159d820f9bec12aaadd}
+
+
+Definition at line 785 of file xmltok.\+c.
+
+\index{xmltok.\+c@{xmltok.\+c}!B\+I\+G2\+\_\+\+I\+S\+\_\+\+N\+A\+M\+E\+\_\+\+C\+H\+A\+R\+\_\+\+M\+I\+N\+B\+PC@{B\+I\+G2\+\_\+\+I\+S\+\_\+\+N\+A\+M\+E\+\_\+\+C\+H\+A\+R\+\_\+\+M\+I\+N\+B\+PC}}
+\index{B\+I\+G2\+\_\+\+I\+S\+\_\+\+N\+A\+M\+E\+\_\+\+C\+H\+A\+R\+\_\+\+M\+I\+N\+B\+PC@{B\+I\+G2\+\_\+\+I\+S\+\_\+\+N\+A\+M\+E\+\_\+\+C\+H\+A\+R\+\_\+\+M\+I\+N\+B\+PC}!xmltok.\+c@{xmltok.\+c}}
+\subsubsection[{\texorpdfstring{B\+I\+G2\+\_\+\+I\+S\+\_\+\+N\+A\+M\+E\+\_\+\+C\+H\+A\+R\+\_\+\+M\+I\+N\+B\+PC}{BIG2_IS_NAME_CHAR_MINBPC}}]{\setlength{\rightskip}{0pt plus 5cm}\#define B\+I\+G2\+\_\+\+I\+S\+\_\+\+N\+A\+M\+E\+\_\+\+C\+H\+A\+R\+\_\+\+M\+I\+N\+B\+PC(
+\begin{DoxyParamCaption}
+\item[{}]{enc, }
+\item[{}]{{\bf p}}
+\end{DoxyParamCaption}
+)~{\bf U\+C\+S2\+\_\+\+G\+E\+T\+\_\+\+N\+A\+M\+I\+NG}(name\+Pages, (unsigned char){\bf p}\mbox{[}0\mbox{]}, (unsigned char){\bf p}\mbox{[}1\mbox{]})}\hypertarget{xmltok_8c_a28afd07284c6409a37ce572b55154993}{}\label{xmltok_8c_a28afd07284c6409a37ce572b55154993}
+
+
+Definition at line 786 of file xmltok.\+c.
+
+\index{xmltok.\+c@{xmltok.\+c}!B\+I\+G2\+\_\+\+I\+S\+\_\+\+N\+M\+S\+T\+R\+T\+\_\+\+C\+H\+A\+R\+\_\+\+M\+I\+N\+B\+PC@{B\+I\+G2\+\_\+\+I\+S\+\_\+\+N\+M\+S\+T\+R\+T\+\_\+\+C\+H\+A\+R\+\_\+\+M\+I\+N\+B\+PC}}
+\index{B\+I\+G2\+\_\+\+I\+S\+\_\+\+N\+M\+S\+T\+R\+T\+\_\+\+C\+H\+A\+R\+\_\+\+M\+I\+N\+B\+PC@{B\+I\+G2\+\_\+\+I\+S\+\_\+\+N\+M\+S\+T\+R\+T\+\_\+\+C\+H\+A\+R\+\_\+\+M\+I\+N\+B\+PC}!xmltok.\+c@{xmltok.\+c}}
+\subsubsection[{\texorpdfstring{B\+I\+G2\+\_\+\+I\+S\+\_\+\+N\+M\+S\+T\+R\+T\+\_\+\+C\+H\+A\+R\+\_\+\+M\+I\+N\+B\+PC}{BIG2_IS_NMSTRT_CHAR_MINBPC}}]{\setlength{\rightskip}{0pt plus 5cm}\#define B\+I\+G2\+\_\+\+I\+S\+\_\+\+N\+M\+S\+T\+R\+T\+\_\+\+C\+H\+A\+R\+\_\+\+M\+I\+N\+B\+PC(
+\begin{DoxyParamCaption}
+\item[{}]{enc, }
+\item[{}]{{\bf p}}
+\end{DoxyParamCaption}
+)~{\bf U\+C\+S2\+\_\+\+G\+E\+T\+\_\+\+N\+A\+M\+I\+NG}(nmstrt\+Pages, (unsigned char){\bf p}\mbox{[}0\mbox{]}, (unsigned char){\bf p}\mbox{[}1\mbox{]})}\hypertarget{xmltok_8c_abdd6cf0e917ca2e51eb89a7bfff5d409}{}\label{xmltok_8c_abdd6cf0e917ca2e51eb89a7bfff5d409}
+
+
+Definition at line 788 of file xmltok.\+c.
+
+\index{xmltok.\+c@{xmltok.\+c}!B\+T\+\_\+\+C\+O\+L\+ON@{B\+T\+\_\+\+C\+O\+L\+ON}}
+\index{B\+T\+\_\+\+C\+O\+L\+ON@{B\+T\+\_\+\+C\+O\+L\+ON}!xmltok.\+c@{xmltok.\+c}}
+\subsubsection[{\texorpdfstring{B\+T\+\_\+\+C\+O\+L\+ON}{BT_COLON}}]{\setlength{\rightskip}{0pt plus 5cm}\#define B\+T\+\_\+\+C\+O\+L\+ON~{\bf B\+T\+\_\+\+N\+M\+S\+T\+RT}}\hypertarget{xmltok_8c_ac4d6338aebdfb87cb31abe1e438521b5}{}\label{xmltok_8c_ac4d6338aebdfb87cb31abe1e438521b5}
+\index{xmltok.\+c@{xmltok.\+c}!B\+T\+\_\+\+C\+O\+L\+ON@{B\+T\+\_\+\+C\+O\+L\+ON}}
+\index{B\+T\+\_\+\+C\+O\+L\+ON@{B\+T\+\_\+\+C\+O\+L\+ON}!xmltok.\+c@{xmltok.\+c}}
+\subsubsection[{\texorpdfstring{B\+T\+\_\+\+C\+O\+L\+ON}{BT_COLON}}]{\setlength{\rightskip}{0pt plus 5cm}\#define B\+T\+\_\+\+C\+O\+L\+ON~{\bf B\+T\+\_\+\+N\+M\+S\+T\+RT}}\hypertarget{xmltok_8c_ac4d6338aebdfb87cb31abe1e438521b5}{}\label{xmltok_8c_ac4d6338aebdfb87cb31abe1e438521b5}
+\index{xmltok.\+c@{xmltok.\+c}!B\+T\+\_\+\+C\+O\+L\+ON@{B\+T\+\_\+\+C\+O\+L\+ON}}
+\index{B\+T\+\_\+\+C\+O\+L\+ON@{B\+T\+\_\+\+C\+O\+L\+ON}!xmltok.\+c@{xmltok.\+c}}
+\subsubsection[{\texorpdfstring{B\+T\+\_\+\+C\+O\+L\+ON}{BT_COLON}}]{\setlength{\rightskip}{0pt plus 5cm}\#define B\+T\+\_\+\+C\+O\+L\+ON~{\bf B\+T\+\_\+\+N\+M\+S\+T\+RT}}\hypertarget{xmltok_8c_ac4d6338aebdfb87cb31abe1e438521b5}{}\label{xmltok_8c_ac4d6338aebdfb87cb31abe1e438521b5}
+\index{xmltok.\+c@{xmltok.\+c}!B\+T\+\_\+\+C\+O\+L\+ON@{B\+T\+\_\+\+C\+O\+L\+ON}}
+\index{B\+T\+\_\+\+C\+O\+L\+ON@{B\+T\+\_\+\+C\+O\+L\+ON}!xmltok.\+c@{xmltok.\+c}}
+\subsubsection[{\texorpdfstring{B\+T\+\_\+\+C\+O\+L\+ON}{BT_COLON}}]{\setlength{\rightskip}{0pt plus 5cm}\#define B\+T\+\_\+\+C\+O\+L\+ON~{\bf B\+T\+\_\+\+N\+M\+S\+T\+RT}}\hypertarget{xmltok_8c_ac4d6338aebdfb87cb31abe1e438521b5}{}\label{xmltok_8c_ac4d6338aebdfb87cb31abe1e438521b5}
+\index{xmltok.\+c@{xmltok.\+c}!B\+T\+\_\+\+C\+O\+L\+ON@{B\+T\+\_\+\+C\+O\+L\+ON}}
+\index{B\+T\+\_\+\+C\+O\+L\+ON@{B\+T\+\_\+\+C\+O\+L\+ON}!xmltok.\+c@{xmltok.\+c}}
+\subsubsection[{\texorpdfstring{B\+T\+\_\+\+C\+O\+L\+ON}{BT_COLON}}]{\setlength{\rightskip}{0pt plus 5cm}\#define B\+T\+\_\+\+C\+O\+L\+ON~{\bf B\+T\+\_\+\+N\+M\+S\+T\+RT}}\hypertarget{xmltok_8c_ac4d6338aebdfb87cb31abe1e438521b5}{}\label{xmltok_8c_ac4d6338aebdfb87cb31abe1e438521b5}
+\index{xmltok.\+c@{xmltok.\+c}!B\+T\+\_\+\+C\+O\+L\+ON@{B\+T\+\_\+\+C\+O\+L\+ON}}
+\index{B\+T\+\_\+\+C\+O\+L\+ON@{B\+T\+\_\+\+C\+O\+L\+ON}!xmltok.\+c@{xmltok.\+c}}
+\subsubsection[{\texorpdfstring{B\+T\+\_\+\+C\+O\+L\+ON}{BT_COLON}}]{\setlength{\rightskip}{0pt plus 5cm}\#define B\+T\+\_\+\+C\+O\+L\+ON~{\bf B\+T\+\_\+\+N\+M\+S\+T\+RT}}\hypertarget{xmltok_8c_ac4d6338aebdfb87cb31abe1e438521b5}{}\label{xmltok_8c_ac4d6338aebdfb87cb31abe1e438521b5}
+\index{xmltok.\+c@{xmltok.\+c}!B\+T\+\_\+\+C\+O\+L\+ON@{B\+T\+\_\+\+C\+O\+L\+ON}}
+\index{B\+T\+\_\+\+C\+O\+L\+ON@{B\+T\+\_\+\+C\+O\+L\+ON}!xmltok.\+c@{xmltok.\+c}}
+\subsubsection[{\texorpdfstring{B\+T\+\_\+\+C\+O\+L\+ON}{BT_COLON}}]{\setlength{\rightskip}{0pt plus 5cm}\#define B\+T\+\_\+\+C\+O\+L\+ON~{\bf B\+T\+\_\+\+N\+M\+S\+T\+RT}}\hypertarget{xmltok_8c_ac4d6338aebdfb87cb31abe1e438521b5}{}\label{xmltok_8c_ac4d6338aebdfb87cb31abe1e438521b5}
+\index{xmltok.\+c@{xmltok.\+c}!B\+T\+\_\+\+C\+O\+L\+ON@{B\+T\+\_\+\+C\+O\+L\+ON}}
+\index{B\+T\+\_\+\+C\+O\+L\+ON@{B\+T\+\_\+\+C\+O\+L\+ON}!xmltok.\+c@{xmltok.\+c}}
+\subsubsection[{\texorpdfstring{B\+T\+\_\+\+C\+O\+L\+ON}{BT_COLON}}]{\setlength{\rightskip}{0pt plus 5cm}\#define B\+T\+\_\+\+C\+O\+L\+ON~{\bf B\+T\+\_\+\+N\+M\+S\+T\+RT}}\hypertarget{xmltok_8c_ac4d6338aebdfb87cb31abe1e438521b5}{}\label{xmltok_8c_ac4d6338aebdfb87cb31abe1e438521b5}
+\index{xmltok.\+c@{xmltok.\+c}!B\+Y\+T\+E\+\_\+\+T\+O\+\_\+\+A\+S\+C\+II@{B\+Y\+T\+E\+\_\+\+T\+O\+\_\+\+A\+S\+C\+II}}
+\index{B\+Y\+T\+E\+\_\+\+T\+O\+\_\+\+A\+S\+C\+II@{B\+Y\+T\+E\+\_\+\+T\+O\+\_\+\+A\+S\+C\+II}!xmltok.\+c@{xmltok.\+c}}
+\subsubsection[{\texorpdfstring{B\+Y\+T\+E\+\_\+\+T\+O\+\_\+\+A\+S\+C\+II}{BYTE_TO_ASCII}}]{\setlength{\rightskip}{0pt plus 5cm}\#define B\+Y\+T\+E\+\_\+\+T\+O\+\_\+\+A\+S\+C\+II(
+\begin{DoxyParamCaption}
+\item[{}]{enc, }
+\item[{}]{{\bf p}}
+\end{DoxyParamCaption}
+)~($\ast$({\bf p}))}\hypertarget{xmltok_8c_aa1f9102f99142da53ab1c754472764ec}{}\label{xmltok_8c_aa1f9102f99142da53ab1c754472764ec}
+
+
+Definition at line 833 of file xmltok.\+c.
+
+\index{xmltok.\+c@{xmltok.\+c}!B\+Y\+T\+E\+\_\+\+T\+O\+\_\+\+A\+S\+C\+II@{B\+Y\+T\+E\+\_\+\+T\+O\+\_\+\+A\+S\+C\+II}}
+\index{B\+Y\+T\+E\+\_\+\+T\+O\+\_\+\+A\+S\+C\+II@{B\+Y\+T\+E\+\_\+\+T\+O\+\_\+\+A\+S\+C\+II}!xmltok.\+c@{xmltok.\+c}}
+\subsubsection[{\texorpdfstring{B\+Y\+T\+E\+\_\+\+T\+O\+\_\+\+A\+S\+C\+II}{BYTE_TO_ASCII}}]{\setlength{\rightskip}{0pt plus 5cm}\#define B\+Y\+T\+E\+\_\+\+T\+O\+\_\+\+A\+S\+C\+II(
+\begin{DoxyParamCaption}
+\item[{}]{enc, }
+\item[{}]{{\bf p}}
+\end{DoxyParamCaption}
+)~{\bf L\+I\+T\+T\+L\+E2\+\_\+\+B\+Y\+T\+E\+\_\+\+T\+O\+\_\+\+A\+S\+C\+II}(enc, {\bf p})}\hypertarget{xmltok_8c_aa1f9102f99142da53ab1c754472764ec}{}\label{xmltok_8c_aa1f9102f99142da53ab1c754472764ec}
+
+
+Definition at line 833 of file xmltok.\+c.
+
+\index{xmltok.\+c@{xmltok.\+c}!B\+Y\+T\+E\+\_\+\+T\+O\+\_\+\+A\+S\+C\+II@{B\+Y\+T\+E\+\_\+\+T\+O\+\_\+\+A\+S\+C\+II}}
+\index{B\+Y\+T\+E\+\_\+\+T\+O\+\_\+\+A\+S\+C\+II@{B\+Y\+T\+E\+\_\+\+T\+O\+\_\+\+A\+S\+C\+II}!xmltok.\+c@{xmltok.\+c}}
+\subsubsection[{\texorpdfstring{B\+Y\+T\+E\+\_\+\+T\+O\+\_\+\+A\+S\+C\+II}{BYTE_TO_ASCII}}]{\setlength{\rightskip}{0pt plus 5cm}\#define B\+Y\+T\+E\+\_\+\+T\+O\+\_\+\+A\+S\+C\+II(
+\begin{DoxyParamCaption}
+\item[{}]{enc, }
+\item[{}]{{\bf p}}
+\end{DoxyParamCaption}
+)~{\bf B\+I\+G2\+\_\+\+B\+Y\+T\+E\+\_\+\+T\+O\+\_\+\+A\+S\+C\+II}(enc, {\bf p})}\hypertarget{xmltok_8c_aa1f9102f99142da53ab1c754472764ec}{}\label{xmltok_8c_aa1f9102f99142da53ab1c754472764ec}
+
+
+Definition at line 833 of file xmltok.\+c.
+
+\index{xmltok.\+c@{xmltok.\+c}!B\+Y\+T\+E\+\_\+\+T\+Y\+PE@{B\+Y\+T\+E\+\_\+\+T\+Y\+PE}}
+\index{B\+Y\+T\+E\+\_\+\+T\+Y\+PE@{B\+Y\+T\+E\+\_\+\+T\+Y\+PE}!xmltok.\+c@{xmltok.\+c}}
+\subsubsection[{\texorpdfstring{B\+Y\+T\+E\+\_\+\+T\+Y\+PE}{BYTE_TYPE}}]{\setlength{\rightskip}{0pt plus 5cm}\#define B\+Y\+T\+E\+\_\+\+T\+Y\+PE(
+\begin{DoxyParamCaption}
+\item[{}]{enc, }
+\item[{}]{{\bf p}}
+\end{DoxyParamCaption}
+)~{\bf S\+B\+\_\+\+B\+Y\+T\+E\+\_\+\+T\+Y\+PE}(enc, {\bf p})}\hypertarget{xmltok_8c_a5858621ad07123547f8171d7f2a05554}{}\label{xmltok_8c_a5858621ad07123547f8171d7f2a05554}
+
+
+Definition at line 832 of file xmltok.\+c.
+
+\index{xmltok.\+c@{xmltok.\+c}!B\+Y\+T\+E\+\_\+\+T\+Y\+PE@{B\+Y\+T\+E\+\_\+\+T\+Y\+PE}}
+\index{B\+Y\+T\+E\+\_\+\+T\+Y\+PE@{B\+Y\+T\+E\+\_\+\+T\+Y\+PE}!xmltok.\+c@{xmltok.\+c}}
+\subsubsection[{\texorpdfstring{B\+Y\+T\+E\+\_\+\+T\+Y\+PE}{BYTE_TYPE}}]{\setlength{\rightskip}{0pt plus 5cm}\#define B\+Y\+T\+E\+\_\+\+T\+Y\+PE(
+\begin{DoxyParamCaption}
+\item[{}]{enc, }
+\item[{}]{{\bf p}}
+\end{DoxyParamCaption}
+)~{\bf L\+I\+T\+T\+L\+E2\+\_\+\+B\+Y\+T\+E\+\_\+\+T\+Y\+PE}(enc, {\bf p})}\hypertarget{xmltok_8c_a5858621ad07123547f8171d7f2a05554}{}\label{xmltok_8c_a5858621ad07123547f8171d7f2a05554}
+
+
+Definition at line 832 of file xmltok.\+c.
+
+\index{xmltok.\+c@{xmltok.\+c}!B\+Y\+T\+E\+\_\+\+T\+Y\+PE@{B\+Y\+T\+E\+\_\+\+T\+Y\+PE}}
+\index{B\+Y\+T\+E\+\_\+\+T\+Y\+PE@{B\+Y\+T\+E\+\_\+\+T\+Y\+PE}!xmltok.\+c@{xmltok.\+c}}
+\subsubsection[{\texorpdfstring{B\+Y\+T\+E\+\_\+\+T\+Y\+PE}{BYTE_TYPE}}]{\setlength{\rightskip}{0pt plus 5cm}\#define B\+Y\+T\+E\+\_\+\+T\+Y\+PE(
+\begin{DoxyParamCaption}
+\item[{}]{enc, }
+\item[{}]{{\bf p}}
+\end{DoxyParamCaption}
+)~{\bf B\+I\+G2\+\_\+\+B\+Y\+T\+E\+\_\+\+T\+Y\+PE}(enc, {\bf p})}\hypertarget{xmltok_8c_a5858621ad07123547f8171d7f2a05554}{}\label{xmltok_8c_a5858621ad07123547f8171d7f2a05554}
+
+
+Definition at line 832 of file xmltok.\+c.
+
+\index{xmltok.\+c@{xmltok.\+c}!C\+H\+A\+R\+\_\+\+M\+A\+T\+C\+H\+ES@{C\+H\+A\+R\+\_\+\+M\+A\+T\+C\+H\+ES}}
+\index{C\+H\+A\+R\+\_\+\+M\+A\+T\+C\+H\+ES@{C\+H\+A\+R\+\_\+\+M\+A\+T\+C\+H\+ES}!xmltok.\+c@{xmltok.\+c}}
+\subsubsection[{\texorpdfstring{C\+H\+A\+R\+\_\+\+M\+A\+T\+C\+H\+ES}{CHAR_MATCHES}}]{\setlength{\rightskip}{0pt plus 5cm}\#define C\+H\+A\+R\+\_\+\+M\+A\+T\+C\+H\+ES(
+\begin{DoxyParamCaption}
+\item[{}]{enc, }
+\item[{}]{{\bf p}, }
+\item[{}]{{\bf c}}
+\end{DoxyParamCaption}
+)~($\ast$({\bf p}) == {\bf c})}\hypertarget{xmltok_8c_a2fdbcc8ba570d5141133e05a04e44eb2}{}\label{xmltok_8c_a2fdbcc8ba570d5141133e05a04e44eb2}
+
+
+Definition at line 834 of file xmltok.\+c.
+
+\index{xmltok.\+c@{xmltok.\+c}!C\+H\+A\+R\+\_\+\+M\+A\+T\+C\+H\+ES@{C\+H\+A\+R\+\_\+\+M\+A\+T\+C\+H\+ES}}
+\index{C\+H\+A\+R\+\_\+\+M\+A\+T\+C\+H\+ES@{C\+H\+A\+R\+\_\+\+M\+A\+T\+C\+H\+ES}!xmltok.\+c@{xmltok.\+c}}
+\subsubsection[{\texorpdfstring{C\+H\+A\+R\+\_\+\+M\+A\+T\+C\+H\+ES}{CHAR_MATCHES}}]{\setlength{\rightskip}{0pt plus 5cm}\#define C\+H\+A\+R\+\_\+\+M\+A\+T\+C\+H\+ES(
+\begin{DoxyParamCaption}
+\item[{}]{enc, }
+\item[{}]{{\bf p}, }
+\item[{}]{{\bf c}}
+\end{DoxyParamCaption}
+)~{\bf L\+I\+T\+T\+L\+E2\+\_\+\+C\+H\+A\+R\+\_\+\+M\+A\+T\+C\+H\+ES}(enc, {\bf p}, {\bf c})}\hypertarget{xmltok_8c_a2fdbcc8ba570d5141133e05a04e44eb2}{}\label{xmltok_8c_a2fdbcc8ba570d5141133e05a04e44eb2}
+
+
+Definition at line 834 of file xmltok.\+c.
+
+\index{xmltok.\+c@{xmltok.\+c}!C\+H\+A\+R\+\_\+\+M\+A\+T\+C\+H\+ES@{C\+H\+A\+R\+\_\+\+M\+A\+T\+C\+H\+ES}}
+\index{C\+H\+A\+R\+\_\+\+M\+A\+T\+C\+H\+ES@{C\+H\+A\+R\+\_\+\+M\+A\+T\+C\+H\+ES}!xmltok.\+c@{xmltok.\+c}}
+\subsubsection[{\texorpdfstring{C\+H\+A\+R\+\_\+\+M\+A\+T\+C\+H\+ES}{CHAR_MATCHES}}]{\setlength{\rightskip}{0pt plus 5cm}\#define C\+H\+A\+R\+\_\+\+M\+A\+T\+C\+H\+ES(
+\begin{DoxyParamCaption}
+\item[{}]{enc, }
+\item[{}]{{\bf p}, }
+\item[{}]{{\bf c}}
+\end{DoxyParamCaption}
+)~{\bf B\+I\+G2\+\_\+\+C\+H\+A\+R\+\_\+\+M\+A\+T\+C\+H\+ES}(enc, {\bf p}, {\bf c})}\hypertarget{xmltok_8c_a2fdbcc8ba570d5141133e05a04e44eb2}{}\label{xmltok_8c_a2fdbcc8ba570d5141133e05a04e44eb2}
+
+
+Definition at line 834 of file xmltok.\+c.
+
+\index{xmltok.\+c@{xmltok.\+c}!D\+E\+F\+I\+N\+E\+\_\+\+U\+T\+F16\+\_\+\+T\+O\+\_\+\+U\+T\+F16@{D\+E\+F\+I\+N\+E\+\_\+\+U\+T\+F16\+\_\+\+T\+O\+\_\+\+U\+T\+F16}}
+\index{D\+E\+F\+I\+N\+E\+\_\+\+U\+T\+F16\+\_\+\+T\+O\+\_\+\+U\+T\+F16@{D\+E\+F\+I\+N\+E\+\_\+\+U\+T\+F16\+\_\+\+T\+O\+\_\+\+U\+T\+F16}!xmltok.\+c@{xmltok.\+c}}
+\subsubsection[{\texorpdfstring{D\+E\+F\+I\+N\+E\+\_\+\+U\+T\+F16\+\_\+\+T\+O\+\_\+\+U\+T\+F16}{DEFINE_UTF16_TO_UTF16}}]{\setlength{\rightskip}{0pt plus 5cm}\#define D\+E\+F\+I\+N\+E\+\_\+\+U\+T\+F16\+\_\+\+T\+O\+\_\+\+U\+T\+F16(
+\begin{DoxyParamCaption}
+\item[{}]{{\bf E}}
+\end{DoxyParamCaption}
+)}\hypertarget{xmltok_8c_ae7b4a58a0c7cc0d19bad2984d7572870}{}\label{xmltok_8c_ae7b4a58a0c7cc0d19bad2984d7572870}
+{\bfseries Value\+:}
+\begin{DoxyCode}
+\textcolor{keyword}{static} \textcolor{keywordtype}{void}  \hyperlink{twolame_2libtwolame_2common_8h_a07484107e6d9fdf38b53edf631d6511d}{PTRCALL \(\backslash\)}
+\hyperlink{twolame_2libtwolame_2common_8h_a07484107e6d9fdf38b53edf631d6511d}{E} ## toUtf16(\textcolor{keyword}{const} \hyperlink{structencoding}{ENCODING} *enc, \(\backslash\)
+             \textcolor{keyword}{const} \textcolor{keywordtype}{char} **fromP, \textcolor{keyword}{const} \textcolor{keywordtype}{char} *fromLim, \(\backslash\)
+             \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{short} **toP, \textcolor{keyword}{const} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{short} *toLim) \(\backslash\)
+\{ \(\backslash\)
+  \textcolor{comment}{/* Avoid copying first half only of surrogate */} \hyperlink{winfun_8c_ab24f32995c1d94525943b4568cce20cb}{\(\backslash\)}
+\hyperlink{winfun_8c_ab24f32995c1d94525943b4568cce20cb}{  if} (fromLim - *fromP > ((toLim - *toP) << 1) \(\backslash\)
+      && (\hyperlink{xmltok_8c_a022e25267c1def84445b583203bc5c3d}{GET\_HI}(fromLim - 2) & 0xF8) == 0xD8) \(\backslash\)
+    fromLim -= 2; \hyperlink{hashrout_8h_af69473f95324d0c0f91fdfb1d1a00360}{\(\backslash\)}
+\hyperlink{hashrout_8h_af69473f95324d0c0f91fdfb1d1a00360}{  for} (; *fromP != fromLim && *toP != toLim; *fromP += 2) \(\backslash\)
+    *(*toP)++ = (\hyperlink{xmltok_8c_a022e25267c1def84445b583203bc5c3d}{GET\_HI}(*fromP) << 8) | \hyperlink{xmltok_8c_a81faca3f8c491f3d0815438b8b5e7f85}{GET\_LO}(*fromP); \(\backslash\)
+\}
+\end{DoxyCode}
+
+
+Definition at line 601 of file xmltok.\+c.
+
+\index{xmltok.\+c@{xmltok.\+c}!D\+E\+F\+I\+N\+E\+\_\+\+U\+T\+F16\+\_\+\+T\+O\+\_\+\+U\+T\+F8@{D\+E\+F\+I\+N\+E\+\_\+\+U\+T\+F16\+\_\+\+T\+O\+\_\+\+U\+T\+F8}}
+\index{D\+E\+F\+I\+N\+E\+\_\+\+U\+T\+F16\+\_\+\+T\+O\+\_\+\+U\+T\+F8@{D\+E\+F\+I\+N\+E\+\_\+\+U\+T\+F16\+\_\+\+T\+O\+\_\+\+U\+T\+F8}!xmltok.\+c@{xmltok.\+c}}
+\subsubsection[{\texorpdfstring{D\+E\+F\+I\+N\+E\+\_\+\+U\+T\+F16\+\_\+\+T\+O\+\_\+\+U\+T\+F8}{DEFINE_UTF16_TO_UTF8}}]{\setlength{\rightskip}{0pt plus 5cm}\#define D\+E\+F\+I\+N\+E\+\_\+\+U\+T\+F16\+\_\+\+T\+O\+\_\+\+U\+T\+F8(
+\begin{DoxyParamCaption}
+\item[{}]{{\bf E}}
+\end{DoxyParamCaption}
+)}\hypertarget{xmltok_8c_a31e943f699d48878210dba7bda3ac319}{}\label{xmltok_8c_a31e943f699d48878210dba7bda3ac319}
+
+
+Definition at line 538 of file xmltok.\+c.
+
+\index{xmltok.\+c@{xmltok.\+c}!G\+E\+T\+\_\+\+HI@{G\+E\+T\+\_\+\+HI}}
+\index{G\+E\+T\+\_\+\+HI@{G\+E\+T\+\_\+\+HI}!xmltok.\+c@{xmltok.\+c}}
+\subsubsection[{\texorpdfstring{G\+E\+T\+\_\+\+HI}{GET_HI}}]{\setlength{\rightskip}{0pt plus 5cm}\#define G\+E\+T\+\_\+\+HI(
+\begin{DoxyParamCaption}
+\item[{}]{ptr}
+\end{DoxyParamCaption}
+)~((unsigned char)(ptr)\mbox{[}1\mbox{]})}\hypertarget{xmltok_8c_a022e25267c1def84445b583203bc5c3d}{}\label{xmltok_8c_a022e25267c1def84445b583203bc5c3d}
+
+
+Definition at line 630 of file xmltok.\+c.
+
+\index{xmltok.\+c@{xmltok.\+c}!G\+E\+T\+\_\+\+HI@{G\+E\+T\+\_\+\+HI}}
+\index{G\+E\+T\+\_\+\+HI@{G\+E\+T\+\_\+\+HI}!xmltok.\+c@{xmltok.\+c}}
+\subsubsection[{\texorpdfstring{G\+E\+T\+\_\+\+HI}{GET_HI}}]{\setlength{\rightskip}{0pt plus 5cm}\#define G\+E\+T\+\_\+\+HI(
+\begin{DoxyParamCaption}
+\item[{}]{ptr}
+\end{DoxyParamCaption}
+)~((unsigned char)(ptr)\mbox{[}0\mbox{]})}\hypertarget{xmltok_8c_a022e25267c1def84445b583203bc5c3d}{}\label{xmltok_8c_a022e25267c1def84445b583203bc5c3d}
+
+
+Definition at line 630 of file xmltok.\+c.
+
+\index{xmltok.\+c@{xmltok.\+c}!G\+E\+T\+\_\+\+LO@{G\+E\+T\+\_\+\+LO}}
+\index{G\+E\+T\+\_\+\+LO@{G\+E\+T\+\_\+\+LO}!xmltok.\+c@{xmltok.\+c}}
+\subsubsection[{\texorpdfstring{G\+E\+T\+\_\+\+LO}{GET_LO}}]{\setlength{\rightskip}{0pt plus 5cm}\#define G\+E\+T\+\_\+\+LO(
+\begin{DoxyParamCaption}
+\item[{}]{ptr}
+\end{DoxyParamCaption}
+)~((unsigned char)(ptr)\mbox{[}0\mbox{]})}\hypertarget{xmltok_8c_a81faca3f8c491f3d0815438b8b5e7f85}{}\label{xmltok_8c_a81faca3f8c491f3d0815438b8b5e7f85}
+
+
+Definition at line 629 of file xmltok.\+c.
+
+\index{xmltok.\+c@{xmltok.\+c}!G\+E\+T\+\_\+\+LO@{G\+E\+T\+\_\+\+LO}}
+\index{G\+E\+T\+\_\+\+LO@{G\+E\+T\+\_\+\+LO}!xmltok.\+c@{xmltok.\+c}}
+\subsubsection[{\texorpdfstring{G\+E\+T\+\_\+\+LO}{GET_LO}}]{\setlength{\rightskip}{0pt plus 5cm}\#define G\+E\+T\+\_\+\+LO(
+\begin{DoxyParamCaption}
+\item[{}]{ptr}
+\end{DoxyParamCaption}
+)~((unsigned char)(ptr)\mbox{[}1\mbox{]})}\hypertarget{xmltok_8c_a81faca3f8c491f3d0815438b8b5e7f85}{}\label{xmltok_8c_a81faca3f8c491f3d0815438b8b5e7f85}
+
+
+Definition at line 629 of file xmltok.\+c.
+
+\index{xmltok.\+c@{xmltok.\+c}!I\+G\+N\+O\+R\+E\+\_\+\+S\+E\+C\+T\+I\+O\+N\+\_\+\+T\+O\+K\+\_\+\+V\+T\+A\+B\+LE@{I\+G\+N\+O\+R\+E\+\_\+\+S\+E\+C\+T\+I\+O\+N\+\_\+\+T\+O\+K\+\_\+\+V\+T\+A\+B\+LE}}
+\index{I\+G\+N\+O\+R\+E\+\_\+\+S\+E\+C\+T\+I\+O\+N\+\_\+\+T\+O\+K\+\_\+\+V\+T\+A\+B\+LE@{I\+G\+N\+O\+R\+E\+\_\+\+S\+E\+C\+T\+I\+O\+N\+\_\+\+T\+O\+K\+\_\+\+V\+T\+A\+B\+LE}!xmltok.\+c@{xmltok.\+c}}
+\subsubsection[{\texorpdfstring{I\+G\+N\+O\+R\+E\+\_\+\+S\+E\+C\+T\+I\+O\+N\+\_\+\+T\+O\+K\+\_\+\+V\+T\+A\+B\+LE}{IGNORE_SECTION_TOK_VTABLE}}]{\setlength{\rightskip}{0pt plus 5cm}\#define I\+G\+N\+O\+R\+E\+\_\+\+S\+E\+C\+T\+I\+O\+N\+\_\+\+T\+O\+K\+\_\+\+V\+T\+A\+B\+LE~/$\ast$ as nothing $\ast$/}\hypertarget{xmltok_8c_a16f3efc6d3a2792acf7e4c917d260adc}{}\label{xmltok_8c_a16f3efc6d3a2792acf7e4c917d260adc}
+
+
+Definition at line 29 of file xmltok.\+c.
+
+\index{xmltok.\+c@{xmltok.\+c}!I\+N\+I\+T\+\_\+\+E\+N\+C\+\_\+\+I\+N\+D\+EX@{I\+N\+I\+T\+\_\+\+E\+N\+C\+\_\+\+I\+N\+D\+EX}}
+\index{I\+N\+I\+T\+\_\+\+E\+N\+C\+\_\+\+I\+N\+D\+EX@{I\+N\+I\+T\+\_\+\+E\+N\+C\+\_\+\+I\+N\+D\+EX}!xmltok.\+c@{xmltok.\+c}}
+\subsubsection[{\texorpdfstring{I\+N\+I\+T\+\_\+\+E\+N\+C\+\_\+\+I\+N\+D\+EX}{INIT_ENC_INDEX}}]{\setlength{\rightskip}{0pt plus 5cm}\#define I\+N\+I\+T\+\_\+\+E\+N\+C\+\_\+\+I\+N\+D\+EX(
+\begin{DoxyParamCaption}
+\item[{}]{enc}
+\end{DoxyParamCaption}
+)~(({\bf int})(enc)-\/$>$init\+Enc.\+is\+Utf16)}\hypertarget{xmltok_8c_a68f7c1c3da15a1bb3844eb28bc572907}{}\label{xmltok_8c_a68f7c1c3da15a1bb3844eb28bc572907}
+
+
+Definition at line 1485 of file xmltok.\+c.
+
+\index{xmltok.\+c@{xmltok.\+c}!I\+S\+\_\+\+I\+N\+V\+A\+L\+I\+D\+\_\+\+C\+H\+AR@{I\+S\+\_\+\+I\+N\+V\+A\+L\+I\+D\+\_\+\+C\+H\+AR}}
+\index{I\+S\+\_\+\+I\+N\+V\+A\+L\+I\+D\+\_\+\+C\+H\+AR@{I\+S\+\_\+\+I\+N\+V\+A\+L\+I\+D\+\_\+\+C\+H\+AR}!xmltok.\+c@{xmltok.\+c}}
+\subsubsection[{\texorpdfstring{I\+S\+\_\+\+I\+N\+V\+A\+L\+I\+D\+\_\+\+C\+H\+AR}{IS_INVALID_CHAR}}]{\setlength{\rightskip}{0pt plus 5cm}\#define I\+S\+\_\+\+I\+N\+V\+A\+L\+I\+D\+\_\+\+C\+H\+AR(
+\begin{DoxyParamCaption}
+\item[{}]{enc, }
+\item[{}]{{\bf p}, }
+\item[{}]{n}
+\end{DoxyParamCaption}
+)~({\bf A\+S\+\_\+\+N\+O\+R\+M\+A\+L\+\_\+\+E\+N\+C\+O\+D\+I\+NG}(enc)-\/$>$is\+Invalid \#\# n(enc, {\bf p}))}\hypertarget{xmltok_8c_af4a439ecc8c32e3d3ca79edd8d19f35e}{}\label{xmltok_8c_af4a439ecc8c32e3d3ca79edd8d19f35e}
+
+
+Definition at line 273 of file xmltok.\+c.
+
+\index{xmltok.\+c@{xmltok.\+c}!I\+S\+\_\+\+N\+A\+M\+E\+\_\+\+C\+H\+AR@{I\+S\+\_\+\+N\+A\+M\+E\+\_\+\+C\+H\+AR}}
+\index{I\+S\+\_\+\+N\+A\+M\+E\+\_\+\+C\+H\+AR@{I\+S\+\_\+\+N\+A\+M\+E\+\_\+\+C\+H\+AR}!xmltok.\+c@{xmltok.\+c}}
+\subsubsection[{\texorpdfstring{I\+S\+\_\+\+N\+A\+M\+E\+\_\+\+C\+H\+AR}{IS_NAME_CHAR}}]{\setlength{\rightskip}{0pt plus 5cm}\#define I\+S\+\_\+\+N\+A\+M\+E\+\_\+\+C\+H\+AR(
+\begin{DoxyParamCaption}
+\item[{}]{enc, }
+\item[{}]{{\bf p}, }
+\item[{}]{n}
+\end{DoxyParamCaption}
+)~({\bf A\+S\+\_\+\+N\+O\+R\+M\+A\+L\+\_\+\+E\+N\+C\+O\+D\+I\+NG}(enc)-\/$>$is\+Name \#\# n(enc, {\bf p}))}\hypertarget{xmltok_8c_a812d39ddd8702515ffb6b20ca8a7af2e}{}\label{xmltok_8c_a812d39ddd8702515ffb6b20ca8a7af2e}
+
+
+Definition at line 835 of file xmltok.\+c.
+
+\index{xmltok.\+c@{xmltok.\+c}!I\+S\+\_\+\+N\+A\+M\+E\+\_\+\+C\+H\+AR@{I\+S\+\_\+\+N\+A\+M\+E\+\_\+\+C\+H\+AR}}
+\index{I\+S\+\_\+\+N\+A\+M\+E\+\_\+\+C\+H\+AR@{I\+S\+\_\+\+N\+A\+M\+E\+\_\+\+C\+H\+AR}!xmltok.\+c@{xmltok.\+c}}
+\subsubsection[{\texorpdfstring{I\+S\+\_\+\+N\+A\+M\+E\+\_\+\+C\+H\+AR}{IS_NAME_CHAR}}]{\setlength{\rightskip}{0pt plus 5cm}\#define I\+S\+\_\+\+N\+A\+M\+E\+\_\+\+C\+H\+AR(
+\begin{DoxyParamCaption}
+\item[{}]{enc, }
+\item[{}]{{\bf p}, }
+\item[{}]{n}
+\end{DoxyParamCaption}
+)~0}\hypertarget{xmltok_8c_a812d39ddd8702515ffb6b20ca8a7af2e}{}\label{xmltok_8c_a812d39ddd8702515ffb6b20ca8a7af2e}
+
+
+Definition at line 835 of file xmltok.\+c.
+
+\index{xmltok.\+c@{xmltok.\+c}!I\+S\+\_\+\+N\+A\+M\+E\+\_\+\+C\+H\+AR@{I\+S\+\_\+\+N\+A\+M\+E\+\_\+\+C\+H\+AR}}
+\index{I\+S\+\_\+\+N\+A\+M\+E\+\_\+\+C\+H\+AR@{I\+S\+\_\+\+N\+A\+M\+E\+\_\+\+C\+H\+AR}!xmltok.\+c@{xmltok.\+c}}
+\subsubsection[{\texorpdfstring{I\+S\+\_\+\+N\+A\+M\+E\+\_\+\+C\+H\+AR}{IS_NAME_CHAR}}]{\setlength{\rightskip}{0pt plus 5cm}\#define I\+S\+\_\+\+N\+A\+M\+E\+\_\+\+C\+H\+AR(
+\begin{DoxyParamCaption}
+\item[{}]{enc, }
+\item[{}]{{\bf p}, }
+\item[{}]{n}
+\end{DoxyParamCaption}
+)~0}\hypertarget{xmltok_8c_a812d39ddd8702515ffb6b20ca8a7af2e}{}\label{xmltok_8c_a812d39ddd8702515ffb6b20ca8a7af2e}
+
+
+Definition at line 835 of file xmltok.\+c.
+
+\index{xmltok.\+c@{xmltok.\+c}!I\+S\+\_\+\+N\+A\+M\+E\+\_\+\+C\+H\+A\+R\+\_\+\+M\+I\+N\+B\+PC@{I\+S\+\_\+\+N\+A\+M\+E\+\_\+\+C\+H\+A\+R\+\_\+\+M\+I\+N\+B\+PC}}
+\index{I\+S\+\_\+\+N\+A\+M\+E\+\_\+\+C\+H\+A\+R\+\_\+\+M\+I\+N\+B\+PC@{I\+S\+\_\+\+N\+A\+M\+E\+\_\+\+C\+H\+A\+R\+\_\+\+M\+I\+N\+B\+PC}!xmltok.\+c@{xmltok.\+c}}
+\subsubsection[{\texorpdfstring{I\+S\+\_\+\+N\+A\+M\+E\+\_\+\+C\+H\+A\+R\+\_\+\+M\+I\+N\+B\+PC}{IS_NAME_CHAR_MINBPC}}]{\setlength{\rightskip}{0pt plus 5cm}\#define I\+S\+\_\+\+N\+A\+M\+E\+\_\+\+C\+H\+A\+R\+\_\+\+M\+I\+N\+B\+PC(
+\begin{DoxyParamCaption}
+\item[{}]{enc, }
+\item[{}]{{\bf p}}
+\end{DoxyParamCaption}
+)~(0)}\hypertarget{xmltok_8c_a5836087b0358204c2cffdb6fc10d93d3}{}\label{xmltok_8c_a5836087b0358204c2cffdb6fc10d93d3}
+
+
+Definition at line 836 of file xmltok.\+c.
+
+\index{xmltok.\+c@{xmltok.\+c}!I\+S\+\_\+\+N\+A\+M\+E\+\_\+\+C\+H\+A\+R\+\_\+\+M\+I\+N\+B\+PC@{I\+S\+\_\+\+N\+A\+M\+E\+\_\+\+C\+H\+A\+R\+\_\+\+M\+I\+N\+B\+PC}}
+\index{I\+S\+\_\+\+N\+A\+M\+E\+\_\+\+C\+H\+A\+R\+\_\+\+M\+I\+N\+B\+PC@{I\+S\+\_\+\+N\+A\+M\+E\+\_\+\+C\+H\+A\+R\+\_\+\+M\+I\+N\+B\+PC}!xmltok.\+c@{xmltok.\+c}}
+\subsubsection[{\texorpdfstring{I\+S\+\_\+\+N\+A\+M\+E\+\_\+\+C\+H\+A\+R\+\_\+\+M\+I\+N\+B\+PC}{IS_NAME_CHAR_MINBPC}}]{\setlength{\rightskip}{0pt plus 5cm}\#define I\+S\+\_\+\+N\+A\+M\+E\+\_\+\+C\+H\+A\+R\+\_\+\+M\+I\+N\+B\+PC(
+\begin{DoxyParamCaption}
+\item[{}]{enc, }
+\item[{}]{{\bf p}}
+\end{DoxyParamCaption}
+)~{\bf L\+I\+T\+T\+L\+E2\+\_\+\+I\+S\+\_\+\+N\+A\+M\+E\+\_\+\+C\+H\+A\+R\+\_\+\+M\+I\+N\+B\+PC}(enc, {\bf p})}\hypertarget{xmltok_8c_a5836087b0358204c2cffdb6fc10d93d3}{}\label{xmltok_8c_a5836087b0358204c2cffdb6fc10d93d3}
+
+
+Definition at line 836 of file xmltok.\+c.
+
+\index{xmltok.\+c@{xmltok.\+c}!I\+S\+\_\+\+N\+A\+M\+E\+\_\+\+C\+H\+A\+R\+\_\+\+M\+I\+N\+B\+PC@{I\+S\+\_\+\+N\+A\+M\+E\+\_\+\+C\+H\+A\+R\+\_\+\+M\+I\+N\+B\+PC}}
+\index{I\+S\+\_\+\+N\+A\+M\+E\+\_\+\+C\+H\+A\+R\+\_\+\+M\+I\+N\+B\+PC@{I\+S\+\_\+\+N\+A\+M\+E\+\_\+\+C\+H\+A\+R\+\_\+\+M\+I\+N\+B\+PC}!xmltok.\+c@{xmltok.\+c}}
+\subsubsection[{\texorpdfstring{I\+S\+\_\+\+N\+A\+M\+E\+\_\+\+C\+H\+A\+R\+\_\+\+M\+I\+N\+B\+PC}{IS_NAME_CHAR_MINBPC}}]{\setlength{\rightskip}{0pt plus 5cm}\#define I\+S\+\_\+\+N\+A\+M\+E\+\_\+\+C\+H\+A\+R\+\_\+\+M\+I\+N\+B\+PC(
+\begin{DoxyParamCaption}
+\item[{}]{enc, }
+\item[{}]{{\bf p}}
+\end{DoxyParamCaption}
+)~{\bf B\+I\+G2\+\_\+\+I\+S\+\_\+\+N\+A\+M\+E\+\_\+\+C\+H\+A\+R\+\_\+\+M\+I\+N\+B\+PC}(enc, {\bf p})}\hypertarget{xmltok_8c_a5836087b0358204c2cffdb6fc10d93d3}{}\label{xmltok_8c_a5836087b0358204c2cffdb6fc10d93d3}
+
+
+Definition at line 836 of file xmltok.\+c.
+
+\index{xmltok.\+c@{xmltok.\+c}!I\+S\+\_\+\+N\+M\+S\+T\+R\+T\+\_\+\+C\+H\+AR@{I\+S\+\_\+\+N\+M\+S\+T\+R\+T\+\_\+\+C\+H\+AR}}
+\index{I\+S\+\_\+\+N\+M\+S\+T\+R\+T\+\_\+\+C\+H\+AR@{I\+S\+\_\+\+N\+M\+S\+T\+R\+T\+\_\+\+C\+H\+AR}!xmltok.\+c@{xmltok.\+c}}
+\subsubsection[{\texorpdfstring{I\+S\+\_\+\+N\+M\+S\+T\+R\+T\+\_\+\+C\+H\+AR}{IS_NMSTRT_CHAR}}]{\setlength{\rightskip}{0pt plus 5cm}\#define I\+S\+\_\+\+N\+M\+S\+T\+R\+T\+\_\+\+C\+H\+AR(
+\begin{DoxyParamCaption}
+\item[{}]{enc, }
+\item[{}]{{\bf p}, }
+\item[{}]{n}
+\end{DoxyParamCaption}
+)~({\bf A\+S\+\_\+\+N\+O\+R\+M\+A\+L\+\_\+\+E\+N\+C\+O\+D\+I\+NG}(enc)-\/$>$is\+Nmstrt \#\# n(enc, {\bf p}))}\hypertarget{xmltok_8c_a045ba451fab004ca1e63fbcac6933359}{}\label{xmltok_8c_a045ba451fab004ca1e63fbcac6933359}
+
+
+Definition at line 837 of file xmltok.\+c.
+
+\index{xmltok.\+c@{xmltok.\+c}!I\+S\+\_\+\+N\+M\+S\+T\+R\+T\+\_\+\+C\+H\+AR@{I\+S\+\_\+\+N\+M\+S\+T\+R\+T\+\_\+\+C\+H\+AR}}
+\index{I\+S\+\_\+\+N\+M\+S\+T\+R\+T\+\_\+\+C\+H\+AR@{I\+S\+\_\+\+N\+M\+S\+T\+R\+T\+\_\+\+C\+H\+AR}!xmltok.\+c@{xmltok.\+c}}
+\subsubsection[{\texorpdfstring{I\+S\+\_\+\+N\+M\+S\+T\+R\+T\+\_\+\+C\+H\+AR}{IS_NMSTRT_CHAR}}]{\setlength{\rightskip}{0pt plus 5cm}\#define I\+S\+\_\+\+N\+M\+S\+T\+R\+T\+\_\+\+C\+H\+AR(
+\begin{DoxyParamCaption}
+\item[{}]{enc, }
+\item[{}]{{\bf p}, }
+\item[{}]{n}
+\end{DoxyParamCaption}
+)~(0)}\hypertarget{xmltok_8c_a045ba451fab004ca1e63fbcac6933359}{}\label{xmltok_8c_a045ba451fab004ca1e63fbcac6933359}
+
+
+Definition at line 837 of file xmltok.\+c.
+
+\index{xmltok.\+c@{xmltok.\+c}!I\+S\+\_\+\+N\+M\+S\+T\+R\+T\+\_\+\+C\+H\+AR@{I\+S\+\_\+\+N\+M\+S\+T\+R\+T\+\_\+\+C\+H\+AR}}
+\index{I\+S\+\_\+\+N\+M\+S\+T\+R\+T\+\_\+\+C\+H\+AR@{I\+S\+\_\+\+N\+M\+S\+T\+R\+T\+\_\+\+C\+H\+AR}!xmltok.\+c@{xmltok.\+c}}
+\subsubsection[{\texorpdfstring{I\+S\+\_\+\+N\+M\+S\+T\+R\+T\+\_\+\+C\+H\+AR}{IS_NMSTRT_CHAR}}]{\setlength{\rightskip}{0pt plus 5cm}\#define I\+S\+\_\+\+N\+M\+S\+T\+R\+T\+\_\+\+C\+H\+AR(
+\begin{DoxyParamCaption}
+\item[{}]{enc, }
+\item[{}]{{\bf p}, }
+\item[{}]{n}
+\end{DoxyParamCaption}
+)~(0)}\hypertarget{xmltok_8c_a045ba451fab004ca1e63fbcac6933359}{}\label{xmltok_8c_a045ba451fab004ca1e63fbcac6933359}
+
+
+Definition at line 837 of file xmltok.\+c.
+
+\index{xmltok.\+c@{xmltok.\+c}!I\+S\+\_\+\+N\+M\+S\+T\+R\+T\+\_\+\+C\+H\+A\+R\+\_\+\+M\+I\+N\+B\+PC@{I\+S\+\_\+\+N\+M\+S\+T\+R\+T\+\_\+\+C\+H\+A\+R\+\_\+\+M\+I\+N\+B\+PC}}
+\index{I\+S\+\_\+\+N\+M\+S\+T\+R\+T\+\_\+\+C\+H\+A\+R\+\_\+\+M\+I\+N\+B\+PC@{I\+S\+\_\+\+N\+M\+S\+T\+R\+T\+\_\+\+C\+H\+A\+R\+\_\+\+M\+I\+N\+B\+PC}!xmltok.\+c@{xmltok.\+c}}
+\subsubsection[{\texorpdfstring{I\+S\+\_\+\+N\+M\+S\+T\+R\+T\+\_\+\+C\+H\+A\+R\+\_\+\+M\+I\+N\+B\+PC}{IS_NMSTRT_CHAR_MINBPC}}]{\setlength{\rightskip}{0pt plus 5cm}\#define I\+S\+\_\+\+N\+M\+S\+T\+R\+T\+\_\+\+C\+H\+A\+R\+\_\+\+M\+I\+N\+B\+PC(
+\begin{DoxyParamCaption}
+\item[{}]{enc, }
+\item[{}]{{\bf p}}
+\end{DoxyParamCaption}
+)~(0)}\hypertarget{xmltok_8c_aefdcf2e917e29be31114f8ed8a020942}{}\label{xmltok_8c_aefdcf2e917e29be31114f8ed8a020942}
+
+
+Definition at line 838 of file xmltok.\+c.
+
+\index{xmltok.\+c@{xmltok.\+c}!I\+S\+\_\+\+N\+M\+S\+T\+R\+T\+\_\+\+C\+H\+A\+R\+\_\+\+M\+I\+N\+B\+PC@{I\+S\+\_\+\+N\+M\+S\+T\+R\+T\+\_\+\+C\+H\+A\+R\+\_\+\+M\+I\+N\+B\+PC}}
+\index{I\+S\+\_\+\+N\+M\+S\+T\+R\+T\+\_\+\+C\+H\+A\+R\+\_\+\+M\+I\+N\+B\+PC@{I\+S\+\_\+\+N\+M\+S\+T\+R\+T\+\_\+\+C\+H\+A\+R\+\_\+\+M\+I\+N\+B\+PC}!xmltok.\+c@{xmltok.\+c}}
+\subsubsection[{\texorpdfstring{I\+S\+\_\+\+N\+M\+S\+T\+R\+T\+\_\+\+C\+H\+A\+R\+\_\+\+M\+I\+N\+B\+PC}{IS_NMSTRT_CHAR_MINBPC}}]{\setlength{\rightskip}{0pt plus 5cm}\#define I\+S\+\_\+\+N\+M\+S\+T\+R\+T\+\_\+\+C\+H\+A\+R\+\_\+\+M\+I\+N\+B\+PC(
+\begin{DoxyParamCaption}
+\item[{}]{enc, }
+\item[{}]{{\bf p}}
+\end{DoxyParamCaption}
+)~{\bf L\+I\+T\+T\+L\+E2\+\_\+\+I\+S\+\_\+\+N\+M\+S\+T\+R\+T\+\_\+\+C\+H\+A\+R\+\_\+\+M\+I\+N\+B\+PC}(enc, {\bf p})}\hypertarget{xmltok_8c_aefdcf2e917e29be31114f8ed8a020942}{}\label{xmltok_8c_aefdcf2e917e29be31114f8ed8a020942}
+
+
+Definition at line 838 of file xmltok.\+c.
+
+\index{xmltok.\+c@{xmltok.\+c}!I\+S\+\_\+\+N\+M\+S\+T\+R\+T\+\_\+\+C\+H\+A\+R\+\_\+\+M\+I\+N\+B\+PC@{I\+S\+\_\+\+N\+M\+S\+T\+R\+T\+\_\+\+C\+H\+A\+R\+\_\+\+M\+I\+N\+B\+PC}}
+\index{I\+S\+\_\+\+N\+M\+S\+T\+R\+T\+\_\+\+C\+H\+A\+R\+\_\+\+M\+I\+N\+B\+PC@{I\+S\+\_\+\+N\+M\+S\+T\+R\+T\+\_\+\+C\+H\+A\+R\+\_\+\+M\+I\+N\+B\+PC}!xmltok.\+c@{xmltok.\+c}}
+\subsubsection[{\texorpdfstring{I\+S\+\_\+\+N\+M\+S\+T\+R\+T\+\_\+\+C\+H\+A\+R\+\_\+\+M\+I\+N\+B\+PC}{IS_NMSTRT_CHAR_MINBPC}}]{\setlength{\rightskip}{0pt plus 5cm}\#define I\+S\+\_\+\+N\+M\+S\+T\+R\+T\+\_\+\+C\+H\+A\+R\+\_\+\+M\+I\+N\+B\+PC(
+\begin{DoxyParamCaption}
+\item[{}]{enc, }
+\item[{}]{{\bf p}}
+\end{DoxyParamCaption}
+)~{\bf B\+I\+G2\+\_\+\+I\+S\+\_\+\+N\+M\+S\+T\+R\+T\+\_\+\+C\+H\+A\+R\+\_\+\+M\+I\+N\+B\+PC}(enc, {\bf p})}\hypertarget{xmltok_8c_aefdcf2e917e29be31114f8ed8a020942}{}\label{xmltok_8c_aefdcf2e917e29be31114f8ed8a020942}
+
+
+Definition at line 838 of file xmltok.\+c.
+
+\index{xmltok.\+c@{xmltok.\+c}!L\+I\+T\+T\+L\+E2\+\_\+\+B\+Y\+T\+E\+\_\+\+T\+O\+\_\+\+A\+S\+C\+II@{L\+I\+T\+T\+L\+E2\+\_\+\+B\+Y\+T\+E\+\_\+\+T\+O\+\_\+\+A\+S\+C\+II}}
+\index{L\+I\+T\+T\+L\+E2\+\_\+\+B\+Y\+T\+E\+\_\+\+T\+O\+\_\+\+A\+S\+C\+II@{L\+I\+T\+T\+L\+E2\+\_\+\+B\+Y\+T\+E\+\_\+\+T\+O\+\_\+\+A\+S\+C\+II}!xmltok.\+c@{xmltok.\+c}}
+\subsubsection[{\texorpdfstring{L\+I\+T\+T\+L\+E2\+\_\+\+B\+Y\+T\+E\+\_\+\+T\+O\+\_\+\+A\+S\+C\+II}{LITTLE2_BYTE_TO_ASCII}}]{\setlength{\rightskip}{0pt plus 5cm}\#define L\+I\+T\+T\+L\+E2\+\_\+\+B\+Y\+T\+E\+\_\+\+T\+O\+\_\+\+A\+S\+C\+II(
+\begin{DoxyParamCaption}
+\item[{}]{enc, }
+\item[{}]{{\bf p}}
+\end{DoxyParamCaption}
+)~(({\bf p})\mbox{[}1\mbox{]} == 0 ? ({\bf p})\mbox{[}0\mbox{]} \+: -\/1)}\hypertarget{xmltok_8c_ae2f95554982b44b53fc1048bfbb66ba5}{}\label{xmltok_8c_ae2f95554982b44b53fc1048bfbb66ba5}
+
+
+Definition at line 643 of file xmltok.\+c.
+
+\index{xmltok.\+c@{xmltok.\+c}!L\+I\+T\+T\+L\+E2\+\_\+\+B\+Y\+T\+E\+\_\+\+T\+Y\+PE@{L\+I\+T\+T\+L\+E2\+\_\+\+B\+Y\+T\+E\+\_\+\+T\+Y\+PE}}
+\index{L\+I\+T\+T\+L\+E2\+\_\+\+B\+Y\+T\+E\+\_\+\+T\+Y\+PE@{L\+I\+T\+T\+L\+E2\+\_\+\+B\+Y\+T\+E\+\_\+\+T\+Y\+PE}!xmltok.\+c@{xmltok.\+c}}
+\subsubsection[{\texorpdfstring{L\+I\+T\+T\+L\+E2\+\_\+\+B\+Y\+T\+E\+\_\+\+T\+Y\+PE}{LITTLE2_BYTE_TYPE}}]{\setlength{\rightskip}{0pt plus 5cm}\#define L\+I\+T\+T\+L\+E2\+\_\+\+B\+Y\+T\+E\+\_\+\+T\+Y\+PE(
+\begin{DoxyParamCaption}
+\item[{}]{enc, }
+\item[{}]{{\bf p}}
+\end{DoxyParamCaption}
+)}\hypertarget{xmltok_8c_ac30c78ed4701a81af657b02dd4cf91b4}{}\label{xmltok_8c_ac30c78ed4701a81af657b02dd4cf91b4}
+{\bfseries Value\+:}
+\begin{DoxyCode}
+((\hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p})[1] == 0 \(\backslash\)
+  ? ((\textcolor{keyword}{struct} \hyperlink{structnormal__encoding}{normal\_encoding} *)(enc))->type[(\textcolor{keywordtype}{unsigned} char)*(\hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p})] \(\backslash\)
+  : unicode\_byte\_type((\hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p})[1], (\hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p})[0]))
+\end{DoxyCode}
+
+
+Definition at line 639 of file xmltok.\+c.
+
+\index{xmltok.\+c@{xmltok.\+c}!L\+I\+T\+T\+L\+E2\+\_\+\+C\+H\+A\+R\+\_\+\+M\+A\+T\+C\+H\+ES@{L\+I\+T\+T\+L\+E2\+\_\+\+C\+H\+A\+R\+\_\+\+M\+A\+T\+C\+H\+ES}}
+\index{L\+I\+T\+T\+L\+E2\+\_\+\+C\+H\+A\+R\+\_\+\+M\+A\+T\+C\+H\+ES@{L\+I\+T\+T\+L\+E2\+\_\+\+C\+H\+A\+R\+\_\+\+M\+A\+T\+C\+H\+ES}!xmltok.\+c@{xmltok.\+c}}
+\subsubsection[{\texorpdfstring{L\+I\+T\+T\+L\+E2\+\_\+\+C\+H\+A\+R\+\_\+\+M\+A\+T\+C\+H\+ES}{LITTLE2_CHAR_MATCHES}}]{\setlength{\rightskip}{0pt plus 5cm}\#define L\+I\+T\+T\+L\+E2\+\_\+\+C\+H\+A\+R\+\_\+\+M\+A\+T\+C\+H\+ES(
+\begin{DoxyParamCaption}
+\item[{}]{enc, }
+\item[{}]{{\bf p}, }
+\item[{}]{{\bf c}}
+\end{DoxyParamCaption}
+)~(({\bf p})\mbox{[}1\mbox{]} == 0 \&\& ({\bf p})\mbox{[}0\mbox{]} == {\bf c})}\hypertarget{xmltok_8c_aadf1bccd8fc3d3315743603dfe06b3e0}{}\label{xmltok_8c_aadf1bccd8fc3d3315743603dfe06b3e0}
+
+
+Definition at line 644 of file xmltok.\+c.
+
+\index{xmltok.\+c@{xmltok.\+c}!L\+I\+T\+T\+L\+E2\+\_\+\+I\+S\+\_\+\+N\+A\+M\+E\+\_\+\+C\+H\+A\+R\+\_\+\+M\+I\+N\+B\+PC@{L\+I\+T\+T\+L\+E2\+\_\+\+I\+S\+\_\+\+N\+A\+M\+E\+\_\+\+C\+H\+A\+R\+\_\+\+M\+I\+N\+B\+PC}}
+\index{L\+I\+T\+T\+L\+E2\+\_\+\+I\+S\+\_\+\+N\+A\+M\+E\+\_\+\+C\+H\+A\+R\+\_\+\+M\+I\+N\+B\+PC@{L\+I\+T\+T\+L\+E2\+\_\+\+I\+S\+\_\+\+N\+A\+M\+E\+\_\+\+C\+H\+A\+R\+\_\+\+M\+I\+N\+B\+PC}!xmltok.\+c@{xmltok.\+c}}
+\subsubsection[{\texorpdfstring{L\+I\+T\+T\+L\+E2\+\_\+\+I\+S\+\_\+\+N\+A\+M\+E\+\_\+\+C\+H\+A\+R\+\_\+\+M\+I\+N\+B\+PC}{LITTLE2_IS_NAME_CHAR_MINBPC}}]{\setlength{\rightskip}{0pt plus 5cm}\#define L\+I\+T\+T\+L\+E2\+\_\+\+I\+S\+\_\+\+N\+A\+M\+E\+\_\+\+C\+H\+A\+R\+\_\+\+M\+I\+N\+B\+PC(
+\begin{DoxyParamCaption}
+\item[{}]{enc, }
+\item[{}]{{\bf p}}
+\end{DoxyParamCaption}
+)~{\bf U\+C\+S2\+\_\+\+G\+E\+T\+\_\+\+N\+A\+M\+I\+NG}(name\+Pages, (unsigned char){\bf p}\mbox{[}1\mbox{]}, (unsigned char){\bf p}\mbox{[}0\mbox{]})}\hypertarget{xmltok_8c_acadb074b0c1aa1b3d809debfbd29ed5e}{}\label{xmltok_8c_acadb074b0c1aa1b3d809debfbd29ed5e}
+
+
+Definition at line 645 of file xmltok.\+c.
+
+\index{xmltok.\+c@{xmltok.\+c}!L\+I\+T\+T\+L\+E2\+\_\+\+I\+S\+\_\+\+N\+M\+S\+T\+R\+T\+\_\+\+C\+H\+A\+R\+\_\+\+M\+I\+N\+B\+PC@{L\+I\+T\+T\+L\+E2\+\_\+\+I\+S\+\_\+\+N\+M\+S\+T\+R\+T\+\_\+\+C\+H\+A\+R\+\_\+\+M\+I\+N\+B\+PC}}
+\index{L\+I\+T\+T\+L\+E2\+\_\+\+I\+S\+\_\+\+N\+M\+S\+T\+R\+T\+\_\+\+C\+H\+A\+R\+\_\+\+M\+I\+N\+B\+PC@{L\+I\+T\+T\+L\+E2\+\_\+\+I\+S\+\_\+\+N\+M\+S\+T\+R\+T\+\_\+\+C\+H\+A\+R\+\_\+\+M\+I\+N\+B\+PC}!xmltok.\+c@{xmltok.\+c}}
+\subsubsection[{\texorpdfstring{L\+I\+T\+T\+L\+E2\+\_\+\+I\+S\+\_\+\+N\+M\+S\+T\+R\+T\+\_\+\+C\+H\+A\+R\+\_\+\+M\+I\+N\+B\+PC}{LITTLE2_IS_NMSTRT_CHAR_MINBPC}}]{\setlength{\rightskip}{0pt plus 5cm}\#define L\+I\+T\+T\+L\+E2\+\_\+\+I\+S\+\_\+\+N\+M\+S\+T\+R\+T\+\_\+\+C\+H\+A\+R\+\_\+\+M\+I\+N\+B\+PC(
+\begin{DoxyParamCaption}
+\item[{}]{enc, }
+\item[{}]{{\bf p}}
+\end{DoxyParamCaption}
+)~{\bf U\+C\+S2\+\_\+\+G\+E\+T\+\_\+\+N\+A\+M\+I\+NG}(nmstrt\+Pages, (unsigned char){\bf p}\mbox{[}1\mbox{]}, (unsigned char){\bf p}\mbox{[}0\mbox{]})}\hypertarget{xmltok_8c_af232a139c838c1e4c446b985f2aa0a78}{}\label{xmltok_8c_af232a139c838c1e4c446b985f2aa0a78}
+
+
+Definition at line 647 of file xmltok.\+c.
+
+\index{xmltok.\+c@{xmltok.\+c}!M\+I\+N\+B\+PC@{M\+I\+N\+B\+PC}}
+\index{M\+I\+N\+B\+PC@{M\+I\+N\+B\+PC}!xmltok.\+c@{xmltok.\+c}}
+\subsubsection[{\texorpdfstring{M\+I\+N\+B\+PC}{MINBPC}}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+I\+N\+B\+PC(
+\begin{DoxyParamCaption}
+\item[{}]{enc}
+\end{DoxyParamCaption}
+)~1}\hypertarget{xmltok_8c_a10dc99867769531ae008e676b7298238}{}\label{xmltok_8c_a10dc99867769531ae008e676b7298238}
+
+
+Definition at line 830 of file xmltok.\+c.
+
+\index{xmltok.\+c@{xmltok.\+c}!M\+I\+N\+B\+PC@{M\+I\+N\+B\+PC}}
+\index{M\+I\+N\+B\+PC@{M\+I\+N\+B\+PC}!xmltok.\+c@{xmltok.\+c}}
+\subsubsection[{\texorpdfstring{M\+I\+N\+B\+PC}{MINBPC}}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+I\+N\+B\+PC(
+\begin{DoxyParamCaption}
+\item[{}]{enc}
+\end{DoxyParamCaption}
+)~2}\hypertarget{xmltok_8c_a10dc99867769531ae008e676b7298238}{}\label{xmltok_8c_a10dc99867769531ae008e676b7298238}
+
+
+Definition at line 830 of file xmltok.\+c.
+
+\index{xmltok.\+c@{xmltok.\+c}!M\+I\+N\+B\+PC@{M\+I\+N\+B\+PC}}
+\index{M\+I\+N\+B\+PC@{M\+I\+N\+B\+PC}!xmltok.\+c@{xmltok.\+c}}
+\subsubsection[{\texorpdfstring{M\+I\+N\+B\+PC}{MINBPC}}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+I\+N\+B\+PC(
+\begin{DoxyParamCaption}
+\item[{}]{enc}
+\end{DoxyParamCaption}
+)~2}\hypertarget{xmltok_8c_a10dc99867769531ae008e676b7298238}{}\label{xmltok_8c_a10dc99867769531ae008e676b7298238}
+
+
+Definition at line 830 of file xmltok.\+c.
+
+\index{xmltok.\+c@{xmltok.\+c}!N\+O\+R\+M\+A\+L\+\_\+\+V\+T\+A\+B\+LE@{N\+O\+R\+M\+A\+L\+\_\+\+V\+T\+A\+B\+LE}}
+\index{N\+O\+R\+M\+A\+L\+\_\+\+V\+T\+A\+B\+LE@{N\+O\+R\+M\+A\+L\+\_\+\+V\+T\+A\+B\+LE}!xmltok.\+c@{xmltok.\+c}}
+\subsubsection[{\texorpdfstring{N\+O\+R\+M\+A\+L\+\_\+\+V\+T\+A\+B\+LE}{NORMAL_VTABLE}}]{\setlength{\rightskip}{0pt plus 5cm}\#define N\+O\+R\+M\+A\+L\+\_\+\+V\+T\+A\+B\+LE(
+\begin{DoxyParamCaption}
+\item[{}]{{\bf E}}
+\end{DoxyParamCaption}
+)}\hypertarget{xmltok_8c_a5d31098ce53360e3b57dddbca8cc4d30}{}\label{xmltok_8c_a5d31098ce53360e3b57dddbca8cc4d30}
+{\bfseries Value\+:}
+\begin{DoxyCode}
+\hyperlink{twolame_2libtwolame_2common_8h_a07484107e6d9fdf38b53edf631d6511d}{E} ## isName2, \hyperlink{twolame_2libtwolame_2common_8h_a07484107e6d9fdf38b53edf631d6511d}{\(\backslash\)}
+\hyperlink{twolame_2libtwolame_2common_8h_a07484107e6d9fdf38b53edf631d6511d}{ E} ## isName3, \hyperlink{twolame_2libtwolame_2common_8h_a07484107e6d9fdf38b53edf631d6511d}{\(\backslash\)}
+\hyperlink{twolame_2libtwolame_2common_8h_a07484107e6d9fdf38b53edf631d6511d}{ E} ## isName4, \hyperlink{twolame_2libtwolame_2common_8h_a07484107e6d9fdf38b53edf631d6511d}{\(\backslash\)}
+\hyperlink{twolame_2libtwolame_2common_8h_a07484107e6d9fdf38b53edf631d6511d}{ E} ## isNmstrt2, \hyperlink{twolame_2libtwolame_2common_8h_a07484107e6d9fdf38b53edf631d6511d}{\(\backslash\)}
+\hyperlink{twolame_2libtwolame_2common_8h_a07484107e6d9fdf38b53edf631d6511d}{ E} ## isNmstrt3, \hyperlink{twolame_2libtwolame_2common_8h_a07484107e6d9fdf38b53edf631d6511d}{\(\backslash\)}
+\hyperlink{twolame_2libtwolame_2common_8h_a07484107e6d9fdf38b53edf631d6511d}{ E} ## isNmstrt4, \hyperlink{twolame_2libtwolame_2common_8h_a07484107e6d9fdf38b53edf631d6511d}{\(\backslash\)}
+\hyperlink{twolame_2libtwolame_2common_8h_a07484107e6d9fdf38b53edf631d6511d}{ E} ## isInvalid2, \hyperlink{twolame_2libtwolame_2common_8h_a07484107e6d9fdf38b53edf631d6511d}{\(\backslash\)}
+\hyperlink{twolame_2libtwolame_2common_8h_a07484107e6d9fdf38b53edf631d6511d}{ E} ## isInvalid3, \hyperlink{twolame_2libtwolame_2common_8h_a07484107e6d9fdf38b53edf631d6511d}{\(\backslash\)}
+\hyperlink{twolame_2libtwolame_2common_8h_a07484107e6d9fdf38b53edf631d6511d}{ E} ## isInvalid4
+\end{DoxyCode}
+
+
+Definition at line 214 of file xmltok.\+c.
+
+\index{xmltok.\+c@{xmltok.\+c}!NS@{NS}}
+\index{NS@{NS}!xmltok.\+c@{xmltok.\+c}}
+\subsubsection[{\texorpdfstring{NS}{NS}}]{\setlength{\rightskip}{0pt plus 5cm}\#define NS(
+\begin{DoxyParamCaption}
+\item[{}]{x}
+\end{DoxyParamCaption}
+)~x}\hypertarget{xmltok_8c_a3e797486ea8dd3e564d65a537c67f0c5}{}\label{xmltok_8c_a3e797486ea8dd3e564d65a537c67f0c5}
+
+
+Definition at line 1619 of file xmltok.\+c.
+
+\index{xmltok.\+c@{xmltok.\+c}!ns@{ns}}
+\index{ns@{ns}!xmltok.\+c@{xmltok.\+c}}
+\subsubsection[{\texorpdfstring{ns}{ns}}]{\setlength{\rightskip}{0pt plus 5cm}\#define ns(
+\begin{DoxyParamCaption}
+\item[{}]{x}
+\end{DoxyParamCaption}
+)~x}\hypertarget{xmltok_8c_ab6aec1346fb6c7b2733f0f73c9536ad2}{}\label{xmltok_8c_ab6aec1346fb6c7b2733f0f73c9536ad2}
+
+
+Definition at line 1620 of file xmltok.\+c.
+
+\index{xmltok.\+c@{xmltok.\+c}!P\+R\+E\+F\+IX@{P\+R\+E\+F\+IX}}
+\index{P\+R\+E\+F\+IX@{P\+R\+E\+F\+IX}!xmltok.\+c@{xmltok.\+c}}
+\subsubsection[{\texorpdfstring{P\+R\+E\+F\+IX}{PREFIX}}]{\setlength{\rightskip}{0pt plus 5cm}\#define {\bf P\+R\+E\+F\+IX}(
+\begin{DoxyParamCaption}
+\item[{}]{ident}
+\end{DoxyParamCaption}
+)~normal\+\_\+ \#\# ident}\hypertarget{xmltok_8c_a3c81563b8124715ddef3c493850bf822}{}\label{xmltok_8c_a3c81563b8124715ddef3c493850bf822}
+
+
+Definition at line 829 of file xmltok.\+c.
+
+\index{xmltok.\+c@{xmltok.\+c}!P\+R\+E\+F\+IX@{P\+R\+E\+F\+IX}}
+\index{P\+R\+E\+F\+IX@{P\+R\+E\+F\+IX}!xmltok.\+c@{xmltok.\+c}}
+\subsubsection[{\texorpdfstring{P\+R\+E\+F\+IX}{PREFIX}}]{\setlength{\rightskip}{0pt plus 5cm}\#define {\bf P\+R\+E\+F\+IX}(
+\begin{DoxyParamCaption}
+\item[{}]{ident}
+\end{DoxyParamCaption}
+)~little2\+\_\+ \#\# ident}\hypertarget{xmltok_8c_a3c81563b8124715ddef3c493850bf822}{}\label{xmltok_8c_a3c81563b8124715ddef3c493850bf822}
+
+
+Definition at line 829 of file xmltok.\+c.
+
+\index{xmltok.\+c@{xmltok.\+c}!P\+R\+E\+F\+IX@{P\+R\+E\+F\+IX}}
+\index{P\+R\+E\+F\+IX@{P\+R\+E\+F\+IX}!xmltok.\+c@{xmltok.\+c}}
+\subsubsection[{\texorpdfstring{P\+R\+E\+F\+IX}{PREFIX}}]{\setlength{\rightskip}{0pt plus 5cm}\#define {\bf P\+R\+E\+F\+IX}(
+\begin{DoxyParamCaption}
+\item[{}]{ident}
+\end{DoxyParamCaption}
+)~big2\+\_\+ \#\# ident}\hypertarget{xmltok_8c_a3c81563b8124715ddef3c493850bf822}{}\label{xmltok_8c_a3c81563b8124715ddef3c493850bf822}
+
+
+Definition at line 829 of file xmltok.\+c.
+
+\index{xmltok.\+c@{xmltok.\+c}!S\+B\+\_\+\+B\+Y\+T\+E\+\_\+\+T\+Y\+PE@{S\+B\+\_\+\+B\+Y\+T\+E\+\_\+\+T\+Y\+PE}}
+\index{S\+B\+\_\+\+B\+Y\+T\+E\+\_\+\+T\+Y\+PE@{S\+B\+\_\+\+B\+Y\+T\+E\+\_\+\+T\+Y\+PE}!xmltok.\+c@{xmltok.\+c}}
+\subsubsection[{\texorpdfstring{S\+B\+\_\+\+B\+Y\+T\+E\+\_\+\+T\+Y\+PE}{SB_BYTE_TYPE}}]{\setlength{\rightskip}{0pt plus 5cm}\#define S\+B\+\_\+\+B\+Y\+T\+E\+\_\+\+T\+Y\+PE(
+\begin{DoxyParamCaption}
+\item[{}]{enc, }
+\item[{}]{{\bf p}}
+\end{DoxyParamCaption}
+)~(((struct {\bf normal\+\_\+encoding} $\ast$)(enc))-\/$>$type\mbox{[}(unsigned char)$\ast$({\bf p})\mbox{]})}\hypertarget{xmltok_8c_aa3d3a62657be003bc07c01d3debb3485}{}\label{xmltok_8c_aa3d3a62657be003bc07c01d3debb3485}
+
+
+Definition at line 242 of file xmltok.\+c.
+
+\index{xmltok.\+c@{xmltok.\+c}!S\+E\+T2@{S\+E\+T2}}
+\index{S\+E\+T2@{S\+E\+T2}!xmltok.\+c@{xmltok.\+c}}
+\subsubsection[{\texorpdfstring{S\+E\+T2}{SET2}}]{\setlength{\rightskip}{0pt plus 5cm}\#define S\+E\+T2(
+\begin{DoxyParamCaption}
+\item[{}]{ptr, }
+\item[{}]{ch}
+\end{DoxyParamCaption}
+)~(((ptr)\mbox{[}0\mbox{]} = ((ch) \& 0xff)), ((ptr)\mbox{[}1\mbox{]} = ((ch) $>$$>$ 8)))}\hypertarget{xmltok_8c_ab85f3a62f3c9d398df131330a7021b90}{}\label{xmltok_8c_ab85f3a62f3c9d398df131330a7021b90}
+
+
+Definition at line 627 of file xmltok.\+c.
+
+\index{xmltok.\+c@{xmltok.\+c}!S\+E\+T2@{S\+E\+T2}}
+\index{S\+E\+T2@{S\+E\+T2}!xmltok.\+c@{xmltok.\+c}}
+\subsubsection[{\texorpdfstring{S\+E\+T2}{SET2}}]{\setlength{\rightskip}{0pt plus 5cm}\#define S\+E\+T2(
+\begin{DoxyParamCaption}
+\item[{}]{ptr, }
+\item[{}]{ch}
+\end{DoxyParamCaption}
+)~(((ptr)\mbox{[}0\mbox{]} = ((ch) $>$$>$ 8)), ((ptr)\mbox{[}1\mbox{]} = ((ch) \& 0x\+F\+F)))}\hypertarget{xmltok_8c_ab85f3a62f3c9d398df131330a7021b90}{}\label{xmltok_8c_ab85f3a62f3c9d398df131330a7021b90}
+
+
+Definition at line 627 of file xmltok.\+c.
+
+\index{xmltok.\+c@{xmltok.\+c}!S\+E\+T\+\_\+\+I\+N\+I\+T\+\_\+\+E\+N\+C\+\_\+\+I\+N\+D\+EX@{S\+E\+T\+\_\+\+I\+N\+I\+T\+\_\+\+E\+N\+C\+\_\+\+I\+N\+D\+EX}}
+\index{S\+E\+T\+\_\+\+I\+N\+I\+T\+\_\+\+E\+N\+C\+\_\+\+I\+N\+D\+EX@{S\+E\+T\+\_\+\+I\+N\+I\+T\+\_\+\+E\+N\+C\+\_\+\+I\+N\+D\+EX}!xmltok.\+c@{xmltok.\+c}}
+\subsubsection[{\texorpdfstring{S\+E\+T\+\_\+\+I\+N\+I\+T\+\_\+\+E\+N\+C\+\_\+\+I\+N\+D\+EX}{SET_INIT_ENC_INDEX}}]{\setlength{\rightskip}{0pt plus 5cm}\#define S\+E\+T\+\_\+\+I\+N\+I\+T\+\_\+\+E\+N\+C\+\_\+\+I\+N\+D\+EX(
+\begin{DoxyParamCaption}
+\item[{}]{enc, }
+\item[{}]{{\bf i}}
+\end{DoxyParamCaption}
+)~((enc)-\/$>$init\+Enc.\+is\+Utf16 = (char){\bf i})}\hypertarget{xmltok_8c_aca6ad11aa35dbb980967340905bac3e4}{}\label{xmltok_8c_aca6ad11aa35dbb980967340905bac3e4}
+
+
+Definition at line 1486 of file xmltok.\+c.
+
+\index{xmltok.\+c@{xmltok.\+c}!S\+T\+A\+N\+D\+A\+R\+D\+\_\+\+V\+T\+A\+B\+LE@{S\+T\+A\+N\+D\+A\+R\+D\+\_\+\+V\+T\+A\+B\+LE}}
+\index{S\+T\+A\+N\+D\+A\+R\+D\+\_\+\+V\+T\+A\+B\+LE@{S\+T\+A\+N\+D\+A\+R\+D\+\_\+\+V\+T\+A\+B\+LE}!xmltok.\+c@{xmltok.\+c}}
+\subsubsection[{\texorpdfstring{S\+T\+A\+N\+D\+A\+R\+D\+\_\+\+V\+T\+A\+B\+LE}{STANDARD_VTABLE}}]{\setlength{\rightskip}{0pt plus 5cm}\#define S\+T\+A\+N\+D\+A\+R\+D\+\_\+\+V\+T\+A\+B\+LE(
+\begin{DoxyParamCaption}
+\item[{}]{{\bf E}}
+\end{DoxyParamCaption}
+)~/$\ast$ as nothing $\ast$/}\hypertarget{xmltok_8c_a08a659495975650900f980413527b371}{}\label{xmltok_8c_a08a659495975650900f980413527b371}
+
+
+Definition at line 210 of file xmltok.\+c.
+
+\index{xmltok.\+c@{xmltok.\+c}!U\+C\+S2\+\_\+\+G\+E\+T\+\_\+\+N\+A\+M\+I\+NG@{U\+C\+S2\+\_\+\+G\+E\+T\+\_\+\+N\+A\+M\+I\+NG}}
+\index{U\+C\+S2\+\_\+\+G\+E\+T\+\_\+\+N\+A\+M\+I\+NG@{U\+C\+S2\+\_\+\+G\+E\+T\+\_\+\+N\+A\+M\+I\+NG}!xmltok.\+c@{xmltok.\+c}}
+\subsubsection[{\texorpdfstring{U\+C\+S2\+\_\+\+G\+E\+T\+\_\+\+N\+A\+M\+I\+NG}{UCS2_GET_NAMING}}]{\setlength{\rightskip}{0pt plus 5cm}\#define U\+C\+S2\+\_\+\+G\+E\+T\+\_\+\+N\+A\+M\+I\+NG(
+\begin{DoxyParamCaption}
+\item[{}]{pages, }
+\item[{}]{hi, }
+\item[{}]{lo}
+\end{DoxyParamCaption}
+)~(naming\+Bitmap\mbox{[}(pages\mbox{[}hi\mbox{]} $<$$<$ 3) + ((lo) $>$$>$ 5)\mbox{]} \& (1 $<$$<$ ((lo) \& 0x1\+F)))}\hypertarget{xmltok_8c_ad84d58bf17e92b57516106f68fb4ca03}{}\label{xmltok_8c_ad84d58bf17e92b57516106f68fb4ca03}
+
+
+Definition at line 48 of file xmltok.\+c.
+
+\index{xmltok.\+c@{xmltok.\+c}!U\+T\+F8\+\_\+\+G\+E\+T\+\_\+\+N\+A\+M\+I\+NG@{U\+T\+F8\+\_\+\+G\+E\+T\+\_\+\+N\+A\+M\+I\+NG}}
+\index{U\+T\+F8\+\_\+\+G\+E\+T\+\_\+\+N\+A\+M\+I\+NG@{U\+T\+F8\+\_\+\+G\+E\+T\+\_\+\+N\+A\+M\+I\+NG}!xmltok.\+c@{xmltok.\+c}}
+\subsubsection[{\texorpdfstring{U\+T\+F8\+\_\+\+G\+E\+T\+\_\+\+N\+A\+M\+I\+NG}{UTF8_GET_NAMING}}]{\setlength{\rightskip}{0pt plus 5cm}\#define U\+T\+F8\+\_\+\+G\+E\+T\+\_\+\+N\+A\+M\+I\+NG(
+\begin{DoxyParamCaption}
+\item[{}]{pages, }
+\item[{}]{{\bf p}, }
+\item[{}]{n}
+\end{DoxyParamCaption}
+)}\hypertarget{xmltok_8c_a3597134ecd2f0180f7f6054eedd855e2}{}\label{xmltok_8c_a3597134ecd2f0180f7f6054eedd855e2}
+{\bfseries Value\+:}
+\begin{DoxyCode}
+((n) == 2 \(\backslash\)
+  ? \hyperlink{xmltok_8c_adaca69017a970dff47a1616105fcd190}{UTF8\_GET\_NAMING2}(pages, (\textcolor{keyword}{const} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{char} *)(\hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p})) \(\backslash\)
+  : ((n) == 3 \(\backslash\)
+     ? \hyperlink{xmltok_8c_a1d082b430fb0f6e4e88bb54b18854fa3}{UTF8\_GET\_NAMING3}(pages, (\textcolor{keyword}{const} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{char} *)(\hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p})) \(\backslash\)
+     : 0))
+\end{DoxyCode}
+
+
+Definition at line 74 of file xmltok.\+c.
+
+\index{xmltok.\+c@{xmltok.\+c}!U\+T\+F8\+\_\+\+G\+E\+T\+\_\+\+N\+A\+M\+I\+N\+G2@{U\+T\+F8\+\_\+\+G\+E\+T\+\_\+\+N\+A\+M\+I\+N\+G2}}
+\index{U\+T\+F8\+\_\+\+G\+E\+T\+\_\+\+N\+A\+M\+I\+N\+G2@{U\+T\+F8\+\_\+\+G\+E\+T\+\_\+\+N\+A\+M\+I\+N\+G2}!xmltok.\+c@{xmltok.\+c}}
+\subsubsection[{\texorpdfstring{U\+T\+F8\+\_\+\+G\+E\+T\+\_\+\+N\+A\+M\+I\+N\+G2}{UTF8_GET_NAMING2}}]{\setlength{\rightskip}{0pt plus 5cm}\#define U\+T\+F8\+\_\+\+G\+E\+T\+\_\+\+N\+A\+M\+I\+N\+G2(
+\begin{DoxyParamCaption}
+\item[{}]{pages, }
+\item[{}]{byte}
+\end{DoxyParamCaption}
+)}\hypertarget{xmltok_8c_adaca69017a970dff47a1616105fcd190}{}\label{xmltok_8c_adaca69017a970dff47a1616105fcd190}
+{\bfseries Value\+:}
+\begin{DoxyCode}
+(namingBitmap[((pages)[(((byte)[0]) >> 2) & 7] << 3) \(\backslash\)
+                      + ((((byte)[0]) & 3) << 1) \(\backslash\)
+                      + ((((byte)[1]) >> 5) & 1)] \(\backslash\)
+         & (1 << (((byte)[1]) & 0x1F)))
+\end{DoxyCode}
+
+
+Definition at line 55 of file xmltok.\+c.
+
+\index{xmltok.\+c@{xmltok.\+c}!U\+T\+F8\+\_\+\+G\+E\+T\+\_\+\+N\+A\+M\+I\+N\+G3@{U\+T\+F8\+\_\+\+G\+E\+T\+\_\+\+N\+A\+M\+I\+N\+G3}}
+\index{U\+T\+F8\+\_\+\+G\+E\+T\+\_\+\+N\+A\+M\+I\+N\+G3@{U\+T\+F8\+\_\+\+G\+E\+T\+\_\+\+N\+A\+M\+I\+N\+G3}!xmltok.\+c@{xmltok.\+c}}
+\subsubsection[{\texorpdfstring{U\+T\+F8\+\_\+\+G\+E\+T\+\_\+\+N\+A\+M\+I\+N\+G3}{UTF8_GET_NAMING3}}]{\setlength{\rightskip}{0pt plus 5cm}\#define U\+T\+F8\+\_\+\+G\+E\+T\+\_\+\+N\+A\+M\+I\+N\+G3(
+\begin{DoxyParamCaption}
+\item[{}]{pages, }
+\item[{}]{byte}
+\end{DoxyParamCaption}
+)}\hypertarget{xmltok_8c_a1d082b430fb0f6e4e88bb54b18854fa3}{}\label{xmltok_8c_a1d082b430fb0f6e4e88bb54b18854fa3}
+{\bfseries Value\+:}
+\begin{DoxyCode}
+(namingBitmap[((pages)[((((byte)[0]) & 0xF) << 4) \(\backslash\)
+                             + ((((byte)[1]) >> 2) & 0xF)] \(\backslash\)
+                       << 3) \(\backslash\)
+                      + ((((byte)[1]) & 3) << 1) \(\backslash\)
+                      + ((((byte)[2]) >> 5) & 1)] \(\backslash\)
+         & (1 << (((byte)[2]) & 0x1F)))
+\end{DoxyCode}
+
+
+Definition at line 66 of file xmltok.\+c.
+
+\index{xmltok.\+c@{xmltok.\+c}!U\+T\+F8\+\_\+\+I\+N\+V\+A\+L\+I\+D2@{U\+T\+F8\+\_\+\+I\+N\+V\+A\+L\+I\+D2}}
+\index{U\+T\+F8\+\_\+\+I\+N\+V\+A\+L\+I\+D2@{U\+T\+F8\+\_\+\+I\+N\+V\+A\+L\+I\+D2}!xmltok.\+c@{xmltok.\+c}}
+\subsubsection[{\texorpdfstring{U\+T\+F8\+\_\+\+I\+N\+V\+A\+L\+I\+D2}{UTF8_INVALID2}}]{\setlength{\rightskip}{0pt plus 5cm}\#define U\+T\+F8\+\_\+\+I\+N\+V\+A\+L\+I\+D2(
+\begin{DoxyParamCaption}
+\item[{}]{{\bf p}}
+\end{DoxyParamCaption}
+)~(($\ast${\bf p}) $<$ 0x\+C2 $\vert$$\vert$ ((p)\mbox{[}1\mbox{]} \& 0x80) == 0 $\vert$$\vert$ ((p)\mbox{[}1\mbox{]} \& 0x\+C0) == 0x\+C0)}\hypertarget{xmltok_8c_a92b3df08bd25bfa9805a3b8998125ad7}{}\label{xmltok_8c_a92b3df08bd25bfa9805a3b8998125ad7}
+
+
+Definition at line 91 of file xmltok.\+c.
+
+\index{xmltok.\+c@{xmltok.\+c}!U\+T\+F8\+\_\+\+I\+N\+V\+A\+L\+I\+D3@{U\+T\+F8\+\_\+\+I\+N\+V\+A\+L\+I\+D3}}
+\index{U\+T\+F8\+\_\+\+I\+N\+V\+A\+L\+I\+D3@{U\+T\+F8\+\_\+\+I\+N\+V\+A\+L\+I\+D3}!xmltok.\+c@{xmltok.\+c}}
+\subsubsection[{\texorpdfstring{U\+T\+F8\+\_\+\+I\+N\+V\+A\+L\+I\+D3}{UTF8_INVALID3}}]{\setlength{\rightskip}{0pt plus 5cm}\#define U\+T\+F8\+\_\+\+I\+N\+V\+A\+L\+I\+D3(
+\begin{DoxyParamCaption}
+\item[{}]{{\bf p}}
+\end{DoxyParamCaption}
+)}\hypertarget{xmltok_8c_ae52313e00ac70d98fdb894cefe7ad851}{}\label{xmltok_8c_ae52313e00ac70d98fdb894cefe7ad851}
+{\bfseries Value\+:}
+\begin{DoxyCode}
+(((\hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p})[2] & 0x80) == 0 \(\backslash\)
+  || \(\backslash\)
+  ((*p) == 0xEF && (\hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p})[1] == 0xBF \(\backslash\)
+    ? \(\backslash\)
+    (\hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p})[2] > 0xBD \(\backslash\)
+    : \(\backslash\)
+    ((\hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p})[2] & 0xC0) == 0xC0) \(\backslash\)
+  || \(\backslash\)
+  ((*\hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p}) == 0xE0 \(\backslash\)
+    ? \(\backslash\)
+    (\hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p})[1] < 0xA0 || ((\hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p})[1] & 0xC0) == 0xC0 \(\backslash\)
+    : \(\backslash\)
+    ((\hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p})[1] & 0x80) == 0 \(\backslash\)
+    || \(\backslash\)
+    ((*\hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p}) == 0xED ? (\hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p})[1] > 0x9F : ((\hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p})[1] & 0xC0) == 0xC0)))
+\end{DoxyCode}
+
+
+Definition at line 94 of file xmltok.\+c.
+
+\index{xmltok.\+c@{xmltok.\+c}!U\+T\+F8\+\_\+\+I\+N\+V\+A\+L\+I\+D4@{U\+T\+F8\+\_\+\+I\+N\+V\+A\+L\+I\+D4}}
+\index{U\+T\+F8\+\_\+\+I\+N\+V\+A\+L\+I\+D4@{U\+T\+F8\+\_\+\+I\+N\+V\+A\+L\+I\+D4}!xmltok.\+c@{xmltok.\+c}}
+\subsubsection[{\texorpdfstring{U\+T\+F8\+\_\+\+I\+N\+V\+A\+L\+I\+D4}{UTF8_INVALID4}}]{\setlength{\rightskip}{0pt plus 5cm}\#define U\+T\+F8\+\_\+\+I\+N\+V\+A\+L\+I\+D4(
+\begin{DoxyParamCaption}
+\item[{}]{{\bf p}}
+\end{DoxyParamCaption}
+)}\hypertarget{xmltok_8c_ac7146407dd40e78b07b238dd6550075c}{}\label{xmltok_8c_ac7146407dd40e78b07b238dd6550075c}
+{\bfseries Value\+:}
+\begin{DoxyCode}
+(((\hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p})[3] & 0x80) == 0 || ((\hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p})[3] & 0xC0) == 0xC0 \(\backslash\)
+  || \(\backslash\)
+  ((\hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p})[2] & 0x80) == 0 || ((\hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p})[2] & 0xC0) == 0xC0 \(\backslash\)
+  || \(\backslash\)
+  ((*p) == 0xF0 \(\backslash\)
+    ? \(\backslash\)
+    (\hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p})[1] < 0x90 || ((\hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p})[1] & 0xC0) == 0xC0 \(\backslash\)
+    : \(\backslash\)
+    ((\hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p})[1] & 0x80) == 0 \(\backslash\)
+    || \(\backslash\)
+    ((*\hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p}) == 0xF4 ? (\hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p})[1] > 0x8F : ((\hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p})[1] & 0xC0) == 0xC0)))
+\end{DoxyCode}
+
+
+Definition at line 111 of file xmltok.\+c.
+
+\index{xmltok.\+c@{xmltok.\+c}!utf8\+\_\+is\+Name4@{utf8\+\_\+is\+Name4}}
+\index{utf8\+\_\+is\+Name4@{utf8\+\_\+is\+Name4}!xmltok.\+c@{xmltok.\+c}}
+\subsubsection[{\texorpdfstring{utf8\+\_\+is\+Name4}{utf8_isName4}}]{\setlength{\rightskip}{0pt plus 5cm}\#define utf8\+\_\+is\+Name4~is\+Never}\hypertarget{xmltok_8c_a2d1b1e0e2401a0271f56d126f712a62a}{}\label{xmltok_8c_a2d1b1e0e2401a0271f56d126f712a62a}
+
+
+Definition at line 142 of file xmltok.\+c.
+
+\index{xmltok.\+c@{xmltok.\+c}!utf8\+\_\+is\+Nmstrt4@{utf8\+\_\+is\+Nmstrt4}}
+\index{utf8\+\_\+is\+Nmstrt4@{utf8\+\_\+is\+Nmstrt4}!xmltok.\+c@{xmltok.\+c}}
+\subsubsection[{\texorpdfstring{utf8\+\_\+is\+Nmstrt4}{utf8_isNmstrt4}}]{\setlength{\rightskip}{0pt plus 5cm}\#define utf8\+\_\+is\+Nmstrt4~is\+Never}\hypertarget{xmltok_8c_a1da5db8634e941c529d70e65c40d05ed}{}\label{xmltok_8c_a1da5db8634e941c529d70e65c40d05ed}
+
+
+Definition at line 156 of file xmltok.\+c.
+
+\index{xmltok.\+c@{xmltok.\+c}!V\+T\+A\+B\+LE@{V\+T\+A\+B\+LE}}
+\index{V\+T\+A\+B\+LE@{V\+T\+A\+B\+LE}!xmltok.\+c@{xmltok.\+c}}
+\subsubsection[{\texorpdfstring{V\+T\+A\+B\+LE}{VTABLE}}]{\setlength{\rightskip}{0pt plus 5cm}\#define V\+T\+A\+B\+LE~{\bf V\+T\+A\+B\+L\+E1}, {\bf P\+R\+E\+F\+IX}(to\+Utf8), {\bf P\+R\+E\+F\+IX}(to\+Utf16)}\hypertarget{xmltok_8c_aa4a137442c139400b647ac62b40ea51a}{}\label{xmltok_8c_aa4a137442c139400b647ac62b40ea51a}
+
+
+Definition at line 46 of file xmltok.\+c.
+
+\index{xmltok.\+c@{xmltok.\+c}!V\+T\+A\+B\+L\+E1@{V\+T\+A\+B\+L\+E1}}
+\index{V\+T\+A\+B\+L\+E1@{V\+T\+A\+B\+L\+E1}!xmltok.\+c@{xmltok.\+c}}
+\subsubsection[{\texorpdfstring{V\+T\+A\+B\+L\+E1}{VTABLE1}}]{\setlength{\rightskip}{0pt plus 5cm}\#define V\+T\+A\+B\+L\+E1}\hypertarget{xmltok_8c_a0e414f9ad2147e44c943c0456234c529}{}\label{xmltok_8c_a0e414f9ad2147e44c943c0456234c529}
+{\bfseries Value\+:}
+\begin{DoxyCode}
+\{ \hyperlink{xmltok_8c_a3c81563b8124715ddef3c493850bf822}{PREFIX}(prologTok), \hyperlink{xmltok_8c_a3c81563b8124715ddef3c493850bf822}{PREFIX}(contentTok), \(\backslash\)
+    PREFIX(cdataSectionTok) \hyperlink{xmltok_8c_a16f3efc6d3a2792acf7e4c917d260adc}{IGNORE\_SECTION\_TOK\_VTABLE} \}, \(\backslash\)
+  \{ \hyperlink{xmltok_8c_a3c81563b8124715ddef3c493850bf822}{PREFIX}(attributeValueTok), \hyperlink{xmltok_8c_a3c81563b8124715ddef3c493850bf822}{PREFIX}(entityValueTok) \}, \hyperlink{xmltok_8c_a3c81563b8124715ddef3c493850bf822}{\(\backslash\)}
+\hyperlink{xmltok_8c_a3c81563b8124715ddef3c493850bf822}{  PREFIX}(sameName), \hyperlink{xmltok_8c_a3c81563b8124715ddef3c493850bf822}{\(\backslash\)}
+\hyperlink{xmltok_8c_a3c81563b8124715ddef3c493850bf822}{  PREFIX}(nameMatchesAscii), \hyperlink{xmltok_8c_a3c81563b8124715ddef3c493850bf822}{\(\backslash\)}
+\hyperlink{xmltok_8c_a3c81563b8124715ddef3c493850bf822}{  PREFIX}(nameLength), \hyperlink{xmltok_8c_a3c81563b8124715ddef3c493850bf822}{\(\backslash\)}
+\hyperlink{xmltok_8c_a3c81563b8124715ddef3c493850bf822}{  PREFIX}(skipS), \hyperlink{xmltok_8c_a3c81563b8124715ddef3c493850bf822}{\(\backslash\)}
+\hyperlink{xmltok_8c_a3c81563b8124715ddef3c493850bf822}{  PREFIX}(getAtts), \hyperlink{xmltok_8c_a3c81563b8124715ddef3c493850bf822}{\(\backslash\)}
+\hyperlink{xmltok_8c_a3c81563b8124715ddef3c493850bf822}{  PREFIX}(charRefNumber), \hyperlink{xmltok_8c_a3c81563b8124715ddef3c493850bf822}{\(\backslash\)}
+\hyperlink{xmltok_8c_a3c81563b8124715ddef3c493850bf822}{  PREFIX}(predefinedEntityName), \hyperlink{xmltok_8c_a3c81563b8124715ddef3c493850bf822}{\(\backslash\)}
+\hyperlink{xmltok_8c_a3c81563b8124715ddef3c493850bf822}{  PREFIX}(updatePosition), \hyperlink{xmltok_8c_a3c81563b8124715ddef3c493850bf822}{\(\backslash\)}
+\hyperlink{xmltok_8c_a3c81563b8124715ddef3c493850bf822}{  PREFIX}(isPublicId)
+\end{DoxyCode}
+
+
+Definition at line 32 of file xmltok.\+c.
+
+\index{xmltok.\+c@{xmltok.\+c}!X\+M\+L\+\_\+\+T\+O\+K\+\_\+\+I\+M\+P\+L\+\_\+C@{X\+M\+L\+\_\+\+T\+O\+K\+\_\+\+I\+M\+P\+L\+\_\+C}}
+\index{X\+M\+L\+\_\+\+T\+O\+K\+\_\+\+I\+M\+P\+L\+\_\+C@{X\+M\+L\+\_\+\+T\+O\+K\+\_\+\+I\+M\+P\+L\+\_\+C}!xmltok.\+c@{xmltok.\+c}}
+\subsubsection[{\texorpdfstring{X\+M\+L\+\_\+\+T\+O\+K\+\_\+\+I\+M\+P\+L\+\_\+C}{XML_TOK_IMPL_C}}]{\setlength{\rightskip}{0pt plus 5cm}\#define X\+M\+L\+\_\+\+T\+O\+K\+\_\+\+I\+M\+P\+L\+\_\+C}\hypertarget{xmltok_8c_a23c348e434463ae32dd10b4c672a7361}{}\label{xmltok_8c_a23c348e434463ae32dd10b4c672a7361}
+
+
+Definition at line 840 of file xmltok.\+c.
+
+\index{xmltok.\+c@{xmltok.\+c}!X\+M\+L\+\_\+\+T\+O\+K\+\_\+\+I\+M\+P\+L\+\_\+C@{X\+M\+L\+\_\+\+T\+O\+K\+\_\+\+I\+M\+P\+L\+\_\+C}}
+\index{X\+M\+L\+\_\+\+T\+O\+K\+\_\+\+I\+M\+P\+L\+\_\+C@{X\+M\+L\+\_\+\+T\+O\+K\+\_\+\+I\+M\+P\+L\+\_\+C}!xmltok.\+c@{xmltok.\+c}}
+\subsubsection[{\texorpdfstring{X\+M\+L\+\_\+\+T\+O\+K\+\_\+\+I\+M\+P\+L\+\_\+C}{XML_TOK_IMPL_C}}]{\setlength{\rightskip}{0pt plus 5cm}\#define X\+M\+L\+\_\+\+T\+O\+K\+\_\+\+I\+M\+P\+L\+\_\+C}\hypertarget{xmltok_8c_a23c348e434463ae32dd10b4c672a7361}{}\label{xmltok_8c_a23c348e434463ae32dd10b4c672a7361}
+
+
+Definition at line 840 of file xmltok.\+c.
+
+\index{xmltok.\+c@{xmltok.\+c}!X\+M\+L\+\_\+\+T\+O\+K\+\_\+\+I\+M\+P\+L\+\_\+C@{X\+M\+L\+\_\+\+T\+O\+K\+\_\+\+I\+M\+P\+L\+\_\+C}}
+\index{X\+M\+L\+\_\+\+T\+O\+K\+\_\+\+I\+M\+P\+L\+\_\+C@{X\+M\+L\+\_\+\+T\+O\+K\+\_\+\+I\+M\+P\+L\+\_\+C}!xmltok.\+c@{xmltok.\+c}}
+\subsubsection[{\texorpdfstring{X\+M\+L\+\_\+\+T\+O\+K\+\_\+\+I\+M\+P\+L\+\_\+C}{XML_TOK_IMPL_C}}]{\setlength{\rightskip}{0pt plus 5cm}\#define X\+M\+L\+\_\+\+T\+O\+K\+\_\+\+I\+M\+P\+L\+\_\+C}\hypertarget{xmltok_8c_a23c348e434463ae32dd10b4c672a7361}{}\label{xmltok_8c_a23c348e434463ae32dd10b4c672a7361}
+
+
+Definition at line 840 of file xmltok.\+c.
+
+\index{xmltok.\+c@{xmltok.\+c}!X\+M\+L\+\_\+\+T\+O\+K\+\_\+\+N\+S\+\_\+C@{X\+M\+L\+\_\+\+T\+O\+K\+\_\+\+N\+S\+\_\+C}}
+\index{X\+M\+L\+\_\+\+T\+O\+K\+\_\+\+N\+S\+\_\+C@{X\+M\+L\+\_\+\+T\+O\+K\+\_\+\+N\+S\+\_\+C}!xmltok.\+c@{xmltok.\+c}}
+\subsubsection[{\texorpdfstring{X\+M\+L\+\_\+\+T\+O\+K\+\_\+\+N\+S\+\_\+C}{XML_TOK_NS_C}}]{\setlength{\rightskip}{0pt plus 5cm}\#define X\+M\+L\+\_\+\+T\+O\+K\+\_\+\+N\+S\+\_\+C}\hypertarget{xmltok_8c_a07cab1fdd4935685d882c7ff421935a7}{}\label{xmltok_8c_a07cab1fdd4935685d882c7ff421935a7}
+
+
+Definition at line 1621 of file xmltok.\+c.
+
+
+
+\subsection{Enumeration Type Documentation}
+\subsubsection[{\texorpdfstring{anonymous enum}{anonymous enum}}]{\setlength{\rightskip}{0pt plus 5cm}anonymous enum}\hypertarget{xmltok_8c_adf764cbdea00d65edcd07bb9953ad2b7}{}\label{xmltok_8c_adf764cbdea00d65edcd07bb9953ad2b7}
+\begin{Desc}
+\item[Enumerator]\par
+\begin{description}
+\index{U\+T\+F8\+\_\+cval1@{U\+T\+F8\+\_\+cval1}!xmltok.\+c@{xmltok.\+c}}\index{xmltok.\+c@{xmltok.\+c}!U\+T\+F8\+\_\+cval1@{U\+T\+F8\+\_\+cval1}}\item[{\em 
+U\+T\+F8\+\_\+cval1\hypertarget{xmltok_8c_adf764cbdea00d65edcd07bb9953ad2b7aa178fa0d4471a87df9f098c3d4d5bfaf}{}\label{xmltok_8c_adf764cbdea00d65edcd07bb9953ad2b7aa178fa0d4471a87df9f098c3d4d5bfaf}
+}]\index{U\+T\+F8\+\_\+cval2@{U\+T\+F8\+\_\+cval2}!xmltok.\+c@{xmltok.\+c}}\index{xmltok.\+c@{xmltok.\+c}!U\+T\+F8\+\_\+cval2@{U\+T\+F8\+\_\+cval2}}\item[{\em 
+U\+T\+F8\+\_\+cval2\hypertarget{xmltok_8c_adf764cbdea00d65edcd07bb9953ad2b7ab9de40520f12e745e305de6cbaae89aa}{}\label{xmltok_8c_adf764cbdea00d65edcd07bb9953ad2b7ab9de40520f12e745e305de6cbaae89aa}
+}]\index{U\+T\+F8\+\_\+cval3@{U\+T\+F8\+\_\+cval3}!xmltok.\+c@{xmltok.\+c}}\index{xmltok.\+c@{xmltok.\+c}!U\+T\+F8\+\_\+cval3@{U\+T\+F8\+\_\+cval3}}\item[{\em 
+U\+T\+F8\+\_\+cval3\hypertarget{xmltok_8c_adf764cbdea00d65edcd07bb9953ad2b7ae5c645f459c8b1198b8cf357679b3e25}{}\label{xmltok_8c_adf764cbdea00d65edcd07bb9953ad2b7ae5c645f459c8b1198b8cf357679b3e25}
+}]\index{U\+T\+F8\+\_\+cval4@{U\+T\+F8\+\_\+cval4}!xmltok.\+c@{xmltok.\+c}}\index{xmltok.\+c@{xmltok.\+c}!U\+T\+F8\+\_\+cval4@{U\+T\+F8\+\_\+cval4}}\item[{\em 
+U\+T\+F8\+\_\+cval4\hypertarget{xmltok_8c_adf764cbdea00d65edcd07bb9953ad2b7a3bb425f865be325cf7805ae568063409}{}\label{xmltok_8c_adf764cbdea00d65edcd07bb9953ad2b7a3bb425f865be325cf7805ae568063409}
+}]\end{description}
+\end{Desc}
+
+
+Definition at line 314 of file xmltok.\+c.
+
+\subsubsection[{\texorpdfstring{anonymous enum}{anonymous enum}}]{\setlength{\rightskip}{0pt plus 5cm}anonymous enum}\hypertarget{xmltok_8c_a99fb83031ce9923c84392b4e92f956b5}{}\label{xmltok_8c_a99fb83031ce9923c84392b4e92f956b5}
+\begin{Desc}
+\item[Enumerator]\par
+\begin{description}
+\index{U\+N\+K\+N\+O\+W\+N\+\_\+\+E\+NC@{U\+N\+K\+N\+O\+W\+N\+\_\+\+E\+NC}!xmltok.\+c@{xmltok.\+c}}\index{xmltok.\+c@{xmltok.\+c}!U\+N\+K\+N\+O\+W\+N\+\_\+\+E\+NC@{U\+N\+K\+N\+O\+W\+N\+\_\+\+E\+NC}}\item[{\em 
+U\+N\+K\+N\+O\+W\+N\+\_\+\+E\+NC\hypertarget{xmltok_8c_a99fb83031ce9923c84392b4e92f956b5a7ebb1f3e154cf1ec4ea6d2df2d32d7a1}{}\label{xmltok_8c_a99fb83031ce9923c84392b4e92f956b5a7ebb1f3e154cf1ec4ea6d2df2d32d7a1}
+}]\index{I\+S\+O\+\_\+8859\+\_\+1\+\_\+\+E\+NC@{I\+S\+O\+\_\+8859\+\_\+1\+\_\+\+E\+NC}!xmltok.\+c@{xmltok.\+c}}\index{xmltok.\+c@{xmltok.\+c}!I\+S\+O\+\_\+8859\+\_\+1\+\_\+\+E\+NC@{I\+S\+O\+\_\+8859\+\_\+1\+\_\+\+E\+NC}}\item[{\em 
+I\+S\+O\+\_\+8859\+\_\+1\+\_\+\+E\+NC\hypertarget{xmltok_8c_a99fb83031ce9923c84392b4e92f956b5a2f5e6cab5c293aa8f8f7587e7857b02d}{}\label{xmltok_8c_a99fb83031ce9923c84392b4e92f956b5a2f5e6cab5c293aa8f8f7587e7857b02d}
+}]\index{U\+S\+\_\+\+A\+S\+C\+I\+I\+\_\+\+E\+NC@{U\+S\+\_\+\+A\+S\+C\+I\+I\+\_\+\+E\+NC}!xmltok.\+c@{xmltok.\+c}}\index{xmltok.\+c@{xmltok.\+c}!U\+S\+\_\+\+A\+S\+C\+I\+I\+\_\+\+E\+NC@{U\+S\+\_\+\+A\+S\+C\+I\+I\+\_\+\+E\+NC}}\item[{\em 
+U\+S\+\_\+\+A\+S\+C\+I\+I\+\_\+\+E\+NC\hypertarget{xmltok_8c_a99fb83031ce9923c84392b4e92f956b5a27c4bf314a7c0605785316594381be58}{}\label{xmltok_8c_a99fb83031ce9923c84392b4e92f956b5a27c4bf314a7c0605785316594381be58}
+}]\index{U\+T\+F\+\_\+8\+\_\+\+E\+NC@{U\+T\+F\+\_\+8\+\_\+\+E\+NC}!xmltok.\+c@{xmltok.\+c}}\index{xmltok.\+c@{xmltok.\+c}!U\+T\+F\+\_\+8\+\_\+\+E\+NC@{U\+T\+F\+\_\+8\+\_\+\+E\+NC}}\item[{\em 
+U\+T\+F\+\_\+8\+\_\+\+E\+NC\hypertarget{xmltok_8c_a99fb83031ce9923c84392b4e92f956b5a46f663e9f48222664eee117b68c13999}{}\label{xmltok_8c_a99fb83031ce9923c84392b4e92f956b5a46f663e9f48222664eee117b68c13999}
+}]\index{U\+T\+F\+\_\+16\+\_\+\+E\+NC@{U\+T\+F\+\_\+16\+\_\+\+E\+NC}!xmltok.\+c@{xmltok.\+c}}\index{xmltok.\+c@{xmltok.\+c}!U\+T\+F\+\_\+16\+\_\+\+E\+NC@{U\+T\+F\+\_\+16\+\_\+\+E\+NC}}\item[{\em 
+U\+T\+F\+\_\+16\+\_\+\+E\+NC\hypertarget{xmltok_8c_a99fb83031ce9923c84392b4e92f956b5a518bab58caf7f653a902d34c941bb790}{}\label{xmltok_8c_a99fb83031ce9923c84392b4e92f956b5a518bab58caf7f653a902d34c941bb790}
+}]\index{U\+T\+F\+\_\+16\+B\+E\+\_\+\+E\+NC@{U\+T\+F\+\_\+16\+B\+E\+\_\+\+E\+NC}!xmltok.\+c@{xmltok.\+c}}\index{xmltok.\+c@{xmltok.\+c}!U\+T\+F\+\_\+16\+B\+E\+\_\+\+E\+NC@{U\+T\+F\+\_\+16\+B\+E\+\_\+\+E\+NC}}\item[{\em 
+U\+T\+F\+\_\+16\+B\+E\+\_\+\+E\+NC\hypertarget{xmltok_8c_a99fb83031ce9923c84392b4e92f956b5a8399af631a29e3f4e74df22504d45b5a}{}\label{xmltok_8c_a99fb83031ce9923c84392b4e92f956b5a8399af631a29e3f4e74df22504d45b5a}
+}]\index{U\+T\+F\+\_\+16\+L\+E\+\_\+\+E\+NC@{U\+T\+F\+\_\+16\+L\+E\+\_\+\+E\+NC}!xmltok.\+c@{xmltok.\+c}}\index{xmltok.\+c@{xmltok.\+c}!U\+T\+F\+\_\+16\+L\+E\+\_\+\+E\+NC@{U\+T\+F\+\_\+16\+L\+E\+\_\+\+E\+NC}}\item[{\em 
+U\+T\+F\+\_\+16\+L\+E\+\_\+\+E\+NC\hypertarget{xmltok_8c_a99fb83031ce9923c84392b4e92f956b5abda1f037886224aa8e5bc5a235d8f4ec}{}\label{xmltok_8c_a99fb83031ce9923c84392b4e92f956b5abda1f037886224aa8e5bc5a235d8f4ec}
+}]\index{N\+O\+\_\+\+E\+NC@{N\+O\+\_\+\+E\+NC}!xmltok.\+c@{xmltok.\+c}}\index{xmltok.\+c@{xmltok.\+c}!N\+O\+\_\+\+E\+NC@{N\+O\+\_\+\+E\+NC}}\item[{\em 
+N\+O\+\_\+\+E\+NC\hypertarget{xmltok_8c_a99fb83031ce9923c84392b4e92f956b5a19e41dd21dcd20b0051b8e436501d5dc}{}\label{xmltok_8c_a99fb83031ce9923c84392b4e92f956b5a19e41dd21dcd20b0051b8e436501d5dc}
+}]\end{description}
+\end{Desc}
+
+
+Definition at line 1426 of file xmltok.\+c.
+
+
+
+\subsection{Function Documentation}
+\index{xmltok.\+c@{xmltok.\+c}!Xml\+Init\+Unknown\+Encoding@{Xml\+Init\+Unknown\+Encoding}}
+\index{Xml\+Init\+Unknown\+Encoding@{Xml\+Init\+Unknown\+Encoding}!xmltok.\+c@{xmltok.\+c}}
+\subsubsection[{\texorpdfstring{Xml\+Init\+Unknown\+Encoding(void $\ast$mem, int $\ast$table, C\+O\+N\+V\+E\+R\+T\+E\+R convert, void $\ast$user\+Data)}{XmlInitUnknownEncoding(void *mem, int *table, CONVERTER convert, void *userData)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf E\+N\+C\+O\+D\+I\+NG}$\ast$ Xml\+Init\+Unknown\+Encoding (
+\begin{DoxyParamCaption}
+\item[{{\bf void} $\ast$}]{mem, }
+\item[{{\bf int} $\ast$}]{table, }
+\item[{C\+O\+N\+V\+E\+R\+T\+ER}]{convert, }
+\item[{{\bf void} $\ast$}]{user\+Data}
+\end{DoxyParamCaption}
+)}\hypertarget{xmltok_8c_a7bd2980a71390ec11b4039e2f10a41da}{}\label{xmltok_8c_a7bd2980a71390ec11b4039e2f10a41da}
+
+
+Definition at line 1346 of file xmltok.\+c.
+
+\index{xmltok.\+c@{xmltok.\+c}!Xml\+Size\+Of\+Unknown\+Encoding@{Xml\+Size\+Of\+Unknown\+Encoding}}
+\index{Xml\+Size\+Of\+Unknown\+Encoding@{Xml\+Size\+Of\+Unknown\+Encoding}!xmltok.\+c@{xmltok.\+c}}
+\subsubsection[{\texorpdfstring{Xml\+Size\+Of\+Unknown\+Encoding(void)}{XmlSizeOfUnknownEncoding(void)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf int} Xml\+Size\+Of\+Unknown\+Encoding (
+\begin{DoxyParamCaption}
+\item[{{\bf void}}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{xmltok_8c_a8671b08cbc73ee001e696f02404e878f}{}\label{xmltok_8c_a8671b08cbc73ee001e696f02404e878f}
+
+
+Definition at line 1258 of file xmltok.\+c.
+
+\index{xmltok.\+c@{xmltok.\+c}!Xml\+Utf16\+Encode@{Xml\+Utf16\+Encode}}
+\index{Xml\+Utf16\+Encode@{Xml\+Utf16\+Encode}!xmltok.\+c@{xmltok.\+c}}
+\subsubsection[{\texorpdfstring{Xml\+Utf16\+Encode(int char\+Num, unsigned short $\ast$buf)}{XmlUtf16Encode(int charNum, unsigned short *buf)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf int} {\bf F\+A\+S\+T\+C\+A\+LL} Xml\+Utf16\+Encode (
+\begin{DoxyParamCaption}
+\item[{{\bf int}}]{char\+Num, }
+\item[{unsigned short $\ast$}]{buf}
+\end{DoxyParamCaption}
+)}\hypertarget{xmltok_8c_adc07edbd5e6dee6d65bff7a183b54beb}{}\label{xmltok_8c_adc07edbd5e6dee6d65bff7a183b54beb}
+
+
+Definition at line 1230 of file xmltok.\+c.
+
+\index{xmltok.\+c@{xmltok.\+c}!Xml\+Utf8\+Encode@{Xml\+Utf8\+Encode}}
+\index{Xml\+Utf8\+Encode@{Xml\+Utf8\+Encode}!xmltok.\+c@{xmltok.\+c}}
+\subsubsection[{\texorpdfstring{Xml\+Utf8\+Encode(int c, char $\ast$buf)}{XmlUtf8Encode(int c, char *buf)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf int} {\bf F\+A\+S\+T\+C\+A\+LL} Xml\+Utf8\+Encode (
+\begin{DoxyParamCaption}
+\item[{{\bf int}}]{c, }
+\item[{char $\ast$}]{buf}
+\end{DoxyParamCaption}
+)}\hypertarget{xmltok_8c_afb9948e7ab79ffca787166b7a2f8f7ec}{}\label{xmltok_8c_afb9948e7ab79ffca787166b7a2f8f7ec}
+
+
+Definition at line 1193 of file xmltok.\+c.
+

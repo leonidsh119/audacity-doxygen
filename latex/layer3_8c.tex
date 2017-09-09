@@ -1,0 +1,237 @@
+\hypertarget{layer3_8c}{}\section{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/libmad/layer3.c File Reference}
+\label{layer3_8c}\index{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/libmad/layer3.\+c@{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/libmad/layer3.\+c}}
+{\ttfamily \#include \char`\"{}global.\+h\char`\"{}}\\*
+{\ttfamily \#include $<$stdlib.\+h$>$}\\*
+{\ttfamily \#include $<$string.\+h$>$}\\*
+{\ttfamily \#include \char`\"{}fixed.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}bit.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}stream.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}frame.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}huffman.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}layer3.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}rq\+\_\+table.\+dat\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}imdct\+\_\+s.\+dat\char`\"{}}\\*
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structsideinfo}{sideinfo}
+\item 
+struct \hyperlink{structsideinfo_1_1granule}{sideinfo\+::granule}
+\item 
+struct \hyperlink{structsideinfo_1_1granule_1_1channel}{sideinfo\+::granule\+::channel}
+\item 
+struct {\bfseries fixedfloat}
+\end{DoxyCompactItemize}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{layer3_8c_a308d9dd2c0028ddb184b455bbd7865de}{C\+H\+A\+R\+\_\+\+B\+IT}~8
+\item 
+\#define \hyperlink{layer3_8c_a900ebc6fbadeb5004b79a825049e54e0}{sfb\+\_\+16000\+\_\+long}~sfb\+\_\+22050\+\_\+long
+\item 
+\#define \hyperlink{layer3_8c_a2c3468e064a074084afab39c7a87f72e}{sfb\+\_\+12000\+\_\+long}~\hyperlink{layer3_8c_a900ebc6fbadeb5004b79a825049e54e0}{sfb\+\_\+16000\+\_\+long}
+\item 
+\#define \hyperlink{layer3_8c_a5322ca9489668038d2250cdb3aa1ceeb}{sfb\+\_\+11025\+\_\+long}~\hyperlink{layer3_8c_a2c3468e064a074084afab39c7a87f72e}{sfb\+\_\+12000\+\_\+long}
+\item 
+\#define \hyperlink{layer3_8c_ab8c3f1b9f136036f8fdd74bb19d83294}{sfb\+\_\+12000\+\_\+short}~sfb\+\_\+16000\+\_\+short
+\item 
+\#define \hyperlink{layer3_8c_a91cffd3a782e3f77f7a7b2f72cf8aa14}{sfb\+\_\+11025\+\_\+short}~\hyperlink{layer3_8c_ab8c3f1b9f136036f8fdd74bb19d83294}{sfb\+\_\+12000\+\_\+short}
+\item 
+\#define \hyperlink{layer3_8c_a98d3b1bfea8dd045ea3e789597fc9469}{sfb\+\_\+12000\+\_\+mixed}~sfb\+\_\+16000\+\_\+mixed
+\item 
+\#define \hyperlink{layer3_8c_af607c408d6b3223c2f94641979f305d3}{sfb\+\_\+11025\+\_\+mixed}~\hyperlink{layer3_8c_a98d3b1bfea8dd045ea3e789597fc9469}{sfb\+\_\+12000\+\_\+mixed}
+\item 
+\#define \hyperlink{layer3_8c_a594406939b6a996d40392cb090c09f85}{M\+A\+SK}(cache,  sz,  \hyperlink{metrics_8c_a1eb8fc809d37cc6176f7f27374b063d0}{bits})~(((cache) $>$$>$ ((sz) -\/ (\hyperlink{metrics_8c_a1eb8fc809d37cc6176f7f27374b063d0}{bits}))) \& ((1 $<$$<$ (\hyperlink{metrics_8c_a1eb8fc809d37cc6176f7f27374b063d0}{bits})) -\/ 1))
+\item 
+\#define \hyperlink{layer3_8c_afb7c03c5fa5c951eff68cda7fd8dd425}{M\+A\+S\+K1\+B\+IT}(cache,  sz)~((cache) \& (1 $<$$<$ ((sz) -\/ 1)))
+\end{DoxyCompactItemize}
+\subsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \{ \hyperlink{layer3_8c_aa57e16cd48de3b9a989056ff8df26f84af3807d2cd5097d63f263d0f797f234b3}{count1table\+\_\+select} = 0x01, 
+\hyperlink{layer3_8c_aa57e16cd48de3b9a989056ff8df26f84a29aaff7e848a86514250122ec74c0c33}{scalefac\+\_\+scale} = 0x02, 
+\hyperlink{layer3_8c_aa57e16cd48de3b9a989056ff8df26f84a707c7e22f76bf186cf5ac9d56efeaf7f}{preflag} = 0x04, 
+\hyperlink{layer3_8c_aa57e16cd48de3b9a989056ff8df26f84adf37b69a7ef97ec7a54b452589943270}{mixed\+\_\+block\+\_\+flag} = 0x08
+ \}
+\item 
+enum \{ \hyperlink{layer3_8c_a634f9f55e799f3052a34590f08100017ab2daed1d6867470c115cb0911462064e}{I\+\_\+\+S\+T\+E\+R\+EO} = 0x1, 
+\hyperlink{layer3_8c_a634f9f55e799f3052a34590f08100017a4d85b480cf12d199d4dfe097e95b8745}{M\+S\+\_\+\+S\+T\+E\+R\+EO} = 0x2
+ \}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{layer3_8c_ad1d86c6f04764597294113498fc311f7}{mad\+\_\+layer\+\_\+\+I\+II} (struct \hyperlink{structmad__stream}{mad\+\_\+stream} $\ast$stream, struct \hyperlink{structmad__frame}{mad\+\_\+frame} $\ast$frame)
+\end{DoxyCompactItemize}
+
+
+\subsection{Macro Definition Documentation}
+\index{layer3.\+c@{layer3.\+c}!C\+H\+A\+R\+\_\+\+B\+IT@{C\+H\+A\+R\+\_\+\+B\+IT}}
+\index{C\+H\+A\+R\+\_\+\+B\+IT@{C\+H\+A\+R\+\_\+\+B\+IT}!layer3.\+c@{layer3.\+c}}
+\subsubsection[{\texorpdfstring{C\+H\+A\+R\+\_\+\+B\+IT}{CHAR_BIT}}]{\setlength{\rightskip}{0pt plus 5cm}\#define C\+H\+A\+R\+\_\+\+B\+IT~8}\hypertarget{layer3_8c_a308d9dd2c0028ddb184b455bbd7865de}{}\label{layer3_8c_a308d9dd2c0028ddb184b455bbd7865de}
+
+
+Definition at line 38 of file layer3.\+c.
+
+\index{layer3.\+c@{layer3.\+c}!M\+A\+SK@{M\+A\+SK}}
+\index{M\+A\+SK@{M\+A\+SK}!layer3.\+c@{layer3.\+c}}
+\subsubsection[{\texorpdfstring{M\+A\+SK}{MASK}}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+A\+SK(
+\begin{DoxyParamCaption}
+\item[{}]{cache, }
+\item[{}]{sz, }
+\item[{}]{{\bf bits}}
+\end{DoxyParamCaption}
+)~(((cache) $>$$>$ ((sz) -\/ ({\bf bits}))) \& ((1 $<$$<$ ({\bf bits})) -\/ 1))}\hypertarget{layer3_8c_a594406939b6a996d40392cb090c09f85}{}\label{layer3_8c_a594406939b6a996d40392cb090c09f85}
+
+
+Definition at line 923 of file layer3.\+c.
+
+\index{layer3.\+c@{layer3.\+c}!M\+A\+S\+K1\+B\+IT@{M\+A\+S\+K1\+B\+IT}}
+\index{M\+A\+S\+K1\+B\+IT@{M\+A\+S\+K1\+B\+IT}!layer3.\+c@{layer3.\+c}}
+\subsubsection[{\texorpdfstring{M\+A\+S\+K1\+B\+IT}{MASK1BIT}}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+A\+S\+K1\+B\+IT(
+\begin{DoxyParamCaption}
+\item[{}]{cache, }
+\item[{}]{sz}
+\end{DoxyParamCaption}
+)~((cache) \& (1 $<$$<$ ((sz) -\/ 1)))}\hypertarget{layer3_8c_afb7c03c5fa5c951eff68cda7fd8dd425}{}\label{layer3_8c_afb7c03c5fa5c951eff68cda7fd8dd425}
+
+
+Definition at line 925 of file layer3.\+c.
+
+\index{layer3.\+c@{layer3.\+c}!sfb\+\_\+11025\+\_\+long@{sfb\+\_\+11025\+\_\+long}}
+\index{sfb\+\_\+11025\+\_\+long@{sfb\+\_\+11025\+\_\+long}!layer3.\+c@{layer3.\+c}}
+\subsubsection[{\texorpdfstring{sfb\+\_\+11025\+\_\+long}{sfb_11025_long}}]{\setlength{\rightskip}{0pt plus 5cm}\#define sfb\+\_\+11025\+\_\+long~{\bf sfb\+\_\+12000\+\_\+long}}\hypertarget{layer3_8c_a5322ca9489668038d2250cdb3aa1ceeb}{}\label{layer3_8c_a5322ca9489668038d2250cdb3aa1ceeb}
+
+
+Definition at line 270 of file layer3.\+c.
+
+\index{layer3.\+c@{layer3.\+c}!sfb\+\_\+11025\+\_\+mixed@{sfb\+\_\+11025\+\_\+mixed}}
+\index{sfb\+\_\+11025\+\_\+mixed@{sfb\+\_\+11025\+\_\+mixed}!layer3.\+c@{layer3.\+c}}
+\subsubsection[{\texorpdfstring{sfb\+\_\+11025\+\_\+mixed}{sfb_11025_mixed}}]{\setlength{\rightskip}{0pt plus 5cm}\#define sfb\+\_\+11025\+\_\+mixed~{\bf sfb\+\_\+12000\+\_\+mixed}}\hypertarget{layer3_8c_af607c408d6b3223c2f94641979f305d3}{}\label{layer3_8c_af607c408d6b3223c2f94641979f305d3}
+
+
+Definition at line 289 of file layer3.\+c.
+
+\index{layer3.\+c@{layer3.\+c}!sfb\+\_\+11025\+\_\+short@{sfb\+\_\+11025\+\_\+short}}
+\index{sfb\+\_\+11025\+\_\+short@{sfb\+\_\+11025\+\_\+short}!layer3.\+c@{layer3.\+c}}
+\subsubsection[{\texorpdfstring{sfb\+\_\+11025\+\_\+short}{sfb_11025_short}}]{\setlength{\rightskip}{0pt plus 5cm}\#define sfb\+\_\+11025\+\_\+short~{\bf sfb\+\_\+12000\+\_\+short}}\hypertarget{layer3_8c_a91cffd3a782e3f77f7a7b2f72cf8aa14}{}\label{layer3_8c_a91cffd3a782e3f77f7a7b2f72cf8aa14}
+
+
+Definition at line 279 of file layer3.\+c.
+
+\index{layer3.\+c@{layer3.\+c}!sfb\+\_\+12000\+\_\+long@{sfb\+\_\+12000\+\_\+long}}
+\index{sfb\+\_\+12000\+\_\+long@{sfb\+\_\+12000\+\_\+long}!layer3.\+c@{layer3.\+c}}
+\subsubsection[{\texorpdfstring{sfb\+\_\+12000\+\_\+long}{sfb_12000_long}}]{\setlength{\rightskip}{0pt plus 5cm}\#define sfb\+\_\+12000\+\_\+long~{\bf sfb\+\_\+16000\+\_\+long}}\hypertarget{layer3_8c_a2c3468e064a074084afab39c7a87f72e}{}\label{layer3_8c_a2c3468e064a074084afab39c7a87f72e}
+
+
+Definition at line 269 of file layer3.\+c.
+
+\index{layer3.\+c@{layer3.\+c}!sfb\+\_\+12000\+\_\+mixed@{sfb\+\_\+12000\+\_\+mixed}}
+\index{sfb\+\_\+12000\+\_\+mixed@{sfb\+\_\+12000\+\_\+mixed}!layer3.\+c@{layer3.\+c}}
+\subsubsection[{\texorpdfstring{sfb\+\_\+12000\+\_\+mixed}{sfb_12000_mixed}}]{\setlength{\rightskip}{0pt plus 5cm}\#define sfb\+\_\+12000\+\_\+mixed~sfb\+\_\+16000\+\_\+mixed}\hypertarget{layer3_8c_a98d3b1bfea8dd045ea3e789597fc9469}{}\label{layer3_8c_a98d3b1bfea8dd045ea3e789597fc9469}
+
+
+Definition at line 288 of file layer3.\+c.
+
+\index{layer3.\+c@{layer3.\+c}!sfb\+\_\+12000\+\_\+short@{sfb\+\_\+12000\+\_\+short}}
+\index{sfb\+\_\+12000\+\_\+short@{sfb\+\_\+12000\+\_\+short}!layer3.\+c@{layer3.\+c}}
+\subsubsection[{\texorpdfstring{sfb\+\_\+12000\+\_\+short}{sfb_12000_short}}]{\setlength{\rightskip}{0pt plus 5cm}\#define sfb\+\_\+12000\+\_\+short~sfb\+\_\+16000\+\_\+short}\hypertarget{layer3_8c_ab8c3f1b9f136036f8fdd74bb19d83294}{}\label{layer3_8c_ab8c3f1b9f136036f8fdd74bb19d83294}
+
+
+Definition at line 278 of file layer3.\+c.
+
+\index{layer3.\+c@{layer3.\+c}!sfb\+\_\+16000\+\_\+long@{sfb\+\_\+16000\+\_\+long}}
+\index{sfb\+\_\+16000\+\_\+long@{sfb\+\_\+16000\+\_\+long}!layer3.\+c@{layer3.\+c}}
+\subsubsection[{\texorpdfstring{sfb\+\_\+16000\+\_\+long}{sfb_16000_long}}]{\setlength{\rightskip}{0pt plus 5cm}\#define sfb\+\_\+16000\+\_\+long~sfb\+\_\+22050\+\_\+long}\hypertarget{layer3_8c_a900ebc6fbadeb5004b79a825049e54e0}{}\label{layer3_8c_a900ebc6fbadeb5004b79a825049e54e0}
+
+
+Definition at line 218 of file layer3.\+c.
+
+
+
+\subsection{Enumeration Type Documentation}
+\subsubsection[{\texorpdfstring{anonymous enum}{anonymous enum}}]{\setlength{\rightskip}{0pt plus 5cm}anonymous enum}\hypertarget{layer3_8c_aa57e16cd48de3b9a989056ff8df26f84}{}\label{layer3_8c_aa57e16cd48de3b9a989056ff8df26f84}
+\begin{Desc}
+\item[Enumerator]\par
+\begin{description}
+\index{count1table\+\_\+select@{count1table\+\_\+select}!layer3.\+c@{layer3.\+c}}\index{layer3.\+c@{layer3.\+c}!count1table\+\_\+select@{count1table\+\_\+select}}\item[{\em 
+count1table\+\_\+select\hypertarget{layer3_8c_aa57e16cd48de3b9a989056ff8df26f84af3807d2cd5097d63f263d0f797f234b3}{}\label{layer3_8c_aa57e16cd48de3b9a989056ff8df26f84af3807d2cd5097d63f263d0f797f234b3}
+}]\index{scalefac\+\_\+scale@{scalefac\+\_\+scale}!layer3.\+c@{layer3.\+c}}\index{layer3.\+c@{layer3.\+c}!scalefac\+\_\+scale@{scalefac\+\_\+scale}}\item[{\em 
+scalefac\+\_\+scale\hypertarget{layer3_8c_aa57e16cd48de3b9a989056ff8df26f84a29aaff7e848a86514250122ec74c0c33}{}\label{layer3_8c_aa57e16cd48de3b9a989056ff8df26f84a29aaff7e848a86514250122ec74c0c33}
+}]\index{preflag@{preflag}!layer3.\+c@{layer3.\+c}}\index{layer3.\+c@{layer3.\+c}!preflag@{preflag}}\item[{\em 
+preflag\hypertarget{layer3_8c_aa57e16cd48de3b9a989056ff8df26f84a707c7e22f76bf186cf5ac9d56efeaf7f}{}\label{layer3_8c_aa57e16cd48de3b9a989056ff8df26f84a707c7e22f76bf186cf5ac9d56efeaf7f}
+}]\index{mixed\+\_\+block\+\_\+flag@{mixed\+\_\+block\+\_\+flag}!layer3.\+c@{layer3.\+c}}\index{layer3.\+c@{layer3.\+c}!mixed\+\_\+block\+\_\+flag@{mixed\+\_\+block\+\_\+flag}}\item[{\em 
+mixed\+\_\+block\+\_\+flag\hypertarget{layer3_8c_aa57e16cd48de3b9a989056ff8df26f84adf37b69a7ef97ec7a54b452589943270}{}\label{layer3_8c_aa57e16cd48de3b9a989056ff8df26f84adf37b69a7ef97ec7a54b452589943270}
+}]\end{description}
+\end{Desc}
+
+
+Definition at line 50 of file layer3.\+c.
+
+\subsubsection[{\texorpdfstring{anonymous enum}{anonymous enum}}]{\setlength{\rightskip}{0pt plus 5cm}anonymous enum}\hypertarget{layer3_8c_a634f9f55e799f3052a34590f08100017}{}\label{layer3_8c_a634f9f55e799f3052a34590f08100017}
+\begin{Desc}
+\item[Enumerator]\par
+\begin{description}
+\index{I\+\_\+\+S\+T\+E\+R\+EO@{I\+\_\+\+S\+T\+E\+R\+EO}!layer3.\+c@{layer3.\+c}}\index{layer3.\+c@{layer3.\+c}!I\+\_\+\+S\+T\+E\+R\+EO@{I\+\_\+\+S\+T\+E\+R\+EO}}\item[{\em 
+I\+\_\+\+S\+T\+E\+R\+EO\hypertarget{layer3_8c_a634f9f55e799f3052a34590f08100017ab2daed1d6867470c115cb0911462064e}{}\label{layer3_8c_a634f9f55e799f3052a34590f08100017ab2daed1d6867470c115cb0911462064e}
+}]\index{M\+S\+\_\+\+S\+T\+E\+R\+EO@{M\+S\+\_\+\+S\+T\+E\+R\+EO}!layer3.\+c@{layer3.\+c}}\index{layer3.\+c@{layer3.\+c}!M\+S\+\_\+\+S\+T\+E\+R\+EO@{M\+S\+\_\+\+S\+T\+E\+R\+EO}}\item[{\em 
+M\+S\+\_\+\+S\+T\+E\+R\+EO\hypertarget{layer3_8c_a634f9f55e799f3052a34590f08100017a4d85b480cf12d199d4dfe097e95b8745}{}\label{layer3_8c_a634f9f55e799f3052a34590f08100017a4d85b480cf12d199d4dfe097e95b8745}
+}]\end{description}
+\end{Desc}
+
+
+Definition at line 57 of file layer3.\+c.
+
+
+
+\subsection{Function Documentation}
+\index{layer3.\+c@{layer3.\+c}!mad\+\_\+layer\+\_\+\+I\+II@{mad\+\_\+layer\+\_\+\+I\+II}}
+\index{mad\+\_\+layer\+\_\+\+I\+II@{mad\+\_\+layer\+\_\+\+I\+II}!layer3.\+c@{layer3.\+c}}
+\subsubsection[{\texorpdfstring{mad\+\_\+layer\+\_\+\+I\+I\+I(struct mad\+\_\+stream $\ast$stream, struct mad\+\_\+frame $\ast$frame)}{mad_layer_III(struct mad_stream *stream, struct mad_frame *frame)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf int} mad\+\_\+layer\+\_\+\+I\+II (
+\begin{DoxyParamCaption}
+\item[{struct {\bf mad\+\_\+stream} $\ast$}]{stream, }
+\item[{struct {\bf mad\+\_\+frame} $\ast$}]{frame}
+\end{DoxyParamCaption}
+)}\hypertarget{layer3_8c_ad1d86c6f04764597294113498fc311f7}{}\label{layer3_8c_ad1d86c6f04764597294113498fc311f7}
+
+
+Definition at line 2516 of file layer3.\+c.
+
+
+
+\subsection{Variable Documentation}
+\index{layer3.\+c@{layer3.\+c}!l@{l}}
+\index{l@{l}!layer3.\+c@{layer3.\+c}}
+\subsubsection[{\texorpdfstring{l}{l}}]{\setlength{\rightskip}{0pt plus 5cm}unsigned char {\bf const}$\ast$ l}\hypertarget{layer3_8c_a741dbb4d8e78c3cb69915db7282fcec0}{}\label{layer3_8c_a741dbb4d8e78c3cb69915db7282fcec0}
+
+
+Definition at line 303 of file layer3.\+c.
+
+\index{layer3.\+c@{layer3.\+c}!m@{m}}
+\index{m@{m}!layer3.\+c@{layer3.\+c}}
+\subsubsection[{\texorpdfstring{m}{m}}]{\setlength{\rightskip}{0pt plus 5cm}unsigned char {\bf const}$\ast$ m}\hypertarget{layer3_8c_a4b8bfe70f28d6faddcb10d6ecf8c1989}{}\label{layer3_8c_a4b8bfe70f28d6faddcb10d6ecf8c1989}
+
+
+Definition at line 305 of file layer3.\+c.
+
+\index{layer3.\+c@{layer3.\+c}!s@{s}}
+\index{s@{s}!layer3.\+c@{layer3.\+c}}
+\subsubsection[{\texorpdfstring{s}{s}}]{\setlength{\rightskip}{0pt plus 5cm}unsigned char {\bf const}$\ast$ {\bf s}}\hypertarget{layer3_8c_ae3c712a485a2ad95beb3032edecaba3a}{}\label{layer3_8c_ae3c712a485a2ad95beb3032edecaba3a}
+
+
+Definition at line 304 of file layer3.\+c.
+
+\index{layer3.\+c@{layer3.\+c}!slen1@{slen1}}
+\index{slen1@{slen1}!layer3.\+c@{layer3.\+c}}
+\subsubsection[{\texorpdfstring{slen1}{slen1}}]{\setlength{\rightskip}{0pt plus 5cm}unsigned char slen1}\hypertarget{layer3_8c_a0067b27321945c4dfda6ca6b33a56c9e}{}\label{layer3_8c_a0067b27321945c4dfda6ca6b33a56c9e}
+
+
+Definition at line 95 of file layer3.\+c.
+
+\index{layer3.\+c@{layer3.\+c}!slen2@{slen2}}
+\index{slen2@{slen2}!layer3.\+c@{layer3.\+c}}
+\subsubsection[{\texorpdfstring{slen2}{slen2}}]{\setlength{\rightskip}{0pt plus 5cm}unsigned char slen2}\hypertarget{layer3_8c_a8a77842ffae6378eff663e2acb50aa9f}{}\label{layer3_8c_a8a77842ffae6378eff663e2acb50aa9f}
+
+
+Definition at line 96 of file layer3.\+c.
+

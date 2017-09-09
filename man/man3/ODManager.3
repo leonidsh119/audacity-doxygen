@@ -1,0 +1,485 @@
+.TH "ODManager" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+ODManager \- A singleton that manages currently running Tasks on an arbitrary number of threads\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <ODManager\&.h>\fP
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "class \fBODManagerHelperThread\fP"
+.br
+.in -1c
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBvoid\fP \fBDemandTrackUpdate\fP (\fBWaveTrack\fP *track, double seconds)"
+.br
+.RI "\fIchanges the tasks associated with this Waveform to process the task from a different point in the track \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBDecrementCurrentThreads\fP ()"
+.br
+.RI "\fIReduces the count of current threads running\&. Meant to be called when ODTaskThreads end in their own threads\&. Thread-safe\&. \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBAddNewTask\fP (\fBODTask\fP *task, \fBbool\fP lockMutex=\fBtrue\fP)"
+.br
+.RI "\fIAdds a wavetrack, creates a queue member\&. \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBSignalTaskQueueLoop\fP ()"
+.br
+.RI "\fIWakes the queue loop up by signalling its condition variable\&. \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBRemoveWaveTrack\fP (\fBWaveTrack\fP *track)"
+.br
+.RI "\fIremoves a wavetrack and notifies its associated tasks to stop using its reference\&. \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBMakeWaveTrackIndependent\fP (\fBWaveTrack\fP *track)"
+.br
+.RI "\fIif it shares a queue/task, creates a NEW queue/task for the track, and removes it from any previously existing tasks\&. \fP"
+.ti -1c
+.RI "\fBbool\fP \fBMakeWaveTrackDependent\fP (\fBWaveTrack\fP *dependentTrack, \fBWaveTrack\fP *masterTrack)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBReplaceWaveTrack\fP (\fBWaveTrack\fP *oldTrack, \fBWaveTrack\fP *newTrack)"
+.br
+.RI "\fIreplace the wavetrack whose wavecache the gui watches for updates \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBAddTask\fP (\fBODTask\fP *task)"
+.br
+.RI "\fIAdds a task to the running queue\&. Threas-safe\&. \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBRemoveTaskIfInQueue\fP (\fBODTask\fP *task)"
+.br
+.RI "\fIremoves a task from the active task queue \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBFillTipForWaveTrack\fP (\fBWaveTrack\fP *\fBt\fP, wxString &tip)"
+.br
+.RI "\fIfills in the status bar message for a given track \fP"
+.ti -1c
+.RI "float \fBGetOverallPercentComplete\fP ()"
+.br
+.RI "\fIGets the total percent complete for all tasks combined\&. \fP"
+.ti -1c
+.RI "\fBint\fP \fBGetTotalNumTasks\fP ()"
+.br
+.RI "\fIGet Total Number of Tasks\&. \fP"
+.in -1c
+.SS "Static Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "static \fBODManager\fP * \fBInstanceFirstTime\fP ()"
+.br
+.RI "\fIGets the singleton instance\&. \fP"
+.ti -1c
+.RI "static \fBODManager\fP * \fBInstanceNormal\fP ()"
+.br
+.RI "\fIGets the singleton instance\&. \fP"
+.ti -1c
+.RI "static \fBvoid\fP \fBQuit\fP ()"
+.br
+.RI "\fIKills the ODMananger Thread\&. \fP"
+.ti -1c
+.RI "static \fBvoid\fP \fBMarkLoadedODFlag\fP ()"
+.br
+.RI "\fIsets a flag that is set if we have loaded some OD blockfiles from PCM\&. \fP"
+.ti -1c
+.RI "static \fBvoid\fP \fBUnmarkLoadedODFlag\fP ()"
+.br
+.RI "\fIresets a flag that is set if we have loaded some OD blockfiles from PCM\&. \fP"
+.ti -1c
+.RI "static \fBbool\fP \fBHasLoadedODFlag\fP ()"
+.br
+.RI "\fIreturns a flag that is set if we have loaded some OD blockfiles from PCM\&. \fP"
+.ti -1c
+.RI "static \fBbool\fP \fBIsInstanceCreated\fP ()"
+.br
+.RI "\fIreturns whether or not the singleton instance was created yet \fP"
+.ti -1c
+.RI "static \fBvoid\fP \fBPause\fP (\fBbool\fP \fBpause\fP=\fBtrue\fP)"
+.br
+.ti -1c
+.RI "static \fBvoid\fP \fBResume\fP ()"
+.br
+.ti -1c
+.RI "static \fBvoid\fP \fBLockLibSndFileMutex\fP ()"
+.br
+.ti -1c
+.RI "static \fBvoid\fP \fBUnlockLibSndFileMutex\fP ()"
+.br
+.in -1c
+.SS "Static Public Attributes"
+
+.in +1c
+.ti -1c
+.RI "static \fBODManager\fP *(* \fBInstance\fP )() = &(\fBODManager::InstanceFirstTime\fP)"
+.br
+.in -1c
+.SS "Protected Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBODManager\fP ()"
+.br
+.ti -1c
+.RI "virtual \fB~ODManager\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBInit\fP ()"
+.br
+.RI "\fILaunches a thread for the manager and starts accepting Tasks\&. \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBStart\fP ()"
+.br
+.RI "\fIStart the main loop for the manager\&. \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBUpdateQueues\fP ()"
+.br
+.RI "\fIRemove references in our array to Tasks that have been completed/Schedule NEW ones\&. \fP"
+.in -1c
+.SS "Protected Attributes"
+
+.in +1c
+.ti -1c
+.RI "std::vector< \fBODWaveTrackTaskQueue\fP * > \fBmQueues\fP"
+.br
+.ti -1c
+.RI "\fBODLock\fP \fBmQueuesMutex\fP"
+.br
+.ti -1c
+.RI "std::vector< \fBODTask\fP * > \fBmTasks\fP"
+.br
+.ti -1c
+.RI "\fBODLock\fP \fBmTasksMutex\fP"
+.br
+.ti -1c
+.RI "volatile \fBbool\fP \fBmPause\fP"
+.br
+.ti -1c
+.RI "\fBODLock\fP \fBmPauseLock\fP"
+.br
+.ti -1c
+.RI "volatile \fBint\fP \fBmNeedsDraw\fP"
+.br
+.ti -1c
+.RI "volatile \fBint\fP \fBmCurrentThreads\fP"
+.br
+.RI "\fINumber of threads currently running\&. Accessed thru multiple threads\&. \fP"
+.ti -1c
+.RI "\fBODLock\fP \fBmCurrentThreadsMutex\fP"
+.br
+.ti -1c
+.RI "\fBint\fP \fBmMaxThreads\fP"
+.br
+.RI "\fIMaximum number of threads allowed out\&. \fP"
+.ti -1c
+.RI "volatile \fBbool\fP \fBmTerminate\fP"
+.br
+.ti -1c
+.RI "\fBODLock\fP \fBmTerminateMutex\fP"
+.br
+.ti -1c
+.RI "volatile \fBbool\fP \fBmTerminated\fP"
+.br
+.ti -1c
+.RI "\fBODLock\fP \fBmTerminatedMutex\fP"
+.br
+.ti -1c
+.RI "\fBODLock\fP \fBmQueueNotEmptyCondLock\fP"
+.br
+.ti -1c
+.RI "\fBODCondition\fP * \fBmQueueNotEmptyCond\fP"
+.br
+.in -1c
+.SS "Static Protected Attributes"
+
+.in +1c
+.ti -1c
+.RI "static \fBODManager\fP * \fBpMan\fP =\fBNULL\fP"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+A singleton that manages currently running Tasks on an arbitrary number of threads\&. 
+.PP
+Definition at line 43 of file ODManager\&.h\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "ODManager::ODManager ()\fC [protected]\fP"
+
+.PP
+Definition at line 65 of file ODManager\&.cpp\&.
+.SS "ODManager::~ODManager ()\fC [protected]\fP, \fC [virtual]\fP"
+
+.PP
+Definition at line 76 of file ODManager\&.cpp\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "\fBvoid\fP ODManager::AddNewTask (\fBODTask\fP * task, \fBbool\fP lockMutex = \fC\fBtrue\fP\fP)"
+
+.PP
+Adds a wavetrack, creates a queue member\&. Adds a NEW task to the queue\&. Creates a queue if the tracks associated with the task is not in the list
+.PP
+\fBParameters:\fP
+.RS 4
+\fItask\fP the task to add 
+.br
+\fIlockMutex\fP locks the mutexes if true (default)\&. This function is used within other \fBODManager\fP calls, which many need to set this to false\&. 
+.RE
+.PP
+
+.PP
+Definition at line 141 of file ODManager\&.cpp\&.
+.SS "\fBvoid\fP ODManager::AddTask (\fBODTask\fP * task)"
+
+.PP
+Adds a task to the running queue\&. Threas-safe\&. Adds a task to running queue\&. Thread-safe\&. 
+.PP
+Definition at line 87 of file ODManager\&.cpp\&.
+.SS "\fBvoid\fP ODManager::DecrementCurrentThreads ()"
+
+.PP
+Reduces the count of current threads running\&. Meant to be called when ODTaskThreads end in their own threads\&. Thread-safe\&. 
+.PP
+Definition at line 227 of file ODManager\&.cpp\&.
+.SS "\fBvoid\fP ODManager::DemandTrackUpdate (\fBWaveTrack\fP * track, double seconds)"
+
+.PP
+changes the tasks associated with this Waveform to process the task from a different point in the track changes the tasks associated with this Waveform to process the task from a different point in the track 
+.PP
+\fBParameters:\fP
+.RS 4
+\fItrack\fP the track to update 
+.br
+\fIseconds\fP the point in the track from which the tasks associated with track should begin processing from\&. 
+.RE
+.PP
+
+.PP
+Definition at line 478 of file ODManager\&.cpp\&.
+.SS "\fBvoid\fP ODManager::FillTipForWaveTrack (\fBWaveTrack\fP * t, wxString & tip)"
+
+.PP
+fills in the status bar message for a given track 
+.PP
+Definition at line 544 of file ODManager\&.cpp\&.
+.SS "float ODManager::GetOverallPercentComplete ()"
+
+.PP
+Gets the total percent complete for all tasks combined\&. 
+.PP
+Definition at line 555 of file ODManager\&.cpp\&.
+.SS "\fBint\fP ODManager::GetTotalNumTasks ()"
+
+.PP
+Get Total Number of Tasks\&. 
+.PP
+Definition at line 571 of file ODManager\&.cpp\&.
+.SS "\fBbool\fP ODManager::HasLoadedODFlag ()\fC [static]\fP"
+
+.PP
+returns a flag that is set if we have loaded some OD blockfiles from PCM\&. 
+.PP
+Definition at line 538 of file ODManager\&.cpp\&.
+.SS "\fBvoid\fP ODManager::Init ()\fC [protected]\fP"
+
+.PP
+Launches a thread for the manager and starts accepting Tasks\&. 
+.PP
+Definition at line 210 of file ODManager\&.cpp\&.
+.SS "\fBODManager\fP * ODManager::InstanceFirstTime ()\fC [static]\fP"
+
+.PP
+Gets the singleton instance\&. 
+.PP
+Definition at line 177 of file ODManager\&.cpp\&.
+.SS "\fBODManager\fP * ODManager::InstanceNormal ()\fC [static]\fP"
+
+.PP
+Gets the singleton instance\&. 
+.PP
+Definition at line 195 of file ODManager\&.cpp\&.
+.SS "\fBbool\fP ODManager::IsInstanceCreated ()\fC [static]\fP"
+
+.PP
+returns whether or not the singleton instance was created yet 
+.PP
+Definition at line 200 of file ODManager\&.cpp\&.
+.SS "\fBvoid\fP ODManager::LockLibSndFileMutex ()\fC [static]\fP"
+
+.PP
+Definition at line 53 of file ODManager\&.cpp\&.
+.SS "\fBbool\fP ODManager::MakeWaveTrackDependent (\fBWaveTrack\fP * dependentTrack, \fBWaveTrack\fP * masterTrack)"
+attach the track in question to another, already existing track's queues and tasks\&. Remove the task/tracks\&. Returns success if it was possible\&.\&. Some \fBODTask\fP conditions make it impossible until the Tasks finish\&.
+.PP
+attach the track in question to another, already existing track's queues and tasks\&. Remove the task/tracks\&. only works if both tracks exist\&. Sets needODUpdate flag for the task\&. This is complicated and will probably need better design in the future\&. 
+.PP
+\fBReturns:\fP
+.RS 4
+returns success\&. Some \fBODTask\fP conditions require that the tasks finish before merging\&. e\&.g\&. they have different effects being processed at the same time\&. 
+.RE
+.PP
+
+.PP
+Definition at line 431 of file ODManager\&.cpp\&.
+.SS "\fBvoid\fP ODManager::MakeWaveTrackIndependent (\fBWaveTrack\fP * track)"
+
+.PP
+if it shares a queue/task, creates a NEW queue/task for the track, and removes it from any previously existing tasks\&. 
+.PP
+Definition at line 408 of file ODManager\&.cpp\&.
+.SS "\fBvoid\fP ODManager::MarkLoadedODFlag ()\fC [static]\fP"
+
+.PP
+sets a flag that is set if we have loaded some OD blockfiles from PCM\&. 
+.PP
+Definition at line 524 of file ODManager\&.cpp\&.
+.SS "\fBvoid\fP ODManager::Pause (\fBbool\fP pause = \fC\fBtrue\fP\fP)\fC [static]\fP"
+
+.PP
+Definition at line 332 of file ODManager\&.cpp\&.
+.SS "\fBvoid\fP ODManager::Quit ()\fC [static]\fP"
+
+.PP
+Kills the ODMananger Thread\&. 
+.PP
+Definition at line 356 of file ODManager\&.cpp\&.
+.SS "\fBvoid\fP ODManager::RemoveTaskIfInQueue (\fBODTask\fP * task)"
+
+.PP
+removes a task from the active task queue 
+.PP
+Definition at line 121 of file ODManager\&.cpp\&.
+.SS "\fBvoid\fP ODManager::RemoveWaveTrack (\fBWaveTrack\fP * track)"
+
+.PP
+removes a wavetrack and notifies its associated tasks to stop using its reference\&. 
+.PP
+Definition at line 385 of file ODManager\&.cpp\&.
+.SS "\fBvoid\fP ODManager::ReplaceWaveTrack (\fBWaveTrack\fP * oldTrack, \fBWaveTrack\fP * newTrack)"
+
+.PP
+replace the wavetrack whose wavecache the gui watches for updates 
+.PP
+Definition at line 397 of file ODManager\&.cpp\&.
+.SS "\fBvoid\fP ODManager::Resume ()\fC [static]\fP"
+
+.PP
+Definition at line 351 of file ODManager\&.cpp\&.
+.SS "\fBvoid\fP ODManager::SignalTaskQueueLoop ()"
+
+.PP
+Wakes the queue loop up by signalling its condition variable\&. 
+.PP
+Definition at line 106 of file ODManager\&.cpp\&.
+.SS "\fBvoid\fP ODManager::Start ()\fC [protected]\fP"
+
+.PP
+Start the main loop for the manager\&. Main loop for managing threads and tasks\&. 
+.PP
+Definition at line 235 of file ODManager\&.cpp\&.
+.SS "\fBvoid\fP ODManager::UnlockLibSndFileMutex ()\fC [static]\fP"
+
+.PP
+Definition at line 58 of file ODManager\&.cpp\&.
+.SS "\fBvoid\fP ODManager::UnmarkLoadedODFlag ()\fC [static]\fP"
+
+.PP
+resets a flag that is set if we have loaded some OD blockfiles from PCM\&. 
+.PP
+Definition at line 531 of file ODManager\&.cpp\&.
+.SS "\fBvoid\fP ODManager::UpdateQueues ()\fC [protected]\fP"
+
+.PP
+Remove references in our array to Tasks that have been completed/Schedule NEW ones\&. remove tasks from ODWaveTrackTaskQueues that have been done\&. Schedules NEW ones if they exist Also remove queues that have become empty\&. 
+.PP
+Definition at line 490 of file ODManager\&.cpp\&.
+.SH "Member Data Documentation"
+.PP 
+.SS "\fBpfodman\fP ODManager::Instance = &(\fBODManager::InstanceFirstTime\fP)\fC [static]\fP"
+Gets the singleton instance - this is a function pointer that points to one of the below two instance calls\&. Note that it is not a member function pointer since it is a static function\&. the function pointer swapping is valid as long as the initial calls only happen from the main thread\&. 
+.PP
+Definition at line 49 of file ODManager\&.h\&.
+.SS "volatile \fBint\fP ODManager::mCurrentThreads\fC [protected]\fP"
+
+.PP
+Number of threads currently running\&. Accessed thru multiple threads\&. 
+.PP
+Definition at line 151 of file ODManager\&.h\&.
+.SS "\fBODLock\fP ODManager::mCurrentThreadsMutex\fC [protected]\fP"
+
+.PP
+Definition at line 153 of file ODManager\&.h\&.
+.SS "\fBint\fP ODManager::mMaxThreads\fC [protected]\fP"
+
+.PP
+Maximum number of threads allowed out\&. 
+.PP
+Definition at line 156 of file ODManager\&.h\&.
+.SS "volatile \fBint\fP ODManager::mNeedsDraw\fC [protected]\fP"
+
+.PP
+Definition at line 148 of file ODManager\&.h\&.
+.SS "volatile \fBbool\fP ODManager::mPause\fC [protected]\fP"
+
+.PP
+Definition at line 145 of file ODManager\&.h\&.
+.SS "\fBODLock\fP ODManager::mPauseLock\fC [protected]\fP"
+
+.PP
+Definition at line 146 of file ODManager\&.h\&.
+.SS "\fBODCondition\fP* ODManager::mQueueNotEmptyCond\fC [protected]\fP"
+
+.PP
+Definition at line 166 of file ODManager\&.h\&.
+.SS "\fBODLock\fP ODManager::mQueueNotEmptyCondLock\fC [protected]\fP"
+
+.PP
+Definition at line 165 of file ODManager\&.h\&.
+.SS "std::vector<\fBODWaveTrackTaskQueue\fP*> ODManager::mQueues\fC [protected]\fP"
+
+.PP
+Definition at line 136 of file ODManager\&.h\&.
+.SS "\fBODLock\fP ODManager::mQueuesMutex\fC [protected]\fP"
+
+.PP
+Definition at line 137 of file ODManager\&.h\&.
+.SS "std::vector<\fBODTask\fP*> ODManager::mTasks\fC [protected]\fP"
+
+.PP
+Definition at line 140 of file ODManager\&.h\&.
+.SS "\fBODLock\fP ODManager::mTasksMutex\fC [protected]\fP"
+
+.PP
+Definition at line 142 of file ODManager\&.h\&.
+.SS "volatile \fBbool\fP ODManager::mTerminate\fC [protected]\fP"
+
+.PP
+Definition at line 158 of file ODManager\&.h\&.
+.SS "volatile \fBbool\fP ODManager::mTerminated\fC [protected]\fP"
+
+.PP
+Definition at line 161 of file ODManager\&.h\&.
+.SS "\fBODLock\fP ODManager::mTerminatedMutex\fC [protected]\fP"
+
+.PP
+Definition at line 162 of file ODManager\&.h\&.
+.SS "\fBODLock\fP ODManager::mTerminateMutex\fC [protected]\fP"
+
+.PP
+Definition at line 159 of file ODManager\&.h\&.
+.SS "\fBODManager\fP * ODManager::pMan =\fBNULL\fP\fC [static]\fP, \fC [protected]\fP"
+
+.PP
+Definition at line 133 of file ODManager\&.h\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

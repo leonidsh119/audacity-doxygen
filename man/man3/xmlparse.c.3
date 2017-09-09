@@ -1,0 +1,1524 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/lib-src/expat/lib/xmlparse.c" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/lib-src/expat/lib/xmlparse.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <stddef\&.h>\fP
+.br
+\fC#include <string\&.h>\fP
+.br
+\fC#include <assert\&.h>\fP
+.br
+\fC#include <limits\&.h>\fP
+.br
+\fC#include <time\&.h>\fP
+.br
+\fC#include 'ascii\&.h'\fP
+.br
+\fC#include 'expat\&.h'\fP
+.br
+\fC#include 'internal\&.h'\fP
+.br
+\fC#include 'xmltok\&.h'\fP
+.br
+\fC#include 'xmlrole\&.h'\fP
+.br
+
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "struct \fBNAMED\fP"
+.br
+.ti -1c
+.RI "struct \fBHASH_TABLE\fP"
+.br
+.ti -1c
+.RI "struct \fBHASH_TABLE_ITER\fP"
+.br
+.ti -1c
+.RI "struct \fBbinding\fP"
+.br
+.ti -1c
+.RI "struct \fBprefix\fP"
+.br
+.ti -1c
+.RI "struct \fBTAG_NAME\fP"
+.br
+.ti -1c
+.RI "struct \fBtag\fP"
+.br
+.ti -1c
+.RI "struct \fBENTITY\fP"
+.br
+.ti -1c
+.RI "struct \fBCONTENT_SCAFFOLD\fP"
+.br
+.ti -1c
+.RI "struct \fBblock\fP"
+.br
+.ti -1c
+.RI "struct \fBSTRING_POOL\fP"
+.br
+.ti -1c
+.RI "struct \fBattribute_id\fP"
+.br
+.ti -1c
+.RI "struct \fBDEFAULT_ATTRIBUTE\fP"
+.br
+.ti -1c
+.RI "struct \fBNS_ATT\fP"
+.br
+.ti -1c
+.RI "struct \fBELEMENT_TYPE\fP"
+.br
+.ti -1c
+.RI "struct \fBDTD\fP"
+.br
+.ti -1c
+.RI "struct \fBopen_internal_entity\fP"
+.br
+.ti -1c
+.RI "struct \fBXML_ParserStruct\fP"
+.br
+.in -1c
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBXML_BUILDING_EXPAT\fP   1"
+.br
+.ti -1c
+.RI "#define \fBXML_ENCODE_MAX\fP   \fBXML_UTF8_ENCODE_MAX\fP"
+.br
+.ti -1c
+.RI "#define \fBXmlConvert\fP   \fBXmlUtf8Convert\fP"
+.br
+.ti -1c
+.RI "#define \fBXmlGetInternalEncoding\fP   \fBXmlGetUtf8InternalEncoding\fP"
+.br
+.ti -1c
+.RI "#define \fBXmlGetInternalEncodingNS\fP   \fBXmlGetUtf8InternalEncodingNS\fP"
+.br
+.ti -1c
+.RI "#define \fBXmlEncode\fP   \fBXmlUtf8Encode\fP"
+.br
+.ti -1c
+.RI "#define \fBMUST_CONVERT\fP(enc,  \fBs\fP)   (!(enc)\->isUtf8)"
+.br
+.ti -1c
+.RI "#define \fBXmlInitEncodingNS\fP   \fBXmlInitEncoding\fP"
+.br
+.ti -1c
+.RI "#define \fBXmlInitUnknownEncodingNS\fP   \fBXmlInitUnknownEncoding\fP"
+.br
+.ti -1c
+.RI "#define \fBXmlGetInternalEncodingNS\fP   \fBXmlGetInternalEncoding\fP"
+.br
+.ti -1c
+.RI "#define \fBXmlParseXmlDeclNS\fP   \fBXmlParseXmlDecl\fP"
+.br
+.ti -1c
+.RI "#define \fBXML_T\fP(x)   x"
+.br
+.ti -1c
+.RI "#define \fBXML_L\fP(x)   x"
+.br
+.ti -1c
+.RI "#define \fBROUND_UP\fP(n,  sz)   (((n) + ((sz) \- 1)) & ~((sz) \- 1))"
+.br
+.ti -1c
+.RI "#define \fBCHAR_HASH\fP(h,  \fBc\fP)   (((h) * 0xF4243) ^ (unsigned char)(c))"
+.br
+.ti -1c
+.RI "#define \fBSECOND_HASH\fP(\fBhash\fP,  \fBmask\fP,  power)   ((((\fBhash\fP) & ~(\fBmask\fP)) >> ((power) \- 1)) & ((\fBmask\fP) >> 2))"
+.br
+.ti -1c
+.RI "#define \fBPROBE_STEP\fP(\fBhash\fP,  \fBmask\fP,  power)   ((unsigned char)((\fBSECOND_HASH\fP(\fBhash\fP, \fBmask\fP, power)) | 1))"
+.br
+.ti -1c
+.RI "#define \fBINIT_TAG_BUF_SIZE\fP   32  /* must be \fBa\fP multiple \fBof\fP sizeof(\fBXML_Char\fP) */"
+.br
+.ti -1c
+.RI "#define \fBINIT_DATA_BUF_SIZE\fP   1024"
+.br
+.ti -1c
+.RI "#define \fBINIT_ATTS_SIZE\fP   16"
+.br
+.ti -1c
+.RI "#define \fBINIT_ATTS_VERSION\fP   0xFFFFFFFF"
+.br
+.ti -1c
+.RI "#define \fBINIT_BLOCK_SIZE\fP   1024"
+.br
+.ti -1c
+.RI "#define \fBINIT_BUFFER_SIZE\fP   1024"
+.br
+.ti -1c
+.RI "#define \fBEXPAND_SPARE\fP   24"
+.br
+.ti -1c
+.RI "#define \fBINIT_SCAFFOLD_ELEMENTS\fP   32"
+.br
+.ti -1c
+.RI "#define \fBpoolStart\fP(pool)   ((pool)\->\fBstart\fP)"
+.br
+.ti -1c
+.RI "#define \fBpoolEnd\fP(pool)   ((pool)\->ptr)"
+.br
+.ti -1c
+.RI "#define \fBpoolLength\fP(pool)   ((pool)\->ptr \- (pool)\->\fBstart\fP)"
+.br
+.ti -1c
+.RI "#define \fBpoolChop\fP(pool)   ((\fBvoid\fP)\-\-(pool\->ptr))"
+.br
+.ti -1c
+.RI "#define \fBpoolLastChar\fP(pool)   (((pool)\->ptr)[\-1])"
+.br
+.ti -1c
+.RI "#define \fBpoolDiscard\fP(pool)   ((pool)\->ptr = (pool)\->\fBstart\fP)"
+.br
+.ti -1c
+.RI "#define \fBpoolFinish\fP(pool)   ((pool)\->\fBstart\fP = (pool)\->ptr)"
+.br
+.ti -1c
+.RI "#define \fBpoolAppendChar\fP(pool,  \fBc\fP)"
+.br
+.ti -1c
+.RI "#define \fBMALLOC\fP(\fBs\fP)   (parser\->m_mem\&.malloc_fcn((\fBs\fP)))"
+.br
+.ti -1c
+.RI "#define \fBREALLOC\fP(\fBp\fP,  \fBs\fP)   (parser\->m_mem\&.realloc_fcn((\fBp\fP),(\fBs\fP)))"
+.br
+.ti -1c
+.RI "#define \fBFREE\fP(\fBp\fP)   (parser\->m_mem\&.free_fcn((\fBp\fP)))"
+.br
+.ti -1c
+.RI "#define \fBuserData\fP   (parser\->m_userData)"
+.br
+.ti -1c
+.RI "#define \fBhandlerArg\fP   (parser\->m_handlerArg)"
+.br
+.ti -1c
+.RI "#define \fBstartElementHandler\fP   (parser\->m_startElementHandler)"
+.br
+.ti -1c
+.RI "#define \fBendElementHandler\fP   (parser\->m_endElementHandler)"
+.br
+.ti -1c
+.RI "#define \fBcharacterDataHandler\fP   (parser\->m_characterDataHandler)"
+.br
+.ti -1c
+.RI "#define \fBprocessingInstructionHandler\fP   (parser\->m_processingInstructionHandler)"
+.br
+.ti -1c
+.RI "#define \fBcommentHandler\fP   (parser\->m_commentHandler)"
+.br
+.ti -1c
+.RI "#define \fBstartCdataSectionHandler\fP   (parser\->m_startCdataSectionHandler)"
+.br
+.ti -1c
+.RI "#define \fBendCdataSectionHandler\fP   (parser\->m_endCdataSectionHandler)"
+.br
+.ti -1c
+.RI "#define \fBdefaultHandler\fP   (parser\->m_defaultHandler)"
+.br
+.ti -1c
+.RI "#define \fBstartDoctypeDeclHandler\fP   (parser\->m_startDoctypeDeclHandler)"
+.br
+.ti -1c
+.RI "#define \fBendDoctypeDeclHandler\fP   (parser\->m_endDoctypeDeclHandler)"
+.br
+.ti -1c
+.RI "#define \fBunparsedEntityDeclHandler\fP   (parser\->m_unparsedEntityDeclHandler)"
+.br
+.ti -1c
+.RI "#define \fBnotationDeclHandler\fP   (parser\->m_notationDeclHandler)"
+.br
+.ti -1c
+.RI "#define \fBstartNamespaceDeclHandler\fP   (parser\->m_startNamespaceDeclHandler)"
+.br
+.ti -1c
+.RI "#define \fBendNamespaceDeclHandler\fP   (parser\->m_endNamespaceDeclHandler)"
+.br
+.ti -1c
+.RI "#define \fBnotStandaloneHandler\fP   (parser\->m_notStandaloneHandler)"
+.br
+.ti -1c
+.RI "#define \fBexternalEntityRefHandler\fP   (parser\->m_externalEntityRefHandler)"
+.br
+.ti -1c
+.RI "#define \fBexternalEntityRefHandlerArg\fP   (parser\->m_externalEntityRefHandlerArg)"
+.br
+.ti -1c
+.RI "#define \fBinternalEntityRefHandler\fP   (parser\->m_internalEntityRefHandler)"
+.br
+.ti -1c
+.RI "#define \fBskippedEntityHandler\fP   (parser\->m_skippedEntityHandler)"
+.br
+.ti -1c
+.RI "#define \fBunknownEncodingHandler\fP   (parser\->m_unknownEncodingHandler)"
+.br
+.ti -1c
+.RI "#define \fBelementDeclHandler\fP   (parser\->m_elementDeclHandler)"
+.br
+.ti -1c
+.RI "#define \fBattlistDeclHandler\fP   (parser\->m_attlistDeclHandler)"
+.br
+.ti -1c
+.RI "#define \fBentityDeclHandler\fP   (parser\->m_entityDeclHandler)"
+.br
+.ti -1c
+.RI "#define \fBxmlDeclHandler\fP   (parser\->m_xmlDeclHandler)"
+.br
+.ti -1c
+.RI "#define \fBencoding\fP   (parser\->m_encoding)"
+.br
+.ti -1c
+.RI "#define \fBinitEncoding\fP   (parser\->m_initEncoding)"
+.br
+.ti -1c
+.RI "#define \fBinternalEncoding\fP   (parser\->m_internalEncoding)"
+.br
+.ti -1c
+.RI "#define \fBunknownEncodingMem\fP   (parser\->m_unknownEncodingMem)"
+.br
+.ti -1c
+.RI "#define \fBunknownEncodingData\fP   (parser\->m_unknownEncodingData)"
+.br
+.ti -1c
+.RI "#define \fBunknownEncodingHandlerData\fP   (parser\->m_unknownEncodingHandlerData)"
+.br
+.ti -1c
+.RI "#define \fBunknownEncodingRelease\fP   (parser\->m_unknownEncodingRelease)"
+.br
+.ti -1c
+.RI "#define \fBprotocolEncodingName\fP   (parser\->m_protocolEncodingName)"
+.br
+.ti -1c
+.RI "#define \fBns\fP   (parser\->m_ns)"
+.br
+.ti -1c
+.RI "#define \fBns_triplets\fP   (parser\->m_ns_triplets)"
+.br
+.ti -1c
+.RI "#define \fBprologState\fP   (parser\->m_prologState)"
+.br
+.ti -1c
+.RI "#define \fBprocessor\fP   (parser\->m_processor)"
+.br
+.ti -1c
+.RI "#define \fBerrorCode\fP   (parser\->m_errorCode)"
+.br
+.ti -1c
+.RI "#define \fBeventPtr\fP   (parser\->m_eventPtr)"
+.br
+.ti -1c
+.RI "#define \fBeventEndPtr\fP   (parser\->m_eventEndPtr)"
+.br
+.ti -1c
+.RI "#define \fBpositionPtr\fP   (parser\->m_positionPtr)"
+.br
+.ti -1c
+.RI "#define \fBposition\fP   (parser\->m_position)"
+.br
+.ti -1c
+.RI "#define \fBopenInternalEntities\fP   (parser\->m_openInternalEntities)"
+.br
+.ti -1c
+.RI "#define \fBfreeInternalEntities\fP   (parser\->m_freeInternalEntities)"
+.br
+.ti -1c
+.RI "#define \fBdefaultExpandInternalEntities\fP   (parser\->m_defaultExpandInternalEntities)"
+.br
+.ti -1c
+.RI "#define \fBtagLevel\fP   (parser\->m_tagLevel)"
+.br
+.ti -1c
+.RI "#define \fBbuffer\fP   (parser\->m_buffer)"
+.br
+.ti -1c
+.RI "#define \fBbufferPtr\fP   (parser\->m_bufferPtr)"
+.br
+.ti -1c
+.RI "#define \fBbufferEnd\fP   (parser\->m_bufferEnd)"
+.br
+.ti -1c
+.RI "#define \fBparseEndByteIndex\fP   (parser\->m_parseEndByteIndex)"
+.br
+.ti -1c
+.RI "#define \fBparseEndPtr\fP   (parser\->m_parseEndPtr)"
+.br
+.ti -1c
+.RI "#define \fBbufferLim\fP   (parser\->m_bufferLim)"
+.br
+.ti -1c
+.RI "#define \fBdataBuf\fP   (parser\->m_dataBuf)"
+.br
+.ti -1c
+.RI "#define \fBdataBufEnd\fP   (parser\->m_dataBufEnd)"
+.br
+.ti -1c
+.RI "#define \fB_dtd\fP   (parser\->m_dtd)"
+.br
+.ti -1c
+.RI "#define \fBcurBase\fP   (parser\->m_curBase)"
+.br
+.ti -1c
+.RI "#define \fBdeclEntity\fP   (parser\->m_declEntity)"
+.br
+.ti -1c
+.RI "#define \fBdoctypeName\fP   (parser\->m_doctypeName)"
+.br
+.ti -1c
+.RI "#define \fBdoctypeSysid\fP   (parser\->m_doctypeSysid)"
+.br
+.ti -1c
+.RI "#define \fBdoctypePubid\fP   (parser\->m_doctypePubid)"
+.br
+.ti -1c
+.RI "#define \fBdeclAttributeType\fP   (parser\->m_declAttributeType)"
+.br
+.ti -1c
+.RI "#define \fBdeclNotationName\fP   (parser\->m_declNotationName)"
+.br
+.ti -1c
+.RI "#define \fBdeclNotationPublicId\fP   (parser\->m_declNotationPublicId)"
+.br
+.ti -1c
+.RI "#define \fBdeclElementType\fP   (parser\->m_declElementType)"
+.br
+.ti -1c
+.RI "#define \fBdeclAttributeId\fP   (parser\->m_declAttributeId)"
+.br
+.ti -1c
+.RI "#define \fBdeclAttributeIsCdata\fP   (parser\->m_declAttributeIsCdata)"
+.br
+.ti -1c
+.RI "#define \fBdeclAttributeIsId\fP   (parser\->m_declAttributeIsId)"
+.br
+.ti -1c
+.RI "#define \fBfreeTagList\fP   (parser\->m_freeTagList)"
+.br
+.ti -1c
+.RI "#define \fBfreeBindingList\fP   (parser\->m_freeBindingList)"
+.br
+.ti -1c
+.RI "#define \fBinheritedBindings\fP   (parser\->m_inheritedBindings)"
+.br
+.ti -1c
+.RI "#define \fBtagStack\fP   (parser\->m_tagStack)"
+.br
+.ti -1c
+.RI "#define \fBatts\fP   (parser\->m_atts)"
+.br
+.ti -1c
+.RI "#define \fBattsSize\fP   (parser\->m_attsSize)"
+.br
+.ti -1c
+.RI "#define \fBnSpecifiedAtts\fP   (parser\->m_nSpecifiedAtts)"
+.br
+.ti -1c
+.RI "#define \fBidAttIndex\fP   (parser\->m_idAttIndex)"
+.br
+.ti -1c
+.RI "#define \fBnsAtts\fP   (parser\->m_nsAtts)"
+.br
+.ti -1c
+.RI "#define \fBnsAttsVersion\fP   (parser\->m_nsAttsVersion)"
+.br
+.ti -1c
+.RI "#define \fBnsAttsPower\fP   (parser\->m_nsAttsPower)"
+.br
+.ti -1c
+.RI "#define \fBattInfo\fP   (parser\->m_attInfo)"
+.br
+.ti -1c
+.RI "#define \fBtempPool\fP   (parser\->m_tempPool)"
+.br
+.ti -1c
+.RI "#define \fBtemp2Pool\fP   (parser\->m_temp2Pool)"
+.br
+.ti -1c
+.RI "#define \fBgroupConnector\fP   (parser\->m_groupConnector)"
+.br
+.ti -1c
+.RI "#define \fBgroupSize\fP   (parser\->m_groupSize)"
+.br
+.ti -1c
+.RI "#define \fBnamespaceSeparator\fP   (parser\->m_namespaceSeparator)"
+.br
+.ti -1c
+.RI "#define \fBparentParser\fP   (parser\->m_parentParser)"
+.br
+.ti -1c
+.RI "#define \fBps_parsing\fP   (parser\->m_parsingStatus\&.parsing)"
+.br
+.ti -1c
+.RI "#define \fBps_finalBuffer\fP   (parser\->m_parsingStatus\&.finalBuffer)"
+.br
+.ti -1c
+.RI "#define \fBhash_secret_salt\fP   (parser\->m_hash_secret_salt)"
+.br
+.ti -1c
+.RI "#define \fBV1\fP(\fBa\fP,  \fBb\fP,  \fBc\fP)   \fBXML_L\fP(#\fBa\fP)\fBXML_L\fP('\&.')\fBXML_L\fP(#\fBb\fP)\fBXML_L\fP('\&.')\fBXML_L\fP(#\fBc\fP)"
+.br
+.ti -1c
+.RI "#define \fBV2\fP(\fBa\fP,  \fBb\fP,  \fBc\fP)   \fBXML_L\fP('expat_')V1(\fBa\fP,\fBb\fP,\fBc\fP)"
+.br
+.ti -1c
+.RI "#define \fBCONTEXT_SEP\fP   \fBXML_T\fP(\fBASCII_FF\fP)"
+.br
+.ti -1c
+.RI "#define \fBINIT_POWER\fP   6"
+.br
+.in -1c
+.SS "Typedefs"
+
+.in +1c
+.ti -1c
+.RI "typedef char \fBICHAR\fP"
+.br
+.ti -1c
+.RI "typedef \fBconst\fP \fBXML_Char\fP * \fBKEY\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBbinding\fP \fBBINDING\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBprefix\fP \fBPREFIX\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBtag\fP \fBTAG\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBblock\fP \fBBLOCK\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBattribute_id\fP \fBATTRIBUTE_ID\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBopen_internal_entity\fP \fBOPEN_INTERNAL_ENTITY\fP"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "enum \fBXML_Error\fP \fBPTRCALL\fP \fBProcessor\fP (\fBXML_Parser\fP parser, \fBconst\fP char *\fBstart\fP, \fBconst\fP char *\fBend\fP, \fBconst\fP char **endPtr)"
+.br
+.ti -1c
+.RI "\fBXML_Parser\fP \fBXMLCALL\fP \fBXML_ParserCreate\fP (\fBconst\fP \fBXML_Char\fP *encodingName)"
+.br
+.ti -1c
+.RI "\fBXML_Parser\fP \fBXMLCALL\fP \fBXML_ParserCreateNS\fP (\fBconst\fP \fBXML_Char\fP *encodingName, \fBXML_Char\fP nsSep)"
+.br
+.ti -1c
+.RI "\fBXML_Parser\fP \fBXMLCALL\fP \fBXML_ParserCreate_MM\fP (\fBconst\fP \fBXML_Char\fP *encodingName, \fBconst\fP \fBXML_Memory_Handling_Suite\fP *memsuite, \fBconst\fP \fBXML_Char\fP *nameSep)"
+.br
+.ti -1c
+.RI "\fBXML_Bool\fP \fBXMLCALL\fP \fBXML_ParserReset\fP (\fBXML_Parser\fP parser, \fBconst\fP \fBXML_Char\fP *encodingName)"
+.br
+.ti -1c
+.RI "enum \fBXML_Status\fP \fBXMLCALL\fP \fBXML_SetEncoding\fP (\fBXML_Parser\fP parser, \fBconst\fP \fBXML_Char\fP *encodingName)"
+.br
+.ti -1c
+.RI "\fBXML_Parser\fP \fBXMLCALL\fP \fBXML_ExternalEntityParserCreate\fP (\fBXML_Parser\fP oldParser, \fBconst\fP \fBXML_Char\fP *\fBcontext\fP, \fBconst\fP \fBXML_Char\fP *encodingName)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBXMLCALL\fP \fBXML_ParserFree\fP (\fBXML_Parser\fP parser)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBXMLCALL\fP \fBXML_UseParserAsHandlerArg\fP (\fBXML_Parser\fP parser)"
+.br
+.ti -1c
+.RI "enum \fBXML_Error\fP \fBXMLCALL\fP \fBXML_UseForeignDTD\fP (\fBXML_Parser\fP parser, \fBXML_Bool\fP useDTD)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBXMLCALL\fP \fBXML_SetReturnNSTriplet\fP (\fBXML_Parser\fP parser, \fBint\fP do_nst)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBXMLCALL\fP \fBXML_SetUserData\fP (\fBXML_Parser\fP parser, \fBvoid\fP *\fBp\fP)"
+.br
+.ti -1c
+.RI "enum \fBXML_Status\fP \fBXMLCALL\fP \fBXML_SetBase\fP (\fBXML_Parser\fP parser, \fBconst\fP \fBXML_Char\fP *\fBp\fP)"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBXML_Char\fP *\fBXMLCALL\fP \fBXML_GetBase\fP (\fBXML_Parser\fP parser)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBXMLCALL\fP \fBXML_GetSpecifiedAttributeCount\fP (\fBXML_Parser\fP parser)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBXMLCALL\fP \fBXML_GetIdAttributeIndex\fP (\fBXML_Parser\fP parser)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBXMLCALL\fP \fBXML_SetElementHandler\fP (\fBXML_Parser\fP parser, \fBXML_StartElementHandler\fP \fBstart\fP, \fBXML_EndElementHandler\fP \fBend\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBXMLCALL\fP \fBXML_SetStartElementHandler\fP (\fBXML_Parser\fP parser, \fBXML_StartElementHandler\fP \fBstart\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBXMLCALL\fP \fBXML_SetEndElementHandler\fP (\fBXML_Parser\fP parser, \fBXML_EndElementHandler\fP \fBend\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBXMLCALL\fP \fBXML_SetCharacterDataHandler\fP (\fBXML_Parser\fP parser, \fBXML_CharacterDataHandler\fP handler)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBXMLCALL\fP \fBXML_SetProcessingInstructionHandler\fP (\fBXML_Parser\fP parser, \fBXML_ProcessingInstructionHandler\fP handler)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBXMLCALL\fP \fBXML_SetCommentHandler\fP (\fBXML_Parser\fP parser, \fBXML_CommentHandler\fP handler)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBXMLCALL\fP \fBXML_SetCdataSectionHandler\fP (\fBXML_Parser\fP parser, \fBXML_StartCdataSectionHandler\fP \fBstart\fP, \fBXML_EndCdataSectionHandler\fP \fBend\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBXMLCALL\fP \fBXML_SetStartCdataSectionHandler\fP (\fBXML_Parser\fP parser, \fBXML_StartCdataSectionHandler\fP \fBstart\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBXMLCALL\fP \fBXML_SetEndCdataSectionHandler\fP (\fBXML_Parser\fP parser, \fBXML_EndCdataSectionHandler\fP \fBend\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBXMLCALL\fP \fBXML_SetDefaultHandler\fP (\fBXML_Parser\fP parser, \fBXML_DefaultHandler\fP handler)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBXMLCALL\fP \fBXML_SetDefaultHandlerExpand\fP (\fBXML_Parser\fP parser, \fBXML_DefaultHandler\fP handler)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBXMLCALL\fP \fBXML_SetDoctypeDeclHandler\fP (\fBXML_Parser\fP parser, \fBXML_StartDoctypeDeclHandler\fP \fBstart\fP, \fBXML_EndDoctypeDeclHandler\fP \fBend\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBXMLCALL\fP \fBXML_SetStartDoctypeDeclHandler\fP (\fBXML_Parser\fP parser, \fBXML_StartDoctypeDeclHandler\fP \fBstart\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBXMLCALL\fP \fBXML_SetEndDoctypeDeclHandler\fP (\fBXML_Parser\fP parser, \fBXML_EndDoctypeDeclHandler\fP \fBend\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBXMLCALL\fP \fBXML_SetUnparsedEntityDeclHandler\fP (\fBXML_Parser\fP parser, \fBXML_UnparsedEntityDeclHandler\fP handler)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBXMLCALL\fP \fBXML_SetNotationDeclHandler\fP (\fBXML_Parser\fP parser, \fBXML_NotationDeclHandler\fP handler)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBXMLCALL\fP \fBXML_SetNamespaceDeclHandler\fP (\fBXML_Parser\fP parser, \fBXML_StartNamespaceDeclHandler\fP \fBstart\fP, \fBXML_EndNamespaceDeclHandler\fP \fBend\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBXMLCALL\fP \fBXML_SetStartNamespaceDeclHandler\fP (\fBXML_Parser\fP parser, \fBXML_StartNamespaceDeclHandler\fP \fBstart\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBXMLCALL\fP \fBXML_SetEndNamespaceDeclHandler\fP (\fBXML_Parser\fP parser, \fBXML_EndNamespaceDeclHandler\fP \fBend\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBXMLCALL\fP \fBXML_SetNotStandaloneHandler\fP (\fBXML_Parser\fP parser, \fBXML_NotStandaloneHandler\fP handler)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBXMLCALL\fP \fBXML_SetExternalEntityRefHandler\fP (\fBXML_Parser\fP parser, \fBXML_ExternalEntityRefHandler\fP handler)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBXMLCALL\fP \fBXML_SetExternalEntityRefHandlerArg\fP (\fBXML_Parser\fP parser, \fBvoid\fP *arg)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBXMLCALL\fP \fBXML_SetSkippedEntityHandler\fP (\fBXML_Parser\fP parser, \fBXML_SkippedEntityHandler\fP handler)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBXMLCALL\fP \fBXML_SetUnknownEncodingHandler\fP (\fBXML_Parser\fP parser, \fBXML_UnknownEncodingHandler\fP handler, \fBvoid\fP *\fBdata\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBXMLCALL\fP \fBXML_SetElementDeclHandler\fP (\fBXML_Parser\fP parser, \fBXML_ElementDeclHandler\fP eldecl)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBXMLCALL\fP \fBXML_SetAttlistDeclHandler\fP (\fBXML_Parser\fP parser, \fBXML_AttlistDeclHandler\fP attdecl)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBXMLCALL\fP \fBXML_SetEntityDeclHandler\fP (\fBXML_Parser\fP parser, \fBXML_EntityDeclHandler\fP handler)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBXMLCALL\fP \fBXML_SetXmlDeclHandler\fP (\fBXML_Parser\fP parser, \fBXML_XmlDeclHandler\fP handler)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBXMLCALL\fP \fBXML_SetParamEntityParsing\fP (\fBXML_Parser\fP parser, enum \fBXML_ParamEntityParsing\fP peParsing)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBXMLCALL\fP \fBXML_SetHashSalt\fP (\fBXML_Parser\fP parser, unsigned long hash_salt)"
+.br
+.ti -1c
+.RI "enum \fBXML_Status\fP \fBXMLCALL\fP \fBXML_Parse\fP (\fBXML_Parser\fP parser, \fBconst\fP char *\fBs\fP, \fBint\fP \fBlen\fP, \fBint\fP isFinal)"
+.br
+.ti -1c
+.RI "enum \fBXML_Status\fP \fBXMLCALL\fP \fBXML_ParseBuffer\fP (\fBXML_Parser\fP parser, \fBint\fP \fBlen\fP, \fBint\fP isFinal)"
+.br
+.ti -1c
+.RI "\fBvoid\fP *\fBXMLCALL\fP \fBXML_GetBuffer\fP (\fBXML_Parser\fP parser, \fBint\fP \fBlen\fP)"
+.br
+.ti -1c
+.RI "enum \fBXML_Status\fP \fBXMLCALL\fP \fBXML_StopParser\fP (\fBXML_Parser\fP parser, \fBXML_Bool\fP resumable)"
+.br
+.ti -1c
+.RI "enum \fBXML_Status\fP \fBXMLCALL\fP \fBXML_ResumeParser\fP (\fBXML_Parser\fP parser)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBXMLCALL\fP \fBXML_GetParsingStatus\fP (\fBXML_Parser\fP parser, \fBXML_ParsingStatus\fP *\fBstatus\fP)"
+.br
+.ti -1c
+.RI "enum \fBXML_Error\fP \fBXMLCALL\fP \fBXML_GetErrorCode\fP (\fBXML_Parser\fP parser)"
+.br
+.ti -1c
+.RI "\fBXML_Index\fP \fBXMLCALL\fP \fBXML_GetCurrentByteIndex\fP (\fBXML_Parser\fP parser)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBXMLCALL\fP \fBXML_GetCurrentByteCount\fP (\fBXML_Parser\fP parser)"
+.br
+.ti -1c
+.RI "\fBconst\fP char *\fBXMLCALL\fP \fBXML_GetInputContext\fP (\fBXML_Parser\fP parser, \fBint\fP *\fBoffset\fP, \fBint\fP *\fBsize\fP)"
+.br
+.ti -1c
+.RI "\fBXML_Size\fP \fBXMLCALL\fP \fBXML_GetCurrentLineNumber\fP (\fBXML_Parser\fP parser)"
+.br
+.ti -1c
+.RI "\fBXML_Size\fP \fBXMLCALL\fP \fBXML_GetCurrentColumnNumber\fP (\fBXML_Parser\fP parser)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBXMLCALL\fP \fBXML_FreeContentModel\fP (\fBXML_Parser\fP parser, \fBXML_Content\fP *\fBmodel\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP *\fBXMLCALL\fP \fBXML_MemMalloc\fP (\fBXML_Parser\fP parser, size_t \fBsize\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP *\fBXMLCALL\fP \fBXML_MemRealloc\fP (\fBXML_Parser\fP parser, \fBvoid\fP *ptr, size_t \fBsize\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBXMLCALL\fP \fBXML_MemFree\fP (\fBXML_Parser\fP parser, \fBvoid\fP *ptr)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBXMLCALL\fP \fBXML_DefaultCurrent\fP (\fBXML_Parser\fP parser)"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBXML_LChar\fP *\fBXMLCALL\fP \fBXML_ErrorString\fP (enum \fBXML_Error\fP code)"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBXML_LChar\fP *\fBXMLCALL\fP \fBXML_ExpatVersion\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBXML_Expat_Version\fP \fBXMLCALL\fP \fBXML_ExpatVersionInfo\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBXML_Feature\fP *\fBXMLCALL\fP \fBXML_GetFeatureList\fP (\fBvoid\fP)"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define _dtd   (parser\->m_dtd)"
+
+.PP
+Definition at line 630 of file xmlparse\&.c\&.
+.SS "#define attInfo   (parser\->m_attInfo)"
+
+.PP
+Definition at line 654 of file xmlparse\&.c\&.
+.SS "#define attlistDeclHandler   (parser\->m_attlistDeclHandler)"
+
+.PP
+Definition at line 596 of file xmlparse\&.c\&.
+.SS "#define \fBatts\fP   (parser\->m_atts)"
+
+.PP
+Definition at line 647 of file xmlparse\&.c\&.
+.SS "#define attsSize   (parser\->m_attsSize)"
+
+.PP
+Definition at line 648 of file xmlparse\&.c\&.
+.SS "#define \fBbuffer\fP   (parser\->m_buffer)"
+
+.PP
+Definition at line 622 of file xmlparse\&.c\&.
+.SS "#define bufferEnd   (parser\->m_bufferEnd)"
+
+.PP
+Definition at line 624 of file xmlparse\&.c\&.
+.SS "#define bufferLim   (parser\->m_bufferLim)"
+
+.PP
+Definition at line 627 of file xmlparse\&.c\&.
+.SS "#define bufferPtr   (parser\->m_bufferPtr)"
+
+.PP
+Definition at line 623 of file xmlparse\&.c\&.
+.SS "#define CHAR_HASH(h, \fBc\fP)   (((h) * 0xF4243) ^ (unsigned char)(c))"
+
+.PP
+Definition at line 113 of file xmlparse\&.c\&.
+.SS "#define characterDataHandler   (parser\->m_characterDataHandler)"
+
+.PP
+Definition at line 570 of file xmlparse\&.c\&.
+.SS "#define commentHandler   (parser\->m_commentHandler)"
+
+.PP
+Definition at line 573 of file xmlparse\&.c\&.
+.SS "#define CONTEXT_SEP   \fBXML_T\fP(\fBASCII_FF\fP)"
+
+.PP
+Definition at line 5490 of file xmlparse\&.c\&.
+.SS "#define curBase   (parser\->m_curBase)"
+
+.PP
+Definition at line 631 of file xmlparse\&.c\&.
+.SS "#define dataBuf   (parser\->m_dataBuf)"
+
+.PP
+Definition at line 628 of file xmlparse\&.c\&.
+.SS "#define dataBufEnd   (parser\->m_dataBufEnd)"
+
+.PP
+Definition at line 629 of file xmlparse\&.c\&.
+.SS "#define declAttributeId   (parser\->m_declAttributeId)"
+
+.PP
+Definition at line 640 of file xmlparse\&.c\&.
+.SS "#define declAttributeIsCdata   (parser\->m_declAttributeIsCdata)"
+
+.PP
+Definition at line 641 of file xmlparse\&.c\&.
+.SS "#define declAttributeIsId   (parser\->m_declAttributeIsId)"
+
+.PP
+Definition at line 642 of file xmlparse\&.c\&.
+.SS "#define declAttributeType   (parser\->m_declAttributeType)"
+
+.PP
+Definition at line 636 of file xmlparse\&.c\&.
+.SS "#define declElementType   (parser\->m_declElementType)"
+
+.PP
+Definition at line 639 of file xmlparse\&.c\&.
+.SS "#define declEntity   (parser\->m_declEntity)"
+
+.PP
+Definition at line 632 of file xmlparse\&.c\&.
+.SS "#define declNotationName   (parser\->m_declNotationName)"
+
+.PP
+Definition at line 637 of file xmlparse\&.c\&.
+.SS "#define declNotationPublicId   (parser\->m_declNotationPublicId)"
+
+.PP
+Definition at line 638 of file xmlparse\&.c\&.
+.SS "#define defaultExpandInternalEntities   (parser\->m_defaultExpandInternalEntities)"
+
+.PP
+Definition at line 619 of file xmlparse\&.c\&.
+.SS "#define defaultHandler   (parser\->m_defaultHandler)"
+
+.PP
+Definition at line 577 of file xmlparse\&.c\&.
+.SS "#define \fBdoctypeName\fP   (parser\->m_doctypeName)"
+
+.PP
+Definition at line 633 of file xmlparse\&.c\&.
+.SS "#define doctypePubid   (parser\->m_doctypePubid)"
+
+.PP
+Definition at line 635 of file xmlparse\&.c\&.
+.SS "#define doctypeSysid   (parser\->m_doctypeSysid)"
+
+.PP
+Definition at line 634 of file xmlparse\&.c\&.
+.SS "#define elementDeclHandler   (parser\->m_elementDeclHandler)"
+
+.PP
+Definition at line 595 of file xmlparse\&.c\&.
+.SS "#define \fBencoding\fP   (parser\->m_encoding)"
+
+.PP
+Definition at line 599 of file xmlparse\&.c\&.
+.SS "#define endCdataSectionHandler   (parser\->m_endCdataSectionHandler)"
+
+.PP
+Definition at line 576 of file xmlparse\&.c\&.
+.SS "#define endDoctypeDeclHandler   (parser\->m_endDoctypeDeclHandler)"
+
+.PP
+Definition at line 579 of file xmlparse\&.c\&.
+.SS "#define endElementHandler   (parser\->m_endElementHandler)"
+
+.PP
+Definition at line 569 of file xmlparse\&.c\&.
+.SS "#define endNamespaceDeclHandler   (parser\->m_endNamespaceDeclHandler)"
+
+.PP
+Definition at line 585 of file xmlparse\&.c\&.
+.SS "#define entityDeclHandler   (parser\->m_entityDeclHandler)"
+
+.PP
+Definition at line 597 of file xmlparse\&.c\&.
+.SS "#define errorCode   (parser\->m_errorCode)"
+
+.PP
+Definition at line 612 of file xmlparse\&.c\&.
+.SS "#define eventEndPtr   (parser\->m_eventEndPtr)"
+
+.PP
+Definition at line 614 of file xmlparse\&.c\&.
+.SS "#define eventPtr   (parser\->m_eventPtr)"
+
+.PP
+Definition at line 613 of file xmlparse\&.c\&.
+.SS "#define EXPAND_SPARE   24"
+
+.PP
+Definition at line 142 of file xmlparse\&.c\&.
+.SS "#define externalEntityRefHandler   (parser\->m_externalEntityRefHandler)"
+
+.PP
+Definition at line 587 of file xmlparse\&.c\&.
+.SS "#define externalEntityRefHandlerArg   (parser\->m_externalEntityRefHandlerArg)"
+
+.PP
+Definition at line 589 of file xmlparse\&.c\&.
+.SS "#define FREE(\fBp\fP)   (parser\->m_mem\&.free_fcn((\fBp\fP)))"
+
+.PP
+Definition at line 564 of file xmlparse\&.c\&.
+.SS "#define freeBindingList   (parser\->m_freeBindingList)"
+
+.PP
+Definition at line 644 of file xmlparse\&.c\&.
+.SS "#define freeInternalEntities   (parser\->m_freeInternalEntities)"
+
+.PP
+Definition at line 618 of file xmlparse\&.c\&.
+.SS "#define freeTagList   (parser\->m_freeTagList)"
+
+.PP
+Definition at line 643 of file xmlparse\&.c\&.
+.SS "#define groupConnector   (parser\->m_groupConnector)"
+
+.PP
+Definition at line 657 of file xmlparse\&.c\&.
+.SS "#define groupSize   (parser\->m_groupSize)"
+
+.PP
+Definition at line 658 of file xmlparse\&.c\&.
+.SS "#define handlerArg   (parser\->m_handlerArg)"
+
+.PP
+Definition at line 567 of file xmlparse\&.c\&.
+.SS "#define hash_secret_salt   (parser\->m_hash_secret_salt)"
+
+.PP
+Definition at line 668 of file xmlparse\&.c\&.
+.SS "#define idAttIndex   (parser\->m_idAttIndex)"
+
+.PP
+Definition at line 650 of file xmlparse\&.c\&.
+.SS "#define inheritedBindings   (parser\->m_inheritedBindings)"
+
+.PP
+Definition at line 645 of file xmlparse\&.c\&.
+.SS "#define INIT_ATTS_SIZE   16"
+
+.PP
+Definition at line 137 of file xmlparse\&.c\&.
+.SS "#define INIT_ATTS_VERSION   0xFFFFFFFF"
+
+.PP
+Definition at line 138 of file xmlparse\&.c\&.
+.SS "#define INIT_BLOCK_SIZE   1024"
+
+.PP
+Definition at line 139 of file xmlparse\&.c\&.
+.SS "#define INIT_BUFFER_SIZE   1024"
+
+.PP
+Definition at line 140 of file xmlparse\&.c\&.
+.SS "#define INIT_DATA_BUF_SIZE   1024"
+
+.PP
+Definition at line 136 of file xmlparse\&.c\&.
+.SS "#define INIT_POWER   6"
+
+.PP
+Definition at line 5949 of file xmlparse\&.c\&.
+.SS "#define INIT_SCAFFOLD_ELEMENTS   32"
+
+.PP
+Definition at line 215 of file xmlparse\&.c\&.
+.SS "#define INIT_TAG_BUF_SIZE   32  /* must be \fBa\fP multiple \fBof\fP sizeof(\fBXML_Char\fP) */"
+
+.PP
+Definition at line 135 of file xmlparse\&.c\&.
+.SS "#define initEncoding   (parser\->m_initEncoding)"
+
+.PP
+Definition at line 600 of file xmlparse\&.c\&.
+.SS "#define internalEncoding   (parser\->m_internalEncoding)"
+
+.PP
+Definition at line 601 of file xmlparse\&.c\&.
+.SS "#define internalEntityRefHandler   (parser\->m_internalEntityRefHandler)"
+
+.PP
+Definition at line 591 of file xmlparse\&.c\&.
+.SS "#define MALLOC(\fBs\fP)   (parser\->m_mem\&.malloc_fcn((\fBs\fP)))"
+
+.PP
+Definition at line 562 of file xmlparse\&.c\&.
+.SS "#define MUST_CONVERT(enc, \fBs\fP)   (!(enc)\->isUtf8)"
+
+.PP
+Definition at line 43 of file xmlparse\&.c\&.
+.SS "#define namespaceSeparator   (parser\->m_namespaceSeparator)"
+
+.PP
+Definition at line 659 of file xmlparse\&.c\&.
+.SS "#define notationDeclHandler   (parser\->m_notationDeclHandler)"
+
+.PP
+Definition at line 582 of file xmlparse\&.c\&.
+.SS "#define notStandaloneHandler   (parser\->m_notStandaloneHandler)"
+
+.PP
+Definition at line 586 of file xmlparse\&.c\&.
+.SS "#define ns   (parser\->m_ns)"
+
+.PP
+Definition at line 608 of file xmlparse\&.c\&.
+.SS "#define ns_triplets   (parser\->m_ns_triplets)"
+
+.PP
+Definition at line 609 of file xmlparse\&.c\&.
+.SS "#define nsAtts   (parser\->m_nsAtts)"
+
+.PP
+Definition at line 651 of file xmlparse\&.c\&.
+.SS "#define nsAttsPower   (parser\->m_nsAttsPower)"
+
+.PP
+Definition at line 653 of file xmlparse\&.c\&.
+.SS "#define nsAttsVersion   (parser\->m_nsAttsVersion)"
+
+.PP
+Definition at line 652 of file xmlparse\&.c\&.
+.SS "#define nSpecifiedAtts   (parser\->m_nSpecifiedAtts)"
+
+.PP
+Definition at line 649 of file xmlparse\&.c\&.
+.SS "#define openInternalEntities   (parser\->m_openInternalEntities)"
+
+.PP
+Definition at line 617 of file xmlparse\&.c\&.
+.SS "#define parentParser   (parser\->m_parentParser)"
+
+.PP
+Definition at line 660 of file xmlparse\&.c\&.
+.SS "#define parseEndByteIndex   (parser\->m_parseEndByteIndex)"
+
+.PP
+Definition at line 625 of file xmlparse\&.c\&.
+.SS "#define parseEndPtr   (parser\->m_parseEndPtr)"
+
+.PP
+Definition at line 626 of file xmlparse\&.c\&.
+.SS "#define poolAppendChar(pool, \fBc\fP)"
+\fBValue:\fP
+.PP
+.nf
+(((pool)->ptr == (pool)->end && !poolGrow(pool)) \
+   ? 0 \
+   : ((*((pool)->ptr)++ = c), 1))
+.fi
+.PP
+Definition at line 454 of file xmlparse\&.c\&.
+.SS "#define poolChop(pool)   ((\fBvoid\fP)\-\-(pool\->ptr))"
+
+.PP
+Definition at line 450 of file xmlparse\&.c\&.
+.SS "#define poolDiscard(pool)   ((pool)\->ptr = (pool)\->\fBstart\fP)"
+
+.PP
+Definition at line 452 of file xmlparse\&.c\&.
+.SS "#define poolEnd(pool)   ((pool)\->ptr)"
+
+.PP
+Definition at line 448 of file xmlparse\&.c\&.
+.SS "#define poolFinish(pool)   ((pool)\->\fBstart\fP = (pool)\->ptr)"
+
+.PP
+Definition at line 453 of file xmlparse\&.c\&.
+.SS "#define poolLastChar(pool)   (((pool)\->ptr)[\-1])"
+
+.PP
+Definition at line 451 of file xmlparse\&.c\&.
+.SS "#define poolLength(pool)   ((pool)\->ptr \- (pool)\->\fBstart\fP)"
+
+.PP
+Definition at line 449 of file xmlparse\&.c\&.
+.SS "#define poolStart(pool)   ((pool)\->\fBstart\fP)"
+
+.PP
+Definition at line 447 of file xmlparse\&.c\&.
+.SS "#define \fBposition\fP   (parser\->m_position)"
+
+.PP
+Definition at line 616 of file xmlparse\&.c\&.
+.SS "#define positionPtr   (parser\->m_positionPtr)"
+
+.PP
+Definition at line 615 of file xmlparse\&.c\&.
+.SS "#define PROBE_STEP(\fBhash\fP, \fBmask\fP, power)   ((unsigned char)((\fBSECOND_HASH\fP(\fBhash\fP, \fBmask\fP, power)) | 1))"
+
+.PP
+Definition at line 127 of file xmlparse\&.c\&.
+.SS "#define processingInstructionHandler   (parser\->m_processingInstructionHandler)"
+
+.PP
+Definition at line 571 of file xmlparse\&.c\&.
+.SS "#define processor   (parser\->m_processor)"
+
+.PP
+Definition at line 611 of file xmlparse\&.c\&.
+.SS "#define prologState   (parser\->m_prologState)"
+
+.PP
+Definition at line 610 of file xmlparse\&.c\&.
+.SS "#define protocolEncodingName   (parser\->m_protocolEncodingName)"
+
+.PP
+Definition at line 607 of file xmlparse\&.c\&.
+.SS "#define ps_finalBuffer   (parser\->m_parsingStatus\&.finalBuffer)"
+
+.PP
+Definition at line 662 of file xmlparse\&.c\&.
+.SS "#define ps_parsing   (parser\->m_parsingStatus\&.parsing)"
+
+.PP
+Definition at line 661 of file xmlparse\&.c\&.
+.SS "#define REALLOC(\fBp\fP, \fBs\fP)   (parser\->m_mem\&.realloc_fcn((\fBp\fP),(\fBs\fP)))"
+
+.PP
+Definition at line 563 of file xmlparse\&.c\&.
+.SS "#define ROUND_UP(n, sz)   (((n) + ((sz) \- 1)) & ~((sz) \- 1))"
+
+.PP
+Definition at line 76 of file xmlparse\&.c\&.
+.SS "#define SECOND_HASH(\fBhash\fP, \fBmask\fP, power)   ((((\fBhash\fP) & ~(\fBmask\fP)) >> ((power) \- 1)) & ((\fBmask\fP) >> 2))"
+
+.PP
+Definition at line 125 of file xmlparse\&.c\&.
+.SS "#define skippedEntityHandler   (parser\->m_skippedEntityHandler)"
+
+.PP
+Definition at line 593 of file xmlparse\&.c\&.
+.SS "#define startCdataSectionHandler   (parser\->m_startCdataSectionHandler)"
+
+.PP
+Definition at line 574 of file xmlparse\&.c\&.
+.SS "#define startDoctypeDeclHandler   (parser\->m_startDoctypeDeclHandler)"
+
+.PP
+Definition at line 578 of file xmlparse\&.c\&.
+.SS "#define startElementHandler   (parser\->m_startElementHandler)"
+
+.PP
+Definition at line 568 of file xmlparse\&.c\&.
+.SS "#define startNamespaceDeclHandler   (parser\->m_startNamespaceDeclHandler)"
+
+.PP
+Definition at line 583 of file xmlparse\&.c\&.
+.SS "#define tagLevel   (parser\->m_tagLevel)"
+
+.PP
+Definition at line 621 of file xmlparse\&.c\&.
+.SS "#define tagStack   (parser\->m_tagStack)"
+
+.PP
+Definition at line 646 of file xmlparse\&.c\&.
+.SS "#define temp2Pool   (parser\->m_temp2Pool)"
+
+.PP
+Definition at line 656 of file xmlparse\&.c\&.
+.SS "#define tempPool   (parser\->m_tempPool)"
+
+.PP
+Definition at line 655 of file xmlparse\&.c\&.
+.SS "#define unknownEncodingData   (parser\->m_unknownEncodingData)"
+
+.PP
+Definition at line 603 of file xmlparse\&.c\&.
+.SS "#define unknownEncodingHandler   (parser\->m_unknownEncodingHandler)"
+
+.PP
+Definition at line 594 of file xmlparse\&.c\&.
+.SS "#define unknownEncodingHandlerData   (parser\->m_unknownEncodingHandlerData)"
+
+.PP
+Definition at line 604 of file xmlparse\&.c\&.
+.SS "#define unknownEncodingMem   (parser\->m_unknownEncodingMem)"
+
+.PP
+Definition at line 602 of file xmlparse\&.c\&.
+.SS "#define unknownEncodingRelease   (parser\->m_unknownEncodingRelease)"
+
+.PP
+Definition at line 606 of file xmlparse\&.c\&.
+.SS "#define unparsedEntityDeclHandler   (parser\->m_unparsedEntityDeclHandler)"
+
+.PP
+Definition at line 580 of file xmlparse\&.c\&.
+.SS "#define userData   (parser\->m_userData)"
+
+.PP
+Definition at line 566 of file xmlparse\&.c\&.
+.SS "#define V1(\fBa\fP, \fBb\fP, \fBc\fP)   \fBXML_L\fP(#\fBa\fP)\fBXML_L\fP('\&.')\fBXML_L\fP(#\fBb\fP)\fBXML_L\fP('\&.')\fBXML_L\fP(#\fBc\fP)"
+
+.SS "#define V2(\fBa\fP, \fBb\fP, \fBc\fP)   \fBXML_L\fP('expat_')V1(\fBa\fP,\fBb\fP,\fBc\fP)"
+
+.SS "#define XML_BUILDING_EXPAT   1"
+
+.PP
+Definition at line 11 of file xmlparse\&.c\&.
+.SS "#define XML_ENCODE_MAX   \fBXML_UTF8_ENCODE_MAX\fP"
+
+.PP
+Definition at line 38 of file xmlparse\&.c\&.
+.SS "#define XML_L(x)   x"
+
+.PP
+Definition at line 71 of file xmlparse\&.c\&.
+.SS "#define XML_T(x)   x"
+
+.PP
+Definition at line 70 of file xmlparse\&.c\&.
+.SS "#define XmlConvert   \fBXmlUtf8Convert\fP"
+
+.PP
+Definition at line 39 of file xmlparse\&.c\&.
+.SS "#define xmlDeclHandler   (parser\->m_xmlDeclHandler)"
+
+.PP
+Definition at line 598 of file xmlparse\&.c\&.
+.SS "#define XmlEncode   \fBXmlUtf8Encode\fP"
+
+.PP
+Definition at line 42 of file xmlparse\&.c\&.
+.SS "#define XmlGetInternalEncoding   \fBXmlGetUtf8InternalEncoding\fP"
+
+.PP
+Definition at line 40 of file xmlparse\&.c\&.
+.SS "#define XmlGetInternalEncodingNS   \fBXmlGetUtf8InternalEncodingNS\fP"
+
+.PP
+Definition at line 53 of file xmlparse\&.c\&.
+.SS "#define XmlGetInternalEncodingNS   \fBXmlGetInternalEncoding\fP"
+
+.PP
+Definition at line 53 of file xmlparse\&.c\&.
+.SS "#define XmlInitEncodingNS   \fBXmlInitEncoding\fP"
+
+.PP
+Definition at line 50 of file xmlparse\&.c\&.
+.SS "#define XmlInitUnknownEncodingNS   \fBXmlInitUnknownEncoding\fP"
+
+.PP
+Definition at line 51 of file xmlparse\&.c\&.
+.SS "#define XmlParseXmlDeclNS   \fBXmlParseXmlDecl\fP"
+
+.PP
+Definition at line 54 of file xmlparse\&.c\&.
+.SH "Typedef Documentation"
+.PP 
+.SS "typedef struct \fBattribute_id\fP  \fBATTRIBUTE_ID\fP"
+
+.SS "typedef struct \fBbinding\fP  \fBBINDING\fP"
+
+.SS "typedef struct \fBblock\fP  \fBBLOCK\fP"
+
+.SS "typedef char \fBICHAR\fP"
+
+.PP
+Definition at line 44 of file xmlparse\&.c\&.
+.SS "typedef \fBconst\fP \fBXML_Char\fP* \fBKEY\fP"
+
+.PP
+Definition at line 91 of file xmlparse\&.c\&.
+.SS "typedef struct \fBopen_internal_entity\fP  \fBOPEN_INTERNAL_ENTITY\fP"
+
+.SS "typedef struct \fBprefix\fP  \fBPREFIX\fP"
+
+.SS "typedef struct \fBtag\fP  \fBTAG\fP"
+
+.SH "Function Documentation"
+.PP 
+.SS "enum \fBXML_Error\fP \fBPTRCALL\fP Processor (\fBXML_Parser\fP parser, \fBconst\fP char * start, \fBconst\fP char * end, \fBconst\fP char ** endPtr)"
+
+.SS "\fBvoid\fP \fBXMLCALL\fP XML_DefaultCurrent (\fBXML_Parser\fP parser)"
+
+.PP
+Definition at line 1914 of file xmlparse\&.c\&.
+.SS "\fBconst\fP \fBXML_LChar\fP* \fBXMLCALL\fP XML_ErrorString (enum \fBXML_Error\fP code)"
+
+.PP
+Definition at line 1928 of file xmlparse\&.c\&.
+.SS "\fBconst\fP \fBXML_LChar\fP* \fBXMLCALL\fP XML_ExpatVersion (\fBvoid\fP)"
+
+.PP
+Definition at line 1979 of file xmlparse\&.c\&.
+.SS "\fBXML_Expat_Version\fP \fBXMLCALL\fP XML_ExpatVersionInfo (\fBvoid\fP)"
+
+.PP
+Definition at line 1999 of file xmlparse\&.c\&.
+.SS "\fBXML_Parser\fP \fBXMLCALL\fP XML_ExternalEntityParserCreate (\fBXML_Parser\fP oldParser, \fBconst\fP \fBXML_Char\fP * context, \fBconst\fP \fBXML_Char\fP * encodingName)"
+
+.PP
+Definition at line 980 of file xmlparse\&.c\&.
+.SS "\fBvoid\fP \fBXMLCALL\fP XML_FreeContentModel (\fBXML_Parser\fP parser, \fBXML_Content\fP * model)"
+
+.PP
+Definition at line 1890 of file xmlparse\&.c\&.
+.SS "\fBconst\fP \fBXML_Char\fP* \fBXMLCALL\fP XML_GetBase (\fBXML_Parser\fP parser)"
+
+.PP
+Definition at line 1247 of file xmlparse\&.c\&.
+.SS "\fBvoid\fP* \fBXMLCALL\fP XML_GetBuffer (\fBXML_Parser\fP parser, \fBint\fP len)"
+
+.PP
+Definition at line 1679 of file xmlparse\&.c\&.
+.SS "\fBint\fP \fBXMLCALL\fP XML_GetCurrentByteCount (\fBXML_Parser\fP parser)"
+
+.PP
+Definition at line 1849 of file xmlparse\&.c\&.
+.SS "\fBXML_Index\fP \fBXMLCALL\fP XML_GetCurrentByteIndex (\fBXML_Parser\fP parser)"
+
+.PP
+Definition at line 1841 of file xmlparse\&.c\&.
+.SS "\fBXML_Size\fP \fBXMLCALL\fP XML_GetCurrentColumnNumber (\fBXML_Parser\fP parser)"
+
+.PP
+Definition at line 1880 of file xmlparse\&.c\&.
+.SS "\fBXML_Size\fP \fBXMLCALL\fP XML_GetCurrentLineNumber (\fBXML_Parser\fP parser)"
+
+.PP
+Definition at line 1870 of file xmlparse\&.c\&.
+.SS "enum \fBXML_Error\fP \fBXMLCALL\fP XML_GetErrorCode (\fBXML_Parser\fP parser)"
+
+.PP
+Definition at line 1835 of file xmlparse\&.c\&.
+.SS "\fBconst\fP \fBXML_Feature\fP* \fBXMLCALL\fP XML_GetFeatureList (\fBvoid\fP)"
+
+.PP
+Definition at line 2011 of file xmlparse\&.c\&.
+.SS "\fBint\fP \fBXMLCALL\fP XML_GetIdAttributeIndex (\fBXML_Parser\fP parser)"
+
+.PP
+Definition at line 1259 of file xmlparse\&.c\&.
+.SS "\fBconst\fP char* \fBXMLCALL\fP XML_GetInputContext (\fBXML_Parser\fP parser, \fBint\fP * offset, \fBint\fP * size)"
+
+.PP
+Definition at line 1857 of file xmlparse\&.c\&.
+.SS "\fBvoid\fP \fBXMLCALL\fP XML_GetParsingStatus (\fBXML_Parser\fP parser, \fBXML_ParsingStatus\fP * status)"
+
+.PP
+Definition at line 1828 of file xmlparse\&.c\&.
+.SS "\fBint\fP \fBXMLCALL\fP XML_GetSpecifiedAttributeCount (\fBXML_Parser\fP parser)"
+
+.PP
+Definition at line 1253 of file xmlparse\&.c\&.
+.SS "\fBvoid\fP \fBXMLCALL\fP XML_MemFree (\fBXML_Parser\fP parser, \fBvoid\fP * ptr)"
+
+.PP
+Definition at line 1908 of file xmlparse\&.c\&.
+.SS "\fBvoid\fP* \fBXMLCALL\fP XML_MemMalloc (\fBXML_Parser\fP parser, size_t size)"
+
+.PP
+Definition at line 1896 of file xmlparse\&.c\&.
+.SS "\fBvoid\fP* \fBXMLCALL\fP XML_MemRealloc (\fBXML_Parser\fP parser, \fBvoid\fP * ptr, size_t size)"
+
+.PP
+Definition at line 1902 of file xmlparse\&.c\&.
+.SS "enum \fBXML_Status\fP \fBXMLCALL\fP XML_Parse (\fBXML_Parser\fP parser, \fBconst\fP char * s, \fBint\fP len, \fBint\fP isFinal)"
+
+.PP
+Definition at line 1500 of file xmlparse\&.c\&.
+.SS "enum \fBXML_Status\fP \fBXMLCALL\fP XML_ParseBuffer (\fBXML_Parser\fP parser, \fBint\fP len, \fBint\fP isFinal)"
+
+.PP
+Definition at line 1623 of file xmlparse\&.c\&.
+.SS "\fBXML_Parser\fP \fBXMLCALL\fP XML_ParserCreate (\fBconst\fP \fBXML_Char\fP * encodingName)"
+
+.PP
+Definition at line 671 of file xmlparse\&.c\&.
+.SS "\fBXML_Parser\fP \fBXMLCALL\fP XML_ParserCreate_MM (\fBconst\fP \fBXML_Char\fP * encodingName, \fBconst\fP \fBXML_Memory_Handling_Suite\fP * memsuite, \fBconst\fP \fBXML_Char\fP * nameSep)"
+
+.PP
+Definition at line 717 of file xmlparse\&.c\&.
+.SS "\fBXML_Parser\fP \fBXMLCALL\fP XML_ParserCreateNS (\fBconst\fP \fBXML_Char\fP * encodingName, \fBXML_Char\fP nsSep)"
+
+.PP
+Definition at line 677 of file xmlparse\&.c\&.
+.SS "\fBvoid\fP \fBXMLCALL\fP XML_ParserFree (\fBXML_Parser\fP parser)"
+
+.PP
+Definition at line 1130 of file xmlparse\&.c\&.
+.SS "\fBXML_Bool\fP \fBXMLCALL\fP XML_ParserReset (\fBXML_Parser\fP parser, \fBconst\fP \fBXML_Char\fP * encodingName)"
+
+.PP
+Definition at line 925 of file xmlparse\&.c\&.
+.SS "enum \fBXML_Status\fP \fBXMLCALL\fP XML_ResumeParser (\fBXML_Parser\fP parser)"
+
+.PP
+Definition at line 1790 of file xmlparse\&.c\&.
+.SS "\fBvoid\fP \fBXMLCALL\fP XML_SetAttlistDeclHandler (\fBXML_Parser\fP parser, \fBXML_AttlistDeclHandler\fP attdecl)"
+
+.PP
+Definition at line 1454 of file xmlparse\&.c\&.
+.SS "enum \fBXML_Status\fP \fBXMLCALL\fP XML_SetBase (\fBXML_Parser\fP parser, \fBconst\fP \fBXML_Char\fP * p)"
+
+.PP
+Definition at line 1233 of file xmlparse\&.c\&.
+.SS "\fBvoid\fP \fBXMLCALL\fP XML_SetCdataSectionHandler (\fBXML_Parser\fP parser, \fBXML_StartCdataSectionHandler\fP start, \fBXML_EndCdataSectionHandler\fP end)"
+
+.PP
+Definition at line 1315 of file xmlparse\&.c\&.
+.SS "\fBvoid\fP \fBXMLCALL\fP XML_SetCharacterDataHandler (\fBXML_Parser\fP parser, \fBXML_CharacterDataHandler\fP handler)"
+
+.PP
+Definition at line 1294 of file xmlparse\&.c\&.
+.SS "\fBvoid\fP \fBXMLCALL\fP XML_SetCommentHandler (\fBXML_Parser\fP parser, \fBXML_CommentHandler\fP handler)"
+
+.PP
+Definition at line 1308 of file xmlparse\&.c\&.
+.SS "\fBvoid\fP \fBXMLCALL\fP XML_SetDefaultHandler (\fBXML_Parser\fP parser, \fBXML_DefaultHandler\fP handler)"
+
+.PP
+Definition at line 1336 of file xmlparse\&.c\&.
+.SS "\fBvoid\fP \fBXMLCALL\fP XML_SetDefaultHandlerExpand (\fBXML_Parser\fP parser, \fBXML_DefaultHandler\fP handler)"
+
+.PP
+Definition at line 1344 of file xmlparse\&.c\&.
+.SS "\fBvoid\fP \fBXMLCALL\fP XML_SetDoctypeDeclHandler (\fBXML_Parser\fP parser, \fBXML_StartDoctypeDeclHandler\fP start, \fBXML_EndDoctypeDeclHandler\fP end)"
+
+.PP
+Definition at line 1352 of file xmlparse\&.c\&.
+.SS "\fBvoid\fP \fBXMLCALL\fP XML_SetElementDeclHandler (\fBXML_Parser\fP parser, \fBXML_ElementDeclHandler\fP eldecl)"
+
+.PP
+Definition at line 1447 of file xmlparse\&.c\&.
+.SS "\fBvoid\fP \fBXMLCALL\fP XML_SetElementHandler (\fBXML_Parser\fP parser, \fBXML_StartElementHandler\fP start, \fBXML_EndElementHandler\fP end)"
+
+.PP
+Definition at line 1273 of file xmlparse\&.c\&.
+.SS "enum \fBXML_Status\fP \fBXMLCALL\fP XML_SetEncoding (\fBXML_Parser\fP parser, \fBconst\fP \fBXML_Char\fP * encodingName)"
+
+.PP
+Definition at line 961 of file xmlparse\&.c\&.
+.SS "\fBvoid\fP \fBXMLCALL\fP XML_SetEndCdataSectionHandler (\fBXML_Parser\fP parser, \fBXML_EndCdataSectionHandler\fP end)"
+
+.PP
+Definition at line 1330 of file xmlparse\&.c\&.
+.SS "\fBvoid\fP \fBXMLCALL\fP XML_SetEndDoctypeDeclHandler (\fBXML_Parser\fP parser, \fBXML_EndDoctypeDeclHandler\fP end)"
+
+.PP
+Definition at line 1367 of file xmlparse\&.c\&.
+.SS "\fBvoid\fP \fBXMLCALL\fP XML_SetEndElementHandler (\fBXML_Parser\fP parser, \fBXML_EndElementHandler\fP end)"
+
+.PP
+Definition at line 1288 of file xmlparse\&.c\&.
+.SS "\fBvoid\fP \fBXMLCALL\fP XML_SetEndNamespaceDeclHandler (\fBXML_Parser\fP parser, \fBXML_EndNamespaceDeclHandler\fP end)"
+
+.PP
+Definition at line 1402 of file xmlparse\&.c\&.
+.SS "\fBvoid\fP \fBXMLCALL\fP XML_SetEntityDeclHandler (\fBXML_Parser\fP parser, \fBXML_EntityDeclHandler\fP handler)"
+
+.PP
+Definition at line 1461 of file xmlparse\&.c\&.
+.SS "\fBvoid\fP \fBXMLCALL\fP XML_SetExternalEntityRefHandler (\fBXML_Parser\fP parser, \fBXML_ExternalEntityRefHandler\fP handler)"
+
+.PP
+Definition at line 1415 of file xmlparse\&.c\&.
+.SS "\fBvoid\fP \fBXMLCALL\fP XML_SetExternalEntityRefHandlerArg (\fBXML_Parser\fP parser, \fBvoid\fP * arg)"
+
+.PP
+Definition at line 1422 of file xmlparse\&.c\&.
+.SS "\fBint\fP \fBXMLCALL\fP XML_SetHashSalt (\fBXML_Parser\fP parser, unsigned long hash_salt)"
+
+.PP
+Definition at line 1489 of file xmlparse\&.c\&.
+.SS "\fBvoid\fP \fBXMLCALL\fP XML_SetNamespaceDeclHandler (\fBXML_Parser\fP parser, \fBXML_StartNamespaceDeclHandler\fP start, \fBXML_EndNamespaceDeclHandler\fP end)"
+
+.PP
+Definition at line 1387 of file xmlparse\&.c\&.
+.SS "\fBvoid\fP \fBXMLCALL\fP XML_SetNotationDeclHandler (\fBXML_Parser\fP parser, \fBXML_NotationDeclHandler\fP handler)"
+
+.PP
+Definition at line 1380 of file xmlparse\&.c\&.
+.SS "\fBvoid\fP \fBXMLCALL\fP XML_SetNotStandaloneHandler (\fBXML_Parser\fP parser, \fBXML_NotStandaloneHandler\fP handler)"
+
+.PP
+Definition at line 1408 of file xmlparse\&.c\&.
+.SS "\fBint\fP \fBXMLCALL\fP XML_SetParamEntityParsing (\fBXML_Parser\fP parser, enum \fBXML_ParamEntityParsing\fP peParsing)"
+
+.PP
+Definition at line 1474 of file xmlparse\&.c\&.
+.SS "\fBvoid\fP \fBXMLCALL\fP XML_SetProcessingInstructionHandler (\fBXML_Parser\fP parser, \fBXML_ProcessingInstructionHandler\fP handler)"
+
+.PP
+Definition at line 1301 of file xmlparse\&.c\&.
+.SS "\fBvoid\fP \fBXMLCALL\fP XML_SetReturnNSTriplet (\fBXML_Parser\fP parser, \fBint\fP do_nst)"
+
+.PP
+Definition at line 1215 of file xmlparse\&.c\&.
+.SS "\fBvoid\fP \fBXMLCALL\fP XML_SetSkippedEntityHandler (\fBXML_Parser\fP parser, \fBXML_SkippedEntityHandler\fP handler)"
+
+.PP
+Definition at line 1431 of file xmlparse\&.c\&.
+.SS "\fBvoid\fP \fBXMLCALL\fP XML_SetStartCdataSectionHandler (\fBXML_Parser\fP parser, \fBXML_StartCdataSectionHandler\fP start)"
+
+.PP
+Definition at line 1324 of file xmlparse\&.c\&.
+.SS "\fBvoid\fP \fBXMLCALL\fP XML_SetStartDoctypeDeclHandler (\fBXML_Parser\fP parser, \fBXML_StartDoctypeDeclHandler\fP start)"
+
+.PP
+Definition at line 1361 of file xmlparse\&.c\&.
+.SS "\fBvoid\fP \fBXMLCALL\fP XML_SetStartElementHandler (\fBXML_Parser\fP parser, \fBXML_StartElementHandler\fP start)"
+
+.PP
+Definition at line 1282 of file xmlparse\&.c\&.
+.SS "\fBvoid\fP \fBXMLCALL\fP XML_SetStartNamespaceDeclHandler (\fBXML_Parser\fP parser, \fBXML_StartNamespaceDeclHandler\fP start)"
+
+.PP
+Definition at line 1396 of file xmlparse\&.c\&.
+.SS "\fBvoid\fP \fBXMLCALL\fP XML_SetUnknownEncodingHandler (\fBXML_Parser\fP parser, \fBXML_UnknownEncodingHandler\fP handler, \fBvoid\fP * data)"
+
+.PP
+Definition at line 1438 of file xmlparse\&.c\&.
+.SS "\fBvoid\fP \fBXMLCALL\fP XML_SetUnparsedEntityDeclHandler (\fBXML_Parser\fP parser, \fBXML_UnparsedEntityDeclHandler\fP handler)"
+
+.PP
+Definition at line 1373 of file xmlparse\&.c\&.
+.SS "\fBvoid\fP \fBXMLCALL\fP XML_SetUserData (\fBXML_Parser\fP parser, \fBvoid\fP * p)"
+
+.PP
+Definition at line 1224 of file xmlparse\&.c\&.
+.SS "\fBvoid\fP \fBXMLCALL\fP XML_SetXmlDeclHandler (\fBXML_Parser\fP parser, \fBXML_XmlDeclHandler\fP handler)"
+
+.PP
+Definition at line 1468 of file xmlparse\&.c\&.
+.SS "enum \fBXML_Status\fP \fBXMLCALL\fP XML_StopParser (\fBXML_Parser\fP parser, \fBXML_Bool\fP resumable)"
+
+.PP
+Definition at line 1760 of file xmlparse\&.c\&.
+.SS "enum \fBXML_Error\fP \fBXMLCALL\fP XML_UseForeignDTD (\fBXML_Parser\fP parser, \fBXML_Bool\fP useDTD)"
+
+.PP
+Definition at line 1201 of file xmlparse\&.c\&.
+.SS "\fBvoid\fP \fBXMLCALL\fP XML_UseParserAsHandlerArg (\fBXML_Parser\fP parser)"
+
+.PP
+Definition at line 1195 of file xmlparse\&.c\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

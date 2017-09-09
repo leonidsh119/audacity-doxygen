@@ -1,0 +1,150 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/lib-src/libsndfile/src/rf64.c" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/lib-src/libsndfile/src/rf64.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include 'sfconfig\&.h'\fP
+.br
+\fC#include <stdio\&.h>\fP
+.br
+\fC#include <fcntl\&.h>\fP
+.br
+\fC#include <string\&.h>\fP
+.br
+\fC#include <ctype\&.h>\fP
+.br
+\fC#include 'sndfile\&.h'\fP
+.br
+\fC#include 'sfendian\&.h'\fP
+.br
+\fC#include 'common\&.h'\fP
+.br
+\fC#include 'wav_w64\&.h'\fP
+.br
+
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBRF64_MARKER\fP   MAKE_MARKER ('R', '\fBF\fP', '6', '4')"
+.br
+.ti -1c
+.RI "#define \fBFFFF_MARKER\fP   MAKE_MARKER (0xff, 0xff, 0xff, 0xff)"
+.br
+.ti -1c
+.RI "#define \fBWAVE_MARKER\fP   MAKE_MARKER ('W', '\fBA\fP', '\fBV\fP', '\fBE\fP')"
+.br
+.ti -1c
+.RI "#define \fBds64_MARKER\fP   MAKE_MARKER ('\fBd\fP', '\fBs\fP', '6', '4')"
+.br
+.ti -1c
+.RI "#define \fBfmt_MARKER\fP   MAKE_MARKER ('\fBf\fP', '\fBm\fP', '\fBt\fP', ' ')"
+.br
+.ti -1c
+.RI "#define \fBfact_MARKER\fP   MAKE_MARKER ('\fBf\fP', '\fBa\fP', '\fBc\fP', '\fBt\fP')"
+.br
+.ti -1c
+.RI "#define \fBdata_MARKER\fP   MAKE_MARKER ('\fBd\fP', '\fBa\fP', '\fBt\fP', '\fBa\fP')"
+.br
+.ti -1c
+.RI "#define \fBbext_MARKER\fP   MAKE_MARKER ('\fBb\fP', 'e', 'x', '\fBt\fP')"
+.br
+.ti -1c
+.RI "#define \fBOggS_MARKER\fP   MAKE_MARKER ('O', 'g', 'g', '\fBS\fP')"
+.br
+.ti -1c
+.RI "#define \fBwvpk_MARKER\fP   MAKE_MARKER ('w', 'v', '\fBp\fP', '\fBk\fP')"
+.br
+.ti -1c
+.RI "#define \fBHAVE_CHUNK\fP(CHUNK)   ((parsestage & CHUNK) != 0)"
+.br
+.in -1c
+.SS "Enumerations"
+
+.in +1c
+.ti -1c
+.RI "enum { \fBHAVE_ds64\fP = 0x01, \fBHAVE_fmt\fP = 0x02, \fBHAVE_bext\fP = 0x04, \fBHAVE_data\fP = 0x08 }"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBint\fP \fBrf64_open\fP (\fBSF_PRIVATE\fP *psf)"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define bext_MARKER   MAKE_MARKER ('\fBb\fP', 'e', 'x', '\fBt\fP')"
+
+.PP
+Definition at line 51 of file rf64\&.c\&.
+.SS "#define data_MARKER   MAKE_MARKER ('\fBd\fP', '\fBa\fP', '\fBt\fP', '\fBa\fP')"
+
+.PP
+Definition at line 49 of file rf64\&.c\&.
+.SS "#define ds64_MARKER   MAKE_MARKER ('\fBd\fP', '\fBs\fP', '6', '4')"
+
+.PP
+Definition at line 46 of file rf64\&.c\&.
+.SS "#define fact_MARKER   MAKE_MARKER ('\fBf\fP', '\fBa\fP', '\fBc\fP', '\fBt\fP')"
+
+.PP
+Definition at line 48 of file rf64\&.c\&.
+.SS "#define FFFF_MARKER   MAKE_MARKER (0xff, 0xff, 0xff, 0xff)"
+
+.PP
+Definition at line 44 of file rf64\&.c\&.
+.SS "#define fmt_MARKER   MAKE_MARKER ('\fBf\fP', '\fBm\fP', '\fBt\fP', ' ')"
+
+.PP
+Definition at line 47 of file rf64\&.c\&.
+.SS "#define HAVE_CHUNK(CHUNK)   ((parsestage & CHUNK) != 0)"
+
+.PP
+Definition at line 154 of file rf64\&.c\&.
+.SS "#define OggS_MARKER   MAKE_MARKER ('O', 'g', 'g', '\fBS\fP')"
+
+.PP
+Definition at line 52 of file rf64\&.c\&.
+.SS "#define RF64_MARKER   MAKE_MARKER ('R', '\fBF\fP', '6', '4')"
+
+.PP
+Definition at line 43 of file rf64\&.c\&.
+.SS "#define WAVE_MARKER   MAKE_MARKER ('W', '\fBA\fP', '\fBV\fP', '\fBE\fP')"
+
+.PP
+Definition at line 45 of file rf64\&.c\&.
+.SS "#define wvpk_MARKER   MAKE_MARKER ('w', 'v', '\fBp\fP', '\fBk\fP')"
+
+.PP
+Definition at line 53 of file rf64\&.c\&.
+.SH "Enumeration Type Documentation"
+.PP 
+.SS "anonymous enum"
+
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fIHAVE_ds64 \fP\fP
+.TP
+\fB\fIHAVE_fmt \fP\fP
+.TP
+\fB\fIHAVE_bext \fP\fP
+.TP
+\fB\fIHAVE_data \fP\fP
+.PP
+Definition at line 147 of file rf64\&.c\&.
+.SH "Function Documentation"
+.PP 
+.SS "\fBint\fP rf64_open (\fBSF_PRIVATE\fP * psf)"
+
+.PP
+Definition at line 73 of file rf64\&.c\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

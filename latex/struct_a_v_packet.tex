@@ -1,0 +1,174 @@
+\hypertarget{struct_a_v_packet}{}\section{A\+V\+Packet Struct Reference}
+\label{struct_a_v_packet}\index{A\+V\+Packet@{A\+V\+Packet}}
+
+
+{\ttfamily \#include $<$avcodec.\+h$>$}
+
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{struct_a_v_buffer_ref}{A\+V\+Buffer\+Ref} $\ast$ \hyperlink{struct_a_v_packet_a3bf81872813551fe9343dd0e09993e38}{buf}
+\item 
+\hyperlink{lib-src_2ffmpeg_2win32_2stdint_8h_a67a9885ef4908cb72ce26d75b694386c}{int64\+\_\+t} \hyperlink{struct_a_v_packet_a73bde0a37f3b1efc839f11295bfbf42a}{pts}
+\item 
+\hyperlink{lib-src_2ffmpeg_2win32_2stdint_8h_a67a9885ef4908cb72ce26d75b694386c}{int64\+\_\+t} \hyperlink{struct_a_v_packet_a85dbbd306b44b02390cd91c45e6a0f76}{dts}
+\item 
+\hyperlink{lib-src_2ffmpeg_2win32_2stdint_8h_a9a941819355e6f658991890ff66b4b0e}{uint8\+\_\+t} $\ast$ \hyperlink{struct_a_v_packet_aaf4fe58dfcc7c232c1f2268b539d8367}{data}
+\item 
+\hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{struct_a_v_packet_a4d1ea19f63eb107111fd650ca514d1f4}{size}
+\item 
+\hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{struct_a_v_packet_a0d1cb9b5a32b00fb6edc81ea3aae2a49}{stream\+\_\+index}
+\item 
+\hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{struct_a_v_packet_a437be96a9da675f12caa228a9c81bd82}{flags}
+\item 
+\begin{tabbing}
+xx\=xx\=xx\=xx\=xx\=xx\=xx\=xx\=xx\=\kill
+struct \{\\
+\>\hyperlink{lib-src_2ffmpeg_2win32_2stdint_8h_a9a941819355e6f658991890ff66b4b0e}{uint8\_t} $\ast$ \hyperlink{struct_a_v_packet_aaf4fe58dfcc7c232c1f2268b539d8367}{data}\\
+\>\hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{struct_a_v_packet_a4d1ea19f63eb107111fd650ca514d1f4}{size}\\
+\>enum \hyperlink{group__lavc__packet_ga9a80bfcacc586b483a973272800edb97}{AVPacketSideDataType} \hyperlink{struct_a_v_packet_a01690f0be58299b32a1c37fb849ae724}{type}\\
+\} $\ast$ \hyperlink{struct_a_v_packet_afe42dfd3da47cb717a8183c9460436d2}{side\_data}\\
+
+\end{tabbing}\item 
+\hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{struct_a_v_packet_af415e25244b26921e8fc249d45499b84}{side\+\_\+data\+\_\+elems}
+\item 
+\hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{struct_a_v_packet_af151ba1967c37038088883cd544eeacd}{duration}
+\item 
+\hyperlink{attributes_8h_aa6d076561d3a9eea4729ee632652de02}{attribute\+\_\+deprecated} \hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void}($\ast$ \hyperlink{struct_a_v_packet_ad6441dd4a01abd03fdd05141e6bc4d6d}{destruct} )(struct \hyperlink{struct_a_v_packet}{A\+V\+Packet} $\ast$)
+\item 
+\hyperlink{attributes_8h_aa6d076561d3a9eea4729ee632652de02}{attribute\+\_\+deprecated} \hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} $\ast$ \hyperlink{struct_a_v_packet_aeba7ec45ff7ac22381ad066f8eafdc96}{priv}
+\item 
+\hyperlink{lib-src_2ffmpeg_2win32_2stdint_8h_a67a9885ef4908cb72ce26d75b694386c}{int64\+\_\+t} \hyperlink{struct_a_v_packet_ab5793d8195cf4789dfb3913b7a693903}{pos}
+\begin{DoxyCompactList}\small\item\em byte position in stream, -\/1 if unknown \end{DoxyCompactList}\item 
+\hyperlink{lib-src_2ffmpeg_2win32_2stdint_8h_a67a9885ef4908cb72ce26d75b694386c}{int64\+\_\+t} \hyperlink{struct_a_v_packet_a942409654446e8da1834c17ce69d0ce9}{convergence\+\_\+duration}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+This structure stores compressed data. It is typically exported by demuxers and then passed as input to decoders, or received as output from encoders and then passed to muxers.
+
+For video, it should typically contain one compressed frame. For audio it may contain several compressed frames.
+
+\hyperlink{struct_a_v_packet}{A\+V\+Packet} is one of the few structs in F\+Fmpeg, whose size is a part of public A\+BI. Thus it may be allocated on stack and no new fields can be added to it without libavcodec and libavformat major bump.
+
+The semantics of data ownership depends on the buf or destruct (deprecated) fields. If either is set, the packet data is dynamically allocated and is valid indefinitely until \hyperlink{group__lavc__packet_gae65881462e78f98b268f34661d921ee0}{av\+\_\+free\+\_\+packet()} is called (which in turn calls \hyperlink{group__lavu__buffer_ga135e9e929b5033bb8f68322497b2effc}{av\+\_\+buffer\+\_\+unref()}/the destruct callback to free the data). If neither is set, the packet data is typically backed by some static buffer somewhere and is only valid for a limited time (e.\+g. until the next read call when demuxing).
+
+The side data is always allocated with \hyperlink{group__lavu__mem_gacbca30ebc510a7e4156d66e7aceb2dc8}{av\+\_\+malloc()} and is freed in \hyperlink{group__lavc__packet_gae65881462e78f98b268f34661d921ee0}{av\+\_\+free\+\_\+packet()}. 
+
+Definition at line 1092 of file avcodec.\+h.
+
+
+
+\subsection{Member Data Documentation}
+\index{A\+V\+Packet@{A\+V\+Packet}!buf@{buf}}
+\index{buf@{buf}!A\+V\+Packet@{A\+V\+Packet}}
+\subsubsection[{\texorpdfstring{buf}{buf}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf A\+V\+Buffer\+Ref}$\ast$ A\+V\+Packet\+::buf}\hypertarget{struct_a_v_packet_a3bf81872813551fe9343dd0e09993e38}{}\label{struct_a_v_packet_a3bf81872813551fe9343dd0e09993e38}
+A reference to the reference-\/counted buffer where the packet data is stored. May be N\+U\+LL, then the packet data is not reference-\/counted. 
+
+Definition at line 1098 of file avcodec.\+h.
+
+\index{A\+V\+Packet@{A\+V\+Packet}!convergence\+\_\+duration@{convergence\+\_\+duration}}
+\index{convergence\+\_\+duration@{convergence\+\_\+duration}!A\+V\+Packet@{A\+V\+Packet}}
+\subsubsection[{\texorpdfstring{convergence\+\_\+duration}{convergence_duration}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf int64\+\_\+t} A\+V\+Packet\+::convergence\+\_\+duration}\hypertarget{struct_a_v_packet_a942409654446e8da1834c17ce69d0ce9}{}\label{struct_a_v_packet_a942409654446e8da1834c17ce69d0ce9}
+Time difference in A\+V\+Stream-\/$>$time\+\_\+base units from the pts of this packet to the point at which the output from the decoder has converged independent from the availability of previous frames. That is, the frames are virtually identical no matter if decoding started from the very first frame or from this keyframe. Is A\+V\+\_\+\+N\+O\+P\+T\+S\+\_\+\+V\+A\+L\+UE if unknown. This field is not the display duration of the current packet. This field has no meaning if the packet does not have A\+V\+\_\+\+P\+K\+T\+\_\+\+F\+L\+A\+G\+\_\+\+K\+EY set.
+
+The purpose of this field is to allow seeking in streams that have no keyframes in the conventional sense. It corresponds to the recovery point S\+EI in H.\+264 and match\+\_\+time\+\_\+delta in N\+UT. It is also essential for some types of subtitle streams to ensure that all subtitles are correctly displayed after seeking. 
+
+Definition at line 1163 of file avcodec.\+h.
+
+\index{A\+V\+Packet@{A\+V\+Packet}!data@{data}}
+\index{data@{data}!A\+V\+Packet@{A\+V\+Packet}}
+\subsubsection[{\texorpdfstring{data}{data}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint8\+\_\+t}$\ast$ A\+V\+Packet\+::data}\hypertarget{struct_a_v_packet_aaf4fe58dfcc7c232c1f2268b539d8367}{}\label{struct_a_v_packet_aaf4fe58dfcc7c232c1f2268b539d8367}
+
+
+Definition at line 1115 of file avcodec.\+h.
+
+\index{A\+V\+Packet@{A\+V\+Packet}!destruct@{destruct}}
+\index{destruct@{destruct}!A\+V\+Packet@{A\+V\+Packet}}
+\subsubsection[{\texorpdfstring{destruct}{destruct}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf attribute\+\_\+deprecated} {\bf void}($\ast$ A\+V\+Packet\+::destruct) (struct {\bf A\+V\+Packet} $\ast$)}\hypertarget{struct_a_v_packet_ad6441dd4a01abd03fdd05141e6bc4d6d}{}\label{struct_a_v_packet_ad6441dd4a01abd03fdd05141e6bc4d6d}
+
+
+Definition at line 1140 of file avcodec.\+h.
+
+\index{A\+V\+Packet@{A\+V\+Packet}!dts@{dts}}
+\index{dts@{dts}!A\+V\+Packet@{A\+V\+Packet}}
+\subsubsection[{\texorpdfstring{dts}{dts}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf int64\+\_\+t} A\+V\+Packet\+::dts}\hypertarget{struct_a_v_packet_a85dbbd306b44b02390cd91c45e6a0f76}{}\label{struct_a_v_packet_a85dbbd306b44b02390cd91c45e6a0f76}
+Decompression timestamp in A\+V\+Stream-\/$>$time\+\_\+base units; the time at which the packet is decompressed. Can be A\+V\+\_\+\+N\+O\+P\+T\+S\+\_\+\+V\+A\+L\+UE if it is not stored in the file. 
+
+Definition at line 1114 of file avcodec.\+h.
+
+\index{A\+V\+Packet@{A\+V\+Packet}!duration@{duration}}
+\index{duration@{duration}!A\+V\+Packet@{A\+V\+Packet}}
+\subsubsection[{\texorpdfstring{duration}{duration}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf int} A\+V\+Packet\+::duration}\hypertarget{struct_a_v_packet_af151ba1967c37038088883cd544eeacd}{}\label{struct_a_v_packet_af151ba1967c37038088883cd544eeacd}
+Duration of this packet in A\+V\+Stream-\/$>$time\+\_\+base units, 0 if unknown. Equals next\+\_\+pts -\/ this\+\_\+pts in presentation order. 
+
+Definition at line 1137 of file avcodec.\+h.
+
+\index{A\+V\+Packet@{A\+V\+Packet}!flags@{flags}}
+\index{flags@{flags}!A\+V\+Packet@{A\+V\+Packet}}
+\subsubsection[{\texorpdfstring{flags}{flags}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf int} A\+V\+Packet\+::flags}\hypertarget{struct_a_v_packet_a437be96a9da675f12caa228a9c81bd82}{}\label{struct_a_v_packet_a437be96a9da675f12caa228a9c81bd82}
+A combination of A\+V\+\_\+\+P\+K\+T\+\_\+\+F\+L\+AG values 
+
+Definition at line 1121 of file avcodec.\+h.
+
+\index{A\+V\+Packet@{A\+V\+Packet}!pos@{pos}}
+\index{pos@{pos}!A\+V\+Packet@{A\+V\+Packet}}
+\subsubsection[{\texorpdfstring{pos}{pos}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf int64\+\_\+t} A\+V\+Packet\+::pos}\hypertarget{struct_a_v_packet_ab5793d8195cf4789dfb3913b7a693903}{}\label{struct_a_v_packet_ab5793d8195cf4789dfb3913b7a693903}
+
+
+byte position in stream, -\/1 if unknown 
+
+
+
+Definition at line 1144 of file avcodec.\+h.
+
+\index{A\+V\+Packet@{A\+V\+Packet}!priv@{priv}}
+\index{priv@{priv}!A\+V\+Packet@{A\+V\+Packet}}
+\subsubsection[{\texorpdfstring{priv}{priv}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf attribute\+\_\+deprecated} {\bf void}$\ast$ A\+V\+Packet\+::priv}\hypertarget{struct_a_v_packet_aeba7ec45ff7ac22381ad066f8eafdc96}{}\label{struct_a_v_packet_aeba7ec45ff7ac22381ad066f8eafdc96}
+
+
+Definition at line 1142 of file avcodec.\+h.
+
+\index{A\+V\+Packet@{A\+V\+Packet}!pts@{pts}}
+\index{pts@{pts}!A\+V\+Packet@{A\+V\+Packet}}
+\subsubsection[{\texorpdfstring{pts}{pts}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf int64\+\_\+t} A\+V\+Packet\+::pts}\hypertarget{struct_a_v_packet_a73bde0a37f3b1efc839f11295bfbf42a}{}\label{struct_a_v_packet_a73bde0a37f3b1efc839f11295bfbf42a}
+Presentation timestamp in A\+V\+Stream-\/$>$time\+\_\+base units; the time at which the decompressed packet will be presented to the user. Can be A\+V\+\_\+\+N\+O\+P\+T\+S\+\_\+\+V\+A\+L\+UE if it is not stored in the file. pts M\+U\+ST be larger or equal to dts as presentation cannot happen before decompression, unless one wants to view hex dumps. Some formats misuse the terms dts and pts/cts to mean something different. Such timestamps must be converted to true pts/dts before they are stored in \hyperlink{struct_a_v_packet}{A\+V\+Packet}. 
+
+Definition at line 1108 of file avcodec.\+h.
+
+\index{A\+V\+Packet@{A\+V\+Packet}!side\+\_\+data@{side\+\_\+data}}
+\index{side\+\_\+data@{side\+\_\+data}!A\+V\+Packet@{A\+V\+Packet}}
+\subsubsection[{\texorpdfstring{side\+\_\+data}{side_data}}]{\setlength{\rightskip}{0pt plus 5cm}struct \{ ... \}  $\ast$ A\+V\+Packet\+::side\+\_\+data}\hypertarget{struct_a_v_packet_afe42dfd3da47cb717a8183c9460436d2}{}\label{struct_a_v_packet_afe42dfd3da47cb717a8183c9460436d2}
+Additional packet data that can be provided by the container. Packet can contain several types of side information. \index{A\+V\+Packet@{A\+V\+Packet}!side\+\_\+data\+\_\+elems@{side\+\_\+data\+\_\+elems}}
+\index{side\+\_\+data\+\_\+elems@{side\+\_\+data\+\_\+elems}!A\+V\+Packet@{A\+V\+Packet}}
+\subsubsection[{\texorpdfstring{side\+\_\+data\+\_\+elems}{side_data_elems}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf int} A\+V\+Packet\+::side\+\_\+data\+\_\+elems}\hypertarget{struct_a_v_packet_af415e25244b26921e8fc249d45499b84}{}\label{struct_a_v_packet_af415e25244b26921e8fc249d45499b84}
+
+
+Definition at line 1131 of file avcodec.\+h.
+
+\index{A\+V\+Packet@{A\+V\+Packet}!size@{size}}
+\index{size@{size}!A\+V\+Packet@{A\+V\+Packet}}
+\subsubsection[{\texorpdfstring{size}{size}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf int} A\+V\+Packet\+::size}\hypertarget{struct_a_v_packet_a4d1ea19f63eb107111fd650ca514d1f4}{}\label{struct_a_v_packet_a4d1ea19f63eb107111fd650ca514d1f4}
+
+
+Definition at line 1116 of file avcodec.\+h.
+
+\index{A\+V\+Packet@{A\+V\+Packet}!stream\+\_\+index@{stream\+\_\+index}}
+\index{stream\+\_\+index@{stream\+\_\+index}!A\+V\+Packet@{A\+V\+Packet}}
+\subsubsection[{\texorpdfstring{stream\+\_\+index}{stream_index}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf int} A\+V\+Packet\+::stream\+\_\+index}\hypertarget{struct_a_v_packet_a0d1cb9b5a32b00fb6edc81ea3aae2a49}{}\label{struct_a_v_packet_a0d1cb9b5a32b00fb6edc81ea3aae2a49}
+
+
+Definition at line 1117 of file avcodec.\+h.
+
+\index{A\+V\+Packet@{A\+V\+Packet}!type@{type}}
+\index{type@{type}!A\+V\+Packet@{A\+V\+Packet}}
+\subsubsection[{\texorpdfstring{type}{type}}]{\setlength{\rightskip}{0pt plus 5cm}enum {\bf A\+V\+Packet\+Side\+Data\+Type} A\+V\+Packet\+::type}\hypertarget{struct_a_v_packet_a01690f0be58299b32a1c37fb849ae724}{}\label{struct_a_v_packet_a01690f0be58299b32a1c37fb849ae724}
+
+
+Definition at line 1129 of file avcodec.\+h.
+
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/ffmpeg/libavcodec/\hyperlink{avcodec_8h}{avcodec.\+h}\end{DoxyCompactItemize}

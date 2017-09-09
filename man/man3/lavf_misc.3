@@ -1,0 +1,402 @@
+.TH "lavf_misc" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+lavf_misc \- Utility functions
+.SS "Modules"
+
+.in +1c
+.ti -1c
+.RI "\fBRIFF FourCCs\fP"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBvoid\fP \fBav_hex_dump\fP (FILE *\fBf\fP, \fBconst\fP \fBuint8_t\fP *\fBbuf\fP, \fBint\fP \fBsize\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBav_hex_dump_log\fP (\fBvoid\fP *avcl, \fBint\fP level, \fBconst\fP \fBuint8_t\fP *\fBbuf\fP, \fBint\fP \fBsize\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBav_pkt_dump2\fP (FILE *\fBf\fP, \fBAVPacket\fP *pkt, \fBint\fP dump_payload, \fBAVStream\fP *st)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBav_pkt_dump_log2\fP (\fBvoid\fP *avcl, \fBint\fP level, \fBAVPacket\fP *pkt, \fBint\fP dump_payload, \fBAVStream\fP *st)"
+.br
+.ti -1c
+.RI "enum \fBAVCodecID\fP \fBav_codec_get_id\fP (\fBconst\fP struct AVCodecTag *\fBconst\fP *tags, unsigned \fBint\fP \fBtag\fP)"
+.br
+.ti -1c
+.RI "unsigned \fBint\fP \fBav_codec_get_tag\fP (\fBconst\fP struct AVCodecTag *\fBconst\fP *tags, enum \fBAVCodecID\fP id)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_codec_get_tag2\fP (\fBconst\fP struct AVCodecTag *\fBconst\fP *tags, enum \fBAVCodecID\fP id, unsigned \fBint\fP *\fBtag\fP)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_find_default_stream_index\fP (\fBAVFormatContext\fP *\fBs\fP)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_index_search_timestamp\fP (\fBAVStream\fP *st, \fBint64_t\fP timestamp, \fBint\fP flags)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_add_index_entry\fP (\fBAVStream\fP *st, \fBint64_t\fP pos, \fBint64_t\fP timestamp, \fBint\fP \fBsize\fP, \fBint\fP distance, \fBint\fP flags)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBav_url_split\fP (char *proto, \fBint\fP proto_size, char *authorization, \fBint\fP authorization_size, char *hostname, \fBint\fP hostname_size, \fBint\fP *port_ptr, char *path, \fBint\fP path_size, \fBconst\fP char *url)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBav_dump_format\fP (\fBAVFormatContext\fP *ic, \fBint\fP index, \fBconst\fP char *url, \fBint\fP is_output)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_get_frame_filename\fP (char *\fBbuf\fP, \fBint\fP buf_size, \fBconst\fP char *path, \fBint\fP number)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_filename_number_test\fP (\fBconst\fP char *\fBfilename\fP)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_sdp_create\fP (\fBAVFormatContext\fP *ac[], \fBint\fP n_files, char *\fBbuf\fP, \fBint\fP \fBsize\fP)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_match_ext\fP (\fBconst\fP char *\fBfilename\fP, \fBconst\fP char *extensions)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBavformat_query_codec\fP (\fBAVOutputFormat\fP *ofmt, enum \fBAVCodecID\fP codec_id, \fBint\fP std_compliance)"
+.br
+.ti -1c
+.RI "\fBAVRational\fP \fBav_guess_sample_aspect_ratio\fP (\fBAVFormatContext\fP *\fBformat\fP, \fBAVStream\fP *stream, \fBAVFrame\fP *frame)"
+.br
+.ti -1c
+.RI "\fBAVRational\fP \fBav_guess_frame_rate\fP (\fBAVFormatContext\fP *ctx, \fBAVStream\fP *stream, \fBAVFrame\fP *frame)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBavformat_match_stream_specifier\fP (\fBAVFormatContext\fP *\fBs\fP, \fBAVStream\fP *st, \fBconst\fP char *spec)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBavformat_queue_attached_pictures\fP (\fBAVFormatContext\fP *\fBs\fP)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Miscellaneous utility functions related to both muxing and demuxing (or neither)\&. 
+.SH "Function Documentation"
+.PP 
+.SS "\fBint\fP av_add_index_entry (\fBAVStream\fP * st, \fBint64_t\fP pos, \fBint64_t\fP timestamp, \fBint\fP size, \fBint\fP distance, \fBint\fP flags)"
+Add an index entry into a sorted list\&. Update the entry if the list already contains it\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fItimestamp\fP timestamp in the time base of the given stream 
+.RE
+.PP
+
+.SS "enum \fBAVCodecID\fP av_codec_get_id (\fBconst\fP struct AVCodecTag *\fBconst\fP * tags, unsigned \fBint\fP tag)"
+Get the AVCodecID for the given codec tag tag\&. If no codec id is found returns AV_CODEC_ID_NONE\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fItags\fP list of supported codec_id-codec_tag pairs, as stored in \fBAVInputFormat\&.codec_tag\fP and \fBAVOutputFormat\&.codec_tag\fP 
+.br
+\fItag\fP codec tag to match to a codec ID 
+.RE
+.PP
+
+.SS "unsigned \fBint\fP av_codec_get_tag (\fBconst\fP struct AVCodecTag *\fBconst\fP * tags, enum \fBAVCodecID\fP id)"
+Get the codec tag for the given codec id id\&. If no codec tag is found returns 0\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fItags\fP list of supported codec_id-codec_tag pairs, as stored in \fBAVInputFormat\&.codec_tag\fP and \fBAVOutputFormat\&.codec_tag\fP 
+.br
+\fIid\fP codec ID to match to a codec tag 
+.RE
+.PP
+
+.SS "\fBint\fP av_codec_get_tag2 (\fBconst\fP struct AVCodecTag *\fBconst\fP * tags, enum \fBAVCodecID\fP id, unsigned \fBint\fP * tag)"
+Get the codec tag for the given codec id\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fItags\fP list of supported codec_id - codec_tag pairs, as stored in \fBAVInputFormat\&.codec_tag\fP and \fBAVOutputFormat\&.codec_tag\fP 
+.br
+\fIid\fP codec id that should be searched for in the list 
+.br
+\fItag\fP A pointer to the found tag 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+0 if id was not found in tags, > 0 if it was found 
+.RE
+.PP
+
+.SS "\fBvoid\fP av_dump_format (\fBAVFormatContext\fP * ic, \fBint\fP index, \fBconst\fP char * url, \fBint\fP is_output)"
+
+.SS "\fBint\fP av_filename_number_test (\fBconst\fP char * filename)"
+Check whether filename actually is a numbered sequence generator\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIfilename\fP possible numbered sequence string 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+1 if a valid numbered sequence string, 0 otherwise 
+.RE
+.PP
+
+.SS "\fBint\fP av_find_default_stream_index (\fBAVFormatContext\fP * s)"
+
+.SS "\fBint\fP av_get_frame_filename (char * buf, \fBint\fP buf_size, \fBconst\fP char * path, \fBint\fP number)"
+Return in 'buf' the path with 'd' replaced by a number\&.
+.PP
+Also handles the '%0nd' format where 'n' is the total number of digits and '%'\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIbuf\fP destination buffer 
+.br
+\fIbuf_size\fP destination buffer size 
+.br
+\fIpath\fP numbered sequence string 
+.br
+\fInumber\fP frame number 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+0 if OK, -1 on format error 
+.RE
+.PP
+
+.SS "\fBAVRational\fP av_guess_frame_rate (\fBAVFormatContext\fP * ctx, \fBAVStream\fP * stream, \fBAVFrame\fP * frame)"
+Guess the frame rate, based on both the container and codec information\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the format context which the stream is part of 
+.br
+\fIstream\fP the stream which the frame is part of 
+.br
+\fIframe\fP the frame for which the frame rate should be determined, may be NULL 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the guessed (valid) frame rate, 0/1 if no idea 
+.RE
+.PP
+
+.SS "\fBAVRational\fP av_guess_sample_aspect_ratio (\fBAVFormatContext\fP * format, \fBAVStream\fP * stream, \fBAVFrame\fP * frame)"
+Guess the sample aspect ratio of a frame, based on both the stream and the frame aspect ratio\&.
+.PP
+Since the frame aspect ratio is set by the codec but the stream aspect ratio is set by the demuxer, these two may not be equal\&. This function tries to return the value that you should use if you would like to display the frame\&.
+.PP
+Basic logic is to use the stream aspect ratio if it is set to something sane otherwise use the frame aspect ratio\&. This way a container setting, which is usually easy to modify can override the coded value in the frames\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIformat\fP the format context which the stream is part of 
+.br
+\fIstream\fP the stream which the frame is part of 
+.br
+\fIframe\fP the frame with the aspect ratio to be determined 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the guessed (valid) sample_aspect_ratio, 0/1 if no idea 
+.RE
+.PP
+
+.SS "\fBvoid\fP av_hex_dump (FILE * f, \fBconst\fP \fBuint8_t\fP * buf, \fBint\fP size)"
+Send a nice hexadecimal dump of a buffer to the specified file stream\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIf\fP The file stream pointer where the dump should be sent to\&. 
+.br
+\fIbuf\fP buffer 
+.br
+\fIsize\fP buffer size
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBav_hex_dump_log\fP, \fBav_pkt_dump2\fP, \fBav_pkt_dump_log2\fP 
+.RE
+.PP
+
+.SS "\fBvoid\fP av_hex_dump_log (\fBvoid\fP * avcl, \fBint\fP level, \fBconst\fP \fBuint8_t\fP * buf, \fBint\fP size)"
+Send a nice hexadecimal dump of a buffer to the log\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIavcl\fP A pointer to an arbitrary struct of which the first field is a pointer to an \fBAVClass\fP struct\&. 
+.br
+\fIlevel\fP The importance level of the message, lower values signifying higher importance\&. 
+.br
+\fIbuf\fP buffer 
+.br
+\fIsize\fP buffer size
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBav_hex_dump\fP, \fBav_pkt_dump2\fP, \fBav_pkt_dump_log2\fP 
+.RE
+.PP
+
+.SS "\fBint\fP av_index_search_timestamp (\fBAVStream\fP * st, \fBint64_t\fP timestamp, \fBint\fP flags)"
+Get the index for a specific timestamp\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIst\fP stream that the timestamp belongs to 
+.br
+\fItimestamp\fP timestamp to retrieve the index for 
+.br
+\fIflags\fP if AVSEEK_FLAG_BACKWARD then the returned index will correspond to the timestamp which is <= the requested one, if backward is 0, then it will be >= if AVSEEK_FLAG_ANY seek to any frame, only keyframes otherwise 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+< 0 if no such timestamp could be found 
+.RE
+.PP
+
+.SS "\fBint\fP av_match_ext (\fBconst\fP char * filename, \fBconst\fP char * extensions)"
+Return a positive value if the given filename has one of the given extensions, 0 otherwise\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIfilename\fP file name to check against the given extensions 
+.br
+\fIextensions\fP a comma-separated list of filename extensions 
+.RE
+.PP
+
+.SS "\fBvoid\fP av_pkt_dump2 (FILE * f, \fBAVPacket\fP * pkt, \fBint\fP dump_payload, \fBAVStream\fP * st)"
+Send a nice dump of a packet to the specified file stream\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIf\fP The file stream pointer where the dump should be sent to\&. 
+.br
+\fIpkt\fP packet to dump 
+.br
+\fIdump_payload\fP True if the payload must be displayed, too\&. 
+.br
+\fIst\fP \fBAVStream\fP that the packet belongs to 
+.RE
+.PP
+
+.SS "\fBvoid\fP av_pkt_dump_log2 (\fBvoid\fP * avcl, \fBint\fP level, \fBAVPacket\fP * pkt, \fBint\fP dump_payload, \fBAVStream\fP * st)"
+Send a nice dump of a packet to the log\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIavcl\fP A pointer to an arbitrary struct of which the first field is a pointer to an \fBAVClass\fP struct\&. 
+.br
+\fIlevel\fP The importance level of the message, lower values signifying higher importance\&. 
+.br
+\fIpkt\fP packet to dump 
+.br
+\fIdump_payload\fP True if the payload must be displayed, too\&. 
+.br
+\fIst\fP \fBAVStream\fP that the packet belongs to 
+.RE
+.PP
+
+.SS "\fBint\fP av_sdp_create (\fBAVFormatContext\fP * ac[], \fBint\fP n_files, char * buf, \fBint\fP size)"
+Generate an SDP for an RTP session\&.
+.PP
+Note, this overwrites the id values of AVStreams in the muxer contexts for getting unique dynamic payload types\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIac\fP array of AVFormatContexts describing the RTP streams\&. If the array is composed by only one context, such context can contain multiple AVStreams (one \fBAVStream\fP per RTP stream)\&. Otherwise, all the contexts in the array (an \fBAVCodecContext\fP per RTP stream) must contain only one \fBAVStream\fP\&. 
+.br
+\fIn_files\fP number of AVCodecContexts contained in ac 
+.br
+\fIbuf\fP buffer where the SDP will be stored (must be allocated by the caller) 
+.br
+\fIsize\fP the size of the buffer 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+0 if OK, AVERROR_xxx on error 
+.RE
+.PP
+
+.SS "\fBvoid\fP av_url_split (char * proto, \fBint\fP proto_size, char * authorization, \fBint\fP authorization_size, char * hostname, \fBint\fP hostname_size, \fBint\fP * port_ptr, char * path, \fBint\fP path_size, \fBconst\fP char * url)"
+Split a URL string into components\&.
+.PP
+The pointers to buffers for storing individual components may be null, in order to ignore that component\&. Buffers for components not found are set to empty strings\&. If the port is not found, it is set to a negative value\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIproto\fP the buffer for the protocol 
+.br
+\fIproto_size\fP the size of the proto buffer 
+.br
+\fIauthorization\fP the buffer for the authorization 
+.br
+\fIauthorization_size\fP the size of the authorization buffer 
+.br
+\fIhostname\fP the buffer for the host name 
+.br
+\fIhostname_size\fP the size of the hostname buffer 
+.br
+\fIport_ptr\fP a pointer to store the port number in 
+.br
+\fIpath\fP the buffer for the path 
+.br
+\fIpath_size\fP the size of the path buffer 
+.br
+\fIurl\fP the URL to split 
+.RE
+.PP
+
+.SS "\fBint\fP avformat_match_stream_specifier (\fBAVFormatContext\fP * s, \fBAVStream\fP * st, \fBconst\fP char * spec)"
+Check if the stream st contained in s is matched by the stream specifier spec\&.
+.PP
+See the 'stream specifiers' chapter in the documentation for the syntax of spec\&.
+.PP
+\fBReturns:\fP
+.RS 4
+>0 if st is matched by spec; 0 if st is not matched by spec; AVERROR code if spec is invalid
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+A stream specifier can match several streams in the format\&. 
+.RE
+.PP
+
+.SS "\fBint\fP avformat_query_codec (\fBAVOutputFormat\fP * ofmt, enum \fBAVCodecID\fP codec_id, \fBint\fP std_compliance)"
+\fBTest\fP if the given container can store a codec\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIofmt\fP container to check for compatibility 
+.br
+\fIcodec_id\fP codec to potentially store in container 
+.br
+\fIstd_compliance\fP standards compliance level, one of FF_COMPLIANCE_*
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+1 if codec with ID codec_id can be stored in ofmt, 0 if it cannot\&. A negative number if this information is not available\&. 
+.RE
+.PP
+
+.SS "\fBint\fP avformat_queue_attached_pictures (\fBAVFormatContext\fP * s)"
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

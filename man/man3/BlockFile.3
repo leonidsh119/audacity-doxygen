@@ -1,0 +1,560 @@
+.TH "BlockFile" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+BlockFile \- A \fBBlockFile\fP is a chunk of immutable audio data\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <BlockFile\&.h>\fP
+.PP
+Inherited by \fBAliasBlockFile\fP, \fBLegacyBlockFile\fP, \fBSilentBlockFile\fP, and \fBSimpleBlockFile\fP\&.
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBBlockFile\fP (wxFileName fileName, \fBsampleCount\fP \fBsamples\fP)"
+.br
+.RI "\fIConstruct a \fBBlockFile\fP\&. \fP"
+.ti -1c
+.RI "virtual \fB~BlockFile\fP ()"
+.br
+.ti -1c
+.RI "virtual \fBint\fP \fBReadData\fP (\fBsamplePtr\fP \fBdata\fP, \fBsampleFormat\fP \fBformat\fP, \fBsampleCount\fP \fBstart\fP, \fBsampleCount\fP \fBlen\fP)=0"
+.br
+.RI "\fIRetrieves audio data from this \fBBlockFile\fP\&. \fP"
+.ti -1c
+.RI "virtual \fBbool\fP \fBGetNeedWriteCacheToDisk\fP ()"
+.br
+.ti -1c
+.RI "virtual \fBvoid\fP \fBWriteCacheToDisk\fP ()"
+.br
+.ti -1c
+.RI "virtual \fBbool\fP \fBGetNeedFillCache\fP ()"
+.br
+.ti -1c
+.RI "virtual \fBvoid\fP \fBFillCache\fP ()"
+.br
+.ti -1c
+.RI "virtual \fBvoid\fP \fBSaveXML\fP (\fBXMLWriter\fP &xmlFile)=0"
+.br
+.RI "\fIStores a representation of this file in XML\&. \fP"
+.ti -1c
+.RI "virtual wxFileName \fBGetFileName\fP ()"
+.br
+.ti -1c
+.RI "virtual \fBvoid\fP \fBSetFileName\fP (wxFileName &\fBname\fP)"
+.br
+.RI "\fIsets the file name the summary info will be saved in\&. threadsafe\&. \fP"
+.ti -1c
+.RI "virtual \fBsampleCount\fP \fBGetLength\fP ()"
+.br
+.ti -1c
+.RI "virtual \fBvoid\fP \fBSetLength\fP (\fBconst\fP \fBsampleCount\fP newLen)"
+.br
+.ti -1c
+.RI "virtual \fBvoid\fP \fBLock\fP ()"
+.br
+.RI "\fILocks this \fBBlockFile\fP, to prevent it from being moved\&. \fP"
+.ti -1c
+.RI "virtual \fBvoid\fP \fBUnlock\fP ()"
+.br
+.RI "\fIUnlock this \fBBlockFile\fP, allowing it to be moved\&. \fP"
+.ti -1c
+.RI "virtual \fBbool\fP \fBIsLocked\fP ()"
+.br
+.RI "\fIReturns TRUE if this \fBBlockFile\fP is locked\&. \fP"
+.ti -1c
+.RI "virtual \fBvoid\fP \fBGetMinMax\fP (\fBsampleCount\fP \fBstart\fP, \fBsampleCount\fP \fBlen\fP, float *outMin, float *outMax, float *outRMS)"
+.br
+.RI "\fIGets extreme values for the specified region\&. \fP"
+.ti -1c
+.RI "virtual \fBvoid\fP \fBGetMinMax\fP (float *outMin, float *outMax, float *outRMS)"
+.br
+.RI "\fIGets extreme values for the entire block\&. \fP"
+.ti -1c
+.RI "virtual \fBbool\fP \fBRead256\fP (float *\fBbuffer\fP, \fBsampleCount\fP \fBstart\fP, \fBsampleCount\fP \fBlen\fP)"
+.br
+.RI "\fIReturns the 256 byte summary data block\&. \fP"
+.ti -1c
+.RI "virtual \fBbool\fP \fBRead64K\fP (float *\fBbuffer\fP, \fBsampleCount\fP \fBstart\fP, \fBsampleCount\fP \fBlen\fP)"
+.br
+.RI "\fIReturns the 64K summary data block\&. \fP"
+.ti -1c
+.RI "virtual \fBbool\fP \fBIsAlias\fP ()"
+.br
+.RI "\fIReturns TRUE if this block references another disk file\&. \fP"
+.ti -1c
+.RI "virtual \fBbool\fP \fBIsSummaryAvailable\fP ()"
+.br
+.RI "\fIReturns TRUE if this block's complete summary has been computed and is ready (for OD) \fP"
+.ti -1c
+.RI "virtual \fBbool\fP \fBIsDataAvailable\fP ()"
+.br
+.RI "\fIReturns TRUE if this block's complete data is ready to be accessed by Read() \fP"
+.ti -1c
+.RI "virtual \fBbool\fP \fBIsSummaryBeingComputed\fP ()"
+.br
+.RI "\fIReturns TRUE if the summary has not yet been written, but is actively being computed and written to disk\&. \fP"
+.ti -1c
+.RI "virtual \fBBlockFile\fP * \fBCopy\fP (wxFileName newFileName)=0"
+.br
+.RI "\fICreate a NEW \fBBlockFile\fP identical to this, using the given filename\&. \fP"
+.ti -1c
+.RI "virtual wxLongLong \fBGetSpaceUsage\fP ()=0"
+.br
+.ti -1c
+.RI "virtual \fBvoid\fP \fBRecover\fP ()=0"
+.br
+.RI "\fIif the on-disk state disappeared, either recover it (if it was \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBSilenceLog\fP ()"
+.br
+.RI "\fIif we've detected an on-disk problem, the user opted to \fP"
+.ti -1c
+.RI "virtual \fBvoid\fP \fBCloseLock\fP ()"
+.br
+.ti -1c
+.RI "virtual \fBvoid\fP \fBLockRead\fP ()"
+.br
+.RI "\fIPrevents a read on other threads\&. The basic blockfile runs on only one thread, so does nothing\&. \fP"
+.ti -1c
+.RI "virtual \fBvoid\fP \fBUnlockRead\fP ()"
+.br
+.RI "\fIAllows reading on other threads\&. \fP"
+.in -1c
+.SS "Static Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "static \fBvoid\fP \fBDeinit\fP ()"
+.br
+.in -1c
+.SS "Protected Member Functions"
+
+.in +1c
+.ti -1c
+.RI "virtual \fBvoid\fP * \fBCalcSummary\fP (\fBsamplePtr\fP \fBbuffer\fP, \fBsampleCount\fP \fBlen\fP, \fBsampleFormat\fP \fBformat\fP)"
+.br
+.RI "\fICalculate summary data for the given sample data\&. \fP"
+.ti -1c
+.RI "virtual \fBbool\fP \fBReadSummary\fP (\fBvoid\fP *\fBdata\fP)=0"
+.br
+.RI "\fIRead the summary section of the file\&. Derived classes implement\&. \fP"
+.ti -1c
+.RI "virtual \fBvoid\fP \fBFixSummary\fP (\fBvoid\fP *\fBdata\fP)"
+.br
+.in -1c
+.SS "Protected Attributes"
+
+.in +1c
+.ti -1c
+.RI "wxFileName \fBmFileName\fP"
+.br
+.ti -1c
+.RI "\fBsampleCount\fP \fBmLen\fP"
+.br
+.ti -1c
+.RI "\fBSummaryInfo\fP \fBmSummaryInfo\fP"
+.br
+.ti -1c
+.RI "float \fBmMin\fP"
+.br
+.ti -1c
+.RI "float \fBmMax\fP"
+.br
+.ti -1c
+.RI "float \fBmRMS\fP"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBmSilentLog\fP"
+.br
+.in -1c
+.SS "Friends"
+
+.in +1c
+.ti -1c
+.RI "class \fBDirManager\fP"
+.br
+.ti -1c
+.RI "class \fBAudacityApp\fP"
+.br
+.ti -1c
+.RI "class \fBODComputeSummaryTask\fP"
+.br
+.ti -1c
+.RI "class \fBODDecodeTask\fP"
+.br
+.ti -1c
+.RI "class \fBODPCMAliasBlockFile\fP"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+A \fBBlockFile\fP is a chunk of immutable audio data\&. 
+
+A \fBBlockFile\fP represents a chunk of audio data\&. These chunks are assembled into sequences by the class \fBSequence\fP\&. These classes are at the heart of how Audacity stores audio data\&.
+.PP
+\fBBlockFile\fP is an abstract base class that can be implemented in many different ways\&. However it does have a fairly large amount of shared code that deals with the physical file and manipulating the summary data\&.
+.PP
+\fBBlockFile\fP should be thought of as an immutable class\&. After it is constructed, it is essentially never changed (though there are a few exceptions)\&. Most notably, the audio data and summary data are never altered once it is constructed\&. This is important to some of the derived classes that are actually aliases to audio data stored in existing files\&.
+.PP
+BlockFiles are reference-counted, and deleted when their reference count hits zero\&. \fBDirManager\fP is the class responsible for constructing and managing BlockFiles and managing their reference counts\&. 
+.PP
+Definition at line 41 of file BlockFile\&.h\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "BlockFile::BlockFile (wxFileName fileName, \fBsampleCount\fP samples)"
+
+.PP
+Construct a \fBBlockFile\fP\&. Initializes the base \fBBlockFile\fP data\&. The block is initially unlocked and its reference count is 1\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIfileName\fP The name of the disk file associated with this \fBBlockFile\fP\&. Not all BlockFiles will store their sample data here (for example, AliasBlockFiles read their data from elsewhere), but all BlockFiles will store at least the summary data here\&.
+.br
+\fIsamples\fP The number of samples this \fBBlockFile\fP contains\&. 
+.RE
+.PP
+
+.PP
+Definition at line 101 of file BlockFile\&.cpp\&.
+.SS "BlockFile::~BlockFile ()\fC [virtual]\fP"
+
+.PP
+Definition at line 111 of file BlockFile\&.cpp\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "\fBvoid\fP * BlockFile::CalcSummary (\fBsamplePtr\fP buffer, \fBsampleCount\fP len, \fBsampleFormat\fP format)\fC [protected]\fP, \fC [virtual]\fP"
+
+.PP
+Calculate summary data for the given sample data\&. Get a buffer containing a summary block describing this sample data\&. This must be called by derived classes when they are constructed, to allow them to construct their summary data, after which they should write that data to their disk file\&.
+.PP
+This method also has the side effect of setting the mMin, mMax, and mRMS members of this class\&.
+.PP
+You must not DELETE the returned buffer; it is static to this method\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIbuffer\fP A buffer containing the sample data to be analyzed 
+.br
+\fIlen\fP The length of the sample data 
+.br
+\fIformat\fP The format of the sample data\&. 
+.RE
+.PP
+
+.PP
+Reimplemented in \fBODDecodeBlockFile\fP, and \fBODPCMAliasBlockFile\fP\&.
+.PP
+Definition at line 203 of file BlockFile\&.cpp\&.
+.SS "virtual \fBvoid\fP BlockFile::CloseLock ()\fC [inline]\fP, \fC [virtual]\fP"
+when the project closes, it locks the blockfiles\&. Override this in case it needs special treatment 
+.PP
+Reimplemented in \fBODPCMAliasBlockFile\fP\&.
+.PP
+Definition at line 127 of file BlockFile\&.h\&.
+.SS "virtual \fBBlockFile\fP* BlockFile::Copy (wxFileName newFileName)\fC [pure virtual]\fP"
+
+.PP
+Create a NEW \fBBlockFile\fP identical to this, using the given filename\&. 
+.PP
+Implemented in \fBODDecodeBlockFile\fP, \fBODPCMAliasBlockFile\fP, \fBSimpleBlockFile\fP, \fBLegacyBlockFile\fP, \fBPCMAliasBlockFile\fP, \fBSilentBlockFile\fP, and \fBLegacyAliasBlockFile\fP\&.
+.SS "\fBvoid\fP BlockFile::Deinit ()\fC [static]\fP"
+
+.PP
+Definition at line 184 of file BlockFile\&.cpp\&.
+.SS "virtual \fBvoid\fP BlockFile::FillCache ()\fC [inline]\fP, \fC [virtual]\fP"
+
+.PP
+Reimplemented in \fBSimpleBlockFile\fP\&.
+.PP
+Definition at line 66 of file BlockFile\&.h\&.
+.SS "\fBvoid\fP BlockFile::FixSummary (\fBvoid\fP * data)\fC [protected]\fP, \fC [virtual]\fP"
+Byte-swap the summary data, in case it was saved by a system on a different platform 
+.PP
+Definition at line 340 of file BlockFile\&.cpp\&.
+.SS "wxFileName BlockFile::GetFileName ()\fC [virtual]\fP"
+Gets the filename of the disk file associated with this \fBBlockFile\fP (can be empty -- some BlockFiles, like \fBSilentBlockFile\fP, correspond to no file on disk)
+.PP
+Returns the file name of the disk file associated with this \fBBlockFile\fP\&. Not all BlockFiles store their sample data here, but most BlockFiles have at least their summary data here\&. (some, i\&.e\&. SilentBlockFiles, do not correspond to a file on disk and have empty file names) 
+.PP
+Reimplemented in \fBODDecodeBlockFile\fP, and \fBODPCMAliasBlockFile\fP\&.
+.PP
+Definition at line 122 of file BlockFile\&.cpp\&.
+.SS "virtual \fBsampleCount\fP BlockFile::GetLength ()\fC [inline]\fP, \fC [virtual]\fP"
+
+.PP
+Definition at line 77 of file BlockFile\&.h\&.
+.SS "\fBvoid\fP BlockFile::GetMinMax (\fBsampleCount\fP start, \fBsampleCount\fP len, float * outMin, float * outMax, float * outRMS)\fC [virtual]\fP"
+
+.PP
+Gets extreme values for the specified region\&. Retrieves the minimum, maximum, and maximum RMS of the specified sample data in this block\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIstart\fP The offset in this block where the region should begin 
+.br
+\fIlen\fP The number of samples to include in the region 
+.br
+\fI*outMin\fP A pointer to where the minimum value for this region should be stored 
+.br
+\fI*outMax\fP A pointer to where the maximum value for this region should be stored 
+.br
+\fI*outRMS\fP A pointer to where the maximum RMS value for this region should be stored\&. 
+.RE
+.PP
+
+.PP
+Reimplemented in \fBODPCMAliasBlockFile\fP, and \fBODDecodeBlockFile\fP\&.
+.PP
+Definition at line 386 of file BlockFile\&.cpp\&.
+.SS "\fBvoid\fP BlockFile::GetMinMax (float * outMin, float * outMax, float * outRMS)\fC [virtual]\fP"
+
+.PP
+Gets extreme values for the entire block\&. Retrieves the minimum, maximum, and maximum RMS of this entire block\&. This is faster than the other GetMinMax function since these values are already computed\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fI*outMin\fP A pointer to where the minimum value for this block should be stored 
+.br
+\fI*outMax\fP A pointer to where the maximum value for this block should be stored 
+.br
+\fI*outRMS\fP A pointer to where the maximum RMS value for this block should be stored\&. 
+.RE
+.PP
+
+.PP
+Reimplemented in \fBODPCMAliasBlockFile\fP, and \fBODDecodeBlockFile\fP\&.
+.PP
+Definition at line 423 of file BlockFile\&.cpp\&.
+.SS "virtual \fBbool\fP BlockFile::GetNeedFillCache ()\fC [inline]\fP, \fC [virtual]\fP"
+
+.PP
+Reimplemented in \fBSimpleBlockFile\fP\&.
+.PP
+Definition at line 65 of file BlockFile\&.h\&.
+.SS "virtual \fBbool\fP BlockFile::GetNeedWriteCacheToDisk ()\fC [inline]\fP, \fC [virtual]\fP"
+
+.PP
+Reimplemented in \fBSimpleBlockFile\fP\&.
+.PP
+Definition at line 61 of file BlockFile\&.h\&.
+.SS "virtual wxLongLong BlockFile::GetSpaceUsage ()\fC [pure virtual]\fP"
+
+.PP
+Implemented in \fBAliasBlockFile\fP, \fBSimpleBlockFile\fP, \fBODPCMAliasBlockFile\fP, \fBODDecodeBlockFile\fP, \fBLegacyBlockFile\fP, and \fBSilentBlockFile\fP\&.
+.SS "virtual \fBbool\fP BlockFile::IsAlias ()\fC [inline]\fP, \fC [virtual]\fP"
+
+.PP
+Returns TRUE if this block references another disk file\&. 
+.PP
+Reimplemented in \fBAliasBlockFile\fP\&.
+.PP
+Definition at line 98 of file BlockFile\&.h\&.
+.SS "virtual \fBbool\fP BlockFile::IsDataAvailable ()\fC [inline]\fP, \fC [virtual]\fP"
+
+.PP
+Returns TRUE if this block's complete data is ready to be accessed by Read() 
+.PP
+Reimplemented in \fBODDecodeBlockFile\fP\&.
+.PP
+Definition at line 104 of file BlockFile\&.h\&.
+.SS "\fBbool\fP BlockFile::IsLocked ()\fC [virtual]\fP"
+
+.PP
+Returns TRUE if this \fBBlockFile\fP is locked\&. Returns true if the block is locked\&. 
+.PP
+Definition at line 157 of file BlockFile\&.cpp\&.
+.SS "virtual \fBbool\fP BlockFile::IsSummaryAvailable ()\fC [inline]\fP, \fC [virtual]\fP"
+
+.PP
+Returns TRUE if this block's complete summary has been computed and is ready (for OD) 
+.PP
+Reimplemented in \fBODPCMAliasBlockFile\fP, and \fBODDecodeBlockFile\fP\&.
+.PP
+Definition at line 101 of file BlockFile\&.h\&.
+.SS "virtual \fBbool\fP BlockFile::IsSummaryBeingComputed ()\fC [inline]\fP, \fC [virtual]\fP"
+
+.PP
+Returns TRUE if the summary has not yet been written, but is actively being computed and written to disk\&. 
+.PP
+Reimplemented in \fBODPCMAliasBlockFile\fP, and \fBODDecodeBlockFile\fP\&.
+.PP
+Definition at line 107 of file BlockFile\&.h\&.
+.SS "\fBvoid\fP BlockFile::Lock ()\fC [virtual]\fP"
+
+.PP
+Locks this \fBBlockFile\fP, to prevent it from being moved\&. Marks this \fBBlockFile\fP as 'locked\&.' A locked \fBBlockFile\fP may not be moved or deleted, only copied\&. Locking a \fBBlockFile\fP prevents it from disappearing if the project is saved in a different location\&. When doing a 'Save As,' Audacity locks all blocks belonging to the already-existing project, to ensure that the existing project remains valid with all the blocks it needs\&. Audacity also locks the blocks of the last saved version of a project when the project is deleted so that the files aren't deleted when their refcount hits zero\&. 
+.PP
+Reimplemented in \fBODPCMAliasBlockFile\fP\&.
+.PP
+Definition at line 143 of file BlockFile\&.cpp\&.
+.SS "virtual \fBvoid\fP BlockFile::LockRead ()\fC [inline]\fP, \fC [virtual]\fP"
+
+.PP
+Prevents a read on other threads\&. The basic blockfile runs on only one thread, so does nothing\&. 
+.PP
+Reimplemented in \fBODDecodeBlockFile\fP, and \fBODPCMAliasBlockFile\fP\&.
+.PP
+Definition at line 130 of file BlockFile\&.h\&.
+.SS "\fBbool\fP BlockFile::Read256 (float * buffer, \fBsampleCount\fP start, \fBsampleCount\fP len)\fC [virtual]\fP"
+
+.PP
+Returns the 256 byte summary data block\&. Retrieves a portion of the 256-byte summary buffer from this \fBBlockFile\fP\&. This data provides information about the minimum value, the maximum value, and the maximum RMS value for every group of 256 samples in the file\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fI*buffer\fP The area where the summary information will be written\&. It must be at least len*3 long\&. 
+.br
+\fIstart\fP The offset in 256-sample increments 
+.br
+\fIlen\fP The number of 256-sample summary frames to read 
+.RE
+.PP
+
+.PP
+Reimplemented in \fBODPCMAliasBlockFile\fP, and \fBODDecodeBlockFile\fP\&.
+.PP
+Definition at line 439 of file BlockFile\&.cpp\&.
+.SS "\fBbool\fP BlockFile::Read64K (float * buffer, \fBsampleCount\fP start, \fBsampleCount\fP len)\fC [virtual]\fP"
+
+.PP
+Returns the 64K summary data block\&. Retrieves a portion of the 64K summary buffer from this \fBBlockFile\fP\&. This data provides information about the minimum value, the maximum value, and the maximum RMS value for every group of 64K samples in the file\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fI*buffer\fP The area where the summary information will be written\&. It must be at least len*3 long\&. 
+.br
+\fIstart\fP The offset in 64K-sample increments 
+.br
+\fIlen\fP The number of 64K-sample summary frames to read 
+.RE
+.PP
+
+.PP
+Reimplemented in \fBODPCMAliasBlockFile\fP, and \fBODDecodeBlockFile\fP\&.
+.PP
+Definition at line 478 of file BlockFile\&.cpp\&.
+.SS "virtual \fBint\fP BlockFile::ReadData (\fBsamplePtr\fP data, \fBsampleFormat\fP format, \fBsampleCount\fP start, \fBsampleCount\fP len)\fC [pure virtual]\fP"
+
+.PP
+Retrieves audio data from this \fBBlockFile\fP\&. 
+.PP
+Implemented in \fBODPCMAliasBlockFile\fP, \fBODDecodeBlockFile\fP, \fBSimpleBlockFile\fP, \fBLegacyBlockFile\fP, \fBPCMAliasBlockFile\fP, and \fBSilentBlockFile\fP\&.
+.SS "virtual \fBbool\fP BlockFile::ReadSummary (\fBvoid\fP * data)\fC [protected]\fP, \fC [pure virtual]\fP"
+
+.PP
+Read the summary section of the file\&. Derived classes implement\&. 
+.PP
+Implemented in \fBAliasBlockFile\fP, \fBODPCMAliasBlockFile\fP, \fBODDecodeBlockFile\fP, \fBSimpleBlockFile\fP, \fBLegacyBlockFile\fP, and \fBSilentBlockFile\fP\&.
+.SS "virtual \fBvoid\fP BlockFile::Recover ()\fC [pure virtual]\fP"
+
+.PP
+if the on-disk state disappeared, either recover it (if it was 
+.PP
+Implemented in \fBODDecodeBlockFile\fP, \fBODPCMAliasBlockFile\fP, \fBSimpleBlockFile\fP, \fBLegacyBlockFile\fP, \fBSilentBlockFile\fP, \fBPCMAliasBlockFile\fP, and \fBLegacyAliasBlockFile\fP\&.
+.SS "virtual \fBvoid\fP BlockFile::SaveXML (\fBXMLWriter\fP & xmlFile)\fC [pure virtual]\fP"
+
+.PP
+Stores a representation of this file in XML\&. 
+.PP
+Implemented in \fBODDecodeBlockFile\fP, \fBODPCMAliasBlockFile\fP, \fBSimpleBlockFile\fP, \fBLegacyBlockFile\fP, \fBSilentBlockFile\fP, \fBPCMAliasBlockFile\fP, and \fBLegacyAliasBlockFile\fP\&.
+.SS "\fBvoid\fP BlockFile::SetFileName (wxFileName & name)\fC [virtual]\fP"
+
+.PP
+sets the file name the summary info will be saved in\&. threadsafe\&. 
+.PP
+Reimplemented in \fBODDecodeBlockFile\fP, and \fBODPCMAliasBlockFile\fP\&.
+.PP
+Definition at line 128 of file BlockFile\&.cpp\&.
+.SS "virtual \fBvoid\fP BlockFile::SetLength (\fBconst\fP \fBsampleCount\fP newLen)\fC [inline]\fP, \fC [virtual]\fP"
+
+.PP
+Definition at line 78 of file BlockFile\&.h\&.
+.SS "\fBvoid\fP BlockFile::SilenceLog ()\fC [inline]\fP"
+
+.PP
+if we've detected an on-disk problem, the user opted to 
+.PP
+Definition at line 123 of file BlockFile\&.h\&.
+.SS "\fBvoid\fP BlockFile::Unlock ()\fC [virtual]\fP"
+
+.PP
+Unlock this \fBBlockFile\fP, allowing it to be moved\&. Marks this \fBBlockFile\fP as 'unlocked\&.'\&. 
+.PP
+Reimplemented in \fBODPCMAliasBlockFile\fP\&.
+.PP
+Definition at line 150 of file BlockFile\&.cpp\&.
+.SS "virtual \fBvoid\fP BlockFile::UnlockRead ()\fC [inline]\fP, \fC [virtual]\fP"
+
+.PP
+Allows reading on other threads\&. 
+.PP
+Reimplemented in \fBODDecodeBlockFile\fP, and \fBODPCMAliasBlockFile\fP\&.
+.PP
+Definition at line 132 of file BlockFile\&.h\&.
+.SS "virtual \fBvoid\fP BlockFile::WriteCacheToDisk ()\fC [inline]\fP, \fC [virtual]\fP"
+
+.PP
+Reimplemented in \fBSimpleBlockFile\fP\&.
+.PP
+Definition at line 62 of file BlockFile\&.h\&.
+.SH "Friends And Related Function Documentation"
+.PP 
+.SS "friend class \fBAudacityApp\fP\fC [friend]\fP"
+
+.PP
+Definition at line 137 of file BlockFile\&.h\&.
+.SS "friend class \fBDirManager\fP\fC [friend]\fP"
+
+.PP
+Definition at line 136 of file BlockFile\&.h\&.
+.SS "friend class \fBODComputeSummaryTask\fP\fC [friend]\fP"
+
+.PP
+Definition at line 139 of file BlockFile\&.h\&.
+.SS "friend class \fBODDecodeTask\fP\fC [friend]\fP"
+
+.PP
+Definition at line 140 of file BlockFile\&.h\&.
+.SS "friend class \fBODPCMAliasBlockFile\fP\fC [friend]\fP"
+
+.PP
+Definition at line 141 of file BlockFile\&.h\&.
+.SH "Member Data Documentation"
+.PP 
+.SS "wxFileName BlockFile::mFileName\fC [protected]\fP"
+
+.PP
+Definition at line 165 of file BlockFile\&.h\&.
+.SS "\fBsampleCount\fP BlockFile::mLen\fC [protected]\fP"
+
+.PP
+Definition at line 166 of file BlockFile\&.h\&.
+.SS "float BlockFile::mMax\fC [protected]\fP"
+
+.PP
+Definition at line 168 of file BlockFile\&.h\&.
+.SS "float BlockFile::mMin\fC [protected]\fP"
+
+.PP
+Definition at line 168 of file BlockFile\&.h\&.
+.SS "float BlockFile::mRMS\fC [protected]\fP"
+
+.PP
+Definition at line 168 of file BlockFile\&.h\&.
+.SS "\fBbool\fP BlockFile::mSilentLog\fC [protected]\fP"
+
+.PP
+Definition at line 169 of file BlockFile\&.h\&.
+.SS "\fBSummaryInfo\fP BlockFile::mSummaryInfo\fC [protected]\fP"
+
+.PP
+Definition at line 167 of file BlockFile\&.h\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

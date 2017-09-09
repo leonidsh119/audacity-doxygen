@@ -1,0 +1,298 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/lib-src/libsoxr/src/rate.h" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/lib-src/libsoxr/src/rate.h \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <math\&.h>\fP
+.br
+\fC#include <assert\&.h>\fP
+.br
+\fC#include <string\&.h>\fP
+.br
+\fC#include <stdlib\&.h>\fP
+.br
+\fC#include 'filter\&.h'\fP
+.br
+\fC#include 'fifo\&.h'\fP
+.br
+\fC#include 'filters\&.h'\fP
+.br
+
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "union \fBint64p_t\fP"
+.br
+.ti -1c
+.RI "union \fBuint64p_t\fP"
+.br
+.ti -1c
+.RI "struct \fBdft_filter_t\fP"
+.br
+.ti -1c
+.RI "struct \fBrate_shared_t\fP"
+.br
+.ti -1c
+.RI "union \fBstep_t\fP"
+.br
+.ti -1c
+.RI "struct \fBstage\fP"
+.br
+.ti -1c
+.RI "struct \fBrate_t\fP"
+.br
+.in -1c
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBRATE_SIMD_POLY\fP   0"
+.br
+.ti -1c
+.RI "#define \fBnum_coefs4\fP   \fBnum_coefs\fP"
+.br
+.ti -1c
+.RI "#define \fBcoefs4_check\fP(\fBi\fP)   1"
+.br
+.ti -1c
+.RI "#define \fBaligned_free\fP   free"
+.br
+.ti -1c
+.RI "#define \fBaligned_malloc\fP   malloc"
+.br
+.ti -1c
+.RI "#define \fBaligned_calloc\fP   calloc"
+.br
+.ti -1c
+.RI "#define \fBFIFO_SIZE_T\fP   \fBint\fP"
+.br
+.ti -1c
+.RI "#define \fBFLOAT_HI_PREC_CLOCK\fP   0    /* Non\-float hi\-prec has ~96 bits\&. */"
+.br
+.ti -1c
+.RI "#define \fBfloat_step_t\fP   long double /* __float128 is also \fBa\fP (slow) option */"
+.br
+.ti -1c
+.RI "#define \fBcoef\fP(coef_p,  interp_order,  fir_len,  phase_num,  coef_interp_num,  fir_coef_num)   coef_p[(fir_len) * ((interp_order) + 1) * (phase_num) + ((interp_order) + 1) * (fir_coef_num) + (interp_order \- coef_interp_num)]"
+.br
+.ti -1c
+.RI "#define \fBraw_coef_t\fP   double"
+.br
+.ti -1c
+.RI "#define \fBcoef_coef\fP(x)   \fBcoef\fP(result, interp_order, \fBnum_coefs4\fP, j, x, \fBnum_coefs4\fP \- 1 \- \fBi\fP)"
+.br
+.ti -1c
+.RI "#define \fBMULT32\fP   (65536\&. * 65536\&.)"
+.br
+.ti -1c
+.RI "#define \fBstage_occupancy\fP(\fBs\fP)   \fBmax\fP(0, fifo_occupancy(&(\fBs\fP)\->fifo) \- (\fBs\fP)\->pre_post)"
+.br
+.ti -1c
+.RI "#define \fBstage_read_p\fP(\fBs\fP)   ((\fBsample_t\fP *)\fBfifo_read_ptr\fP(&(\fBs\fP)\->fifo) + (\fBs\fP)\->pre)"
+.br
+.ti -1c
+.RI "#define \fBinteger\fP   fix\&.ms\&.parts\&.ms"
+.br
+.ti -1c
+.RI "#define \fBfraction\fP   fix\&.ms\&.parts\&.ls"
+.br
+.ti -1c
+.RI "#define \fBwhole\fP   fix\&.ms\&.all"
+.br
+.ti -1c
+.RI "#define \fBdft_out\fP   \fBoutput\fP"
+.br
+.ti -1c
+.RI "#define \fBpre_stage\fP   \fBp\fP\->stages[shift]"
+.br
+.ti -1c
+.RI "#define \fBarb_stage\fP   \fBp\fP\->stages[shift + \fBhave_pre_stage\fP]"
+.br
+.ti -1c
+.RI "#define \fBpost_stage\fP   \fBp\fP\->stages[shift + \fBhave_pre_stage\fP + \fBhave_arb_stage\fP]"
+.br
+.ti -1c
+.RI "#define \fBhave_pre_stage\fP   (preM  * preL  != 1)"
+.br
+.ti -1c
+.RI "#define \fBhave_arb_stage\fP   (arbM  * arbL  != 1)"
+.br
+.ti -1c
+.RI "#define \fBhave_post_stage\fP   (postM * postL != 1)"
+.br
+.ti -1c
+.RI "#define \fBTO_3dB\fP(\fBa\fP)             ((1\&.6e\-6*a\-7\&.5e\-4)*a+\&.646)"
+.br
+.ti -1c
+.RI "#define \fBLOW_Q_BW0\fP   (1385 / 2048\&.) /* 0\&.67625 rounded to be \fBa\fP FP exact\&. */"
+.br
+.in -1c
+.SS "Typedefs"
+
+.in +1c
+.ti -1c
+.RI "typedef \fBvoid\fP(* \fBstage_fn_t\fP) (struct \fBstage\fP *input, \fBfifo_t\fP *\fBoutput\fP)"
+.br
+.ti -1c
+.RI "typedef struct \fBstage\fP \fBstage_t\fP"
+.br
+.in -1c
+.SS "Enumerations"
+
+.in +1c
+.ti -1c
+.RI "enum \fBstage_type_t\fP { \fBirrational_stage\fP = 1, \fBcubic_stage\fP, \fBdft_stage\fP, \fBhalf_stage\fP, \fBrational_stage\fP }"
+.br
+.ti -1c
+.RI "enum \fBrolloff_t\fP { \fBrolloff_none\fP, \fBrolloff_small\fP, \fBrolloff_medium\fP }"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define aligned_calloc   calloc"
+
+.PP
+Definition at line 65 of file rate\&.h\&.
+.SS "#define aligned_free   free"
+
+.PP
+Definition at line 63 of file rate\&.h\&.
+.SS "#define aligned_malloc   malloc"
+
+.PP
+Definition at line 64 of file rate\&.h\&.
+.SS "#define arb_stage   \fBp\fP\->stages[shift + \fBhave_pre_stage\fP]"
+
+.PP
+Definition at line 365 of file rate\&.h\&.
+.SS "#define coef(coef_p, interp_order, fir_len, phase_num, coef_interp_num, fir_coef_num)   coef_p[(fir_len) * ((interp_order) + 1) * (phase_num) + ((interp_order) + 1) * (fir_coef_num) + (interp_order \- coef_interp_num)]"
+
+.PP
+Definition at line 92 of file rate\&.h\&.
+.SS "#define coef_coef(x)   \fBcoef\fP(result, interp_order, \fBnum_coefs4\fP, j, x, \fBnum_coefs4\fP \- 1 \- \fBi\fP)"
+
+.SS "#define coefs4_check(\fBi\fP)   1"
+
+.PP
+Definition at line 61 of file rate\&.h\&.
+.SS "#define dft_out   \fBoutput\fP"
+
+.PP
+Definition at line 205 of file rate\&.h\&.
+.SS "#define FIFO_SIZE_T   \fBint\fP"
+
+.PP
+Definition at line 68 of file rate\&.h\&.
+.SS "#define FLOAT_HI_PREC_CLOCK   0    /* Non\-float hi\-prec has ~96 bits\&. */"
+
+.PP
+Definition at line 89 of file rate\&.h\&.
+.SS "#define float_step_t   long double /* __float128 is also \fBa\fP (slow) option */"
+
+.PP
+Definition at line 90 of file rate\&.h\&.
+.SS "#define fraction   fix\&.ms\&.parts\&.ls"
+
+.SS "#define have_arb_stage   (arbM  * arbL  != 1)"
+
+.PP
+Definition at line 368 of file rate\&.h\&.
+.SS "#define have_post_stage   (postM * postL != 1)"
+
+.PP
+Definition at line 369 of file rate\&.h\&.
+.SS "#define have_pre_stage   (preM  * preL  != 1)"
+
+.PP
+Definition at line 367 of file rate\&.h\&.
+.SS "#define integer   fix\&.ms\&.parts\&.ms"
+
+.SS "#define LOW_Q_BW0   (1385 / 2048\&.) /* 0\&.67625 rounded to be \fBa\fP FP exact\&. */"
+
+.PP
+Definition at line 372 of file rate\&.h\&.
+.SS "#define MULT32   (65536\&. * 65536\&.)"
+
+.PP
+Definition at line 147 of file rate\&.h\&.
+.SS "#define num_coefs4   \fBnum_coefs\fP"
+
+.PP
+Definition at line 60 of file rate\&.h\&.
+.SS "#define post_stage   \fBp\fP\->stages[shift + \fBhave_pre_stage\fP + \fBhave_arb_stage\fP]"
+
+.PP
+Definition at line 366 of file rate\&.h\&.
+.SS "#define pre_stage   \fBp\fP\->stages[shift]"
+
+.PP
+Definition at line 364 of file rate\&.h\&.
+.SS "#define RATE_SIMD_POLY   0"
+
+.PP
+Definition at line 59 of file rate\&.h\&.
+.SS "#define raw_coef_t   double"
+
+.PP
+Definition at line 94 of file rate\&.h\&.
+.SS "#define stage_occupancy(\fBs\fP)   \fBmax\fP(0, fifo_occupancy(&(\fBs\fP)\->fifo) \- (\fBs\fP)\->pre_post)"
+
+.PP
+Definition at line 177 of file rate\&.h\&.
+.SS "#define stage_read_p(\fBs\fP)   ((\fBsample_t\fP *)\fBfifo_read_ptr\fP(&(\fBs\fP)\->fifo) + (\fBs\fP)\->pre)"
+
+.PP
+Definition at line 178 of file rate\&.h\&.
+.SS "#define TO_3dB(\fBa\fP)   ((1\&.6e\-6*a\-7\&.5e\-4)*a+\&.646)"
+
+.PP
+Definition at line 371 of file rate\&.h\&.
+.SS "#define whole   fix\&.ms\&.all"
+
+.SH "Typedef Documentation"
+.PP 
+.SS "typedef \fBvoid\fP(*  stage_fn_t) (struct \fBstage\fP *input, \fBfifo_t\fP *\fBoutput\fP)"
+
+.PP
+Definition at line 146 of file rate\&.h\&.
+.SS "typedef struct \fBstage\fP  \fBstage_t\fP"
+
+.SH "Enumeration Type Documentation"
+.PP 
+.SS "enum \fBrolloff_t\fP"
+
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fIrolloff_none \fP\fP
+.TP
+\fB\fIrolloff_small \fP\fP
+.TP
+\fB\fIrolloff_medium \fP\fP
+.PP
+Definition at line 374 of file rate\&.h\&.
+.SS "enum \fBstage_type_t\fP"
+
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fIirrational_stage \fP\fP
+.TP
+\fB\fIcubic_stage \fP\fP
+.TP
+\fB\fIdft_stage \fP\fP
+.TP
+\fB\fIhalf_stage \fP\fP
+.TP
+\fB\fIrational_stage \fP\fP
+.PP
+Definition at line 137 of file rate\&.h\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

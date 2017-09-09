@@ -1,0 +1,186 @@
+.TH "lavc_misc_pixfmt" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+lavc_misc_pixfmt \- Pixel formats
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBFF_LOSS_RESOLUTION\fP   0x0001"
+.br
+.ti -1c
+.RI "#define \fBFF_LOSS_DEPTH\fP   0x0002"
+.br
+.ti -1c
+.RI "#define \fBFF_LOSS_COLORSPACE\fP   0x0004"
+.br
+.ti -1c
+.RI "#define \fBFF_LOSS_ALPHA\fP   0x0008"
+.br
+.ti -1c
+.RI "#define \fBFF_LOSS_COLORQUANT\fP   0x0010"
+.br
+.ti -1c
+.RI "#define \fBFF_LOSS_CHROMA\fP   0x0020"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBvoid\fP \fBavcodec_get_chroma_sub_sample\fP (enum \fBAVPixelFormat\fP pix_fmt, \fBint\fP *h_shift, \fBint\fP *v_shift)"
+.br
+.ti -1c
+.RI "unsigned \fBint\fP \fBavcodec_pix_fmt_to_codec_tag\fP (enum \fBAVPixelFormat\fP pix_fmt)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBavcodec_get_pix_fmt_loss\fP (enum \fBAVPixelFormat\fP dst_pix_fmt, enum \fBAVPixelFormat\fP src_pix_fmt, \fBint\fP has_alpha)"
+.br
+.ti -1c
+.RI "enum \fBAVPixelFormat\fP \fBavcodec_find_best_pix_fmt_of_list\fP (\fBconst\fP enum \fBAVPixelFormat\fP *pix_fmt_list, enum \fBAVPixelFormat\fP src_pix_fmt, \fBint\fP has_alpha, \fBint\fP *loss_ptr)"
+.br
+.ti -1c
+.RI "enum \fBAVPixelFormat\fP \fBavcodec_find_best_pix_fmt_of_2\fP (enum \fBAVPixelFormat\fP dst_pix_fmt1, enum \fBAVPixelFormat\fP dst_pix_fmt2, enum \fBAVPixelFormat\fP src_pix_fmt, \fBint\fP has_alpha, \fBint\fP *loss_ptr)"
+.br
+.ti -1c
+.RI "\fBattribute_deprecated\fP enum \fBAVPixelFormat\fP \fBavcodec_find_best_pix_fmt2\fP (enum \fBAVPixelFormat\fP dst_pix_fmt1, enum \fBAVPixelFormat\fP dst_pix_fmt2, enum \fBAVPixelFormat\fP src_pix_fmt, \fBint\fP has_alpha, \fBint\fP *loss_ptr)"
+.br
+.ti -1c
+.RI "enum \fBAVPixelFormat\fP \fBavcodec_default_get_format\fP (struct \fBAVCodecContext\fP *\fBs\fP, \fBconst\fP enum \fBAVPixelFormat\fP *fmt)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Functions for working with pixel formats\&. 
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define FF_LOSS_ALPHA   0x0008"
+loss of alpha bits 
+.PP
+Definition at line 4653 of file avcodec\&.h\&.
+.SS "#define FF_LOSS_CHROMA   0x0020"
+loss of chroma (e\&.g\&. RGB to gray conversion) 
+.PP
+Definition at line 4655 of file avcodec\&.h\&.
+.SS "#define FF_LOSS_COLORQUANT   0x0010"
+loss due to color quantization 
+.PP
+Definition at line 4654 of file avcodec\&.h\&.
+.SS "#define FF_LOSS_COLORSPACE   0x0004"
+loss due to color space conversion 
+.PP
+Definition at line 4652 of file avcodec\&.h\&.
+.SS "#define FF_LOSS_DEPTH   0x0002"
+loss due to color depth change 
+.PP
+Definition at line 4651 of file avcodec\&.h\&.
+.SS "#define FF_LOSS_RESOLUTION   0x0001"
+loss due to resolution change 
+.PP
+Definition at line 4650 of file avcodec\&.h\&.
+.SH "Function Documentation"
+.PP 
+.SS "enum \fBAVPixelFormat\fP avcodec_default_get_format (struct \fBAVCodecContext\fP * s, \fBconst\fP enum \fBAVPixelFormat\fP * fmt)"
+
+.SS "\fBattribute_deprecated\fP enum \fBAVPixelFormat\fP avcodec_find_best_pix_fmt2 (enum \fBAVPixelFormat\fP dst_pix_fmt1, enum \fBAVPixelFormat\fP dst_pix_fmt2, enum \fBAVPixelFormat\fP src_pix_fmt, \fBint\fP has_alpha, \fBint\fP * loss_ptr)"
+
+.SS "enum \fBAVPixelFormat\fP avcodec_find_best_pix_fmt_of_2 (enum \fBAVPixelFormat\fP dst_pix_fmt1, enum \fBAVPixelFormat\fP dst_pix_fmt2, enum \fBAVPixelFormat\fP src_pix_fmt, \fBint\fP has_alpha, \fBint\fP * loss_ptr)"
+Find the best pixel format to convert to given a certain source pixel format and a selection of two destination pixel formats\&. When converting from one pixel format to another, information loss may occur\&. For example, when converting from RGB24 to GRAY, the color information will be lost\&. Similarly, other losses occur when converting from some formats to other formats\&. \fBavcodec_find_best_pix_fmt_of_2()\fP selects which of the given pixel formats should be used to suffer the least amount of loss\&.
+.PP
+If one of the destination formats is AV_PIX_FMT_NONE the other pixel format (if valid) will be returned\&.
+.PP
+.PP
+.nf
+1 src_pix_fmt = AV_PIX_FMT_YUV420P;
+2 dst_pix_fmt1= AV_PIX_FMT_RGB24;
+3 dst_pix_fmt2= AV_PIX_FMT_GRAY8;
+4 dst_pix_fmt3= AV_PIX_FMT_RGB8;
+5 loss= FF_LOSS_CHROMA; // don't care about chroma loss, so chroma loss will be ignored\&.
+6 dst_pix_fmt = avcodec_find_best_pix_fmt_of_2(dst_pix_fmt1, dst_pix_fmt2, src_pix_fmt, alpha, &loss);
+7 dst_pix_fmt = avcodec_find_best_pix_fmt_of_2(dst_pix_fmt, dst_pix_fmt3, src_pix_fmt, alpha, &loss);
+.fi
+.PP
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdst_pix_fmt1\fP One of the two destination pixel formats to choose from 
+.br
+\fIdst_pix_fmt2\fP The other of the two destination pixel formats to choose from 
+.br
+\fIsrc_pix_fmt\fP Source pixel format 
+.br
+\fIhas_alpha\fP Whether the source pixel format alpha channel is used\&. 
+.br
+\fIloss_ptr\fP Combination of loss flags\&. In: selects which of the losses to ignore, i\&.e\&. NULL or value of zero means we care about all losses\&. Out: the loss that occurs when converting from src to selected dst pixel format\&. 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+The best pixel format to convert to or -1 if none was found\&. 
+.RE
+.PP
+
+.SS "enum \fBAVPixelFormat\fP avcodec_find_best_pix_fmt_of_list (\fBconst\fP enum \fBAVPixelFormat\fP * pix_fmt_list, enum \fBAVPixelFormat\fP src_pix_fmt, \fBint\fP has_alpha, \fBint\fP * loss_ptr)"
+Find the best pixel format to convert to given a certain source pixel format\&. When converting from one pixel format to another, information loss may occur\&. For example, when converting from RGB24 to GRAY, the color information will be lost\&. Similarly, other losses occur when converting from some formats to other formats\&. \fBavcodec_find_best_pix_fmt_of_2()\fP searches which of the given pixel formats should be used to suffer the least amount of loss\&. The pixel formats from which it chooses one, are determined by the pix_fmt_list parameter\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIpix_fmt_list\fP AV_PIX_FMT_NONE terminated array of pixel formats to choose from 
+.br
+\fIsrc_pix_fmt\fP source pixel format 
+.br
+\fIhas_alpha\fP Whether the source pixel format alpha channel is used\&. 
+.br
+\fIloss_ptr\fP Combination of flags informing you what kind of losses will occur\&. 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+The best pixel format to convert to or -1 if none was found\&. 
+.RE
+.PP
+
+.SS "\fBvoid\fP avcodec_get_chroma_sub_sample (enum \fBAVPixelFormat\fP pix_fmt, \fBint\fP * h_shift, \fBint\fP * v_shift)"
+Utility function to access log2_chroma_w log2_chroma_h from the pixel format \fBAVPixFmtDescriptor\fP\&.
+.PP
+This function asserts that pix_fmt is valid\&. See av_pix_fmt_get_chroma_sub_sample for one that returns a failure code and continues in case of invalid pix_fmts\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIpix_fmt\fP the pixel format 
+.br
+\fIh_shift\fP store log2_chroma_w 
+.br
+\fIv_shift\fP store log2_chroma_h
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBav_pix_fmt_get_chroma_sub_sample\fP 
+.RE
+.PP
+
+.SS "\fBint\fP avcodec_get_pix_fmt_loss (enum \fBAVPixelFormat\fP dst_pix_fmt, enum \fBAVPixelFormat\fP src_pix_fmt, \fBint\fP has_alpha)"
+Compute what kind of losses will occur when converting from one specific pixel format to another\&. When converting from one pixel format to another, information loss may occur\&. For example, when converting from RGB24 to GRAY, the color information will be lost\&. Similarly, other losses occur when converting from some formats to other formats\&. These losses can involve loss of chroma, but also loss of resolution, loss of color depth, loss due to the color space conversion, loss of the alpha bits or loss due to color quantization\&. avcodec_get_fix_fmt_loss() informs you about the various types of losses which will occur when converting from one pixel format to another\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdst_pix_fmt\fP destination pixel format 
+.br
+\fIsrc_pix_fmt\fP source pixel format 
+.br
+\fIhas_alpha\fP Whether the source pixel format alpha channel is used\&. 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+Combination of flags informing you what kind of losses will occur (maximum loss for an invalid dst_pix_fmt)\&. 
+.RE
+.PP
+
+.SS "unsigned \fBint\fP avcodec_pix_fmt_to_codec_tag (enum \fBAVPixelFormat\fP pix_fmt)"
+Return a value representing the fourCC code associated to the pixel format pix_fmt, or 0 if no associated fourCC code can be found\&. 
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

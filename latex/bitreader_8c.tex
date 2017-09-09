@@ -1,0 +1,394 @@
+\hypertarget{bitreader_8c}{}\section{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/libflac/src/lib\+F\+L\+A\+C/bitreader.c File Reference}
+\label{bitreader_8c}\index{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/libflac/src/lib\+F\+L\+A\+C/bitreader.\+c@{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/libflac/src/lib\+F\+L\+A\+C/bitreader.\+c}}
+{\ttfamily \#include $<$stdlib.\+h$>$}\\*
+{\ttfamily \#include $<$string.\+h$>$}\\*
+{\ttfamily \#include \char`\"{}private/bitmath.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}private/bitreader.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}private/crc.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}private/macros.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}F\+L\+A\+C/assert.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}share/compat.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}share/endswap.\+h\char`\"{}}\\*
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{struct_f_l_a_c_____bit_reader}{F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Reader}
+\end{DoxyCompactItemize}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{bitreader_8c_a7fef7566120d2dee49ee62c239ad7e7e}{F\+L\+A\+C\+\_\+\+\_\+\+B\+Y\+T\+E\+S\+\_\+\+P\+E\+R\+\_\+\+W\+O\+RD}~4		/$\ast$ sizeof \hyperlink{lib-src_2ffmpeg_2win32_2stdint_8h_a6eb1e68cc391dd753bc8ce896dbb8315}{uint32\+\_\+t} $\ast$/
+\item 
+\#define \hyperlink{bitreader_8c_aea11f2954ff740c8de5039d89ad89999}{F\+L\+A\+C\+\_\+\+\_\+\+B\+I\+T\+S\+\_\+\+P\+E\+R\+\_\+\+W\+O\+RD}~(8 $\ast$ \hyperlink{lib_f_l_a_c_2bitwriter_8c_a7fef7566120d2dee49ee62c239ad7e7e}{F\+L\+A\+C\+\_\+\+\_\+\+B\+Y\+T\+E\+S\+\_\+\+P\+E\+R\+\_\+\+W\+O\+RD})
+\item 
+\#define \hyperlink{bitreader_8c_a2bb3f532a0f74bb43b56557eb2ce2d95}{F\+L\+A\+C\+\_\+\+\_\+\+W\+O\+R\+D\+\_\+\+A\+L\+L\+\_\+\+O\+N\+ES}~((\hyperlink{ordinals_8h_a9c4005ea7ef8d564b0cc993cdd0e4e5e}{F\+L\+A\+C\+\_\+\+\_\+uint32})0xffffffff)
+\item 
+\#define \hyperlink{bitreader_8c_a3f56349a14908953c8006f33d1df6674}{S\+W\+A\+P\+\_\+\+B\+E\+\_\+\+W\+O\+R\+D\+\_\+\+T\+O\+\_\+\+H\+O\+ST}(x)~\hyperlink{include_2share_2endswap_8h_a54e3d0aec5f31f61d06cdfbc4e900b34}{E\+N\+D\+S\+W\+A\+P\+\_\+32}(x)
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{struct_f_l_a_c_____bit_reader}{F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Reader} $\ast$ \hyperlink{bitreader_8c_a840db48cc238a7628212f7711d1749dc}{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+new} (\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void})
+\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{bitreader_8c_a0b842e6b5161429f590bd465b09d33e5}{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+delete} (\hyperlink{struct_f_l_a_c_____bit_reader}{F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Reader} $\ast$br)
+\item 
+\hyperlink{ordinals_8h_a95103469f1cbd78b8cf250194985b34e}{F\+L\+A\+C\+\_\+\+\_\+bool} \hyperlink{bitreader_8c_ab8c93cd35d01ddfdeea70ac1ea98c2a1}{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+init} (\hyperlink{struct_f_l_a_c_____bit_reader}{F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Reader} $\ast$br, \hyperlink{bitreader_8h_a0c06be76d05b61ca81a7e26d90e3534e}{F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Reader\+Read\+Callback} rcb, \hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} $\ast$\hyperlink{rfft2d_test_m_l_8m_a51ec853512a386583838922288834695}{cd})
+\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{bitreader_8c_a891c42265a86aa0269b04806d4f12bad}{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+free} (\hyperlink{struct_f_l_a_c_____bit_reader}{F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Reader} $\ast$br)
+\item 
+\hyperlink{ordinals_8h_a95103469f1cbd78b8cf250194985b34e}{F\+L\+A\+C\+\_\+\+\_\+bool} \hyperlink{bitreader_8c_a4ade6a35e2ddd708520abcdbcb8d399f}{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+clear} (\hyperlink{struct_f_l_a_c_____bit_reader}{F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Reader} $\ast$br)
+\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{bitreader_8c_aab98cb7f9fa82984d237ba0baa2e61a6}{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+dump} (\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{struct_f_l_a_c_____bit_reader}{F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Reader} $\ast$br, F\+I\+LE $\ast$\hyperlink{latency_8c_a71fd1c281affec034757279e4f91c50b}{out})
+\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{bitreader_8c_ab9525ea6c21ab1ec8b9c831f0bd8ff6d}{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+reset\+\_\+read\+\_\+crc16} (\hyperlink{struct_f_l_a_c_____bit_reader}{F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Reader} $\ast$br, \hyperlink{ordinals_8h_a0fbaee65d056a075245dcd0c903fb94c}{F\+L\+A\+C\+\_\+\+\_\+uint16} seed)
+\item 
+\hyperlink{ordinals_8h_a0fbaee65d056a075245dcd0c903fb94c}{F\+L\+A\+C\+\_\+\+\_\+uint16} \hyperlink{bitreader_8c_acf14b2403aedcb2ad5b32a48675fa2df}{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+get\+\_\+read\+\_\+crc16} (\hyperlink{struct_f_l_a_c_____bit_reader}{F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Reader} $\ast$br)
+\item 
+\hyperlink{ordinals_8h_a95103469f1cbd78b8cf250194985b34e}{F\+L\+A\+C\+\_\+\+\_\+bool} \hyperlink{bitreader_8c_af13f6048e26ab93c7c12f715aba1cb25}{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+is\+\_\+consumed\+\_\+byte\+\_\+aligned} (\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{struct_f_l_a_c_____bit_reader}{F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Reader} $\ast$br)
+\item 
+unsigned \hyperlink{bitreader_8c_a4d6a18c6cb7279d41afde5e34e93bc3e}{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+bits\+\_\+left\+\_\+for\+\_\+byte\+\_\+alignment} (\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{struct_f_l_a_c_____bit_reader}{F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Reader} $\ast$br)
+\item 
+unsigned \hyperlink{bitreader_8c_a3cfe0adbccf714b39f1d8eb58ef46cb2}{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+get\+\_\+input\+\_\+bits\+\_\+unconsumed} (\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{struct_f_l_a_c_____bit_reader}{F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Reader} $\ast$br)
+\item 
+\hyperlink{ordinals_8h_a95103469f1cbd78b8cf250194985b34e}{F\+L\+A\+C\+\_\+\+\_\+bool} \hyperlink{bitreader_8c_afa8a663f5e89588d21f5747ef542d575}{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+read\+\_\+raw\+\_\+uint32} (\hyperlink{struct_f_l_a_c_____bit_reader}{F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Reader} $\ast$br, \hyperlink{ordinals_8h_a9c4005ea7ef8d564b0cc993cdd0e4e5e}{F\+L\+A\+C\+\_\+\+\_\+uint32} $\ast$val, unsigned \hyperlink{metrics_8c_a1eb8fc809d37cc6176f7f27374b063d0}{bits})
+\item 
+\hyperlink{ordinals_8h_a95103469f1cbd78b8cf250194985b34e}{F\+L\+A\+C\+\_\+\+\_\+bool} \hyperlink{bitreader_8c_af372422bf62b3e703ef7210ac0e2e2ea}{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+read\+\_\+raw\+\_\+int32} (\hyperlink{struct_f_l_a_c_____bit_reader}{F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Reader} $\ast$br, \hyperlink{ordinals_8h_a33fd77bfe6d685541a0c034a75deccdc}{F\+L\+A\+C\+\_\+\+\_\+int32} $\ast$val, unsigned \hyperlink{metrics_8c_a1eb8fc809d37cc6176f7f27374b063d0}{bits})
+\item 
+\hyperlink{ordinals_8h_a95103469f1cbd78b8cf250194985b34e}{F\+L\+A\+C\+\_\+\+\_\+bool} \hyperlink{bitreader_8c_a6d69fe04dd39ddc4c6c2804275052616}{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+read\+\_\+raw\+\_\+uint64} (\hyperlink{struct_f_l_a_c_____bit_reader}{F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Reader} $\ast$br, \hyperlink{ordinals_8h_aa78c8c70a3eb8a58af7436f278acde8e}{F\+L\+A\+C\+\_\+\+\_\+uint64} $\ast$val, unsigned \hyperlink{metrics_8c_a1eb8fc809d37cc6176f7f27374b063d0}{bits})
+\item 
+\hyperlink{ordinals_8h_a95103469f1cbd78b8cf250194985b34e}{F\+L\+A\+C\+\_\+\+\_\+bool} \hyperlink{bitreader_8c_acda8774501dc16ac2198d1be768c4680}{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+read\+\_\+uint32\+\_\+little\+\_\+endian} (\hyperlink{struct_f_l_a_c_____bit_reader}{F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Reader} $\ast$br, \hyperlink{ordinals_8h_a9c4005ea7ef8d564b0cc993cdd0e4e5e}{F\+L\+A\+C\+\_\+\+\_\+uint32} $\ast$val)
+\item 
+\hyperlink{ordinals_8h_a95103469f1cbd78b8cf250194985b34e}{F\+L\+A\+C\+\_\+\+\_\+bool} \hyperlink{bitreader_8c_a005f5de0552ce1fd27faa43e1cad8196}{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+skip\+\_\+bits\+\_\+no\+\_\+crc} (\hyperlink{struct_f_l_a_c_____bit_reader}{F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Reader} $\ast$br, unsigned \hyperlink{metrics_8c_a1eb8fc809d37cc6176f7f27374b063d0}{bits})
+\item 
+\hyperlink{ordinals_8h_a95103469f1cbd78b8cf250194985b34e}{F\+L\+A\+C\+\_\+\+\_\+bool} \hyperlink{bitreader_8c_a00e783d8613440130f2a81f49416a538}{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+skip\+\_\+byte\+\_\+block\+\_\+aligned\+\_\+no\+\_\+crc} (\hyperlink{struct_f_l_a_c_____bit_reader}{F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Reader} $\ast$br, unsigned nvals)
+\item 
+\hyperlink{ordinals_8h_a95103469f1cbd78b8cf250194985b34e}{F\+L\+A\+C\+\_\+\+\_\+bool} \hyperlink{bitreader_8c_a222e525a0eeecf636a43580eb738a9d2}{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+read\+\_\+byte\+\_\+block\+\_\+aligned\+\_\+no\+\_\+crc} (\hyperlink{struct_f_l_a_c_____bit_reader}{F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Reader} $\ast$br, \hyperlink{ordinals_8h_a5eb569b12d5b047cdacada4d57924ee3}{F\+L\+A\+C\+\_\+\+\_\+byte} $\ast$val, unsigned nvals)
+\item 
+\hyperlink{ordinals_8h_a95103469f1cbd78b8cf250194985b34e}{F\+L\+A\+C\+\_\+\+\_\+bool} \hyperlink{bitreader_8c_a7a26f753940d74dba2aa72958fc1fcfc}{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+read\+\_\+unary\+\_\+unsigned} (\hyperlink{struct_f_l_a_c_____bit_reader}{F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Reader} $\ast$br, unsigned $\ast$val)
+\item 
+\hyperlink{ordinals_8h_a95103469f1cbd78b8cf250194985b34e}{F\+L\+A\+C\+\_\+\+\_\+bool} \hyperlink{bitreader_8c_a006e08b1c0d743dcd15ea2177ddbb761}{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+read\+\_\+rice\+\_\+signed} (\hyperlink{struct_f_l_a_c_____bit_reader}{F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Reader} $\ast$br, \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} $\ast$val, unsigned parameter)
+\item 
+\hyperlink{ordinals_8h_a95103469f1cbd78b8cf250194985b34e}{F\+L\+A\+C\+\_\+\+\_\+bool} \hyperlink{bitreader_8c_ad7a2f1f9d159edf10c09f2b51e818360}{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+read\+\_\+rice\+\_\+signed\+\_\+block} (\hyperlink{struct_f_l_a_c_____bit_reader}{F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Reader} $\ast$br, \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} vals\mbox{[}$\,$\mbox{]}, unsigned nvals, unsigned parameter)
+\item 
+\hyperlink{ordinals_8h_a95103469f1cbd78b8cf250194985b34e}{F\+L\+A\+C\+\_\+\+\_\+bool} \hyperlink{bitreader_8c_a99b7ed52b8404ed6a9f3c5034d1ff365}{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+read\+\_\+utf8\+\_\+uint32} (\hyperlink{struct_f_l_a_c_____bit_reader}{F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Reader} $\ast$br, \hyperlink{ordinals_8h_a9c4005ea7ef8d564b0cc993cdd0e4e5e}{F\+L\+A\+C\+\_\+\+\_\+uint32} $\ast$val, \hyperlink{ordinals_8h_a5eb569b12d5b047cdacada4d57924ee3}{F\+L\+A\+C\+\_\+\+\_\+byte} $\ast$raw, unsigned $\ast$rawlen)
+\item 
+\hyperlink{ordinals_8h_a95103469f1cbd78b8cf250194985b34e}{F\+L\+A\+C\+\_\+\+\_\+bool} \hyperlink{bitreader_8c_a4a9f259cfff57225f893bc3224c7ee75}{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+read\+\_\+utf8\+\_\+uint64} (\hyperlink{struct_f_l_a_c_____bit_reader}{F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Reader} $\ast$br, \hyperlink{ordinals_8h_aa78c8c70a3eb8a58af7436f278acde8e}{F\+L\+A\+C\+\_\+\+\_\+uint64} $\ast$val, \hyperlink{ordinals_8h_a5eb569b12d5b047cdacada4d57924ee3}{F\+L\+A\+C\+\_\+\+\_\+byte} $\ast$raw, unsigned $\ast$rawlen)
+\end{DoxyCompactItemize}
+
+
+\subsection{Macro Definition Documentation}
+\index{bitreader.\+c@{bitreader.\+c}!F\+L\+A\+C\+\_\+\+\_\+\+B\+I\+T\+S\+\_\+\+P\+E\+R\+\_\+\+W\+O\+RD@{F\+L\+A\+C\+\_\+\+\_\+\+B\+I\+T\+S\+\_\+\+P\+E\+R\+\_\+\+W\+O\+RD}}
+\index{F\+L\+A\+C\+\_\+\+\_\+\+B\+I\+T\+S\+\_\+\+P\+E\+R\+\_\+\+W\+O\+RD@{F\+L\+A\+C\+\_\+\+\_\+\+B\+I\+T\+S\+\_\+\+P\+E\+R\+\_\+\+W\+O\+RD}!bitreader.\+c@{bitreader.\+c}}
+\subsubsection[{\texorpdfstring{F\+L\+A\+C\+\_\+\+\_\+\+B\+I\+T\+S\+\_\+\+P\+E\+R\+\_\+\+W\+O\+RD}{FLAC__BITS_PER_WORD}}]{\setlength{\rightskip}{0pt plus 5cm}\#define F\+L\+A\+C\+\_\+\+\_\+\+B\+I\+T\+S\+\_\+\+P\+E\+R\+\_\+\+W\+O\+RD~(8 $\ast$ {\bf F\+L\+A\+C\+\_\+\+\_\+\+B\+Y\+T\+E\+S\+\_\+\+P\+E\+R\+\_\+\+W\+O\+RD})}\hypertarget{bitreader_8c_aea11f2954ff740c8de5039d89ad89999}{}\label{bitreader_8c_aea11f2954ff740c8de5039d89ad89999}
+
+
+Definition at line 52 of file bitreader.\+c.
+
+\index{bitreader.\+c@{bitreader.\+c}!F\+L\+A\+C\+\_\+\+\_\+\+B\+Y\+T\+E\+S\+\_\+\+P\+E\+R\+\_\+\+W\+O\+RD@{F\+L\+A\+C\+\_\+\+\_\+\+B\+Y\+T\+E\+S\+\_\+\+P\+E\+R\+\_\+\+W\+O\+RD}}
+\index{F\+L\+A\+C\+\_\+\+\_\+\+B\+Y\+T\+E\+S\+\_\+\+P\+E\+R\+\_\+\+W\+O\+RD@{F\+L\+A\+C\+\_\+\+\_\+\+B\+Y\+T\+E\+S\+\_\+\+P\+E\+R\+\_\+\+W\+O\+RD}!bitreader.\+c@{bitreader.\+c}}
+\subsubsection[{\texorpdfstring{F\+L\+A\+C\+\_\+\+\_\+\+B\+Y\+T\+E\+S\+\_\+\+P\+E\+R\+\_\+\+W\+O\+RD}{FLAC__BYTES_PER_WORD}}]{\setlength{\rightskip}{0pt plus 5cm}\#define F\+L\+A\+C\+\_\+\+\_\+\+B\+Y\+T\+E\+S\+\_\+\+P\+E\+R\+\_\+\+W\+O\+RD~4		/$\ast$ sizeof {\bf uint32\+\_\+t} $\ast$/}\hypertarget{bitreader_8c_a7fef7566120d2dee49ee62c239ad7e7e}{}\label{bitreader_8c_a7fef7566120d2dee49ee62c239ad7e7e}
+
+
+Definition at line 51 of file bitreader.\+c.
+
+\index{bitreader.\+c@{bitreader.\+c}!F\+L\+A\+C\+\_\+\+\_\+\+W\+O\+R\+D\+\_\+\+A\+L\+L\+\_\+\+O\+N\+ES@{F\+L\+A\+C\+\_\+\+\_\+\+W\+O\+R\+D\+\_\+\+A\+L\+L\+\_\+\+O\+N\+ES}}
+\index{F\+L\+A\+C\+\_\+\+\_\+\+W\+O\+R\+D\+\_\+\+A\+L\+L\+\_\+\+O\+N\+ES@{F\+L\+A\+C\+\_\+\+\_\+\+W\+O\+R\+D\+\_\+\+A\+L\+L\+\_\+\+O\+N\+ES}!bitreader.\+c@{bitreader.\+c}}
+\subsubsection[{\texorpdfstring{F\+L\+A\+C\+\_\+\+\_\+\+W\+O\+R\+D\+\_\+\+A\+L\+L\+\_\+\+O\+N\+ES}{FLAC__WORD_ALL_ONES}}]{\setlength{\rightskip}{0pt plus 5cm}\#define F\+L\+A\+C\+\_\+\+\_\+\+W\+O\+R\+D\+\_\+\+A\+L\+L\+\_\+\+O\+N\+ES~(({\bf F\+L\+A\+C\+\_\+\+\_\+uint32})0xffffffff)}\hypertarget{bitreader_8c_a2bb3f532a0f74bb43b56557eb2ce2d95}{}\label{bitreader_8c_a2bb3f532a0f74bb43b56557eb2ce2d95}
+
+
+Definition at line 53 of file bitreader.\+c.
+
+\index{bitreader.\+c@{bitreader.\+c}!S\+W\+A\+P\+\_\+\+B\+E\+\_\+\+W\+O\+R\+D\+\_\+\+T\+O\+\_\+\+H\+O\+ST@{S\+W\+A\+P\+\_\+\+B\+E\+\_\+\+W\+O\+R\+D\+\_\+\+T\+O\+\_\+\+H\+O\+ST}}
+\index{S\+W\+A\+P\+\_\+\+B\+E\+\_\+\+W\+O\+R\+D\+\_\+\+T\+O\+\_\+\+H\+O\+ST@{S\+W\+A\+P\+\_\+\+B\+E\+\_\+\+W\+O\+R\+D\+\_\+\+T\+O\+\_\+\+H\+O\+ST}!bitreader.\+c@{bitreader.\+c}}
+\subsubsection[{\texorpdfstring{S\+W\+A\+P\+\_\+\+B\+E\+\_\+\+W\+O\+R\+D\+\_\+\+T\+O\+\_\+\+H\+O\+ST}{SWAP_BE_WORD_TO_HOST}}]{\setlength{\rightskip}{0pt plus 5cm}\#define S\+W\+A\+P\+\_\+\+B\+E\+\_\+\+W\+O\+R\+D\+\_\+\+T\+O\+\_\+\+H\+O\+ST(
+\begin{DoxyParamCaption}
+\item[{}]{x}
+\end{DoxyParamCaption}
+)~{\bf E\+N\+D\+S\+W\+A\+P\+\_\+32}(x)}\hypertarget{bitreader_8c_a3f56349a14908953c8006f33d1df6674}{}\label{bitreader_8c_a3f56349a14908953c8006f33d1df6674}
+
+
+Definition at line 58 of file bitreader.\+c.
+
+
+
+\subsection{Function Documentation}
+\index{bitreader.\+c@{bitreader.\+c}!F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+bits\+\_\+left\+\_\+for\+\_\+byte\+\_\+alignment@{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+bits\+\_\+left\+\_\+for\+\_\+byte\+\_\+alignment}}
+\index{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+bits\+\_\+left\+\_\+for\+\_\+byte\+\_\+alignment@{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+bits\+\_\+left\+\_\+for\+\_\+byte\+\_\+alignment}!bitreader.\+c@{bitreader.\+c}}
+\subsubsection[{\texorpdfstring{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+bits\+\_\+left\+\_\+for\+\_\+byte\+\_\+alignment(const F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Reader $\ast$br)}{FLAC__bitreader_bits_left_for_byte_alignment(const FLAC__BitReader *br)}}]{\setlength{\rightskip}{0pt plus 5cm}unsigned F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+bits\+\_\+left\+\_\+for\+\_\+byte\+\_\+alignment (
+\begin{DoxyParamCaption}
+\item[{{\bf const} {\bf F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Reader} $\ast$}]{br}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{bitreader_8c_a4d6a18c6cb7279d41afde5e34e93bc3e}{}\label{bitreader_8c_a4d6a18c6cb7279d41afde5e34e93bc3e}
+
+
+Definition at line 330 of file bitreader.\+c.
+
+\index{bitreader.\+c@{bitreader.\+c}!F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+clear@{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+clear}}
+\index{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+clear@{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+clear}!bitreader.\+c@{bitreader.\+c}}
+\subsubsection[{\texorpdfstring{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+clear(\+F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Reader $\ast$br)}{FLAC__bitreader_clear(FLAC__BitReader *br)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf F\+L\+A\+C\+\_\+\+\_\+bool} F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+clear (
+\begin{DoxyParamCaption}
+\item[{{\bf F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Reader} $\ast$}]{br}
+\end{DoxyParamCaption}
+)}\hypertarget{bitreader_8c_a4ade6a35e2ddd708520abcdbcb8d399f}{}\label{bitreader_8c_a4ade6a35e2ddd708520abcdbcb8d399f}
+
+
+Definition at line 262 of file bitreader.\+c.
+
+\index{bitreader.\+c@{bitreader.\+c}!F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+delete@{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+delete}}
+\index{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+delete@{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+delete}!bitreader.\+c@{bitreader.\+c}}
+\subsubsection[{\texorpdfstring{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+delete(\+F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Reader $\ast$br)}{FLAC__bitreader_delete(FLAC__BitReader *br)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+delete (
+\begin{DoxyParamCaption}
+\item[{{\bf F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Reader} $\ast$}]{br}
+\end{DoxyParamCaption}
+)}\hypertarget{bitreader_8c_a0b842e6b5161429f590bd465b09d33e5}{}\label{bitreader_8c_a0b842e6b5161429f590bd465b09d33e5}
+
+
+Definition at line 218 of file bitreader.\+c.
+
+\index{bitreader.\+c@{bitreader.\+c}!F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+dump@{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+dump}}
+\index{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+dump@{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+dump}!bitreader.\+c@{bitreader.\+c}}
+\subsubsection[{\texorpdfstring{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+dump(const F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Reader $\ast$br, F\+I\+L\+E $\ast$out)}{FLAC__bitreader_dump(const FLAC__BitReader *br, FILE *out)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+dump (
+\begin{DoxyParamCaption}
+\item[{{\bf const} {\bf F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Reader} $\ast$}]{br, }
+\item[{F\+I\+LE $\ast$}]{out}
+\end{DoxyParamCaption}
+)}\hypertarget{bitreader_8c_aab98cb7f9fa82984d237ba0baa2e61a6}{}\label{bitreader_8c_aab98cb7f9fa82984d237ba0baa2e61a6}
+
+
+Definition at line 269 of file bitreader.\+c.
+
+\index{bitreader.\+c@{bitreader.\+c}!F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+free@{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+free}}
+\index{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+free@{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+free}!bitreader.\+c@{bitreader.\+c}}
+\subsubsection[{\texorpdfstring{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+free(\+F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Reader $\ast$br)}{FLAC__bitreader_free(FLAC__BitReader *br)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+free (
+\begin{DoxyParamCaption}
+\item[{{\bf F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Reader} $\ast$}]{br}
+\end{DoxyParamCaption}
+)}\hypertarget{bitreader_8c_a891c42265a86aa0269b04806d4f12bad}{}\label{bitreader_8c_a891c42265a86aa0269b04806d4f12bad}
+
+
+Definition at line 248 of file bitreader.\+c.
+
+\index{bitreader.\+c@{bitreader.\+c}!F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+get\+\_\+input\+\_\+bits\+\_\+unconsumed@{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+get\+\_\+input\+\_\+bits\+\_\+unconsumed}}
+\index{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+get\+\_\+input\+\_\+bits\+\_\+unconsumed@{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+get\+\_\+input\+\_\+bits\+\_\+unconsumed}!bitreader.\+c@{bitreader.\+c}}
+\subsubsection[{\texorpdfstring{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+get\+\_\+input\+\_\+bits\+\_\+unconsumed(const F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Reader $\ast$br)}{FLAC__bitreader_get_input_bits_unconsumed(const FLAC__BitReader *br)}}]{\setlength{\rightskip}{0pt plus 5cm}unsigned F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+get\+\_\+input\+\_\+bits\+\_\+unconsumed (
+\begin{DoxyParamCaption}
+\item[{{\bf const} {\bf F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Reader} $\ast$}]{br}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{bitreader_8c_a3cfe0adbccf714b39f1d8eb58ef46cb2}{}\label{bitreader_8c_a3cfe0adbccf714b39f1d8eb58ef46cb2}
+
+
+Definition at line 335 of file bitreader.\+c.
+
+\index{bitreader.\+c@{bitreader.\+c}!F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+get\+\_\+read\+\_\+crc16@{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+get\+\_\+read\+\_\+crc16}}
+\index{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+get\+\_\+read\+\_\+crc16@{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+get\+\_\+read\+\_\+crc16}!bitreader.\+c@{bitreader.\+c}}
+\subsubsection[{\texorpdfstring{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+get\+\_\+read\+\_\+crc16(\+F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Reader $\ast$br)}{FLAC__bitreader_get_read_crc16(FLAC__BitReader *br)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf F\+L\+A\+C\+\_\+\+\_\+uint16} F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+get\+\_\+read\+\_\+crc16 (
+\begin{DoxyParamCaption}
+\item[{{\bf F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Reader} $\ast$}]{br}
+\end{DoxyParamCaption}
+)}\hypertarget{bitreader_8c_acf14b2403aedcb2ad5b32a48675fa2df}{}\label{bitreader_8c_acf14b2403aedcb2ad5b32a48675fa2df}
+
+
+Definition at line 309 of file bitreader.\+c.
+
+\index{bitreader.\+c@{bitreader.\+c}!F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+init@{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+init}}
+\index{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+init@{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+init}!bitreader.\+c@{bitreader.\+c}}
+\subsubsection[{\texorpdfstring{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+init(\+F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Reader $\ast$br, F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Reader\+Read\+Callback rcb, void $\ast$cd)}{FLAC__bitreader_init(FLAC__BitReader *br, FLAC__BitReaderReadCallback rcb, void *cd)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf F\+L\+A\+C\+\_\+\+\_\+bool} F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+init (
+\begin{DoxyParamCaption}
+\item[{{\bf F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Reader} $\ast$}]{br, }
+\item[{{\bf F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Reader\+Read\+Callback}}]{rcb, }
+\item[{{\bf void} $\ast$}]{cd}
+\end{DoxyParamCaption}
+)}\hypertarget{bitreader_8c_ab8c93cd35d01ddfdeea70ac1ea98c2a1}{}\label{bitreader_8c_ab8c93cd35d01ddfdeea70ac1ea98c2a1}
+
+
+Definition at line 232 of file bitreader.\+c.
+
+\index{bitreader.\+c@{bitreader.\+c}!F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+is\+\_\+consumed\+\_\+byte\+\_\+aligned@{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+is\+\_\+consumed\+\_\+byte\+\_\+aligned}}
+\index{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+is\+\_\+consumed\+\_\+byte\+\_\+aligned@{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+is\+\_\+consumed\+\_\+byte\+\_\+aligned}!bitreader.\+c@{bitreader.\+c}}
+\subsubsection[{\texorpdfstring{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+is\+\_\+consumed\+\_\+byte\+\_\+aligned(const F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Reader $\ast$br)}{FLAC__bitreader_is_consumed_byte_aligned(const FLAC__BitReader *br)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf F\+L\+A\+C\+\_\+\+\_\+bool} F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+is\+\_\+consumed\+\_\+byte\+\_\+aligned (
+\begin{DoxyParamCaption}
+\item[{{\bf const} {\bf F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Reader} $\ast$}]{br}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{bitreader_8c_af13f6048e26ab93c7c12f715aba1cb25}{}\label{bitreader_8c_af13f6048e26ab93c7c12f715aba1cb25}
+
+
+Definition at line 325 of file bitreader.\+c.
+
+\index{bitreader.\+c@{bitreader.\+c}!F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+new@{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+new}}
+\index{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+new@{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+new}!bitreader.\+c@{bitreader.\+c}}
+\subsubsection[{\texorpdfstring{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+new(void)}{FLAC__bitreader_new(void)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Reader}$\ast$ F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+new (
+\begin{DoxyParamCaption}
+\item[{{\bf void}}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{bitreader_8c_a840db48cc238a7628212f7711d1749dc}{}\label{bitreader_8c_a840db48cc238a7628212f7711d1749dc}
+
+
+Definition at line 202 of file bitreader.\+c.
+
+\index{bitreader.\+c@{bitreader.\+c}!F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+read\+\_\+byte\+\_\+block\+\_\+aligned\+\_\+no\+\_\+crc@{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+read\+\_\+byte\+\_\+block\+\_\+aligned\+\_\+no\+\_\+crc}}
+\index{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+read\+\_\+byte\+\_\+block\+\_\+aligned\+\_\+no\+\_\+crc@{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+read\+\_\+byte\+\_\+block\+\_\+aligned\+\_\+no\+\_\+crc}!bitreader.\+c@{bitreader.\+c}}
+\subsubsection[{\texorpdfstring{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+read\+\_\+byte\+\_\+block\+\_\+aligned\+\_\+no\+\_\+crc(\+F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Reader $\ast$br, F\+L\+A\+C\+\_\+\+\_\+byte $\ast$val, unsigned nvals)}{FLAC__bitreader_read_byte_block_aligned_no_crc(FLAC__BitReader *br, FLAC__byte *val, unsigned nvals)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf F\+L\+A\+C\+\_\+\+\_\+bool} F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+read\+\_\+byte\+\_\+block\+\_\+aligned\+\_\+no\+\_\+crc (
+\begin{DoxyParamCaption}
+\item[{{\bf F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Reader} $\ast$}]{br, }
+\item[{{\bf F\+L\+A\+C\+\_\+\+\_\+byte} $\ast$}]{val, }
+\item[{unsigned}]{nvals}
+\end{DoxyParamCaption}
+)}\hypertarget{bitreader_8c_a222e525a0eeecf636a43580eb738a9d2}{}\label{bitreader_8c_a222e525a0eeecf636a43580eb738a9d2}
+
+
+Definition at line 546 of file bitreader.\+c.
+
+\index{bitreader.\+c@{bitreader.\+c}!F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+read\+\_\+raw\+\_\+int32@{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+read\+\_\+raw\+\_\+int32}}
+\index{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+read\+\_\+raw\+\_\+int32@{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+read\+\_\+raw\+\_\+int32}!bitreader.\+c@{bitreader.\+c}}
+\subsubsection[{\texorpdfstring{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+read\+\_\+raw\+\_\+int32(\+F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Reader $\ast$br, F\+L\+A\+C\+\_\+\+\_\+int32 $\ast$val, unsigned bits)}{FLAC__bitreader_read_raw_int32(FLAC__BitReader *br, FLAC__int32 *val, unsigned bits)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf F\+L\+A\+C\+\_\+\+\_\+bool} F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+read\+\_\+raw\+\_\+int32 (
+\begin{DoxyParamCaption}
+\item[{{\bf F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Reader} $\ast$}]{br, }
+\item[{{\bf F\+L\+A\+C\+\_\+\+\_\+int32} $\ast$}]{val, }
+\item[{unsigned}]{bits}
+\end{DoxyParamCaption}
+)}\hypertarget{bitreader_8c_af372422bf62b3e703ef7210ac0e2e2ea}{}\label{bitreader_8c_af372422bf62b3e703ef7210ac0e2e2ea}
+
+
+Definition at line 419 of file bitreader.\+c.
+
+\index{bitreader.\+c@{bitreader.\+c}!F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+read\+\_\+raw\+\_\+uint32@{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+read\+\_\+raw\+\_\+uint32}}
+\index{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+read\+\_\+raw\+\_\+uint32@{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+read\+\_\+raw\+\_\+uint32}!bitreader.\+c@{bitreader.\+c}}
+\subsubsection[{\texorpdfstring{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+read\+\_\+raw\+\_\+uint32(\+F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Reader $\ast$br, F\+L\+A\+C\+\_\+\+\_\+uint32 $\ast$val, unsigned bits)}{FLAC__bitreader_read_raw_uint32(FLAC__BitReader *br, FLAC__uint32 *val, unsigned bits)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf F\+L\+A\+C\+\_\+\+\_\+bool} F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+read\+\_\+raw\+\_\+uint32 (
+\begin{DoxyParamCaption}
+\item[{{\bf F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Reader} $\ast$}]{br, }
+\item[{{\bf F\+L\+A\+C\+\_\+\+\_\+uint32} $\ast$}]{val, }
+\item[{unsigned}]{bits}
+\end{DoxyParamCaption}
+)}\hypertarget{bitreader_8c_afa8a663f5e89588d21f5747ef542d575}{}\label{bitreader_8c_afa8a663f5e89588d21f5747ef542d575}
+
+
+Definition at line 340 of file bitreader.\+c.
+
+\index{bitreader.\+c@{bitreader.\+c}!F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+read\+\_\+raw\+\_\+uint64@{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+read\+\_\+raw\+\_\+uint64}}
+\index{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+read\+\_\+raw\+\_\+uint64@{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+read\+\_\+raw\+\_\+uint64}!bitreader.\+c@{bitreader.\+c}}
+\subsubsection[{\texorpdfstring{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+read\+\_\+raw\+\_\+uint64(\+F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Reader $\ast$br, F\+L\+A\+C\+\_\+\+\_\+uint64 $\ast$val, unsigned bits)}{FLAC__bitreader_read_raw_uint64(FLAC__BitReader *br, FLAC__uint64 *val, unsigned bits)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf F\+L\+A\+C\+\_\+\+\_\+bool} F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+read\+\_\+raw\+\_\+uint64 (
+\begin{DoxyParamCaption}
+\item[{{\bf F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Reader} $\ast$}]{br, }
+\item[{{\bf F\+L\+A\+C\+\_\+\+\_\+uint64} $\ast$}]{val, }
+\item[{unsigned}]{bits}
+\end{DoxyParamCaption}
+)}\hypertarget{bitreader_8c_a6d69fe04dd39ddc4c6c2804275052616}{}\label{bitreader_8c_a6d69fe04dd39ddc4c6c2804275052616}
+
+
+Definition at line 430 of file bitreader.\+c.
+
+\index{bitreader.\+c@{bitreader.\+c}!F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+read\+\_\+rice\+\_\+signed@{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+read\+\_\+rice\+\_\+signed}}
+\index{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+read\+\_\+rice\+\_\+signed@{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+read\+\_\+rice\+\_\+signed}!bitreader.\+c@{bitreader.\+c}}
+\subsubsection[{\texorpdfstring{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+read\+\_\+rice\+\_\+signed(\+F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Reader $\ast$br, int $\ast$val, unsigned parameter)}{FLAC__bitreader_read_rice_signed(FLAC__BitReader *br, int *val, unsigned parameter)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf F\+L\+A\+C\+\_\+\+\_\+bool} F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+read\+\_\+rice\+\_\+signed (
+\begin{DoxyParamCaption}
+\item[{{\bf F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Reader} $\ast$}]{br, }
+\item[{{\bf int} $\ast$}]{val, }
+\item[{unsigned}]{parameter}
+\end{DoxyParamCaption}
+)}\hypertarget{bitreader_8c_a006e08b1c0d743dcd15ea2177ddbb761}{}\label{bitreader_8c_a006e08b1c0d743dcd15ea2177ddbb761}
+
+
+Definition at line 683 of file bitreader.\+c.
+
+\index{bitreader.\+c@{bitreader.\+c}!F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+read\+\_\+rice\+\_\+signed\+\_\+block@{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+read\+\_\+rice\+\_\+signed\+\_\+block}}
+\index{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+read\+\_\+rice\+\_\+signed\+\_\+block@{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+read\+\_\+rice\+\_\+signed\+\_\+block}!bitreader.\+c@{bitreader.\+c}}
+\subsubsection[{\texorpdfstring{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+read\+\_\+rice\+\_\+signed\+\_\+block(\+F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Reader $\ast$br, int vals[], unsigned nvals, unsigned parameter)}{FLAC__bitreader_read_rice_signed_block(FLAC__BitReader *br, int vals[], unsigned nvals, unsigned parameter)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf F\+L\+A\+C\+\_\+\+\_\+bool} F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+read\+\_\+rice\+\_\+signed\+\_\+block (
+\begin{DoxyParamCaption}
+\item[{{\bf F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Reader} $\ast$}]{br, }
+\item[{{\bf int}}]{vals\mbox{[}$\,$\mbox{]}, }
+\item[{unsigned}]{nvals, }
+\item[{unsigned}]{parameter}
+\end{DoxyParamCaption}
+)}\hypertarget{bitreader_8c_ad7a2f1f9d159edf10c09f2b51e818360}{}\label{bitreader_8c_ad7a2f1f9d159edf10c09f2b51e818360}
+
+
+Definition at line 711 of file bitreader.\+c.
+
+\index{bitreader.\+c@{bitreader.\+c}!F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+read\+\_\+uint32\+\_\+little\+\_\+endian@{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+read\+\_\+uint32\+\_\+little\+\_\+endian}}
+\index{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+read\+\_\+uint32\+\_\+little\+\_\+endian@{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+read\+\_\+uint32\+\_\+little\+\_\+endian}!bitreader.\+c@{bitreader.\+c}}
+\subsubsection[{\texorpdfstring{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+read\+\_\+uint32\+\_\+little\+\_\+endian(\+F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Reader $\ast$br, F\+L\+A\+C\+\_\+\+\_\+uint32 $\ast$val)}{FLAC__bitreader_read_uint32_little_endian(FLAC__BitReader *br, FLAC__uint32 *val)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf F\+L\+A\+C\+\_\+\+\_\+bool} F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+read\+\_\+uint32\+\_\+little\+\_\+endian (
+\begin{DoxyParamCaption}
+\item[{{\bf F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Reader} $\ast$}]{br, }
+\item[{{\bf F\+L\+A\+C\+\_\+\+\_\+uint32} $\ast$}]{val}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{bitreader_8c_acda8774501dc16ac2198d1be768c4680}{}\label{bitreader_8c_acda8774501dc16ac2198d1be768c4680}
+
+
+Definition at line 451 of file bitreader.\+c.
+
+\index{bitreader.\+c@{bitreader.\+c}!F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+read\+\_\+unary\+\_\+unsigned@{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+read\+\_\+unary\+\_\+unsigned}}
+\index{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+read\+\_\+unary\+\_\+unsigned@{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+read\+\_\+unary\+\_\+unsigned}!bitreader.\+c@{bitreader.\+c}}
+\subsubsection[{\texorpdfstring{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+read\+\_\+unary\+\_\+unsigned(\+F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Reader $\ast$br, unsigned $\ast$val)}{FLAC__bitreader_read_unary_unsigned(FLAC__BitReader *br, unsigned *val)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf F\+L\+A\+C\+\_\+\+\_\+bool} F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+read\+\_\+unary\+\_\+unsigned (
+\begin{DoxyParamCaption}
+\item[{{\bf F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Reader} $\ast$}]{br, }
+\item[{unsigned $\ast$}]{val}
+\end{DoxyParamCaption}
+)}\hypertarget{bitreader_8c_a7a26f753940d74dba2aa72958fc1fcfc}{}\label{bitreader_8c_a7a26f753940d74dba2aa72958fc1fcfc}
+
+
+Definition at line 602 of file bitreader.\+c.
+
+\index{bitreader.\+c@{bitreader.\+c}!F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+read\+\_\+utf8\+\_\+uint32@{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+read\+\_\+utf8\+\_\+uint32}}
+\index{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+read\+\_\+utf8\+\_\+uint32@{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+read\+\_\+utf8\+\_\+uint32}!bitreader.\+c@{bitreader.\+c}}
+\subsubsection[{\texorpdfstring{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+read\+\_\+utf8\+\_\+uint32(\+F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Reader $\ast$br, F\+L\+A\+C\+\_\+\+\_\+uint32 $\ast$val, F\+L\+A\+C\+\_\+\+\_\+byte $\ast$raw, unsigned $\ast$rawlen)}{FLAC__bitreader_read_utf8_uint32(FLAC__BitReader *br, FLAC__uint32 *val, FLAC__byte *raw, unsigned *rawlen)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf F\+L\+A\+C\+\_\+\+\_\+bool} F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+read\+\_\+utf8\+\_\+uint32 (
+\begin{DoxyParamCaption}
+\item[{{\bf F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Reader} $\ast$}]{br, }
+\item[{{\bf F\+L\+A\+C\+\_\+\+\_\+uint32} $\ast$}]{val, }
+\item[{{\bf F\+L\+A\+C\+\_\+\+\_\+byte} $\ast$}]{raw, }
+\item[{unsigned $\ast$}]{rawlen}
+\end{DoxyParamCaption}
+)}\hypertarget{bitreader_8c_a99b7ed52b8404ed6a9f3c5034d1ff365}{}\label{bitreader_8c_a99b7ed52b8404ed6a9f3c5034d1ff365}
+
+
+Definition at line 935 of file bitreader.\+c.
+
+\index{bitreader.\+c@{bitreader.\+c}!F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+read\+\_\+utf8\+\_\+uint64@{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+read\+\_\+utf8\+\_\+uint64}}
+\index{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+read\+\_\+utf8\+\_\+uint64@{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+read\+\_\+utf8\+\_\+uint64}!bitreader.\+c@{bitreader.\+c}}
+\subsubsection[{\texorpdfstring{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+read\+\_\+utf8\+\_\+uint64(\+F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Reader $\ast$br, F\+L\+A\+C\+\_\+\+\_\+uint64 $\ast$val, F\+L\+A\+C\+\_\+\+\_\+byte $\ast$raw, unsigned $\ast$rawlen)}{FLAC__bitreader_read_utf8_uint64(FLAC__BitReader *br, FLAC__uint64 *val, FLAC__byte *raw, unsigned *rawlen)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf F\+L\+A\+C\+\_\+\+\_\+bool} F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+read\+\_\+utf8\+\_\+uint64 (
+\begin{DoxyParamCaption}
+\item[{{\bf F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Reader} $\ast$}]{br, }
+\item[{{\bf F\+L\+A\+C\+\_\+\+\_\+uint64} $\ast$}]{val, }
+\item[{{\bf F\+L\+A\+C\+\_\+\+\_\+byte} $\ast$}]{raw, }
+\item[{unsigned $\ast$}]{rawlen}
+\end{DoxyParamCaption}
+)}\hypertarget{bitreader_8c_a4a9f259cfff57225f893bc3224c7ee75}{}\label{bitreader_8c_a4a9f259cfff57225f893bc3224c7ee75}
+
+
+Definition at line 990 of file bitreader.\+c.
+
+\index{bitreader.\+c@{bitreader.\+c}!F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+reset\+\_\+read\+\_\+crc16@{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+reset\+\_\+read\+\_\+crc16}}
+\index{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+reset\+\_\+read\+\_\+crc16@{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+reset\+\_\+read\+\_\+crc16}!bitreader.\+c@{bitreader.\+c}}
+\subsubsection[{\texorpdfstring{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+reset\+\_\+read\+\_\+crc16(\+F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Reader $\ast$br, F\+L\+A\+C\+\_\+\+\_\+uint16 seed)}{FLAC__bitreader_reset_read_crc16(FLAC__BitReader *br, FLAC__uint16 seed)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+reset\+\_\+read\+\_\+crc16 (
+\begin{DoxyParamCaption}
+\item[{{\bf F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Reader} $\ast$}]{br, }
+\item[{{\bf F\+L\+A\+C\+\_\+\+\_\+uint16}}]{seed}
+\end{DoxyParamCaption}
+)}\hypertarget{bitreader_8c_ab9525ea6c21ab1ec8b9c831f0bd8ff6d}{}\label{bitreader_8c_ab9525ea6c21ab1ec8b9c831f0bd8ff6d}
+
+
+Definition at line 299 of file bitreader.\+c.
+
+\index{bitreader.\+c@{bitreader.\+c}!F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+skip\+\_\+bits\+\_\+no\+\_\+crc@{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+skip\+\_\+bits\+\_\+no\+\_\+crc}}
+\index{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+skip\+\_\+bits\+\_\+no\+\_\+crc@{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+skip\+\_\+bits\+\_\+no\+\_\+crc}!bitreader.\+c@{bitreader.\+c}}
+\subsubsection[{\texorpdfstring{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+skip\+\_\+bits\+\_\+no\+\_\+crc(\+F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Reader $\ast$br, unsigned bits)}{FLAC__bitreader_skip_bits_no_crc(FLAC__BitReader *br, unsigned bits)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf F\+L\+A\+C\+\_\+\+\_\+bool} F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+skip\+\_\+bits\+\_\+no\+\_\+crc (
+\begin{DoxyParamCaption}
+\item[{{\bf F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Reader} $\ast$}]{br, }
+\item[{unsigned}]{bits}
+\end{DoxyParamCaption}
+)}\hypertarget{bitreader_8c_a005f5de0552ce1fd27faa43e1cad8196}{}\label{bitreader_8c_a005f5de0552ce1fd27faa43e1cad8196}
+
+
+Definition at line 476 of file bitreader.\+c.
+
+\index{bitreader.\+c@{bitreader.\+c}!F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+skip\+\_\+byte\+\_\+block\+\_\+aligned\+\_\+no\+\_\+crc@{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+skip\+\_\+byte\+\_\+block\+\_\+aligned\+\_\+no\+\_\+crc}}
+\index{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+skip\+\_\+byte\+\_\+block\+\_\+aligned\+\_\+no\+\_\+crc@{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+skip\+\_\+byte\+\_\+block\+\_\+aligned\+\_\+no\+\_\+crc}!bitreader.\+c@{bitreader.\+c}}
+\subsubsection[{\texorpdfstring{F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+skip\+\_\+byte\+\_\+block\+\_\+aligned\+\_\+no\+\_\+crc(\+F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Reader $\ast$br, unsigned nvals)}{FLAC__bitreader_skip_byte_block_aligned_no_crc(FLAC__BitReader *br, unsigned nvals)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf F\+L\+A\+C\+\_\+\+\_\+bool} F\+L\+A\+C\+\_\+\+\_\+bitreader\+\_\+skip\+\_\+byte\+\_\+block\+\_\+aligned\+\_\+no\+\_\+crc (
+\begin{DoxyParamCaption}
+\item[{{\bf F\+L\+A\+C\+\_\+\+\_\+\+Bit\+Reader} $\ast$}]{br, }
+\item[{unsigned}]{nvals}
+\end{DoxyParamCaption}
+)}\hypertarget{bitreader_8c_a00e783d8613440130f2a81f49416a538}{}\label{bitreader_8c_a00e783d8613440130f2a81f49416a538}
+
+
+Definition at line 511 of file bitreader.\+c.
+

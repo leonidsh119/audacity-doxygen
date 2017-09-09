@@ -1,0 +1,75 @@
+.TH "flacpp_metadata_level2" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+flacpp_metadata_level2 \- FLAC++/metadata\&.h: metadata level 2 interface
+.PP
+Level 2 metadata iterator\&.  
+
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "class \fBFLAC::Metadata::Chain\fP"
+.br
+.ti -1c
+.RI "class \fBFLAC::Metadata::Iterator\fP"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBFLAC::Metadata::Prototype::Prototype\fP (\fBconst\fP Prototype &)"
+.br
+.ti -1c
+.RI "\fBFLAC::Metadata::Prototype::Prototype\fP (\fBconst\fP ::\fBFLAC__StreamMetadata\fP &)"
+.br
+.ti -1c
+.RI "\fBFLAC::Metadata::Prototype::Prototype\fP (\fBconst\fP ::\fBFLAC__StreamMetadata\fP *)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Level 2 metadata iterator\&. 
+
+The flow through the iterator in the C++ layer is similar to the C layer:
+.IP "\(bu" 2
+Create a \fBChain\fP instance
+.IP "\(bu" 2
+Check \fBChain::is_valid()\fP
+.IP "\(bu" 2
+Call \fBChain::read()\fP and check the return
+.IP "\(bu" 2
+Traverse and/or edit with an \fBIterator\fP or with \fBChain::merge_padding()\fP or \fBChain::sort_padding()\fP
+.IP "\(bu" 2
+Write changes back to \fBFLAC\fP file with \fBChain::write()\fP
+.IP "\(bu" 2
+Destroy the \fBChain\fP instance
+.PP
+.PP
+The ownership of pointers in the C++ layer is slightly different than in the C layer, i\&.e\&.
+.IP "\(bu" 2
+The objects returned by \fBIterator::get_block()\fP are NOT owned by the iterator and should be deleted by the caller when finished, BUT, when you modify the block, it will directly edit what's in the chain and you do not need to call \fBIterator::set_block()\fP\&. However the changes will not be reflected in the \fBFLAC\fP file until the chain is written with \fBChain::write()\fP\&.
+.IP "\(bu" 2
+When you pass an object to \fBIterator::set_block()\fP, \fBIterator::insert_block_before()\fP, or \fBIterator::insert_block_after()\fP, the iterator takes ownership of the block and it will be deleted by the chain\&.
+.PP
+.PP
+See the \fBC layer equivalent \fP for more\&. 
+.SH "Function Documentation"
+.PP 
+.SS "FLAC::Metadata::Prototype::Prototype (\fBconst\fP \fBPrototype\fP & object)\fC [protected]\fP"
+Constructs a copy of the given object\&. This form always performs a deep copy\&. 
+.PP
+Definition at line 129 of file metadata\&.cpp\&.
+.SS "FLAC::Metadata::Prototype::Prototype (\fBconst\fP ::\fBFLAC__StreamMetadata\fP & object)\fC [protected]\fP"
+
+.PP
+Definition at line 136 of file metadata\&.cpp\&.
+.SS "FLAC::Metadata::Prototype::Prototype (\fBconst\fP ::\fBFLAC__StreamMetadata\fP * object)\fC [protected]\fP"
+
+.PP
+Definition at line 142 of file metadata\&.cpp\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

@@ -1,0 +1,153 @@
+.TH "lavc_resample" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+lavc_resample \- Audio resampling
+.SS "Typedefs"
+
+.in +1c
+.ti -1c
+.RI "typedef struct \fBReSampleContext\fP \fBReSampleContext\fP"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBattribute_deprecated\fP \fBReSampleContext\fP * \fBav_audio_resample_init\fP (\fBint\fP output_channels, \fBint\fP input_channels, \fBint\fP output_rate, \fBint\fP input_rate, enum \fBAVSampleFormat\fP sample_fmt_out, enum \fBAVSampleFormat\fP sample_fmt_in, \fBint\fP filter_length, \fBint\fP log2_phase_count, \fBint\fP linear, double cutoff)"
+.br
+.ti -1c
+.RI "\fBattribute_deprecated\fP \fBint\fP \fBaudio_resample\fP (\fBReSampleContext\fP *\fBs\fP, short *\fBoutput\fP, short *input, \fBint\fP nb_samples)"
+.br
+.ti -1c
+.RI "\fBattribute_deprecated\fP \fBvoid\fP \fBaudio_resample_close\fP (\fBReSampleContext\fP *\fBs\fP)"
+.br
+.ti -1c
+.RI "\fBattribute_deprecated\fP struct AVResampleContext * \fBav_resample_init\fP (\fBint\fP out_rate, \fBint\fP in_rate, \fBint\fP filter_length, \fBint\fP log2_phase_count, \fBint\fP linear, double cutoff)"
+.br
+.ti -1c
+.RI "\fBattribute_deprecated\fP \fBint\fP \fBav_resample\fP (struct AVResampleContext *\fBc\fP, short *dst, short *src, \fBint\fP *consumed, \fBint\fP src_size, \fBint\fP dst_size, \fBint\fP update_ctx)"
+.br
+.ti -1c
+.RI "\fBattribute_deprecated\fP \fBvoid\fP \fBav_resample_compensate\fP (struct AVResampleContext *\fBc\fP, \fBint\fP sample_delta, \fBint\fP compensation_distance)"
+.br
+.ti -1c
+.RI "\fBattribute_deprecated\fP \fBvoid\fP \fBav_resample_close\fP (struct AVResampleContext *\fBc\fP)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+
+.PP
+\fBDeprecated\fP
+.RS 4
+use libswresample instead
+.RE
+.PP
+
+.SH "Typedef Documentation"
+.PP 
+.SS "typedef struct \fBReSampleContext\fP \fBReSampleContext\fP"
+
+.PP
+Definition at line 4400 of file avcodec\&.h\&.
+.SH "Function Documentation"
+.PP 
+.SS "\fBattribute_deprecated\fP \fBint\fP audio_resample (\fBReSampleContext\fP * s, short * output, short * input, \fBint\fP nb_samples)"
+
+.SS "\fBattribute_deprecated\fP \fBvoid\fP audio_resample_close (\fBReSampleContext\fP * s)"
+Free resample context\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIs\fP a non-NULL pointer to a resample context previously created with \fBav_audio_resample_init()\fP 
+.RE
+.PP
+
+.SS "\fBattribute_deprecated\fP \fBReSampleContext\fP* av_audio_resample_init (\fBint\fP output_channels, \fBint\fP input_channels, \fBint\fP output_rate, \fBint\fP input_rate, enum \fBAVSampleFormat\fP sample_fmt_out, enum \fBAVSampleFormat\fP sample_fmt_in, \fBint\fP filter_length, \fBint\fP log2_phase_count, \fBint\fP linear, double cutoff)"
+Initialize audio resampling context\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIoutput_channels\fP number of output channels 
+.br
+\fIinput_channels\fP number of input channels 
+.br
+\fIoutput_rate\fP output sample rate 
+.br
+\fIinput_rate\fP input sample rate 
+.br
+\fIsample_fmt_out\fP requested output sample format 
+.br
+\fIsample_fmt_in\fP input sample format 
+.br
+\fIfilter_length\fP length of each FIR filter in the filterbank relative to the cutoff frequency 
+.br
+\fIlog2_phase_count\fP log2 of the number of entries in the polyphase filterbank 
+.br
+\fIlinear\fP if 1 then the used FIR filter will be linearly interpolated between the 2 closest, if 0 the closest will be used 
+.br
+\fIcutoff\fP cutoff frequency, 1\&.0 corresponds to half the output sampling rate 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+allocated ReSampleContext, NULL if error occurred 
+.RE
+.PP
+
+.SS "\fBattribute_deprecated\fP \fBint\fP av_resample (struct AVResampleContext * c, short * dst, short * src, \fBint\fP * consumed, \fBint\fP src_size, \fBint\fP dst_size, \fBint\fP update_ctx)"
+\fBResample\fP an array of samples using a previously configured context\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIsrc\fP an array of unconsumed samples 
+.br
+\fIconsumed\fP the number of samples of src which have been consumed are returned here 
+.br
+\fIsrc_size\fP the number of unconsumed samples available 
+.br
+\fIdst_size\fP the amount of space in samples available in dst 
+.br
+\fIupdate_ctx\fP If this is 0 then the context will not be modified, that way several channels can be resampled with the same context\&. 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the number of samples written in dst or -1 if an error occurred 
+.RE
+.PP
+
+.SS "\fBattribute_deprecated\fP \fBvoid\fP av_resample_close (struct AVResampleContext * c)"
+
+.SS "\fBattribute_deprecated\fP \fBvoid\fP av_resample_compensate (struct AVResampleContext * c, \fBint\fP sample_delta, \fBint\fP compensation_distance)"
+Compensate samplerate/timestamp drift\&. The compensation is done by changing the resampler parameters, so no audible clicks or similar distortions occur 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcompensation_distance\fP distance in output samples over which the compensation should be performed 
+.br
+\fIsample_delta\fP number of output samples which should be output less
+.RE
+.PP
+example: av_resample_compensate(c, 10, 500) here instead of 510 samples only 500 samples would be output
+.PP
+note, due to rounding the actual compensation might be slightly different, especially if the compensation_distance is large and the in_rate used during init is small 
+.SS "\fBattribute_deprecated\fP struct AVResampleContext* av_resample_init (\fBint\fP out_rate, \fBint\fP in_rate, \fBint\fP filter_length, \fBint\fP log2_phase_count, \fBint\fP linear, double cutoff)"
+Initialize an audio resampler\&. Note, if either rate is not an integer then simply scale both rates up so they are\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIfilter_length\fP length of each FIR filter in the filterbank relative to the cutoff freq 
+.br
+\fIlog2_phase_count\fP log2 of the number of entries in the polyphase filterbank 
+.br
+\fIlinear\fP If 1 then the used FIR filter will be linearly interpolated between the 2 closest, if 0 the closest will be used 
+.br
+\fIcutoff\fP cutoff frequency, 1\&.0 corresponds to half the output sampling rate 
+.RE
+.PP
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

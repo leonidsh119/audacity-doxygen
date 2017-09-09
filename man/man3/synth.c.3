@@ -1,0 +1,273 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/lib-src/libmad/synth.c" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/lib-src/libmad/synth.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include 'global\&.h'\fP
+.br
+\fC#include 'fixed\&.h'\fP
+.br
+\fC#include 'frame\&.h'\fP
+.br
+\fC#include 'synth\&.h'\fP
+.br
+\fC#include 'D\&.dat'\fP
+.br
+
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBSHIFT\fP(x)   (x)"
+.br
+.ti -1c
+.RI "#define \fBMUL\fP(x,  y)   \fBmad_f_mul\fP((x), (y))"
+.br
+.ti -1c
+.RI "#define \fBcostab1\fP   \fBMAD_F\fP(0x0ffb10f2)  /* 0\&.998795456 */"
+.br
+.ti -1c
+.RI "#define \fBcostab2\fP   \fBMAD_F\fP(0x0fec46d2)  /* 0\&.995184727 */"
+.br
+.ti -1c
+.RI "#define \fBcostab3\fP   \fBMAD_F\fP(0x0fd3aac0)  /* 0\&.989176510 */"
+.br
+.ti -1c
+.RI "#define \fBcostab4\fP   \fBMAD_F\fP(0x0fb14be8)  /* 0\&.980785280 */"
+.br
+.ti -1c
+.RI "#define \fBcostab5\fP   \fBMAD_F\fP(0x0f853f7e)  /* 0\&.970031253 */"
+.br
+.ti -1c
+.RI "#define \fBcostab6\fP   \fBMAD_F\fP(0x0f4fa0ab)  /* 0\&.956940336 */"
+.br
+.ti -1c
+.RI "#define \fBcostab7\fP   \fBMAD_F\fP(0x0f109082)  /* 0\&.941544065 */"
+.br
+.ti -1c
+.RI "#define \fBcostab8\fP   \fBMAD_F\fP(0x0ec835e8)  /* 0\&.923879533 */"
+.br
+.ti -1c
+.RI "#define \fBcostab9\fP   \fBMAD_F\fP(0x0e76bd7a)  /* 0\&.903989293 */"
+.br
+.ti -1c
+.RI "#define \fBcostab10\fP   \fBMAD_F\fP(0x0e1c5979)  /* 0\&.881921264 */"
+.br
+.ti -1c
+.RI "#define \fBcostab11\fP   \fBMAD_F\fP(0x0db941a3)  /* 0\&.857728610 */"
+.br
+.ti -1c
+.RI "#define \fBcostab12\fP   \fBMAD_F\fP(0x0d4db315)  /* 0\&.831469612 */"
+.br
+.ti -1c
+.RI "#define \fBcostab13\fP   \fBMAD_F\fP(0x0cd9f024)  /* 0\&.803207531 */"
+.br
+.ti -1c
+.RI "#define \fBcostab14\fP   \fBMAD_F\fP(0x0c5e4036)  /* 0\&.773010453 */"
+.br
+.ti -1c
+.RI "#define \fBcostab15\fP   \fBMAD_F\fP(0x0bdaef91)  /* 0\&.740951125 */"
+.br
+.ti -1c
+.RI "#define \fBcostab16\fP   \fBMAD_F\fP(0x0b504f33)  /* 0\&.707106781 */"
+.br
+.ti -1c
+.RI "#define \fBcostab17\fP   \fBMAD_F\fP(0x0abeb49a)  /* 0\&.671558955 */"
+.br
+.ti -1c
+.RI "#define \fBcostab18\fP   \fBMAD_F\fP(0x0a267993)  /* 0\&.634393284 */"
+.br
+.ti -1c
+.RI "#define \fBcostab19\fP   \fBMAD_F\fP(0x0987fbfe)  /* 0\&.595699304 */"
+.br
+.ti -1c
+.RI "#define \fBcostab20\fP   \fBMAD_F\fP(0x08e39d9d)  /* 0\&.555570233 */"
+.br
+.ti -1c
+.RI "#define \fBcostab21\fP   \fBMAD_F\fP(0x0839c3cd)  /* 0\&.514102744 */"
+.br
+.ti -1c
+.RI "#define \fBcostab22\fP   \fBMAD_F\fP(0x078ad74e)  /* 0\&.471396737 */"
+.br
+.ti -1c
+.RI "#define \fBcostab23\fP   \fBMAD_F\fP(0x06d74402)  /* 0\&.427555093 */"
+.br
+.ti -1c
+.RI "#define \fBcostab24\fP   \fBMAD_F\fP(0x061f78aa)  /* 0\&.382683432 */"
+.br
+.ti -1c
+.RI "#define \fBcostab25\fP   \fBMAD_F\fP(0x0563e69d)  /* 0\&.336889853 */"
+.br
+.ti -1c
+.RI "#define \fBcostab26\fP   \fBMAD_F\fP(0x04a5018c)  /* 0\&.290284677 */"
+.br
+.ti -1c
+.RI "#define \fBcostab27\fP   \fBMAD_F\fP(0x03e33f2f)  /* 0\&.242980180 */"
+.br
+.ti -1c
+.RI "#define \fBcostab28\fP   \fBMAD_F\fP(0x031f1708)  /* 0\&.195090322 */"
+.br
+.ti -1c
+.RI "#define \fBcostab29\fP   \fBMAD_F\fP(0x0259020e)  /* 0\&.146730474 */"
+.br
+.ti -1c
+.RI "#define \fBcostab30\fP   \fBMAD_F\fP(0x01917a6c)  /* 0\&.098017140 */"
+.br
+.ti -1c
+.RI "#define \fBcostab31\fP   \fBMAD_F\fP(0x00c8fb30)  /* 0\&.049067674 */"
+.br
+.ti -1c
+.RI "#define \fBML0\fP(hi,  lo,  x,  y)   \fBMAD_F_ML0\fP((hi), (lo), (x), (y))"
+.br
+.ti -1c
+.RI "#define \fBMLA\fP(hi,  lo,  x,  y)   \fBMAD_F_MLA\fP((hi), (lo), (x), (y))"
+.br
+.ti -1c
+.RI "#define \fBMLN\fP(hi,  lo)   \fBMAD_F_MLN\fP((hi), (lo))"
+.br
+.ti -1c
+.RI "#define \fBMLZ\fP(hi,  lo)   \fBMAD_F_MLZ\fP((hi), (lo))"
+.br
+.ti -1c
+.RI "#define \fBSHIFT\fP(x)   (x)"
+.br
+.ti -1c
+.RI "#define \fBMAD_F_SCALEBITS\fP   (\fBMAD_F_FRACBITS\fP \- 12)"
+.br
+.ti -1c
+.RI "#define \fBPRESHIFT\fP(x)   (\fBMAD_F\fP(x) >> 12)"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBvoid\fP \fBmad_synth_init\fP (struct \fBmad_synth\fP *synth)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBmad_synth_mute\fP (struct \fBmad_synth\fP *synth)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBmad_synth_frame\fP (struct \fBmad_synth\fP *synth, struct \fBmad_frame\fP \fBconst\fP *frame)"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define costab1   \fBMAD_F\fP(0x0ffb10f2)  /* 0\&.998795456 */"
+
+.SS "#define costab10   \fBMAD_F\fP(0x0e1c5979)  /* 0\&.881921264 */"
+
+.SS "#define costab11   \fBMAD_F\fP(0x0db941a3)  /* 0\&.857728610 */"
+
+.SS "#define costab12   \fBMAD_F\fP(0x0d4db315)  /* 0\&.831469612 */"
+
+.SS "#define costab13   \fBMAD_F\fP(0x0cd9f024)  /* 0\&.803207531 */"
+
+.SS "#define costab14   \fBMAD_F\fP(0x0c5e4036)  /* 0\&.773010453 */"
+
+.SS "#define costab15   \fBMAD_F\fP(0x0bdaef91)  /* 0\&.740951125 */"
+
+.SS "#define costab16   \fBMAD_F\fP(0x0b504f33)  /* 0\&.707106781 */"
+
+.SS "#define costab17   \fBMAD_F\fP(0x0abeb49a)  /* 0\&.671558955 */"
+
+.SS "#define costab18   \fBMAD_F\fP(0x0a267993)  /* 0\&.634393284 */"
+
+.SS "#define costab19   \fBMAD_F\fP(0x0987fbfe)  /* 0\&.595699304 */"
+
+.SS "#define costab2   \fBMAD_F\fP(0x0fec46d2)  /* 0\&.995184727 */"
+
+.SS "#define costab20   \fBMAD_F\fP(0x08e39d9d)  /* 0\&.555570233 */"
+
+.SS "#define costab21   \fBMAD_F\fP(0x0839c3cd)  /* 0\&.514102744 */"
+
+.SS "#define costab22   \fBMAD_F\fP(0x078ad74e)  /* 0\&.471396737 */"
+
+.SS "#define costab23   \fBMAD_F\fP(0x06d74402)  /* 0\&.427555093 */"
+
+.SS "#define costab24   \fBMAD_F\fP(0x061f78aa)  /* 0\&.382683432 */"
+
+.SS "#define costab25   \fBMAD_F\fP(0x0563e69d)  /* 0\&.336889853 */"
+
+.SS "#define costab26   \fBMAD_F\fP(0x04a5018c)  /* 0\&.290284677 */"
+
+.SS "#define costab27   \fBMAD_F\fP(0x03e33f2f)  /* 0\&.242980180 */"
+
+.SS "#define costab28   \fBMAD_F\fP(0x031f1708)  /* 0\&.195090322 */"
+
+.SS "#define costab29   \fBMAD_F\fP(0x0259020e)  /* 0\&.146730474 */"
+
+.SS "#define costab3   \fBMAD_F\fP(0x0fd3aac0)  /* 0\&.989176510 */"
+
+.SS "#define costab30   \fBMAD_F\fP(0x01917a6c)  /* 0\&.098017140 */"
+
+.SS "#define costab31   \fBMAD_F\fP(0x00c8fb30)  /* 0\&.049067674 */"
+
+.SS "#define costab4   \fBMAD_F\fP(0x0fb14be8)  /* 0\&.980785280 */"
+
+.SS "#define costab5   \fBMAD_F\fP(0x0f853f7e)  /* 0\&.970031253 */"
+
+.SS "#define costab6   \fBMAD_F\fP(0x0f4fa0ab)  /* 0\&.956940336 */"
+
+.SS "#define costab7   \fBMAD_F\fP(0x0f109082)  /* 0\&.941544065 */"
+
+.SS "#define costab8   \fBMAD_F\fP(0x0ec835e8)  /* 0\&.923879533 */"
+
+.SS "#define costab9   \fBMAD_F\fP(0x0e76bd7a)  /* 0\&.903989293 */"
+
+.SS "#define MAD_F_SCALEBITS   (\fBMAD_F_FRACBITS\fP \- 12)"
+
+.PP
+Definition at line 537 of file synth\&.c\&.
+.SS "#define ML0(hi, lo, x, y)   \fBMAD_F_ML0\fP((hi), (lo), (x), (y))"
+
+.PP
+Definition at line 530 of file synth\&.c\&.
+.SS "#define MLA(hi, lo, x, y)   \fBMAD_F_MLA\fP((hi), (lo), (x), (y))"
+
+.PP
+Definition at line 531 of file synth\&.c\&.
+.SS "#define MLN(hi, lo)   \fBMAD_F_MLN\fP((hi), (lo))"
+
+.PP
+Definition at line 532 of file synth\&.c\&.
+.SS "#define MLZ(hi, lo)   \fBMAD_F_MLZ\fP((hi), (lo))"
+
+.PP
+Definition at line 533 of file synth\&.c\&.
+.SS "#define MUL(x, y)   \fBmad_f_mul\fP((x), (y))"
+
+.PP
+Definition at line 115 of file synth\&.c\&.
+.SS "#define PRESHIFT(x)   (\fBMAD_F\fP(x) >> 12)"
+
+.PP
+Definition at line 538 of file synth\&.c\&.
+.SS "#define SHIFT(x)   (x)"
+
+.PP
+Definition at line 534 of file synth\&.c\&.
+.SS "#define SHIFT(x)   (x)"
+
+.PP
+Definition at line 534 of file synth\&.c\&.
+.SH "Function Documentation"
+.PP 
+.SS "\fBvoid\fP mad_synth_frame (struct \fBmad_synth\fP * synth, struct \fBmad_frame\fP \fBconst\fP * frame)"
+
+.PP
+Definition at line 832 of file synth\&.c\&.
+.SS "\fBvoid\fP mad_synth_init (struct \fBmad_synth\fP * synth)"
+
+.PP
+Definition at line 36 of file synth\&.c\&.
+.SS "\fBvoid\fP mad_synth_mute (struct \fBmad_synth\fP * synth)"
+
+.PP
+Definition at line 51 of file synth\&.c\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

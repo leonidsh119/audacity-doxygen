@@ -1,0 +1,645 @@
+\hypertarget{portmidi_8c}{}\section{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/portmidi/pm\+\_\+common/portmidi.c File Reference}
+\label{portmidi_8c}\index{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/portmidi/pm\+\_\+common/portmidi.\+c@{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/portmidi/pm\+\_\+common/portmidi.\+c}}
+{\ttfamily \#include \char`\"{}stdlib.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}string.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}portmidi.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}porttime.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}pmutil.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}pminternal.\+h\char`\"{}}\\*
+{\ttfamily \#include $<$assert.\+h$>$}\\*
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{portmidi_8c_afa5e4e295aafd15ab7893344599b3b89}{M\+I\+D\+I\+\_\+\+C\+L\+O\+CK}~0xf8
+\item 
+\#define \hyperlink{portmidi_8c_a6ff6dd452be369b24a8bb05102b2ff76}{M\+I\+D\+I\+\_\+\+A\+C\+T\+I\+VE}~0xfe
+\item 
+\#define \hyperlink{portmidi_8c_a1ee2586a063422ec7d18e2abfbafa545}{M\+I\+D\+I\+\_\+\+S\+T\+A\+T\+U\+S\+\_\+\+M\+A\+SK}~0x80
+\item 
+\#define \hyperlink{portmidi_8c_aa2197f6ca200566c0986e737edd211e4}{M\+I\+D\+I\+\_\+\+S\+Y\+S\+EX}~0xf0
+\item 
+\#define \hyperlink{portmidi_8c_a140c8cfa4bbf1a03494abdbd639d49f2}{M\+I\+D\+I\+\_\+\+E\+OX}~0xf7
+\item 
+\#define \hyperlink{portmidi_8c_a8233631c85823aa546f932ad8975caa4}{M\+I\+D\+I\+\_\+\+S\+T\+A\+RT}~0x\+FA
+\item 
+\#define \hyperlink{portmidi_8c_a3af9271d4b1f0d22904a0b055f48cf62}{M\+I\+D\+I\+\_\+\+S\+T\+OP}~0x\+FC
+\item 
+\#define \hyperlink{portmidi_8c_ab24430f0081e27215b0da84dd0ee745c}{M\+I\+D\+I\+\_\+\+C\+O\+N\+T\+I\+N\+UE}~0x\+FB
+\item 
+\#define \hyperlink{portmidi_8c_ab4ef04d3d15cb2ae88364b639dc29834}{M\+I\+D\+I\+\_\+\+F9}~0x\+F9
+\item 
+\#define \hyperlink{portmidi_8c_ace178eb4669d53d06c7873596fa27084}{M\+I\+D\+I\+\_\+\+FD}~0x\+FD
+\item 
+\#define \hyperlink{portmidi_8c_a02947f30ca62dc332fdeb10c5868323b}{M\+I\+D\+I\+\_\+\+R\+E\+S\+ET}~0x\+FF
+\item 
+\#define \hyperlink{portmidi_8c_acb743a02e36b618a4bd1990671b3325f}{M\+I\+D\+I\+\_\+\+N\+O\+T\+E\+\_\+\+ON}~0x90
+\item 
+\#define \hyperlink{portmidi_8c_a4259def83bd534a786edb4408fec67f0}{M\+I\+D\+I\+\_\+\+N\+O\+T\+E\+\_\+\+O\+FF}~0x80
+\item 
+\#define \hyperlink{portmidi_8c_ab47c590c8324e5127da43ad0f3e63a26}{M\+I\+D\+I\+\_\+\+C\+H\+A\+N\+N\+E\+L\+\_\+\+AT}~0x\+D0
+\item 
+\#define \hyperlink{portmidi_8c_ae11126c99c31285d199b88c12feff9be}{M\+I\+D\+I\+\_\+\+P\+O\+L\+Y\+\_\+\+AT}~0x\+A0
+\item 
+\#define \hyperlink{portmidi_8c_a8bbe829ae5724352ee1f45f5590e7f84}{M\+I\+D\+I\+\_\+\+P\+R\+O\+G\+R\+AM}~0x\+C0
+\item 
+\#define \hyperlink{portmidi_8c_ad618c2530c16b5bdb92ace73f3a1dcb5}{M\+I\+D\+I\+\_\+\+C\+O\+N\+T\+R\+OL}~0x\+B0
+\item 
+\#define \hyperlink{portmidi_8c_abcc799504e8064679bca03f232223af4}{M\+I\+D\+I\+\_\+\+P\+I\+T\+C\+H\+B\+E\+ND}~0x\+E0
+\item 
+\#define \hyperlink{portmidi_8c_a8e5430a8f1fcdc14fc227b7ab24bf1cf}{M\+I\+D\+I\+\_\+\+M\+TC}~0x\+F1
+\item 
+\#define \hyperlink{portmidi_8c_aecd1881207e391fdaad13496b84a8ae7}{M\+I\+D\+I\+\_\+\+S\+O\+N\+G\+P\+OS}~0x\+F2
+\item 
+\#define \hyperlink{portmidi_8c_aca755324971f1443459847786a4d4507}{M\+I\+D\+I\+\_\+\+S\+O\+N\+G\+S\+EL}~0x\+F3
+\item 
+\#define \hyperlink{portmidi_8c_adf060c9ba94819a8445a9924ea799fd8}{M\+I\+D\+I\+\_\+\+T\+U\+NE}~0x\+F6
+\item 
+\#define \hyperlink{portmidi_8c_a2d48efb2f9e0ad13211a0ab1c66cabef}{is\+\_\+empty}(\hyperlink{midiclock_8c_a55d909f140b116a12ba644132b67031e}{midi})~((\hyperlink{midiclock_8c_a55d909f140b116a12ba644132b67031e}{midi})-\/$>$tail == (\hyperlink{midiclock_8c_a55d909f140b116a12ba644132b67031e}{midi})-\/$>$head)
+\item 
+\#define \hyperlink{portmidi_8c_a1e3fc08b00e2542c99314d01844afd2c}{pm\+\_\+errmsg}(err)~err
+\item 
+\#define \hyperlink{portmidi_8c_a366d307d9adc16df4ed72c0c96d56bd0}{none\+\_\+abort}~\hyperlink{portmidi_8c_aeeae549047bfcfbbe3eff9f3857ff77a}{pm\+\_\+fail\+\_\+fn}
+\item 
+\#define \hyperlink{portmidi_8c_aee20ca803d94f91361fe009179095c90}{none\+\_\+close}~\hyperlink{portmidi_8c_aeeae549047bfcfbbe3eff9f3857ff77a}{pm\+\_\+fail\+\_\+fn}
+\item 
+\#define \hyperlink{portmidi_8c_ad974fe981249f5e84fbf1683b012c9f8}{B\+U\+F\+L\+EN}~((\hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int}) (\hyperlink{portmidi_8h_a22eb909045c1638449c78e8a6207611b}{P\+M\+\_\+\+D\+E\+F\+A\+U\+L\+T\+\_\+\+S\+Y\+S\+E\+X\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+S\+I\+ZE} / sizeof(\hyperlink{group__grp__events__filters_gad8455e4afe978a74c68e345bef99761d}{Pm\+Message})))
+\item 
+\#define \hyperlink{portmidi_8c_a5af1caf64b8661a79e54e850e9dbe191}{pm\+\_\+channel\+\_\+filtered}(\hyperlink{rfft2d_test_m_l_8m_a1b5437a866e6f95107b07ba845bc1800}{status},  \hyperlink{structmask}{mask})~((((\hyperlink{rfft2d_test_m_l_8m_a1b5437a866e6f95107b07ba845bc1800}{status}) \& 0x\+F0) != 0x\+F0) \&\& (!(\+Pm\+\_\+\+Channel((status) \& 0x0\+F) \& (mask))))
+\item 
+\#define \hyperlink{portmidi_8c_a814afeefb4df5b95673e3d43c7a26282}{pm\+\_\+realtime\+\_\+filtered}(\hyperlink{rfft2d_test_m_l_8m_a1b5437a866e6f95107b07ba845bc1800}{status},  filters)~((((\hyperlink{rfft2d_test_m_l_8m_a1b5437a866e6f95107b07ba845bc1800}{status}) \& 0x\+F0) == 0x\+F0) \&\& ((1 $<$$<$ ((status) \& 0x\+F)) \& (filters)))
+\item 
+\#define \hyperlink{portmidi_8c_ac3c153803616975e2fdd1edd45e05398}{pm\+\_\+status\+\_\+filtered}(\hyperlink{rfft2d_test_m_l_8m_a1b5437a866e6f95107b07ba845bc1800}{status},  filters)~((1 $<$$<$ (16 + ((\hyperlink{rfft2d_test_m_l_8m_a1b5437a866e6f95107b07ba845bc1800}{status}) $>$$>$ 4))) \& (filters))
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{portmidi_8h_a5fd46ccd2e320e17a840886731e8c6b9}{Pm\+Error} \hyperlink{portmidi_8c_a8c66dfe796fb47b3f2a4a195a0529249}{pm\+\_\+add\+\_\+device} (char $\ast$interf, char $\ast$\hyperlink{lib_2expat_8h_a1b49b495b59f9e73205b69ad1a2965b0}{name}, \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} input, \hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} $\ast$descriptor, \hyperlink{pminternal_8h_a28b39bba2919ba7ccbe1bfa11443465b}{pm\+\_\+fns\+\_\+type} dictionary)
+\item 
+\hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{portmidi_8c_a7c21a21a0dbab33bf9f3bb9122879142}{pm\+\_\+find\+\_\+default\+\_\+device} (char $\ast$pattern, \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} is\+\_\+input)
+\item 
+\hyperlink{porttime_8h_ad478fb637833fb6b1a4bdb25a03f4662}{P\+M\+E\+X\+P\+O\+RT} \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{portmidi_8c_aa09d809f5c5bdc5d2fc9b3d2290ec282}{Pm\+\_\+\+Count\+Devices} (\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void})
+\item 
+\hyperlink{porttime_8h_ad478fb637833fb6b1a4bdb25a03f4662}{P\+M\+E\+X\+P\+O\+RT} \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{struct_pm_device_info}{Pm\+Device\+Info} $\ast$ \hyperlink{group__grp__device_ga2ff3676bcff6077e64ef6f3eb57fb37e}{Pm\+\_\+\+Get\+Device\+Info} (\hyperlink{portmidi_8h_a696cc4d4360bb8513f13df4bb134098a}{Pm\+Device\+ID} id)
+\item 
+\hyperlink{portmidi_8h_a5fd46ccd2e320e17a840886731e8c6b9}{Pm\+Error} \hyperlink{portmidi_8c_afe35490233517557ab6ce2a63008c7f9}{pm\+\_\+success\+\_\+fn} (\hyperlink{pminternal_8h_acb48fe118f5feaf74bc314943658b733}{Pm\+Internal} $\ast$\hyperlink{midiclock_8c_a55d909f140b116a12ba644132b67031e}{midi})
+\item 
+\hyperlink{portmidi_8h_a5fd46ccd2e320e17a840886731e8c6b9}{Pm\+Error} \hyperlink{portmidi_8c_a841d04eb4d4efa3eebfc4e718cf9faa3}{none\+\_\+write\+\_\+short} (\hyperlink{pminternal_8h_acb48fe118f5feaf74bc314943658b733}{Pm\+Internal} $\ast$\hyperlink{midiclock_8c_a55d909f140b116a12ba644132b67031e}{midi}, \hyperlink{struct_pm_event}{Pm\+Event} $\ast$\hyperlink{structbuffer}{buffer})
+\item 
+\hyperlink{portmidi_8h_a5fd46ccd2e320e17a840886731e8c6b9}{Pm\+Error} \hyperlink{portmidi_8c_a36fcdf715926bc285b87c92005c04523}{pm\+\_\+fail\+\_\+timestamp\+\_\+fn} (\hyperlink{pminternal_8h_acb48fe118f5feaf74bc314943658b733}{Pm\+Internal} $\ast$\hyperlink{midiclock_8c_a55d909f140b116a12ba644132b67031e}{midi}, \hyperlink{portmidi_8h_acf4245beeef251c4a46d66e99d77ffdf}{Pm\+Timestamp} timestamp)
+\item 
+\hyperlink{portmidi_8h_a5fd46ccd2e320e17a840886731e8c6b9}{Pm\+Error} \hyperlink{portmidi_8c_a2181992bfdc1d719bdd96353763965d7}{none\+\_\+write\+\_\+byte} (\hyperlink{pminternal_8h_acb48fe118f5feaf74bc314943658b733}{Pm\+Internal} $\ast$\hyperlink{midiclock_8c_a55d909f140b116a12ba644132b67031e}{midi}, unsigned char byte, \hyperlink{portmidi_8h_acf4245beeef251c4a46d66e99d77ffdf}{Pm\+Timestamp} timestamp)
+\item 
+\hyperlink{portmidi_8h_a5fd46ccd2e320e17a840886731e8c6b9}{Pm\+Error} \hyperlink{portmidi_8c_aeeae549047bfcfbbe3eff9f3857ff77a}{pm\+\_\+fail\+\_\+fn} (\hyperlink{pminternal_8h_acb48fe118f5feaf74bc314943658b733}{Pm\+Internal} $\ast$\hyperlink{midiclock_8c_a55d909f140b116a12ba644132b67031e}{midi})
+\item 
+\hyperlink{portmidi_8h_acf4245beeef251c4a46d66e99d77ffdf}{Pm\+Timestamp} \hyperlink{portmidi_8c_a9128319a3c3cb967bdde782ae9c5c4ba}{none\+\_\+synchronize} (\hyperlink{pminternal_8h_acb48fe118f5feaf74bc314943658b733}{Pm\+Internal} $\ast$\hyperlink{midiclock_8c_a55d909f140b116a12ba644132b67031e}{midi})
+\item 
+\hyperlink{porttime_8h_ad478fb637833fb6b1a4bdb25a03f4662}{P\+M\+E\+X\+P\+O\+RT} \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} char $\ast$ \hyperlink{portmidi_8c_af6f9fa86b2192d5df87a36762f43b1a4}{Pm\+\_\+\+Get\+Error\+Text} (\hyperlink{portmidi_8h_a5fd46ccd2e320e17a840886731e8c6b9}{Pm\+Error} errnum)
+\item 
+\hyperlink{porttime_8h_ad478fb637833fb6b1a4bdb25a03f4662}{P\+M\+E\+X\+P\+O\+RT} \hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{portmidi_8c_ae5dd1f766c2d1f492ab4a9a4a6da651f}{Pm\+\_\+\+Get\+Host\+Error\+Text} (char $\ast$msg, unsigned \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{lib_2expat_8h_af86d325fecfc8f47b61fbf5a5146f582}{len})
+\item 
+\hyperlink{porttime_8h_ad478fb637833fb6b1a4bdb25a03f4662}{P\+M\+E\+X\+P\+O\+RT} \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{portmidi_8c_aa631918a228994f19bed5dcbc398d59a}{Pm\+\_\+\+Has\+Host\+Error} (\hyperlink{portmidi_8h_af4949219ee1bb0afc857cb242d123914}{Port\+Midi\+Stream} $\ast$stream)
+\item 
+\hyperlink{porttime_8h_ad478fb637833fb6b1a4bdb25a03f4662}{P\+M\+E\+X\+P\+O\+RT} \hyperlink{portmidi_8h_a5fd46ccd2e320e17a840886731e8c6b9}{Pm\+Error} \hyperlink{portmidi_8c_a5e9d0c116061f0cc25fb789fc393b417}{Pm\+\_\+\+Initialize} (\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void})
+\item 
+\hyperlink{porttime_8h_ad478fb637833fb6b1a4bdb25a03f4662}{P\+M\+E\+X\+P\+O\+RT} \hyperlink{portmidi_8h_a5fd46ccd2e320e17a840886731e8c6b9}{Pm\+Error} \hyperlink{portmidi_8c_a6c5dd5cd3657ac1cdab6bc5f3063193e}{Pm\+\_\+\+Terminate} (\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void})
+\item 
+\hyperlink{porttime_8h_ad478fb637833fb6b1a4bdb25a03f4662}{P\+M\+E\+X\+P\+O\+RT} \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{group__grp__io_ga3d59225bc890ede974f245ada3de6456}{Pm\+\_\+\+Read} (\hyperlink{portmidi_8h_af4949219ee1bb0afc857cb242d123914}{Port\+Midi\+Stream} $\ast$stream, \hyperlink{struct_pm_event}{Pm\+Event} $\ast$\hyperlink{structbuffer}{buffer}, \hyperlink{lib-src_2ffmpeg_2win32_2stdint_8h_a37994e3b11c72957c6f454c6ec96d43d}{int32\+\_\+t} \hyperlink{test__lib_f_l_a_c_2format_8c_ac94dc16b22556ba5fa815655f27442da}{length})
+\item 
+\hyperlink{porttime_8h_ad478fb637833fb6b1a4bdb25a03f4662}{P\+M\+E\+X\+P\+O\+RT} \hyperlink{portmidi_8h_a5fd46ccd2e320e17a840886731e8c6b9}{Pm\+Error} \hyperlink{group__grp__io_ga54198ca9dc1af9d82ec5f44f661faeea}{Pm\+\_\+\+Poll} (\hyperlink{portmidi_8h_af4949219ee1bb0afc857cb242d123914}{Port\+Midi\+Stream} $\ast$stream)
+\item 
+\hyperlink{porttime_8h_ad478fb637833fb6b1a4bdb25a03f4662}{P\+M\+E\+X\+P\+O\+RT} \hyperlink{portmidi_8h_a5fd46ccd2e320e17a840886731e8c6b9}{Pm\+Error} \hyperlink{group__grp__io_ga82950117f003d28f9ca6536c00af985a}{Pm\+\_\+\+Write} (\hyperlink{portmidi_8h_af4949219ee1bb0afc857cb242d123914}{Port\+Midi\+Stream} $\ast$stream, \hyperlink{struct_pm_event}{Pm\+Event} $\ast$\hyperlink{structbuffer}{buffer}, \hyperlink{lib-src_2ffmpeg_2win32_2stdint_8h_a37994e3b11c72957c6f454c6ec96d43d}{int32\+\_\+t} \hyperlink{test__lib_f_l_a_c_2format_8c_ac94dc16b22556ba5fa815655f27442da}{length})
+\item 
+\hyperlink{porttime_8h_ad478fb637833fb6b1a4bdb25a03f4662}{P\+M\+E\+X\+P\+O\+RT} \hyperlink{portmidi_8h_a5fd46ccd2e320e17a840886731e8c6b9}{Pm\+Error} \hyperlink{group__grp__io_ga4a8cdd77e5b2ad4c16338eed475dfc6b}{Pm\+\_\+\+Write\+Short} (\hyperlink{portmidi_8h_af4949219ee1bb0afc857cb242d123914}{Port\+Midi\+Stream} $\ast$stream, \hyperlink{portmidi_8h_acf4245beeef251c4a46d66e99d77ffdf}{Pm\+Timestamp} when, \hyperlink{group__grp__events__filters_gad8455e4afe978a74c68e345bef99761d}{Pm\+Message} msg)
+\item 
+\hyperlink{porttime_8h_ad478fb637833fb6b1a4bdb25a03f4662}{P\+M\+E\+X\+P\+O\+RT} \hyperlink{portmidi_8h_a5fd46ccd2e320e17a840886731e8c6b9}{Pm\+Error} \hyperlink{group__grp__io_ga4bd5753bdfb53a1611bcdf5ba159fc87}{Pm\+\_\+\+Write\+Sys\+Ex} (\hyperlink{portmidi_8h_af4949219ee1bb0afc857cb242d123914}{Port\+Midi\+Stream} $\ast$stream, \hyperlink{portmidi_8h_acf4245beeef251c4a46d66e99d77ffdf}{Pm\+Timestamp} when, unsigned char $\ast$msg)
+\item 
+\hyperlink{porttime_8h_ad478fb637833fb6b1a4bdb25a03f4662}{P\+M\+E\+X\+P\+O\+RT} \hyperlink{portmidi_8h_a5fd46ccd2e320e17a840886731e8c6b9}{Pm\+Error} \hyperlink{group__grp__device_gabd50a31baaa494ad8b405f9ad54c966e}{Pm\+\_\+\+Open\+Input} (\hyperlink{portmidi_8h_af4949219ee1bb0afc857cb242d123914}{Port\+Midi\+Stream} $\ast$$\ast$stream, \hyperlink{portmidi_8h_a696cc4d4360bb8513f13df4bb134098a}{Pm\+Device\+ID} input\+Device, \hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} $\ast$input\+Driver\+Info, \hyperlink{lib-src_2ffmpeg_2win32_2stdint_8h_a37994e3b11c72957c6f454c6ec96d43d}{int32\+\_\+t} buffer\+Size, \hyperlink{portmidi_8h_a86cdcb85cfa72e067bc2fd1b96fca05d}{Pm\+Time\+Proc\+Ptr} time\+\_\+proc, \hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} $\ast$time\+\_\+info)
+\item 
+\hyperlink{porttime_8h_ad478fb637833fb6b1a4bdb25a03f4662}{P\+M\+E\+X\+P\+O\+RT} \hyperlink{portmidi_8h_a5fd46ccd2e320e17a840886731e8c6b9}{Pm\+Error} \hyperlink{group__grp__device_ga134924cfa8badeecff3c5e1f22aee178}{Pm\+\_\+\+Open\+Output} (\hyperlink{portmidi_8h_af4949219ee1bb0afc857cb242d123914}{Port\+Midi\+Stream} $\ast$$\ast$stream, \hyperlink{portmidi_8h_a696cc4d4360bb8513f13df4bb134098a}{Pm\+Device\+ID} output\+Device, \hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} $\ast$output\+Driver\+Info, \hyperlink{lib-src_2ffmpeg_2win32_2stdint_8h_a37994e3b11c72957c6f454c6ec96d43d}{int32\+\_\+t} buffer\+Size, \hyperlink{portmidi_8h_a86cdcb85cfa72e067bc2fd1b96fca05d}{Pm\+Time\+Proc\+Ptr} time\+\_\+proc, \hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} $\ast$time\+\_\+info, \hyperlink{lib-src_2ffmpeg_2win32_2stdint_8h_a37994e3b11c72957c6f454c6ec96d43d}{int32\+\_\+t} \hyperlink{portmidi_2pm__test_2test_8c_abe13b7efd223bb5d20e2f3710b43bcd2}{latency})
+\item 
+\hyperlink{porttime_8h_ad478fb637833fb6b1a4bdb25a03f4662}{P\+M\+E\+X\+P\+O\+RT} \hyperlink{portmidi_8h_a5fd46ccd2e320e17a840886731e8c6b9}{Pm\+Error} \hyperlink{group__grp__events__filters_ga87f9bc67a21a8b058a3f915a2f98746a}{Pm\+\_\+\+Set\+Channel\+Mask} (\hyperlink{portmidi_8h_af4949219ee1bb0afc857cb242d123914}{Port\+Midi\+Stream} $\ast$stream, \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{structmask}{mask})
+\item 
+\hyperlink{porttime_8h_ad478fb637833fb6b1a4bdb25a03f4662}{P\+M\+E\+X\+P\+O\+RT} \hyperlink{portmidi_8h_a5fd46ccd2e320e17a840886731e8c6b9}{Pm\+Error} \hyperlink{group__grp__events__filters_ga1a2b69b85efe9743345e18fc96607994}{Pm\+\_\+\+Set\+Filter} (\hyperlink{portmidi_8h_af4949219ee1bb0afc857cb242d123914}{Port\+Midi\+Stream} $\ast$stream, \hyperlink{lib-src_2ffmpeg_2win32_2stdint_8h_a37994e3b11c72957c6f454c6ec96d43d}{int32\+\_\+t} filters)
+\item 
+\hyperlink{porttime_8h_ad478fb637833fb6b1a4bdb25a03f4662}{P\+M\+E\+X\+P\+O\+RT} \hyperlink{portmidi_8h_a5fd46ccd2e320e17a840886731e8c6b9}{Pm\+Error} \hyperlink{group__grp__events__filters_ga6b26be2fbcf092c9625ade5303edd0ac}{Pm\+\_\+\+Close} (\hyperlink{portmidi_8h_af4949219ee1bb0afc857cb242d123914}{Port\+Midi\+Stream} $\ast$stream)
+\item 
+\hyperlink{portmidi_8h_a5fd46ccd2e320e17a840886731e8c6b9}{Pm\+Error} \hyperlink{group__grp__events__filters_gada0edc37a3424b086b14b151be3aea1a}{Pm\+\_\+\+Synchronize} (\hyperlink{portmidi_8h_af4949219ee1bb0afc857cb242d123914}{Port\+Midi\+Stream} $\ast$stream)
+\item 
+\hyperlink{porttime_8h_ad478fb637833fb6b1a4bdb25a03f4662}{P\+M\+E\+X\+P\+O\+RT} \hyperlink{portmidi_8h_a5fd46ccd2e320e17a840886731e8c6b9}{Pm\+Error} \hyperlink{group__grp__events__filters_ga8934ac3b02359b60177a06580c66a20e}{Pm\+\_\+\+Abort} (\hyperlink{portmidi_8h_af4949219ee1bb0afc857cb242d123914}{Port\+Midi\+Stream} $\ast$stream)
+\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{portmidi_8c_a11a153e33a42b3f20df33394ce241005}{pm\+\_\+read\+\_\+short} (\hyperlink{pminternal_8h_acb48fe118f5feaf74bc314943658b733}{Pm\+Internal} $\ast$\hyperlink{midiclock_8c_a55d909f140b116a12ba644132b67031e}{midi}, \hyperlink{struct_pm_event}{Pm\+Event} $\ast$event)
+\item 
+unsigned \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{portmidi_8c_a42d9f2529a0dedc5cbcaca8d3025a005}{pm\+\_\+read\+\_\+bytes} (\hyperlink{pminternal_8h_acb48fe118f5feaf74bc314943658b733}{Pm\+Internal} $\ast$\hyperlink{midiclock_8c_a55d909f140b116a12ba644132b67031e}{midi}, \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} unsigned char $\ast$\hyperlink{lib_2expat_8h_ac39e72a1de1cb50dbdc54b08d0432a24}{data}, \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{lib_2expat_8h_af86d325fecfc8f47b61fbf5a5146f582}{len}, \hyperlink{portmidi_8h_acf4245beeef251c4a46d66e99d77ffdf}{Pm\+Timestamp} timestamp)
+\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{portmidi_8c_ad503ee62c76e6fe2beef957f0fe53488}{pm\+\_\+initialized} = \hyperlink{twolame_8h_aa93f0eb578d23995850d61f7d61c55c1}{F\+A\+L\+SE}
+\item 
+\hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{portmidi_8c_af455cd83ef19eb07a7996c38dd806ee4}{pm\+\_\+hosterror}
+\item 
+char \hyperlink{portmidi_8c_ac24a8881f0ef8c3a944349bee479cf05}{pm\+\_\+hosterror\+\_\+text} \mbox{[}\hyperlink{portmidi_8h_a40b1b3ff3147b3e0dff5843911345c8e}{P\+M\+\_\+\+H\+O\+S\+T\+\_\+\+E\+R\+R\+O\+R\+\_\+\+M\+S\+G\+\_\+\+L\+EN}\mbox{]}
+\item 
+\hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{portmidi_8c_a9ffc95d4de3ed10d1efcac1d79e39f11}{pm\+\_\+descriptor\+\_\+max} = 0
+\item 
+\hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{portmidi_8c_abf37b57cc544c04b6d27cf33a02b473f}{pm\+\_\+descriptor\+\_\+index} = 0
+\item 
+\hyperlink{pminternal_8h_a29d5a895f53cf98108afbfd7379edbb1}{descriptor\+\_\+type} \hyperlink{portmidi_8c_a8a86f0e79d5794e79c94c3f380a7088c}{descriptors} = \hyperlink{px__mixer_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{N\+U\+LL}
+\item 
+\hyperlink{structpm__fns__node}{pm\+\_\+fns\+\_\+node} \hyperlink{portmidi_8c_a8b038edc211455d61f88e5f9c7773496}{pm\+\_\+none\+\_\+dictionary}
+\end{DoxyCompactItemize}
+
+
+\subsection{Macro Definition Documentation}
+\index{portmidi.\+c@{portmidi.\+c}!B\+U\+F\+L\+EN@{B\+U\+F\+L\+EN}}
+\index{B\+U\+F\+L\+EN@{B\+U\+F\+L\+EN}!portmidi.\+c@{portmidi.\+c}}
+\subsubsection[{\texorpdfstring{B\+U\+F\+L\+EN}{BUFLEN}}]{\setlength{\rightskip}{0pt plus 5cm}\#define B\+U\+F\+L\+EN~(({\bf int}) ({\bf P\+M\+\_\+\+D\+E\+F\+A\+U\+L\+T\+\_\+\+S\+Y\+S\+E\+X\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+S\+I\+ZE} / sizeof({\bf Pm\+Message})))}\hypertarget{portmidi_8c_ad974fe981249f5e84fbf1683b012c9f8}{}\label{portmidi_8c_ad974fe981249f5e84fbf1683b012c9f8}
+\index{portmidi.\+c@{portmidi.\+c}!is\+\_\+empty@{is\+\_\+empty}}
+\index{is\+\_\+empty@{is\+\_\+empty}!portmidi.\+c@{portmidi.\+c}}
+\subsubsection[{\texorpdfstring{is\+\_\+empty}{is_empty}}]{\setlength{\rightskip}{0pt plus 5cm}\#define is\+\_\+empty(
+\begin{DoxyParamCaption}
+\item[{}]{{\bf midi}}
+\end{DoxyParamCaption}
+)~(({\bf midi})-\/$>$tail == ({\bf midi})-\/$>$head)}\hypertarget{portmidi_8c_a2d48efb2f9e0ad13211a0ab1c66cabef}{}\label{portmidi_8c_a2d48efb2f9e0ad13211a0ab1c66cabef}
+
+
+Definition at line 37 of file portmidi.\+c.
+
+\index{portmidi.\+c@{portmidi.\+c}!M\+I\+D\+I\+\_\+\+A\+C\+T\+I\+VE@{M\+I\+D\+I\+\_\+\+A\+C\+T\+I\+VE}}
+\index{M\+I\+D\+I\+\_\+\+A\+C\+T\+I\+VE@{M\+I\+D\+I\+\_\+\+A\+C\+T\+I\+VE}!portmidi.\+c@{portmidi.\+c}}
+\subsubsection[{\texorpdfstring{M\+I\+D\+I\+\_\+\+A\+C\+T\+I\+VE}{MIDI_ACTIVE}}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+I\+D\+I\+\_\+\+A\+C\+T\+I\+VE~0xfe}\hypertarget{portmidi_8c_a6ff6dd452be369b24a8bb05102b2ff76}{}\label{portmidi_8c_a6ff6dd452be369b24a8bb05102b2ff76}
+
+
+Definition at line 15 of file portmidi.\+c.
+
+\index{portmidi.\+c@{portmidi.\+c}!M\+I\+D\+I\+\_\+\+C\+H\+A\+N\+N\+E\+L\+\_\+\+AT@{M\+I\+D\+I\+\_\+\+C\+H\+A\+N\+N\+E\+L\+\_\+\+AT}}
+\index{M\+I\+D\+I\+\_\+\+C\+H\+A\+N\+N\+E\+L\+\_\+\+AT@{M\+I\+D\+I\+\_\+\+C\+H\+A\+N\+N\+E\+L\+\_\+\+AT}!portmidi.\+c@{portmidi.\+c}}
+\subsubsection[{\texorpdfstring{M\+I\+D\+I\+\_\+\+C\+H\+A\+N\+N\+E\+L\+\_\+\+AT}{MIDI_CHANNEL_AT}}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+I\+D\+I\+\_\+\+C\+H\+A\+N\+N\+E\+L\+\_\+\+AT~0x\+D0}\hypertarget{portmidi_8c_ab47c590c8324e5127da43ad0f3e63a26}{}\label{portmidi_8c_ab47c590c8324e5127da43ad0f3e63a26}
+
+
+Definition at line 27 of file portmidi.\+c.
+
+\index{portmidi.\+c@{portmidi.\+c}!M\+I\+D\+I\+\_\+\+C\+L\+O\+CK@{M\+I\+D\+I\+\_\+\+C\+L\+O\+CK}}
+\index{M\+I\+D\+I\+\_\+\+C\+L\+O\+CK@{M\+I\+D\+I\+\_\+\+C\+L\+O\+CK}!portmidi.\+c@{portmidi.\+c}}
+\subsubsection[{\texorpdfstring{M\+I\+D\+I\+\_\+\+C\+L\+O\+CK}{MIDI_CLOCK}}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+I\+D\+I\+\_\+\+C\+L\+O\+CK~0xf8}\hypertarget{portmidi_8c_afa5e4e295aafd15ab7893344599b3b89}{}\label{portmidi_8c_afa5e4e295aafd15ab7893344599b3b89}
+
+
+Definition at line 14 of file portmidi.\+c.
+
+\index{portmidi.\+c@{portmidi.\+c}!M\+I\+D\+I\+\_\+\+C\+O\+N\+T\+I\+N\+UE@{M\+I\+D\+I\+\_\+\+C\+O\+N\+T\+I\+N\+UE}}
+\index{M\+I\+D\+I\+\_\+\+C\+O\+N\+T\+I\+N\+UE@{M\+I\+D\+I\+\_\+\+C\+O\+N\+T\+I\+N\+UE}!portmidi.\+c@{portmidi.\+c}}
+\subsubsection[{\texorpdfstring{M\+I\+D\+I\+\_\+\+C\+O\+N\+T\+I\+N\+UE}{MIDI_CONTINUE}}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+I\+D\+I\+\_\+\+C\+O\+N\+T\+I\+N\+UE~0x\+FB}\hypertarget{portmidi_8c_ab24430f0081e27215b0da84dd0ee745c}{}\label{portmidi_8c_ab24430f0081e27215b0da84dd0ee745c}
+
+
+Definition at line 21 of file portmidi.\+c.
+
+\index{portmidi.\+c@{portmidi.\+c}!M\+I\+D\+I\+\_\+\+C\+O\+N\+T\+R\+OL@{M\+I\+D\+I\+\_\+\+C\+O\+N\+T\+R\+OL}}
+\index{M\+I\+D\+I\+\_\+\+C\+O\+N\+T\+R\+OL@{M\+I\+D\+I\+\_\+\+C\+O\+N\+T\+R\+OL}!portmidi.\+c@{portmidi.\+c}}
+\subsubsection[{\texorpdfstring{M\+I\+D\+I\+\_\+\+C\+O\+N\+T\+R\+OL}{MIDI_CONTROL}}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+I\+D\+I\+\_\+\+C\+O\+N\+T\+R\+OL~0x\+B0}\hypertarget{portmidi_8c_ad618c2530c16b5bdb92ace73f3a1dcb5}{}\label{portmidi_8c_ad618c2530c16b5bdb92ace73f3a1dcb5}
+
+
+Definition at line 30 of file portmidi.\+c.
+
+\index{portmidi.\+c@{portmidi.\+c}!M\+I\+D\+I\+\_\+\+E\+OX@{M\+I\+D\+I\+\_\+\+E\+OX}}
+\index{M\+I\+D\+I\+\_\+\+E\+OX@{M\+I\+D\+I\+\_\+\+E\+OX}!portmidi.\+c@{portmidi.\+c}}
+\subsubsection[{\texorpdfstring{M\+I\+D\+I\+\_\+\+E\+OX}{MIDI_EOX}}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+I\+D\+I\+\_\+\+E\+OX~0xf7}\hypertarget{portmidi_8c_a140c8cfa4bbf1a03494abdbd639d49f2}{}\label{portmidi_8c_a140c8cfa4bbf1a03494abdbd639d49f2}
+
+
+Definition at line 18 of file portmidi.\+c.
+
+\index{portmidi.\+c@{portmidi.\+c}!M\+I\+D\+I\+\_\+\+F9@{M\+I\+D\+I\+\_\+\+F9}}
+\index{M\+I\+D\+I\+\_\+\+F9@{M\+I\+D\+I\+\_\+\+F9}!portmidi.\+c@{portmidi.\+c}}
+\subsubsection[{\texorpdfstring{M\+I\+D\+I\+\_\+\+F9}{MIDI_F9}}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+I\+D\+I\+\_\+\+F9~0x\+F9}\hypertarget{portmidi_8c_ab4ef04d3d15cb2ae88364b639dc29834}{}\label{portmidi_8c_ab4ef04d3d15cb2ae88364b639dc29834}
+
+
+Definition at line 22 of file portmidi.\+c.
+
+\index{portmidi.\+c@{portmidi.\+c}!M\+I\+D\+I\+\_\+\+FD@{M\+I\+D\+I\+\_\+\+FD}}
+\index{M\+I\+D\+I\+\_\+\+FD@{M\+I\+D\+I\+\_\+\+FD}!portmidi.\+c@{portmidi.\+c}}
+\subsubsection[{\texorpdfstring{M\+I\+D\+I\+\_\+\+FD}{MIDI_FD}}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+I\+D\+I\+\_\+\+FD~0x\+FD}\hypertarget{portmidi_8c_ace178eb4669d53d06c7873596fa27084}{}\label{portmidi_8c_ace178eb4669d53d06c7873596fa27084}
+
+
+Definition at line 23 of file portmidi.\+c.
+
+\index{portmidi.\+c@{portmidi.\+c}!M\+I\+D\+I\+\_\+\+M\+TC@{M\+I\+D\+I\+\_\+\+M\+TC}}
+\index{M\+I\+D\+I\+\_\+\+M\+TC@{M\+I\+D\+I\+\_\+\+M\+TC}!portmidi.\+c@{portmidi.\+c}}
+\subsubsection[{\texorpdfstring{M\+I\+D\+I\+\_\+\+M\+TC}{MIDI_MTC}}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+I\+D\+I\+\_\+\+M\+TC~0x\+F1}\hypertarget{portmidi_8c_a8e5430a8f1fcdc14fc227b7ab24bf1cf}{}\label{portmidi_8c_a8e5430a8f1fcdc14fc227b7ab24bf1cf}
+
+
+Definition at line 32 of file portmidi.\+c.
+
+\index{portmidi.\+c@{portmidi.\+c}!M\+I\+D\+I\+\_\+\+N\+O\+T\+E\+\_\+\+O\+FF@{M\+I\+D\+I\+\_\+\+N\+O\+T\+E\+\_\+\+O\+FF}}
+\index{M\+I\+D\+I\+\_\+\+N\+O\+T\+E\+\_\+\+O\+FF@{M\+I\+D\+I\+\_\+\+N\+O\+T\+E\+\_\+\+O\+FF}!portmidi.\+c@{portmidi.\+c}}
+\subsubsection[{\texorpdfstring{M\+I\+D\+I\+\_\+\+N\+O\+T\+E\+\_\+\+O\+FF}{MIDI_NOTE_OFF}}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+I\+D\+I\+\_\+\+N\+O\+T\+E\+\_\+\+O\+FF~0x80}\hypertarget{portmidi_8c_a4259def83bd534a786edb4408fec67f0}{}\label{portmidi_8c_a4259def83bd534a786edb4408fec67f0}
+
+
+Definition at line 26 of file portmidi.\+c.
+
+\index{portmidi.\+c@{portmidi.\+c}!M\+I\+D\+I\+\_\+\+N\+O\+T\+E\+\_\+\+ON@{M\+I\+D\+I\+\_\+\+N\+O\+T\+E\+\_\+\+ON}}
+\index{M\+I\+D\+I\+\_\+\+N\+O\+T\+E\+\_\+\+ON@{M\+I\+D\+I\+\_\+\+N\+O\+T\+E\+\_\+\+ON}!portmidi.\+c@{portmidi.\+c}}
+\subsubsection[{\texorpdfstring{M\+I\+D\+I\+\_\+\+N\+O\+T\+E\+\_\+\+ON}{MIDI_NOTE_ON}}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+I\+D\+I\+\_\+\+N\+O\+T\+E\+\_\+\+ON~0x90}\hypertarget{portmidi_8c_acb743a02e36b618a4bd1990671b3325f}{}\label{portmidi_8c_acb743a02e36b618a4bd1990671b3325f}
+
+
+Definition at line 25 of file portmidi.\+c.
+
+\index{portmidi.\+c@{portmidi.\+c}!M\+I\+D\+I\+\_\+\+P\+I\+T\+C\+H\+B\+E\+ND@{M\+I\+D\+I\+\_\+\+P\+I\+T\+C\+H\+B\+E\+ND}}
+\index{M\+I\+D\+I\+\_\+\+P\+I\+T\+C\+H\+B\+E\+ND@{M\+I\+D\+I\+\_\+\+P\+I\+T\+C\+H\+B\+E\+ND}!portmidi.\+c@{portmidi.\+c}}
+\subsubsection[{\texorpdfstring{M\+I\+D\+I\+\_\+\+P\+I\+T\+C\+H\+B\+E\+ND}{MIDI_PITCHBEND}}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+I\+D\+I\+\_\+\+P\+I\+T\+C\+H\+B\+E\+ND~0x\+E0}\hypertarget{portmidi_8c_abcc799504e8064679bca03f232223af4}{}\label{portmidi_8c_abcc799504e8064679bca03f232223af4}
+
+
+Definition at line 31 of file portmidi.\+c.
+
+\index{portmidi.\+c@{portmidi.\+c}!M\+I\+D\+I\+\_\+\+P\+O\+L\+Y\+\_\+\+AT@{M\+I\+D\+I\+\_\+\+P\+O\+L\+Y\+\_\+\+AT}}
+\index{M\+I\+D\+I\+\_\+\+P\+O\+L\+Y\+\_\+\+AT@{M\+I\+D\+I\+\_\+\+P\+O\+L\+Y\+\_\+\+AT}!portmidi.\+c@{portmidi.\+c}}
+\subsubsection[{\texorpdfstring{M\+I\+D\+I\+\_\+\+P\+O\+L\+Y\+\_\+\+AT}{MIDI_POLY_AT}}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+I\+D\+I\+\_\+\+P\+O\+L\+Y\+\_\+\+AT~0x\+A0}\hypertarget{portmidi_8c_ae11126c99c31285d199b88c12feff9be}{}\label{portmidi_8c_ae11126c99c31285d199b88c12feff9be}
+
+
+Definition at line 28 of file portmidi.\+c.
+
+\index{portmidi.\+c@{portmidi.\+c}!M\+I\+D\+I\+\_\+\+P\+R\+O\+G\+R\+AM@{M\+I\+D\+I\+\_\+\+P\+R\+O\+G\+R\+AM}}
+\index{M\+I\+D\+I\+\_\+\+P\+R\+O\+G\+R\+AM@{M\+I\+D\+I\+\_\+\+P\+R\+O\+G\+R\+AM}!portmidi.\+c@{portmidi.\+c}}
+\subsubsection[{\texorpdfstring{M\+I\+D\+I\+\_\+\+P\+R\+O\+G\+R\+AM}{MIDI_PROGRAM}}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+I\+D\+I\+\_\+\+P\+R\+O\+G\+R\+AM~0x\+C0}\hypertarget{portmidi_8c_a8bbe829ae5724352ee1f45f5590e7f84}{}\label{portmidi_8c_a8bbe829ae5724352ee1f45f5590e7f84}
+
+
+Definition at line 29 of file portmidi.\+c.
+
+\index{portmidi.\+c@{portmidi.\+c}!M\+I\+D\+I\+\_\+\+R\+E\+S\+ET@{M\+I\+D\+I\+\_\+\+R\+E\+S\+ET}}
+\index{M\+I\+D\+I\+\_\+\+R\+E\+S\+ET@{M\+I\+D\+I\+\_\+\+R\+E\+S\+ET}!portmidi.\+c@{portmidi.\+c}}
+\subsubsection[{\texorpdfstring{M\+I\+D\+I\+\_\+\+R\+E\+S\+ET}{MIDI_RESET}}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+I\+D\+I\+\_\+\+R\+E\+S\+ET~0x\+FF}\hypertarget{portmidi_8c_a02947f30ca62dc332fdeb10c5868323b}{}\label{portmidi_8c_a02947f30ca62dc332fdeb10c5868323b}
+
+
+Definition at line 24 of file portmidi.\+c.
+
+\index{portmidi.\+c@{portmidi.\+c}!M\+I\+D\+I\+\_\+\+S\+O\+N\+G\+P\+OS@{M\+I\+D\+I\+\_\+\+S\+O\+N\+G\+P\+OS}}
+\index{M\+I\+D\+I\+\_\+\+S\+O\+N\+G\+P\+OS@{M\+I\+D\+I\+\_\+\+S\+O\+N\+G\+P\+OS}!portmidi.\+c@{portmidi.\+c}}
+\subsubsection[{\texorpdfstring{M\+I\+D\+I\+\_\+\+S\+O\+N\+G\+P\+OS}{MIDI_SONGPOS}}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+I\+D\+I\+\_\+\+S\+O\+N\+G\+P\+OS~0x\+F2}\hypertarget{portmidi_8c_aecd1881207e391fdaad13496b84a8ae7}{}\label{portmidi_8c_aecd1881207e391fdaad13496b84a8ae7}
+
+
+Definition at line 33 of file portmidi.\+c.
+
+\index{portmidi.\+c@{portmidi.\+c}!M\+I\+D\+I\+\_\+\+S\+O\+N\+G\+S\+EL@{M\+I\+D\+I\+\_\+\+S\+O\+N\+G\+S\+EL}}
+\index{M\+I\+D\+I\+\_\+\+S\+O\+N\+G\+S\+EL@{M\+I\+D\+I\+\_\+\+S\+O\+N\+G\+S\+EL}!portmidi.\+c@{portmidi.\+c}}
+\subsubsection[{\texorpdfstring{M\+I\+D\+I\+\_\+\+S\+O\+N\+G\+S\+EL}{MIDI_SONGSEL}}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+I\+D\+I\+\_\+\+S\+O\+N\+G\+S\+EL~0x\+F3}\hypertarget{portmidi_8c_aca755324971f1443459847786a4d4507}{}\label{portmidi_8c_aca755324971f1443459847786a4d4507}
+
+
+Definition at line 34 of file portmidi.\+c.
+
+\index{portmidi.\+c@{portmidi.\+c}!M\+I\+D\+I\+\_\+\+S\+T\+A\+RT@{M\+I\+D\+I\+\_\+\+S\+T\+A\+RT}}
+\index{M\+I\+D\+I\+\_\+\+S\+T\+A\+RT@{M\+I\+D\+I\+\_\+\+S\+T\+A\+RT}!portmidi.\+c@{portmidi.\+c}}
+\subsubsection[{\texorpdfstring{M\+I\+D\+I\+\_\+\+S\+T\+A\+RT}{MIDI_START}}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+I\+D\+I\+\_\+\+S\+T\+A\+RT~0x\+FA}\hypertarget{portmidi_8c_a8233631c85823aa546f932ad8975caa4}{}\label{portmidi_8c_a8233631c85823aa546f932ad8975caa4}
+
+
+Definition at line 19 of file portmidi.\+c.
+
+\index{portmidi.\+c@{portmidi.\+c}!M\+I\+D\+I\+\_\+\+S\+T\+A\+T\+U\+S\+\_\+\+M\+A\+SK@{M\+I\+D\+I\+\_\+\+S\+T\+A\+T\+U\+S\+\_\+\+M\+A\+SK}}
+\index{M\+I\+D\+I\+\_\+\+S\+T\+A\+T\+U\+S\+\_\+\+M\+A\+SK@{M\+I\+D\+I\+\_\+\+S\+T\+A\+T\+U\+S\+\_\+\+M\+A\+SK}!portmidi.\+c@{portmidi.\+c}}
+\subsubsection[{\texorpdfstring{M\+I\+D\+I\+\_\+\+S\+T\+A\+T\+U\+S\+\_\+\+M\+A\+SK}{MIDI_STATUS_MASK}}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+I\+D\+I\+\_\+\+S\+T\+A\+T\+U\+S\+\_\+\+M\+A\+SK~0x80}\hypertarget{portmidi_8c_a1ee2586a063422ec7d18e2abfbafa545}{}\label{portmidi_8c_a1ee2586a063422ec7d18e2abfbafa545}
+
+
+Definition at line 16 of file portmidi.\+c.
+
+\index{portmidi.\+c@{portmidi.\+c}!M\+I\+D\+I\+\_\+\+S\+T\+OP@{M\+I\+D\+I\+\_\+\+S\+T\+OP}}
+\index{M\+I\+D\+I\+\_\+\+S\+T\+OP@{M\+I\+D\+I\+\_\+\+S\+T\+OP}!portmidi.\+c@{portmidi.\+c}}
+\subsubsection[{\texorpdfstring{M\+I\+D\+I\+\_\+\+S\+T\+OP}{MIDI_STOP}}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+I\+D\+I\+\_\+\+S\+T\+OP~0x\+FC}\hypertarget{portmidi_8c_a3af9271d4b1f0d22904a0b055f48cf62}{}\label{portmidi_8c_a3af9271d4b1f0d22904a0b055f48cf62}
+
+
+Definition at line 20 of file portmidi.\+c.
+
+\index{portmidi.\+c@{portmidi.\+c}!M\+I\+D\+I\+\_\+\+S\+Y\+S\+EX@{M\+I\+D\+I\+\_\+\+S\+Y\+S\+EX}}
+\index{M\+I\+D\+I\+\_\+\+S\+Y\+S\+EX@{M\+I\+D\+I\+\_\+\+S\+Y\+S\+EX}!portmidi.\+c@{portmidi.\+c}}
+\subsubsection[{\texorpdfstring{M\+I\+D\+I\+\_\+\+S\+Y\+S\+EX}{MIDI_SYSEX}}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+I\+D\+I\+\_\+\+S\+Y\+S\+EX~0xf0}\hypertarget{portmidi_8c_aa2197f6ca200566c0986e737edd211e4}{}\label{portmidi_8c_aa2197f6ca200566c0986e737edd211e4}
+
+
+Definition at line 17 of file portmidi.\+c.
+
+\index{portmidi.\+c@{portmidi.\+c}!M\+I\+D\+I\+\_\+\+T\+U\+NE@{M\+I\+D\+I\+\_\+\+T\+U\+NE}}
+\index{M\+I\+D\+I\+\_\+\+T\+U\+NE@{M\+I\+D\+I\+\_\+\+T\+U\+NE}!portmidi.\+c@{portmidi.\+c}}
+\subsubsection[{\texorpdfstring{M\+I\+D\+I\+\_\+\+T\+U\+NE}{MIDI_TUNE}}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+I\+D\+I\+\_\+\+T\+U\+NE~0x\+F6}\hypertarget{portmidi_8c_adf060c9ba94819a8445a9924ea799fd8}{}\label{portmidi_8c_adf060c9ba94819a8445a9924ea799fd8}
+
+
+Definition at line 35 of file portmidi.\+c.
+
+\index{portmidi.\+c@{portmidi.\+c}!none\+\_\+abort@{none\+\_\+abort}}
+\index{none\+\_\+abort@{none\+\_\+abort}!portmidi.\+c@{portmidi.\+c}}
+\subsubsection[{\texorpdfstring{none\+\_\+abort}{none_abort}}]{\setlength{\rightskip}{0pt plus 5cm}\#define none\+\_\+abort~{\bf pm\+\_\+fail\+\_\+fn}}\hypertarget{portmidi_8c_a366d307d9adc16df4ed72c0c96d56bd0}{}\label{portmidi_8c_a366d307d9adc16df4ed72c0c96d56bd0}
+
+
+Definition at line 229 of file portmidi.\+c.
+
+\index{portmidi.\+c@{portmidi.\+c}!none\+\_\+close@{none\+\_\+close}}
+\index{none\+\_\+close@{none\+\_\+close}!portmidi.\+c@{portmidi.\+c}}
+\subsubsection[{\texorpdfstring{none\+\_\+close}{none_close}}]{\setlength{\rightskip}{0pt plus 5cm}\#define none\+\_\+close~{\bf pm\+\_\+fail\+\_\+fn}}\hypertarget{portmidi_8c_aee20ca803d94f91361fe009179095c90}{}\label{portmidi_8c_aee20ca803d94f91361fe009179095c90}
+
+
+Definition at line 230 of file portmidi.\+c.
+
+\index{portmidi.\+c@{portmidi.\+c}!pm\+\_\+channel\+\_\+filtered@{pm\+\_\+channel\+\_\+filtered}}
+\index{pm\+\_\+channel\+\_\+filtered@{pm\+\_\+channel\+\_\+filtered}!portmidi.\+c@{portmidi.\+c}}
+\subsubsection[{\texorpdfstring{pm\+\_\+channel\+\_\+filtered}{pm_channel_filtered}}]{\setlength{\rightskip}{0pt plus 5cm}\#define pm\+\_\+channel\+\_\+filtered(
+\begin{DoxyParamCaption}
+\item[{}]{{\bf status}, }
+\item[{}]{{\bf mask}}
+\end{DoxyParamCaption}
+)~(((({\bf status}) \& 0x\+F0) != 0x\+F0) \&\& (!(\+Pm\+\_\+\+Channel((status) \& 0x0\+F) \& (mask))))}\hypertarget{portmidi_8c_a5af1caf64b8661a79e54e850e9dbe191}{}\label{portmidi_8c_a5af1caf64b8661a79e54e850e9dbe191}
+
+
+Definition at line 930 of file portmidi.\+c.
+
+\index{portmidi.\+c@{portmidi.\+c}!pm\+\_\+errmsg@{pm\+\_\+errmsg}}
+\index{pm\+\_\+errmsg@{pm\+\_\+errmsg}!portmidi.\+c@{portmidi.\+c}}
+\subsubsection[{\texorpdfstring{pm\+\_\+errmsg}{pm_errmsg}}]{\setlength{\rightskip}{0pt plus 5cm}\#define pm\+\_\+errmsg(
+\begin{DoxyParamCaption}
+\item[{}]{err}
+\end{DoxyParamCaption}
+)~err}\hypertarget{portmidi_8c_a1e3fc08b00e2542c99314d01844afd2c}{}\label{portmidi_8c_a1e3fc08b00e2542c99314d01844afd2c}
+
+
+Definition at line 80 of file portmidi.\+c.
+
+\index{portmidi.\+c@{portmidi.\+c}!pm\+\_\+realtime\+\_\+filtered@{pm\+\_\+realtime\+\_\+filtered}}
+\index{pm\+\_\+realtime\+\_\+filtered@{pm\+\_\+realtime\+\_\+filtered}!portmidi.\+c@{portmidi.\+c}}
+\subsubsection[{\texorpdfstring{pm\+\_\+realtime\+\_\+filtered}{pm_realtime_filtered}}]{\setlength{\rightskip}{0pt plus 5cm}\#define pm\+\_\+realtime\+\_\+filtered(
+\begin{DoxyParamCaption}
+\item[{}]{{\bf status}, }
+\item[{}]{filters}
+\end{DoxyParamCaption}
+)~(((({\bf status}) \& 0x\+F0) == 0x\+F0) \&\& ((1 $<$$<$ ((status) \& 0x\+F)) \& (filters)))}\hypertarget{portmidi_8c_a814afeefb4df5b95673e3d43c7a26282}{}\label{portmidi_8c_a814afeefb4df5b95673e3d43c7a26282}
+
+
+Definition at line 943 of file portmidi.\+c.
+
+\index{portmidi.\+c@{portmidi.\+c}!pm\+\_\+status\+\_\+filtered@{pm\+\_\+status\+\_\+filtered}}
+\index{pm\+\_\+status\+\_\+filtered@{pm\+\_\+status\+\_\+filtered}!portmidi.\+c@{portmidi.\+c}}
+\subsubsection[{\texorpdfstring{pm\+\_\+status\+\_\+filtered}{pm_status_filtered}}]{\setlength{\rightskip}{0pt plus 5cm}\#define pm\+\_\+status\+\_\+filtered(
+\begin{DoxyParamCaption}
+\item[{}]{{\bf status}, }
+\item[{}]{filters}
+\end{DoxyParamCaption}
+)~((1 $<$$<$ (16 + (({\bf status}) $>$$>$ 4))) \& (filters))}\hypertarget{portmidi_8c_ac3c153803616975e2fdd1edd45e05398}{}\label{portmidi_8c_ac3c153803616975e2fdd1edd45e05398}
+
+
+Definition at line 967 of file portmidi.\+c.
+
+
+
+\subsection{Function Documentation}
+\index{portmidi.\+c@{portmidi.\+c}!none\+\_\+synchronize@{none\+\_\+synchronize}}
+\index{none\+\_\+synchronize@{none\+\_\+synchronize}!portmidi.\+c@{portmidi.\+c}}
+\subsubsection[{\texorpdfstring{none\+\_\+synchronize(\+Pm\+Internal $\ast$midi)}{none_synchronize(PmInternal *midi)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Pm\+Timestamp} none\+\_\+synchronize (
+\begin{DoxyParamCaption}
+\item[{{\bf Pm\+Internal} $\ast$}]{midi}
+\end{DoxyParamCaption}
+)}\hypertarget{portmidi_8c_a9128319a3c3cb967bdde782ae9c5c4ba}{}\label{portmidi_8c_a9128319a3c3cb967bdde782ae9c5c4ba}
+
+
+Definition at line 225 of file portmidi.\+c.
+
+\index{portmidi.\+c@{portmidi.\+c}!none\+\_\+write\+\_\+byte@{none\+\_\+write\+\_\+byte}}
+\index{none\+\_\+write\+\_\+byte@{none\+\_\+write\+\_\+byte}!portmidi.\+c@{portmidi.\+c}}
+\subsubsection[{\texorpdfstring{none\+\_\+write\+\_\+byte(\+Pm\+Internal $\ast$midi, unsigned char byte, Pm\+Timestamp timestamp)}{none_write_byte(PmInternal *midi, unsigned char byte, PmTimestamp timestamp)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Pm\+Error} none\+\_\+write\+\_\+byte (
+\begin{DoxyParamCaption}
+\item[{{\bf Pm\+Internal} $\ast$}]{midi, }
+\item[{unsigned char}]{byte, }
+\item[{{\bf Pm\+Timestamp}}]{timestamp}
+\end{DoxyParamCaption}
+)}\hypertarget{portmidi_8c_a2181992bfdc1d719bdd96353763965d7}{}\label{portmidi_8c_a2181992bfdc1d719bdd96353763965d7}
+
+
+Definition at line 206 of file portmidi.\+c.
+
+\index{portmidi.\+c@{portmidi.\+c}!none\+\_\+write\+\_\+short@{none\+\_\+write\+\_\+short}}
+\index{none\+\_\+write\+\_\+short@{none\+\_\+write\+\_\+short}!portmidi.\+c@{portmidi.\+c}}
+\subsubsection[{\texorpdfstring{none\+\_\+write\+\_\+short(\+Pm\+Internal $\ast$midi, Pm\+Event $\ast$buffer)}{none_write_short(PmInternal *midi, PmEvent *buffer)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Pm\+Error} none\+\_\+write\+\_\+short (
+\begin{DoxyParamCaption}
+\item[{{\bf Pm\+Internal} $\ast$}]{midi, }
+\item[{{\bf Pm\+Event} $\ast$}]{buffer}
+\end{DoxyParamCaption}
+)}\hypertarget{portmidi_8c_a841d04eb4d4efa3eebfc4e718cf9faa3}{}\label{portmidi_8c_a841d04eb4d4efa3eebfc4e718cf9faa3}
+
+
+Definition at line 197 of file portmidi.\+c.
+
+\index{portmidi.\+c@{portmidi.\+c}!pm\+\_\+add\+\_\+device@{pm\+\_\+add\+\_\+device}}
+\index{pm\+\_\+add\+\_\+device@{pm\+\_\+add\+\_\+device}!portmidi.\+c@{portmidi.\+c}}
+\subsubsection[{\texorpdfstring{pm\+\_\+add\+\_\+device(char $\ast$interf, char $\ast$name, int input, void $\ast$descriptor, pm\+\_\+fns\+\_\+type dictionary)}{pm_add_device(char *interf, char *name, int input, void *descriptor, pm_fns_type dictionary)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Pm\+Error} pm\+\_\+add\+\_\+device (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{interf, }
+\item[{char $\ast$}]{name, }
+\item[{{\bf int}}]{input, }
+\item[{{\bf void} $\ast$}]{descriptor, }
+\item[{{\bf pm\+\_\+fns\+\_\+type}}]{dictionary}
+\end{DoxyParamCaption}
+)}\hypertarget{portmidi_8c_a8c66dfe796fb47b3f2a4a195a0529249}{}\label{portmidi_8c_a8c66dfe796fb47b3f2a4a195a0529249}
+
+
+Definition at line 102 of file portmidi.\+c.
+
+\index{portmidi.\+c@{portmidi.\+c}!Pm\+\_\+\+Count\+Devices@{Pm\+\_\+\+Count\+Devices}}
+\index{Pm\+\_\+\+Count\+Devices@{Pm\+\_\+\+Count\+Devices}!portmidi.\+c@{portmidi.\+c}}
+\subsubsection[{\texorpdfstring{Pm\+\_\+\+Count\+Devices(void)}{Pm_CountDevices(void)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf P\+M\+E\+X\+P\+O\+RT} {\bf int} Pm\+\_\+\+Count\+Devices (
+\begin{DoxyParamCaption}
+\item[{{\bf void}}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{portmidi_8c_aa09d809f5c5bdc5d2fc9b3d2290ec282}{}\label{portmidi_8c_aa09d809f5c5bdc5d2fc9b3d2290ec282}
+Get devices count, ids range from 0 to \hyperlink{portmidi_8h_aa09d809f5c5bdc5d2fc9b3d2290ec282}{Pm\+\_\+\+Count\+Devices()}-\/1. 
+
+Definition at line 176 of file portmidi.\+c.
+
+\index{portmidi.\+c@{portmidi.\+c}!pm\+\_\+fail\+\_\+fn@{pm\+\_\+fail\+\_\+fn}}
+\index{pm\+\_\+fail\+\_\+fn@{pm\+\_\+fail\+\_\+fn}!portmidi.\+c@{portmidi.\+c}}
+\subsubsection[{\texorpdfstring{pm\+\_\+fail\+\_\+fn(\+Pm\+Internal $\ast$midi)}{pm_fail_fn(PmInternal *midi)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Pm\+Error} pm\+\_\+fail\+\_\+fn (
+\begin{DoxyParamCaption}
+\item[{{\bf Pm\+Internal} $\ast$}]{midi}
+\end{DoxyParamCaption}
+)}\hypertarget{portmidi_8c_aeeae549047bfcfbbe3eff9f3857ff77a}{}\label{portmidi_8c_aeeae549047bfcfbbe3eff9f3857ff77a}
+
+
+Definition at line 212 of file portmidi.\+c.
+
+\index{portmidi.\+c@{portmidi.\+c}!pm\+\_\+fail\+\_\+timestamp\+\_\+fn@{pm\+\_\+fail\+\_\+timestamp\+\_\+fn}}
+\index{pm\+\_\+fail\+\_\+timestamp\+\_\+fn@{pm\+\_\+fail\+\_\+timestamp\+\_\+fn}!portmidi.\+c@{portmidi.\+c}}
+\subsubsection[{\texorpdfstring{pm\+\_\+fail\+\_\+timestamp\+\_\+fn(\+Pm\+Internal $\ast$midi, Pm\+Timestamp timestamp)}{pm_fail_timestamp_fn(PmInternal *midi, PmTimestamp timestamp)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Pm\+Error} pm\+\_\+fail\+\_\+timestamp\+\_\+fn (
+\begin{DoxyParamCaption}
+\item[{{\bf Pm\+Internal} $\ast$}]{midi, }
+\item[{{\bf Pm\+Timestamp}}]{timestamp}
+\end{DoxyParamCaption}
+)}\hypertarget{portmidi_8c_a36fcdf715926bc285b87c92005c04523}{}\label{portmidi_8c_a36fcdf715926bc285b87c92005c04523}
+
+
+Definition at line 202 of file portmidi.\+c.
+
+\index{portmidi.\+c@{portmidi.\+c}!pm\+\_\+find\+\_\+default\+\_\+device@{pm\+\_\+find\+\_\+default\+\_\+device}}
+\index{pm\+\_\+find\+\_\+default\+\_\+device@{pm\+\_\+find\+\_\+default\+\_\+device}!portmidi.\+c@{portmidi.\+c}}
+\subsubsection[{\texorpdfstring{pm\+\_\+find\+\_\+default\+\_\+device(char $\ast$pattern, int is\+\_\+input)}{pm_find_default_device(char *pattern, int is_input)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf int} pm\+\_\+find\+\_\+default\+\_\+device (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{pattern, }
+\item[{{\bf int}}]{is\+\_\+input}
+\end{DoxyParamCaption}
+)}\hypertarget{portmidi_8c_a7c21a21a0dbab33bf9f3bb9122879142}{}\label{portmidi_8c_a7c21a21a0dbab33bf9f3bb9122879142}
+
+
+Definition at line 142 of file portmidi.\+c.
+
+\index{portmidi.\+c@{portmidi.\+c}!Pm\+\_\+\+Get\+Error\+Text@{Pm\+\_\+\+Get\+Error\+Text}}
+\index{Pm\+\_\+\+Get\+Error\+Text@{Pm\+\_\+\+Get\+Error\+Text}!portmidi.\+c@{portmidi.\+c}}
+\subsubsection[{\texorpdfstring{Pm\+\_\+\+Get\+Error\+Text(\+Pm\+Error errnum)}{Pm_GetErrorText(PmError errnum)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf P\+M\+E\+X\+P\+O\+RT} {\bf const} char$\ast$ Pm\+\_\+\+Get\+Error\+Text (
+\begin{DoxyParamCaption}
+\item[{{\bf Pm\+Error}}]{errnum}
+\end{DoxyParamCaption}
+)}\hypertarget{portmidi_8c_af6f9fa86b2192d5df87a36762f43b1a4}{}\label{portmidi_8c_af6f9fa86b2192d5df87a36762f43b1a4}
+Translate portmidi error number into human readable message. These strings are constants (set at compile time) so client has no need to allocate storage 
+
+Definition at line 249 of file portmidi.\+c.
+
+\index{portmidi.\+c@{portmidi.\+c}!Pm\+\_\+\+Get\+Host\+Error\+Text@{Pm\+\_\+\+Get\+Host\+Error\+Text}}
+\index{Pm\+\_\+\+Get\+Host\+Error\+Text@{Pm\+\_\+\+Get\+Host\+Error\+Text}!portmidi.\+c@{portmidi.\+c}}
+\subsubsection[{\texorpdfstring{Pm\+\_\+\+Get\+Host\+Error\+Text(char $\ast$msg, unsigned int len)}{Pm_GetHostErrorText(char *msg, unsigned int len)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf P\+M\+E\+X\+P\+O\+RT} {\bf void} Pm\+\_\+\+Get\+Host\+Error\+Text (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{msg, }
+\item[{unsigned {\bf int}}]{len}
+\end{DoxyParamCaption}
+)}\hypertarget{portmidi_8c_ae5dd1f766c2d1f492ab4a9a4a6da651f}{}\label{portmidi_8c_ae5dd1f766c2d1f492ab4a9a4a6da651f}
+Translate portmidi host error into human readable message. These strings are computed at run time, so client has to allocate storage. After this routine executes, the host error is cleared. 
+
+Definition at line 295 of file portmidi.\+c.
+
+\index{portmidi.\+c@{portmidi.\+c}!Pm\+\_\+\+Has\+Host\+Error@{Pm\+\_\+\+Has\+Host\+Error}}
+\index{Pm\+\_\+\+Has\+Host\+Error@{Pm\+\_\+\+Has\+Host\+Error}!portmidi.\+c@{portmidi.\+c}}
+\subsubsection[{\texorpdfstring{Pm\+\_\+\+Has\+Host\+Error(\+Port\+Midi\+Stream $\ast$stream)}{Pm_HasHostError(PortMidiStream *stream)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf P\+M\+E\+X\+P\+O\+RT} {\bf int} Pm\+\_\+\+Has\+Host\+Error (
+\begin{DoxyParamCaption}
+\item[{{\bf Port\+Midi\+Stream} $\ast$}]{stream}
+\end{DoxyParamCaption}
+)}\hypertarget{portmidi_8c_aa631918a228994f19bed5dcbc398d59a}{}\label{portmidi_8c_aa631918a228994f19bed5dcbc398d59a}
+\hyperlink{struct_test}{Test} whether stream has a pending host error. Normally, the client finds out about errors through returned error codes, but some errors can occur asynchronously where the client does not explicitly call a function, and therefore cannot receive an error code. The client can test for a pending error using \hyperlink{portmidi_8h_aa631918a228994f19bed5dcbc398d59a}{Pm\+\_\+\+Has\+Host\+Error()}. If true, the error can be accessed and cleared by calling \hyperlink{portmidi_8h_af6f9fa86b2192d5df87a36762f43b1a4}{Pm\+\_\+\+Get\+Error\+Text()}. Errors are also cleared by calling other functions that can return errors, e.\+g. \hyperlink{group__grp__device_gabd50a31baaa494ad8b405f9ad54c966e}{Pm\+\_\+\+Open\+Input()}, \hyperlink{group__grp__device_ga134924cfa8badeecff3c5e1f22aee178}{Pm\+\_\+\+Open\+Output()}, \hyperlink{group__grp__io_ga3d59225bc890ede974f245ada3de6456}{Pm\+\_\+\+Read()}, \hyperlink{group__grp__io_ga82950117f003d28f9ca6536c00af985a}{Pm\+\_\+\+Write()}. The client does not need to call \hyperlink{portmidi_8h_aa631918a228994f19bed5dcbc398d59a}{Pm\+\_\+\+Has\+Host\+Error()}. Any pending error will be reported the next time the client performs an explicit function call on the stream, e.\+g. an input or output operation. Until the error is cleared, no new error codes will be obtained, even for a different stream. 
+
+Definition at line 310 of file portmidi.\+c.
+
+\index{portmidi.\+c@{portmidi.\+c}!Pm\+\_\+\+Initialize@{Pm\+\_\+\+Initialize}}
+\index{Pm\+\_\+\+Initialize@{Pm\+\_\+\+Initialize}!portmidi.\+c@{portmidi.\+c}}
+\subsubsection[{\texorpdfstring{Pm\+\_\+\+Initialize(void)}{Pm_Initialize(void)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf P\+M\+E\+X\+P\+O\+RT} {\bf Pm\+Error} Pm\+\_\+\+Initialize (
+\begin{DoxyParamCaption}
+\item[{{\bf void}}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{portmidi_8c_a5e9d0c116061f0cc25fb789fc393b417}{}\label{portmidi_8c_a5e9d0c116061f0cc25fb789fc393b417}
+\hyperlink{portmidi_8h_a5e9d0c116061f0cc25fb789fc393b417}{Pm\+\_\+\+Initialize()} is the library initialisation function -\/ call this before using the library. 
+
+Definition at line 326 of file portmidi.\+c.
+
+\index{portmidi.\+c@{portmidi.\+c}!pm\+\_\+read\+\_\+bytes@{pm\+\_\+read\+\_\+bytes}}
+\index{pm\+\_\+read\+\_\+bytes@{pm\+\_\+read\+\_\+bytes}!portmidi.\+c@{portmidi.\+c}}
+\subsubsection[{\texorpdfstring{pm\+\_\+read\+\_\+bytes(\+Pm\+Internal $\ast$midi, const unsigned char $\ast$data, int len, Pm\+Timestamp timestamp)}{pm_read_bytes(PmInternal *midi, const unsigned char *data, int len, PmTimestamp timestamp)}}]{\setlength{\rightskip}{0pt plus 5cm}unsigned {\bf int} pm\+\_\+read\+\_\+bytes (
+\begin{DoxyParamCaption}
+\item[{{\bf Pm\+Internal} $\ast$}]{midi, }
+\item[{{\bf const} unsigned char $\ast$}]{data, }
+\item[{{\bf int}}]{len, }
+\item[{{\bf Pm\+Timestamp}}]{timestamp}
+\end{DoxyParamCaption}
+)}\hypertarget{portmidi_8c_a42d9f2529a0dedc5cbcaca8d3025a005}{}\label{portmidi_8c_a42d9f2529a0dedc5cbcaca8d3025a005}
+
+
+Definition at line 1055 of file portmidi.\+c.
+
+\index{portmidi.\+c@{portmidi.\+c}!pm\+\_\+read\+\_\+short@{pm\+\_\+read\+\_\+short}}
+\index{pm\+\_\+read\+\_\+short@{pm\+\_\+read\+\_\+short}!portmidi.\+c@{portmidi.\+c}}
+\subsubsection[{\texorpdfstring{pm\+\_\+read\+\_\+short(\+Pm\+Internal $\ast$midi, Pm\+Event $\ast$event)}{pm_read_short(PmInternal *midi, PmEvent *event)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} pm\+\_\+read\+\_\+short (
+\begin{DoxyParamCaption}
+\item[{{\bf Pm\+Internal} $\ast$}]{midi, }
+\item[{{\bf Pm\+Event} $\ast$}]{event}
+\end{DoxyParamCaption}
+)}\hypertarget{portmidi_8c_a11a153e33a42b3f20df33394ce241005}{}\label{portmidi_8c_a11a153e33a42b3f20df33394ce241005}
+
+
+Definition at line 1015 of file portmidi.\+c.
+
+\index{portmidi.\+c@{portmidi.\+c}!pm\+\_\+success\+\_\+fn@{pm\+\_\+success\+\_\+fn}}
+\index{pm\+\_\+success\+\_\+fn@{pm\+\_\+success\+\_\+fn}!portmidi.\+c@{portmidi.\+c}}
+\subsubsection[{\texorpdfstring{pm\+\_\+success\+\_\+fn(\+Pm\+Internal $\ast$midi)}{pm_success_fn(PmInternal *midi)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Pm\+Error} pm\+\_\+success\+\_\+fn (
+\begin{DoxyParamCaption}
+\item[{{\bf Pm\+Internal} $\ast$}]{midi}
+\end{DoxyParamCaption}
+)}\hypertarget{portmidi_8c_afe35490233517557ab6ce2a63008c7f9}{}\label{portmidi_8c_afe35490233517557ab6ce2a63008c7f9}
+
+
+Definition at line 192 of file portmidi.\+c.
+
+\index{portmidi.\+c@{portmidi.\+c}!Pm\+\_\+\+Terminate@{Pm\+\_\+\+Terminate}}
+\index{Pm\+\_\+\+Terminate@{Pm\+\_\+\+Terminate}!portmidi.\+c@{portmidi.\+c}}
+\subsubsection[{\texorpdfstring{Pm\+\_\+\+Terminate(void)}{Pm_Terminate(void)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf P\+M\+E\+X\+P\+O\+RT} {\bf Pm\+Error} Pm\+\_\+\+Terminate (
+\begin{DoxyParamCaption}
+\item[{{\bf void}}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{portmidi_8c_a6c5dd5cd3657ac1cdab6bc5f3063193e}{}\label{portmidi_8c_a6c5dd5cd3657ac1cdab6bc5f3063193e}
+\hyperlink{portmidi_8h_a6c5dd5cd3657ac1cdab6bc5f3063193e}{Pm\+\_\+\+Terminate()} is the library termination function -\/ call this after using the library. 
+
+Definition at line 337 of file portmidi.\+c.
+
+
+
+\subsection{Variable Documentation}
+\index{portmidi.\+c@{portmidi.\+c}!descriptors@{descriptors}}
+\index{descriptors@{descriptors}!portmidi.\+c@{portmidi.\+c}}
+\subsubsection[{\texorpdfstring{descriptors}{descriptors}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf descriptor\+\_\+type} descriptors = {\bf N\+U\+LL}}\hypertarget{portmidi_8c_a8a86f0e79d5794e79c94c3f380a7088c}{}\label{portmidi_8c_a8a86f0e79d5794e79c94c3f380a7088c}
+
+
+Definition at line 91 of file portmidi.\+c.
+
+\index{portmidi.\+c@{portmidi.\+c}!pm\+\_\+descriptor\+\_\+index@{pm\+\_\+descriptor\+\_\+index}}
+\index{pm\+\_\+descriptor\+\_\+index@{pm\+\_\+descriptor\+\_\+index}!portmidi.\+c@{portmidi.\+c}}
+\subsubsection[{\texorpdfstring{pm\+\_\+descriptor\+\_\+index}{pm_descriptor_index}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf int} pm\+\_\+descriptor\+\_\+index = 0}\hypertarget{portmidi_8c_abf37b57cc544c04b6d27cf33a02b473f}{}\label{portmidi_8c_abf37b57cc544c04b6d27cf33a02b473f}
+
+
+Definition at line 90 of file portmidi.\+c.
+
+\index{portmidi.\+c@{portmidi.\+c}!pm\+\_\+descriptor\+\_\+max@{pm\+\_\+descriptor\+\_\+max}}
+\index{pm\+\_\+descriptor\+\_\+max@{pm\+\_\+descriptor\+\_\+max}!portmidi.\+c@{portmidi.\+c}}
+\subsubsection[{\texorpdfstring{pm\+\_\+descriptor\+\_\+max}{pm_descriptor_max}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf int} pm\+\_\+descriptor\+\_\+max = 0}\hypertarget{portmidi_8c_a9ffc95d4de3ed10d1efcac1d79e39f11}{}\label{portmidi_8c_a9ffc95d4de3ed10d1efcac1d79e39f11}
+
+
+Definition at line 89 of file portmidi.\+c.
+
+\index{portmidi.\+c@{portmidi.\+c}!pm\+\_\+hosterror@{pm\+\_\+hosterror}}
+\index{pm\+\_\+hosterror@{pm\+\_\+hosterror}!portmidi.\+c@{portmidi.\+c}}
+\subsubsection[{\texorpdfstring{pm\+\_\+hosterror}{pm_hosterror}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf int} pm\+\_\+hosterror}\hypertarget{portmidi_8c_af455cd83ef19eb07a7996c38dd806ee4}{}\label{portmidi_8c_af455cd83ef19eb07a7996c38dd806ee4}
+
+
+Definition at line 44 of file portmidi.\+c.
+
+\index{portmidi.\+c@{portmidi.\+c}!pm\+\_\+hosterror\+\_\+text@{pm\+\_\+hosterror\+\_\+text}}
+\index{pm\+\_\+hosterror\+\_\+text@{pm\+\_\+hosterror\+\_\+text}!portmidi.\+c@{portmidi.\+c}}
+\subsubsection[{\texorpdfstring{pm\+\_\+hosterror\+\_\+text}{pm_hosterror_text}}]{\setlength{\rightskip}{0pt plus 5cm}char pm\+\_\+hosterror\+\_\+text\mbox{[}{\bf P\+M\+\_\+\+H\+O\+S\+T\+\_\+\+E\+R\+R\+O\+R\+\_\+\+M\+S\+G\+\_\+\+L\+EN}\mbox{]}}\hypertarget{portmidi_8c_ac24a8881f0ef8c3a944349bee479cf05}{}\label{portmidi_8c_ac24a8881f0ef8c3a944349bee479cf05}
+
+
+Definition at line 45 of file portmidi.\+c.
+
+\index{portmidi.\+c@{portmidi.\+c}!pm\+\_\+initialized@{pm\+\_\+initialized}}
+\index{pm\+\_\+initialized@{pm\+\_\+initialized}!portmidi.\+c@{portmidi.\+c}}
+\subsubsection[{\texorpdfstring{pm\+\_\+initialized}{pm_initialized}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf int} pm\+\_\+initialized = {\bf F\+A\+L\+SE}}\hypertarget{portmidi_8c_ad503ee62c76e6fe2beef957f0fe53488}{}\label{portmidi_8c_ad503ee62c76e6fe2beef957f0fe53488}
+
+
+Definition at line 42 of file portmidi.\+c.
+
+\index{portmidi.\+c@{portmidi.\+c}!pm\+\_\+none\+\_\+dictionary@{pm\+\_\+none\+\_\+dictionary}}
+\index{pm\+\_\+none\+\_\+dictionary@{pm\+\_\+none\+\_\+dictionary}!portmidi.\+c@{portmidi.\+c}}
+\subsubsection[{\texorpdfstring{pm\+\_\+none\+\_\+dictionary}{pm_none_dictionary}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf pm\+\_\+fns\+\_\+node} pm\+\_\+none\+\_\+dictionary}\hypertarget{portmidi_8c_a8b038edc211455d61f88e5f9c7773496}{}\label{portmidi_8c_a8b038edc211455d61f88e5f9c7773496}
+{\bfseries Initial value\+:}
+\begin{DoxyCode}
+= \{
+    \hyperlink{portmidi_8c_a841d04eb4d4efa3eebfc4e718cf9faa3}{none\_write\_short},
+    \hyperlink{pminternal_8h_ac44b30c88f5076903c62f9e8fc8c51ec}{none\_sysex},
+    \hyperlink{pminternal_8h_ac44b30c88f5076903c62f9e8fc8c51ec}{none\_sysex},
+    \hyperlink{portmidi_8c_a2181992bfdc1d719bdd96353763965d7}{none\_write\_byte},
+    \hyperlink{portmidi_8c_a841d04eb4d4efa3eebfc4e718cf9faa3}{none\_write\_short},
+    \hyperlink{pminternal_8h_a1381cf29da7767a1db6c268b7941a6f8}{none\_write\_flush},
+    \hyperlink{portmidi_8c_a9128319a3c3cb967bdde782ae9c5c4ba}{none\_synchronize},
+    none\_open,
+    \hyperlink{portmidi_8c_a366d307d9adc16df4ed72c0c96d56bd0}{none\_abort}, 
+    \hyperlink{portmidi_8c_aee20ca803d94f91361fe009179095c90}{none\_close},
+    \hyperlink{pminternal_8h_a7b782f381e349f7b220b925bcdf9c9c1}{none\_poll},
+    none\_has\_host\_error,
+    none\_get\_host\_error 
+\}
+\end{DoxyCode}
+
+
+Definition at line 232 of file portmidi.\+c.
+

@@ -1,0 +1,400 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/lib-src/libsndfile/tests/utils.c" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/lib-src/libsndfile/tests/utils.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include 'sfconfig\&.h'\fP
+.br
+\fC#include <stdio\&.h>\fP
+.br
+\fC#include <stdlib\&.h>\fP
+.br
+\fC#include <inttypes\&.h>\fP
+.br
+\fC#include <sf_unistd\&.h>\fP
+.br
+\fC#include <errno\&.h>\fP
+.br
+\fC#include <string\&.h>\fP
+.br
+\fC#include <ctype\&.h>\fP
+.br
+\fC#include <math\&.h>\fP
+.br
+\fC#include <fcntl\&.h>\fP
+.br
+\fC#include <sys/stat\&.h>\fP
+.br
+\fC#include <sndfile\&.h>\fP
+.br
+\fC#include 'utils\&.h'\fP
+.br
+
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBM_PI\fP   3\&.14159265358979323846264338"
+.br
+.ti -1c
+.RI "#define \fBLOG_BUFFER_SIZE\fP   2048"
+.br
+.ti -1c
+.RI "#define \fBO_BINARY\fP   0"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBvoid\fP \fBgen_windowed_sine_float\fP (float *\fBdata\fP, \fBint\fP \fBlen\fP, double maximum)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBgen_windowed_sine_double\fP (double *\fBdata\fP, \fBint\fP \fBlen\fP, double maximum)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBcreate_short_sndfile\fP (\fBconst\fP char *\fBfilename\fP, \fBint\fP \fBformat\fP, \fBint\fP channels)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBcheck_file_hash_or_die\fP (\fBconst\fP char *\fBfilename\fP, \fBuint64_t\fP target_hash, \fBint\fP line_num)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBprint_test_name\fP (\fBconst\fP char *\fBtest\fP, \fBconst\fP char *\fBfilename\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBdump_data_to_file\fP (\fBconst\fP char *\fBfilename\fP, \fBconst\fP \fBvoid\fP *\fBdata\fP, unsigned \fBint\fP datalen)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBoct_save_short\fP (\fBconst\fP short *\fBa\fP, \fBconst\fP short *\fBb\fP, \fBint\fP \fBlen\fP)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBoct_save_int\fP (\fBconst\fP \fBint\fP *\fBa\fP, \fBconst\fP \fBint\fP *\fBb\fP, \fBint\fP \fBlen\fP)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBoct_save_float\fP (\fBconst\fP float *\fBa\fP, \fBconst\fP float *\fBb\fP, \fBint\fP \fBlen\fP)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBoct_save_double\fP (\fBconst\fP double *\fBa\fP, \fBconst\fP double *\fBb\fP, \fBint\fP \fBlen\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBcheck_log_buffer_or_die\fP (\fBSNDFILE\fP *file, \fBint\fP line_num)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBstring_in_log_buffer\fP (\fBSNDFILE\fP *file, \fBconst\fP char *\fBs\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBhexdump_file\fP (\fBconst\fP char *\fBfilename\fP, \fBsf_count_t\fP \fBoffset\fP, \fBsf_count_t\fP \fBlength\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBdump_log_buffer\fP (\fBSNDFILE\fP *file)"
+.br
+.ti -1c
+.RI "\fBSNDFILE\fP * \fBtest_open_file_or_die\fP (\fBconst\fP char *\fBfilename\fP, \fBint\fP mode, \fBSF_INFO\fP *\fBsfinfo\fP, \fBint\fP allow_fd, \fBint\fP line_num)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBtest_read_write_position_or_die\fP (\fBSNDFILE\fP *file, \fBint\fP line_num, \fBint\fP pass, \fBsf_count_t\fP read_pos, \fBsf_count_t\fP write_pos)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBtest_seek_or_die\fP (\fBSNDFILE\fP *file, \fBsf_count_t\fP \fBoffset\fP, \fBint\fP whence, \fBsf_count_t\fP new_pos, \fBint\fP channels, \fBint\fP line_num)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBtest_read_short_or_die\fP (\fBSNDFILE\fP *file, \fBint\fP pass, short *\fBtest\fP, \fBsf_count_t\fP items, \fBint\fP line_num)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBtest_read_int_or_die\fP (\fBSNDFILE\fP *file, \fBint\fP pass, \fBint\fP *\fBtest\fP, \fBsf_count_t\fP items, \fBint\fP line_num)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBtest_read_float_or_die\fP (\fBSNDFILE\fP *file, \fBint\fP pass, float *\fBtest\fP, \fBsf_count_t\fP items, \fBint\fP line_num)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBtest_read_double_or_die\fP (\fBSNDFILE\fP *file, \fBint\fP pass, double *\fBtest\fP, \fBsf_count_t\fP items, \fBint\fP line_num)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBtest_readf_short_or_die\fP (\fBSNDFILE\fP *file, \fBint\fP pass, short *\fBtest\fP, \fBsf_count_t\fP frames, \fBint\fP line_num)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBtest_readf_int_or_die\fP (\fBSNDFILE\fP *file, \fBint\fP pass, \fBint\fP *\fBtest\fP, \fBsf_count_t\fP frames, \fBint\fP line_num)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBtest_readf_float_or_die\fP (\fBSNDFILE\fP *file, \fBint\fP pass, float *\fBtest\fP, \fBsf_count_t\fP frames, \fBint\fP line_num)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBtest_readf_double_or_die\fP (\fBSNDFILE\fP *file, \fBint\fP pass, double *\fBtest\fP, \fBsf_count_t\fP frames, \fBint\fP line_num)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBtest_read_raw_or_die\fP (\fBSNDFILE\fP *file, \fBint\fP pass, \fBvoid\fP *\fBtest\fP, \fBsf_count_t\fP items, \fBint\fP line_num)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBtest_write_short_or_die\fP (\fBSNDFILE\fP *file, \fBint\fP pass, \fBconst\fP short *\fBtest\fP, \fBsf_count_t\fP items, \fBint\fP line_num)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBtest_write_int_or_die\fP (\fBSNDFILE\fP *file, \fBint\fP pass, \fBconst\fP \fBint\fP *\fBtest\fP, \fBsf_count_t\fP items, \fBint\fP line_num)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBtest_write_float_or_die\fP (\fBSNDFILE\fP *file, \fBint\fP pass, \fBconst\fP float *\fBtest\fP, \fBsf_count_t\fP items, \fBint\fP line_num)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBtest_write_double_or_die\fP (\fBSNDFILE\fP *file, \fBint\fP pass, \fBconst\fP double *\fBtest\fP, \fBsf_count_t\fP items, \fBint\fP line_num)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBtest_writef_short_or_die\fP (\fBSNDFILE\fP *file, \fBint\fP pass, \fBconst\fP short *\fBtest\fP, \fBsf_count_t\fP frames, \fBint\fP line_num)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBtest_writef_int_or_die\fP (\fBSNDFILE\fP *file, \fBint\fP pass, \fBconst\fP \fBint\fP *\fBtest\fP, \fBsf_count_t\fP frames, \fBint\fP line_num)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBtest_writef_float_or_die\fP (\fBSNDFILE\fP *file, \fBint\fP pass, \fBconst\fP float *\fBtest\fP, \fBsf_count_t\fP frames, \fBint\fP line_num)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBtest_writef_double_or_die\fP (\fBSNDFILE\fP *file, \fBint\fP pass, \fBconst\fP double *\fBtest\fP, \fBsf_count_t\fP frames, \fBint\fP line_num)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBtest_write_raw_or_die\fP (\fBSNDFILE\fP *file, \fBint\fP pass, \fBconst\fP \fBvoid\fP *\fBtest\fP, \fBsf_count_t\fP items, \fBint\fP line_num)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBcompare_short_or_die\fP (\fBconst\fP short *left, \fBconst\fP short *right, unsigned \fBcount\fP, \fBint\fP line_num)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBcompare_int_or_die\fP (\fBconst\fP \fBint\fP *left, \fBconst\fP \fBint\fP *right, unsigned \fBcount\fP, \fBint\fP line_num)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBcompare_float_or_die\fP (\fBconst\fP float *left, \fBconst\fP float *right, unsigned \fBcount\fP, \fBint\fP line_num)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBcompare_double_or_die\fP (\fBconst\fP double *left, \fBconst\fP double *right, unsigned \fBcount\fP, \fBint\fP line_num)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBdelete_file\fP (\fBint\fP \fBformat\fP, \fBconst\fP char *\fBfilename\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBcount_open_files\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBincrement_open_file_count\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBcheck_open_file_count_or_die\fP (\fBint\fP \fBlineno\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBwrite_mono_file\fP (\fBconst\fP char *\fBfilename\fP, \fBint\fP \fBformat\fP, \fBint\fP srate, float *\fBoutput\fP, \fBint\fP \fBlen\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBgen_lowpass_noise_float\fP (float *\fBdata\fP, \fBint\fP \fBlen\fP)"
+.br
+.ti -1c
+.RI "\fBsf_count_t\fP \fBfile_length\fP (\fBconst\fP char *fname)"
+.br
+.ti -1c
+.RI "\fBsf_count_t\fP \fBfile_length_fd\fP (\fBint\fP fd)"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define LOG_BUFFER_SIZE   2048"
+
+.PP
+Definition at line 57 of file utils\&.c\&.
+.SS "#define M_PI   3\&.14159265358979323846264338"
+
+.PP
+Definition at line 54 of file utils\&.c\&.
+.SS "#define O_BINARY   0"
+
+.PP
+Definition at line 65 of file utils\&.c\&.
+.SH "Function Documentation"
+.PP 
+.SS "\fBvoid\fP check_file_hash_or_die (\fBconst\fP char * filename, \fBuint64_t\fP target_hash, \fBint\fP line_num)"
+
+.PP
+Definition at line 137 of file utils\&.c\&.
+.SS "\fBvoid\fP check_log_buffer_or_die (\fBSNDFILE\fP * file, \fBint\fP line_num)"
+
+.PP
+Definition at line 339 of file utils\&.c\&.
+.SS "\fBvoid\fP check_open_file_count_or_die (\fBint\fP lineno)"
+
+.PP
+Definition at line 1069 of file utils\&.c\&.
+.SS "\fBvoid\fP compare_double_or_die (\fBconst\fP double * left, \fBconst\fP double * right, unsigned count, \fBint\fP line_num)"
+
+.PP
+Definition at line 997 of file utils\&.c\&.
+.SS "\fBvoid\fP compare_float_or_die (\fBconst\fP float * left, \fBconst\fP float * right, unsigned count, \fBint\fP line_num)"
+
+.PP
+Definition at line 984 of file utils\&.c\&.
+.SS "\fBvoid\fP compare_int_or_die (\fBconst\fP \fBint\fP * left, \fBconst\fP \fBint\fP * right, unsigned count, \fBint\fP line_num)"
+
+.PP
+Definition at line 971 of file utils\&.c\&.
+.SS "\fBvoid\fP compare_short_or_die (\fBconst\fP short * left, \fBconst\fP short * right, unsigned count, \fBint\fP line_num)"
+
+.PP
+Definition at line 958 of file utils\&.c\&.
+.SS "\fBvoid\fP count_open_files (\fBvoid\fP)"
+
+.PP
+Definition at line 1044 of file utils\&.c\&.
+.SS "\fBvoid\fP create_short_sndfile (\fBconst\fP char * filename, \fBint\fP format, \fBint\fP channels)"
+
+.PP
+Definition at line 117 of file utils\&.c\&.
+.SS "\fBvoid\fP delete_file (\fBint\fP format, \fBconst\fP char * filename)"
+
+.PP
+Definition at line 1013 of file utils\&.c\&.
+.SS "\fBvoid\fP dump_data_to_file (\fBconst\fP char * filename, \fBconst\fP \fBvoid\fP * data, unsigned \fBint\fP datalen)"
+
+.PP
+Definition at line 198 of file utils\&.c\&.
+.SS "\fBvoid\fP dump_log_buffer (\fBSNDFILE\fP * file)"
+
+.PP
+Definition at line 449 of file utils\&.c\&.
+.SS "\fBsf_count_t\fP file_length (\fBconst\fP char * fname)"
+
+.PP
+Definition at line 1141 of file utils\&.c\&.
+.SS "\fBsf_count_t\fP file_length_fd (\fBint\fP fd)"
+
+.PP
+Definition at line 1151 of file utils\&.c\&.
+.SS "\fBvoid\fP gen_lowpass_noise_float (float * data, \fBint\fP len)"
+
+.PP
+Definition at line 1114 of file utils\&.c\&.
+.SS "\fBvoid\fP gen_windowed_sine_double (double * data, \fBint\fP len, double maximum)"
+
+.PP
+Definition at line 93 of file utils\&.c\&.
+.SS "\fBvoid\fP gen_windowed_sine_float (float * data, \fBint\fP len, double maximum)"
+
+.PP
+Definition at line 70 of file utils\&.c\&.
+.SS "\fBvoid\fP hexdump_file (\fBconst\fP char * filename, \fBsf_count_t\fP offset, \fBsf_count_t\fP length)"
+
+.PP
+Definition at line 397 of file utils\&.c\&.
+.SS "\fBvoid\fP increment_open_file_count (\fBvoid\fP)"
+
+.PP
+Definition at line 1064 of file utils\&.c\&.
+.SS "\fBint\fP oct_save_double (\fBconst\fP double * a, \fBconst\fP double * b, \fBint\fP len)"
+
+.PP
+Definition at line 308 of file utils\&.c\&.
+.SS "\fBint\fP oct_save_float (\fBconst\fP float * a, \fBconst\fP float * b, \fBint\fP len)"
+
+.PP
+Definition at line 279 of file utils\&.c\&.
+.SS "\fBint\fP oct_save_int (\fBconst\fP \fBint\fP * a, \fBconst\fP \fBint\fP * b, \fBint\fP len)"
+
+.PP
+Definition at line 250 of file utils\&.c\&.
+.SS "\fBint\fP oct_save_short (\fBconst\fP short * a, \fBconst\fP short * b, \fBint\fP len)"
+
+.PP
+Definition at line 221 of file utils\&.c\&.
+.SS "\fBvoid\fP print_test_name (\fBconst\fP char * test, \fBconst\fP char * filename)"
+
+.PP
+Definition at line 173 of file utils\&.c\&.
+.SS "\fBint\fP string_in_log_buffer (\fBSNDFILE\fP * file, \fBconst\fP char * s)"
+
+.PP
+Definition at line 378 of file utils\&.c\&.
+.SS "\fBSNDFILE\fP* test_open_file_or_die (\fBconst\fP char * filename, \fBint\fP mode, \fBSF_INFO\fP * sfinfo, \fBint\fP allow_fd, \fBint\fP line_num)"
+
+.PP
+Definition at line 467 of file utils\&.c\&.
+.SS "\fBvoid\fP test_read_double_or_die (\fBSNDFILE\fP * file, \fBint\fP pass, double * test, \fBsf_count_t\fP items, \fBint\fP line_num)"
+
+.PP
+Definition at line 681 of file utils\&.c\&.
+.SS "\fBvoid\fP test_read_float_or_die (\fBSNDFILE\fP * file, \fBint\fP pass, float * test, \fBsf_count_t\fP items, \fBint\fP line_num)"
+
+.PP
+Definition at line 663 of file utils\&.c\&.
+.SS "\fBvoid\fP test_read_int_or_die (\fBSNDFILE\fP * file, \fBint\fP pass, \fBint\fP * test, \fBsf_count_t\fP items, \fBint\fP line_num)"
+
+.PP
+Definition at line 645 of file utils\&.c\&.
+.SS "\fBvoid\fP test_read_raw_or_die (\fBSNDFILE\fP * file, \fBint\fP pass, \fBvoid\fP * test, \fBsf_count_t\fP items, \fBint\fP line_num)"
+
+.PP
+Definition at line 773 of file utils\&.c\&.
+.SS "\fBvoid\fP test_read_short_or_die (\fBSNDFILE\fP * file, \fBint\fP pass, short * test, \fBsf_count_t\fP items, \fBint\fP line_num)"
+
+.PP
+Definition at line 627 of file utils\&.c\&.
+.SS "\fBvoid\fP test_read_write_position_or_die (\fBSNDFILE\fP * file, \fBint\fP line_num, \fBint\fP pass, \fBsf_count_t\fP read_pos, \fBsf_count_t\fP write_pos)"
+
+.PP
+Definition at line 545 of file utils\&.c\&.
+.SS "\fBvoid\fP test_readf_double_or_die (\fBSNDFILE\fP * file, \fBint\fP pass, double * test, \fBsf_count_t\fP frames, \fBint\fP line_num)"
+
+.PP
+Definition at line 754 of file utils\&.c\&.
+.SS "\fBvoid\fP test_readf_float_or_die (\fBSNDFILE\fP * file, \fBint\fP pass, float * test, \fBsf_count_t\fP frames, \fBint\fP line_num)"
+
+.PP
+Definition at line 736 of file utils\&.c\&.
+.SS "\fBvoid\fP test_readf_int_or_die (\fBSNDFILE\fP * file, \fBint\fP pass, \fBint\fP * test, \fBsf_count_t\fP frames, \fBint\fP line_num)"
+
+.PP
+Definition at line 718 of file utils\&.c\&.
+.SS "\fBvoid\fP test_readf_short_or_die (\fBSNDFILE\fP * file, \fBint\fP pass, short * test, \fBsf_count_t\fP frames, \fBint\fP line_num)"
+
+.PP
+Definition at line 700 of file utils\&.c\&.
+.SS "\fBvoid\fP test_seek_or_die (\fBSNDFILE\fP * file, \fBsf_count_t\fP offset, \fBint\fP whence, \fBsf_count_t\fP new_pos, \fBint\fP channels, \fBint\fP line_num)"
+
+.PP
+Definition at line 571 of file utils\&.c\&.
+.SS "\fBvoid\fP test_write_double_or_die (\fBSNDFILE\fP * file, \fBint\fP pass, \fBconst\fP double * test, \fBsf_count_t\fP items, \fBint\fP line_num)"
+
+.PP
+Definition at line 847 of file utils\&.c\&.
+.SS "\fBvoid\fP test_write_float_or_die (\fBSNDFILE\fP * file, \fBint\fP pass, \fBconst\fP float * test, \fBsf_count_t\fP items, \fBint\fP line_num)"
+
+.PP
+Definition at line 829 of file utils\&.c\&.
+.SS "\fBvoid\fP test_write_int_or_die (\fBSNDFILE\fP * file, \fBint\fP pass, \fBconst\fP \fBint\fP * test, \fBsf_count_t\fP items, \fBint\fP line_num)"
+
+.PP
+Definition at line 811 of file utils\&.c\&.
+.SS "\fBvoid\fP test_write_raw_or_die (\fBSNDFILE\fP * file, \fBint\fP pass, \fBconst\fP \fBvoid\fP * test, \fBsf_count_t\fP items, \fBint\fP line_num)"
+
+.PP
+Definition at line 939 of file utils\&.c\&.
+.SS "\fBvoid\fP test_write_short_or_die (\fBSNDFILE\fP * file, \fBint\fP pass, \fBconst\fP short * test, \fBsf_count_t\fP items, \fBint\fP line_num)"
+
+.PP
+Definition at line 793 of file utils\&.c\&.
+.SS "\fBvoid\fP test_writef_double_or_die (\fBSNDFILE\fP * file, \fBint\fP pass, \fBconst\fP double * test, \fBsf_count_t\fP frames, \fBint\fP line_num)"
+
+.PP
+Definition at line 920 of file utils\&.c\&.
+.SS "\fBvoid\fP test_writef_float_or_die (\fBSNDFILE\fP * file, \fBint\fP pass, \fBconst\fP float * test, \fBsf_count_t\fP frames, \fBint\fP line_num)"
+
+.PP
+Definition at line 902 of file utils\&.c\&.
+.SS "\fBvoid\fP test_writef_int_or_die (\fBSNDFILE\fP * file, \fBint\fP pass, \fBconst\fP \fBint\fP * test, \fBsf_count_t\fP frames, \fBint\fP line_num)"
+
+.PP
+Definition at line 884 of file utils\&.c\&.
+.SS "\fBvoid\fP test_writef_short_or_die (\fBSNDFILE\fP * file, \fBint\fP pass, \fBconst\fP short * test, \fBsf_count_t\fP frames, \fBint\fP line_num)"
+
+.PP
+Definition at line 866 of file utils\&.c\&.
+.SS "\fBvoid\fP write_mono_file (\fBconst\fP char * filename, \fBint\fP format, \fBint\fP srate, float * output, \fBint\fP len)"
+
+.PP
+Definition at line 1093 of file utils\&.c\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

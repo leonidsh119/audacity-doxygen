@@ -1,0 +1,196 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/lib-src/libsoxr/src/pffft.c" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/lib-src/libsoxr/src/pffft.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include 'pffft\&.h'\fP
+.br
+\fC#include 'simd\&.h'\fP
+.br
+\fC#include <string\&.h>\fP
+.br
+\fC#include <stdlib\&.h>\fP
+.br
+\fC#include <math\&.h>\fP
+.br
+\fC#include <assert\&.h>\fP
+.br
+
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "struct \fBPFFFT_Setup\fP"
+.br
+.in -1c
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBpffft_aligned_free\fP   \fB_soxr_simd_aligned_free\fP"
+.br
+.ti -1c
+.RI "#define \fBpffft_aligned_malloc\fP   \fB_soxr_simd_aligned_malloc\fP"
+.br
+.ti -1c
+.RI "#define \fBpffft_aligned_calloc\fP   \fB_soxr_simd_aligned_calloc\fP"
+.br
+.ti -1c
+.RI "#define \fBPFFFT_SIMD_DISABLE\fP   /* fallback to scalar code */"
+.br
+.ti -1c
+.RI "#define \fBSIMD_SZ\fP   1"
+.br
+.ti -1c
+.RI "#define \fBVZERO\fP()   0\&.\fBf\fP"
+.br
+.ti -1c
+.RI "#define \fBVMUL\fP(\fBa\fP,  \fBb\fP)   ((\fBa\fP)*(\fBb\fP))"
+.br
+.ti -1c
+.RI "#define \fBVADD\fP(\fBa\fP,  \fBb\fP)   ((\fBa\fP)+(\fBb\fP))"
+.br
+.ti -1c
+.RI "#define \fBVMADD\fP(\fBa\fP,  \fBb\fP,  \fBc\fP)   ((\fBa\fP)*(\fBb\fP)+(\fBc\fP))"
+.br
+.ti -1c
+.RI "#define \fBVSUB\fP(\fBa\fP,  \fBb\fP)   ((\fBa\fP)\-(\fBb\fP))"
+.br
+.ti -1c
+.RI "#define \fBLD_PS1\fP(\fBp\fP)   (\fBp\fP)"
+.br
+.ti -1c
+.RI "#define \fBVALIGNED\fP(ptr)   ((((long)(ptr)) & 0x3) == 0)"
+.br
+.ti -1c
+.RI "#define \fBVCPLXMUL\fP(ar,  ai,  br,  bi)   { \fBv4sf\fP tmp; tmp=\fBVMUL\fP(ar,bi); ar=\fBVMUL\fP(ar,br); ar=\fBVSUB\fP(ar,\fBVMUL\fP(ai,bi)); ai=\fBVMUL\fP(ai,br); ai=\fBVADD\fP(ai,tmp); }"
+.br
+.ti -1c
+.RI "#define \fBVCPLXMULCONJ\fP(ar,  ai,  br,  bi)   { \fBv4sf\fP tmp; tmp=\fBVMUL\fP(ar,bi); ar=\fBVMUL\fP(ar,br); ar=\fBVADD\fP(ar,\fBVMUL\fP(ai,bi)); ai=\fBVMUL\fP(ai,br); ai=\fBVSUB\fP(ai,tmp); }"
+.br
+.ti -1c
+.RI "#define \fBsin\fP   sinf"
+.br
+.ti -1c
+.RI "#define \fBcos\fP   cosf"
+.br
+.ti -1c
+.RI "#define \fBpffft_zreorder_nosimd\fP   pffft_zreorder"
+.br
+.ti -1c
+.RI "#define \fBpffft_transform_internal_nosimd\fP   pffft_transform_internal"
+.br
+.ti -1c
+.RI "#define \fBpffft_zconvolve_nosimd\fP   pffft_zconvolve"
+.br
+.in -1c
+.SS "Typedefs"
+
+.in +1c
+.ti -1c
+.RI "typedef float \fBv4sf\fP"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBPFFFT_Setup\fP * \fBpffft_new_setup\fP (\fBint\fP \fBN\fP, \fBpffft_transform_t\fP transform)"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define cos   cosf"
+
+.PP
+Definition at line 263 of file pffft\&.c\&.
+.SS "#define LD_PS1(\fBp\fP)   (\fBp\fP)"
+
+.PP
+Definition at line 196 of file pffft\&.c\&.
+.SS "#define pffft_aligned_calloc   \fB_soxr_simd_aligned_calloc\fP"
+
+.PP
+Definition at line 70 of file pffft\&.c\&.
+.SS "#define pffft_aligned_free   \fB_soxr_simd_aligned_free\fP"
+
+.PP
+Definition at line 68 of file pffft\&.c\&.
+.SS "#define pffft_aligned_malloc   \fB_soxr_simd_aligned_malloc\fP"
+
+.PP
+Definition at line 69 of file pffft\&.c\&.
+.SS "#define PFFFT_SIMD_DISABLE   /* fallback to scalar code */"
+
+.PP
+Definition at line 183 of file pffft\&.c\&.
+.SS "#define pffft_transform_internal_nosimd   pffft_transform_internal"
+
+.PP
+Definition at line 1613 of file pffft\&.c\&.
+.SS "#define pffft_zconvolve_nosimd   pffft_zconvolve"
+
+.PP
+Definition at line 1693 of file pffft\&.c\&.
+.SS "#define pffft_zreorder_nosimd   pffft_zreorder"
+
+.PP
+Definition at line 1593 of file pffft\&.c\&.
+.SS "#define SIMD_SZ   1"
+
+.PP
+Definition at line 190 of file pffft\&.c\&.
+.SS "#define sin   sinf"
+PFFFT_SIMD_DISABLE 
+.PP
+Definition at line 262 of file pffft\&.c\&.
+.SS "#define VADD(\fBa\fP, \fBb\fP)   ((\fBa\fP)+(\fBb\fP))"
+
+.PP
+Definition at line 193 of file pffft\&.c\&.
+.SS "#define VALIGNED(ptr)   ((((long)(ptr)) & 0x3) == 0)"
+
+.PP
+Definition at line 197 of file pffft\&.c\&.
+.SS "#define VCPLXMUL(ar, ai, br, bi)   { \fBv4sf\fP tmp; tmp=\fBVMUL\fP(ar,bi); ar=\fBVMUL\fP(ar,br); ar=\fBVSUB\fP(ar,\fBVMUL\fP(ai,bi)); ai=\fBVMUL\fP(ai,br); ai=\fBVADD\fP(ai,tmp); }"
+
+.PP
+Definition at line 201 of file pffft\&.c\&.
+.SS "#define VCPLXMULCONJ(ar, ai, br, bi)   { \fBv4sf\fP tmp; tmp=\fBVMUL\fP(ar,bi); ar=\fBVMUL\fP(ar,br); ar=\fBVADD\fP(ar,\fBVMUL\fP(ai,bi)); ai=\fBVMUL\fP(ai,br); ai=\fBVSUB\fP(ai,tmp); }"
+
+.PP
+Definition at line 202 of file pffft\&.c\&.
+.SS "#define VMADD(\fBa\fP, \fBb\fP, \fBc\fP)   ((\fBa\fP)*(\fBb\fP)+(\fBc\fP))"
+
+.PP
+Definition at line 194 of file pffft\&.c\&.
+.SS "#define VMUL(\fBa\fP, \fBb\fP)   ((\fBa\fP)*(\fBb\fP))"
+
+.PP
+Definition at line 192 of file pffft\&.c\&.
+.SS "#define VSUB(\fBa\fP, \fBb\fP)   ((\fBa\fP)\-(\fBb\fP))"
+
+.PP
+Definition at line 195 of file pffft\&.c\&.
+.SS "#define VZERO()   0\&.\fBf\fP"
+
+.PP
+Definition at line 191 of file pffft\&.c\&.
+.SH "Typedef Documentation"
+.PP 
+.SS "typedef float \fBv4sf\fP"
+
+.PP
+Definition at line 189 of file pffft\&.c\&.
+.SH "Function Documentation"
+.PP 
+.SS "\fBPFFFT_Setup\fP* pffft_new_setup (\fBint\fP N, \fBpffft_transform_t\fP transform)"
+
+.PP
+Definition at line 948 of file pffft\&.c\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

@@ -1,0 +1,161 @@
+.TH "_LV2_Descriptor" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+_LV2_Descriptor \- 
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <lv2\&.h>\fP
+.SS "Public Attributes"
+
+.in +1c
+.ti -1c
+.RI "\fBconst\fP char * \fBURI\fP"
+.br
+.ti -1c
+.RI "\fBLV2_Handle\fP(* \fBinstantiate\fP )(\fBconst\fP struct \fB_LV2_Descriptor\fP *descriptor, double sample_rate, \fBconst\fP char *bundle_path, \fBconst\fP \fBLV2_Feature\fP *\fBconst\fP *features)"
+.br
+.ti -1c
+.RI "\fBvoid\fP(* \fBconnect_port\fP )(\fBLV2_Handle\fP instance, \fBuint32_t\fP port, \fBvoid\fP *data_location)"
+.br
+.ti -1c
+.RI "\fBvoid\fP(* \fBactivate\fP )(\fBLV2_Handle\fP instance)"
+.br
+.ti -1c
+.RI "\fBvoid\fP(* \fBrun\fP )(\fBLV2_Handle\fP instance, \fBuint32_t\fP sample_count)"
+.br
+.ti -1c
+.RI "\fBvoid\fP(* \fBdeactivate\fP )(\fBLV2_Handle\fP instance)"
+.br
+.ti -1c
+.RI "\fBvoid\fP(* \fBcleanup\fP )(\fBLV2_Handle\fP instance)"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBvoid\fP *(* \fBextension_data\fP )(\fBconst\fP char *\fBuri\fP)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Plugin Descriptor\&.
+.PP
+This structure provides the core functions necessary to instantiate and use a plugin\&. 
+.PP
+Definition at line 164 of file lv2\&.h\&.
+.SH "Member Data Documentation"
+.PP 
+.SS "\fBvoid\fP(* _LV2_Descriptor::activate) (\fBLV2_Handle\fP instance)"
+Initialise a plugin instance and activate it for use\&.
+.PP
+This is separated from \fBinstantiate()\fP to aid real-time support and so that hosts can reinitialise a plugin instance by calling \fBdeactivate()\fP and then \fBactivate()\fP\&. In this case the plugin instance MUST reset all state information dependent on the history of the plugin instance except for any data locations provided by \fBconnect_port()\fP\&. If there is nothing for \fBactivate()\fP to do then this field may be NULL\&.
+.PP
+When present, hosts MUST call this function once before \fBrun()\fP is called for the first time\&. This call SHOULD be made as close to the \fBrun()\fP call as possible and indicates to real-time plugins that they are now live, however plugins MUST NOT rely on a prompt call to \fBrun()\fP after \fBactivate()\fP\&.
+.PP
+The host MUST NOT call \fBactivate()\fP again until \fBdeactivate()\fP has been called first\&. If a host calls \fBactivate()\fP, it MUST call \fBdeactivate()\fP at some point in the future\&. Note that \fBconnect_port()\fP may be called before or after \fBactivate()\fP\&. 
+.PP
+Definition at line 266 of file lv2\&.h\&.
+.SS "\fBvoid\fP(* _LV2_Descriptor::cleanup) (\fBLV2_Handle\fP instance)"
+Clean up a plugin instance (counterpart to \fBinstantiate()\fP)\&.
+.PP
+Once an instance of a plugin has been finished with it must be deleted using this function\&. The instance handle passed ceases to be valid after this call\&.
+.PP
+If \fBactivate()\fP was called for a plugin instance then a corresponding call to \fBdeactivate()\fP MUST be made before \fBcleanup()\fP is called\&. Hosts MUST NOT call \fBcleanup()\fP unless \fBinstantiate()\fP was previously called\&. 
+.PP
+Definition at line 325 of file lv2\&.h\&.
+.SS "\fBvoid\fP(* _LV2_Descriptor::connect_port) (\fBLV2_Handle\fP instance, \fBuint32_t\fP port, \fBvoid\fP *data_location)"
+Connect a port on a plugin instance to a memory location\&.
+.PP
+Plugin writers should be aware that the host may elect to use the same buffer for more than one port and even use the same buffer for both input and output (see lv2:inPlaceBroken in lv2\&.ttl)\&.
+.PP
+If the plugin has the feature lv2:hardRTCapable then there are various things that the plugin MUST NOT do within the \fBconnect_port()\fP function; see lv2core\&.ttl for details\&.
+.PP
+\fBconnect_port()\fP MUST be called at least once for each port before \fBrun()\fP is called, unless that port is lv2:connectionOptional\&. The plugin must pay careful attention to the block size passed to \fBrun()\fP since the block allocated may only just be large enough to contain the data, and is not guaranteed to remain constant between \fBrun()\fP calls\&.
+.PP
+\fBconnect_port()\fP may be called more than once for a plugin instance to allow the host to change the buffers that the plugin is reading or writing\&. These calls may be made before or after \fBactivate()\fP or \fBdeactivate()\fP calls\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIinstance\fP Plugin instance containing the port\&.
+.br
+\fIport\fP Index of the port to connect\&. The host MUST NOT try to connect a port index that is not defined in the plugin's RDF data\&. If it does, the plugin's behaviour is undefined (a crash is likely)\&.
+.br
+\fIdata_location\fP Pointer to data of the type defined by the port type in the plugin's RDF data (e\&.g\&. an array of float for an lv2:AudioPort)\&. This pointer must be stored by the plugin instance and used to read/write data when \fBrun()\fP is called\&. Data present at the time of the \fBconnect_port()\fP call MUST NOT be considered meaningful\&. 
+.RE
+.PP
+
+.PP
+Definition at line 241 of file lv2\&.h\&.
+.SS "\fBvoid\fP(* _LV2_Descriptor::deactivate) (\fBLV2_Handle\fP instance)"
+Deactivate a plugin instance (counterpart to \fBactivate()\fP)\&.
+.PP
+Hosts MUST deactivate all activated instances after they have been \fBrun()\fP for the last time\&. This call SHOULD be made as close to the last \fBrun()\fP call as possible and indicates to real-time plugins that they are no longer live, however plugins MUST NOT rely on prompt deactivation\&. If there is nothing for \fBdeactivate()\fP to do then this field may be NULL
+.PP
+Deactivation is not similar to pausing since the plugin instance will be reinitialised by \fBactivate()\fP\&. However, \fBdeactivate()\fP itself MUST NOT fully reset plugin state\&. For example, the host may deactivate a plugin, then store its state (using some extension to do so)\&.
+.PP
+Hosts MUST NOT call \fBdeactivate()\fP unless \fBactivate()\fP was previously called\&. Note that \fBconnect_port()\fP may be called before or after \fBdeactivate()\fP\&. 
+.PP
+Definition at line 312 of file lv2\&.h\&.
+.SS "\fBconst\fP \fBvoid\fP*(* _LV2_Descriptor::extension_data) (\fBconst\fP char *\fBuri\fP)"
+Return additional plugin data defined by some extenion\&.
+.PP
+A typical use of this facility is to return a struct containing function pointers to extend the LV2_Descriptor API\&.
+.PP
+The actual type and meaning of the returned object MUST be specified precisely by the extension\&. This function MUST return NULL for any unsupported URI\&. If a plugin does not support any extension data, this field may be NULL\&.
+.PP
+The host is never responsible for freeing the returned value\&. 
+.PP
+Definition at line 340 of file lv2\&.h\&.
+.SS "\fBLV2_Handle\fP(* _LV2_Descriptor::instantiate) (\fBconst\fP struct \fB_LV2_Descriptor\fP *descriptor, double sample_rate, \fBconst\fP char *bundle_path, \fBconst\fP \fBLV2_Feature\fP *\fBconst\fP *features)"
+Instantiate the plugin\&.
+.PP
+Note that instance initialisation should generally occur in \fBactivate()\fP rather than here\&. If a host calls \fBinstantiate()\fP, it MUST call \fBcleanup()\fP at some point in the future\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdescriptor\fP Descriptor of the plugin to instantiate\&.
+.br
+\fIsample_rate\fP \fBSample\fP rate, in Hz, for the new plugin instance\&.
+.br
+\fIbundle_path\fP Path to the LV2 bundle which contains this plugin binary\&. It MUST include the trailing directory separator (e\&.g\&. '/') so that simply appending a filename will yield the path to that file in the bundle\&.
+.br
+\fIfeatures\fP A NULL terminated array of LV2_Feature structs which represent the features the host supports\&. Plugins may refuse to instantiate if required features are not found here\&. However, hosts MUST NOT use this as a discovery mechanism: instead, use the RDF data to determine which features are required and do not attempt to instantiate unsupported plugins at all\&. This parameter MUST NOT be NULL, i\&.e\&. a host that supports no features MUST pass a single element array containing NULL\&.
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+A handle for the new plugin instance, or NULL if instantiation has failed\&. 
+.RE
+.PP
+
+.PP
+Definition at line 202 of file lv2\&.h\&.
+.SS "\fBvoid\fP(* _LV2_Descriptor::run) (\fBLV2_Handle\fP instance, \fBuint32_t\fP sample_count)"
+Run a plugin instance for a block\&.
+.PP
+Note that if an \fBactivate()\fP function exists then it must be called before \fBrun()\fP\&. If \fBdeactivate()\fP is called for a plugin instance then \fBrun()\fP may not be called until \fBactivate()\fP has been called again\&.
+.PP
+If the plugin has the feature lv2:hardRTCapable then there are various things that the plugin MUST NOT do within the \fBrun()\fP function (see lv2core\&.ttl for details)\&.
+.PP
+As a special case, when \fCsample_count\fP is 0, the plugin should update any output ports that represent a single instant in time (e\&.g\&. control ports, but not audio ports)\&. This is particularly useful for latent plugins, which should update their latency output port so hosts can pre-roll plugins to compute latency\&. Plugins MUST NOT crash when \fCsample_count\fP is 0\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIinstance\fP Instance to be run\&.
+.br
+\fIsample_count\fP The block size (in samples) for which the plugin instance must run\&. 
+.RE
+.PP
+
+.PP
+Definition at line 291 of file lv2\&.h\&.
+.SS "\fBconst\fP char* _LV2_Descriptor::URI"
+A globally unique, case-sensitive identifier for this plugin\&.
+.PP
+This MUST be a valid URI string as defined by RFC 3986\&. All plugins with the same URI MUST be compatible to some degree, see http://lv2plug.in/ns/lv2core for details\&. 
+.PP
+Definition at line 172 of file lv2\&.h\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

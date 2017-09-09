@@ -1,0 +1,341 @@
+\hypertarget{pmwinmm_8c}{}\section{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/portmidi/pm\+\_\+win/pmwinmm.c File Reference}
+\label{pmwinmm_8c}\index{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/portmidi/pm\+\_\+win/pmwinmm.\+c@{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/portmidi/pm\+\_\+win/pmwinmm.\+c}}
+{\ttfamily \#include \char`\"{}windows.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}mmsystem.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}portmidi.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}pmutil.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}pminternal.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}pmwinmm.\+h\char`\"{}}\\*
+{\ttfamily \#include $<$string.\+h$>$}\\*
+{\ttfamily \#include \char`\"{}porttime.\+h\char`\"{}}\\*
+{\ttfamily \#include $<$assert.\+h$>$}\\*
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structmidiwinmm__struct}{midiwinmm\+\_\+struct}
+\end{DoxyCompactItemize}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{pmwinmm_8c_ac50762666aa00bd3a4308158510f1748}{\+\_\+\+W\+I\+N32\+\_\+\+W\+I\+N\+NT}~0x0500
+\item 
+\#define \hyperlink{pmwinmm_8c_a3d9d471ccb3b9b4b61bcbc359ab65b2a}{streql}(x,  y)~(strcmp(x, y) == 0)
+\item 
+\#define \hyperlink{pmwinmm_8c_aa2197f6ca200566c0986e737edd211e4}{M\+I\+D\+I\+\_\+\+S\+Y\+S\+EX}~0xf0
+\item 
+\#define \hyperlink{pmwinmm_8c_a140c8cfa4bbf1a03494abdbd639d49f2}{M\+I\+D\+I\+\_\+\+E\+OX}~0xf7
+\item 
+\#define \hyperlink{pmwinmm_8c_aeae8e048fee020b6a24f20007a3a48d0}{N\+U\+M\+\_\+\+S\+I\+M\+P\+L\+E\+\_\+\+S\+Y\+S\+E\+X\+\_\+\+B\+U\+F\+F\+E\+RS}~3
+\item 
+\#define \hyperlink{pmwinmm_8c_a408412abbb0f2222aef584c08007b3e4}{M\+I\+N\+\_\+\+S\+I\+M\+P\+L\+E\+\_\+\+S\+Y\+S\+E\+X\+\_\+\+L\+EN}~256
+\item 
+\#define \hyperlink{pmwinmm_8c_adf056ca1f5470fb9d2b3644a3b916729}{M\+I\+N\+\_\+\+S\+T\+R\+E\+A\+M\+\_\+\+B\+U\+F\+F\+E\+RS}~16
+\item 
+\#define \hyperlink{pmwinmm_8c_a30ed3188169b95726d10bcb4e862bfb0}{S\+T\+R\+E\+A\+M\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+L\+EN}~24
+\item 
+\#define \hyperlink{pmwinmm_8c_a4bc32e1209ae9b421738a12756802d28}{I\+N\+P\+U\+T\+\_\+\+S\+Y\+S\+E\+X\+\_\+\+L\+EN}~64
+\item 
+\#define \hyperlink{pmwinmm_8c_a58f375481e55800a20f0c5ebcbbb8cca}{M\+I\+N\+\_\+\+I\+N\+P\+U\+T\+\_\+\+B\+U\+F\+F\+E\+RS}~16
+\item 
+\#define \hyperlink{pmwinmm_8c_a52205e796892fa98328990df0bb3d4f6}{N\+U\+M\+\_\+\+E\+X\+P\+A\+N\+S\+I\+O\+N\+\_\+\+B\+U\+F\+F\+E\+RS}~128
+\item 
+\#define \hyperlink{pmwinmm_8c_af84dccb9759d130019a69b865fb87601}{E\+X\+P\+A\+N\+S\+I\+O\+N\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+L\+EN}~1024
+\item 
+\#define \hyperlink{pmwinmm_8c_abff1952153bc536259ad6aed96c6c3af}{M\+I\+D\+I\+H\+D\+R\+\_\+\+S\+Y\+S\+E\+X\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+L\+E\+N\+G\+TH}(x)~((x) + sizeof(long)$\ast$3)
+\item 
+\#define \hyperlink{pmwinmm_8c_a4d10fea3a370c9fc049d486610e26c0e}{M\+I\+D\+I\+H\+D\+R\+\_\+\+S\+Y\+S\+E\+X\+\_\+\+S\+I\+ZE}(x)~(\hyperlink{pmwinmm_8c_abff1952153bc536259ad6aed96c6c3af}{M\+I\+D\+I\+H\+D\+R\+\_\+\+S\+Y\+S\+E\+X\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+L\+E\+N\+G\+TH}(x) + sizeof(M\+I\+D\+I\+H\+DR))
+\item 
+\#define \hyperlink{pmwinmm_8c_aee16c4e278880ae62e80e24875a05d64}{winmm\+\_\+begin\+\_\+sysex}~winmm\+\_\+write\+\_\+flush
+\item 
+\#define \hyperlink{pmwinmm_8c_a535115b4a2e19deead82ff097abc9a17}{winmm\+\_\+in\+\_\+abort}~\hyperlink{portmidi_8c_aeeae549047bfcfbbe3eff9f3857ff77a}{pm\+\_\+fail\+\_\+fn}
+\end{DoxyCompactItemize}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef struct \hyperlink{structmidiwinmm__struct}{midiwinmm\+\_\+struct} \hyperlink{pmwinmm_8c_a6e0f0a98c5693acd77408061a8ee728d}{midiwinmm\+\_\+node}
+\item 
+typedef struct \hyperlink{structmidiwinmm__struct}{midiwinmm\+\_\+struct} $\ast$ \hyperlink{pmwinmm_8c_acffe1edf2c2208240d3f50e0be1d456a}{midiwinmm\+\_\+type}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{pmwinmm_8c_a814dc61aecbbd16add0d5dc7b6f10ce6}{pm\+\_\+winmm\+\_\+init} (\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void})
+\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{pmwinmm_8c_a855566afe42cc36711aedabe2a1527f9}{pm\+\_\+winmm\+\_\+term} (\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void})
+\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{structpm__fns__node}{pm\+\_\+fns\+\_\+node} \hyperlink{pmwinmm_8c_a50237725f4cf3e9972ad0c8f147b73ff}{pm\+\_\+winmm\+\_\+in\+\_\+dictionary}
+\item 
+\hyperlink{structpm__fns__node}{pm\+\_\+fns\+\_\+node} \hyperlink{pmwinmm_8c_a14223904cd337b8ae5b9af26c1641b4a}{pm\+\_\+winmm\+\_\+out\+\_\+dictionary}
+\item 
+M\+I\+D\+I\+I\+N\+C\+A\+PS $\ast$ \hyperlink{pmwinmm_8c_ab84a0b370e7dd74cca0e8627f5b2f96b}{midi\+\_\+in\+\_\+caps} = \hyperlink{px__mixer_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{N\+U\+LL}
+\item 
+M\+I\+D\+I\+I\+N\+C\+A\+PS \hyperlink{pmwinmm_8c_ad887e6eab533bec22ebcb2c1d2d10bfd}{midi\+\_\+in\+\_\+mapper\+\_\+caps}
+\item 
+\hyperlink{mapinls_8h_a36cb3b01d81ffd844bbbfb54003e06ec}{U\+I\+NT} \hyperlink{pmwinmm_8c_a1c2017def59fae2eb3d78813c2d67226}{midi\+\_\+num\+\_\+inputs} = 0
+\item 
+M\+I\+D\+I\+O\+U\+T\+C\+A\+PS $\ast$ \hyperlink{pmwinmm_8c_ab6cf6e432b3dbb187bc76c78fc035bb8}{midi\+\_\+out\+\_\+caps} = \hyperlink{px__mixer_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{N\+U\+LL}
+\item 
+M\+I\+D\+I\+O\+U\+T\+C\+A\+PS \hyperlink{pmwinmm_8c_a79da5f9031e33e1c5b6b1f2cb43f9162}{midi\+\_\+out\+\_\+mapper\+\_\+caps}
+\item 
+\hyperlink{mapinls_8h_a36cb3b01d81ffd844bbbfb54003e06ec}{U\+I\+NT} \hyperlink{pmwinmm_8c_a1dbcc28647b5d6e1c4a66049f71bee79}{midi\+\_\+num\+\_\+outputs} = 0
+\end{DoxyCompactItemize}
+
+
+\subsection{Macro Definition Documentation}
+\index{pmwinmm.\+c@{pmwinmm.\+c}!\+\_\+\+W\+I\+N32\+\_\+\+W\+I\+N\+NT@{\+\_\+\+W\+I\+N32\+\_\+\+W\+I\+N\+NT}}
+\index{\+\_\+\+W\+I\+N32\+\_\+\+W\+I\+N\+NT@{\+\_\+\+W\+I\+N32\+\_\+\+W\+I\+N\+NT}!pmwinmm.\+c@{pmwinmm.\+c}}
+\subsubsection[{\texorpdfstring{\+\_\+\+W\+I\+N32\+\_\+\+W\+I\+N\+NT}{_WIN32_WINNT}}]{\setlength{\rightskip}{0pt plus 5cm}\#define \+\_\+\+W\+I\+N32\+\_\+\+W\+I\+N\+NT~0x0500}\hypertarget{pmwinmm_8c_ac50762666aa00bd3a4308158510f1748}{}\label{pmwinmm_8c_ac50762666aa00bd3a4308158510f1748}
+
+
+Definition at line 11 of file pmwinmm.\+c.
+
+\index{pmwinmm.\+c@{pmwinmm.\+c}!E\+X\+P\+A\+N\+S\+I\+O\+N\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+L\+EN@{E\+X\+P\+A\+N\+S\+I\+O\+N\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+L\+EN}}
+\index{E\+X\+P\+A\+N\+S\+I\+O\+N\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+L\+EN@{E\+X\+P\+A\+N\+S\+I\+O\+N\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+L\+EN}!pmwinmm.\+c@{pmwinmm.\+c}}
+\subsubsection[{\texorpdfstring{E\+X\+P\+A\+N\+S\+I\+O\+N\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+L\+EN}{EXPANSION_BUFFER_LEN}}]{\setlength{\rightskip}{0pt plus 5cm}\#define E\+X\+P\+A\+N\+S\+I\+O\+N\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+L\+EN~1024}\hypertarget{pmwinmm_8c_af84dccb9759d130019a69b865fb87601}{}\label{pmwinmm_8c_af84dccb9759d130019a69b865fb87601}
+
+
+Definition at line 94 of file pmwinmm.\+c.
+
+\index{pmwinmm.\+c@{pmwinmm.\+c}!I\+N\+P\+U\+T\+\_\+\+S\+Y\+S\+E\+X\+\_\+\+L\+EN@{I\+N\+P\+U\+T\+\_\+\+S\+Y\+S\+E\+X\+\_\+\+L\+EN}}
+\index{I\+N\+P\+U\+T\+\_\+\+S\+Y\+S\+E\+X\+\_\+\+L\+EN@{I\+N\+P\+U\+T\+\_\+\+S\+Y\+S\+E\+X\+\_\+\+L\+EN}!pmwinmm.\+c@{pmwinmm.\+c}}
+\subsubsection[{\texorpdfstring{I\+N\+P\+U\+T\+\_\+\+S\+Y\+S\+E\+X\+\_\+\+L\+EN}{INPUT_SYSEX_LEN}}]{\setlength{\rightskip}{0pt plus 5cm}\#define I\+N\+P\+U\+T\+\_\+\+S\+Y\+S\+E\+X\+\_\+\+L\+EN~64}\hypertarget{pmwinmm_8c_a4bc32e1209ae9b421738a12756802d28}{}\label{pmwinmm_8c_a4bc32e1209ae9b421738a12756802d28}
+
+
+Definition at line 87 of file pmwinmm.\+c.
+
+\index{pmwinmm.\+c@{pmwinmm.\+c}!M\+I\+D\+I\+\_\+\+E\+OX@{M\+I\+D\+I\+\_\+\+E\+OX}}
+\index{M\+I\+D\+I\+\_\+\+E\+OX@{M\+I\+D\+I\+\_\+\+E\+OX}!pmwinmm.\+c@{pmwinmm.\+c}}
+\subsubsection[{\texorpdfstring{M\+I\+D\+I\+\_\+\+E\+OX}{MIDI_EOX}}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+I\+D\+I\+\_\+\+E\+OX~0xf7}\hypertarget{pmwinmm_8c_a140c8cfa4bbf1a03494abdbd639d49f2}{}\label{pmwinmm_8c_a140c8cfa4bbf1a03494abdbd639d49f2}
+
+
+Definition at line 37 of file pmwinmm.\+c.
+
+\index{pmwinmm.\+c@{pmwinmm.\+c}!M\+I\+D\+I\+\_\+\+S\+Y\+S\+EX@{M\+I\+D\+I\+\_\+\+S\+Y\+S\+EX}}
+\index{M\+I\+D\+I\+\_\+\+S\+Y\+S\+EX@{M\+I\+D\+I\+\_\+\+S\+Y\+S\+EX}!pmwinmm.\+c@{pmwinmm.\+c}}
+\subsubsection[{\texorpdfstring{M\+I\+D\+I\+\_\+\+S\+Y\+S\+EX}{MIDI_SYSEX}}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+I\+D\+I\+\_\+\+S\+Y\+S\+EX~0xf0}\hypertarget{pmwinmm_8c_aa2197f6ca200566c0986e737edd211e4}{}\label{pmwinmm_8c_aa2197f6ca200566c0986e737edd211e4}
+
+
+Definition at line 36 of file pmwinmm.\+c.
+
+\index{pmwinmm.\+c@{pmwinmm.\+c}!M\+I\+D\+I\+H\+D\+R\+\_\+\+S\+Y\+S\+E\+X\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+L\+E\+N\+G\+TH@{M\+I\+D\+I\+H\+D\+R\+\_\+\+S\+Y\+S\+E\+X\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+L\+E\+N\+G\+TH}}
+\index{M\+I\+D\+I\+H\+D\+R\+\_\+\+S\+Y\+S\+E\+X\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+L\+E\+N\+G\+TH@{M\+I\+D\+I\+H\+D\+R\+\_\+\+S\+Y\+S\+E\+X\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+L\+E\+N\+G\+TH}!pmwinmm.\+c@{pmwinmm.\+c}}
+\subsubsection[{\texorpdfstring{M\+I\+D\+I\+H\+D\+R\+\_\+\+S\+Y\+S\+E\+X\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+L\+E\+N\+G\+TH}{MIDIHDR_SYSEX_BUFFER_LENGTH}}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+I\+D\+I\+H\+D\+R\+\_\+\+S\+Y\+S\+E\+X\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+L\+E\+N\+G\+TH(
+\begin{DoxyParamCaption}
+\item[{}]{x}
+\end{DoxyParamCaption}
+)~((x) + sizeof(long)$\ast$3)}\hypertarget{pmwinmm_8c_abff1952153bc536259ad6aed96c6c3af}{}\label{pmwinmm_8c_abff1952153bc536259ad6aed96c6c3af}
+
+
+Definition at line 97 of file pmwinmm.\+c.
+
+\index{pmwinmm.\+c@{pmwinmm.\+c}!M\+I\+D\+I\+H\+D\+R\+\_\+\+S\+Y\+S\+E\+X\+\_\+\+S\+I\+ZE@{M\+I\+D\+I\+H\+D\+R\+\_\+\+S\+Y\+S\+E\+X\+\_\+\+S\+I\+ZE}}
+\index{M\+I\+D\+I\+H\+D\+R\+\_\+\+S\+Y\+S\+E\+X\+\_\+\+S\+I\+ZE@{M\+I\+D\+I\+H\+D\+R\+\_\+\+S\+Y\+S\+E\+X\+\_\+\+S\+I\+ZE}!pmwinmm.\+c@{pmwinmm.\+c}}
+\subsubsection[{\texorpdfstring{M\+I\+D\+I\+H\+D\+R\+\_\+\+S\+Y\+S\+E\+X\+\_\+\+S\+I\+ZE}{MIDIHDR_SYSEX_SIZE}}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+I\+D\+I\+H\+D\+R\+\_\+\+S\+Y\+S\+E\+X\+\_\+\+S\+I\+ZE(
+\begin{DoxyParamCaption}
+\item[{}]{x}
+\end{DoxyParamCaption}
+)~({\bf M\+I\+D\+I\+H\+D\+R\+\_\+\+S\+Y\+S\+E\+X\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+L\+E\+N\+G\+TH}(x) + sizeof(M\+I\+D\+I\+H\+DR))}\hypertarget{pmwinmm_8c_a4d10fea3a370c9fc049d486610e26c0e}{}\label{pmwinmm_8c_a4d10fea3a370c9fc049d486610e26c0e}
+
+
+Definition at line 99 of file pmwinmm.\+c.
+
+\index{pmwinmm.\+c@{pmwinmm.\+c}!M\+I\+N\+\_\+\+I\+N\+P\+U\+T\+\_\+\+B\+U\+F\+F\+E\+RS@{M\+I\+N\+\_\+\+I\+N\+P\+U\+T\+\_\+\+B\+U\+F\+F\+E\+RS}}
+\index{M\+I\+N\+\_\+\+I\+N\+P\+U\+T\+\_\+\+B\+U\+F\+F\+E\+RS@{M\+I\+N\+\_\+\+I\+N\+P\+U\+T\+\_\+\+B\+U\+F\+F\+E\+RS}!pmwinmm.\+c@{pmwinmm.\+c}}
+\subsubsection[{\texorpdfstring{M\+I\+N\+\_\+\+I\+N\+P\+U\+T\+\_\+\+B\+U\+F\+F\+E\+RS}{MIN_INPUT_BUFFERS}}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+I\+N\+\_\+\+I\+N\+P\+U\+T\+\_\+\+B\+U\+F\+F\+E\+RS~16}\hypertarget{pmwinmm_8c_a58f375481e55800a20f0c5ebcbbb8cca}{}\label{pmwinmm_8c_a58f375481e55800a20f0c5ebcbbb8cca}
+
+
+Definition at line 88 of file pmwinmm.\+c.
+
+\index{pmwinmm.\+c@{pmwinmm.\+c}!M\+I\+N\+\_\+\+S\+I\+M\+P\+L\+E\+\_\+\+S\+Y\+S\+E\+X\+\_\+\+L\+EN@{M\+I\+N\+\_\+\+S\+I\+M\+P\+L\+E\+\_\+\+S\+Y\+S\+E\+X\+\_\+\+L\+EN}}
+\index{M\+I\+N\+\_\+\+S\+I\+M\+P\+L\+E\+\_\+\+S\+Y\+S\+E\+X\+\_\+\+L\+EN@{M\+I\+N\+\_\+\+S\+I\+M\+P\+L\+E\+\_\+\+S\+Y\+S\+E\+X\+\_\+\+L\+EN}!pmwinmm.\+c@{pmwinmm.\+c}}
+\subsubsection[{\texorpdfstring{M\+I\+N\+\_\+\+S\+I\+M\+P\+L\+E\+\_\+\+S\+Y\+S\+E\+X\+\_\+\+L\+EN}{MIN_SIMPLE_SYSEX_LEN}}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+I\+N\+\_\+\+S\+I\+M\+P\+L\+E\+\_\+\+S\+Y\+S\+E\+X\+\_\+\+L\+EN~256}\hypertarget{pmwinmm_8c_a408412abbb0f2222aef584c08007b3e4}{}\label{pmwinmm_8c_a408412abbb0f2222aef584c08007b3e4}
+
+
+Definition at line 82 of file pmwinmm.\+c.
+
+\index{pmwinmm.\+c@{pmwinmm.\+c}!M\+I\+N\+\_\+\+S\+T\+R\+E\+A\+M\+\_\+\+B\+U\+F\+F\+E\+RS@{M\+I\+N\+\_\+\+S\+T\+R\+E\+A\+M\+\_\+\+B\+U\+F\+F\+E\+RS}}
+\index{M\+I\+N\+\_\+\+S\+T\+R\+E\+A\+M\+\_\+\+B\+U\+F\+F\+E\+RS@{M\+I\+N\+\_\+\+S\+T\+R\+E\+A\+M\+\_\+\+B\+U\+F\+F\+E\+RS}!pmwinmm.\+c@{pmwinmm.\+c}}
+\subsubsection[{\texorpdfstring{M\+I\+N\+\_\+\+S\+T\+R\+E\+A\+M\+\_\+\+B\+U\+F\+F\+E\+RS}{MIN_STREAM_BUFFERS}}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+I\+N\+\_\+\+S\+T\+R\+E\+A\+M\+\_\+\+B\+U\+F\+F\+E\+RS~16}\hypertarget{pmwinmm_8c_adf056ca1f5470fb9d2b3644a3b916729}{}\label{pmwinmm_8c_adf056ca1f5470fb9d2b3644a3b916729}
+
+
+Definition at line 84 of file pmwinmm.\+c.
+
+\index{pmwinmm.\+c@{pmwinmm.\+c}!N\+U\+M\+\_\+\+E\+X\+P\+A\+N\+S\+I\+O\+N\+\_\+\+B\+U\+F\+F\+E\+RS@{N\+U\+M\+\_\+\+E\+X\+P\+A\+N\+S\+I\+O\+N\+\_\+\+B\+U\+F\+F\+E\+RS}}
+\index{N\+U\+M\+\_\+\+E\+X\+P\+A\+N\+S\+I\+O\+N\+\_\+\+B\+U\+F\+F\+E\+RS@{N\+U\+M\+\_\+\+E\+X\+P\+A\+N\+S\+I\+O\+N\+\_\+\+B\+U\+F\+F\+E\+RS}!pmwinmm.\+c@{pmwinmm.\+c}}
+\subsubsection[{\texorpdfstring{N\+U\+M\+\_\+\+E\+X\+P\+A\+N\+S\+I\+O\+N\+\_\+\+B\+U\+F\+F\+E\+RS}{NUM_EXPANSION_BUFFERS}}]{\setlength{\rightskip}{0pt plus 5cm}\#define N\+U\+M\+\_\+\+E\+X\+P\+A\+N\+S\+I\+O\+N\+\_\+\+B\+U\+F\+F\+E\+RS~128}\hypertarget{pmwinmm_8c_a52205e796892fa98328990df0bb3d4f6}{}\label{pmwinmm_8c_a52205e796892fa98328990df0bb3d4f6}
+
+
+Definition at line 93 of file pmwinmm.\+c.
+
+\index{pmwinmm.\+c@{pmwinmm.\+c}!N\+U\+M\+\_\+\+S\+I\+M\+P\+L\+E\+\_\+\+S\+Y\+S\+E\+X\+\_\+\+B\+U\+F\+F\+E\+RS@{N\+U\+M\+\_\+\+S\+I\+M\+P\+L\+E\+\_\+\+S\+Y\+S\+E\+X\+\_\+\+B\+U\+F\+F\+E\+RS}}
+\index{N\+U\+M\+\_\+\+S\+I\+M\+P\+L\+E\+\_\+\+S\+Y\+S\+E\+X\+\_\+\+B\+U\+F\+F\+E\+RS@{N\+U\+M\+\_\+\+S\+I\+M\+P\+L\+E\+\_\+\+S\+Y\+S\+E\+X\+\_\+\+B\+U\+F\+F\+E\+RS}!pmwinmm.\+c@{pmwinmm.\+c}}
+\subsubsection[{\texorpdfstring{N\+U\+M\+\_\+\+S\+I\+M\+P\+L\+E\+\_\+\+S\+Y\+S\+E\+X\+\_\+\+B\+U\+F\+F\+E\+RS}{NUM_SIMPLE_SYSEX_BUFFERS}}]{\setlength{\rightskip}{0pt plus 5cm}\#define N\+U\+M\+\_\+\+S\+I\+M\+P\+L\+E\+\_\+\+S\+Y\+S\+E\+X\+\_\+\+B\+U\+F\+F\+E\+RS~3}\hypertarget{pmwinmm_8c_aeae8e048fee020b6a24f20007a3a48d0}{}\label{pmwinmm_8c_aeae8e048fee020b6a24f20007a3a48d0}
+
+
+Definition at line 81 of file pmwinmm.\+c.
+
+\index{pmwinmm.\+c@{pmwinmm.\+c}!S\+T\+R\+E\+A\+M\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+L\+EN@{S\+T\+R\+E\+A\+M\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+L\+EN}}
+\index{S\+T\+R\+E\+A\+M\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+L\+EN@{S\+T\+R\+E\+A\+M\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+L\+EN}!pmwinmm.\+c@{pmwinmm.\+c}}
+\subsubsection[{\texorpdfstring{S\+T\+R\+E\+A\+M\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+L\+EN}{STREAM_BUFFER_LEN}}]{\setlength{\rightskip}{0pt plus 5cm}\#define S\+T\+R\+E\+A\+M\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+L\+EN~24}\hypertarget{pmwinmm_8c_a30ed3188169b95726d10bcb4e862bfb0}{}\label{pmwinmm_8c_a30ed3188169b95726d10bcb4e862bfb0}
+
+
+Definition at line 85 of file pmwinmm.\+c.
+
+\index{pmwinmm.\+c@{pmwinmm.\+c}!streql@{streql}}
+\index{streql@{streql}!pmwinmm.\+c@{pmwinmm.\+c}}
+\subsubsection[{\texorpdfstring{streql}{streql}}]{\setlength{\rightskip}{0pt plus 5cm}\#define streql(
+\begin{DoxyParamCaption}
+\item[{}]{x, }
+\item[{}]{y}
+\end{DoxyParamCaption}
+)~(strcmp(x, y) == 0)}\hypertarget{pmwinmm_8c_a3d9d471ccb3b9b4b61bcbc359ab65b2a}{}\label{pmwinmm_8c_a3d9d471ccb3b9b4b61bcbc359ab65b2a}
+
+
+Definition at line 34 of file pmwinmm.\+c.
+
+\index{pmwinmm.\+c@{pmwinmm.\+c}!winmm\+\_\+begin\+\_\+sysex@{winmm\+\_\+begin\+\_\+sysex}}
+\index{winmm\+\_\+begin\+\_\+sysex@{winmm\+\_\+begin\+\_\+sysex}!pmwinmm.\+c@{pmwinmm.\+c}}
+\subsubsection[{\texorpdfstring{winmm\+\_\+begin\+\_\+sysex}{winmm_begin_sysex}}]{\setlength{\rightskip}{0pt plus 5cm}\#define winmm\+\_\+begin\+\_\+sysex~winmm\+\_\+write\+\_\+flush}\hypertarget{pmwinmm_8c_aee16c4e278880ae62e80e24875a05d64}{}\label{pmwinmm_8c_aee16c4e278880ae62e80e24875a05d64}
+
+
+Definition at line 1140 of file pmwinmm.\+c.
+
+\index{pmwinmm.\+c@{pmwinmm.\+c}!winmm\+\_\+in\+\_\+abort@{winmm\+\_\+in\+\_\+abort}}
+\index{winmm\+\_\+in\+\_\+abort@{winmm\+\_\+in\+\_\+abort}!pmwinmm.\+c@{pmwinmm.\+c}}
+\subsubsection[{\texorpdfstring{winmm\+\_\+in\+\_\+abort}{winmm_in_abort}}]{\setlength{\rightskip}{0pt plus 5cm}\#define winmm\+\_\+in\+\_\+abort~{\bf pm\+\_\+fail\+\_\+fn}}\hypertarget{pmwinmm_8c_a535115b4a2e19deead82ff097abc9a17}{}\label{pmwinmm_8c_a535115b4a2e19deead82ff097abc9a17}
+
+
+Definition at line 1360 of file pmwinmm.\+c.
+
+
+
+\subsection{Typedef Documentation}
+\index{pmwinmm.\+c@{pmwinmm.\+c}!midiwinmm\+\_\+node@{midiwinmm\+\_\+node}}
+\index{midiwinmm\+\_\+node@{midiwinmm\+\_\+node}!pmwinmm.\+c@{pmwinmm.\+c}}
+\subsubsection[{\texorpdfstring{midiwinmm\+\_\+node}{midiwinmm_node}}]{\setlength{\rightskip}{0pt plus 5cm}typedef struct {\bf midiwinmm\+\_\+struct}  {\bf midiwinmm\+\_\+node}}\hypertarget{pmwinmm_8c_a6e0f0a98c5693acd77408061a8ee728d}{}\label{pmwinmm_8c_a6e0f0a98c5693acd77408061a8ee728d}
+\index{pmwinmm.\+c@{pmwinmm.\+c}!midiwinmm\+\_\+type@{midiwinmm\+\_\+type}}
+\index{midiwinmm\+\_\+type@{midiwinmm\+\_\+type}!pmwinmm.\+c@{pmwinmm.\+c}}
+\subsubsection[{\texorpdfstring{midiwinmm\+\_\+type}{midiwinmm_type}}]{\setlength{\rightskip}{0pt plus 5cm}typedef struct {\bf midiwinmm\+\_\+struct} $\ast$ {\bf midiwinmm\+\_\+type}}\hypertarget{pmwinmm_8c_acffe1edf2c2208240d3f50e0be1d456a}{}\label{pmwinmm_8c_acffe1edf2c2208240d3f50e0be1d456a}
+
+
+\subsection{Function Documentation}
+\index{pmwinmm.\+c@{pmwinmm.\+c}!pm\+\_\+winmm\+\_\+init@{pm\+\_\+winmm\+\_\+init}}
+\index{pm\+\_\+winmm\+\_\+init@{pm\+\_\+winmm\+\_\+init}!pmwinmm.\+c@{pmwinmm.\+c}}
+\subsubsection[{\texorpdfstring{pm\+\_\+winmm\+\_\+init(void)}{pm_winmm_init(void)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} pm\+\_\+winmm\+\_\+init (
+\begin{DoxyParamCaption}
+\item[{{\bf void}}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{pmwinmm_8c_a814dc61aecbbd16add0d5dc7b6f10ce6}{}\label{pmwinmm_8c_a814dc61aecbbd16add0d5dc7b6f10ce6}
+
+
+Definition at line 1403 of file pmwinmm.\+c.
+
+\index{pmwinmm.\+c@{pmwinmm.\+c}!pm\+\_\+winmm\+\_\+term@{pm\+\_\+winmm\+\_\+term}}
+\index{pm\+\_\+winmm\+\_\+term@{pm\+\_\+winmm\+\_\+term}!pmwinmm.\+c@{pmwinmm.\+c}}
+\subsubsection[{\texorpdfstring{pm\+\_\+winmm\+\_\+term(void)}{pm_winmm_term(void)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} pm\+\_\+winmm\+\_\+term (
+\begin{DoxyParamCaption}
+\item[{{\bf void}}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{pmwinmm_8c_a855566afe42cc36711aedabe2a1527f9}{}\label{pmwinmm_8c_a855566afe42cc36711aedabe2a1527f9}
+
+
+Definition at line 1416 of file pmwinmm.\+c.
+
+
+
+\subsection{Variable Documentation}
+\index{pmwinmm.\+c@{pmwinmm.\+c}!midi\+\_\+in\+\_\+caps@{midi\+\_\+in\+\_\+caps}}
+\index{midi\+\_\+in\+\_\+caps@{midi\+\_\+in\+\_\+caps}!pmwinmm.\+c@{pmwinmm.\+c}}
+\subsubsection[{\texorpdfstring{midi\+\_\+in\+\_\+caps}{midi_in_caps}}]{\setlength{\rightskip}{0pt plus 5cm}M\+I\+D\+I\+I\+N\+C\+A\+PS$\ast$ midi\+\_\+in\+\_\+caps = {\bf N\+U\+LL}}\hypertarget{pmwinmm_8c_ab84a0b370e7dd74cca0e8627f5b2f96b}{}\label{pmwinmm_8c_ab84a0b370e7dd74cca0e8627f5b2f96b}
+
+
+Definition at line 112 of file pmwinmm.\+c.
+
+\index{pmwinmm.\+c@{pmwinmm.\+c}!midi\+\_\+in\+\_\+mapper\+\_\+caps@{midi\+\_\+in\+\_\+mapper\+\_\+caps}}
+\index{midi\+\_\+in\+\_\+mapper\+\_\+caps@{midi\+\_\+in\+\_\+mapper\+\_\+caps}!pmwinmm.\+c@{pmwinmm.\+c}}
+\subsubsection[{\texorpdfstring{midi\+\_\+in\+\_\+mapper\+\_\+caps}{midi_in_mapper_caps}}]{\setlength{\rightskip}{0pt plus 5cm}M\+I\+D\+I\+I\+N\+C\+A\+PS midi\+\_\+in\+\_\+mapper\+\_\+caps}\hypertarget{pmwinmm_8c_ad887e6eab533bec22ebcb2c1d2d10bfd}{}\label{pmwinmm_8c_ad887e6eab533bec22ebcb2c1d2d10bfd}
+
+
+Definition at line 113 of file pmwinmm.\+c.
+
+\index{pmwinmm.\+c@{pmwinmm.\+c}!midi\+\_\+num\+\_\+inputs@{midi\+\_\+num\+\_\+inputs}}
+\index{midi\+\_\+num\+\_\+inputs@{midi\+\_\+num\+\_\+inputs}!pmwinmm.\+c@{pmwinmm.\+c}}
+\subsubsection[{\texorpdfstring{midi\+\_\+num\+\_\+inputs}{midi_num_inputs}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf U\+I\+NT} midi\+\_\+num\+\_\+inputs = 0}\hypertarget{pmwinmm_8c_a1c2017def59fae2eb3d78813c2d67226}{}\label{pmwinmm_8c_a1c2017def59fae2eb3d78813c2d67226}
+
+
+Definition at line 114 of file pmwinmm.\+c.
+
+\index{pmwinmm.\+c@{pmwinmm.\+c}!midi\+\_\+num\+\_\+outputs@{midi\+\_\+num\+\_\+outputs}}
+\index{midi\+\_\+num\+\_\+outputs@{midi\+\_\+num\+\_\+outputs}!pmwinmm.\+c@{pmwinmm.\+c}}
+\subsubsection[{\texorpdfstring{midi\+\_\+num\+\_\+outputs}{midi_num_outputs}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf U\+I\+NT} midi\+\_\+num\+\_\+outputs = 0}\hypertarget{pmwinmm_8c_a1dbcc28647b5d6e1c4a66049f71bee79}{}\label{pmwinmm_8c_a1dbcc28647b5d6e1c4a66049f71bee79}
+
+
+Definition at line 117 of file pmwinmm.\+c.
+
+\index{pmwinmm.\+c@{pmwinmm.\+c}!midi\+\_\+out\+\_\+caps@{midi\+\_\+out\+\_\+caps}}
+\index{midi\+\_\+out\+\_\+caps@{midi\+\_\+out\+\_\+caps}!pmwinmm.\+c@{pmwinmm.\+c}}
+\subsubsection[{\texorpdfstring{midi\+\_\+out\+\_\+caps}{midi_out_caps}}]{\setlength{\rightskip}{0pt plus 5cm}M\+I\+D\+I\+O\+U\+T\+C\+A\+PS$\ast$ midi\+\_\+out\+\_\+caps = {\bf N\+U\+LL}}\hypertarget{pmwinmm_8c_ab6cf6e432b3dbb187bc76c78fc035bb8}{}\label{pmwinmm_8c_ab6cf6e432b3dbb187bc76c78fc035bb8}
+
+
+Definition at line 115 of file pmwinmm.\+c.
+
+\index{pmwinmm.\+c@{pmwinmm.\+c}!midi\+\_\+out\+\_\+mapper\+\_\+caps@{midi\+\_\+out\+\_\+mapper\+\_\+caps}}
+\index{midi\+\_\+out\+\_\+mapper\+\_\+caps@{midi\+\_\+out\+\_\+mapper\+\_\+caps}!pmwinmm.\+c@{pmwinmm.\+c}}
+\subsubsection[{\texorpdfstring{midi\+\_\+out\+\_\+mapper\+\_\+caps}{midi_out_mapper_caps}}]{\setlength{\rightskip}{0pt plus 5cm}M\+I\+D\+I\+O\+U\+T\+C\+A\+PS midi\+\_\+out\+\_\+mapper\+\_\+caps}\hypertarget{pmwinmm_8c_a79da5f9031e33e1c5b6b1f2cb43f9162}{}\label{pmwinmm_8c_a79da5f9031e33e1c5b6b1f2cb43f9162}
+
+
+Definition at line 116 of file pmwinmm.\+c.
+
+\index{pmwinmm.\+c@{pmwinmm.\+c}!pm\+\_\+winmm\+\_\+in\+\_\+dictionary@{pm\+\_\+winmm\+\_\+in\+\_\+dictionary}}
+\index{pm\+\_\+winmm\+\_\+in\+\_\+dictionary@{pm\+\_\+winmm\+\_\+in\+\_\+dictionary}!pmwinmm.\+c@{pmwinmm.\+c}}
+\subsubsection[{\texorpdfstring{pm\+\_\+winmm\+\_\+in\+\_\+dictionary}{pm_winmm_in_dictionary}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf pm\+\_\+fns\+\_\+node} pm\+\_\+winmm\+\_\+in\+\_\+dictionary}\hypertarget{pmwinmm_8c_a50237725f4cf3e9972ad0c8f147b73ff}{}\label{pmwinmm_8c_a50237725f4cf3e9972ad0c8f147b73ff}
+{\bfseries Initial value\+:}
+\begin{DoxyCode}
+= \{
+                                         \hyperlink{pminternal_8h_a841d04eb4d4efa3eebfc4e718cf9faa3}{none\_write\_short},
+                                         \hyperlink{pminternal_8h_ac44b30c88f5076903c62f9e8fc8c51ec}{none\_sysex},
+                                         \hyperlink{pminternal_8h_ac44b30c88f5076903c62f9e8fc8c51ec}{none\_sysex},
+                                         \hyperlink{pminternal_8h_a2181992bfdc1d719bdd96353763965d7}{none\_write\_byte},
+                                         \hyperlink{pminternal_8h_a841d04eb4d4efa3eebfc4e718cf9faa3}{none\_write\_short},
+                                         \hyperlink{pminternal_8h_a1381cf29da7767a1db6c268b7941a6f8}{none\_write\_flush},
+                                         winmm\_synchronize,
+                                         winmm\_in\_open,
+                                         \hyperlink{pmwinmm_8c_a535115b4a2e19deead82ff097abc9a17}{winmm\_in\_abort},
+                                         winmm\_in\_close,
+                                         winmm\_in\_poll,
+                                         winmm\_has\_host\_error,
+                                         winmm\_get\_host\_error
+                                     \}
+\end{DoxyCode}
+
+
+Definition at line 1361 of file pmwinmm.\+c.
+
+\index{pmwinmm.\+c@{pmwinmm.\+c}!pm\+\_\+winmm\+\_\+out\+\_\+dictionary@{pm\+\_\+winmm\+\_\+out\+\_\+dictionary}}
+\index{pm\+\_\+winmm\+\_\+out\+\_\+dictionary@{pm\+\_\+winmm\+\_\+out\+\_\+dictionary}!pmwinmm.\+c@{pmwinmm.\+c}}
+\subsubsection[{\texorpdfstring{pm\+\_\+winmm\+\_\+out\+\_\+dictionary}{pm_winmm_out_dictionary}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf pm\+\_\+fns\+\_\+node} pm\+\_\+winmm\+\_\+out\+\_\+dictionary}\hypertarget{pmwinmm_8c_a14223904cd337b8ae5b9af26c1641b4a}{}\label{pmwinmm_8c_a14223904cd337b8ae5b9af26c1641b4a}
+{\bfseries Initial value\+:}
+\begin{DoxyCode}
+= \{
+                                          winmm\_write\_short,
+                                          \hyperlink{pmwinmm_8c_aee16c4e278880ae62e80e24875a05d64}{winmm\_begin\_sysex},
+                                          winmm\_end\_sysex,
+                                          winmm\_write\_byte,
+                                          winmm\_write\_short,  
+                                          winmm\_write\_flush,
+                                          winmm\_synchronize,
+                                          winmm\_out\_open,
+                                          winmm\_out\_abort,
+                                          winmm\_out\_close,
+                                          \hyperlink{pminternal_8h_a7b782f381e349f7b220b925bcdf9c9c1}{none\_poll},
+                                          winmm\_has\_host\_error,
+                                          winmm\_get\_host\_error
+                                      \}
+\end{DoxyCode}
+
+
+Definition at line 1377 of file pmwinmm.\+c.
+

@@ -1,0 +1,242 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/src/effects/Effect.h" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/src/effects/Effect.h \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include '\&.\&./Audacity\&.h'\fP
+.br
+\fC#include '\&.\&./MemoryX\&.h'\fP
+.br
+\fC#include <set>\fP
+.br
+\fC#include <wx/bmpbuttn\&.h>\fP
+.br
+\fC#include <wx/dynarray\&.h>\fP
+.br
+\fC#include <wx/intl\&.h>\fP
+.br
+\fC#include <wx/string\&.h>\fP
+.br
+\fC#include <wx/tglbtn\&.h>\fP
+.br
+\fC#include 'audacity/ConfigInterface\&.h'\fP
+.br
+\fC#include 'audacity/EffectInterface\&.h'\fP
+.br
+\fC#include '\&.\&./Experimental\&.h'\fP
+.br
+\fC#include '\&.\&./SelectedRegion\&.h'\fP
+.br
+\fC#include '\&.\&./Shuttle\&.h'\fP
+.br
+\fC#include '\&.\&./Internat\&.h'\fP
+.br
+\fC#include '\&.\&./widgets/ProgressDialog\&.h'\fP
+.br
+
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "class \fBEffect\fP"
+.br
+.RI "\fISTK abstract effects parent class\&. \fP"
+.ti -1c
+.RI "class \fBEffect::AddedAnalysisTrack\fP"
+.br
+.ti -1c
+.RI "class \fBEffect::ModifiedAnalysisTrack\fP"
+.br
+.ti -1c
+.RI "class \fBEffectDialog\fP"
+.br
+.RI "\fINew (Jun-2006) base class for effects dialogs\&. Likely to get greater use in future\&. \fP"
+.ti -1c
+.RI "class \fBEffectUIHost\fP"
+.br
+.ti -1c
+.RI "class \fBEffectPresetsDialog\fP"
+.br
+.in -1c
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBBUILTIN_EFFECT_PREFIX\fP   wxT('Built\-\fBin\fP Effect: ')"
+.br
+.ti -1c
+.RI "#define \fBID_EFFECT_PREVIEW\fP   \fBePreviewID\fP"
+.br
+.ti -1c
+.RI "#define \fBParam\fP(\fBname\fP,  type,  key,  def,  \fBmin\fP,  \fBmax\fP,  \fBscale\fP)"
+.br
+.ti -1c
+.RI "#define \fBPBasic\fP(\fBname\fP,  type,  key,  def)"
+.br
+.ti -1c
+.RI "#define \fBPRange\fP(\fBname\fP,  type,  key,  def,  \fBmin\fP,  \fBmax\fP)"
+.br
+.ti -1c
+.RI "#define \fBPScale\fP(\fBname\fP,  type,  key,  def,  \fBmin\fP,  \fBmax\fP,  \fBscale\fP)"
+.br
+.ti -1c
+.RI "#define \fBReadParam\fP(type,  \fBname\fP)"
+.br
+.ti -1c
+.RI "#define \fBReadBasic\fP(type,  \fBname\fP)"
+.br
+.ti -1c
+.RI "#define \fBReadAndVerifyEnum\fP(\fBname\fP,  list)"
+.br
+.ti -1c
+.RI "#define \fBReadAndVerifyInt\fP(\fBname\fP)   \fBReadParam\fP(\fBint\fP, \fBname\fP)"
+.br
+.ti -1c
+.RI "#define \fBReadAndVerifyDouble\fP(\fBname\fP)   \fBReadParam\fP(double, \fBname\fP)"
+.br
+.ti -1c
+.RI "#define \fBReadAndVerifyFloat\fP(\fBname\fP)   \fBReadParam\fP(float, \fBname\fP)"
+.br
+.ti -1c
+.RI "#define \fBReadAndVerifyBool\fP(\fBname\fP)   \fBReadBasic\fP(\fBbool\fP, \fBname\fP)"
+.br
+.ti -1c
+.RI "#define \fBReadAndVerifyString\fP(\fBname\fP)   \fBReadBasic\fP(wxString, \fBname\fP)"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "float \fBTrapFloat\fP (float x, float \fBmin\fP, float \fBmax\fP)"
+.br
+.ti -1c
+.RI "double \fBTrapDouble\fP (double x, double \fBmin\fP, double \fBmax\fP)"
+.br
+.ti -1c
+.RI "long \fBTrapLong\fP (long x, long \fBmin\fP, long \fBmax\fP)"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define BUILTIN_EFFECT_PREFIX   wxT('Built\-\fBin\fP Effect: ')"
+
+.PP
+Definition at line 42 of file Effect\&.h\&.
+.SS "#define ID_EFFECT_PREVIEW   \fBePreviewID\fP"
+
+.PP
+Definition at line 541 of file Effect\&.h\&.
+.SS "#define Param(\fBname\fP, type, key, def, \fBmin\fP, \fBmax\fP, \fBscale\fP)"
+\fBValue:\fP
+.PP
+.nf
+static const wxChar * KEY_ ## name = (key); \
+   static const type DEF_ ## name = (def); \
+   static const type MIN_ ## name = (min); \
+   static const type MAX_ ## name = (max); \
+   static const type SCL_ ## name = (scale);
+.fi
+.PP
+Definition at line 726 of file Effect\&.h\&.
+.SS "#define PBasic(\fBname\fP, type, key, def)"
+\fBValue:\fP
+.PP
+.nf
+static const wxChar * KEY_ ## name = (key); \
+   static const type DEF_ ## name = (def);
+.fi
+.PP
+Definition at line 733 of file Effect\&.h\&.
+.SS "#define PRange(\fBname\fP, type, key, def, \fBmin\fP, \fBmax\fP)"
+\fBValue:\fP
+.PP
+.nf
+PBasic(name, type, key, def); \
+   static const type MIN_ ## name = (min); \
+   static const type MAX_ ## name = (max);
+.fi
+.PP
+Definition at line 737 of file Effect\&.h\&.
+.SS "#define PScale(\fBname\fP, type, key, def, \fBmin\fP, \fBmax\fP, \fBscale\fP)"
+\fBValue:\fP
+.PP
+.nf
+PRange(name, type, key, def, min, max); \
+   static const type SCL_ ## name = (scale);
+.fi
+.PP
+Definition at line 742 of file Effect\&.h\&.
+.SS "#define ReadAndVerifyBool(\fBname\fP)   \fBReadBasic\fP(\fBbool\fP, \fBname\fP)"
+
+.PP
+Definition at line 767 of file Effect\&.h\&.
+.SS "#define ReadAndVerifyDouble(\fBname\fP)   \fBReadParam\fP(double, \fBname\fP)"
+
+.PP
+Definition at line 765 of file Effect\&.h\&.
+.SS "#define ReadAndVerifyEnum(\fBname\fP, list)"
+\fBValue:\fP
+.PP
+.nf
+int name; \
+   if (!parms\&.ReadAndVerify(KEY_ ## name, &name, DEF_ ## name, list)) \
+      return false;
+.fi
+.PP
+Definition at line 759 of file Effect\&.h\&.
+.SS "#define ReadAndVerifyFloat(\fBname\fP)   \fBReadParam\fP(float, \fBname\fP)"
+
+.PP
+Definition at line 766 of file Effect\&.h\&.
+.SS "#define ReadAndVerifyInt(\fBname\fP)   \fBReadParam\fP(\fBint\fP, \fBname\fP)"
+
+.PP
+Definition at line 764 of file Effect\&.h\&.
+.SS "#define ReadAndVerifyString(\fBname\fP)   \fBReadBasic\fP(wxString, \fBname\fP)"
+
+.PP
+Definition at line 768 of file Effect\&.h\&.
+.SS "#define ReadBasic(type, \fBname\fP)"
+\fBValue:\fP
+.PP
+.nf
+type name; \
+   wxUnusedVar(MIN_ ##name); \
+   wxUnusedVar(MAX_ ##name); \
+   wxUnusedVar(SCL_ ##name); \
+   if (!parms\&.ReadAndVerify(KEY_ ## name, &name, DEF_ ## name)) \
+      return false;
+.fi
+.PP
+Definition at line 751 of file Effect\&.h\&.
+.SS "#define ReadParam(type, \fBname\fP)"
+\fBValue:\fP
+.PP
+.nf
+type name; \
+   if (!parms\&.ReadAndVerify(KEY_ ## name, &name, DEF_ ## name, MIN_ ## name, MAX_ ## name)) \
+      return false;
+.fi
+.PP
+Definition at line 746 of file Effect\&.h\&.
+.SH "Function Documentation"
+.PP 
+.SS "double TrapDouble (double x, double min, double max)\fC [inline]\fP"
+
+.PP
+Definition at line 702 of file Effect\&.h\&.
+.SS "float TrapFloat (float x, float min, float max)\fC [inline]\fP"
+
+.PP
+Definition at line 691 of file Effect\&.h\&.
+.SS "long TrapLong (long x, long min, long max)\fC [inline]\fP"
+
+.PP
+Definition at line 713 of file Effect\&.h\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

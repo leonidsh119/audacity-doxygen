@@ -1,0 +1,142 @@
+.TH "lavc_codec_hwaccel_vdpau" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+lavc_codec_hwaccel_vdpau \- VDPAU Decoder and Renderer
+.SS "Files"
+
+.in +1c
+.ti -1c
+.RI "file \fBvdpau\&.h\fP"
+.br
+.in -1c
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "union \fBAVVDPAUPictureInfo\fP"
+.br
+.ti -1c
+.RI "struct \fBAVVDPAUContext\fP"
+.br
+.ti -1c
+.RI "struct \fBvdpau_render_state\fP"
+.br
+.RI "\fIThis structure is used as a callback between the FFmpeg decoder (vd_) and presentation (vo_) module\&. This is used for defining a video frame containing surface, picture parameter, bitstream information etc which are passed between the FFmpeg decoder and its clients\&. \fP"
+.in -1c
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBFF_VDPAU_STATE_USED_FOR_RENDER\fP   1"
+.br
+.RI "\fIThe videoSurface is used for rendering\&. \fP"
+.ti -1c
+.RI "#define \fBFF_VDPAU_STATE_USED_FOR_REFERENCE\fP   2"
+.br
+.RI "\fIThe videoSurface is needed for reference/prediction\&. The codec manipulates this\&. \fP"
+.in -1c
+.SS "Typedefs"
+
+.in +1c
+.ti -1c
+.RI "typedef \fBint\fP(* \fBAVVDPAU_Render2\fP) (struct \fBAVCodecContext\fP *, struct \fBAVFrame\fP *, \fBconst\fP VdpPictureInfo *, \fBuint32_t\fP, \fBconst\fP VdpBitstreamBuffer *)"
+.br
+.ti -1c
+.RI "typedef struct \fBAVVDPAUContext\fP \fBAVVDPAUContext\fP"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBAVVDPAUContext\fP * \fBav_alloc_vdpaucontext\fP (\fBvoid\fP)"
+.br
+.RI "\fIallocation function for \fBAVVDPAUContext\fP \fP"
+.ti -1c
+.RI "\fBAVVDPAU_Render2\fP \fBav_vdpau_hwaccel_get_render2\fP (\fBconst\fP \fBAVVDPAUContext\fP *)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBav_vdpau_hwaccel_set_render2\fP (\fBAVVDPAUContext\fP *, \fBAVVDPAU_Render2\fP)"
+.br
+.ti -1c
+.RI "\fBAVVDPAUContext\fP * \fBav_vdpau_alloc_context\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_vdpau_get_profile\fP (\fBAVCodecContext\fP *avctx, VdpDecoderProfile *profile)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+VDPAU hardware acceleration has two modules
+.IP "\(bu" 2
+VDPAU decoding
+.IP "\(bu" 2
+VDPAU presentation
+.PP
+.PP
+The VDPAU decoding module parses all headers using FFmpeg parsing mechanisms and uses VDPAU for the actual decoding\&.
+.PP
+As per the current implementation, the actual decoding and rendering (API calls) are done as part of the VDPAU presentation (vo_vdpau\&.c) module\&. 
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define FF_VDPAU_STATE_USED_FOR_REFERENCE   2"
+
+.PP
+The videoSurface is needed for reference/prediction\&. The codec manipulates this\&. 
+.PP
+Definition at line 180 of file vdpau\&.h\&.
+.SS "#define FF_VDPAU_STATE_USED_FOR_RENDER   1"
+
+.PP
+The videoSurface is used for rendering\&. 
+.PP
+Definition at line 174 of file vdpau\&.h\&.
+.SH "Typedef Documentation"
+.PP 
+.SS "typedef \fBint\fP(* AVVDPAU_Render2) (struct \fBAVCodecContext\fP *, struct \fBAVFrame\fP *, \fBconst\fP VdpPictureInfo *, \fBuint32_t\fP, \fBconst\fP VdpBitstreamBuffer *)"
+
+.PP
+Definition at line 72 of file vdpau\&.h\&.
+.SS "typedef struct \fBAVVDPAUContext\fP  \fBAVVDPAUContext\fP"
+This structure is used to share data between the libavcodec library and the client video application\&. The user shall allocate the structure via the av_alloc_vdpau_hwaccel function and make it available as \fBAVCodecContext\&.hwaccel_context\fP\&. Members can be set by the user once during initialization or through each \fBAVCodecContext\&.get_buffer()\fP function call\&. In any case, they must be valid prior to calling decoding functions\&.
+.PP
+The size of this structure is not a part of the public ABI and must not be used outside of libavcodec\&. Use \fBav_vdpau_alloc_context()\fP to allocate an \fBAVVDPAUContext\fP\&. 
+.SH "Function Documentation"
+.PP 
+.SS "\fBAVVDPAUContext\fP* av_alloc_vdpaucontext (\fBvoid\fP)"
+
+.PP
+allocation function for \fBAVVDPAUContext\fP Allows extending the struct without breaking API/ABI 
+.SS "\fBAVVDPAUContext\fP* av_vdpau_alloc_context (\fBvoid\fP)"
+Allocate an \fBAVVDPAUContext\fP\&.
+.PP
+\fBReturns:\fP
+.RS 4
+Newly-allocated \fBAVVDPAUContext\fP or NULL on failure\&. 
+.RE
+.PP
+
+.SS "\fBint\fP av_vdpau_get_profile (\fBAVCodecContext\fP * avctx, VdpDecoderProfile * profile)"
+Get a decoder profile that should be used for initializing a VDPAU decoder\&. Should be called from the \fBAVCodecContext\&.get_format()\fP callback\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIavctx\fP the codec context being used for decoding the stream 
+.br
+\fIprofile\fP a pointer into which the result will be written on success\&. The contents of profile are undefined if this function returns an error\&.
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+0 on success (non-negative), a negative AVERROR on failure\&. 
+.RE
+.PP
+
+.SS "\fBAVVDPAU_Render2\fP av_vdpau_hwaccel_get_render2 (\fBconst\fP \fBAVVDPAUContext\fP *)"
+
+.SS "\fBvoid\fP av_vdpau_hwaccel_set_render2 (\fBAVVDPAUContext\fP *, \fBAVVDPAU_Render2\fP)"
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

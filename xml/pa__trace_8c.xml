@@ -1,0 +1,326 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="pa__trace_8c" kind="file" language="C++">
+    <compoundname>pa_trace.c</compoundname>
+    <includes local="no">stdio.h</includes>
+    <includes local="no">stdlib.h</includes>
+    <includes local="no">stdarg.h</includes>
+    <includes local="no">string.h</includes>
+    <includes refid="assert_8h" local="no">assert.h</includes>
+    <includes refid="pa__trace_8h" local="yes">pa_trace.h</includes>
+    <includes refid="pa__util_8h" local="yes">pa_util.h</includes>
+    <includes refid="pa__debugprint_8h" local="yes">pa_debugprint.h</includes>
+    <incdepgraph>
+      <node id="29617">
+        <label>stdarg.h</label>
+      </node>
+      <node id="29616">
+        <label>stdlib.h</label>
+      </node>
+      <node id="29619">
+        <label>assert.h</label>
+        <link refid="assert_8h"/>
+      </node>
+      <node id="29618">
+        <label>string.h</label>
+      </node>
+      <node id="29622">
+        <label>portaudio.h</label>
+        <link refid="portaudio_8h"/>
+      </node>
+      <node id="29614">
+        <label>C:/_dev/OpenU/Audacity/audacity/lib-src/portaudio-v19/src/common/pa_trace.c</label>
+        <link refid="pa_trace.c"/>
+        <childnode refid="29615" relation="include">
+        </childnode>
+        <childnode refid="29616" relation="include">
+        </childnode>
+        <childnode refid="29617" relation="include">
+        </childnode>
+        <childnode refid="29618" relation="include">
+        </childnode>
+        <childnode refid="29619" relation="include">
+        </childnode>
+        <childnode refid="29620" relation="include">
+        </childnode>
+        <childnode refid="29621" relation="include">
+        </childnode>
+        <childnode refid="29623" relation="include">
+        </childnode>
+      </node>
+      <node id="29620">
+        <label>pa_trace.h</label>
+        <link refid="pa__trace_8h"/>
+      </node>
+      <node id="29623">
+        <label>pa_debugprint.h</label>
+        <link refid="pa__debugprint_8h"/>
+      </node>
+      <node id="29615">
+        <label>stdio.h</label>
+      </node>
+      <node id="29621">
+        <label>pa_util.h</label>
+        <link refid="pa__util_8h"/>
+        <childnode refid="29622" relation="include">
+        </childnode>
+      </node>
+    </incdepgraph>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="pa__trace_8c_1a8792d5fa3838f918e653ef09520494de" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="xmltok_8h_1a5a0d4a5641ce434f1d23533f2b2e6653" kindref="member">int</ref></type>
+        <definition>int PaUtil_TraceStubToSatisfyLinker</definition>
+        <argsstring>(void)</argsstring>
+        <name>PaUtil_TraceStubToSatisfyLinker</name>
+        <param>
+          <type><ref refid="sound_8c_1ae35f5844602719cf66324f4de2a658b3" kindref="member">void</ref></type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/_dev/OpenU/Audacity/audacity/lib-src/portaudio-v19/src/common/pa_trace.c" line="234" column="1" bodyfile="C:/_dev/OpenU/Audacity/audacity/lib-src/portaudio-v19/src/common/pa_trace.c" bodystart="234" bodyend="237"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+<para>Real-time safe event trace logging facility for debugging. </para>    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="comment">/*</highlight></codeline>
+<codeline lineno="2"><highlight class="comment"><sp/>*<sp/>$Id:<sp/>pa_trace.c<sp/>1916<sp/>2014-01-17<sp/>03:45:15Z<sp/>philburk<sp/>$</highlight></codeline>
+<codeline lineno="3"><highlight class="comment"><sp/>*<sp/>Portable<sp/>Audio<sp/>I/O<sp/>Library<sp/>Trace<sp/>Facility</highlight></codeline>
+<codeline lineno="4"><highlight class="comment"><sp/>*<sp/>Store<sp/>trace<sp/>information<sp/>in<sp/>real-time<sp/>for<sp/>later<sp/>printing.</highlight></codeline>
+<codeline lineno="5"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="6"><highlight class="comment"><sp/>*<sp/>Based<sp/>on<sp/>the<sp/>Open<sp/>Source<sp/>API<sp/>proposed<sp/>by<sp/>Ross<sp/>Bencina</highlight></codeline>
+<codeline lineno="7"><highlight class="comment"><sp/>*<sp/>Copyright<sp/>(c)<sp/>1999-2000<sp/>Phil<sp/>Burk</highlight></codeline>
+<codeline lineno="8"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="9"><highlight class="comment"><sp/>*<sp/>Permission<sp/>is<sp/>hereby<sp/>granted,<sp/>free<sp/>of<sp/>charge,<sp/>to<sp/>any<sp/>person<sp/>obtaining</highlight></codeline>
+<codeline lineno="10"><highlight class="comment"><sp/>*<sp/>a<sp/>copy<sp/>of<sp/>this<sp/>software<sp/>and<sp/>associated<sp/>documentation<sp/>files</highlight></codeline>
+<codeline lineno="11"><highlight class="comment"><sp/>*<sp/>(the<sp/>&quot;Software&quot;),<sp/>to<sp/>deal<sp/>in<sp/>the<sp/>Software<sp/>without<sp/>restriction,</highlight></codeline>
+<codeline lineno="12"><highlight class="comment"><sp/>*<sp/>including<sp/>without<sp/>limitation<sp/>the<sp/>rights<sp/>to<sp/>use,<sp/>copy,<sp/>modify,<sp/>merge,</highlight></codeline>
+<codeline lineno="13"><highlight class="comment"><sp/>*<sp/>publish,<sp/>distribute,<sp/>sublicense,<sp/>and/or<sp/>sell<sp/>copies<sp/>of<sp/>the<sp/>Software,</highlight></codeline>
+<codeline lineno="14"><highlight class="comment"><sp/>*<sp/>and<sp/>to<sp/>permit<sp/>persons<sp/>to<sp/>whom<sp/>the<sp/>Software<sp/>is<sp/>furnished<sp/>to<sp/>do<sp/>so,</highlight></codeline>
+<codeline lineno="15"><highlight class="comment"><sp/>*<sp/>subject<sp/>to<sp/>the<sp/>following<sp/>conditions:</highlight></codeline>
+<codeline lineno="16"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="17"><highlight class="comment"><sp/>*<sp/>The<sp/>above<sp/>copyright<sp/>notice<sp/>and<sp/>this<sp/>permission<sp/>notice<sp/>shall<sp/>be</highlight></codeline>
+<codeline lineno="18"><highlight class="comment"><sp/>*<sp/>included<sp/>in<sp/>all<sp/>copies<sp/>or<sp/>substantial<sp/>portions<sp/>of<sp/>the<sp/>Software.</highlight></codeline>
+<codeline lineno="19"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="20"><highlight class="comment"><sp/>*<sp/>THE<sp/>SOFTWARE<sp/>IS<sp/>PROVIDED<sp/>&quot;AS<sp/>IS&quot;,<sp/>WITHOUT<sp/>WARRANTY<sp/>OF<sp/>ANY<sp/>KIND,</highlight></codeline>
+<codeline lineno="21"><highlight class="comment"><sp/>*<sp/>EXPRESS<sp/>OR<sp/>IMPLIED,<sp/>INCLUDING<sp/>BUT<sp/>NOT<sp/>LIMITED<sp/>TO<sp/>THE<sp/>WARRANTIES<sp/>OF</highlight></codeline>
+<codeline lineno="22"><highlight class="comment"><sp/>*<sp/>MERCHANTABILITY,<sp/>FITNESS<sp/>FOR<sp/>A<sp/>PARTICULAR<sp/>PURPOSE<sp/>AND<sp/>NONINFRINGEMENT.</highlight></codeline>
+<codeline lineno="23"><highlight class="comment"><sp/>*<sp/>IN<sp/>NO<sp/>EVENT<sp/>SHALL<sp/>THE<sp/>AUTHORS<sp/>OR<sp/>COPYRIGHT<sp/>HOLDERS<sp/>BE<sp/>LIABLE<sp/>FOR</highlight></codeline>
+<codeline lineno="24"><highlight class="comment"><sp/>*<sp/>ANY<sp/>CLAIM,<sp/>DAMAGES<sp/>OR<sp/>OTHER<sp/>LIABILITY,<sp/>WHETHER<sp/>IN<sp/>AN<sp/>ACTION<sp/>OF</highlight></codeline>
+<codeline lineno="25"><highlight class="comment"><sp/>*<sp/>CONTRACT,<sp/>TORT<sp/>OR<sp/>OTHERWISE,<sp/>ARISING<sp/>FROM,<sp/>OUT<sp/>OF<sp/>OR<sp/>IN<sp/>CONNECTION</highlight></codeline>
+<codeline lineno="26"><highlight class="comment"><sp/>*<sp/>WITH<sp/>THE<sp/>SOFTWARE<sp/>OR<sp/>THE<sp/>USE<sp/>OR<sp/>OTHER<sp/>DEALINGS<sp/>IN<sp/>THE<sp/>SOFTWARE.</highlight></codeline>
+<codeline lineno="27"><highlight class="comment"><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="28"><highlight class="normal"></highlight></codeline>
+<codeline lineno="29"><highlight class="normal"></highlight><highlight class="comment">/*</highlight></codeline>
+<codeline lineno="30"><highlight class="comment"><sp/>*<sp/>The<sp/>text<sp/>above<sp/>constitutes<sp/>the<sp/>entire<sp/>PortAudio<sp/>license;<sp/>however,<sp/></highlight></codeline>
+<codeline lineno="31"><highlight class="comment"><sp/>*<sp/>the<sp/>PortAudio<sp/>community<sp/>also<sp/>makes<sp/>the<sp/>following<sp/>non-binding<sp/>requests:</highlight></codeline>
+<codeline lineno="32"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="33"><highlight class="comment"><sp/>*<sp/>Any<sp/>person<sp/>wishing<sp/>to<sp/>distribute<sp/>modifications<sp/>to<sp/>the<sp/>Software<sp/>is</highlight></codeline>
+<codeline lineno="34"><highlight class="comment"><sp/>*<sp/>requested<sp/>to<sp/>send<sp/>the<sp/>modifications<sp/>to<sp/>the<sp/>original<sp/>developer<sp/>so<sp/>that</highlight></codeline>
+<codeline lineno="35"><highlight class="comment"><sp/>*<sp/>they<sp/>can<sp/>be<sp/>incorporated<sp/>into<sp/>the<sp/>canonical<sp/>version.<sp/>It<sp/>is<sp/>also<sp/></highlight></codeline>
+<codeline lineno="36"><highlight class="comment"><sp/>*<sp/>requested<sp/>that<sp/>these<sp/>non-binding<sp/>requests<sp/>be<sp/>included<sp/>along<sp/>with<sp/>the<sp/></highlight></codeline>
+<codeline lineno="37"><highlight class="comment"><sp/>*<sp/>license<sp/>above.</highlight></codeline>
+<codeline lineno="38"><highlight class="comment"><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="39"><highlight class="normal"></highlight></codeline>
+<codeline lineno="47"><highlight class="preprocessor">#include<sp/>&lt;stdio.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="48"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;stdlib.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="49"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;stdarg.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="50"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;string.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="51"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="assert_8h" kindref="compound">assert.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="52"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="pa__trace_8h" kindref="compound">pa_trace.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="53"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="pa__util_8h" kindref="compound">pa_util.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="54"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="pa__debugprint_8h" kindref="compound">pa_debugprint.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="55"><highlight class="normal"></highlight></codeline>
+<codeline lineno="56"><highlight class="normal"></highlight><highlight class="preprocessor">#if<sp/>PA_TRACE_REALTIME_EVENTS</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="57"><highlight class="normal"></highlight></codeline>
+<codeline lineno="58"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>*traceTextArray[<ref refid="pa__trace_8h_1af3ea8880d4c946ab3fe3146446d7394d" kindref="member">PA_MAX_TRACE_RECORDS</ref>];</highlight></codeline>
+<codeline lineno="59"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>traceIntArray[<ref refid="pa__trace_8h_1af3ea8880d4c946ab3fe3146446d7394d" kindref="member">PA_MAX_TRACE_RECORDS</ref>];</highlight></codeline>
+<codeline lineno="60"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>traceIndex<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="61"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>traceBlock<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="62"><highlight class="normal"></highlight></codeline>
+<codeline lineno="63"><highlight class="normal"></highlight><highlight class="comment">/*********************************************************************/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="64"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="pa__trace_8h_1ac7b7bbffe3e633111d58e3cd74a5fcdb" kindref="member">PaUtil_ResetTraceMessages</ref>()</highlight></codeline>
+<codeline lineno="65"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="66"><highlight class="normal"><sp/><sp/><sp/><sp/>traceIndex<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="67"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="68"><highlight class="normal"></highlight></codeline>
+<codeline lineno="69"><highlight class="normal"></highlight><highlight class="comment">/*********************************************************************/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="70"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="pa__trace_8h_1ad43add0acb5375a276d29146cf14d0ad" kindref="member">PaUtil_DumpTraceMessages</ref>()</highlight></codeline>
+<codeline lineno="71"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="72"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="checksum_8c_1ab80e330a3bc9e38c1297fe17381e92b4" kindref="member">i</ref>;</highlight></codeline>
+<codeline lineno="73"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>messageCount<sp/>=<sp/>(traceIndex<sp/>&lt;<sp/><ref refid="pa__trace_8h_1af3ea8880d4c946ab3fe3146446d7394d" kindref="member">PA_MAX_TRACE_RECORDS</ref>)<sp/>?<sp/>traceIndex<sp/>:<sp/><ref refid="pa__trace_8h_1af3ea8880d4c946ab3fe3146446d7394d" kindref="member">PA_MAX_TRACE_RECORDS</ref>;</highlight></codeline>
+<codeline lineno="74"><highlight class="normal"></highlight></codeline>
+<codeline lineno="75"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="octave__test_8m_1ac6d0e62c65e5715b13a5fcb381118888" kindref="member">printf</ref>(</highlight><highlight class="stringliteral">&quot;DumpTraceMessages:<sp/>traceIndex<sp/>=<sp/>%d\n&quot;</highlight><highlight class="normal">,<sp/>traceIndex<sp/>);</highlight></codeline>
+<codeline lineno="76"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal">(<sp/>i=0;<sp/>i&lt;messageCount;<sp/>i++<sp/>)</highlight></codeline>
+<codeline lineno="77"><highlight class="normal"><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="78"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="octave__test_8m_1ac6d0e62c65e5715b13a5fcb381118888" kindref="member">printf</ref>(</highlight><highlight class="stringliteral">&quot;%3d:<sp/>%s<sp/>=<sp/>0x%08X\n&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="79"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>i,<sp/>traceTextArray[i],<sp/>traceIntArray[i]<sp/>);</highlight></codeline>
+<codeline lineno="80"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="81"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="pa__trace_8h_1ac7b7bbffe3e633111d58e3cd74a5fcdb" kindref="member">PaUtil_ResetTraceMessages</ref>();</highlight></codeline>
+<codeline lineno="82"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="octave__test_8m_1a0491ca59ff11d37e0e71589ce262a30c" kindref="member">fflush</ref>(<ref refid="namespacewaflib_1_1ansiterm_1acf95a6e21629de2ca2b5716f5089f3f0" kindref="member">stdout</ref>);</highlight></codeline>
+<codeline lineno="83"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="84"><highlight class="normal"></highlight></codeline>
+<codeline lineno="85"><highlight class="normal"></highlight><highlight class="comment">/*********************************************************************/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="86"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="pa__trace_8h_1a7111d66746fb69f58b8edf9d5f50326f" kindref="member">PaUtil_AddTraceMessage</ref>(<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>*msg,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="lib_2expat_8h_1ac39e72a1de1cb50dbdc54b08d0432a24" kindref="member">data</ref><sp/>)</highlight></codeline>
+<codeline lineno="87"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="88"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(<sp/>(traceIndex<sp/>==<sp/><ref refid="pa__trace_8h_1af3ea8880d4c946ab3fe3146446d7394d" kindref="member">PA_MAX_TRACE_RECORDS</ref>)<sp/>&amp;&amp;<sp/>(traceBlock<sp/>==<sp/>0)<sp/>)</highlight></codeline>
+<codeline lineno="89"><highlight class="normal"><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="90"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>traceBlock<sp/>=<sp/>1;</highlight></codeline>
+<codeline lineno="91"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">/*<sp/><sp/>PaUtil_DumpTraceMessages();<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="92"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="93"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(<sp/>traceIndex<sp/>&lt;<sp/><ref refid="pa__trace_8h_1af3ea8880d4c946ab3fe3146446d7394d" kindref="member">PA_MAX_TRACE_RECORDS</ref><sp/>)</highlight></codeline>
+<codeline lineno="94"><highlight class="normal"><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="95"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>traceTextArray[traceIndex]<sp/>=<sp/>msg;</highlight></codeline>
+<codeline lineno="96"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>traceIntArray[traceIndex]<sp/>=<sp/><ref refid="lib_2expat_8h_1ac39e72a1de1cb50dbdc54b08d0432a24" kindref="member">data</ref>;</highlight></codeline>
+<codeline lineno="97"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>traceIndex++;</highlight></codeline>
+<codeline lineno="98"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="99"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="100"><highlight class="normal"></highlight></codeline>
+<codeline lineno="101"><highlight class="normal"></highlight><highlight class="comment">/************************************************************************/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="102"><highlight class="normal"></highlight><highlight class="comment">/*<sp/>High<sp/>performance<sp/>log<sp/>alternative<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="103"><highlight class="normal"></highlight><highlight class="comment">/************************************************************************/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="104"><highlight class="normal"></highlight></codeline>
+<codeline lineno="105"><highlight class="normal"></highlight><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">long</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">long</highlight><highlight class="normal"><sp/><sp/>PaUint64;</highlight></codeline>
+<codeline lineno="106"><highlight class="normal"></highlight></codeline>
+<codeline lineno="107"><highlight class="normal"></highlight><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal">__PaHighPerformanceLog</highlight></codeline>
+<codeline lineno="108"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="109"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/><sp/><sp/><sp/>magik;</highlight></codeline>
+<codeline lineno="110"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>writePtr;</highlight></codeline>
+<codeline lineno="111"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>readPtr;</highlight></codeline>
+<codeline lineno="112"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="group__lavu__mem_1ga854352f53b148adc24983a58a1866d66" kindref="member">size</ref>;</highlight></codeline>
+<codeline lineno="113"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>refTime;</highlight></codeline>
+<codeline lineno="114"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="lib_2expat_8h_1ac39e72a1de1cb50dbdc54b08d0432a24" kindref="member">data</ref>;</highlight></codeline>
+<codeline lineno="115"><highlight class="normal">}<sp/>PaHighPerformanceLog;</highlight></codeline>
+<codeline lineno="116"><highlight class="normal"></highlight></codeline>
+<codeline lineno="117"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/>kMagik<sp/>=<sp/>0xcafebabe;</highlight></codeline>
+<codeline lineno="118"><highlight class="normal"></highlight></codeline>
+<codeline lineno="119"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>USEC_PER_SEC<sp/><sp/><sp/><sp/>(1000000ULL)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="120"><highlight class="normal"></highlight></codeline>
+<codeline lineno="121"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="pa__trace_8h_1a3217a6b513a2eb1f9b33575db4dbaf88" kindref="member">PaUtil_InitializeHighSpeedLog</ref>(<sp/>LogHandle*<sp/>phLog,<sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/>maxSizeInBytes<sp/>)</highlight></codeline>
+<codeline lineno="122"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="123"><highlight class="normal"><sp/><sp/><sp/><sp/>PaHighPerformanceLog*<sp/>pLog<sp/>=<sp/>(PaHighPerformanceLog*)<ref refid="pa__util_8h_1aa614f193aff12744a6ab90a9eb3128f0" kindref="member">PaUtil_AllocateMemory</ref>(</highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(PaHighPerformanceLog));</highlight></codeline>
+<codeline lineno="124"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(pLog<sp/>==<sp/>0)</highlight></codeline>
+<codeline lineno="125"><highlight class="normal"><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="126"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="portaudio_8h_1a2e45bf8b5145f131a91c128af2bdaec7ad58986a9b5064d5a29c7ed0837bfc621" kindref="member">paInsufficientMemory</ref>;</highlight></codeline>
+<codeline lineno="127"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="128"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="libid3tag_2global_8h_1af576bf8ffa22a44e53018c67095ffbf0" kindref="member">assert</ref>(phLog<sp/>!=<sp/>0);</highlight></codeline>
+<codeline lineno="129"><highlight class="normal"><sp/><sp/><sp/><sp/>*phLog<sp/>=<sp/>pLog;</highlight></codeline>
+<codeline lineno="130"><highlight class="normal"></highlight></codeline>
+<codeline lineno="131"><highlight class="normal"><sp/><sp/><sp/><sp/>pLog-&gt;data<sp/>=<sp/>(</highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*)<ref refid="pa__util_8h_1aa614f193aff12744a6ab90a9eb3128f0" kindref="member">PaUtil_AllocateMemory</ref>(maxSizeInBytes);</highlight></codeline>
+<codeline lineno="132"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(pLog-&gt;data<sp/>==<sp/>0)</highlight></codeline>
+<codeline lineno="133"><highlight class="normal"><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="134"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="pa__util_8h_1a27a8f85d109600ef246e5c642c5c3cad" kindref="member">PaUtil_FreeMemory</ref>(pLog);</highlight></codeline>
+<codeline lineno="135"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="portaudio_8h_1a2e45bf8b5145f131a91c128af2bdaec7ad58986a9b5064d5a29c7ed0837bfc621" kindref="member">paInsufficientMemory</ref>;</highlight></codeline>
+<codeline lineno="136"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="137"><highlight class="normal"><sp/><sp/><sp/><sp/>pLog-&gt;magik<sp/>=<sp/>kMagik;</highlight></codeline>
+<codeline lineno="138"><highlight class="normal"><sp/><sp/><sp/><sp/>pLog-&gt;size<sp/>=<sp/>maxSizeInBytes;</highlight></codeline>
+<codeline lineno="139"><highlight class="normal"><sp/><sp/><sp/><sp/>pLog-&gt;refTime<sp/>=<sp/><ref refid="pa__util_8h_1a9598384d28d22d589f607ca1069cc04c" kindref="member">PaUtil_GetTime</ref>();</highlight></codeline>
+<codeline lineno="140"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="portaudio_8h_1a2e45bf8b5145f131a91c128af2bdaec7aeb09d15a48b6c1034728a9c518cfe4ba" kindref="member">paNoError</ref>;</highlight></codeline>
+<codeline lineno="141"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="142"><highlight class="normal"></highlight></codeline>
+<codeline lineno="143"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="pa__trace_8h_1a420557d267bf7da721717f21bb343806" kindref="member">PaUtil_ResetHighSpeedLogTimeRef</ref>(<sp/>LogHandle<sp/>hLog<sp/>)</highlight></codeline>
+<codeline lineno="144"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="145"><highlight class="normal"><sp/><sp/><sp/><sp/>PaHighPerformanceLog*<sp/>pLog<sp/>=<sp/>(PaHighPerformanceLog*)hLog;</highlight></codeline>
+<codeline lineno="146"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="libid3tag_2global_8h_1af576bf8ffa22a44e53018c67095ffbf0" kindref="member">assert</ref>(pLog-&gt;magik<sp/>==<sp/>kMagik);</highlight></codeline>
+<codeline lineno="147"><highlight class="normal"><sp/><sp/><sp/><sp/>pLog-&gt;refTime<sp/>=<sp/><ref refid="pa__util_8h_1a9598384d28d22d589f607ca1069cc04c" kindref="member">PaUtil_GetTime</ref>();</highlight></codeline>
+<codeline lineno="148"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="149"><highlight class="normal"></highlight></codeline>
+<codeline lineno="150"><highlight class="normal"></highlight><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal">__PaLogEntryHeader</highlight></codeline>
+<codeline lineno="151"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="152"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="group__lavu__mem_1ga854352f53b148adc24983a58a1866d66" kindref="member">size</ref>;</highlight></codeline>
+<codeline lineno="153"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>timeStamp;</highlight></codeline>
+<codeline lineno="154"><highlight class="normal">}<sp/>PaLogEntryHeader;</highlight></codeline>
+<codeline lineno="155"><highlight class="normal"></highlight></codeline>
+<codeline lineno="156"><highlight class="normal"></highlight><highlight class="preprocessor">#ifdef<sp/>__APPLE__</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="157"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>_vsnprintf<sp/>vsnprintf</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="158"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>min(a,b)<sp/>((a)&lt;(b)?(a):(b))</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="159"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="160"><highlight class="normal"></highlight></codeline>
+<codeline lineno="161"><highlight class="normal"></highlight></codeline>
+<codeline lineno="162"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="pa__trace_8h_1a665e802c0ad6f2b2ee97bfd522f2a3fd" kindref="member">PaUtil_AddHighSpeedLogMessage</ref>(<sp/>LogHandle<sp/>hLog,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>fmt,<sp/>...<sp/>)</highlight></codeline>
+<codeline lineno="163"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="164"><highlight class="normal"><sp/><sp/><sp/><sp/>va_list<sp/><ref refid="layer3_8c_1a741dbb4d8e78c3cb69915db7282fcec0" kindref="member">l</ref>;</highlight></codeline>
+<codeline lineno="165"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>n<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="166"><highlight class="normal"><sp/><sp/><sp/><sp/>PaHighPerformanceLog*<sp/>pLog<sp/>=<sp/>(PaHighPerformanceLog*)hLog;</highlight></codeline>
+<codeline lineno="167"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(pLog<sp/>!=<sp/>0)</highlight></codeline>
+<codeline lineno="168"><highlight class="normal"><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="169"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>PaLogEntryHeader*<sp/>pHeader;</highlight></codeline>
+<codeline lineno="170"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/><ref refid="xmltok_8h_1a94b60f3beb36ae85555d36dc9816769c" kindref="member">p</ref>;</highlight></codeline>
+<codeline lineno="171"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>maxN;</highlight></codeline>
+<codeline lineno="172"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="libid3tag_2global_8h_1af576bf8ffa22a44e53018c67095ffbf0" kindref="member">assert</ref>(pLog-&gt;magik<sp/>==<sp/>kMagik);</highlight></codeline>
+<codeline lineno="173"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>pHeader<sp/>=<sp/>(PaLogEntryHeader*)(<sp/>pLog-&gt;data<sp/>+<sp/>pLog-&gt;writePtr<sp/>);</highlight></codeline>
+<codeline lineno="174"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>p<sp/>=<sp/>(</highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*)(<sp/>pHeader<sp/>+<sp/>1<sp/>);</highlight></codeline>
+<codeline lineno="175"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>maxN<sp/>=<sp/>pLog-&gt;size<sp/>-<sp/>pLog-&gt;writePtr<sp/>-<sp/>2<sp/>*<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(PaLogEntryHeader);</highlight></codeline>
+<codeline lineno="176"><highlight class="normal"></highlight></codeline>
+<codeline lineno="177"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>pHeader-&gt;timeStamp<sp/>=<sp/><ref refid="pa__util_8h_1a9598384d28d22d589f607ca1069cc04c" kindref="member">PaUtil_GetTime</ref>()<sp/>-<sp/>pLog-&gt;refTime;</highlight></codeline>
+<codeline lineno="178"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(maxN<sp/>&gt;<sp/>0)</highlight></codeline>
+<codeline lineno="179"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="180"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(maxN<sp/>&gt;<sp/>32)</highlight></codeline>
+<codeline lineno="181"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="182"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>va_start(l,<sp/>fmt);</highlight></codeline>
+<codeline lineno="183"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>n<sp/>=<sp/>_vsnprintf(p,<sp/><ref refid="_compare_audio_command_8cpp_1abd8bbcfabb3ddef2ccaafb9928a37b95" kindref="member">min</ref>(1024,<sp/>maxN),<sp/>fmt,<sp/>l);</highlight></codeline>
+<codeline lineno="184"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>va_end(l);</highlight></codeline>
+<codeline lineno="185"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="186"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="187"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>n<sp/>=<sp/>sprintf(p,<sp/></highlight><highlight class="stringliteral">&quot;End<sp/>of<sp/>log...&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="188"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="189"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>n<sp/>=<sp/>((n<sp/>+<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(unsigned))<sp/>&amp;<sp/>~(</highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(unsigned)-1))<sp/>+<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(PaLogEntryHeader);</highlight></codeline>
+<codeline lineno="190"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>pHeader-&gt;size<sp/>=<sp/>n;</highlight></codeline>
+<codeline lineno="191"><highlight class="normal"></highlight><highlight class="preprocessor">#if<sp/>0</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="192"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="pa__debugprint_8c_1a775ad90aa83e8a15e724f1b0fc55a0d3" kindref="member">PaUtil_DebugPrint</ref>(</highlight><highlight class="stringliteral">&quot;%05u.%03u:<sp/>%s\n&quot;</highlight><highlight class="normal">,<sp/>pHeader-&gt;timeStamp/1000,<sp/>pHeader-&gt;timeStamp%1000,<sp/>p);</highlight></codeline>
+<codeline lineno="193"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="194"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>pLog-&gt;writePtr<sp/>+=<sp/>n;</highlight></codeline>
+<codeline lineno="195"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="196"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="197"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>n;</highlight></codeline>
+<codeline lineno="198"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="199"><highlight class="normal"></highlight></codeline>
+<codeline lineno="200"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="pa__trace_8h_1afa4fb96d2b3c205afb012af0f0e3eb8a" kindref="member">PaUtil_DumpHighSpeedLog</ref>(<sp/>LogHandle<sp/>hLog,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>fileName<sp/>)</highlight></codeline>
+<codeline lineno="201"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="202"><highlight class="normal"><sp/><sp/><sp/><sp/>FILE*<sp/><ref refid="rfft2d_test_m_l_8m_1aacd36fb6ac9ce14cec71f2ca852524d4" kindref="member">f</ref><sp/>=<sp/>(fileName<sp/>!=<sp/><ref refid="getopt1_8c_1a070d2ce7b6bb7e5c05602aa8c308d0c4" kindref="member">NULL</ref>)<sp/>?<sp/>fopen(fileName,<sp/></highlight><highlight class="stringliteral">&quot;w&quot;</highlight><highlight class="normal">)<sp/>:<sp/><ref refid="namespacewaflib_1_1ansiterm_1acf95a6e21629de2ca2b5716f5089f3f0" kindref="member">stdout</ref>;</highlight></codeline>
+<codeline lineno="203"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/>localWritePtr;</highlight></codeline>
+<codeline lineno="204"><highlight class="normal"><sp/><sp/><sp/><sp/>PaHighPerformanceLog*<sp/>pLog<sp/>=<sp/>(PaHighPerformanceLog*)hLog;</highlight></codeline>
+<codeline lineno="205"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="libid3tag_2global_8h_1af576bf8ffa22a44e53018c67095ffbf0" kindref="member">assert</ref>(pLog-&gt;magik<sp/>==<sp/>kMagik);</highlight></codeline>
+<codeline lineno="206"><highlight class="normal"><sp/><sp/><sp/><sp/>localWritePtr<sp/>=<sp/>pLog-&gt;writePtr;</highlight></codeline>
+<codeline lineno="207"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">while</highlight><highlight class="normal"><sp/>(pLog-&gt;readPtr<sp/>!=<sp/>localWritePtr)</highlight></codeline>
+<codeline lineno="208"><highlight class="normal"><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="209"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>PaLogEntryHeader*<sp/>pHeader<sp/>=<sp/>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>PaLogEntryHeader*)(<sp/>pLog-&gt;data<sp/>+<sp/>pLog-&gt;readPtr<sp/>);</highlight></codeline>
+<codeline lineno="210"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>p<sp/>=<sp/>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*)(<sp/>pHeader<sp/>+<sp/>1<sp/>);</highlight></codeline>
+<codeline lineno="211"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>PaUint64<sp/>ts<sp/>=<sp/>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>PaUint64)(<sp/>pHeader-&gt;timeStamp<sp/>*<sp/>USEC_PER_SEC<sp/>);</highlight></codeline>
+<codeline lineno="212"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="libid3tag_2global_8h_1af576bf8ffa22a44e53018c67095ffbf0" kindref="member">assert</ref>(pHeader-&gt;size<sp/>&lt;<sp/>(1024+</highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(</highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal">)+</highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(PaLogEntryHeader)));</highlight></codeline>
+<codeline lineno="213"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>fprintf(f,<sp/></highlight><highlight class="stringliteral">&quot;%05u.%03u:<sp/>%s\n&quot;</highlight><highlight class="normal">,<sp/>(</highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal">)(ts/1000),<sp/>(</highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal">)(ts%1000),<sp/>p);</highlight></codeline>
+<codeline lineno="214"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>pLog-&gt;readPtr<sp/>+=<sp/>pHeader-&gt;size;</highlight></codeline>
+<codeline lineno="215"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="216"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(f<sp/>!=<sp/><ref refid="namespacewaflib_1_1ansiterm_1acf95a6e21629de2ca2b5716f5089f3f0" kindref="member">stdout</ref>)</highlight></codeline>
+<codeline lineno="217"><highlight class="normal"><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="218"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="conv2dtest_8m_1ae93e9d524fd1ef618af3d5070a8126eb" kindref="member">fclose</ref>(f);</highlight></codeline>
+<codeline lineno="219"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="220"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="221"><highlight class="normal"></highlight></codeline>
+<codeline lineno="222"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="pa__trace_8h_1a1214bcb36bdf43df4769d0c16655e487" kindref="member">PaUtil_DiscardHighSpeedLog</ref>(<sp/>LogHandle<sp/>hLog<sp/>)</highlight></codeline>
+<codeline lineno="223"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="224"><highlight class="normal"><sp/><sp/><sp/><sp/>PaHighPerformanceLog*<sp/>pLog<sp/>=<sp/>(PaHighPerformanceLog*)hLog;</highlight></codeline>
+<codeline lineno="225"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="libid3tag_2global_8h_1af576bf8ffa22a44e53018c67095ffbf0" kindref="member">assert</ref>(pLog-&gt;magik<sp/>==<sp/>kMagik);</highlight></codeline>
+<codeline lineno="226"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="pa__util_8h_1a27a8f85d109600ef246e5c642c5c3cad" kindref="member">PaUtil_FreeMemory</ref>(pLog-&gt;data);</highlight></codeline>
+<codeline lineno="227"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="pa__util_8h_1a27a8f85d109600ef246e5c642c5c3cad" kindref="member">PaUtil_FreeMemory</ref>(pLog);</highlight></codeline>
+<codeline lineno="228"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="229"><highlight class="normal"></highlight></codeline>
+<codeline lineno="230"><highlight class="normal"></highlight><highlight class="preprocessor">#else</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="231"><highlight class="normal"></highlight><highlight class="comment">/*<sp/>This<sp/>stub<sp/>was<sp/>added<sp/>so<sp/>that<sp/>this<sp/>file<sp/>will<sp/>generate<sp/>a<sp/>symbol.</highlight></codeline>
+<codeline lineno="232"><highlight class="comment"><sp/>*<sp/>Otherwise<sp/>linker/archiver<sp/>programs<sp/>will<sp/>complain.</highlight></codeline>
+<codeline lineno="233"><highlight class="comment"><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="234" refid="pa__trace_8c_1a8792d5fa3838f918e653ef09520494de" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="pa__trace_8c_1a8792d5fa3838f918e653ef09520494de" kindref="member">PaUtil_TraceStubToSatisfyLinker</ref>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">)</highlight></codeline>
+<codeline lineno="235"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="236"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="237"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="238"><highlight class="normal"></highlight><highlight class="preprocessor">#endif<sp/></highlight><highlight class="comment">/*<sp/>TRACE_REALTIME_EVENTS<sp/>*/</highlight><highlight class="preprocessor"></highlight></codeline>
+    </programlisting>
+    <location file="C:/_dev/OpenU/Audacity/audacity/lib-src/portaudio-v19/src/common/pa_trace.c"/>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,125 @@
+\hypertarget{_freq_window_8cpp}{}\section{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/src/\+Freq\+Window.cpp File Reference}
+\label{_freq_window_8cpp}\index{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/src/\+Freq\+Window.\+cpp@{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/src/\+Freq\+Window.\+cpp}}
+{\ttfamily \#include \char`\"{}Audacity.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Freq\+Window.\+h\char`\"{}}\\*
+{\ttfamily \#include $<$algorithm$>$}\\*
+{\ttfamily \#include $<$wx/brush.\+h$>$}\\*
+{\ttfamily \#include $<$wx/button.\+h$>$}\\*
+{\ttfamily \#include $<$wx/choice.\+h$>$}\\*
+{\ttfamily \#include $<$wx/font.\+h$>$}\\*
+{\ttfamily \#include $<$wx/image.\+h$>$}\\*
+{\ttfamily \#include $<$wx/dcmemory.\+h$>$}\\*
+{\ttfamily \#include $<$wx/msgdlg.\+h$>$}\\*
+{\ttfamily \#include $<$wx/file.\+h$>$}\\*
+{\ttfamily \#include $<$wx/filedlg.\+h$>$}\\*
+{\ttfamily \#include $<$wx/intl.\+h$>$}\\*
+{\ttfamily \#include $<$wx/sizer.\+h$>$}\\*
+{\ttfamily \#include $<$wx/statbmp.\+h$>$}\\*
+{\ttfamily \#include $<$wx/stattext.\+h$>$}\\*
+{\ttfamily \#include $<$wx/statusbr.\+h$>$}\\*
+{\ttfamily \#include $<$wx/textfile.\+h$>$}\\*
+{\ttfamily \#include $<$math.\+h$>$}\\*
+{\ttfamily \#include \char`\"{}Shuttle\+Gui.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}A\+Color.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}F\+F\+T.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Internat.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Pitch\+Name.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}prefs/\+G\+U\+I\+Settings.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Prefs.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Project.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Wave\+Clip.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Theme.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}All\+Theme\+Resources.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}File\+Dialog.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Wave\+Track.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Experimental.\+h\char`\"{}}\\*
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{_freq_window_8cpp_a2ddce7fa25fb8d2768023550da9465a1}{F\+R\+E\+Q\+\_\+\+W\+I\+N\+D\+O\+W\+\_\+\+W\+I\+D\+TH}~480
+\item 
+\#define \hyperlink{_freq_window_8cpp_a4078c6f4d7f3fb34245c02019b113d1c}{F\+R\+E\+Q\+\_\+\+W\+I\+N\+D\+O\+W\+\_\+\+H\+E\+I\+G\+HT}~330
+\end{DoxyCompactItemize}
+\subsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \{ \\*
+\hyperlink{_freq_window_8cpp_a53a02fc48226971c712c23863ecf8196afdd3cb42d7ff8fd19f8ae0626e2b371e}{First\+ID} = 7000, 
+\hyperlink{_freq_window_8cpp_a53a02fc48226971c712c23863ecf8196ae80f9687ca98585bd3cb5e27070a2003}{Freq\+Zoom\+Slider\+ID}, 
+\hyperlink{_freq_window_8cpp_a53a02fc48226971c712c23863ecf8196a2f843d987f70e71d7c200e284bc714d3}{Freq\+Pan\+Scroller\+ID}, 
+\hyperlink{_freq_window_8cpp_a53a02fc48226971c712c23863ecf8196a661ffb28e759a3362b9ae38594141ff7}{Freq\+Export\+Button\+ID}, 
+\\*
+\hyperlink{_freq_window_8cpp_a53a02fc48226971c712c23863ecf8196a8d2777a90c3a5d50419bfb8b7aa677d8}{Freq\+Alg\+Choice\+ID}, 
+\hyperlink{_freq_window_8cpp_a53a02fc48226971c712c23863ecf8196ad0f271519c027224711f1792d92bad46}{Freq\+Size\+Choice\+ID}, 
+\hyperlink{_freq_window_8cpp_a53a02fc48226971c712c23863ecf8196a0cbd40b26a4c1923e9213b4c02a4adc4}{Freq\+Func\+Choice\+ID}, 
+\hyperlink{_freq_window_8cpp_a53a02fc48226971c712c23863ecf8196a0b0674c039aa923818d1ae7e2ba53983}{Freq\+Axis\+Choice\+ID}, 
+\\*
+\hyperlink{_freq_window_8cpp_a53a02fc48226971c712c23863ecf8196a8b32e3d2624d6003a18aab03afdb2e07}{Replot\+Button\+ID}, 
+\hyperlink{_freq_window_8cpp_a53a02fc48226971c712c23863ecf8196afaa0077432982bb40947740920f3743a}{Grid\+On\+Off\+ID}
+ \}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{_freq_window_8cpp_aa56b3ced8dc3ec61313c7e49c4442f7f}{D\+E\+F\+I\+N\+E\+\_\+\+E\+V\+E\+N\+T\+\_\+\+T\+Y\+PE} (E\+V\+T\+\_\+\+F\+R\+E\+Q\+W\+I\+N\+D\+O\+W\+\_\+\+R\+E\+C\+A\+LC)
+\end{DoxyCompactItemize}
+
+
+\subsection{Macro Definition Documentation}
+\index{Freq\+Window.\+cpp@{Freq\+Window.\+cpp}!F\+R\+E\+Q\+\_\+\+W\+I\+N\+D\+O\+W\+\_\+\+H\+E\+I\+G\+HT@{F\+R\+E\+Q\+\_\+\+W\+I\+N\+D\+O\+W\+\_\+\+H\+E\+I\+G\+HT}}
+\index{F\+R\+E\+Q\+\_\+\+W\+I\+N\+D\+O\+W\+\_\+\+H\+E\+I\+G\+HT@{F\+R\+E\+Q\+\_\+\+W\+I\+N\+D\+O\+W\+\_\+\+H\+E\+I\+G\+HT}!Freq\+Window.\+cpp@{Freq\+Window.\+cpp}}
+\subsubsection[{\texorpdfstring{F\+R\+E\+Q\+\_\+\+W\+I\+N\+D\+O\+W\+\_\+\+H\+E\+I\+G\+HT}{FREQ_WINDOW_HEIGHT}}]{\setlength{\rightskip}{0pt plus 5cm}\#define F\+R\+E\+Q\+\_\+\+W\+I\+N\+D\+O\+W\+\_\+\+H\+E\+I\+G\+HT~330}\hypertarget{_freq_window_8cpp_a4078c6f4d7f3fb34245c02019b113d1c}{}\label{_freq_window_8cpp_a4078c6f4d7f3fb34245c02019b113d1c}
+
+
+Definition at line 104 of file Freq\+Window.\+cpp.
+
+\index{Freq\+Window.\+cpp@{Freq\+Window.\+cpp}!F\+R\+E\+Q\+\_\+\+W\+I\+N\+D\+O\+W\+\_\+\+W\+I\+D\+TH@{F\+R\+E\+Q\+\_\+\+W\+I\+N\+D\+O\+W\+\_\+\+W\+I\+D\+TH}}
+\index{F\+R\+E\+Q\+\_\+\+W\+I\+N\+D\+O\+W\+\_\+\+W\+I\+D\+TH@{F\+R\+E\+Q\+\_\+\+W\+I\+N\+D\+O\+W\+\_\+\+W\+I\+D\+TH}!Freq\+Window.\+cpp@{Freq\+Window.\+cpp}}
+\subsubsection[{\texorpdfstring{F\+R\+E\+Q\+\_\+\+W\+I\+N\+D\+O\+W\+\_\+\+W\+I\+D\+TH}{FREQ_WINDOW_WIDTH}}]{\setlength{\rightskip}{0pt plus 5cm}\#define F\+R\+E\+Q\+\_\+\+W\+I\+N\+D\+O\+W\+\_\+\+W\+I\+D\+TH~480}\hypertarget{_freq_window_8cpp_a2ddce7fa25fb8d2768023550da9465a1}{}\label{_freq_window_8cpp_a2ddce7fa25fb8d2768023550da9465a1}
+
+
+Definition at line 103 of file Freq\+Window.\+cpp.
+
+
+
+\subsection{Enumeration Type Documentation}
+\subsubsection[{\texorpdfstring{anonymous enum}{anonymous enum}}]{\setlength{\rightskip}{0pt plus 5cm}anonymous enum}\hypertarget{_freq_window_8cpp_a53a02fc48226971c712c23863ecf8196}{}\label{_freq_window_8cpp_a53a02fc48226971c712c23863ecf8196}
+\begin{Desc}
+\item[Enumerator]\par
+\begin{description}
+\index{First\+ID@{First\+ID}!Freq\+Window.\+cpp@{Freq\+Window.\+cpp}}\index{Freq\+Window.\+cpp@{Freq\+Window.\+cpp}!First\+ID@{First\+ID}}\item[{\em 
+First\+ID\hypertarget{_freq_window_8cpp_a53a02fc48226971c712c23863ecf8196afdd3cb42d7ff8fd19f8ae0626e2b371e}{}\label{_freq_window_8cpp_a53a02fc48226971c712c23863ecf8196afdd3cb42d7ff8fd19f8ae0626e2b371e}
+}]\index{Freq\+Zoom\+Slider\+ID@{Freq\+Zoom\+Slider\+ID}!Freq\+Window.\+cpp@{Freq\+Window.\+cpp}}\index{Freq\+Window.\+cpp@{Freq\+Window.\+cpp}!Freq\+Zoom\+Slider\+ID@{Freq\+Zoom\+Slider\+ID}}\item[{\em 
+Freq\+Zoom\+Slider\+ID\hypertarget{_freq_window_8cpp_a53a02fc48226971c712c23863ecf8196ae80f9687ca98585bd3cb5e27070a2003}{}\label{_freq_window_8cpp_a53a02fc48226971c712c23863ecf8196ae80f9687ca98585bd3cb5e27070a2003}
+}]\index{Freq\+Pan\+Scroller\+ID@{Freq\+Pan\+Scroller\+ID}!Freq\+Window.\+cpp@{Freq\+Window.\+cpp}}\index{Freq\+Window.\+cpp@{Freq\+Window.\+cpp}!Freq\+Pan\+Scroller\+ID@{Freq\+Pan\+Scroller\+ID}}\item[{\em 
+Freq\+Pan\+Scroller\+ID\hypertarget{_freq_window_8cpp_a53a02fc48226971c712c23863ecf8196a2f843d987f70e71d7c200e284bc714d3}{}\label{_freq_window_8cpp_a53a02fc48226971c712c23863ecf8196a2f843d987f70e71d7c200e284bc714d3}
+}]\index{Freq\+Export\+Button\+ID@{Freq\+Export\+Button\+ID}!Freq\+Window.\+cpp@{Freq\+Window.\+cpp}}\index{Freq\+Window.\+cpp@{Freq\+Window.\+cpp}!Freq\+Export\+Button\+ID@{Freq\+Export\+Button\+ID}}\item[{\em 
+Freq\+Export\+Button\+ID\hypertarget{_freq_window_8cpp_a53a02fc48226971c712c23863ecf8196a661ffb28e759a3362b9ae38594141ff7}{}\label{_freq_window_8cpp_a53a02fc48226971c712c23863ecf8196a661ffb28e759a3362b9ae38594141ff7}
+}]\index{Freq\+Alg\+Choice\+ID@{Freq\+Alg\+Choice\+ID}!Freq\+Window.\+cpp@{Freq\+Window.\+cpp}}\index{Freq\+Window.\+cpp@{Freq\+Window.\+cpp}!Freq\+Alg\+Choice\+ID@{Freq\+Alg\+Choice\+ID}}\item[{\em 
+Freq\+Alg\+Choice\+ID\hypertarget{_freq_window_8cpp_a53a02fc48226971c712c23863ecf8196a8d2777a90c3a5d50419bfb8b7aa677d8}{}\label{_freq_window_8cpp_a53a02fc48226971c712c23863ecf8196a8d2777a90c3a5d50419bfb8b7aa677d8}
+}]\index{Freq\+Size\+Choice\+ID@{Freq\+Size\+Choice\+ID}!Freq\+Window.\+cpp@{Freq\+Window.\+cpp}}\index{Freq\+Window.\+cpp@{Freq\+Window.\+cpp}!Freq\+Size\+Choice\+ID@{Freq\+Size\+Choice\+ID}}\item[{\em 
+Freq\+Size\+Choice\+ID\hypertarget{_freq_window_8cpp_a53a02fc48226971c712c23863ecf8196ad0f271519c027224711f1792d92bad46}{}\label{_freq_window_8cpp_a53a02fc48226971c712c23863ecf8196ad0f271519c027224711f1792d92bad46}
+}]\index{Freq\+Func\+Choice\+ID@{Freq\+Func\+Choice\+ID}!Freq\+Window.\+cpp@{Freq\+Window.\+cpp}}\index{Freq\+Window.\+cpp@{Freq\+Window.\+cpp}!Freq\+Func\+Choice\+ID@{Freq\+Func\+Choice\+ID}}\item[{\em 
+Freq\+Func\+Choice\+ID\hypertarget{_freq_window_8cpp_a53a02fc48226971c712c23863ecf8196a0cbd40b26a4c1923e9213b4c02a4adc4}{}\label{_freq_window_8cpp_a53a02fc48226971c712c23863ecf8196a0cbd40b26a4c1923e9213b4c02a4adc4}
+}]\index{Freq\+Axis\+Choice\+ID@{Freq\+Axis\+Choice\+ID}!Freq\+Window.\+cpp@{Freq\+Window.\+cpp}}\index{Freq\+Window.\+cpp@{Freq\+Window.\+cpp}!Freq\+Axis\+Choice\+ID@{Freq\+Axis\+Choice\+ID}}\item[{\em 
+Freq\+Axis\+Choice\+ID\hypertarget{_freq_window_8cpp_a53a02fc48226971c712c23863ecf8196a0b0674c039aa923818d1ae7e2ba53983}{}\label{_freq_window_8cpp_a53a02fc48226971c712c23863ecf8196a0b0674c039aa923818d1ae7e2ba53983}
+}]\index{Replot\+Button\+ID@{Replot\+Button\+ID}!Freq\+Window.\+cpp@{Freq\+Window.\+cpp}}\index{Freq\+Window.\+cpp@{Freq\+Window.\+cpp}!Replot\+Button\+ID@{Replot\+Button\+ID}}\item[{\em 
+Replot\+Button\+ID\hypertarget{_freq_window_8cpp_a53a02fc48226971c712c23863ecf8196a8b32e3d2624d6003a18aab03afdb2e07}{}\label{_freq_window_8cpp_a53a02fc48226971c712c23863ecf8196a8b32e3d2624d6003a18aab03afdb2e07}
+}]\index{Grid\+On\+Off\+ID@{Grid\+On\+Off\+ID}!Freq\+Window.\+cpp@{Freq\+Window.\+cpp}}\index{Freq\+Window.\+cpp@{Freq\+Window.\+cpp}!Grid\+On\+Off\+ID@{Grid\+On\+Off\+ID}}\item[{\em 
+Grid\+On\+Off\+ID\hypertarget{_freq_window_8cpp_a53a02fc48226971c712c23863ecf8196afaa0077432982bb40947740920f3743a}{}\label{_freq_window_8cpp_a53a02fc48226971c712c23863ecf8196afaa0077432982bb40947740920f3743a}
+}]\end{description}
+\end{Desc}
+
+
+Definition at line 87 of file Freq\+Window.\+cpp.
+
+
+
+\subsection{Function Documentation}
+\index{Freq\+Window.\+cpp@{Freq\+Window.\+cpp}!D\+E\+F\+I\+N\+E\+\_\+\+E\+V\+E\+N\+T\+\_\+\+T\+Y\+PE@{D\+E\+F\+I\+N\+E\+\_\+\+E\+V\+E\+N\+T\+\_\+\+T\+Y\+PE}}
+\index{D\+E\+F\+I\+N\+E\+\_\+\+E\+V\+E\+N\+T\+\_\+\+T\+Y\+PE@{D\+E\+F\+I\+N\+E\+\_\+\+E\+V\+E\+N\+T\+\_\+\+T\+Y\+PE}!Freq\+Window.\+cpp@{Freq\+Window.\+cpp}}
+\subsubsection[{\texorpdfstring{D\+E\+F\+I\+N\+E\+\_\+\+E\+V\+E\+N\+T\+\_\+\+T\+Y\+P\+E(\+E\+V\+T\+\_\+\+F\+R\+E\+Q\+W\+I\+N\+D\+O\+W\+\_\+\+R\+E\+C\+A\+L\+C)}{DEFINE_EVENT_TYPE(EVT_FREQWINDOW_RECALC)}}]{\setlength{\rightskip}{0pt plus 5cm}D\+E\+F\+I\+N\+E\+\_\+\+E\+V\+E\+N\+T\+\_\+\+T\+Y\+PE (
+\begin{DoxyParamCaption}
+\item[{E\+V\+T\+\_\+\+F\+R\+E\+Q\+W\+I\+N\+D\+O\+W\+\_\+\+R\+E\+C\+A\+LC}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{_freq_window_8cpp_aa56b3ced8dc3ec61313c7e49c4442f7f}{}\label{_freq_window_8cpp_aa56b3ced8dc3ec61313c7e49c4442f7f}

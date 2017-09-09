@@ -1,0 +1,292 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/lib-src/libnyquist/nyquist/cmt/record.c" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/lib-src/libnyquist/nyquist/cmt/record.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include 'switches\&.h'\fP
+.br
+\fC#include <stdio\&.h>\fP
+.br
+\fC#include <stdlib\&.h>\fP
+.br
+\fC#include 'cext\&.h'\fP
+.br
+\fC#include 'midifns\&.h'\fP
+.br
+\fC#include 'userio\&.h'\fP
+.br
+\fC#include 'midicode\&.h'\fP
+.br
+\fC#include 'record\&.h'\fP
+.br
+\fC#include 'cmdline\&.h'\fP
+.br
+
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "struct \fBnote_struct\fP"
+.br
+.in -1c
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBMIDI_CMD_BIT\fP   0x80"
+.br
+.ti -1c
+.RI "#define \fBHIGH_BIT\fP   0x80000000"
+.br
+.ti -1c
+.RI "#define \fBistime\fP(\fBnote\fP)   (!(((\fBnote\fP)\->when) & \fBHIGH_BIT\fP))"
+.br
+.ti -1c
+.RI "#define \fBENOUGH_ROOM\fP   (20000L * sizeof(union note_struct))"
+.br
+.in -1c
+.SS "Typedefs"
+
+.in +1c
+.ti -1c
+.RI "typedef union \fBnote_struct\fP * \fBnote_type\fP"
+.br
+.ti -1c
+.RI "typedef union \fBnote_struct\fP \fBnote_node\fP"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBprivate\fP \fBvoid\fP \fBbend_filter\fP ()"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBvoid\fP \fBbyteorder\fP ()"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBvoid\fP \fBctrl_filter\fP ()"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBint\fP \fBevent_bend\fP ()"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBvoid\fP \fBfilter\fP ()"
+.br
+.ti -1c
+.RI "\fBprivate\fP long \fBgetdur\fP ()"
+.br
+.ti -1c
+.RI "\fBprivate\fP long \fBgetnext\fP ()"
+.br
+.ti -1c
+.RI "\fBprivate\fP char \fBmap_ctrl\fP ()"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBvoid\fP \fBoutput\fP ()"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBvoid\fP \fBbend_filter\fP (\fBnote_type\fP \fBnote\fP, \fBnote_type\fP \fBlast\fP, long now)"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBvoid\fP \fBctrl_filter\fP (\fBnote_type\fP \fBnote\fP, \fBnote_type\fP \fBlast\fP, long now)"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBint\fP \fBevent_bend\fP (\fBnote_type\fP \fBnote\fP)"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBvoid\fP \fBfilter\fP (\fBnote_type\fP \fBlast\fP)"
+.br
+.ti -1c
+.RI "\fBprivate\fP long \fBgetdur\fP (\fBint\fP \fBi\fP, \fBnote_type\fP \fBlast\fP, \fBint\fP ped, long now)"
+.br
+.ti -1c
+.RI "\fBprivate\fP long \fBgetnext\fP (\fBint\fP \fBi\fP, \fBnote_type\fP \fBlast\fP, long now)"
+.br
+.ti -1c
+.RI "\fBprivate\fP char \fBmap_ctrl\fP (\fBint\fP control)"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBvoid\fP \fBoutput\fP (FILE *fp, \fBnote_type\fP \fBlast\fP, \fBboolean\fP absflag)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBwrite_pitch\fP (FILE *fp, \fBint\fP \fBp\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBrec_final\fP (FILE *fp, \fBboolean\fP absflag)"
+.br
+.ti -1c
+.RI "\fBboolean\fP \fBrec_init\fP (\fBboolean\fP \fBbender\fP)"
+.br
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "long \fBspace\fP"
+.br
+.ti -1c
+.RI "\fBint\fP \fBdebug_rec\fP = \fBFALSE\fP"
+.br
+.ti -1c
+.RI "long \fBmax_notes\fP = \-1L"
+.br
+.ti -1c
+.RI "\fBtime_type\fP \fBprevious_time\fP"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBnote_type\fP \fBevent_buff\fP"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBnote_type\fP \fBnext\fP"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBnote_type\fP \fBlast\fP"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBint\fP \fBpile_ups\fP"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBint\fP \fBmax_pile_up\fP"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBboolean\fP \fBfixed_octave\fP"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define ENOUGH_ROOM   (20000L * sizeof(union note_struct))"
+
+.PP
+Definition at line 560 of file record\&.c\&.
+.SS "#define HIGH_BIT   0x80000000"
+
+.PP
+Definition at line 65 of file record\&.c\&.
+.SS "#define istime(\fBnote\fP)   (!(((\fBnote\fP)\->when) & \fBHIGH_BIT\fP))"
+
+.PP
+Definition at line 66 of file record\&.c\&.
+.SS "#define MIDI_CMD_BIT   0x80"
+
+.PP
+Definition at line 64 of file record\&.c\&.
+.SH "Typedef Documentation"
+.PP 
+.SS "typedef union \fBnote_struct\fP  \fBnote_node\fP"
+
+.SS "typedef union \fBnote_struct\fP 
+* \fBnote_type\fP"
+
+.SH "Function Documentation"
+.PP 
+.SS "\fBprivate\fP \fBvoid\fP bend_filter ()"
+
+.SS "\fBprivate\fP \fBvoid\fP bend_filter (\fBnote_type\fP note, \fBnote_type\fP last, long now)"
+
+.PP
+Definition at line 108 of file record\&.c\&.
+.SS "\fBprivate\fP \fBvoid\fP byteorder ()"
+
+.PP
+Definition at line 135 of file record\&.c\&.
+.SS "\fBprivate\fP \fBvoid\fP ctrl_filter ()"
+
+.SS "\fBprivate\fP \fBvoid\fP ctrl_filter (\fBnote_type\fP note, \fBnote_type\fP last, long now)"
+
+.PP
+Definition at line 169 of file record\&.c\&.
+.SS "\fBprivate\fP \fBint\fP event_bend ()"
+
+.SS "\fBprivate\fP \fBint\fP event_bend (\fBnote_type\fP note)"
+
+.PP
+Definition at line 199 of file record\&.c\&.
+.SS "\fBprivate\fP \fBvoid\fP filter ()"
+
+.SS "\fBprivate\fP \fBvoid\fP filter (\fBnote_type\fP last)"
+
+.PP
+Definition at line 215 of file record\&.c\&.
+.SS "\fBprivate\fP long getdur ()"
+
+.SS "\fBprivate\fP long getdur (\fBint\fP i, \fBnote_type\fP last, \fBint\fP ped, long now)"
+
+.PP
+Definition at line 266 of file record\&.c\&.
+.SS "\fBprivate\fP long getnext ()"
+
+.SS "\fBprivate\fP long getnext (\fBint\fP i, \fBnote_type\fP last, long now)"
+
+.PP
+Definition at line 319 of file record\&.c\&.
+.SS "\fBprivate\fP char map_ctrl ()"
+
+.SS "\fBprivate\fP char map_ctrl (\fBint\fP control)"
+
+.PP
+Definition at line 355 of file record\&.c\&.
+.SS "\fBprivate\fP \fBvoid\fP output ()"
+
+.SS "\fBprivate\fP \fBvoid\fP output (FILE * fp, \fBnote_type\fP last, \fBboolean\fP absflag)"
+
+.PP
+Definition at line 392 of file record\&.c\&.
+.SS "\fBvoid\fP rec_final (FILE * fp, \fBboolean\fP absflag)"
+
+.PP
+Definition at line 525 of file record\&.c\&.
+.SS "\fBboolean\fP rec_init (\fBboolean\fP bender)"
+
+.PP
+Definition at line 564 of file record\&.c\&.
+.SS "\fBvoid\fP write_pitch (FILE * fp, \fBint\fP p)"
+
+.PP
+Definition at line 498 of file record\&.c\&.
+.SH "Variable Documentation"
+.PP 
+.SS "\fBint\fP debug_rec = \fBFALSE\fP"
+
+.PP
+Definition at line 43 of file record\&.c\&.
+.SS "\fBprivate\fP \fBnote_type\fP event_buff"
+
+.PP
+Definition at line 74 of file record\&.c\&.
+.SS "\fBprivate\fP \fBboolean\fP fixed_octave"
+
+.PP
+Definition at line 79 of file record\&.c\&.
+.SS "\fBprivate\fP \fBnote_type\fP last"
+
+.PP
+Definition at line 76 of file record\&.c\&.
+.SS "long max_notes = \-1L"
+
+.PP
+Definition at line 45 of file record\&.c\&.
+.SS "\fBprivate\fP \fBint\fP max_pile_up"
+
+.PP
+Definition at line 78 of file record\&.c\&.
+.SS "\fBprivate\fP \fBnote_type\fP next"
+
+.PP
+Definition at line 75 of file record\&.c\&.
+.SS "\fBprivate\fP \fBint\fP pile_ups"
+
+.PP
+Definition at line 77 of file record\&.c\&.
+.SS "\fBtime_type\fP previous_time"
+
+.PP
+Definition at line 47 of file record\&.c\&.
+.SS "long space"
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

@@ -1,0 +1,78 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/lib-src/libsoxr/examples/4-split-channels.c" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/lib-src/libsoxr/examples/4-split-channels.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <soxr\&.h>\fP
+.br
+\fC#include 'examples\-common\&.h'\fP
+.br
+
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBDEINTERLEAVE\fP(\fBT\fP)"
+.br
+.ti -1c
+.RI "#define \fBINTERLEAVE\fP(\fBT\fP)"
+.br
+.ti -1c
+.RI "#define \fBbuf_total_len\fP   15000  /* \fBIn\fP \fBsamples\fP per channel\&. */"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBint\fP \fBmain\fP (\fBint\fP n, char \fBconst\fP *arg[])"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define buf_total_len   15000  /* \fBIn\fP \fBsamples\fP per channel\&. */"
+
+.SS "#define DEINTERLEAVE(\fBT\fP)"
+\fBValue:\fP
+.PP
+.nf
+do { \
+  unsigned i; \
+  size_t j; \
+  T * const * dest = (T * const *)dest0; \
+  T const * src = src0; \\
+  if (ch == 1) memcpy(dest[0], src, n * sizeof(dest[0][0])); \
+  else for (j = 0; j < n; ++j) for (i = 0; i < ch; ++i) dest[i][j] = *src++; \
+  return; \
+} while (0)
+.fi
+.PP
+Definition at line 23 of file 4\-split\-channels\&.c\&.
+.SS "#define INTERLEAVE(\fBT\fP)"
+\fBValue:\fP
+.PP
+.nf
+do { \
+  unsigned i; \
+  size_t j; \
+  T * dest = dest0; \
+  T const * const * src = (T const * const *)src0; \\
+  if (ch == 1) memcpy(dest, src[0], n * sizeof(dest[0])); \
+  else for (j = 0; j < n; ++j) for (i = 0; i < ch; ++i) *dest++ = src[i][j]; \
+  return; \
+} while (0)
+.fi
+.PP
+Definition at line 47 of file 4\-split\-channels\&.c\&.
+.SH "Function Documentation"
+.PP 
+.SS "\fBint\fP main (\fBint\fP n, char \fBconst\fP * arg[])"
+
+.PP
+Definition at line 69 of file 4\-split\-channels\&.c\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

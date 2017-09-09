@@ -1,0 +1,214 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/lib-src/libflac/src/libFLAC/stream_decoder.c" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/lib-src/libflac/src/libFLAC/stream_decoder.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <stdio\&.h>\fP
+.br
+\fC#include <stdlib\&.h>\fP
+.br
+\fC#include <string\&.h>\fP
+.br
+\fC#include <sys/stat\&.h>\fP
+.br
+\fC#include <sys/types\&.h>\fP
+.br
+\fC#include 'share/compat\&.h'\fP
+.br
+\fC#include 'FLAC/assert\&.h'\fP
+.br
+\fC#include 'share/alloc\&.h'\fP
+.br
+\fC#include 'protected/stream_decoder\&.h'\fP
+.br
+\fC#include 'private/bitreader\&.h'\fP
+.br
+\fC#include 'private/bitmath\&.h'\fP
+.br
+\fC#include 'private/cpu\&.h'\fP
+.br
+\fC#include 'private/crc\&.h'\fP
+.br
+\fC#include 'private/fixed\&.h'\fP
+.br
+\fC#include 'private/format\&.h'\fP
+.br
+\fC#include 'private/lpc\&.h'\fP
+.br
+\fC#include 'private/md5\&.h'\fP
+.br
+\fC#include 'private/memory\&.h'\fP
+.br
+\fC#include 'private/macros\&.h'\fP
+.br
+
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "struct \fBFLAC__StreamDecoderPrivate\fP"
+.br
+.in -1c
+.SS "Typedefs"
+
+.in +1c
+.ti -1c
+.RI "typedef struct \fBFLAC__StreamDecoderPrivate\fP \fBFLAC__StreamDecoderPrivate\fP"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__StreamDecoder\fP * \fBFLAC__stream_decoder_new\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBvoid\fP \fBFLAC__stream_decoder_delete\fP (\fBFLAC__StreamDecoder\fP *decoder)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__StreamDecoderInitStatus\fP \fBFLAC__stream_decoder_init_stream\fP (\fBFLAC__StreamDecoder\fP *decoder, \fBFLAC__StreamDecoderReadCallback\fP read_callback, \fBFLAC__StreamDecoderSeekCallback\fP seek_callback, \fBFLAC__StreamDecoderTellCallback\fP tell_callback, \fBFLAC__StreamDecoderLengthCallback\fP length_callback, \fBFLAC__StreamDecoderEofCallback\fP eof_callback, \fBFLAC__StreamDecoderWriteCallback\fP write_callback, \fBFLAC__StreamDecoderMetadataCallback\fP metadata_callback, \fBFLAC__StreamDecoderErrorCallback\fP error_callback, \fBvoid\fP *client_data)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__StreamDecoderInitStatus\fP \fBFLAC__stream_decoder_init_ogg_stream\fP (\fBFLAC__StreamDecoder\fP *decoder, \fBFLAC__StreamDecoderReadCallback\fP read_callback, \fBFLAC__StreamDecoderSeekCallback\fP seek_callback, \fBFLAC__StreamDecoderTellCallback\fP tell_callback, \fBFLAC__StreamDecoderLengthCallback\fP length_callback, \fBFLAC__StreamDecoderEofCallback\fP eof_callback, \fBFLAC__StreamDecoderWriteCallback\fP write_callback, \fBFLAC__StreamDecoderMetadataCallback\fP metadata_callback, \fBFLAC__StreamDecoderErrorCallback\fP error_callback, \fBvoid\fP *client_data)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__StreamDecoderInitStatus\fP \fBFLAC__stream_decoder_init_FILE\fP (\fBFLAC__StreamDecoder\fP *decoder, FILE *file, \fBFLAC__StreamDecoderWriteCallback\fP write_callback, \fBFLAC__StreamDecoderMetadataCallback\fP metadata_callback, \fBFLAC__StreamDecoderErrorCallback\fP error_callback, \fBvoid\fP *client_data)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__StreamDecoderInitStatus\fP \fBFLAC__stream_decoder_init_ogg_FILE\fP (\fBFLAC__StreamDecoder\fP *decoder, FILE *file, \fBFLAC__StreamDecoderWriteCallback\fP write_callback, \fBFLAC__StreamDecoderMetadataCallback\fP metadata_callback, \fBFLAC__StreamDecoderErrorCallback\fP error_callback, \fBvoid\fP *client_data)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__StreamDecoderInitStatus\fP \fBFLAC__stream_decoder_init_file\fP (\fBFLAC__StreamDecoder\fP *decoder, \fBconst\fP char *\fBfilename\fP, \fBFLAC__StreamDecoderWriteCallback\fP write_callback, \fBFLAC__StreamDecoderMetadataCallback\fP metadata_callback, \fBFLAC__StreamDecoderErrorCallback\fP error_callback, \fBvoid\fP *client_data)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__StreamDecoderInitStatus\fP \fBFLAC__stream_decoder_init_ogg_file\fP (\fBFLAC__StreamDecoder\fP *decoder, \fBconst\fP char *\fBfilename\fP, \fBFLAC__StreamDecoderWriteCallback\fP write_callback, \fBFLAC__StreamDecoderMetadataCallback\fP metadata_callback, \fBFLAC__StreamDecoderErrorCallback\fP error_callback, \fBvoid\fP *client_data)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__stream_decoder_finish\fP (\fBFLAC__StreamDecoder\fP *decoder)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__stream_decoder_set_ogg_serial_number\fP (\fBFLAC__StreamDecoder\fP *decoder, long \fBvalue\fP)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__stream_decoder_set_md5_checking\fP (\fBFLAC__StreamDecoder\fP *decoder, \fBFLAC__bool\fP \fBvalue\fP)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__stream_decoder_set_metadata_respond\fP (\fBFLAC__StreamDecoder\fP *decoder, \fBFLAC__MetadataType\fP type)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__stream_decoder_set_metadata_respond_application\fP (\fBFLAC__StreamDecoder\fP *decoder, \fBconst\fP \fBFLAC__byte\fP id[4])"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__stream_decoder_set_metadata_respond_all\fP (\fBFLAC__StreamDecoder\fP *decoder)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__stream_decoder_set_metadata_ignore\fP (\fBFLAC__StreamDecoder\fP *decoder, \fBFLAC__MetadataType\fP type)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__stream_decoder_set_metadata_ignore_application\fP (\fBFLAC__StreamDecoder\fP *decoder, \fBconst\fP \fBFLAC__byte\fP id[4])"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__stream_decoder_set_metadata_ignore_all\fP (\fBFLAC__StreamDecoder\fP *decoder)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__StreamDecoderState\fP \fBFLAC__stream_decoder_get_state\fP (\fBconst\fP \fBFLAC__StreamDecoder\fP *decoder)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBconst\fP char * \fBFLAC__stream_decoder_get_resolved_state_string\fP (\fBconst\fP \fBFLAC__StreamDecoder\fP *decoder)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__stream_decoder_get_md5_checking\fP (\fBconst\fP \fBFLAC__StreamDecoder\fP *decoder)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__uint64\fP \fBFLAC__stream_decoder_get_total_samples\fP (\fBconst\fP \fBFLAC__StreamDecoder\fP *decoder)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP unsigned \fBFLAC__stream_decoder_get_channels\fP (\fBconst\fP \fBFLAC__StreamDecoder\fP *decoder)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__ChannelAssignment\fP \fBFLAC__stream_decoder_get_channel_assignment\fP (\fBconst\fP \fBFLAC__StreamDecoder\fP *decoder)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP unsigned \fBFLAC__stream_decoder_get_bits_per_sample\fP (\fBconst\fP \fBFLAC__StreamDecoder\fP *decoder)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP unsigned \fBFLAC__stream_decoder_get_sample_rate\fP (\fBconst\fP \fBFLAC__StreamDecoder\fP *decoder)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP unsigned \fBFLAC__stream_decoder_get_blocksize\fP (\fBconst\fP \fBFLAC__StreamDecoder\fP *decoder)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__stream_decoder_get_decode_position\fP (\fBconst\fP \fBFLAC__StreamDecoder\fP *decoder, \fBFLAC__uint64\fP *\fBposition\fP)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__stream_decoder_flush\fP (\fBFLAC__StreamDecoder\fP *decoder)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__stream_decoder_reset\fP (\fBFLAC__StreamDecoder\fP *decoder)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__stream_decoder_process_single\fP (\fBFLAC__StreamDecoder\fP *decoder)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__stream_decoder_process_until_end_of_metadata\fP (\fBFLAC__StreamDecoder\fP *decoder)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__stream_decoder_process_until_end_of_stream\fP (\fBFLAC__StreamDecoder\fP *decoder)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__stream_decoder_skip_single_frame\fP (\fBFLAC__StreamDecoder\fP *decoder)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__stream_decoder_seek_absolute\fP (\fBFLAC__StreamDecoder\fP *decoder, \fBFLAC__uint64\fP sample)"
+.br
+.ti -1c
+.RI "unsigned \fBFLAC__stream_decoder_get_input_bytes_unconsumed\fP (\fBconst\fP \fBFLAC__StreamDecoder\fP *decoder)"
+.br
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "\fBFLAC_API\fP \fBint\fP \fBFLAC_API_SUPPORTS_OGG_FLAC\fP"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBconst\fP char *\fBconst\fP \fBFLAC__StreamDecoderStateString\fP []"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBconst\fP char *\fBconst\fP \fBFLAC__StreamDecoderInitStatusString\fP []"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBconst\fP char *\fBconst\fP \fBFLAC__StreamDecoderReadStatusString\fP []"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBconst\fP char *\fBconst\fP \fBFLAC__StreamDecoderSeekStatusString\fP []"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBconst\fP char *\fBconst\fP \fBFLAC__StreamDecoderTellStatusString\fP []"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBconst\fP char *\fBconst\fP \fBFLAC__StreamDecoderLengthStatusString\fP []"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBconst\fP char *\fBconst\fP \fBFLAC__StreamDecoderWriteStatusString\fP []"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBconst\fP char *\fBconst\fP \fBFLAC__StreamDecoderErrorStatusString\fP []"
+.br
+.in -1c
+.SH "Typedef Documentation"
+.PP 
+.SS "typedef struct \fBFLAC__StreamDecoderPrivate\fP  \fBFLAC__StreamDecoderPrivate\fP"
+
+.SH "Function Documentation"
+.PP 
+.SS "unsigned FLAC__stream_decoder_get_input_bytes_unconsumed (\fBconst\fP \fBFLAC__StreamDecoder\fP * decoder)"
+
+.PP
+Definition at line 1218 of file stream_decoder\&.c\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

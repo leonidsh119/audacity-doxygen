@@ -1,0 +1,21 @@
+\hypertarget{class_effect_noise_removal}{}\section{Effect\+Noise\+Removal Class Reference}
+\label{class_effect_noise_removal}\index{Effect\+Noise\+Removal@{Effect\+Noise\+Removal}}
+
+
+A two-\/pass effect to remove background noise.  
+
+
+
+
+\subsection{Detailed Description}
+A two-\/pass effect to remove background noise. 
+
+The first pass is done over just noise. For each windowed sample of the sound, we take a F\+FT and then statistics are tabulated for each frequency band -\/ specifically the maximum level achieved by at least (n) sampling windows in a row, for various values of (n).
+
+During the noise removal phase, we start by setting a gain control for each frequency band such that if the sound has exceeded the previously-\/determined threshold, the gain is set to 0, otherwise the gain is set lower (e.\+g. -\/18 dB), to suppress the noise. Then frequency-\/smoothing is applied so that a single frequency is never suppressed or boosted in isolation, and then time-\/smoothing is applied so that the gain for each frequency band moves slowly. Lookahead is employed; this effect is not designed for real-\/time but if it were, there would be a significant delay.
+
+The gain controls are applied to the complex F\+FT of the signal, and then the inverse F\+FT is applied, followed by a Hanning window; the output signal is then pieced together using overlap/add of half the window size. 
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/src/effects/\hyperlink{_noise_removal_8cpp}{Noise\+Removal.\+cpp}\end{DoxyCompactItemize}

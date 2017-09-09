@@ -1,0 +1,229 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/lib-src/libflac/src/share/grabbag/replaygain.c" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/lib-src/libflac/src/share/grabbag/replaygain.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <locale\&.h>\fP
+.br
+\fC#include <math\&.h>\fP
+.br
+\fC#include <stdio\&.h>\fP
+.br
+\fC#include <stdlib\&.h>\fP
+.br
+\fC#include <string\&.h>\fP
+.br
+\fC#include <sys/stat\&.h>\fP
+.br
+\fC#include 'FLAC/assert\&.h'\fP
+.br
+\fC#include 'FLAC/metadata\&.h'\fP
+.br
+\fC#include 'FLAC/stream_decoder\&.h'\fP
+.br
+\fC#include 'share/grabbag\&.h'\fP
+.br
+\fC#include 'share/replaygain_analysis\&.h'\fP
+.br
+\fC#include 'share/safe_str\&.h'\fP
+.br
+
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "struct \fBDecoderInstance\fP"
+.br
+.in -1c
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBlocal_min\fP(\fBa\fP,  \fBb\fP)   ((\fBa\fP)<(\fBb\fP)?(\fBa\fP):(\fBb\fP))"
+.br
+.ti -1c
+.RI "#define \fBlocal_max\fP(\fBa\fP,  \fBb\fP)   ((\fBa\fP)>(\fBb\fP)?(\fBa\fP):(\fBb\fP))"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBFLAC__bool\fP \fBgrabbag__replaygain_is_valid_sample_frequency\fP (unsigned sample_frequency)"
+.br
+.ti -1c
+.RI "\fBFLAC__bool\fP \fBgrabbag__replaygain_init\fP (unsigned sample_frequency)"
+.br
+.ti -1c
+.RI "\fBFLAC__bool\fP \fBgrabbag__replaygain_analyze\fP (\fBconst\fP \fBFLAC__int32\fP *\fBconst\fP input[], \fBFLAC__bool\fP is_stereo, unsigned bps, unsigned \fBsamples\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBgrabbag__replaygain_get_album\fP (float *gain, float *peak)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBgrabbag__replaygain_get_title\fP (float *gain, float *peak)"
+.br
+.ti -1c
+.RI "\fBconst\fP char * \fBgrabbag__replaygain_analyze_file\fP (\fBconst\fP char *\fBfilename\fP, float *title_gain, float *title_peak)"
+.br
+.ti -1c
+.RI "\fBconst\fP char * \fBgrabbag__replaygain_store_to_vorbiscomment\fP (\fBFLAC__StreamMetadata\fP *\fBblock\fP, float album_gain, float album_peak, float title_gain, float title_peak)"
+.br
+.ti -1c
+.RI "\fBconst\fP char * \fBgrabbag__replaygain_store_to_vorbiscomment_reference\fP (\fBFLAC__StreamMetadata\fP *\fBblock\fP)"
+.br
+.ti -1c
+.RI "\fBconst\fP char * \fBgrabbag__replaygain_store_to_vorbiscomment_album\fP (\fBFLAC__StreamMetadata\fP *\fBblock\fP, float album_gain, float album_peak)"
+.br
+.ti -1c
+.RI "\fBconst\fP char * \fBgrabbag__replaygain_store_to_vorbiscomment_title\fP (\fBFLAC__StreamMetadata\fP *\fBblock\fP, float title_gain, float title_peak)"
+.br
+.ti -1c
+.RI "\fBconst\fP char * \fBgrabbag__replaygain_store_to_file\fP (\fBconst\fP char *\fBfilename\fP, float album_gain, float album_peak, float title_gain, float title_peak, \fBFLAC__bool\fP \fBpreserve_modtime\fP)"
+.br
+.ti -1c
+.RI "\fBconst\fP char * \fBgrabbag__replaygain_store_to_file_reference\fP (\fBconst\fP char *\fBfilename\fP, \fBFLAC__bool\fP \fBpreserve_modtime\fP)"
+.br
+.ti -1c
+.RI "\fBconst\fP char * \fBgrabbag__replaygain_store_to_file_album\fP (\fBconst\fP char *\fBfilename\fP, float album_gain, float album_peak, \fBFLAC__bool\fP \fBpreserve_modtime\fP)"
+.br
+.ti -1c
+.RI "\fBconst\fP char * \fBgrabbag__replaygain_store_to_file_title\fP (\fBconst\fP char *\fBfilename\fP, float title_gain, float title_peak, \fBFLAC__bool\fP \fBpreserve_modtime\fP)"
+.br
+.ti -1c
+.RI "\fBFLAC__bool\fP \fBgrabbag__replaygain_load_from_vorbiscomment\fP (\fBconst\fP \fBFLAC__StreamMetadata\fP *\fBblock\fP, \fBFLAC__bool\fP album_mode, \fBFLAC__bool\fP strict, double *reference, double *gain, double *peak)"
+.br
+.ti -1c
+.RI "double \fBgrabbag__replaygain_compute_scale_factor\fP (double peak, double gain, double preamp, \fBFLAC__bool\fP prevent_clipping)"
+.br
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "\fBconst\fP unsigned \fBGRABBAG__REPLAYGAIN_MAX_TAG_SPACE_REQUIRED\fP = 190"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBFLAC__byte\fP *\fBconst\fP \fBGRABBAG__REPLAYGAIN_TAG_REFERENCE_LOUDNESS\fP = (\fBconst\fP \fBFLAC__byte\fP * \fBconst\fP)'REPLAYGAIN_REFERENCE_LOUDNESS'"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBFLAC__byte\fP *\fBconst\fP \fBGRABBAG__REPLAYGAIN_TAG_TITLE_GAIN\fP = (\fBconst\fP \fBFLAC__byte\fP * \fBconst\fP)'REPLAYGAIN_TRACK_GAIN'"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBFLAC__byte\fP *\fBconst\fP \fBGRABBAG__REPLAYGAIN_TAG_TITLE_PEAK\fP = (\fBconst\fP \fBFLAC__byte\fP * \fBconst\fP)'REPLAYGAIN_TRACK_PEAK'"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBFLAC__byte\fP *\fBconst\fP \fBGRABBAG__REPLAYGAIN_TAG_ALBUM_GAIN\fP = (\fBconst\fP \fBFLAC__byte\fP * \fBconst\fP)'REPLAYGAIN_ALBUM_GAIN'"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBFLAC__byte\fP *\fBconst\fP \fBGRABBAG__REPLAYGAIN_TAG_ALBUM_PEAK\fP = (\fBconst\fP \fBFLAC__byte\fP * \fBconst\fP)'REPLAYGAIN_ALBUM_PEAK'"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define local_max(\fBa\fP, \fBb\fP)   ((\fBa\fP)>(\fBb\fP)?(\fBa\fP):(\fBb\fP))"
+
+.PP
+Definition at line 49 of file replaygain\&.c\&.
+.SS "#define local_min(\fBa\fP, \fBb\fP)   ((\fBa\fP)<(\fBb\fP)?(\fBa\fP):(\fBb\fP))"
+
+.PP
+Definition at line 44 of file replaygain\&.c\&.
+.SH "Function Documentation"
+.PP 
+.SS "\fBFLAC__bool\fP grabbag__replaygain_analyze (\fBconst\fP \fBFLAC__int32\fP *\fBconst\fP input[], \fBFLAC__bool\fP is_stereo, unsigned bps, unsigned samples)"
+
+.PP
+Definition at line 129 of file replaygain\&.c\&.
+.SS "\fBconst\fP char* grabbag__replaygain_analyze_file (\fBconst\fP char * filename, float * title_gain, float * title_peak)"
+
+.PP
+Definition at line 322 of file replaygain\&.c\&.
+.SS "double grabbag__replaygain_compute_scale_factor (double peak, double gain, double preamp, \fBFLAC__bool\fP prevent_clipping)"
+
+.PP
+Definition at line 656 of file replaygain\&.c\&.
+.SS "\fBvoid\fP grabbag__replaygain_get_album (float * gain, float * peak)"
+
+.PP
+Definition at line 239 of file replaygain\&.c\&.
+.SS "\fBvoid\fP grabbag__replaygain_get_title (float * gain, float * peak)"
+
+.PP
+Definition at line 246 of file replaygain\&.c\&.
+.SS "\fBFLAC__bool\fP grabbag__replaygain_init (unsigned sample_frequency)"
+
+.PP
+Definition at line 123 of file replaygain\&.c\&.
+.SS "\fBFLAC__bool\fP grabbag__replaygain_is_valid_sample_frequency (unsigned sample_frequency)"
+
+.PP
+Definition at line 118 of file replaygain\&.c\&.
+.SS "\fBFLAC__bool\fP grabbag__replaygain_load_from_vorbiscomment (\fBconst\fP \fBFLAC__StreamMetadata\fP * block, \fBFLAC__bool\fP album_mode, \fBFLAC__bool\fP strict, double * reference, double * gain, double * peak)"
+
+.PP
+Definition at line 607 of file replaygain\&.c\&.
+.SS "\fBconst\fP char* grabbag__replaygain_store_to_file (\fBconst\fP char * filename, float album_gain, float album_peak, float title_gain, float title_peak, \fBFLAC__bool\fP preserve_modtime)"
+
+.PP
+Definition at line 503 of file replaygain\&.c\&.
+.SS "\fBconst\fP char* grabbag__replaygain_store_to_file_album (\fBconst\fP char * filename, float album_gain, float album_peak, \fBFLAC__bool\fP preserve_modtime)"
+
+.PP
+Definition at line 543 of file replaygain\&.c\&.
+.SS "\fBconst\fP char* grabbag__replaygain_store_to_file_reference (\fBconst\fP char * filename, \fBFLAC__bool\fP preserve_modtime)"
+
+.PP
+Definition at line 523 of file replaygain\&.c\&.
+.SS "\fBconst\fP char* grabbag__replaygain_store_to_file_title (\fBconst\fP char * filename, float title_gain, float title_peak, \fBFLAC__bool\fP preserve_modtime)"
+
+.PP
+Definition at line 563 of file replaygain\&.c\&.
+.SS "\fBconst\fP char* grabbag__replaygain_store_to_vorbiscomment (\fBFLAC__StreamMetadata\fP * block, float album_gain, float album_peak, float title_gain, float title_peak)"
+
+.PP
+Definition at line 354 of file replaygain\&.c\&.
+.SS "\fBconst\fP char* grabbag__replaygain_store_to_vorbiscomment_album (\fBFLAC__StreamMetadata\fP * block, float album_gain, float album_peak)"
+
+.PP
+Definition at line 384 of file replaygain\&.c\&.
+.SS "\fBconst\fP char* grabbag__replaygain_store_to_vorbiscomment_reference (\fBFLAC__StreamMetadata\fP * block)"
+
+.PP
+Definition at line 370 of file replaygain\&.c\&.
+.SS "\fBconst\fP char* grabbag__replaygain_store_to_vorbiscomment_title (\fBFLAC__StreamMetadata\fP * block, float title_gain, float title_peak)"
+
+.PP
+Definition at line 404 of file replaygain\&.c\&.
+.SH "Variable Documentation"
+.PP 
+.SS "\fBconst\fP unsigned GRABBAG__REPLAYGAIN_MAX_TAG_SPACE_REQUIRED = 190"
+
+.PP
+Definition at line 57 of file replaygain\&.c\&.
+.SS "\fBconst\fP \fBFLAC__byte\fP* \fBconst\fP GRABBAG__REPLAYGAIN_TAG_ALBUM_GAIN = (\fBconst\fP \fBFLAC__byte\fP * \fBconst\fP)'REPLAYGAIN_ALBUM_GAIN'"
+
+.PP
+Definition at line 69 of file replaygain\&.c\&.
+.SS "\fBconst\fP \fBFLAC__byte\fP* \fBconst\fP GRABBAG__REPLAYGAIN_TAG_ALBUM_PEAK = (\fBconst\fP \fBFLAC__byte\fP * \fBconst\fP)'REPLAYGAIN_ALBUM_PEAK'"
+
+.PP
+Definition at line 70 of file replaygain\&.c\&.
+.SS "\fBconst\fP \fBFLAC__byte\fP* \fBconst\fP GRABBAG__REPLAYGAIN_TAG_REFERENCE_LOUDNESS = (\fBconst\fP \fBFLAC__byte\fP * \fBconst\fP)'REPLAYGAIN_REFERENCE_LOUDNESS'"
+
+.PP
+Definition at line 66 of file replaygain\&.c\&.
+.SS "\fBconst\fP \fBFLAC__byte\fP* \fBconst\fP GRABBAG__REPLAYGAIN_TAG_TITLE_GAIN = (\fBconst\fP \fBFLAC__byte\fP * \fBconst\fP)'REPLAYGAIN_TRACK_GAIN'"
+
+.PP
+Definition at line 67 of file replaygain\&.c\&.
+.SS "\fBconst\fP \fBFLAC__byte\fP* \fBconst\fP GRABBAG__REPLAYGAIN_TAG_TITLE_PEAK = (\fBconst\fP \fBFLAC__byte\fP * \fBconst\fP)'REPLAYGAIN_TRACK_PEAK'"
+
+.PP
+Definition at line 68 of file replaygain\&.c\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

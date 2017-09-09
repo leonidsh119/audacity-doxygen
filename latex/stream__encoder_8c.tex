@@ -1,0 +1,297 @@
+\hypertarget{stream__encoder_8c}{}\section{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/libflac/src/lib\+F\+L\+A\+C/stream\+\_\+encoder.c File Reference}
+\label{stream__encoder_8c}\index{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/libflac/src/lib\+F\+L\+A\+C/stream\+\_\+encoder.\+c@{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/libflac/src/lib\+F\+L\+A\+C/stream\+\_\+encoder.\+c}}
+{\ttfamily \#include $<$limits.\+h$>$}\\*
+{\ttfamily \#include $<$stdio.\+h$>$}\\*
+{\ttfamily \#include $<$stdlib.\+h$>$}\\*
+{\ttfamily \#include $<$string.\+h$>$}\\*
+{\ttfamily \#include $<$sys/types.\+h$>$}\\*
+{\ttfamily \#include \char`\"{}share/compat.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}F\+L\+A\+C/assert.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}F\+L\+A\+C/stream\+\_\+decoder.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}protected/stream\+\_\+encoder.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}private/bitwriter.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}private/bitmath.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}private/crc.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}private/cpu.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}private/fixed.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}private/format.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}private/lpc.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}private/md5.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}private/memory.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}private/macros.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}private/stream\+\_\+encoder.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}private/stream\+\_\+encoder\+\_\+framing.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}private/window.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}share/alloc.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}share/private.\+h\char`\"{}}\\*
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structverify__input__fifo}{verify\+\_\+input\+\_\+fifo}
+\item 
+struct \hyperlink{structverify__output}{verify\+\_\+output}
+\item 
+struct {\bfseries Compression\+Levels}
+\item 
+struct \hyperlink{struct_f_l_a_c_____stream_encoder_private}{F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder\+Private}
+\end{DoxyCompactItemize}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{stream__encoder_8c_a43824f02d0836883754e4174e7fd3e1d}{S\+P\+O\+T\+C\+H\+E\+C\+K\+\_\+\+E\+S\+T\+I\+M\+A\+TE}~0
+\item 
+\#define \hyperlink{stream__encoder_8c_a43566f5fa984da91e55e51e826f1c989}{local\+\_\+\+\_\+fwrite}~fwrite
+\end{DoxyCompactItemize}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef struct \hyperlink{struct_f_l_a_c_____stream_encoder_private}{F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder\+Private} \hyperlink{stream__encoder_8c_a4d00b6c6714aad397db3c5c524b31930}{F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder\+Private}
+\end{DoxyCompactItemize}
+\subsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \hyperlink{stream__encoder_8c_abb306d9d764554cc821f1099a519145b}{Encoder\+State\+Hint} \{ \hyperlink{stream__encoder_8c_abb306d9d764554cc821f1099a519145ba84a5ad9bce9bcd1ddfc27c4223000589}{E\+N\+C\+O\+D\+E\+R\+\_\+\+I\+N\+\_\+\+M\+A\+G\+IC} = 0, 
+\hyperlink{stream__encoder_8c_abb306d9d764554cc821f1099a519145ba1081e56b104ef51efc12d91baededa78}{E\+N\+C\+O\+D\+E\+R\+\_\+\+I\+N\+\_\+\+M\+E\+T\+A\+D\+A\+TA} = 1, 
+\hyperlink{stream__encoder_8c_abb306d9d764554cc821f1099a519145ba0854cccae2f72b96838206d4bbc2fbf5}{E\+N\+C\+O\+D\+E\+R\+\_\+\+I\+N\+\_\+\+A\+U\+D\+IO} = 2
+ \}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{group__flac__export_ga56ca07df8a23310707732b1c0007d6f5}{F\+L\+A\+C\+\_\+\+A\+PI} \hyperlink{struct_f_l_a_c_____stream_encoder}{F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder} $\ast$ \hyperlink{group__flac__stream__encoder_ga35f3d94452bcf0a90a31c7d770b200bc}{F\+L\+A\+C\+\_\+\+\_\+stream\+\_\+encoder\+\_\+new} (\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void})
+\item 
+\hyperlink{group__flac__export_ga56ca07df8a23310707732b1c0007d6f5}{F\+L\+A\+C\+\_\+\+A\+PI} \hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{group__flac__stream__encoder_ga9c9956af42bebe923da59437628aa9ea}{F\+L\+A\+C\+\_\+\+\_\+stream\+\_\+encoder\+\_\+delete} (\hyperlink{struct_f_l_a_c_____stream_encoder}{F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder} $\ast$encoder)
+\item 
+\hyperlink{group__flac__export_ga56ca07df8a23310707732b1c0007d6f5}{F\+L\+A\+C\+\_\+\+A\+PI} \hyperlink{group__flac__stream__encoder_ga3bb869620af2b188d77982a5c30b047d}{F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder\+Init\+Status} \hyperlink{group__flac__stream__encoder_ga85221c4ceb9f22dfd4983d8f07a9a35b}{F\+L\+A\+C\+\_\+\+\_\+stream\+\_\+encoder\+\_\+init\+\_\+stream} (\hyperlink{struct_f_l_a_c_____stream_encoder}{F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder} $\ast$encoder, \hyperlink{group__flac__stream__encoder_ga50865125fd57c40fab6eb2f062651429}{F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder\+Write\+Callback} write\+\_\+callback, \hyperlink{group__flac__stream__encoder_ga70b85349d5242e4401c4d8ddf6d9bbca}{F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder\+Seek\+Callback} seek\+\_\+callback, \hyperlink{group__flac__stream__encoder_gabefdf2279e1d0347d9f98f46da4e415b}{F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder\+Tell\+Callback} tell\+\_\+callback, \hyperlink{group__flac__stream__encoder_ga091fbf3340d85bcbda1090c31bc320cf}{F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder\+Metadata\+Callback} metadata\+\_\+callback, \hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} $\ast$client\+\_\+data)
+\item 
+\hyperlink{group__flac__export_ga56ca07df8a23310707732b1c0007d6f5}{F\+L\+A\+C\+\_\+\+A\+PI} \hyperlink{group__flac__stream__encoder_ga3bb869620af2b188d77982a5c30b047d}{F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder\+Init\+Status} \hyperlink{group__flac__stream__encoder_ga87af71d74c09f7d482f9f420ef9bf826}{F\+L\+A\+C\+\_\+\+\_\+stream\+\_\+encoder\+\_\+init\+\_\+ogg\+\_\+stream} (\hyperlink{struct_f_l_a_c_____stream_encoder}{F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder} $\ast$encoder, \hyperlink{group__flac__stream__encoder_ga18b7941b93bae067192732e913536d44}{F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder\+Read\+Callback} read\+\_\+callback, \hyperlink{group__flac__stream__encoder_ga50865125fd57c40fab6eb2f062651429}{F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder\+Write\+Callback} write\+\_\+callback, \hyperlink{group__flac__stream__encoder_ga70b85349d5242e4401c4d8ddf6d9bbca}{F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder\+Seek\+Callback} seek\+\_\+callback, \hyperlink{group__flac__stream__encoder_gabefdf2279e1d0347d9f98f46da4e415b}{F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder\+Tell\+Callback} tell\+\_\+callback, \hyperlink{group__flac__stream__encoder_ga091fbf3340d85bcbda1090c31bc320cf}{F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder\+Metadata\+Callback} metadata\+\_\+callback, \hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} $\ast$client\+\_\+data)
+\item 
+\hyperlink{group__flac__export_ga56ca07df8a23310707732b1c0007d6f5}{F\+L\+A\+C\+\_\+\+A\+PI} \hyperlink{group__flac__stream__encoder_ga3bb869620af2b188d77982a5c30b047d}{F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder\+Init\+Status} \hyperlink{group__flac__stream__encoder_ga78653fea5d9bc490fff34e3ef86de944}{F\+L\+A\+C\+\_\+\+\_\+stream\+\_\+encoder\+\_\+init\+\_\+\+F\+I\+LE} (\hyperlink{struct_f_l_a_c_____stream_encoder}{F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder} $\ast$encoder, F\+I\+LE $\ast$file, \hyperlink{group__flac__stream__encoder_ga6e051c0e5837433f9e7cd56cd42ca6ba}{F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder\+Progress\+Callback} progress\+\_\+callback, \hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} $\ast$client\+\_\+data)
+\item 
+\hyperlink{group__flac__export_ga56ca07df8a23310707732b1c0007d6f5}{F\+L\+A\+C\+\_\+\+A\+PI} \hyperlink{group__flac__stream__encoder_ga3bb869620af2b188d77982a5c30b047d}{F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder\+Init\+Status} \hyperlink{group__flac__stream__encoder_gab44c7f51a61826e04abd8cdf5c1ceac2}{F\+L\+A\+C\+\_\+\+\_\+stream\+\_\+encoder\+\_\+init\+\_\+ogg\+\_\+\+F\+I\+LE} (\hyperlink{struct_f_l_a_c_____stream_encoder}{F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder} $\ast$encoder, F\+I\+LE $\ast$file, \hyperlink{group__flac__stream__encoder_ga6e051c0e5837433f9e7cd56cd42ca6ba}{F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder\+Progress\+Callback} progress\+\_\+callback, \hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} $\ast$client\+\_\+data)
+\item 
+\hyperlink{group__flac__export_ga56ca07df8a23310707732b1c0007d6f5}{F\+L\+A\+C\+\_\+\+A\+PI} \hyperlink{group__flac__stream__encoder_ga3bb869620af2b188d77982a5c30b047d}{F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder\+Init\+Status} \hyperlink{group__flac__stream__encoder_ga693bb5ed30d912822e0e6c7c0404428c}{F\+L\+A\+C\+\_\+\+\_\+stream\+\_\+encoder\+\_\+init\+\_\+file} (\hyperlink{struct_f_l_a_c_____stream_encoder}{F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder} $\ast$encoder, \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} char $\ast$\hyperlink{test__portburn_8cpp_a7efa5e9c7494c7d4586359300221aa5d}{filename}, \hyperlink{group__flac__stream__encoder_ga6e051c0e5837433f9e7cd56cd42ca6ba}{F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder\+Progress\+Callback} progress\+\_\+callback, \hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} $\ast$client\+\_\+data)
+\item 
+\hyperlink{group__flac__export_ga56ca07df8a23310707732b1c0007d6f5}{F\+L\+A\+C\+\_\+\+A\+PI} \hyperlink{group__flac__stream__encoder_ga3bb869620af2b188d77982a5c30b047d}{F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder\+Init\+Status} \hyperlink{group__flac__stream__encoder_ga51eb79f04e9a676cd1ce0c94729252e4}{F\+L\+A\+C\+\_\+\+\_\+stream\+\_\+encoder\+\_\+init\+\_\+ogg\+\_\+file} (\hyperlink{struct_f_l_a_c_____stream_encoder}{F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder} $\ast$encoder, \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} char $\ast$\hyperlink{test__portburn_8cpp_a7efa5e9c7494c7d4586359300221aa5d}{filename}, \hyperlink{group__flac__stream__encoder_ga6e051c0e5837433f9e7cd56cd42ca6ba}{F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder\+Progress\+Callback} progress\+\_\+callback, \hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} $\ast$client\+\_\+data)
+\item 
+\hyperlink{group__flac__export_ga56ca07df8a23310707732b1c0007d6f5}{F\+L\+A\+C\+\_\+\+A\+PI} \hyperlink{ordinals_8h_a95103469f1cbd78b8cf250194985b34e}{F\+L\+A\+C\+\_\+\+\_\+bool} \hyperlink{group__flac__stream__encoder_gab2c1e5477c1e3fe9ad0d722ff8eecda2}{F\+L\+A\+C\+\_\+\+\_\+stream\+\_\+encoder\+\_\+finish} (\hyperlink{struct_f_l_a_c_____stream_encoder}{F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder} $\ast$encoder)
+\item 
+\hyperlink{group__flac__export_ga56ca07df8a23310707732b1c0007d6f5}{F\+L\+A\+C\+\_\+\+A\+PI} \hyperlink{ordinals_8h_a95103469f1cbd78b8cf250194985b34e}{F\+L\+A\+C\+\_\+\+\_\+bool} \hyperlink{group__flac__stream__encoder_ga646c9800d42620a6c504fbdfbd092666}{F\+L\+A\+C\+\_\+\+\_\+stream\+\_\+encoder\+\_\+set\+\_\+ogg\+\_\+serial\+\_\+number} (\hyperlink{struct_f_l_a_c_____stream_encoder}{F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder} $\ast$encoder, long \hyperlink{lib_2expat_8h_a4a30a13b813682e68c5b689b45c65971}{value})
+\item 
+\hyperlink{group__flac__export_ga56ca07df8a23310707732b1c0007d6f5}{F\+L\+A\+C\+\_\+\+A\+PI} \hyperlink{ordinals_8h_a95103469f1cbd78b8cf250194985b34e}{F\+L\+A\+C\+\_\+\+\_\+bool} \hyperlink{group__flac__stream__encoder_ga5f4ac18a7207d2864fed72d284486f9e}{F\+L\+A\+C\+\_\+\+\_\+stream\+\_\+encoder\+\_\+set\+\_\+verify} (\hyperlink{struct_f_l_a_c_____stream_encoder}{F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder} $\ast$encoder, \hyperlink{ordinals_8h_a95103469f1cbd78b8cf250194985b34e}{F\+L\+A\+C\+\_\+\+\_\+bool} \hyperlink{lib_2expat_8h_a4a30a13b813682e68c5b689b45c65971}{value})
+\item 
+\hyperlink{group__flac__export_ga56ca07df8a23310707732b1c0007d6f5}{F\+L\+A\+C\+\_\+\+A\+PI} \hyperlink{ordinals_8h_a95103469f1cbd78b8cf250194985b34e}{F\+L\+A\+C\+\_\+\+\_\+bool} \hyperlink{group__flac__stream__encoder_ga163f1acfe8b6b8ae849f0f4f7c0708f4}{F\+L\+A\+C\+\_\+\+\_\+stream\+\_\+encoder\+\_\+set\+\_\+streamable\+\_\+subset} (\hyperlink{struct_f_l_a_c_____stream_encoder}{F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder} $\ast$encoder, \hyperlink{ordinals_8h_a95103469f1cbd78b8cf250194985b34e}{F\+L\+A\+C\+\_\+\+\_\+bool} \hyperlink{lib_2expat_8h_a4a30a13b813682e68c5b689b45c65971}{value})
+\item 
+\hyperlink{group__flac__export_ga56ca07df8a23310707732b1c0007d6f5}{F\+L\+A\+C\+\_\+\+A\+PI} \hyperlink{ordinals_8h_a95103469f1cbd78b8cf250194985b34e}{F\+L\+A\+C\+\_\+\+\_\+bool} \hyperlink{stream__encoder_8c_ab97bed6682a1cc19490b410193e16af8}{F\+L\+A\+C\+\_\+\+\_\+stream\+\_\+encoder\+\_\+set\+\_\+do\+\_\+md5} (\hyperlink{struct_f_l_a_c_____stream_encoder}{F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder} $\ast$encoder, \hyperlink{ordinals_8h_a95103469f1cbd78b8cf250194985b34e}{F\+L\+A\+C\+\_\+\+\_\+bool} \hyperlink{lib_2expat_8h_a4a30a13b813682e68c5b689b45c65971}{value})
+\item 
+\hyperlink{group__flac__export_ga56ca07df8a23310707732b1c0007d6f5}{F\+L\+A\+C\+\_\+\+A\+PI} \hyperlink{ordinals_8h_a95103469f1cbd78b8cf250194985b34e}{F\+L\+A\+C\+\_\+\+\_\+bool} \hyperlink{group__flac__stream__encoder_gabfc9c883c124a849b5b42a87c30e10a5}{F\+L\+A\+C\+\_\+\+\_\+stream\+\_\+encoder\+\_\+set\+\_\+channels} (\hyperlink{struct_f_l_a_c_____stream_encoder}{F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder} $\ast$encoder, unsigned \hyperlink{lib_2expat_8h_a4a30a13b813682e68c5b689b45c65971}{value})
+\item 
+\hyperlink{group__flac__export_ga56ca07df8a23310707732b1c0007d6f5}{F\+L\+A\+C\+\_\+\+A\+PI} \hyperlink{ordinals_8h_a95103469f1cbd78b8cf250194985b34e}{F\+L\+A\+C\+\_\+\+\_\+bool} \hyperlink{group__flac__stream__encoder_ga5a21cf7f86a81df6ba72714a6b917aa3}{F\+L\+A\+C\+\_\+\+\_\+stream\+\_\+encoder\+\_\+set\+\_\+bits\+\_\+per\+\_\+sample} (\hyperlink{struct_f_l_a_c_____stream_encoder}{F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder} $\ast$encoder, unsigned \hyperlink{lib_2expat_8h_a4a30a13b813682e68c5b689b45c65971}{value})
+\item 
+\hyperlink{group__flac__export_ga56ca07df8a23310707732b1c0007d6f5}{F\+L\+A\+C\+\_\+\+A\+PI} \hyperlink{ordinals_8h_a95103469f1cbd78b8cf250194985b34e}{F\+L\+A\+C\+\_\+\+\_\+bool} \hyperlink{group__flac__stream__encoder_ga108c3f4fbdcaa744ddbb125f91cb3838}{F\+L\+A\+C\+\_\+\+\_\+stream\+\_\+encoder\+\_\+set\+\_\+sample\+\_\+rate} (\hyperlink{struct_f_l_a_c_____stream_encoder}{F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder} $\ast$encoder, unsigned \hyperlink{lib_2expat_8h_a4a30a13b813682e68c5b689b45c65971}{value})
+\item 
+\hyperlink{group__flac__export_ga56ca07df8a23310707732b1c0007d6f5}{F\+L\+A\+C\+\_\+\+A\+PI} \hyperlink{ordinals_8h_a95103469f1cbd78b8cf250194985b34e}{F\+L\+A\+C\+\_\+\+\_\+bool} \hyperlink{group__flac__stream__encoder_ga03495bcd0aae71116c701b0dcf311c4b}{F\+L\+A\+C\+\_\+\+\_\+stream\+\_\+encoder\+\_\+set\+\_\+compression\+\_\+level} (\hyperlink{struct_f_l_a_c_____stream_encoder}{F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder} $\ast$encoder, unsigned \hyperlink{lib_2expat_8h_a4a30a13b813682e68c5b689b45c65971}{value})
+\item 
+\hyperlink{group__flac__export_ga56ca07df8a23310707732b1c0007d6f5}{F\+L\+A\+C\+\_\+\+A\+PI} \hyperlink{ordinals_8h_a95103469f1cbd78b8cf250194985b34e}{F\+L\+A\+C\+\_\+\+\_\+bool} \hyperlink{group__flac__stream__encoder_gae6c001cd7601192334c58ee3631b571f}{F\+L\+A\+C\+\_\+\+\_\+stream\+\_\+encoder\+\_\+set\+\_\+blocksize} (\hyperlink{struct_f_l_a_c_____stream_encoder}{F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder} $\ast$encoder, unsigned \hyperlink{lib_2expat_8h_a4a30a13b813682e68c5b689b45c65971}{value})
+\item 
+\hyperlink{group__flac__export_ga56ca07df8a23310707732b1c0007d6f5}{F\+L\+A\+C\+\_\+\+A\+PI} \hyperlink{ordinals_8h_a95103469f1cbd78b8cf250194985b34e}{F\+L\+A\+C\+\_\+\+\_\+bool} \hyperlink{group__flac__stream__encoder_gadbd1084da109cf0ddd007a5c64027504}{F\+L\+A\+C\+\_\+\+\_\+stream\+\_\+encoder\+\_\+set\+\_\+do\+\_\+mid\+\_\+side\+\_\+stereo} (\hyperlink{struct_f_l_a_c_____stream_encoder}{F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder} $\ast$encoder, \hyperlink{ordinals_8h_a95103469f1cbd78b8cf250194985b34e}{F\+L\+A\+C\+\_\+\+\_\+bool} \hyperlink{lib_2expat_8h_a4a30a13b813682e68c5b689b45c65971}{value})
+\item 
+\hyperlink{group__flac__export_ga56ca07df8a23310707732b1c0007d6f5}{F\+L\+A\+C\+\_\+\+A\+PI} \hyperlink{ordinals_8h_a95103469f1cbd78b8cf250194985b34e}{F\+L\+A\+C\+\_\+\+\_\+bool} \hyperlink{group__flac__stream__encoder_ga7b7d294dccd5df7c6c67e75f59798f48}{F\+L\+A\+C\+\_\+\+\_\+stream\+\_\+encoder\+\_\+set\+\_\+loose\+\_\+mid\+\_\+side\+\_\+stereo} (\hyperlink{struct_f_l_a_c_____stream_encoder}{F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder} $\ast$encoder, \hyperlink{ordinals_8h_a95103469f1cbd78b8cf250194985b34e}{F\+L\+A\+C\+\_\+\+\_\+bool} \hyperlink{lib_2expat_8h_a4a30a13b813682e68c5b689b45c65971}{value})
+\item 
+\hyperlink{group__flac__export_ga56ca07df8a23310707732b1c0007d6f5}{F\+L\+A\+C\+\_\+\+A\+PI} \hyperlink{ordinals_8h_a95103469f1cbd78b8cf250194985b34e}{F\+L\+A\+C\+\_\+\+\_\+bool} \hyperlink{group__flac__stream__encoder_ga83d38fd6fca7abbf8363bdc2536a299e}{F\+L\+A\+C\+\_\+\+\_\+stream\+\_\+encoder\+\_\+set\+\_\+apodization} (\hyperlink{struct_f_l_a_c_____stream_encoder}{F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder} $\ast$encoder, \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} char $\ast$specification)
+\item 
+\hyperlink{group__flac__export_ga56ca07df8a23310707732b1c0007d6f5}{F\+L\+A\+C\+\_\+\+A\+PI} \hyperlink{ordinals_8h_a95103469f1cbd78b8cf250194985b34e}{F\+L\+A\+C\+\_\+\+\_\+bool} \hyperlink{group__flac__stream__encoder_gac3bde5abdaa340674c5659e2e85d2611}{F\+L\+A\+C\+\_\+\+\_\+stream\+\_\+encoder\+\_\+set\+\_\+max\+\_\+lpc\+\_\+order} (\hyperlink{struct_f_l_a_c_____stream_encoder}{F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder} $\ast$encoder, unsigned \hyperlink{lib_2expat_8h_a4a30a13b813682e68c5b689b45c65971}{value})
+\item 
+\hyperlink{group__flac__export_ga56ca07df8a23310707732b1c0007d6f5}{F\+L\+A\+C\+\_\+\+A\+PI} \hyperlink{ordinals_8h_a95103469f1cbd78b8cf250194985b34e}{F\+L\+A\+C\+\_\+\+\_\+bool} \hyperlink{group__flac__stream__encoder_ga0888d739c952ff73456bf90e48634514}{F\+L\+A\+C\+\_\+\+\_\+stream\+\_\+encoder\+\_\+set\+\_\+qlp\+\_\+coeff\+\_\+precision} (\hyperlink{struct_f_l_a_c_____stream_encoder}{F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder} $\ast$encoder, unsigned \hyperlink{lib_2expat_8h_a4a30a13b813682e68c5b689b45c65971}{value})
+\item 
+\hyperlink{group__flac__export_ga56ca07df8a23310707732b1c0007d6f5}{F\+L\+A\+C\+\_\+\+A\+PI} \hyperlink{ordinals_8h_a95103469f1cbd78b8cf250194985b34e}{F\+L\+A\+C\+\_\+\+\_\+bool} \hyperlink{group__flac__stream__encoder_ga3aa94a1aec1cf40c37e54434c86bb50d}{F\+L\+A\+C\+\_\+\+\_\+stream\+\_\+encoder\+\_\+set\+\_\+do\+\_\+qlp\+\_\+coeff\+\_\+prec\+\_\+search} (\hyperlink{struct_f_l_a_c_____stream_encoder}{F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder} $\ast$encoder, \hyperlink{ordinals_8h_a95103469f1cbd78b8cf250194985b34e}{F\+L\+A\+C\+\_\+\+\_\+bool} \hyperlink{lib_2expat_8h_a4a30a13b813682e68c5b689b45c65971}{value})
+\item 
+\hyperlink{group__flac__export_ga56ca07df8a23310707732b1c0007d6f5}{F\+L\+A\+C\+\_\+\+A\+PI} \hyperlink{ordinals_8h_a95103469f1cbd78b8cf250194985b34e}{F\+L\+A\+C\+\_\+\+\_\+bool} \hyperlink{group__flac__stream__encoder_gaa839d19b6d1b30ba0407d419bdb6fe67}{F\+L\+A\+C\+\_\+\+\_\+stream\+\_\+encoder\+\_\+set\+\_\+do\+\_\+escape\+\_\+coding} (\hyperlink{struct_f_l_a_c_____stream_encoder}{F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder} $\ast$encoder, \hyperlink{ordinals_8h_a95103469f1cbd78b8cf250194985b34e}{F\+L\+A\+C\+\_\+\+\_\+bool} \hyperlink{lib_2expat_8h_a4a30a13b813682e68c5b689b45c65971}{value})
+\item 
+\hyperlink{group__flac__export_ga56ca07df8a23310707732b1c0007d6f5}{F\+L\+A\+C\+\_\+\+A\+PI} \hyperlink{ordinals_8h_a95103469f1cbd78b8cf250194985b34e}{F\+L\+A\+C\+\_\+\+\_\+bool} \hyperlink{group__flac__stream__encoder_ga7fbc05ec9abd249a400fccb9f189e55e}{F\+L\+A\+C\+\_\+\+\_\+stream\+\_\+encoder\+\_\+set\+\_\+do\+\_\+exhaustive\+\_\+model\+\_\+search} (\hyperlink{struct_f_l_a_c_____stream_encoder}{F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder} $\ast$encoder, \hyperlink{ordinals_8h_a95103469f1cbd78b8cf250194985b34e}{F\+L\+A\+C\+\_\+\+\_\+bool} \hyperlink{lib_2expat_8h_a4a30a13b813682e68c5b689b45c65971}{value})
+\item 
+\hyperlink{group__flac__export_ga56ca07df8a23310707732b1c0007d6f5}{F\+L\+A\+C\+\_\+\+A\+PI} \hyperlink{ordinals_8h_a95103469f1cbd78b8cf250194985b34e}{F\+L\+A\+C\+\_\+\+\_\+bool} \hyperlink{group__flac__stream__encoder_gae3e2dd204f276d051bf1a118383bfda2}{F\+L\+A\+C\+\_\+\+\_\+stream\+\_\+encoder\+\_\+set\+\_\+min\+\_\+residual\+\_\+partition\+\_\+order} (\hyperlink{struct_f_l_a_c_____stream_encoder}{F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder} $\ast$encoder, unsigned \hyperlink{lib_2expat_8h_a4a30a13b813682e68c5b689b45c65971}{value})
+\item 
+\hyperlink{group__flac__export_ga56ca07df8a23310707732b1c0007d6f5}{F\+L\+A\+C\+\_\+\+A\+PI} \hyperlink{ordinals_8h_a95103469f1cbd78b8cf250194985b34e}{F\+L\+A\+C\+\_\+\+\_\+bool} \hyperlink{group__flac__stream__encoder_ga6de153da5a8eeeb1be2271c27fa58b37}{F\+L\+A\+C\+\_\+\+\_\+stream\+\_\+encoder\+\_\+set\+\_\+max\+\_\+residual\+\_\+partition\+\_\+order} (\hyperlink{struct_f_l_a_c_____stream_encoder}{F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder} $\ast$encoder, unsigned \hyperlink{lib_2expat_8h_a4a30a13b813682e68c5b689b45c65971}{value})
+\item 
+\hyperlink{group__flac__export_ga56ca07df8a23310707732b1c0007d6f5}{F\+L\+A\+C\+\_\+\+A\+PI} \hyperlink{ordinals_8h_a95103469f1cbd78b8cf250194985b34e}{F\+L\+A\+C\+\_\+\+\_\+bool} \hyperlink{group__flac__stream__encoder_ga668de93e7061bce21475c062ffab3e18}{F\+L\+A\+C\+\_\+\+\_\+stream\+\_\+encoder\+\_\+set\+\_\+rice\+\_\+parameter\+\_\+search\+\_\+dist} (\hyperlink{struct_f_l_a_c_____stream_encoder}{F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder} $\ast$encoder, unsigned \hyperlink{lib_2expat_8h_a4a30a13b813682e68c5b689b45c65971}{value})
+\item 
+\hyperlink{group__flac__export_ga56ca07df8a23310707732b1c0007d6f5}{F\+L\+A\+C\+\_\+\+A\+PI} \hyperlink{ordinals_8h_a95103469f1cbd78b8cf250194985b34e}{F\+L\+A\+C\+\_\+\+\_\+bool} \hyperlink{group__flac__stream__encoder_ga0d3f45052f2f7379c73e2b027c7f956c}{F\+L\+A\+C\+\_\+\+\_\+stream\+\_\+encoder\+\_\+set\+\_\+total\+\_\+samples\+\_\+estimate} (\hyperlink{struct_f_l_a_c_____stream_encoder}{F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder} $\ast$encoder, \hyperlink{ordinals_8h_aa78c8c70a3eb8a58af7436f278acde8e}{F\+L\+A\+C\+\_\+\+\_\+uint64} \hyperlink{lib_2expat_8h_a4a30a13b813682e68c5b689b45c65971}{value})
+\item 
+\hyperlink{group__flac__export_ga56ca07df8a23310707732b1c0007d6f5}{F\+L\+A\+C\+\_\+\+A\+PI} \hyperlink{ordinals_8h_a95103469f1cbd78b8cf250194985b34e}{F\+L\+A\+C\+\_\+\+\_\+bool} \hyperlink{group__flac__stream__encoder_ga67b30b1a67a9274f7708a22154b225f6}{F\+L\+A\+C\+\_\+\+\_\+stream\+\_\+encoder\+\_\+set\+\_\+metadata} (\hyperlink{struct_f_l_a_c_____stream_encoder}{F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder} $\ast$encoder, \hyperlink{struct_f_l_a_c_____stream_metadata}{F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Metadata} $\ast$$\ast$metadata, unsigned num\+\_\+blocks)
+\item 
+\hyperlink{group__flac__export_ga56ca07df8a23310707732b1c0007d6f5}{F\+L\+A\+C\+\_\+\+A\+PI} \hyperlink{ordinals_8h_a95103469f1cbd78b8cf250194985b34e}{F\+L\+A\+C\+\_\+\+\_\+bool} \hyperlink{stream__encoder_8c_a76aa9d5aa4766bea5cad50afba05bc80}{F\+L\+A\+C\+\_\+\+\_\+stream\+\_\+encoder\+\_\+disable\+\_\+constant\+\_\+subframes} (\hyperlink{struct_f_l_a_c_____stream_encoder}{F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder} $\ast$encoder, \hyperlink{ordinals_8h_a95103469f1cbd78b8cf250194985b34e}{F\+L\+A\+C\+\_\+\+\_\+bool} \hyperlink{lib_2expat_8h_a4a30a13b813682e68c5b689b45c65971}{value})
+\item 
+\hyperlink{group__flac__export_ga56ca07df8a23310707732b1c0007d6f5}{F\+L\+A\+C\+\_\+\+A\+PI} \hyperlink{ordinals_8h_a95103469f1cbd78b8cf250194985b34e}{F\+L\+A\+C\+\_\+\+\_\+bool} \hyperlink{stream__encoder_8c_ad419137fb5ef5e0485bb537b4856921e}{F\+L\+A\+C\+\_\+\+\_\+stream\+\_\+encoder\+\_\+disable\+\_\+fixed\+\_\+subframes} (\hyperlink{struct_f_l_a_c_____stream_encoder}{F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder} $\ast$encoder, \hyperlink{ordinals_8h_a95103469f1cbd78b8cf250194985b34e}{F\+L\+A\+C\+\_\+\+\_\+bool} \hyperlink{lib_2expat_8h_a4a30a13b813682e68c5b689b45c65971}{value})
+\item 
+\hyperlink{group__flac__export_ga56ca07df8a23310707732b1c0007d6f5}{F\+L\+A\+C\+\_\+\+A\+PI} \hyperlink{ordinals_8h_a95103469f1cbd78b8cf250194985b34e}{F\+L\+A\+C\+\_\+\+\_\+bool} \hyperlink{stream__encoder_8c_a4c406babba4a85d9583ef2cf830d09ab}{F\+L\+A\+C\+\_\+\+\_\+stream\+\_\+encoder\+\_\+disable\+\_\+verbatim\+\_\+subframes} (\hyperlink{struct_f_l_a_c_____stream_encoder}{F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder} $\ast$encoder, \hyperlink{ordinals_8h_a95103469f1cbd78b8cf250194985b34e}{F\+L\+A\+C\+\_\+\+\_\+bool} \hyperlink{lib_2expat_8h_a4a30a13b813682e68c5b689b45c65971}{value})
+\item 
+\hyperlink{group__flac__export_ga56ca07df8a23310707732b1c0007d6f5}{F\+L\+A\+C\+\_\+\+A\+PI} \hyperlink{group__flac__stream__encoder_gac5e9db4fc32ca2fa74abd9c8a87c02a5}{F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder\+State} \hyperlink{group__flac__stream__encoder_gaff7284e55f01b59ed8f03317df510992}{F\+L\+A\+C\+\_\+\+\_\+stream\+\_\+encoder\+\_\+get\+\_\+state} (\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{struct_f_l_a_c_____stream_encoder}{F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder} $\ast$encoder)
+\item 
+\hyperlink{group__flac__export_ga56ca07df8a23310707732b1c0007d6f5}{F\+L\+A\+C\+\_\+\+A\+PI} \hyperlink{group__flac__stream__decoder_ga3adb6891c5871a87cd5bbae6c770ba2d}{F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Decoder\+State} \hyperlink{group__flac__stream__encoder_gac613bebe4181568e7ca59cca30294e52}{F\+L\+A\+C\+\_\+\+\_\+stream\+\_\+encoder\+\_\+get\+\_\+verify\+\_\+decoder\+\_\+state} (\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{struct_f_l_a_c_____stream_encoder}{F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder} $\ast$encoder)
+\item 
+\hyperlink{group__flac__export_ga56ca07df8a23310707732b1c0007d6f5}{F\+L\+A\+C\+\_\+\+A\+PI} \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} char $\ast$ \hyperlink{group__flac__stream__encoder_gac909fca7b0e2aacaf772f3aa0e42c0db}{F\+L\+A\+C\+\_\+\+\_\+stream\+\_\+encoder\+\_\+get\+\_\+resolved\+\_\+state\+\_\+string} (\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{struct_f_l_a_c_____stream_encoder}{F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder} $\ast$encoder)
+\item 
+\hyperlink{group__flac__export_ga56ca07df8a23310707732b1c0007d6f5}{F\+L\+A\+C\+\_\+\+A\+PI} \hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{group__flac__stream__encoder_ga3e3f5a9267eb998f74caa10865991bd5}{F\+L\+A\+C\+\_\+\+\_\+stream\+\_\+encoder\+\_\+get\+\_\+verify\+\_\+decoder\+\_\+error\+\_\+stats} (\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{struct_f_l_a_c_____stream_encoder}{F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder} $\ast$encoder, \hyperlink{ordinals_8h_aa78c8c70a3eb8a58af7436f278acde8e}{F\+L\+A\+C\+\_\+\+\_\+uint64} $\ast$absolute\+\_\+sample, unsigned $\ast$frame\+\_\+number, unsigned $\ast$channel, unsigned $\ast$sample, \hyperlink{ordinals_8h_a33fd77bfe6d685541a0c034a75deccdc}{F\+L\+A\+C\+\_\+\+\_\+int32} $\ast$expected, \hyperlink{ordinals_8h_a33fd77bfe6d685541a0c034a75deccdc}{F\+L\+A\+C\+\_\+\+\_\+int32} $\ast$got)
+\item 
+\hyperlink{group__flac__export_ga56ca07df8a23310707732b1c0007d6f5}{F\+L\+A\+C\+\_\+\+A\+PI} \hyperlink{ordinals_8h_a95103469f1cbd78b8cf250194985b34e}{F\+L\+A\+C\+\_\+\+\_\+bool} \hyperlink{group__flac__stream__encoder_ga044d18f93fa8faa6a85eec4fa7cf86f2}{F\+L\+A\+C\+\_\+\+\_\+stream\+\_\+encoder\+\_\+get\+\_\+verify} (\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{struct_f_l_a_c_____stream_encoder}{F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder} $\ast$encoder)
+\item 
+\hyperlink{group__flac__export_ga56ca07df8a23310707732b1c0007d6f5}{F\+L\+A\+C\+\_\+\+A\+PI} \hyperlink{ordinals_8h_a95103469f1cbd78b8cf250194985b34e}{F\+L\+A\+C\+\_\+\+\_\+bool} \hyperlink{group__flac__stream__encoder_gabafaf69ed39c25c5b1c03044c1a91d66}{F\+L\+A\+C\+\_\+\+\_\+stream\+\_\+encoder\+\_\+get\+\_\+streamable\+\_\+subset} (\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{struct_f_l_a_c_____stream_encoder}{F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder} $\ast$encoder)
+\item 
+\hyperlink{group__flac__export_ga56ca07df8a23310707732b1c0007d6f5}{F\+L\+A\+C\+\_\+\+A\+PI} \hyperlink{ordinals_8h_a95103469f1cbd78b8cf250194985b34e}{F\+L\+A\+C\+\_\+\+\_\+bool} \hyperlink{stream__encoder_8c_a310c231d7bcf4008a3ce146131d48f22}{F\+L\+A\+C\+\_\+\+\_\+stream\+\_\+encoder\+\_\+get\+\_\+do\+\_\+md5} (\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{struct_f_l_a_c_____stream_encoder}{F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder} $\ast$encoder)
+\item 
+\hyperlink{group__flac__export_ga56ca07df8a23310707732b1c0007d6f5}{F\+L\+A\+C\+\_\+\+A\+PI} unsigned \hyperlink{group__flac__stream__encoder_ga4e94f87c0dc9bfc95d57217349aa5c82}{F\+L\+A\+C\+\_\+\+\_\+stream\+\_\+encoder\+\_\+get\+\_\+channels} (\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{struct_f_l_a_c_____stream_encoder}{F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder} $\ast$encoder)
+\item 
+\hyperlink{group__flac__export_ga56ca07df8a23310707732b1c0007d6f5}{F\+L\+A\+C\+\_\+\+A\+PI} unsigned \hyperlink{group__flac__stream__encoder_gacbd84a241c6718ed4c2688fd558efdcd}{F\+L\+A\+C\+\_\+\+\_\+stream\+\_\+encoder\+\_\+get\+\_\+bits\+\_\+per\+\_\+sample} (\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{struct_f_l_a_c_____stream_encoder}{F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder} $\ast$encoder)
+\item 
+\hyperlink{group__flac__export_ga56ca07df8a23310707732b1c0007d6f5}{F\+L\+A\+C\+\_\+\+A\+PI} unsigned \hyperlink{group__flac__stream__encoder_gacc8f4820dea783cc0fc2906b6078b333}{F\+L\+A\+C\+\_\+\+\_\+stream\+\_\+encoder\+\_\+get\+\_\+sample\+\_\+rate} (\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{struct_f_l_a_c_____stream_encoder}{F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder} $\ast$encoder)
+\item 
+\hyperlink{group__flac__export_ga56ca07df8a23310707732b1c0007d6f5}{F\+L\+A\+C\+\_\+\+A\+PI} unsigned \hyperlink{group__flac__stream__encoder_ga75bbef3f55b0e1e18642dd0091ad393e}{F\+L\+A\+C\+\_\+\+\_\+stream\+\_\+encoder\+\_\+get\+\_\+blocksize} (\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{struct_f_l_a_c_____stream_encoder}{F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder} $\ast$encoder)
+\item 
+\hyperlink{group__flac__export_ga56ca07df8a23310707732b1c0007d6f5}{F\+L\+A\+C\+\_\+\+A\+PI} \hyperlink{ordinals_8h_a95103469f1cbd78b8cf250194985b34e}{F\+L\+A\+C\+\_\+\+\_\+bool} \hyperlink{group__flac__stream__encoder_ga3308e73db9d0ae4803485c35d2a54a2d}{F\+L\+A\+C\+\_\+\+\_\+stream\+\_\+encoder\+\_\+get\+\_\+do\+\_\+mid\+\_\+side\+\_\+stereo} (\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{struct_f_l_a_c_____stream_encoder}{F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder} $\ast$encoder)
+\item 
+\hyperlink{group__flac__export_ga56ca07df8a23310707732b1c0007d6f5}{F\+L\+A\+C\+\_\+\+A\+PI} \hyperlink{ordinals_8h_a95103469f1cbd78b8cf250194985b34e}{F\+L\+A\+C\+\_\+\+\_\+bool} \hyperlink{group__flac__stream__encoder_ga539ac36925671ac84371a745f8acce17}{F\+L\+A\+C\+\_\+\+\_\+stream\+\_\+encoder\+\_\+get\+\_\+loose\+\_\+mid\+\_\+side\+\_\+stereo} (\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{struct_f_l_a_c_____stream_encoder}{F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder} $\ast$encoder)
+\item 
+\hyperlink{group__flac__export_ga56ca07df8a23310707732b1c0007d6f5}{F\+L\+A\+C\+\_\+\+A\+PI} unsigned \hyperlink{group__flac__stream__encoder_ga283e0a80301d38295242f9b57ade15cf}{F\+L\+A\+C\+\_\+\+\_\+stream\+\_\+encoder\+\_\+get\+\_\+max\+\_\+lpc\+\_\+order} (\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{struct_f_l_a_c_____stream_encoder}{F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder} $\ast$encoder)
+\item 
+\hyperlink{group__flac__export_ga56ca07df8a23310707732b1c0007d6f5}{F\+L\+A\+C\+\_\+\+A\+PI} unsigned \hyperlink{group__flac__stream__encoder_ga40ae31529071b3be2f39968d4265c663}{F\+L\+A\+C\+\_\+\+\_\+stream\+\_\+encoder\+\_\+get\+\_\+qlp\+\_\+coeff\+\_\+precision} (\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{struct_f_l_a_c_____stream_encoder}{F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder} $\ast$encoder)
+\item 
+\hyperlink{group__flac__export_ga56ca07df8a23310707732b1c0007d6f5}{F\+L\+A\+C\+\_\+\+A\+PI} \hyperlink{ordinals_8h_a95103469f1cbd78b8cf250194985b34e}{F\+L\+A\+C\+\_\+\+\_\+bool} \hyperlink{group__flac__stream__encoder_gaa258ce03d970b397f5b698c63636d985}{F\+L\+A\+C\+\_\+\+\_\+stream\+\_\+encoder\+\_\+get\+\_\+do\+\_\+qlp\+\_\+coeff\+\_\+prec\+\_\+search} (\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{struct_f_l_a_c_____stream_encoder}{F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder} $\ast$encoder)
+\item 
+\hyperlink{group__flac__export_ga56ca07df8a23310707732b1c0007d6f5}{F\+L\+A\+C\+\_\+\+A\+PI} \hyperlink{ordinals_8h_a95103469f1cbd78b8cf250194985b34e}{F\+L\+A\+C\+\_\+\+\_\+bool} \hyperlink{group__flac__stream__encoder_ga06a8e154139880a2def5f54b6c2700d6}{F\+L\+A\+C\+\_\+\+\_\+stream\+\_\+encoder\+\_\+get\+\_\+do\+\_\+escape\+\_\+coding} (\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{struct_f_l_a_c_____stream_encoder}{F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder} $\ast$encoder)
+\item 
+\hyperlink{group__flac__export_ga56ca07df8a23310707732b1c0007d6f5}{F\+L\+A\+C\+\_\+\+A\+PI} \hyperlink{ordinals_8h_a95103469f1cbd78b8cf250194985b34e}{F\+L\+A\+C\+\_\+\+\_\+bool} \hyperlink{group__flac__stream__encoder_gad429e31c7062baff987571d935b889f4}{F\+L\+A\+C\+\_\+\+\_\+stream\+\_\+encoder\+\_\+get\+\_\+do\+\_\+exhaustive\+\_\+model\+\_\+search} (\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{struct_f_l_a_c_____stream_encoder}{F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder} $\ast$encoder)
+\item 
+\hyperlink{group__flac__export_ga56ca07df8a23310707732b1c0007d6f5}{F\+L\+A\+C\+\_\+\+A\+PI} unsigned \hyperlink{group__flac__stream__encoder_gace80859226b77f40b7b06314b26aa478}{F\+L\+A\+C\+\_\+\+\_\+stream\+\_\+encoder\+\_\+get\+\_\+min\+\_\+residual\+\_\+partition\+\_\+order} (\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{struct_f_l_a_c_____stream_encoder}{F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder} $\ast$encoder)
+\item 
+\hyperlink{group__flac__export_ga56ca07df8a23310707732b1c0007d6f5}{F\+L\+A\+C\+\_\+\+A\+PI} unsigned \hyperlink{group__flac__stream__encoder_ga8f96ce37192b7d062394d710fc01b59e}{F\+L\+A\+C\+\_\+\+\_\+stream\+\_\+encoder\+\_\+get\+\_\+max\+\_\+residual\+\_\+partition\+\_\+order} (\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{struct_f_l_a_c_____stream_encoder}{F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder} $\ast$encoder)
+\item 
+\hyperlink{group__flac__export_ga56ca07df8a23310707732b1c0007d6f5}{F\+L\+A\+C\+\_\+\+A\+PI} unsigned \hyperlink{group__flac__stream__encoder_ga6780c051c176a3dcc4dd1a83a6309bd7}{F\+L\+A\+C\+\_\+\+\_\+stream\+\_\+encoder\+\_\+get\+\_\+rice\+\_\+parameter\+\_\+search\+\_\+dist} (\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{struct_f_l_a_c_____stream_encoder}{F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder} $\ast$encoder)
+\item 
+\hyperlink{group__flac__export_ga56ca07df8a23310707732b1c0007d6f5}{F\+L\+A\+C\+\_\+\+A\+PI} \hyperlink{ordinals_8h_aa78c8c70a3eb8a58af7436f278acde8e}{F\+L\+A\+C\+\_\+\+\_\+uint64} \hyperlink{group__flac__stream__encoder_ga8b206187a5b2a261ad4b5067fa43525b}{F\+L\+A\+C\+\_\+\+\_\+stream\+\_\+encoder\+\_\+get\+\_\+total\+\_\+samples\+\_\+estimate} (\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{struct_f_l_a_c_____stream_encoder}{F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder} $\ast$encoder)
+\item 
+\hyperlink{group__flac__export_ga56ca07df8a23310707732b1c0007d6f5}{F\+L\+A\+C\+\_\+\+A\+PI} \hyperlink{ordinals_8h_a95103469f1cbd78b8cf250194985b34e}{F\+L\+A\+C\+\_\+\+\_\+bool} \hyperlink{group__flac__stream__encoder_gae187ec4f6cab3ca109637996ee23272d}{F\+L\+A\+C\+\_\+\+\_\+stream\+\_\+encoder\+\_\+process} (\hyperlink{struct_f_l_a_c_____stream_encoder}{F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder} $\ast$encoder, \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{ordinals_8h_a33fd77bfe6d685541a0c034a75deccdc}{F\+L\+A\+C\+\_\+\+\_\+int32} $\ast$\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{structbuffer}{buffer}\mbox{[}$\,$\mbox{]}, unsigned \hyperlink{test__w__saw8_8c_a54185623a5a093f671a73e5fba6197a1}{samples})
+\item 
+\hyperlink{group__flac__export_ga56ca07df8a23310707732b1c0007d6f5}{F\+L\+A\+C\+\_\+\+A\+PI} \hyperlink{ordinals_8h_a95103469f1cbd78b8cf250194985b34e}{F\+L\+A\+C\+\_\+\+\_\+bool} \hyperlink{group__flac__stream__encoder_ga67c2ff5b23b945180797de420b1f27c0}{F\+L\+A\+C\+\_\+\+\_\+stream\+\_\+encoder\+\_\+process\+\_\+interleaved} (\hyperlink{struct_f_l_a_c_____stream_encoder}{F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder} $\ast$encoder, \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{ordinals_8h_a33fd77bfe6d685541a0c034a75deccdc}{F\+L\+A\+C\+\_\+\+\_\+int32} \hyperlink{structbuffer}{buffer}\mbox{[}$\,$\mbox{]}, unsigned \hyperlink{test__w__saw8_8c_a54185623a5a093f671a73e5fba6197a1}{samples})
+\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{group__flac__export_ga56ca07df8a23310707732b1c0007d6f5}{F\+L\+A\+C\+\_\+\+A\+PI} \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} char $\ast$\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{group__flac__stream__encoder_ga421c1d86de745d3095b4c5d9af1ef0de}{F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder\+State\+String} \mbox{[}$\,$\mbox{]}
+\item 
+\hyperlink{group__flac__export_ga56ca07df8a23310707732b1c0007d6f5}{F\+L\+A\+C\+\_\+\+A\+PI} \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} char $\ast$\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{group__flac__stream__encoder_ga05203d2cf0390dfbbc2b57b0f0b8e2df}{F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder\+Init\+Status\+String} \mbox{[}$\,$\mbox{]}
+\item 
+\hyperlink{group__flac__export_ga56ca07df8a23310707732b1c0007d6f5}{F\+L\+A\+C\+\_\+\+A\+PI} \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} char $\ast$\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{group__flac__stream__encoder_ga056c12d2a27c562d352eb575d4cb9086}{F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder\+Read\+Status\+String} \mbox{[}$\,$\mbox{]}
+\item 
+\hyperlink{group__flac__export_ga56ca07df8a23310707732b1c0007d6f5}{F\+L\+A\+C\+\_\+\+A\+PI} \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} char $\ast$\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{group__flac__stream__encoder_ga00e6218364ced330f52c625061dfa485}{F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder\+Write\+Status\+String} \mbox{[}$\,$\mbox{]}
+\item 
+\hyperlink{group__flac__export_ga56ca07df8a23310707732b1c0007d6f5}{F\+L\+A\+C\+\_\+\+A\+PI} \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} char $\ast$\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{group__flac__stream__encoder_gaf38671371a395919b6baee141ad90642}{F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder\+Seek\+Status\+String} \mbox{[}$\,$\mbox{]}
+\item 
+\hyperlink{group__flac__export_ga56ca07df8a23310707732b1c0007d6f5}{F\+L\+A\+C\+\_\+\+A\+PI} \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} char $\ast$\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{group__flac__stream__encoder_ga53ed1172a97be80e75f493c060eff8d4}{F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder\+Tell\+Status\+String} \mbox{[}$\,$\mbox{]}
+\end{DoxyCompactItemize}
+
+
+\subsection{Macro Definition Documentation}
+\index{stream\+\_\+encoder.\+c@{stream\+\_\+encoder.\+c}!local\+\_\+\+\_\+fwrite@{local\+\_\+\+\_\+fwrite}}
+\index{local\+\_\+\+\_\+fwrite@{local\+\_\+\+\_\+fwrite}!stream\+\_\+encoder.\+c@{stream\+\_\+encoder.\+c}}
+\subsubsection[{\texorpdfstring{local\+\_\+\+\_\+fwrite}{local__fwrite}}]{\setlength{\rightskip}{0pt plus 5cm}\#define local\+\_\+\+\_\+fwrite~fwrite}\hypertarget{stream__encoder_8c_a43566f5fa984da91e55e51e826f1c989}{}\label{stream__encoder_8c_a43566f5fa984da91e55e51e826f1c989}
+
+
+Definition at line 4472 of file stream\+\_\+encoder.\+c.
+
+\index{stream\+\_\+encoder.\+c@{stream\+\_\+encoder.\+c}!S\+P\+O\+T\+C\+H\+E\+C\+K\+\_\+\+E\+S\+T\+I\+M\+A\+TE@{S\+P\+O\+T\+C\+H\+E\+C\+K\+\_\+\+E\+S\+T\+I\+M\+A\+TE}}
+\index{S\+P\+O\+T\+C\+H\+E\+C\+K\+\_\+\+E\+S\+T\+I\+M\+A\+TE@{S\+P\+O\+T\+C\+H\+E\+C\+K\+\_\+\+E\+S\+T\+I\+M\+A\+TE}!stream\+\_\+encoder.\+c@{stream\+\_\+encoder.\+c}}
+\subsubsection[{\texorpdfstring{S\+P\+O\+T\+C\+H\+E\+C\+K\+\_\+\+E\+S\+T\+I\+M\+A\+TE}{SPOTCHECK_ESTIMATE}}]{\setlength{\rightskip}{0pt plus 5cm}\#define S\+P\+O\+T\+C\+H\+E\+C\+K\+\_\+\+E\+S\+T\+I\+M\+A\+TE~0}\hypertarget{stream__encoder_8c_a43824f02d0836883754e4174e7fd3e1d}{}\label{stream__encoder_8c_a43824f02d0836883754e4174e7fd3e1d}
+
+
+Definition at line 3607 of file stream\+\_\+encoder.\+c.
+
+
+
+\subsection{Typedef Documentation}
+\index{stream\+\_\+encoder.\+c@{stream\+\_\+encoder.\+c}!F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder\+Private@{F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder\+Private}}
+\index{F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder\+Private@{F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder\+Private}!stream\+\_\+encoder.\+c@{stream\+\_\+encoder.\+c}}
+\subsubsection[{\texorpdfstring{F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder\+Private}{FLAC__StreamEncoderPrivate}}]{\setlength{\rightskip}{0pt plus 5cm}typedef struct {\bf F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder\+Private}  {\bf F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder\+Private}}\hypertarget{stream__encoder_8c_a4d00b6c6714aad397db3c5c524b31930}{}\label{stream__encoder_8c_a4d00b6c6714aad397db3c5c524b31930}
+
+
+\subsection{Enumeration Type Documentation}
+\index{stream\+\_\+encoder.\+c@{stream\+\_\+encoder.\+c}!Encoder\+State\+Hint@{Encoder\+State\+Hint}}
+\index{Encoder\+State\+Hint@{Encoder\+State\+Hint}!stream\+\_\+encoder.\+c@{stream\+\_\+encoder.\+c}}
+\subsubsection[{\texorpdfstring{Encoder\+State\+Hint}{EncoderStateHint}}]{\setlength{\rightskip}{0pt plus 5cm}enum {\bf Encoder\+State\+Hint}}\hypertarget{stream__encoder_8c_abb306d9d764554cc821f1099a519145b}{}\label{stream__encoder_8c_abb306d9d764554cc821f1099a519145b}
+\begin{Desc}
+\item[Enumerator]\par
+\begin{description}
+\index{E\+N\+C\+O\+D\+E\+R\+\_\+\+I\+N\+\_\+\+M\+A\+G\+IC@{E\+N\+C\+O\+D\+E\+R\+\_\+\+I\+N\+\_\+\+M\+A\+G\+IC}!stream\+\_\+encoder.\+c@{stream\+\_\+encoder.\+c}}\index{stream\+\_\+encoder.\+c@{stream\+\_\+encoder.\+c}!E\+N\+C\+O\+D\+E\+R\+\_\+\+I\+N\+\_\+\+M\+A\+G\+IC@{E\+N\+C\+O\+D\+E\+R\+\_\+\+I\+N\+\_\+\+M\+A\+G\+IC}}\item[{\em 
+E\+N\+C\+O\+D\+E\+R\+\_\+\+I\+N\+\_\+\+M\+A\+G\+IC\hypertarget{stream__encoder_8c_abb306d9d764554cc821f1099a519145ba84a5ad9bce9bcd1ddfc27c4223000589}{}\label{stream__encoder_8c_abb306d9d764554cc821f1099a519145ba84a5ad9bce9bcd1ddfc27c4223000589}
+}]\index{E\+N\+C\+O\+D\+E\+R\+\_\+\+I\+N\+\_\+\+M\+E\+T\+A\+D\+A\+TA@{E\+N\+C\+O\+D\+E\+R\+\_\+\+I\+N\+\_\+\+M\+E\+T\+A\+D\+A\+TA}!stream\+\_\+encoder.\+c@{stream\+\_\+encoder.\+c}}\index{stream\+\_\+encoder.\+c@{stream\+\_\+encoder.\+c}!E\+N\+C\+O\+D\+E\+R\+\_\+\+I\+N\+\_\+\+M\+E\+T\+A\+D\+A\+TA@{E\+N\+C\+O\+D\+E\+R\+\_\+\+I\+N\+\_\+\+M\+E\+T\+A\+D\+A\+TA}}\item[{\em 
+E\+N\+C\+O\+D\+E\+R\+\_\+\+I\+N\+\_\+\+M\+E\+T\+A\+D\+A\+TA\hypertarget{stream__encoder_8c_abb306d9d764554cc821f1099a519145ba1081e56b104ef51efc12d91baededa78}{}\label{stream__encoder_8c_abb306d9d764554cc821f1099a519145ba1081e56b104ef51efc12d91baededa78}
+}]\index{E\+N\+C\+O\+D\+E\+R\+\_\+\+I\+N\+\_\+\+A\+U\+D\+IO@{E\+N\+C\+O\+D\+E\+R\+\_\+\+I\+N\+\_\+\+A\+U\+D\+IO}!stream\+\_\+encoder.\+c@{stream\+\_\+encoder.\+c}}\index{stream\+\_\+encoder.\+c@{stream\+\_\+encoder.\+c}!E\+N\+C\+O\+D\+E\+R\+\_\+\+I\+N\+\_\+\+A\+U\+D\+IO@{E\+N\+C\+O\+D\+E\+R\+\_\+\+I\+N\+\_\+\+A\+U\+D\+IO}}\item[{\em 
+E\+N\+C\+O\+D\+E\+R\+\_\+\+I\+N\+\_\+\+A\+U\+D\+IO\hypertarget{stream__encoder_8c_abb306d9d764554cc821f1099a519145ba0854cccae2f72b96838206d4bbc2fbf5}{}\label{stream__encoder_8c_abb306d9d764554cc821f1099a519145ba0854cccae2f72b96838206d4bbc2fbf5}
+}]\end{description}
+\end{Desc}
+
+
+Definition at line 92 of file stream\+\_\+encoder.\+c.
+
+
+
+\subsection{Function Documentation}
+\index{stream\+\_\+encoder.\+c@{stream\+\_\+encoder.\+c}!F\+L\+A\+C\+\_\+\+\_\+stream\+\_\+encoder\+\_\+disable\+\_\+constant\+\_\+subframes@{F\+L\+A\+C\+\_\+\+\_\+stream\+\_\+encoder\+\_\+disable\+\_\+constant\+\_\+subframes}}
+\index{F\+L\+A\+C\+\_\+\+\_\+stream\+\_\+encoder\+\_\+disable\+\_\+constant\+\_\+subframes@{F\+L\+A\+C\+\_\+\+\_\+stream\+\_\+encoder\+\_\+disable\+\_\+constant\+\_\+subframes}!stream\+\_\+encoder.\+c@{stream\+\_\+encoder.\+c}}
+\subsubsection[{\texorpdfstring{F\+L\+A\+C\+\_\+\+\_\+stream\+\_\+encoder\+\_\+disable\+\_\+constant\+\_\+subframes(\+F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder $\ast$encoder, F\+L\+A\+C\+\_\+\+\_\+bool value)}{FLAC__stream_encoder_disable_constant_subframes(FLAC__StreamEncoder *encoder, FLAC__bool value)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf F\+L\+A\+C\+\_\+\+A\+PI} {\bf F\+L\+A\+C\+\_\+\+\_\+bool} F\+L\+A\+C\+\_\+\+\_\+stream\+\_\+encoder\+\_\+disable\+\_\+constant\+\_\+subframes (
+\begin{DoxyParamCaption}
+\item[{{\bf F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder} $\ast$}]{encoder, }
+\item[{{\bf F\+L\+A\+C\+\_\+\+\_\+bool}}]{value}
+\end{DoxyParamCaption}
+)}\hypertarget{stream__encoder_8c_a76aa9d5aa4766bea5cad50afba05bc80}{}\label{stream__encoder_8c_a76aa9d5aa4766bea5cad50afba05bc80}
+
+
+Definition at line 1900 of file stream\+\_\+encoder.\+c.
+
+\index{stream\+\_\+encoder.\+c@{stream\+\_\+encoder.\+c}!F\+L\+A\+C\+\_\+\+\_\+stream\+\_\+encoder\+\_\+disable\+\_\+fixed\+\_\+subframes@{F\+L\+A\+C\+\_\+\+\_\+stream\+\_\+encoder\+\_\+disable\+\_\+fixed\+\_\+subframes}}
+\index{F\+L\+A\+C\+\_\+\+\_\+stream\+\_\+encoder\+\_\+disable\+\_\+fixed\+\_\+subframes@{F\+L\+A\+C\+\_\+\+\_\+stream\+\_\+encoder\+\_\+disable\+\_\+fixed\+\_\+subframes}!stream\+\_\+encoder.\+c@{stream\+\_\+encoder.\+c}}
+\subsubsection[{\texorpdfstring{F\+L\+A\+C\+\_\+\+\_\+stream\+\_\+encoder\+\_\+disable\+\_\+fixed\+\_\+subframes(\+F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder $\ast$encoder, F\+L\+A\+C\+\_\+\+\_\+bool value)}{FLAC__stream_encoder_disable_fixed_subframes(FLAC__StreamEncoder *encoder, FLAC__bool value)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf F\+L\+A\+C\+\_\+\+A\+PI} {\bf F\+L\+A\+C\+\_\+\+\_\+bool} F\+L\+A\+C\+\_\+\+\_\+stream\+\_\+encoder\+\_\+disable\+\_\+fixed\+\_\+subframes (
+\begin{DoxyParamCaption}
+\item[{{\bf F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder} $\ast$}]{encoder, }
+\item[{{\bf F\+L\+A\+C\+\_\+\+\_\+bool}}]{value}
+\end{DoxyParamCaption}
+)}\hypertarget{stream__encoder_8c_ad419137fb5ef5e0485bb537b4856921e}{}\label{stream__encoder_8c_ad419137fb5ef5e0485bb537b4856921e}
+
+
+Definition at line 1911 of file stream\+\_\+encoder.\+c.
+
+\index{stream\+\_\+encoder.\+c@{stream\+\_\+encoder.\+c}!F\+L\+A\+C\+\_\+\+\_\+stream\+\_\+encoder\+\_\+disable\+\_\+verbatim\+\_\+subframes@{F\+L\+A\+C\+\_\+\+\_\+stream\+\_\+encoder\+\_\+disable\+\_\+verbatim\+\_\+subframes}}
+\index{F\+L\+A\+C\+\_\+\+\_\+stream\+\_\+encoder\+\_\+disable\+\_\+verbatim\+\_\+subframes@{F\+L\+A\+C\+\_\+\+\_\+stream\+\_\+encoder\+\_\+disable\+\_\+verbatim\+\_\+subframes}!stream\+\_\+encoder.\+c@{stream\+\_\+encoder.\+c}}
+\subsubsection[{\texorpdfstring{F\+L\+A\+C\+\_\+\+\_\+stream\+\_\+encoder\+\_\+disable\+\_\+verbatim\+\_\+subframes(\+F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder $\ast$encoder, F\+L\+A\+C\+\_\+\+\_\+bool value)}{FLAC__stream_encoder_disable_verbatim_subframes(FLAC__StreamEncoder *encoder, FLAC__bool value)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf F\+L\+A\+C\+\_\+\+A\+PI} {\bf F\+L\+A\+C\+\_\+\+\_\+bool} F\+L\+A\+C\+\_\+\+\_\+stream\+\_\+encoder\+\_\+disable\+\_\+verbatim\+\_\+subframes (
+\begin{DoxyParamCaption}
+\item[{{\bf F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder} $\ast$}]{encoder, }
+\item[{{\bf F\+L\+A\+C\+\_\+\+\_\+bool}}]{value}
+\end{DoxyParamCaption}
+)}\hypertarget{stream__encoder_8c_a4c406babba4a85d9583ef2cf830d09ab}{}\label{stream__encoder_8c_a4c406babba4a85d9583ef2cf830d09ab}
+
+
+Definition at line 1922 of file stream\+\_\+encoder.\+c.
+
+\index{stream\+\_\+encoder.\+c@{stream\+\_\+encoder.\+c}!F\+L\+A\+C\+\_\+\+\_\+stream\+\_\+encoder\+\_\+get\+\_\+do\+\_\+md5@{F\+L\+A\+C\+\_\+\+\_\+stream\+\_\+encoder\+\_\+get\+\_\+do\+\_\+md5}}
+\index{F\+L\+A\+C\+\_\+\+\_\+stream\+\_\+encoder\+\_\+get\+\_\+do\+\_\+md5@{F\+L\+A\+C\+\_\+\+\_\+stream\+\_\+encoder\+\_\+get\+\_\+do\+\_\+md5}!stream\+\_\+encoder.\+c@{stream\+\_\+encoder.\+c}}
+\subsubsection[{\texorpdfstring{F\+L\+A\+C\+\_\+\+\_\+stream\+\_\+encoder\+\_\+get\+\_\+do\+\_\+md5(const F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder $\ast$encoder)}{FLAC__stream_encoder_get_do_md5(const FLAC__StreamEncoder *encoder)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf F\+L\+A\+C\+\_\+\+A\+PI} {\bf F\+L\+A\+C\+\_\+\+\_\+bool} F\+L\+A\+C\+\_\+\+\_\+stream\+\_\+encoder\+\_\+get\+\_\+do\+\_\+md5 (
+\begin{DoxyParamCaption}
+\item[{{\bf const} {\bf F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder} $\ast$}]{encoder}
+\end{DoxyParamCaption}
+)}\hypertarget{stream__encoder_8c_a310c231d7bcf4008a3ce146131d48f22}{}\label{stream__encoder_8c_a310c231d7bcf4008a3ce146131d48f22}
+
+
+Definition at line 1998 of file stream\+\_\+encoder.\+c.
+
+\index{stream\+\_\+encoder.\+c@{stream\+\_\+encoder.\+c}!F\+L\+A\+C\+\_\+\+\_\+stream\+\_\+encoder\+\_\+set\+\_\+do\+\_\+md5@{F\+L\+A\+C\+\_\+\+\_\+stream\+\_\+encoder\+\_\+set\+\_\+do\+\_\+md5}}
+\index{F\+L\+A\+C\+\_\+\+\_\+stream\+\_\+encoder\+\_\+set\+\_\+do\+\_\+md5@{F\+L\+A\+C\+\_\+\+\_\+stream\+\_\+encoder\+\_\+set\+\_\+do\+\_\+md5}!stream\+\_\+encoder.\+c@{stream\+\_\+encoder.\+c}}
+\subsubsection[{\texorpdfstring{F\+L\+A\+C\+\_\+\+\_\+stream\+\_\+encoder\+\_\+set\+\_\+do\+\_\+md5(\+F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder $\ast$encoder, F\+L\+A\+C\+\_\+\+\_\+bool value)}{FLAC__stream_encoder_set_do_md5(FLAC__StreamEncoder *encoder, FLAC__bool value)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf F\+L\+A\+C\+\_\+\+A\+PI} {\bf F\+L\+A\+C\+\_\+\+\_\+bool} F\+L\+A\+C\+\_\+\+\_\+stream\+\_\+encoder\+\_\+set\+\_\+do\+\_\+md5 (
+\begin{DoxyParamCaption}
+\item[{{\bf F\+L\+A\+C\+\_\+\+\_\+\+Stream\+Encoder} $\ast$}]{encoder, }
+\item[{{\bf F\+L\+A\+C\+\_\+\+\_\+bool}}]{value}
+\end{DoxyParamCaption}
+)}\hypertarget{stream__encoder_8c_ab97bed6682a1cc19490b410193e16af8}{}\label{stream__encoder_8c_ab97bed6682a1cc19490b410193e16af8}
+
+
+Definition at line 1531 of file stream\+\_\+encoder.\+c.
+

@@ -1,0 +1,423 @@
+.TH "Envelope" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Envelope \- STK envelope base class\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <Envelope\&.h>\fP
+.PP
+Inherits \fBXMLTagHandler\fP\&.
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBEnvelope\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBInitialize\fP (\fBint\fP numPoints)"
+.br
+.ti -1c
+.RI "virtual \fB~Envelope\fP ()"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBGetInterpolateDB\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBSetInterpolateDB\fP (\fBbool\fP db)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBMirror\fP (\fBbool\fP mirror)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBRescale\fP (double minValue, double maxValue)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBFlatten\fP (double \fBvalue\fP)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBGetDragPoint\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "double \fBGetMinValue\fP () \fBconst\fP "
+.br
+.ti -1c
+.RI "double \fBGetMaxValue\fP () \fBconst\fP "
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBSetRange\fP (double minValue, double maxValue)"
+.br
+.ti -1c
+.RI "double \fBClampValue\fP (double \fBvalue\fP)"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBHandleXMLTag\fP (\fBconst\fP wxChar *\fBtag\fP, \fBconst\fP wxChar **attrs) override"
+.br
+.ti -1c
+.RI "\fBXMLTagHandler\fP * \fBHandleXMLChild\fP (\fBconst\fP wxChar *\fBtag\fP) override"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBWriteXML\fP (\fBXMLWriter\fP &xmlFile) \fBconst\fP "
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBDrawPoints\fP (wxDC &dc, \fBconst\fP wxRect &r, \fBconst\fP \fBZoomInfo\fP &zoomInfo, \fBbool\fP dB, double dBRange, float zoomMin, float zoomMax) \fBconst\fP "
+.br
+.RI "\fITODO: This should probably move to track artist\&. \fP"
+.ti -1c
+.RI "\fBbool\fP \fBMouseEvent\fP (wxMouseEvent &event, wxRect &r, \fBconst\fP \fBZoomInfo\fP &zoomInfo, \fBbool\fP dB, double dBRange, float zoomMin, float zoomMax)"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBHandleMouseButtonDown\fP (wxMouseEvent &event, wxRect &r, \fBconst\fP \fBZoomInfo\fP &zoomInfo, \fBbool\fP dB, double dBRange, float zoomMin, float zoomMax)"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBHandleDragging\fP (wxMouseEvent &event, wxRect &r, \fBconst\fP \fBZoomInfo\fP &zoomInfo, \fBbool\fP dB, double dBRange, float zoomMin, float zoomMax)"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBHandleMouseButtonUp\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBCollapseRegion\fP (double t0, double t1)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBCopyFrom\fP (\fBconst\fP \fBEnvelope\fP *e, double t0, double t1)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBPaste\fP (double t0, \fBconst\fP \fBEnvelope\fP *e)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBInsertSpace\fP (double t0, double tlen)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBRemoveUnneededPoints\fP (double time=\-1, double tolerence=0\&.001)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBSetOffset\fP (double newOffset)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBSetTrackLen\fP (double trackLen)"
+.br
+.ti -1c
+.RI "double \fBGetValue\fP (double \fBt\fP) \fBconst\fP "
+.br
+.RI "\fIGet envelope value at time t\&. \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBGetValues\fP (double *\fBbuffer\fP, \fBint\fP \fBlen\fP, double t0, double tstep) \fBconst\fP "
+.br
+.RI "\fIGet many envelope points at once\&. \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBGetValues\fP (double *\fBbuffer\fP, \fBint\fP bufferLen, \fBint\fP leftOffset, \fBconst\fP \fBZoomInfo\fP &zoomInfo) \fBconst\fP "
+.br
+.RI "\fIGet many envelope points at once, but don't assume uniform time step\&. \fP"
+.ti -1c
+.RI "\fBint\fP \fBNumberOfPointsAfter\fP (double \fBt\fP) \fBconst\fP "
+.br
+.ti -1c
+.RI "double \fBNextPointAfter\fP (double \fBt\fP) \fBconst\fP "
+.br
+.ti -1c
+.RI "double \fBAverage\fP (double t0, double t1) \fBconst\fP "
+.br
+.ti -1c
+.RI "double \fBAverageOfInverse\fP (double t0, double t1) \fBconst\fP "
+.br
+.ti -1c
+.RI "double \fBIntegral\fP (double t0, double t1) \fBconst\fP "
+.br
+.ti -1c
+.RI "double \fBIntegralOfInverse\fP (double t0, double t1) \fBconst\fP "
+.br
+.ti -1c
+.RI "double \fBSolveIntegralOfInverse\fP (double t0, double area) \fBconst\fP "
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBprint\fP () \fBconst\fP "
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBtestMe\fP ()"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBIsDirty\fP () \fBconst\fP "
+.br
+.ti -1c
+.RI "\fBint\fP \fBInsert\fP (double when, double \fBvalue\fP)"
+.br
+.RI "\fIAdd a point at a particular spot\&. \fP"
+.ti -1c
+.RI "\fBint\fP \fBMove\fP (double when, double \fBvalue\fP)"
+.br
+.RI "\fIMove a point at when to value\&. \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBDelete\fP (\fBint\fP point)"
+.br
+.RI "\fIDELETE a point by its position in array\&. \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBInsert\fP (\fBint\fP point, \fBconst\fP \fBEnvPoint\fP &\fBp\fP)"
+.br
+.RI "\fIinsert a point \fP"
+.ti -1c
+.RI "\fBint\fP \fBGetNumberOfPoints\fP () \fBconst\fP "
+.br
+.RI "\fIReturn number of points\&. \fP"
+.ti -1c
+.RI "\fBconst\fP \fBEnvPoint\fP & \fBoperator[]\fP (\fBint\fP index) \fBconst\fP "
+.br
+.RI "\fIAccessor for points\&. \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBGetPoints\fP (double *bufferWhen, double *bufferValue, \fBint\fP bufferLen) \fBconst\fP "
+.br
+.RI "\fIReturns the sets of when and value pairs\&. \fP"
+.in -1c
+.SH "Detailed Description"
+.PP 
+STK envelope base class\&. 
+
+Draggable curve used in \fBTrackPanel\fP for varying amplification\&.
+.PP
+This class implements a simple envelope generator which is capable of ramping to a target value by a specified \fIrate\fP\&. It also responds to simple \fIkeyOn\fP and \fIkeyOff\fP messages, ramping to 1\&.0 on keyOn and to 0\&.0 on keyOff\&.
+.PP
+by Perry R\&. Cook and Gary P\&. Scavone, 1995 - 2005\&.
+.PP
+This class manages an envelope - i\&.e\&. a piecewise linear funtion that the user can edit by dragging control points around\&. The envelope is most commonly used to control the amplitude of a waveform, but it is also used to shape the Equalization curve\&. 
+.PP
+Definition at line 77 of file Envelope\&.h\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "Envelope::Envelope (\fBvoid\fP)"
+
+.PP
+Definition at line 45 of file Envelope\&.cpp\&.
+.SS "Envelope::~Envelope (\fBvoid\fP)\fC [virtual]\fP"
+
+.PP
+Definition at line 72 of file Envelope\&.cpp\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "double Envelope::Average (double t0, double t1) const"
+
+.PP
+Definition at line 1189 of file Envelope\&.cpp\&.
+.SS "double Envelope::AverageOfInverse (double t0, double t1) const"
+
+.PP
+Definition at line 1197 of file Envelope\&.cpp\&.
+.SS "double Envelope::ClampValue (double value)\fC [inline]\fP"
+
+.PP
+Definition at line 96 of file Envelope\&.h\&.
+.SS "\fBvoid\fP Envelope::CollapseRegion (double t0, double t1)"
+
+.PP
+Definition at line 577 of file Envelope\&.cpp\&.
+.SS "\fBvoid\fP Envelope::CopyFrom (\fBconst\fP \fBEnvelope\fP * e, double t0, double t1)"
+
+.PP
+Definition at line 129 of file Envelope\&.cpp\&.
+.SS "\fBvoid\fP Envelope::Delete (\fBint\fP point)"
+
+.PP
+DELETE a point by its position in array\&. 
+.PP
+Definition at line 551 of file Envelope\&.cpp\&.
+.SS "\fBvoid\fP Envelope::DrawPoints (wxDC & dc, \fBconst\fP wxRect & r, \fBconst\fP \fBZoomInfo\fP & zoomInfo, \fBbool\fP dB, double dBRange, float zoomMin, float zoomMax) const"
+
+.PP
+TODO: This should probably move to track artist\&. 
+.PP
+Definition at line 187 of file Envelope\&.cpp\&.
+.SS "\fBvoid\fP Envelope::Flatten (double value)"
+Flatten removes all points from the envelope to make it horizontal at a chosen y-value\&.  - the y-value for the flat envelope\&. 
+.PP
+Definition at line 109 of file Envelope\&.cpp\&.
+.SS "\fBint\fP Envelope::GetDragPoint (\fBvoid\fP)\fC [inline]\fP"
+
+.PP
+Definition at line 90 of file Envelope\&.h\&.
+.SS "\fBbool\fP Envelope::GetInterpolateDB ()\fC [inline]\fP"
+
+.PP
+Definition at line 84 of file Envelope\&.h\&.
+.SS "double Envelope::GetMaxValue () const\fC [inline]\fP"
+
+.PP
+Definition at line 93 of file Envelope\&.h\&.
+.SS "double Envelope::GetMinValue () const\fC [inline]\fP"
+
+.PP
+Definition at line 92 of file Envelope\&.h\&.
+.SS "\fBint\fP Envelope::GetNumberOfPoints () const"
+
+.PP
+Return number of points\&. 
+.PP
+Definition at line 871 of file Envelope\&.cpp\&.
+.SS "\fBvoid\fP Envelope::GetPoints (double * bufferWhen, double * bufferValue, \fBint\fP bufferLen) const"
+
+.PP
+Returns the sets of when and value pairs\&. 
+.PP
+Definition at line 876 of file Envelope\&.cpp\&.
+.SS "double Envelope::GetValue (double t) const"
+
+.PP
+Get envelope value at time t\&. 
+.PP
+Definition at line 994 of file Envelope\&.cpp\&.
+.SS "\fBvoid\fP Envelope::GetValues (double * buffer, \fBint\fP len, double t0, double tstep) const"
+
+.PP
+Get many envelope points at once\&. This is much faster than calling \fBGetValue()\fP multiple times if you need more than one value in a row\&. 
+.PP
+Definition at line 1061 of file Envelope\&.cpp\&.
+.SS "\fBvoid\fP Envelope::GetValues (double * buffer, \fBint\fP bufferLen, \fBint\fP leftOffset, \fBconst\fP \fBZoomInfo\fP & zoomInfo) const"
+
+.PP
+Get many envelope points at once, but don't assume uniform time step\&. 
+.PP
+Definition at line 1148 of file Envelope\&.cpp\&.
+.SS "\fBbool\fP Envelope::HandleDragging (wxMouseEvent & event, wxRect & r, \fBconst\fP \fBZoomInfo\fP & zoomInfo, \fBbool\fP dB, double dBRange, float zoomMin, float zoomMax)"
+
+.PP
+Definition at line 514 of file Envelope\&.cpp\&.
+.SS "\fBbool\fP Envelope::HandleMouseButtonDown (wxMouseEvent & event, wxRect & r, \fBconst\fP \fBZoomInfo\fP & zoomInfo, \fBbool\fP dB, double dBRange, float zoomMin, float zoomMax)"
+HandleMouseButtonDown either finds an existing control point or adds a NEW one which is then recorded as the point to drag\&. This is slightly complicated by there possibly being four control points for a given time value: We have an upper and lower envelope line\&. Also we may be showing an inner envelope (at 0\&.5 the range)\&. 
+.PP
+Definition at line 334 of file Envelope\&.cpp\&.
+.SS "\fBbool\fP Envelope::HandleMouseButtonUp ()"
+
+.PP
+Definition at line 541 of file Envelope\&.cpp\&.
+.SS "\fBXMLTagHandler\fP * Envelope::HandleXMLChild (\fBconst\fP wxChar * tag)\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Implements \fBXMLTagHandler\fP\&.
+.PP
+Definition at line 276 of file Envelope\&.cpp\&.
+.SS "\fBbool\fP Envelope::HandleXMLTag (\fBconst\fP wxChar * tag, \fBconst\fP wxChar ** attrs)\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Implements \fBXMLTagHandler\fP\&.
+.PP
+Definition at line 249 of file Envelope\&.cpp\&.
+.SS "\fBvoid\fP Envelope::Initialize (\fBint\fP numPoints)"
+
+.SS "\fBint\fP Envelope::Insert (double when, double value)"
+
+.PP
+Add a point at a particular spot\&. Add a control point to the envelope\&.
+.PP
+Control point positions start at zero and are measured in seconds from the start of the envelope\&. The position of the envelope on the project-wide time scale is store in seconds in Envelope::mOffset\&. This is worth remembering\&. If you call \fBEnvelope::Insert()\fP from \fBWaveClip\fP, or anywhere else outside the \fBEnvelope\fP class that is using project timing, subtract the envelope's mOffset from the time\&. If you call \fBEnvelope::Insert()\fP from within \fBEnvelope\fP, don't subtract mOffset because you are working in relative time inside the envelope 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIwhen\fP the time in seconds when the envelope point should be created\&. 
+.br
+\fIvalue\fP the envelope value to use at the given point\&. 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the index of the NEW envelope point within array of envelope points\&. 
+.RE
+.PP
+
+.PP
+Definition at line 920 of file Envelope\&.cpp\&.
+.SS "\fBvoid\fP Envelope::Insert (\fBint\fP point, \fBconst\fP \fBEnvPoint\fP & p)"
+
+.PP
+insert a point 
+.PP
+Definition at line 556 of file Envelope\&.cpp\&.
+.SS "\fBvoid\fP Envelope::InsertSpace (double t0, double tlen)"
+
+.PP
+Definition at line 842 of file Envelope\&.cpp\&.
+.SS "double Envelope::Integral (double t0, double t1) const"
+
+.PP
+Definition at line 1288 of file Envelope\&.cpp\&.
+.SS "double Envelope::IntegralOfInverse (double t0, double t1) const"
+
+.PP
+Definition at line 1348 of file Envelope\&.cpp\&.
+.SS "\fBbool\fP Envelope::IsDirty () const"
+
+.SS "\fBvoid\fP Envelope::Mirror (\fBbool\fP mirror)"
+
+.PP
+Definition at line 76 of file Envelope\&.cpp\&.
+.SS "\fBbool\fP Envelope::MouseEvent (wxMouseEvent & event, wxRect & r, \fBconst\fP \fBZoomInfo\fP & zoomInfo, \fBbool\fP dB, double dBRange, float zoomMin, float zoomMax)"
+
+.PP
+Definition at line 562 of file Envelope\&.cpp\&.
+.SS "\fBint\fP Envelope::Move (double when, double value)"
+
+.PP
+Move a point at when to value\&. Returns 0 if point moved, -1 if not found\&. 
+.PP
+Definition at line 853 of file Envelope\&.cpp\&.
+.SS "double Envelope::NextPointAfter (double t) const"
+
+.PP
+Definition at line 1172 of file Envelope\&.cpp\&.
+.SS "\fBint\fP Envelope::NumberOfPointsAfter (double t) const"
+
+.PP
+Definition at line 1154 of file Envelope\&.cpp\&.
+.SS "\fBconst\fP \fBEnvPoint\fP& Envelope::operator[] (\fBint\fP index) const\fC [inline]\fP"
+
+.PP
+Accessor for points\&. 
+.PP
+Definition at line 184 of file Envelope\&.h\&.
+.SS "\fBvoid\fP Envelope::Paste (double t0, \fBconst\fP \fBEnvelope\fP * e)"
+
+.PP
+Definition at line 613 of file Envelope\&.cpp\&.
+.SS "\fBvoid\fP Envelope::print () const"
+
+.PP
+Definition at line 1506 of file Envelope\&.cpp\&.
+.SS "\fBvoid\fP Envelope::RemoveUnneededPoints (double time = \fC\-1\fP, double tolerence = \fC0\&.001\fP)"
+
+.PP
+Definition at line 806 of file Envelope\&.cpp\&.
+.SS "\fBvoid\fP Envelope::Rescale (double minValue, double maxValue)"
+Rescale function for time tracks (could also be used for other tracks though)\&. This is used to load old time track project files where the envelope used a 0 to 1 range instead of storing the actual time track values\&. This function will change the range of the envelope and rescale all envelope points accordingly (unlike SetRange, which clamps the envelope points to the NEW range)\&.  - the NEW minimum value  - the NEW maximum value 
+.PP
+Definition at line 87 of file Envelope\&.cpp\&.
+.SS "\fBvoid\fP Envelope::SetInterpolateDB (\fBbool\fP db)\fC [inline]\fP"
+
+.PP
+Definition at line 85 of file Envelope\&.h\&.
+.SS "\fBvoid\fP Envelope::SetOffset (double newOffset)"
+
+.PP
+Definition at line 975 of file Envelope\&.cpp\&.
+.SS "\fBvoid\fP Envelope::SetRange (double minValue, double maxValue)"
+
+.PP
+Definition at line 115 of file Envelope\&.cpp\&.
+.SS "\fBvoid\fP Envelope::SetTrackLen (double trackLen)"
+
+.PP
+Definition at line 980 of file Envelope\&.cpp\&.
+.SS "double Envelope::SolveIntegralOfInverse (double t0, double area) const"
+
+.PP
+Definition at line 1408 of file Envelope\&.cpp\&.
+.SS "\fBvoid\fP Envelope::testMe ()"
+
+.PP
+Definition at line 1521 of file Envelope\&.cpp\&.
+.SS "\fBvoid\fP Envelope::WriteXML (\fBXMLWriter\fP & xmlFile) const"
+
+.PP
+Definition at line 284 of file Envelope\&.cpp\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

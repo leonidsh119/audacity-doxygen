@@ -1,0 +1,197 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/lib-src/libid3tag/tag.c" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/lib-src/libid3tag/tag.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include 'global\&.h'\fP
+.br
+\fC#include <string\&.h>\fP
+.br
+\fC#include <stdlib\&.h>\fP
+.br
+\fC#include 'id3tag\&.h'\fP
+.br
+\fC#include 'tag\&.h'\fP
+.br
+\fC#include 'frame\&.h'\fP
+.br
+\fC#include 'compat\&.h'\fP
+.br
+\fC#include 'parse\&.h'\fP
+.br
+\fC#include 'render\&.h'\fP
+.br
+\fC#include 'latin1\&.h'\fP
+.br
+\fC#include 'ucs4\&.h'\fP
+.br
+\fC#include 'genre\&.h'\fP
+.br
+\fC#include 'crc\&.h'\fP
+.br
+\fC#include 'field\&.h'\fP
+.br
+\fC#include 'util\&.h'\fP
+.br
+
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBID3V2_3_TAG_VERSION\fP   0x0300"
+.br
+.ti -1c
+.RI "#define \fBID3V2_3_TAG_FLAG_KNOWNFLAGS\fP   0xc0"
+.br
+.in -1c
+.SS "Enumerations"
+
+.in +1c
+.ti -1c
+.RI "enum \fBtagtype\fP { \fBTAGTYPE_NONE\fP = 0, \fBTAGTYPE_ID3V1\fP, \fBTAGTYPE_ID3V2\fP, \fBTAGTYPE_ID3V2_FOOTER\fP }"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "struct \fBid3_tag\fP * \fBid3_tag_new\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBid3_tag_delete\fP (struct \fBid3_tag\fP *\fBtag\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBid3_tag_addref\fP (struct \fBid3_tag\fP *\fBtag\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBid3_tag_delref\fP (struct \fBid3_tag\fP *\fBtag\fP)"
+.br
+.ti -1c
+.RI "unsigned \fBint\fP \fBid3_tag_version\fP (struct \fBid3_tag\fP \fBconst\fP *\fBtag\fP)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBid3_tag_options\fP (struct \fBid3_tag\fP *\fBtag\fP, \fBint\fP \fBmask\fP, \fBint\fP values)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBid3_tag_setlength\fP (struct \fBid3_tag\fP *\fBtag\fP, \fBid3_length_t\fP \fBlength\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBid3_tag_clearframes\fP (struct \fBid3_tag\fP *\fBtag\fP)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBid3_tag_attachframe\fP (struct \fBid3_tag\fP *\fBtag\fP, struct \fBid3_frame\fP *frame)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBid3_tag_detachframe\fP (struct \fBid3_tag\fP *\fBtag\fP, struct \fBid3_frame\fP *frame)"
+.br
+.ti -1c
+.RI "struct \fBid3_frame\fP * \fBid3_tag_findframe\fP (struct \fBid3_tag\fP \fBconst\fP *\fBtag\fP, char \fBconst\fP *id, unsigned \fBint\fP index)"
+.br
+.ti -1c
+.RI "signed long \fBid3_tag_query\fP (\fBid3_byte_t\fP \fBconst\fP *\fBdata\fP, \fBid3_length_t\fP \fBlength\fP)"
+.br
+.ti -1c
+.RI "struct \fBid3_tag\fP * \fBid3_tag_parse\fP (\fBid3_byte_t\fP \fBconst\fP *\fBdata\fP, \fBid3_length_t\fP \fBlength\fP)"
+.br
+.ti -1c
+.RI "\fBid3_length_t\fP \fBv2_3_render\fP (struct \fBid3_tag\fP \fBconst\fP *\fBtag\fP, \fBid3_byte_t\fP *\fBbuffer\fP)"
+.br
+.ti -1c
+.RI "\fBid3_length_t\fP \fBid3_tag_render\fP (struct \fBid3_tag\fP \fBconst\fP *\fBtag\fP, \fBid3_byte_t\fP *\fBbuffer\fP)"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define ID3V2_3_TAG_FLAG_KNOWNFLAGS   0xc0"
+
+.PP
+Definition at line 771 of file tag\&.c\&.
+.SS "#define ID3V2_3_TAG_VERSION   0x0300"
+
+.PP
+Definition at line 770 of file tag\&.c\&.
+.SH "Enumeration Type Documentation"
+.PP 
+.SS "enum \fBtagtype\fP"
+
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fITAGTYPE_NONE \fP\fP
+.TP
+\fB\fITAGTYPE_ID3V1 \fP\fP
+.TP
+\fB\fITAGTYPE_ID3V2 \fP\fP
+.TP
+\fB\fITAGTYPE_ID3V2_FOOTER \fP\fP
+.PP
+Definition at line 250 of file tag\&.c\&.
+.SH "Function Documentation"
+.PP 
+.SS "\fBvoid\fP id3_tag_addref (struct \fBid3_tag\fP * tag)"
+
+.PP
+Definition at line 95 of file tag\&.c\&.
+.SS "\fBint\fP id3_tag_attachframe (struct \fBid3_tag\fP * tag, struct \fBid3_frame\fP * frame)"
+
+.PP
+Definition at line 171 of file tag\&.c\&.
+.SS "\fBvoid\fP id3_tag_clearframes (struct \fBid3_tag\fP * tag)"
+
+.PP
+Definition at line 153 of file tag\&.c\&.
+.SS "\fBvoid\fP id3_tag_delete (struct \fBid3_tag\fP * tag)"
+
+.PP
+Definition at line 77 of file tag\&.c\&.
+.SS "\fBvoid\fP id3_tag_delref (struct \fBid3_tag\fP * tag)"
+
+.PP
+Definition at line 106 of file tag\&.c\&.
+.SS "\fBint\fP id3_tag_detachframe (struct \fBid3_tag\fP * tag, struct \fBid3_frame\fP * frame)"
+
+.PP
+Definition at line 193 of file tag\&.c\&.
+.SS "struct \fBid3_frame\fP* id3_tag_findframe (struct \fBid3_tag\fP \fBconst\fP * tag, char \fBconst\fP * id, unsigned \fBint\fP index)"
+
+.PP
+Definition at line 220 of file tag\&.c\&.
+.SS "struct \fBid3_tag\fP* id3_tag_new (\fBvoid\fP)"
+
+.PP
+Definition at line 52 of file tag\&.c\&.
+.SS "\fBint\fP id3_tag_options (struct \fBid3_tag\fP * tag, \fBint\fP mask, \fBint\fP values)"
+
+.PP
+Definition at line 128 of file tag\&.c\&.
+.SS "struct \fBid3_tag\fP* id3_tag_parse (\fBid3_byte_t\fP \fBconst\fP * data, \fBid3_length_t\fP length)"
+
+.PP
+Definition at line 633 of file tag\&.c\&.
+.SS "signed long id3_tag_query (\fBid3_byte_t\fP \fBconst\fP * data, \fBid3_length_t\fP length)"
+
+.PP
+Definition at line 289 of file tag\&.c\&.
+.SS "\fBid3_length_t\fP id3_tag_render (struct \fBid3_tag\fP \fBconst\fP * tag, \fBid3_byte_t\fP * buffer)"
+
+.PP
+Definition at line 917 of file tag\&.c\&.
+.SS "\fBvoid\fP id3_tag_setlength (struct \fBid3_tag\fP * tag, \fBid3_length_t\fP length)"
+
+.PP
+Definition at line 142 of file tag\&.c\&.
+.SS "unsigned \fBint\fP id3_tag_version (struct \fBid3_tag\fP \fBconst\fP * tag)"
+
+.PP
+Definition at line 117 of file tag\&.c\&.
+.SS "\fBid3_length_t\fP v2_3_render (struct \fBid3_tag\fP \fBconst\fP * tag, \fBid3_byte_t\fP * buffer)"
+
+.PP
+Definition at line 773 of file tag\&.c\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

@@ -1,0 +1,70 @@
+.TH "grp_io" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+grp_io \- Reading and Writing Midi Messages
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBPMEXPORT\fP \fBint\fP \fBPm_Read\fP (\fBPortMidiStream\fP *stream, \fBPmEvent\fP *\fBbuffer\fP, \fBint32_t\fP \fBlength\fP)"
+.br
+.ti -1c
+.RI "\fBPMEXPORT\fP \fBPmError\fP \fBPm_Poll\fP (\fBPortMidiStream\fP *stream)"
+.br
+.ti -1c
+.RI "\fBPMEXPORT\fP \fBPmError\fP \fBPm_Write\fP (\fBPortMidiStream\fP *stream, \fBPmEvent\fP *\fBbuffer\fP, \fBint32_t\fP \fBlength\fP)"
+.br
+.ti -1c
+.RI "\fBPMEXPORT\fP \fBPmError\fP \fBPm_WriteShort\fP (\fBPortMidiStream\fP *stream, \fBPmTimestamp\fP when, \fBint32_t\fP msg)"
+.br
+.ti -1c
+.RI "\fBPMEXPORT\fP \fBPmError\fP \fBPm_WriteSysEx\fP (\fBPortMidiStream\fP *stream, \fBPmTimestamp\fP when, unsigned char *msg)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+
+.SH "Function Documentation"
+.PP 
+.SS "\fBPMEXPORT\fP \fBPmError\fP Pm_Poll (\fBPortMidiStream\fP * stream)"
+\fBPm_Poll()\fP tests whether input is available, returning TRUE, FALSE, or an error value\&. 
+.PP
+Definition at line 398 of file portmidi\&.c\&.
+.SS "\fBPMEXPORT\fP \fBint\fP Pm_Read (\fBPortMidiStream\fP * stream, \fBPmEvent\fP * buffer, \fBint32_t\fP length)"
+\fBPm_Read()\fP retrieves midi data into a buffer, and returns the number of events read\&. Result is a non-negative number unless an error occurs, in which case a PmError value will be returned\&.
+.PP
+Buffer Overflow
+.PP
+The problem: if an input overflow occurs, data will be lost, ultimately because there is no flow control all the way back to the data source\&. When data is lost, the receiver should be notified and some sort of graceful recovery should take place, e\&.g\&. you shouldn't resume receiving in the middle of a long sysex message\&.
+.PP
+With a lock-free fifo, which is pretty much what we're stuck with to enable portability to the Mac, it's tricky for the producer and consumer to synchronously reset the buffer and resume normal operation\&.
+.PP
+Solution: the buffer managed by PortMidi will be flushed when an overflow occurs\&. The consumer (\fBPm_Read()\fP) gets an error message (pmBufferOverflow) and ordinary processing resumes as soon as a new message arrives\&. The remainder of a partial sysex message is not considered to be a 'new
+message' and will be flushed as well\&. 
+.PP
+Definition at line 357 of file portmidi\&.c\&.
+.SS "\fBPMEXPORT\fP \fBPmError\fP Pm_Write (\fBPortMidiStream\fP * stream, \fBPmEvent\fP * buffer, \fBint32_t\fP length)"
+\fBPm_Write()\fP writes midi data from a buffer\&. This may contain:
+.IP "\(bu" 2
+short messages or
+.IP "\(bu" 2
+sysex messages that are converted into a sequence of \fBPmEvent\fP structures, e\&.g\&. sending data from a file or forwarding them from midi input\&.
+.PP
+.PP
+Use \fBPm_WriteSysEx()\fP to write a sysex message stored as a contiguous array of bytes\&.
+.PP
+Sysex data may contain embedded real-time messages\&. 
+.PP
+Definition at line 448 of file portmidi\&.c\&.
+.SS "\fBPMEXPORT\fP \fBPmError\fP Pm_WriteShort (\fBPortMidiStream\fP * stream, \fBPmTimestamp\fP when, \fBint32_t\fP msg)"
+\fBPm_WriteShort()\fP writes a timestamped non-system-exclusive midi message\&. Messages are delivered in order as received, and timestamps must be non-decreasing\&. (But timestamps are ignored if the stream was opened with latency = 0\&.) 
+.PP
+Definition at line 581 of file portmidi\&.c\&.
+.SS "\fBPMEXPORT\fP \fBPmError\fP Pm_WriteSysEx (\fBPortMidiStream\fP * stream, \fBPmTimestamp\fP when, unsigned char * msg)"
+\fBPm_WriteSysEx()\fP writes a timestamped system-exclusive midi message\&. 
+.PP
+Definition at line 591 of file portmidi\&.c\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

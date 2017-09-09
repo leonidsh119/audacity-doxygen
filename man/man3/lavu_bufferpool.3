@@ -1,0 +1,86 @@
+.TH "lavu_bufferpool" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+lavu_bufferpool \- AVBufferPool
+.SS "Typedefs"
+
+.in +1c
+.ti -1c
+.RI "typedef struct \fBAVBufferPool\fP \fBAVBufferPool\fP"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBAVBufferPool\fP * \fBav_buffer_pool_init\fP (\fBint\fP \fBsize\fP, \fBAVBufferRef\fP *(*alloc)(\fBint\fP \fBsize\fP))"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBav_buffer_pool_uninit\fP (\fBAVBufferPool\fP **pool)"
+.br
+.ti -1c
+.RI "\fBAVBufferRef\fP * \fBav_buffer_pool_get\fP (\fBAVBufferPool\fP *pool)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+AVBufferPool is an API for a lock-free thread-safe pool of AVBuffers\&.
+.PP
+Frequently allocating and freeing large buffers may be slow\&. AVBufferPool is meant to solve this in cases when the caller needs a set of buffers of the same size (the most obvious use case being buffers for raw video or audio frames)\&.
+.PP
+At the beginning, the user must call \fBav_buffer_pool_init()\fP to create the buffer pool\&. Then whenever a buffer is needed, call \fBav_buffer_pool_get()\fP to get a reference to a new buffer, similar to \fBav_buffer_alloc()\fP\&. This new reference works in all aspects the same way as the one created by \fBav_buffer_alloc()\fP\&. However, when the last reference to this buffer is unreferenced, it is returned to the pool instead of being freed and will be reused for subsequent \fBav_buffer_pool_get()\fP calls\&.
+.PP
+When the caller is done with the pool and no longer needs to allocate any new buffers, \fBav_buffer_pool_uninit()\fP must be called to mark the pool as freeable\&. Once all the buffers are released, it will automatically be freed\&.
+.PP
+Allocating and releasing buffers with this API is thread-safe as long as either the default alloc callback is used, or the user-supplied one is thread-safe\&. 
+.SH "Typedef Documentation"
+.PP 
+.SS "typedef struct \fBAVBufferPool\fP \fBAVBufferPool\fP"
+The buffer pool\&. This structure is opaque and not meant to be accessed directly\&. It is allocated with \fBav_buffer_pool_init()\fP and freed with \fBav_buffer_pool_uninit()\fP\&. 
+.PP
+Definition at line 238 of file buffer\&.h\&.
+.SH "Function Documentation"
+.PP 
+.SS "\fBAVBufferRef\fP* av_buffer_pool_get (\fBAVBufferPool\fP * pool)"
+Allocate a new AVBuffer, reusing an old buffer from the pool when available\&. This function may be called simultaneously from multiple threads\&.
+.PP
+\fBReturns:\fP
+.RS 4
+a reference to the new buffer on success, NULL on error\&. 
+.RE
+.PP
+
+.SS "\fBAVBufferPool\fP* av_buffer_pool_init (\fBint\fP size, \fBAVBufferRef\fP *(*)(\fBint\fP \fBsize\fP) alloc)"
+Allocate and initialize a buffer pool\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIsize\fP size of each buffer in this pool 
+.br
+\fIalloc\fP a function that will be used to allocate new buffers when the pool is empty\&. May be NULL, then the default allocator will be used (\fBav_buffer_alloc()\fP)\&. 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+newly created buffer pool on success, NULL on error\&. 
+.RE
+.PP
+
+.SS "\fBvoid\fP av_buffer_pool_uninit (\fBAVBufferPool\fP ** pool)"
+Mark the pool as being available for freeing\&. It will actually be freed only once all the allocated buffers associated with the pool are released\&. Thus it is safe to call this function while some of the allocated buffers are still in use\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIpool\fP pointer to the pool to be freed\&. It will be set to NULL\&. 
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+av_buffer_pool_can_uninit() 
+.RE
+.PP
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

@@ -1,0 +1,166 @@
+.TH "Resample" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Resample \- Interface to libsoxr\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <Resample\&.h>\fP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBResample\fP (\fBconst\fP \fBbool\fP useBestMethod, \fBconst\fP double dMinFactor, \fBconst\fP double dMaxFactor)"
+.br
+.ti -1c
+.RI "\fB~Resample\fP ()"
+.br
+.ti -1c
+.RI "\fBint\fP \fBProcess\fP (double factor, float *inBuffer, \fBint\fP inBufferLen, \fBbool\fP lastFlag, \fBint\fP *inBufferUsed, float *outBuffer, \fBint\fP outBufferLen)"
+.br
+.RI "\fIMain processing function\&. Resamples from the input buffer to the output buffer\&. \fP"
+.in -1c
+.SS "Static Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "static \fBint\fP \fBGetNumMethods\fP ()"
+.br
+.ti -1c
+.RI "static wxString \fBGetMethodName\fP (\fBint\fP index)"
+.br
+.ti -1c
+.RI "static \fBconst\fP wxString \fBGetFastMethodKey\fP ()"
+.br
+.ti -1c
+.RI "static \fBconst\fP wxString \fBGetBestMethodKey\fP ()"
+.br
+.ti -1c
+.RI "static \fBint\fP \fBGetFastMethodDefault\fP ()"
+.br
+.ti -1c
+.RI "static \fBint\fP \fBGetBestMethodDefault\fP ()"
+.br
+.in -1c
+.SS "Protected Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBvoid\fP \fBSetMethod\fP (\fBconst\fP \fBbool\fP useBestMethod)"
+.br
+.in -1c
+.SS "Protected Attributes"
+
+.in +1c
+.ti -1c
+.RI "\fBint\fP \fBmMethod\fP"
+.br
+.ti -1c
+.RI "\fBvoid\fP * \fBmHandle\fP"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBmbWantConstRateResampling\fP"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Interface to libsoxr\&. 
+
+This class abstracts the interface to different resampling libraries:
+.PP
+libsoxr, written by Rob Sykes\&. LGPL\&.
+.PP
+Since Audacity always does resampling on mono streams that are contiguous in memory, this class doesn't support multiple channels or some of the other optional features of some of these resamplers\&. 
+.PP
+Definition at line 22 of file Resample\&.h\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "Resample::Resample (\fBconst\fP \fBbool\fP useBestMethod, \fBconst\fP double dMinFactor, \fBconst\fP double dMaxFactor)"
+Resamplers may have more than one method, offering a tradeoff between speed and quality\&. Audacity identifies two methods out of all of the choices: a Fast method intended for real-time audio I/O, and a Best method intended for mixing and exporting\&. The first parameter lets you select either the best method or the fast method\&. 
+.PP
+Definition at line 30 of file Resample\&.cpp\&.
+.SS "Resample::~Resample ()"
+
+.PP
+Definition at line 47 of file Resample\&.cpp\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "\fBint\fP Resample::GetBestMethodDefault ()\fC [static]\fP"
+
+.PP
+Definition at line 75 of file Resample\&.cpp\&.
+.SS "\fBconst\fP wxString Resample::GetBestMethodKey ()\fC [static]\fP"
+
+.PP
+Definition at line 69 of file Resample\&.cpp\&.
+.SS "\fBint\fP Resample::GetFastMethodDefault ()\fC [static]\fP"
+
+.PP
+Definition at line 74 of file Resample\&.cpp\&.
+.SS "\fBconst\fP wxString Resample::GetFastMethodKey ()\fC [static]\fP"
+
+.PP
+Definition at line 64 of file Resample\&.cpp\&.
+.SS "wxString Resample::GetMethodName (\fBint\fP index)\fC [static]\fP"
+
+.PP
+Definition at line 55 of file Resample\&.cpp\&.
+.SS "\fBint\fP Resample::GetNumMethods ()\fC [static]\fP"
+
+.PP
+Definition at line 53 of file Resample\&.cpp\&.
+.SS "\fBint\fP Resample::Process (double factor, float * inBuffer, \fBint\fP inBufferLen, \fBbool\fP lastFlag, \fBint\fP * inBufferUsed, float * outBuffer, \fBint\fP outBufferLen)"
+
+.PP
+Main processing function\&. Resamples from the input buffer to the output buffer\&. Reads samples from the input buffer, and writes samples to the output buffer\&. Stops when either is exhaughsted, or we reach a convenient block end, unless lastFlag is set to force emptying the input buffer\&. The number of input samples used is returned in inBufferUsed, and the number of output samples generated is the return value of the function\&. This function may do nothing if you don't pass a large enough output buffer (i\&.e\&. there is no where to put a full block of output data) 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIfactor\fP The scaling factor to resample by\&. 
+.br
+\fIinBuffer\fP Buffer of input samples to be processed (mono) 
+.br
+\fIinBufferLen\fP Length of the input buffer, in samples\&. 
+.br
+\fIlastFlag\fP Flag to indicate this is the last lot of input samples and the buffer needs to be emptied out into the rate converter\&. 
+.br
+\fIinBufferUsed\fP Number of samples from inBuffer that have been used (unless lastFlag is true, we don't garuntee to process all the samples in the input this time, we may leave some for next time) 
+.br
+\fIoutBuffer\fP Buffer to write output (converted) samples to\&. 
+.br
+\fIoutBufferLen\fP How big outBuffer is\&. 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+Number of output samples created by this call 
+.RE
+.PP
+
+.PP
+Definition at line 77 of file Resample\&.cpp\&.
+.SS "\fBvoid\fP Resample::SetMethod (\fBconst\fP \fBbool\fP useBestMethod)\fC [protected]\fP"
+
+.PP
+Definition at line 105 of file Resample\&.cpp\&.
+.SH "Member Data Documentation"
+.PP 
+.SS "\fBbool\fP Resample::mbWantConstRateResampling\fC [protected]\fP"
+
+.PP
+Definition at line 82 of file Resample\&.h\&.
+.SS "\fBvoid\fP* Resample::mHandle\fC [protected]\fP"
+
+.PP
+Definition at line 81 of file Resample\&.h\&.
+.SS "\fBint\fP Resample::mMethod\fC [protected]\fP"
+
+.PP
+Definition at line 80 of file Resample\&.h\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

@@ -1,0 +1,101 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/lib-src/lv2/lv2/lv2/lv2plug.in/ns/ext/atom/forge.h" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/lib-src/lv2/lv2/lv2/lv2plug.in/ns/ext/atom/forge.h \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <assert\&.h>\fP
+.br
+\fC#include 'lv2/lv2plug\&.in/ns/ext/atom/atom\&.h'\fP
+.br
+\fC#include 'lv2/lv2plug\&.in/ns/ext/atom/util\&.h'\fP
+.br
+\fC#include 'lv2/lv2plug\&.in/ns/ext/urid/urid\&.h'\fP
+.br
+\fC#include <stdbool\&.h>\fP
+.br
+
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "struct \fB_LV2_Atom_Forge_Frame\fP"
+.br
+.ti -1c
+.RI "struct \fBLV2_Atom_Forge\fP"
+.br
+.in -1c
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBLV2_ATOM_FORGE_DEPRECATED\fP"
+.br
+.in -1c
+.SS "Typedefs"
+
+.in +1c
+.ti -1c
+.RI "typedef \fBvoid\fP * \fBLV2_Atom_Forge_Sink_Handle\fP"
+.br
+.ti -1c
+.RI "typedef \fBintptr_t\fP \fBLV2_Atom_Forge_Ref\fP"
+.br
+.ti -1c
+.RI "typedef \fBLV2_Atom_Forge_Ref\fP(* \fBLV2_Atom_Forge_Sink\fP) (\fBLV2_Atom_Forge_Sink_Handle\fP handle, \fBconst\fP \fBvoid\fP *\fBbuf\fP, \fBuint32_t\fP \fBsize\fP)"
+.br
+.ti -1c
+.RI "typedef \fBLV2_Atom\fP *(* \fBLV2_Atom_Forge_Deref_Func\fP) (\fBLV2_Atom_Forge_Sink_Handle\fP handle, \fBLV2_Atom_Forge_Ref\fP ref)"
+.br
+.ti -1c
+.RI "typedef struct \fB_LV2_Atom_Forge_Frame\fP \fBLV2_Atom_Forge_Frame\fP"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+An API for constructing LV2 atoms\&.
+.PP
+This file provides an API for constructing Atoms which makes it relatively simple to build nested atoms of arbitrary complexity without requiring dynamic memory allocation\&.
+.PP
+The API is based on successively appending the appropriate pieces to build a complete Atom\&. The size of containers is automatically updated\&. Functions that begin a container return (via their frame argument) a stack frame which must be popped when the container is finished\&.
+.PP
+All output is written to a user-provided buffer or sink function\&. This makes it popssible to create create atoms on the stack, on the heap, in LV2 port buffers, in a ringbuffer, or elsewhere, all using the same API\&.
+.PP
+This entire API is realtime safe if used with a buffer or a realtime safe sink, except lv2_atom_forge_init() which is only realtime safe if the URI map function is\&.
+.PP
+Note these functions are all static inline, do not take their address\&.
+.PP
+This header is non-normative, it is provided for convenience\&. 
+.PP
+Definition in file \fBforge\&.h\fP\&.
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define LV2_ATOM_FORGE_DEPRECATED"
+
+.PP
+Definition at line 54 of file forge\&.h\&.
+.SH "Typedef Documentation"
+.PP 
+.SS "typedef \fBLV2_Atom\fP*(* LV2_Atom_Forge_Deref_Func) (\fBLV2_Atom_Forge_Sink_Handle\fP handle, \fBLV2_Atom_Forge_Ref\fP ref)"
+\fBFunction\fP for resolving a reference\&. See lv2_atom_forge_set_sink()\&. 
+.PP
+Definition at line 86 of file forge\&.h\&.
+.SS "typedef struct \fB_LV2_Atom_Forge_Frame\fP  \fBLV2_Atom_Forge_Frame\fP"
+A stack frame used for keeping track of nested Atom containers\&. 
+.SS "typedef \fBintptr_t\fP \fBLV2_Atom_Forge_Ref\fP"
+A reference to a chunk of written output\&. 
+.PP
+Definition at line 76 of file forge\&.h\&.
+.SS "typedef \fBLV2_Atom_Forge_Ref\fP(* LV2_Atom_Forge_Sink) (\fBLV2_Atom_Forge_Sink_Handle\fP handle, \fBconst\fP \fBvoid\fP *\fBbuf\fP, \fBuint32_t\fP \fBsize\fP)"
+Sink function for writing output\&. See lv2_atom_forge_set_sink()\&. 
+.PP
+Definition at line 80 of file forge\&.h\&.
+.SS "typedef \fBvoid\fP* \fBLV2_Atom_Forge_Sink_Handle\fP"
+Handle for LV2_Atom_Forge_Sink\&. 
+.PP
+Definition at line 73 of file forge\&.h\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

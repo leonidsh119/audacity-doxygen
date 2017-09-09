@@ -1,0 +1,70 @@
+.TH "libavf" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+libavf \- I/O and Muxing/Demuxing Library
+.SS "Modules"
+
+.in +1c
+.ti -1c
+.RI "\fBDemuxing\fP"
+.br
+.ti -1c
+.RI "\fBMuxing\fP"
+.br
+.ti -1c
+.RI "\fBI/O Read/Write\fP"
+.br
+.ti -1c
+.RI "\fBDemuxers\fP"
+.br
+.ti -1c
+.RI "\fBI/O Protocols\fP"
+.br
+.ti -1c
+.RI "\fBInternal\fP"
+.br
+.ti -1c
+.RI "\fBPublic Metadata API\fP"
+.br
+.ti -1c
+.RI "\fBCore functions\fP"
+.br
+.ti -1c
+.RI "\fBUtility functions\fP"
+.br
+.in -1c
+.SS "Files"
+
+.in +1c
+.ti -1c
+.RI "file \fBavformat\&.h\fP"
+.br
+.ti -1c
+.RI "file \fBversion\&.h\fP"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Libavformat (lavf) is a library for dealing with various media container formats\&. Its main two purposes are demuxing - i\&.e\&. splitting a media file into component streams, and the reverse process of muxing - writing supplied data in a specified container format\&. It also has an \fBI/O module\fP which supports a number of protocols for accessing the data (e\&.g\&. file, tcp, http and others)\&. Before using lavf, you need to call \fBav_register_all()\fP to register all compiled muxers, demuxers and protocols\&. Unless you are absolutely sure you won't use libavformat's network capabilities, you should also call \fBavformat_network_init()\fP\&.
+.PP
+A supported input format is described by an \fBAVInputFormat\fP struct, conversely an output format is described by \fBAVOutputFormat\fP\&. You can iterate over all registered input/output formats using the \fBav_iformat_next()\fP / \fBav_oformat_next()\fP functions\&. The protocols layer is not part of the public API, so you can only get the names of supported protocols with the \fBavio_enum_protocols()\fP function\&.
+.PP
+Main lavf structure used for both muxing and demuxing is \fBAVFormatContext\fP, which exports all information about the file being read or written\&. As with most Libavformat structures, its size is not part of public ABI, so it cannot be allocated on stack or directly with \fBav_malloc()\fP\&. To create an \fBAVFormatContext\fP, use \fBavformat_alloc_context()\fP (some functions, like \fBavformat_open_input()\fP might do that for you)\&.
+.PP
+Most importantly an \fBAVFormatContext\fP contains: 
+.PD 0
+
+.IP "\(bu" 2
+the \fBinput\fP or \fBoutput\fP format\&. It is either autodetected or set by user for input; always set by user for output\&. 
+.IP "\(bu" 2
+an \fBarray\fP of AVStreams, which describe all elementary streams stored in the file\&. AVStreams are typically referred to using their index in this array\&. 
+.IP "\(bu" 2
+an \fBI/O context\fP\&. It is either opened by lavf or set by user for input, always set by user for output (unless you are dealing with an AVFMT_NOFILE format)\&.
+.PP
+.SH "Passing options to (de)muxers"
+.PP
+Lavf allows to configure muxers and demuxers using the \fBAVOptions\fP mechanism\&. Generic (format-independent) libavformat options are provided by \fBAVFormatContext\fP, they can be examined from a user program by calling \fBav_opt_next()\fP / \fBav_opt_find()\fP on an allocated \fBAVFormatContext\fP (or its \fBAVClass\fP from \fBavformat_get_class()\fP)\&. Private (format-specific) options are provided by \fBAVFormatContext\&.priv_data\fP if and only if \fBAVInputFormat\&.priv_class\fP / \fBAVOutputFormat\&.priv_class\fP of the corresponding format struct is non-NULL\&. Further options may be provided by the \fBI/O context\fP, if its \fBAVClass\fP is non-NULL, and the protocols layer\&. See the discussion on nesting in \fBAVOptions\fP documentation to learn how to access those\&. 
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

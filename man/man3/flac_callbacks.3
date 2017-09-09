@@ -1,0 +1,179 @@
+.TH "flac_callbacks" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+flac_callbacks \- FLAC/callback\&.h: I/O callback structures
+.PP
+This module defines the structures for describing I/O callbacks to the other \fBFLAC\fP interfaces\&.  
+
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "struct \fBFLAC__IOCallbacks\fP"
+.br
+.in -1c
+.SS "Typedefs"
+
+.in +1c
+.ti -1c
+.RI "typedef \fBvoid\fP * \fBFLAC__IOHandle\fP"
+.br
+.ti -1c
+.RI "typedef size_t(* \fBFLAC__IOCallback_Read\fP) (\fBvoid\fP *ptr, size_t \fBsize\fP, size_t \fBnmemb\fP, \fBFLAC__IOHandle\fP handle)"
+.br
+.ti -1c
+.RI "typedef size_t(* \fBFLAC__IOCallback_Write\fP) (\fBconst\fP \fBvoid\fP *ptr, size_t \fBsize\fP, size_t \fBnmemb\fP, \fBFLAC__IOHandle\fP handle)"
+.br
+.ti -1c
+.RI "typedef \fBint\fP(* \fBFLAC__IOCallback_Seek\fP) (\fBFLAC__IOHandle\fP handle, \fBFLAC__int64\fP \fBoffset\fP, \fBint\fP whence)"
+.br
+.ti -1c
+.RI "typedef \fBFLAC__int64\fP(* \fBFLAC__IOCallback_Tell\fP) (\fBFLAC__IOHandle\fP handle)"
+.br
+.ti -1c
+.RI "typedef \fBint\fP(* \fBFLAC__IOCallback_Eof\fP) (\fBFLAC__IOHandle\fP handle)"
+.br
+.ti -1c
+.RI "typedef \fBint\fP(* \fBFLAC__IOCallback_Close\fP) (\fBFLAC__IOHandle\fP handle)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+This module defines the structures for describing I/O callbacks to the other \fBFLAC\fP interfaces\&. 
+
+The purpose of the I/O callback functions is to create a common way for the metadata interfaces to handle I/O\&.
+.PP
+Originally the metadata interfaces required filenames as the way of specifying \fBFLAC\fP files to operate on\&. This is problematic in some environments so there is an additional option to specify a set of callbacks for doing I/O on the \fBFLAC\fP file, instead of the filename\&.
+.PP
+In addition to the callbacks, a FLAC__IOHandle type is defined as an opaque structure for a data source\&.
+.PP
+The callback function prototypes are similar (but not identical) to the stdio functions fread, fwrite, fseek, ftell, feof, and fclose\&. If you use stdio streams to implement the callbacks, you can pass fread, fwrite, and fclose anywhere a FLAC__IOCallback_Read, FLAC__IOCallback_Write, or FLAC__IOCallback_Close is required, and a FILE* anywhere a FLAC__IOHandle is required\&. 
+.PP
+\fBWarning:\fP
+.RS 4
+You generally CANNOT directly use fseek or ftell for FLAC__IOCallback_Seek or FLAC__IOCallback_Tell since on most systems these use 32-bit offsets and \fBFLAC\fP requires 64-bit offsets to deal with large files\&. You will have to find an equivalent function (e\&.g\&. ftello), or write a wrapper\&. The same is true for feof() since this is usually implemented as a macro, not as a function whose address can be taken\&. 
+.RE
+.PP
+
+.SH "Typedef Documentation"
+.PP 
+.SS "typedef \fBint\fP(* FLAC__IOCallback_Close) (\fBFLAC__IOHandle\fP handle)"
+Signature for the close callback\&. The signature and semantics match POSIX \fBfclose()\fP implementations and can generally be used interchangeably\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIhandle\fP The handle to the data source\&. 
+.RE
+.PP
+\fBReturn values:\fP
+.RS 4
+\fIint\fP \fC0\fP on success, \fCEOF\fP on error\&. 
+.RE
+.PP
+
+.PP
+Definition at line 160 of file callback\&.h\&.
+.SS "typedef \fBint\fP(* FLAC__IOCallback_Eof) (\fBFLAC__IOHandle\fP handle)"
+Signature for the EOF callback\&. The signature and semantics mostly match POSIX feof() but WATCHOUT: on many systems, feof() is a macro, so in this case a wrapper function must be provided instead\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIhandle\fP The handle to the data source\&. 
+.RE
+.PP
+\fBReturn values:\fP
+.RS 4
+\fIint\fP \fC0\fP if not at end of file, nonzero if at end of file\&. 
+.RE
+.PP
+
+.PP
+Definition at line 150 of file callback\&.h\&.
+.SS "typedef size_t(* FLAC__IOCallback_Read) (\fBvoid\fP *ptr, size_t \fBsize\fP, size_t \fBnmemb\fP, \fBFLAC__IOHandle\fP handle)"
+Signature for the read callback\&. The signature and semantics match POSIX fread() implementations and can generally be used interchangeably\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIptr\fP The address of the read buffer\&. 
+.br
+\fIsize\fP The size of the records to be read\&. 
+.br
+\fInmemb\fP The number of records to be read\&. 
+.br
+\fIhandle\fP The handle to the data source\&. 
+.RE
+.PP
+\fBReturn values:\fP
+.RS 4
+\fIsize_t\fP The number of records read\&. 
+.RE
+.PP
+
+.PP
+Definition at line 102 of file callback\&.h\&.
+.SS "typedef \fBint\fP(* FLAC__IOCallback_Seek) (\fBFLAC__IOHandle\fP handle, \fBFLAC__int64\fP \fBoffset\fP, \fBint\fP whence)"
+Signature for the seek callback\&. The signature and semantics mostly match POSIX fseek() WITH ONE IMPORTANT EXCEPTION: the offset is a 64-bit type whereas fseek() is generally 'long' and 32-bits wide\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIhandle\fP The handle to the data source\&. 
+.br
+\fIoffset\fP The new position, relative to \fIwhence\fP 
+.br
+\fIwhence\fP \fCSEEK_SET\fP, \fCSEEK_CUR\fP, or \fCSEEK_END\fP 
+.RE
+.PP
+\fBReturn values:\fP
+.RS 4
+\fIint\fP \fC0\fP on success, \fC-1\fP on error\&. 
+.RE
+.PP
+
+.PP
+Definition at line 128 of file callback\&.h\&.
+.SS "typedef \fBFLAC__int64\fP(* FLAC__IOCallback_Tell) (\fBFLAC__IOHandle\fP handle)"
+Signature for the tell callback\&. The signature and semantics mostly match POSIX ftell() WITH ONE IMPORTANT EXCEPTION: the offset is a 64-bit type whereas ftell() is generally 'long' and 32-bits wide\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIhandle\fP The handle to the data source\&. 
+.RE
+.PP
+\fBReturn values:\fP
+.RS 4
+\fIFLAC__int64\fP The current position on success, \fC-1\fP on error\&. 
+.RE
+.PP
+
+.PP
+Definition at line 139 of file callback\&.h\&.
+.SS "typedef size_t(* FLAC__IOCallback_Write) (\fBconst\fP \fBvoid\fP *ptr, size_t \fBsize\fP, size_t \fBnmemb\fP, \fBFLAC__IOHandle\fP handle)"
+Signature for the write callback\&. The signature and semantics match POSIX fwrite() implementations and can generally be used interchangeably\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIptr\fP The address of the write buffer\&. 
+.br
+\fIsize\fP The size of the records to be written\&. 
+.br
+\fInmemb\fP The number of records to be written\&. 
+.br
+\fIhandle\fP The handle to the data source\&. 
+.RE
+.PP
+\fBReturn values:\fP
+.RS 4
+\fIsize_t\fP The number of records written\&. 
+.RE
+.PP
+
+.PP
+Definition at line 115 of file callback\&.h\&.
+.SS "typedef \fBvoid\fP* \fBFLAC__IOHandle\fP"
+This is the opaque handle type used by the callbacks\&. Typically this is a \fCFILE*\fP or address of a file descriptor\&. 
+.PP
+Definition at line 89 of file callback\&.h\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

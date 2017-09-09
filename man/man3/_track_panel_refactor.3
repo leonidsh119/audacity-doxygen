@@ -1,0 +1,49 @@
+.TH "_track_panel_refactor" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+_track_panel_refactor \- \fBTrack\fP Panel Refactor 
+Planned refactoring of \fBTrackPanel\&.cpp\fP
+.PP
+.IP "\(bu" 2
+Move menus from current \fBTrackPanel\fP into \fBTrackInfo\fP\&.
+.IP "\(bu" 2
+Convert \fBTrackInfo\fP from 'flyweight' to heavyweight\&.
+.IP "\(bu" 2
+Split GuiStereoTrack and GuiWaveTrack out from \fBTrackPanel\fP\&.
+.PP
+JKC: Incremental refactoring started April/2003
+.PP
+Possibly aiming for Gui classes something like this - it's under discussion:
+.PP
+.PP
+.PP
+.nf
+
+   +----------------------------------------------------+
+   |      \fBAdornedRulerPanel\fP                             |
+   +----------------------------------------------------+
+   +----------------------------------------------------+
+   |+------------+ +-----------------------------------+|
+   ||            | | (L)  GuiWaveTrack                 ||
+   || \fBTrackInfo\fP  | +-----------------------------------+|
+   ||            | +-----------------------------------+|
+   ||            | | (R)  GuiWaveTrack                 ||
+   |+------------+ +-----------------------------------+|
+   +-------- GuiStereoTrack ----------------------------+
+   +----------------------------------------------------+
+   |+------------+ +-----------------------------------+|
+   ||            | | (L)  GuiWaveTrack                 ||
+   || \fBTrackInfo\fP  | +-----------------------------------+|
+   ||            | +-----------------------------------+|
+   ||            | | (R)  GuiWaveTrack                 ||
+   |+------------+ +-----------------------------------+|
+   +-------- GuiStereoTrack ----------------------------+
+.fi
+.PP
+.PP
+With the whole lot sitting in a \fBTrackPanel\fP which forwards events to the sub objects\&.
+.PP
+The GuiStereoTrack class will do the special logic for Stereo channel grouping\&.
+.PP
+The precise names of the classes are subject to revision\&. Have deliberately not created NEW files for the new classes such as \fBAdornedRulerPanel\fP and \fBTrackInfo\fP - yet\&. 

@@ -1,0 +1,124 @@
+.TH "lavu_crc32" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+lavu_crc32 \- CRC32
+.SS "Typedefs"
+
+.in +1c
+.ti -1c
+.RI "typedef \fBuint32_t\fP \fBAVCRC\fP"
+.br
+.in -1c
+.SS "Enumerations"
+
+.in +1c
+.ti -1c
+.RI "enum \fBAVCRCId\fP { \fBAV_CRC_8_ATM\fP, \fBAV_CRC_16_ANSI\fP, \fBAV_CRC_16_CCITT\fP, \fBAV_CRC_32_IEEE\fP, \fBAV_CRC_32_IEEE_LE\fP, \fBAV_CRC_24_IEEE\fP = 12, \fBAV_CRC_MAX\fP }"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBint\fP \fBav_crc_init\fP (\fBAVCRC\fP *ctx, \fBint\fP le, \fBint\fP \fBbits\fP, \fBuint32_t\fP poly, \fBint\fP ctx_size)"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBAVCRC\fP * \fBav_crc_get_table\fP (\fBAVCRCId\fP crc_id)"
+.br
+.ti -1c
+.RI "\fBuint32_t\fP \fBav_crc\fP (\fBconst\fP \fBAVCRC\fP *ctx, \fBuint32_t\fP crc, \fBconst\fP \fBuint8_t\fP *\fBbuffer\fP, size_t \fBlength\fP) \fBav_pure\fP"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+
+.SH "Typedef Documentation"
+.PP 
+.SS "typedef \fBuint32_t\fP \fBAVCRC\fP"
+
+.PP
+Definition at line 34 of file crc\&.h\&.
+.SH "Enumeration Type Documentation"
+.PP 
+.SS "enum \fBAVCRCId\fP"
+
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fIAV_CRC_8_ATM \fP\fP
+.TP
+\fB\fIAV_CRC_16_ANSI \fP\fP
+.TP
+\fB\fIAV_CRC_16_CCITT \fP\fP
+.TP
+\fB\fIAV_CRC_32_IEEE \fP\fP
+.TP
+\fB\fIAV_CRC_32_IEEE_LE \fP\fP
+.TP
+\fB\fIAV_CRC_24_IEEE \fP\fP
+.TP
+\fB\fIAV_CRC_MAX \fP\fP
+.PP
+Definition at line 36 of file crc\&.h\&.
+.SH "Function Documentation"
+.PP 
+.SS "\fBuint32_t\fP av_crc (\fBconst\fP \fBAVCRC\fP * ctx, \fBuint32_t\fP crc, \fBconst\fP \fBuint8_t\fP * buffer, size_t length)"
+Calculate the CRC of a block\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcrc\fP CRC of previous blocks if any or initial value for CRC 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+CRC updated with the data from the given block
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBav_crc_init()\fP 'le' parameter 
+.RE
+.PP
+
+.SS "\fBconst\fP \fBAVCRC\fP* av_crc_get_table (\fBAVCRCId\fP crc_id)"
+Get an initialized standard CRC table\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcrc_id\fP ID of a standard CRC 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+a pointer to the CRC table or NULL on failure 
+.RE
+.PP
+
+.SS "\fBint\fP av_crc_init (\fBAVCRC\fP * ctx, \fBint\fP le, \fBint\fP bits, \fBuint32_t\fP poly, \fBint\fP ctx_size)"
+Initialize a CRC table\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP must be an array of size sizeof(AVCRC)*257 or sizeof(AVCRC)*1024 
+.br
+\fIle\fP If 1, the lowest bit represents the coefficient for the highest exponent of the corresponding polynomial (both for poly and actual CRC)\&. If 0, you must swap the CRC parameter and the result of av_crc if you need the standard representation (can be simplified in most cases to e\&.g\&. bswap16): av_bswap32(crc << (32-bits)) 
+.br
+\fIbits\fP number of bits for the CRC 
+.br
+\fIpoly\fP generator polynomial without the x**bits coefficient, in the representation as specified by le 
+.br
+\fIctx_size\fP size of ctx in bytes 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+<0 on failure 
+.RE
+.PP
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

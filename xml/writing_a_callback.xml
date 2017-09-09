@@ -1,0 +1,53 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="writing_a_callback" kind="page">
+    <compoundname>writing_a_callback</compoundname>
+    <title>Writing a Callback Function</title>
+    <detaileddescription>
+<para>To write a program using PortAudio, you must include the &quot;portaudio.h&quot; include file. You may wish to read &quot;portaudio.h&quot; because it contains a complete description of the PortAudio functions and constants. Alternatively, you could browse the [<ulink url="http://www.portaudio.com/docs/v19-doxydocs/portaudio_8h.html">http://www.portaudio.com/docs/v19-doxydocs/portaudio_8h.html</ulink> &quot;portaudio.h&quot; Doxygen page] <programlisting><codeline><highlight class="normal">#include<sp/>&quot;portaudio.h&quot;</highlight></codeline>
+</programlisting> The next task is to write your own &quot;callback&quot; function. The &quot;callback&quot; is a function that is called by the PortAudio engine whenever it has captured audio data, or when it needs more audio data for output.</para><para>Before we begin, it&apos;s important to realize that the callback is a delicate place. This is because some systems perform the callback in a special thread, or interrupt handler, and it is rarely treated the same as the rest of your code. For most modern systems, you won&apos;t be able to cause crashes by making disallowed calls in the callback, but if you want your code to produce glitch-free audio, you will have to make sure you avoid function calls that may take an unbounded amount of time to execute. Exactly what these are depend on your platform but almost certainly include the following: memory allocation/deallocation, I/O (including file I/O as well as console I/O, such as <ref refid="octave__test_8m_1ac6d0e62c65e5715b13a5fcb381118888" kindref="member">printf()</ref>), context switching (such as exec() or yield()), mutex operations, or anything else that might rely on the OS. If you think short critical sections are safe please go read about priority inversion. Windows amd Mac OS schedulers have no real-time safe priority inversion prevention. Other platforms require special mutex flags. In addition, it is not safe to call any PortAudio API functions in the callback except as explicitly permitted in the documentation.</para><para>Your callback function must return an int and accept the exact parameters specified in this typedef:</para><para><programlisting><codeline><highlight class="normal">typedef<sp/>int<sp/>PaStreamCallback(<sp/>const<sp/>void<sp/>*input,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>void<sp/>*output,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>unsigned<sp/>long<sp/>frameCount,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>const<sp/>PaStreamCallbackTimeInfo*<sp/>timeInfo,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>PaStreamCallbackFlags<sp/>statusFlags,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>void<sp/>*userData<sp/>)<sp/>;</highlight></codeline>
+</programlisting> Here is an example callback function from the test file &quot;patests/patest_saw.c&quot;. It calculates a simple left and right sawtooth signal and writes it to the output buffer. Notice that in this example, the signals are of float data type. The signals must be between -1.0 and +1.0. You can also use 16 bit integers or other formats which are specified during setup, but floats are easiest to work with. You can pass a pointer to your data structure through PortAudio which will appear as userData.</para><para><programlisting><codeline><highlight class="normal">typedef<sp/>struct</highlight></codeline>
+<codeline><highlight class="normal">{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>float<sp/>left_phase;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>float<sp/>right_phase;</highlight></codeline>
+<codeline><highlight class="normal">}<sp/><sp/><sp/></highlight></codeline>
+<codeline><highlight class="normal">paTestData;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">/*<sp/>This<sp/>routine<sp/>will<sp/>be<sp/>called<sp/>by<sp/>the<sp/>PortAudio<sp/>engine<sp/>when<sp/>audio<sp/>is<sp/>needed.</highlight></codeline>
+<codeline><highlight class="normal"><sp/>*<sp/>It<sp/>may<sp/>called<sp/>at<sp/>interrupt<sp/>level<sp/>on<sp/>some<sp/>machines<sp/>so<sp/>don&apos;t<sp/>do<sp/>anything</highlight></codeline>
+<codeline><highlight class="normal"><sp/>*<sp/>that<sp/>could<sp/>mess<sp/>up<sp/>the<sp/>system<sp/>like<sp/>calling<sp/>malloc()<sp/>or<sp/>free().</highlight></codeline>
+<codeline><highlight class="normal">*/<sp/></highlight></codeline>
+<codeline><highlight class="normal">static<sp/>int<sp/>patestCallback(<sp/>const<sp/>void<sp/>*inputBuffer,<sp/>void<sp/>*outputBuffer,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>unsigned<sp/>long<sp/>framesPerBuffer,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>const<sp/>PaStreamCallbackTimeInfo*<sp/>timeInfo,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>PaStreamCallbackFlags<sp/>statusFlags,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>void<sp/>*userData<sp/>)</highlight></codeline>
+<codeline><highlight class="normal">{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>/*<sp/>Cast<sp/>data<sp/>passed<sp/>through<sp/>stream<sp/>to<sp/>our<sp/>structure.<sp/>*/</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>paTestData<sp/>*data<sp/>=<sp/>(paTestData*)userData;<sp/></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>float<sp/>*out<sp/>=<sp/>(float*)outputBuffer;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>unsigned<sp/>int<sp/>i;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>(void)<sp/>inputBuffer;<sp/>/*<sp/>Prevent<sp/>unused<sp/>variable<sp/>warning.<sp/>*/</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>for(<sp/>i=0;<sp/>i&lt;framesPerBuffer;<sp/>i++<sp/>)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>*out++<sp/>=<sp/>data-&gt;left_phase;<sp/><sp/>/*<sp/>left<sp/>*/</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>*out++<sp/>=<sp/>data-&gt;right_phase;<sp/><sp/>/*<sp/>right<sp/>*/</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>/*<sp/>Generate<sp/>simple<sp/>sawtooth<sp/>phaser<sp/>that<sp/>ranges<sp/>between<sp/>-1.0<sp/>and<sp/>1.0.<sp/>*/</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>data-&gt;left_phase<sp/>+=<sp/>0.01f;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>/*<sp/>When<sp/>signal<sp/>reaches<sp/>top,<sp/>drop<sp/>back<sp/>down.<sp/>*/</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>if(<sp/>data-&gt;left_phase<sp/>&gt;=<sp/>1.0f<sp/>)<sp/>data-&gt;left_phase<sp/>-=<sp/>2.0f;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>/*<sp/>higher<sp/>pitch<sp/>so<sp/>we<sp/>can<sp/>distinguish<sp/>left<sp/>and<sp/>right.<sp/>*/</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>data-&gt;right_phase<sp/>+=<sp/>0.03f;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>if(<sp/>data-&gt;right_phase<sp/>&gt;=<sp/>1.0f<sp/>)<sp/>data-&gt;right_phase<sp/>-=<sp/>2.0f;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>return<sp/>0;</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+</programlisting></para><para>Previous: <ref refid="tutorial_start" kindref="compound">PortAudio Tutorials</ref> | Next: <ref refid="initializing_portaudio" kindref="compound">Initializing PortAudio</ref> </para>    </detaileddescription>
+  </compounddef>
+</doxygen>

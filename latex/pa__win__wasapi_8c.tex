@@ -1,0 +1,1684 @@
+\hypertarget{pa__win__wasapi_8c}{}\section{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/portaudio-\/v19/src/hostapi/wasapi/pa\+\_\+win\+\_\+wasapi.c File Reference}
+\label{pa__win__wasapi_8c}\index{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/portaudio-\/v19/src/hostapi/wasapi/pa\+\_\+win\+\_\+wasapi.\+c@{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/portaudio-\/v19/src/hostapi/wasapi/pa\+\_\+win\+\_\+wasapi.\+c}}
+
+
+W\+A\+S\+A\+PI implementation of support for a host A\+PI.  
+
+
+{\ttfamily \#include $<$windows.\+h$>$}\\*
+{\ttfamily \#include $<$stdio.\+h$>$}\\*
+{\ttfamily \#include $<$process.\+h$>$}\\*
+{\ttfamily \#include $<$assert.\+h$>$}\\*
+{\ttfamily \#include $<$mmsystem.\+h$>$}\\*
+{\ttfamily \#include $<$mmreg.\+h$>$}\\*
+{\ttfamily \#include $<$malloc.\+h$>$}\\*
+{\ttfamily \#include $<$memory.\+h$>$}\\*
+{\ttfamily \#include \char`\"{}pa\+\_\+util.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}pa\+\_\+allocation.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}pa\+\_\+hostapi.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}pa\+\_\+stream.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}pa\+\_\+cpuload.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}pa\+\_\+process.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}pa\+\_\+win\+\_\+wasapi.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}pa\+\_\+debugprint.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}pa\+\_\+ringbuffer.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}pa\+\_\+win\+\_\+coinitialize.\+h\char`\"{}}\\*
+{\ttfamily \#include $<$basetyps.\+h$>$}\\*
+{\ttfamily \#include $<$rpcsal.\+h$>$}\\*
+{\ttfamily \#include $<$sal.\+h$>$}\\*
+{\ttfamily \#include $<$sdkddkver.\+h$>$}\\*
+{\ttfamily \#include $<$propkeydef.\+h$>$}\\*
+{\ttfamily \#include $<$audioclient.\+h$>$}\\*
+{\ttfamily \#include $<$mmdeviceapi.\+h$>$}\\*
+{\ttfamily \#include $<$endpointvolume.\+h$>$}\\*
+{\ttfamily \#include $<$functiondiscoverykeys.\+h$>$}\\*
+{\ttfamily \#include $<$devicetopology.\+h$>$}\\*
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{struct__tagpropertykey}{\+\_\+tagpropertykey}
+\item 
+struct \hyperlink{struct___b_y_t_e___b_l_o_b}{\+\_\+\+B\+Y\+T\+E\+\_\+\+B\+L\+OB}
+\item 
+struct \hyperlink{struct_pa_wasapi_device_info}{Pa\+Wasapi\+Device\+Info}
+\item 
+struct \hyperlink{struct_pa_wasapi_host_api_representation}{Pa\+Wasapi\+Host\+Api\+Representation}
+\item 
+struct \hyperlink{struct_pa_wasapi_audio_client_params}{Pa\+Wasapi\+Audio\+Client\+Params}
+\item 
+struct \hyperlink{struct_pa_wasapi_sub_stream}{Pa\+Wasapi\+Sub\+Stream}
+\item 
+struct \hyperlink{struct_pa_wasapi_host_processor}{Pa\+Wasapi\+Host\+Processor}
+\item 
+struct \hyperlink{struct_pa_wasapi_stream}{Pa\+Wasapi\+Stream}
+\item 
+struct \hyperlink{struct_thread_idle_scheduler}{Thread\+Idle\+Scheduler}
+\end{DoxyCompactItemize}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{pa__win__wasapi_8c_ac7bef5d85e3dcd73eef56ad39ffc84a9}{W\+I\+N32\+\_\+\+L\+E\+A\+N\+\_\+\+A\+N\+D\+\_\+\+M\+E\+AN}
+\item 
+\#define \hyperlink{pa__win__wasapi_8c_a966cd377b9f3fdeb1432460c33352af1}{W\+I\+N\+V\+ER}~0x0600
+\item 
+\#define \hyperlink{pa__win__wasapi_8c_ac50762666aa00bd3a4308158510f1748}{\+\_\+\+W\+I\+N32\+\_\+\+W\+I\+N\+NT}~\hyperlink{pa__win__wasapi_8c_a966cd377b9f3fdeb1432460c33352af1}{W\+I\+N\+V\+ER}
+\item 
+\#define \hyperlink{pa__win__wasapi_8c_a47e37ab430bf80d50648a0d5ac18b103}{\+\_\+\+\_\+\+L\+P\+C\+G\+U\+I\+D\+\_\+\+D\+E\+F\+I\+N\+E\+D\+\_\+\+\_\+}
+\item 
+\#define \hyperlink{pa__win__wasapi_8c_a7d2c965c2e6466eb96707b5034ccd693}{P\+R\+O\+P\+E\+R\+T\+Y\+K\+E\+Y\+\_\+\+D\+E\+F\+I\+N\+ED}
+\item 
+\#define \hyperlink{pa__win__wasapi_8c_a673c1f31132e45e35ddee6d1d92b9bb1}{\+\_\+\+\_\+\+M\+I\+D\+L\+\_\+\+C\+O\+N\+ST}~\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const}
+\item 
+\#define \hyperlink{pa__win__wasapi_8c_af1ecaf25e5207f6c04582d5081d99b00}{N\+O\+N\+A\+M\+E\+L\+E\+S\+S\+U\+N\+I\+ON}
+\item 
+\#define \hyperlink{pa__win__wasapi_8c_a37d17ddda1e36eb0f54d80a946b897f0}{W\+A\+V\+E\+\_\+\+F\+O\+R\+M\+A\+T\+\_\+\+I\+E\+E\+E\+\_\+\+F\+L\+O\+AT}~0x0003
+\item 
+\#define \hyperlink{pa__win__wasapi_8c_adc323f9409c3f1374367fecf9a2e3496}{\+\_\+\+\_\+\+M\+I\+N\+G\+W\+\_\+\+E\+X\+T\+E\+N\+S\+I\+ON}
+\item 
+\#define \hyperlink{pa__win__wasapi_8c_a8dbf8c07441f5b076bfc6eea06513cb7}{C\+O\+B\+J\+M\+A\+C\+R\+OS}
+\item 
+\#define \hyperlink{pa__win__wasapi_8c_af11aade3f3741fb554915d10d3f514eb}{I\+N\+I\+T\+G\+U\+ID}
+\item 
+\#define \hyperlink{pa__win__wasapi_8c_a979170f3a1187ea0059d94e632570a05}{G\+U\+I\+D\+\_\+\+S\+E\+CT}
+\item 
+\#define \hyperlink{pa__win__wasapi_8c_a5270bc6f60431a3ab7cc5f171493b5dd}{\+\_\+\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+G\+U\+ID}(n,  \hyperlink{layer3_8c_a741dbb4d8e78c3cb69915db7282fcec0}{l},  w1,  w2,  b1,  b2,  b3,  b4,  b5,  b6,  b7,  b8)~static \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} G\+U\+ID n \hyperlink{pa__win__wasapi_8c_a979170f3a1187ea0059d94e632570a05}{G\+U\+I\+D\+\_\+\+S\+E\+CT} = \{\hyperlink{layer3_8c_a741dbb4d8e78c3cb69915db7282fcec0}{l},w1,w2,\{b1,b2,b3,b4,b5,b6,b7,b8\}\}
+\item 
+\#define \hyperlink{pa__win__wasapi_8c_ad5dca404e98a4186b60cba66787c5e1a}{\+\_\+\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+I\+ID}(n,  \hyperlink{layer3_8c_a741dbb4d8e78c3cb69915db7282fcec0}{l},  w1,  w2,  b1,  b2,  b3,  b4,  b5,  b6,  b7,  b8)~static \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} I\+ID n \hyperlink{pa__win__wasapi_8c_a979170f3a1187ea0059d94e632570a05}{G\+U\+I\+D\+\_\+\+S\+E\+CT} = \{\hyperlink{layer3_8c_a741dbb4d8e78c3cb69915db7282fcec0}{l},w1,w2,\{b1,b2,b3,b4,b5,b6,b7,b8\}\}
+\item 
+\#define \hyperlink{pa__win__wasapi_8c_a684dc8a813711bb4515ee0c59cf4311f}{\+\_\+\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+C\+L\+S\+ID}(n,  \hyperlink{layer3_8c_a741dbb4d8e78c3cb69915db7282fcec0}{l},  w1,  w2,  b1,  b2,  b3,  b4,  b5,  b6,  b7,  b8)~static \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} C\+L\+S\+ID n \hyperlink{pa__win__wasapi_8c_a979170f3a1187ea0059d94e632570a05}{G\+U\+I\+D\+\_\+\+S\+E\+CT} = \{\hyperlink{layer3_8c_a741dbb4d8e78c3cb69915db7282fcec0}{l},w1,w2,\{b1,b2,b3,b4,b5,b6,b7,b8\}\}
+\item 
+\#define \hyperlink{pa__win__wasapi_8c_a76de14f466267894ffd0f226ec89911d}{P\+A\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+C\+L\+S\+ID}(class\+Name,  \hyperlink{layer3_8c_a741dbb4d8e78c3cb69915db7282fcec0}{l},  w1,  w2,  b1,  b2,  b3,  b4,  b5,  b6,  b7,  b8)~\hyperlink{pa__win__wasapi_8c_a684dc8a813711bb4515ee0c59cf4311f}{\+\_\+\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+C\+L\+S\+ID}(pa\+\_\+\+C\+L\+S\+I\+D\+\_\+\#\#class\+Name, 0x\#\#l, 0x\#\#w1, 0x\#\#w2, 0x\#\#b1, 0x\#\#b2, 0x\#\#b3, 0x\#\#b4, 0x\#\#b5, 0x\#\#b6, 0x\#\#b7, 0x\#\#b8)
+\item 
+\#define \hyperlink{pa__win__wasapi_8c_aca414f4cad142fa0dd6cd229095fcac2}{P\+A\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+I\+ID}(interface\+Name,  \hyperlink{layer3_8c_a741dbb4d8e78c3cb69915db7282fcec0}{l},  w1,  w2,  b1,  b2,  b3,  b4,  b5,  b6,  b7,  b8)~\hyperlink{pa__win__wasapi_8c_ad5dca404e98a4186b60cba66787c5e1a}{\+\_\+\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+I\+ID}(pa\+\_\+\+I\+I\+D\+\_\+\#\#interface\+Name, 0x\#\#l, 0x\#\#w1, 0x\#\#w2, 0x\#\#b1, 0x\#\#b2, 0x\#\#b3, 0x\#\#b4, 0x\#\#b5, 0x\#\#b6, 0x\#\#b7, 0x\#\#b8)
+\item 
+\#define \hyperlink{pa__win__wasapi_8c_a0a9408819040e2ff021281f9e0971a35}{C\+R\+E\+A\+T\+E\+\_\+\+T\+H\+R\+E\+AD}(P\+R\+OC)~(\hyperlink{_sound_touch_d_l_l_8h_aa8c0374618b33785ccb02f74bcfebc46}{H\+A\+N\+D\+LE})\+\_\+beginthreadex( \hyperlink{px__mixer_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{N\+U\+LL}, 0, (P\+R\+OC), stream, 0, \&stream-\/$>$dw\+Thread\+Id )
+\item 
+\#define \hyperlink{pa__win__wasapi_8c_ad744bd36cb3631b1dc11beb41dcc238c}{P\+A\+\_\+\+T\+H\+R\+E\+A\+D\+\_\+\+F\+U\+NC}~static unsigned \hyperlink{mapinls_8h_a9aa60e1ead64be77ad551e745cbfd4d3}{W\+I\+N\+A\+PI}
+\item 
+\#define \hyperlink{pa__win__wasapi_8c_af90ebf49f32d984f4cea06ca90506e40}{P\+A\+\_\+\+T\+H\+R\+E\+A\+D\+\_\+\+ID}~unsigned
+\item 
+\#define \hyperlink{pa__win__wasapi_8c_a8fb76fb0aad37662875d8c84422b7d7d}{A\+U\+D\+C\+L\+N\+T\+\_\+\+E\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+E\+R\+R\+OR}~\hyperlink{audioclient_8h_ad054bd2b5228366ccce81ab79fe369d4}{A\+U\+D\+C\+L\+N\+T\+\_\+\+E\+RR}(0x018)
+\item 
+\#define \hyperlink{pa__win__wasapi_8c_a7d7f5a942a92bc351ee138fb96551d6f}{A\+U\+D\+C\+L\+N\+T\+\_\+\+E\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+S\+I\+Z\+E\+\_\+\+N\+O\+T\+\_\+\+A\+L\+I\+G\+N\+ED}~\hyperlink{audioclient_8h_ad054bd2b5228366ccce81ab79fe369d4}{A\+U\+D\+C\+L\+N\+T\+\_\+\+E\+RR}(0x019)
+\item 
+\#define \hyperlink{pa__win__wasapi_8c_afa7cffa38411eb69296e902cfda00b22}{A\+U\+D\+C\+L\+N\+T\+\_\+\+E\+\_\+\+I\+N\+V\+A\+L\+I\+D\+\_\+\+D\+E\+V\+I\+C\+E\+\_\+\+P\+E\+R\+I\+OD}~\hyperlink{audioclient_8h_ad054bd2b5228366ccce81ab79fe369d4}{A\+U\+D\+C\+L\+N\+T\+\_\+\+E\+RR}(0x020)
+\item 
+\#define \hyperlink{pa__win__wasapi_8c_a58ce36916c399104e18d32ff090f21c6}{M\+A\+X\+\_\+\+S\+T\+R\+\_\+\+L\+EN}~512
+\item 
+\#define \hyperlink{pa__win__wasapi_8c_a1ffa289724d1c8dbeefe0116b976158e}{S\+T\+A\+T\+I\+C\+\_\+\+A\+R\+R\+A\+Y\+\_\+\+S\+I\+ZE}(array)~(sizeof(array)/sizeof(array\mbox{[}0\mbox{]}))
+\item 
+\#define \hyperlink{pa__win__wasapi_8c_ad61844ab25ea35139950e67e9693bc9f}{P\+R\+I\+NT}(x)~\hyperlink{pa__debugprint_8h_a6452e5dde90d9c4ef698559e3f928b17}{P\+A\+\_\+\+D\+E\+B\+UG}(x);
+\item 
+\#define \hyperlink{pa__win__wasapi_8c_a771580ff4e4b9a948ebd1fb0fc9f17d7}{P\+A\+\_\+\+S\+K\+E\+L\+E\+T\+O\+N\+\_\+\+S\+E\+T\+\_\+\+L\+A\+S\+T\+\_\+\+H\+O\+S\+T\+\_\+\+E\+R\+R\+OR}(\hyperlink{xmlparse_8c_adf47938902be0f6a9c144226d02fd634}{error\+Code},  error\+Text)~\hyperlink{pa__util_8h_a9c3ad627c13c1d695fef054c216667f7}{Pa\+Util\+\_\+\+Set\+Last\+Host\+Error\+Info}( \hyperlink{portaudio_8h_a8eaebe3d39c5ea45598da8f86dc2e5aeaa27b155bf2883aef821dfb6eba89e456}{pa\+W\+A\+S\+A\+PI}, \hyperlink{xmlparse_8c_adf47938902be0f6a9c144226d02fd634}{error\+Code}, error\+Text )
+\item 
+\#define \hyperlink{pa__win__wasapi_8c_af46190c73acf456c64118d4df2afd503}{P\+A\+\_\+\+W\+A\+S\+A\+P\+I\+\_\+\+\_\+\+I\+S\+\_\+\+F\+U\+L\+L\+D\+U\+P\+L\+EX}(\hyperlink{xldmem_8h_aa57974323bef0262551029d83546b8e9}{S\+T\+R\+E\+AM})~((\hyperlink{xldmem_8h_aa57974323bef0262551029d83546b8e9}{S\+T\+R\+E\+AM})-\/$>$in.\+client\+Proc \&\& (\hyperlink{xldmem_8h_aa57974323bef0262551029d83546b8e9}{S\+T\+R\+E\+AM})-\/$>$out.\+client\+Proc)
+\item 
+\#define \hyperlink{pa__win__wasapi_8c_a1e9952fda08455274b0399512ddd1830}{I\+F\+\_\+\+F\+A\+I\+L\+E\+D\+\_\+\+J\+U\+MP}(hr,  \hyperlink{_tags_8cpp_a0a3345b0d4574d7adffe113dacd8ccec}{label})~\hyperlink{sndfile__save_8m_a55944e1fa1bcc1bfc6185bc610b0a930}{if}(F\+A\+I\+L\+ED(hr)) goto \hyperlink{_tags_8cpp_a0a3345b0d4574d7adffe113dacd8ccec}{label};
+\item 
+\#define \hyperlink{pa__win__wasapi_8c_a6ab838f91461092984ade025965e713e}{I\+F\+\_\+\+F\+A\+I\+L\+E\+D\+\_\+\+I\+N\+T\+E\+R\+N\+A\+L\+\_\+\+E\+R\+R\+O\+R\+\_\+\+J\+U\+MP}(hr,  \hyperlink{sndfile__save_8m_ada4b423bc19e6ff5c5b514e55f518a82}{error},  \hyperlink{_tags_8cpp_a0a3345b0d4574d7adffe113dacd8ccec}{label})~\hyperlink{sndfile__save_8m_a55944e1fa1bcc1bfc6185bc610b0a930}{if}(F\+A\+I\+L\+ED(hr)) \{ \hyperlink{sndfile__save_8m_ada4b423bc19e6ff5c5b514e55f518a82}{error} = \hyperlink{portaudio_8h_a2e45bf8b5145f131a91c128af2bdaec7a4851f9f753cdad3e7a89380d6589816c}{pa\+Internal\+Error}; goto \hyperlink{_tags_8cpp_a0a3345b0d4574d7adffe113dacd8ccec}{label}; \}
+\item 
+\#define \hyperlink{pa__win__wasapi_8c_ad951b4a0c360e7157d8229beea6c6336}{S\+A\+F\+E\+\_\+\+C\+L\+O\+SE}(h)~\hyperlink{sndfile__save_8m_a55944e1fa1bcc1bfc6185bc610b0a930}{if} ((h) != \hyperlink{px__mixer_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{N\+U\+LL}) \{ Close\+Handle((h)); (h) = \hyperlink{px__mixer_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{N\+U\+LL}; \}
+\item 
+\#define \hyperlink{pa__win__wasapi_8c_aaafc777c741d97e2d33f43fbdd949f2c}{S\+A\+F\+E\+\_\+\+R\+E\+L\+E\+A\+SE}(punk)~\hyperlink{sndfile__save_8m_a55944e1fa1bcc1bfc6185bc610b0a930}{if} ((punk) != \hyperlink{px__mixer_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{N\+U\+LL}) \{ (punk)-\/$>$lp\+Vtbl-\/$>$Release((punk)); (punk) = \hyperlink{px__mixer_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{N\+U\+LL}; \}
+\item 
+\#define \hyperlink{pa__win__wasapi_8c_aaa99ea4974b034b9c0ed40a450076802}{\+\_\+\+Get\+Proc}(fun,  type,  \hyperlink{lib_2expat_8h_a1b49b495b59f9e73205b69ad1a2965b0}{name})
+\item 
+\#define \hyperlink{pa__win__wasapi_8c_a5dfbea2594297c34125d552ea1338244}{Log\+Host\+Error}(H\+R\+ES)~\+\_\+\+\_\+\+Log\+Host\+Error(H\+R\+ES, \+\_\+\+\_\+\+F\+U\+N\+C\+T\+I\+O\+N\+\_\+\+\_\+, \+\_\+\+\_\+\+F\+I\+L\+E\+\_\+\+\_\+, \+\_\+\+\_\+\+L\+I\+N\+E\+\_\+\+\_\+)
+\item 
+\#define \hyperlink{pa__win__wasapi_8c_a633e8a11ad96f367826d8cadb02236c2}{Log\+Pa\+Error}(P\+A\+E\+RR)~\+\_\+\+\_\+\+Log\+Pa\+Error(P\+A\+E\+RR, \+\_\+\+\_\+\+F\+U\+N\+C\+T\+I\+O\+N\+\_\+\+\_\+, \+\_\+\+\_\+\+F\+I\+L\+E\+\_\+\+\_\+, \+\_\+\+\_\+\+L\+I\+N\+E\+\_\+\+\_\+)
+\item 
+\#define \hyperlink{pa__win__wasapi_8c_a6d765e6132c93a5601f277322ae4f98c}{H\+D\+A\+\_\+\+P\+A\+C\+K\+E\+T\+\_\+\+S\+I\+ZE}~(128)
+\item 
+\#define \hyperlink{pa__win__wasapi_8c_a920e4c6a2c837ff4374cf5eb69a554eb}{R\+E\+F\+T\+I\+M\+E\+S\+\_\+\+P\+E\+R\+\_\+\+S\+EC}~10000000
+\item 
+\#define \hyperlink{pa__win__wasapi_8c_af9f1f980d99b0c1568771a74cd275f08}{R\+E\+F\+T\+I\+M\+E\+S\+\_\+\+P\+E\+R\+\_\+\+M\+I\+L\+L\+I\+S\+EC}~10000
+\item 
+\#define \hyperlink{pa__win__wasapi_8c_a920e4c6a2c837ff4374cf5eb69a554eb}{R\+E\+F\+T\+I\+M\+E\+S\+\_\+\+P\+E\+R\+\_\+\+S\+EC}~10000000
+\item 
+\#define \hyperlink{pa__win__wasapi_8c_af9f1f980d99b0c1568771a74cd275f08}{R\+E\+F\+T\+I\+M\+E\+S\+\_\+\+P\+E\+R\+\_\+\+M\+I\+L\+L\+I\+S\+EC}~10000
+\item 
+\#define \hyperlink{pa__win__wasapi_8c_ada6662bf23deb36ae82097ee77924945}{\+\_\+\+W\+A\+S\+A\+P\+I\+\_\+\+M\+O\+N\+O\+\_\+\+T\+O\+\_\+\+S\+T\+E\+R\+E\+O\+\_\+\+M\+I\+X\+E\+R\+\_\+1\+\_\+\+T\+O\+\_\+2}(T\+Y\+PE)
+\item 
+\#define \hyperlink{pa__win__wasapi_8c_a7a033fd62998defc98fd8b3318b1f437}{\+\_\+\+W\+A\+S\+A\+P\+I\+\_\+\+M\+O\+N\+O\+\_\+\+T\+O\+\_\+\+S\+T\+E\+R\+E\+O\+\_\+\+M\+I\+X\+E\+R\+\_\+2\+\_\+\+T\+O\+\_\+1\+\_\+\+F\+L\+T32}(T\+Y\+PE)
+\item 
+\#define \hyperlink{pa__win__wasapi_8c_a0dcd21c9e597e6295abca02c11622736}{\+\_\+\+W\+A\+S\+A\+P\+I\+\_\+\+M\+O\+N\+O\+\_\+\+T\+O\+\_\+\+S\+T\+E\+R\+E\+O\+\_\+\+M\+I\+X\+E\+R\+\_\+2\+\_\+\+T\+O\+\_\+1\+\_\+\+I\+N\+T32}(T\+Y\+PE)
+\item 
+\#define \hyperlink{pa__win__wasapi_8c_a12872b4e5be48d44a65a4b47531a65b3}{\+\_\+\+W\+A\+S\+A\+P\+I\+\_\+\+M\+O\+N\+O\+\_\+\+T\+O\+\_\+\+S\+T\+E\+R\+E\+O\+\_\+\+M\+I\+X\+E\+R\+\_\+2\+\_\+\+T\+O\+\_\+1\+\_\+\+I\+N\+T64}(T\+Y\+PE)
+\item 
+\#define \hyperlink{pa__win__wasapi_8c_aa55d5cb14030dd39ad1e24a82216f71b}{\+\_\+\+W\+A\+S\+A\+P\+I\+\_\+\+M\+O\+N\+O\+\_\+\+T\+O\+\_\+\+S\+T\+E\+R\+E\+O\+\_\+\+M\+I\+X\+E\+R\+\_\+2\+\_\+\+T\+O\+\_\+1\+\_\+L}(T\+Y\+PE)
+\end{DoxyCompactItemize}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef enum \hyperlink{pa__win__wasapi_8c_add7d79439251a024ba77c19ad515b8f6}{\+\_\+\+A\+V\+R\+T\+\_\+\+P\+R\+I\+O\+R\+I\+TY} \hyperlink{pa__win__wasapi_8c_a76e09a9c1d9b4d52236c93683cdd0a13}{A\+V\+R\+T\+\_\+\+P\+R\+I\+O\+R\+I\+TY}
+\item 
+typedef enum \hyperlink{pa__win__wasapi_8c_add7d79439251a024ba77c19ad515b8f6}{\+\_\+\+A\+V\+R\+T\+\_\+\+P\+R\+I\+O\+R\+I\+TY} $\ast$ \hyperlink{pa__win__wasapi_8c_a37790f227e70ff2c3ca5254ccdbfae0f}{P\+A\+V\+R\+T\+\_\+\+P\+R\+I\+O\+R\+I\+TY}
+\item 
+typedef \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} G\+U\+ID $\ast$ \hyperlink{pa__win__wasapi_8c_a9c061ab1f26db8746b3dab38991f48a0}{L\+P\+C\+G\+U\+ID}
+\item 
+typedef struct \hyperlink{struct__tagpropertykey}{\+\_\+tagpropertykey} \hyperlink{pa__win__wasapi_8c_aa83c2fbe06e13eff5ff331ba4a302659}{P\+R\+O\+P\+E\+R\+T\+Y\+K\+EY}
+\item 
+typedef struct \hyperlink{struct___b_y_t_e___b_l_o_b}{\+\_\+\+B\+Y\+T\+E\+\_\+\+B\+L\+OB} \hyperlink{pa__win__wasapi_8c_a2fabb9f78551ca8cece2ae154336019c}{B\+Y\+T\+E\+\_\+\+B\+L\+OB}
+\item 
+typedef \hyperlink{rpcsal_8h_a21fd41c8ce57ed4bb654bc7d456bd054}{\+\_\+\+\_\+\+R\+P\+C\+\_\+unique\+\_\+pointer} \hyperlink{pa__win__wasapi_8c_a2fabb9f78551ca8cece2ae154336019c}{B\+Y\+T\+E\+\_\+\+B\+L\+OB} $\ast$ \hyperlink{pa__win__wasapi_8c_afe91709fff40390914215d21253da001}{U\+P\+\_\+\+B\+Y\+T\+E\+\_\+\+B\+L\+OB}
+\item 
+typedef L\+O\+N\+G\+L\+O\+NG \hyperlink{pa__win__wasapi_8c_a83927f70641d4e9a344563bd9ddb15ae}{R\+E\+F\+E\+R\+E\+N\+C\+E\+\_\+\+T\+I\+ME}
+\item 
+typedef \hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void}($\ast$ \hyperlink{pa__win__wasapi_8c_ae15ae1737c49a3e379f0f418acff17e0}{Mix\+Mono\+To\+StereoF}) (\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} $\ast$\+\_\+\+\_\+to, \hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} $\ast$\+\_\+\+\_\+from, U\+I\+N\+T32 \hyperlink{metrics_8c_afea6e77db19a2f8c91419904fe665a3a}{count})
+\item 
+typedef G\+U\+ID \hyperlink{pa__win__wasapi_8c_adcb5e65535b4cb03302e42da225b1d51}{P\+L\+A\+R\+G\+E\+\_\+\+I\+N\+T\+E\+G\+ER}
+\item 
+typedef \hyperlink{nfilterkit_8h_a3be13892ae7076009afcf121347dd319}{B\+O\+OL}(\hyperlink{mapinls_8h_a9aa60e1ead64be77ad551e745cbfd4d3}{W\+I\+N\+A\+PI} $\ast$ \hyperlink{pa__win__wasapi_8c_a00005277f6e80b50489b77a3641c50f3}{F\+Av\+Revert\+Mm\+Thread\+Characteristics}) (\hyperlink{_sound_touch_d_l_l_8h_aa8c0374618b33785ccb02f74bcfebc46}{H\+A\+N\+D\+LE})
+\item 
+typedef struct \hyperlink{struct_pa_wasapi_device_info}{Pa\+Wasapi\+Device\+Info} \hyperlink{pa__win__wasapi_8c_a1feacb0ea15cada417d700941cb7a8c3}{Pa\+Wasapi\+Device\+Info}
+\item 
+typedef struct \hyperlink{struct_pa_wasapi_audio_client_params}{Pa\+Wasapi\+Audio\+Client\+Params} \hyperlink{pa__win__wasapi_8c_aa746eb234a17020894e1a831699a5abf}{Pa\+Wasapi\+Audio\+Client\+Params}
+\item 
+typedef struct \hyperlink{struct_pa_wasapi_sub_stream}{Pa\+Wasapi\+Sub\+Stream} \hyperlink{pa__win__wasapi_8c_adb52e1579b47dc7ae034deb3c0d9df1e}{Pa\+Wasapi\+Sub\+Stream}
+\item 
+typedef struct \hyperlink{struct_pa_wasapi_host_processor}{Pa\+Wasapi\+Host\+Processor} \hyperlink{pa__win__wasapi_8c_a5e948988d90c01dea08282c308a81e50}{Pa\+Wasapi\+Host\+Processor}
+\item 
+typedef struct \hyperlink{struct_pa_wasapi_stream}{Pa\+Wasapi\+Stream} \hyperlink{pa__win__wasapi_8c_aabfde10324faae7ee10e2d25ac11f655}{Pa\+Wasapi\+Stream}
+\item 
+typedef struct \hyperlink{struct_thread_idle_scheduler}{Thread\+Idle\+Scheduler} \hyperlink{pa__win__wasapi_8c_af54f7e1004799c3325dcbe28a9150a92}{Thread\+Idle\+Scheduler}
+\item 
+typedef U\+I\+N\+T32($\ast$ \hyperlink{pa__win__wasapi_8c_a949fa21ebe968b6a5a38bd434e5eb4f6}{A\+L\+I\+G\+N\+\_\+\+F\+U\+NC}) (U\+I\+N\+T32 v, U\+I\+N\+T32 align)
+\item 
+typedef enum \hyperlink{pa__win__wasapi_8c_aec13744cba5f4a8e731ab1e136a2f966}{E\+Windows\+Version} \hyperlink{pa__win__wasapi_8c_a97486b2468e8463a8fb846b29dacb08b}{E\+Windows\+Version}
+\item 
+typedef enum \hyperlink{pa__win__wasapi_8c_a779380620e3456d84f1eac21a0cd046c}{E\+Mixer\+Dir} \hyperlink{pa__win__wasapi_8c_a213e4b1a6f300932dad4df17045f46d2}{E\+Mixer\+Dir}
+\end{DoxyCompactItemize}
+\subsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \hyperlink{pa__win__wasapi_8c_add7d79439251a024ba77c19ad515b8f6}{\+\_\+\+A\+V\+R\+T\+\_\+\+P\+R\+I\+O\+R\+I\+TY} \{ \hyperlink{pa__win__wasapi_8c_add7d79439251a024ba77c19ad515b8f6a82f37aa1743cab1c69da7d5ff49d6a8a}{A\+V\+R\+T\+\_\+\+P\+R\+I\+O\+R\+I\+T\+Y\+\_\+\+L\+OW} = -\/1, 
+\hyperlink{pa__win__wasapi_8c_add7d79439251a024ba77c19ad515b8f6a9ddb04ddf34535472b8f54f043d3a652}{A\+V\+R\+T\+\_\+\+P\+R\+I\+O\+R\+I\+T\+Y\+\_\+\+N\+O\+R\+M\+AL}, 
+\hyperlink{pa__win__wasapi_8c_add7d79439251a024ba77c19ad515b8f6a3d1e82a3e67940c08fff4233d7ec928f}{A\+V\+R\+T\+\_\+\+P\+R\+I\+O\+R\+I\+T\+Y\+\_\+\+H\+I\+GH}, 
+\hyperlink{pa__win__wasapi_8c_add7d79439251a024ba77c19ad515b8f6a9868458188819915b729402bfa060ba2}{A\+V\+R\+T\+\_\+\+P\+R\+I\+O\+R\+I\+T\+Y\+\_\+\+C\+R\+I\+T\+I\+C\+AL}
+ \}
+\item 
+enum \{ \hyperlink{pa__win__wasapi_8c_ad1df9dc2600f2dda7e99d31c00fd73e0a217b06ba7bf37ab6dc9d9751f1cf6b24}{S\+\_\+\+I\+N\+P\+UT} = 0, 
+\hyperlink{pa__win__wasapi_8c_ad1df9dc2600f2dda7e99d31c00fd73e0a9c7ef9e6df306bfb79b635afee6c1adf}{S\+\_\+\+O\+U\+T\+P\+UT} = 1, 
+\hyperlink{pa__win__wasapi_8c_ad1df9dc2600f2dda7e99d31c00fd73e0acac8c5a7329bfb86776b1d827f2f2e83}{S\+\_\+\+C\+O\+U\+NT} = 2, 
+\hyperlink{pa__win__wasapi_8c_ad1df9dc2600f2dda7e99d31c00fd73e0a973c488a4609f21d89d641b762de9fe7}{S\+\_\+\+F\+U\+L\+L\+D\+U\+P\+L\+EX} = 0
+ \}
+\item 
+enum \{ \hyperlink{pa__win__wasapi_8c_a4eeeead548222804e141df8f1b205ca8a7b6c7e83009a14df464dd680e87feaf2}{W\+A\+S\+A\+P\+I\+\_\+\+P\+A\+C\+K\+E\+T\+S\+\_\+\+P\+E\+R\+\_\+\+I\+N\+P\+U\+T\+\_\+\+B\+U\+F\+F\+ER} = 6
+ \}
+\item 
+enum \hyperlink{pa__win__wasapi_8c_aec13744cba5f4a8e731ab1e136a2f966}{E\+Windows\+Version} \{ \\*
+\hyperlink{pa__win__wasapi_8c_aec13744cba5f4a8e731ab1e136a2f966a34af6dcbce17b7e942bd8901fc89f701}{W\+I\+N\+D\+O\+W\+S\+\_\+\+U\+N\+K\+N\+O\+WN} = 0, 
+\hyperlink{pa__win__wasapi_8c_aec13744cba5f4a8e731ab1e136a2f966ad24275f02eb3bf7b4e1ed8e759016e5f}{W\+I\+N\+D\+O\+W\+S\+\_\+\+V\+I\+S\+T\+A\+\_\+\+S\+E\+R\+V\+E\+R2008}, 
+\hyperlink{pa__win__wasapi_8c_aec13744cba5f4a8e731ab1e136a2f966a3fa4d45ad3f6f0249620f1165ee1ed4f}{W\+I\+N\+D\+O\+W\+S\+\_\+7\+\_\+\+S\+E\+R\+V\+E\+R2008\+R2}, 
+\hyperlink{pa__win__wasapi_8c_aec13744cba5f4a8e731ab1e136a2f966a282960d50b4587c87046a8333bf2c38c}{W\+I\+N\+D\+O\+W\+S\+\_\+8\+\_\+\+S\+E\+R\+V\+E\+R2012}, 
+\\*
+\hyperlink{pa__win__wasapi_8c_aec13744cba5f4a8e731ab1e136a2f966ab5cea250cefffe760d8947ae4c3107d0}{W\+I\+N\+D\+O\+W\+S\+\_\+8\+\_\+1\+\_\+\+S\+E\+R\+V\+E\+R2012\+R2}, 
+\hyperlink{pa__win__wasapi_8c_aec13744cba5f4a8e731ab1e136a2f966a5b9050d995ef03019284af641563c15f}{W\+I\+N\+D\+O\+W\+S\+\_\+10\+\_\+\+S\+E\+R\+V\+E\+R2016}, 
+\hyperlink{pa__win__wasapi_8c_aec13744cba5f4a8e731ab1e136a2f966a16952920e317737f75be9de6682f0d06}{W\+I\+N\+D\+O\+W\+S\+\_\+\+F\+U\+T\+U\+RE}
+ \}
+\item 
+enum \hyperlink{pa__win__wasapi_8c_a779380620e3456d84f1eac21a0cd046c}{E\+Mixer\+Dir} \{ \hyperlink{pa__win__wasapi_8c_a779380620e3456d84f1eac21a0cd046cab2ffbd89db8f6270bf898848a9b77668}{M\+I\+X\+\_\+\+D\+I\+R\+\_\+\+\_\+1\+T\+O2}, 
+\hyperlink{pa__win__wasapi_8c_a779380620e3456d84f1eac21a0cd046ca4a73cefc3d25fc95e94adf7b14ab3583}{M\+I\+X\+\_\+\+D\+I\+R\+\_\+\+\_\+2\+T\+O1}, 
+\hyperlink{pa__win__wasapi_8c_a779380620e3456d84f1eac21a0cd046ca0858f41d4d725a8638f791327d303f33}{M\+I\+X\+\_\+\+D\+I\+R\+\_\+\+\_\+2\+T\+O1\+\_\+L}
+ \}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{pa__win__wasapi_8c_a1ece8a6630af9313888eab6508beec15}{P\+A\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+I\+ID} (\hyperlink{audioclient_8h_ace13012ab56d9326b7aabeab5d477652}{I\+Audio\+Client}, 1cb9ad4c, dbfa, 4c32, b1, 78, c2, f5, 68, a7, 03, b2)
+\item 
+\hyperlink{pa__win__wasapi_8c_a3b95fbf20416e2ff902c8a1cc149b2c2}{P\+A\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+I\+ID} (I\+Audio\+Client2, 726778cd, f60a, 4eda, 82, de, e4, 76, 10, cd, 78, aa)
+\item 
+\hyperlink{pa__win__wasapi_8c_aa5af9cc6b076410d262f921bfd2a0859}{P\+A\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+I\+ID} (\hyperlink{mmdeviceapi_8h_a32d63499f58b0065348b8c09c18d9f36}{I\+M\+M\+Endpoint}, 1be09788, 6894, 4089, 85, 86, 9a, 2a, 6c, 26, 5a, c5)
+\item 
+\hyperlink{pa__win__wasapi_8c_a7352e0e14e250246f7aed4c9bfebe118}{P\+A\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+I\+ID} (\hyperlink{mmdeviceapi_8h_a105bf1359b5d6cd4fb24828cc6ab2874}{I\+M\+M\+Device\+Enumerator}, a95664d2, 9614, 4f35, a7, 46, de, 8d, b6, 36, 17, e6)
+\item 
+\hyperlink{pa__win__wasapi_8c_a217e090bc41b002bac8c67d506e7c293}{P\+A\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+C\+L\+S\+ID} (\hyperlink{mmdeviceapi_8h_a105bf1359b5d6cd4fb24828cc6ab2874}{I\+M\+M\+Device\+Enumerator}, bcde0395, e52f, 467c, 8e, 3d, c4, 57, 92, 91, 69, 2e)
+\item 
+\hyperlink{pa__win__wasapi_8c_ae55f342ce51f789b74ae90ef9f8b8afd}{P\+A\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+I\+ID} (\hyperlink{audioclient_8h_a3d3202e827ce9328a16178551d97746e}{I\+Audio\+Render\+Client}, f294acfc, 3146, 4483, a7, bf, ad, dc, a7, \hyperlink{convtest_8m_a09ab2f3b6c61c793c7b6d24912b2cea0}{c2}, 60, e2)
+\item 
+\hyperlink{pa__win__wasapi_8c_acb9f29dd14a7e4a38a3d768cd3f745e9}{P\+A\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+I\+ID} (\hyperlink{audioclient_8h_a2d3108bb1604145f734949a5cb7a578a}{I\+Audio\+Capture\+Client}, c8adbd64, e71e, 48a0, a4, de, 18, 5c, 39, 5c, d3, 17)
+\item 
+\hyperlink{pa__win__wasapi_8c_ae4739ba48dcd72f329d79eb9b4fe4cdb}{P\+A\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+I\+ID} (\hyperlink{devicetopology_8h_a4997c6c4616c3245d515eafd2ce686d0}{I\+Device\+Topology}, 2\+A07407\+E, 6497, 4\+A18, 97, 87, 32, f7, 9b, d0, d9, 8f)
+\item 
+\hyperlink{pa__win__wasapi_8c_a028039501a67cfcf87ff71f37e2ade6a}{P\+A\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+I\+ID} (\hyperlink{devicetopology_8h_adabb5bd8e19759521e1498eef1d0b56f}{I\+Part}, A\+E2\+D\+E0\+E4, 5\+B\+C\+A, 4\+F2\+D, aa, 46, 5d, 13, f8, fd, b3, a9)
+\item 
+\hyperlink{pa__win__wasapi_8c_a8e34cd8eb85293ec3a3225127754633f}{P\+A\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+I\+ID} (\hyperlink{devicetopology_8h_a309e1781c2a5279a8dcd39a197a59003}{I\+Ks\+Jack\+Description}, 4509\+F757, 2\+D46, 4637, 8e, 62, ce, 7d, b9, 44, f5, 7b)
+\item 
+\hyperlink{pa__win__wasapi_8c_a18656159e0f57f9de0b9fb6c36c98f2d}{\+\_\+\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+G\+U\+ID} (pa\+\_\+\+K\+S\+D\+A\+T\+A\+F\+O\+R\+M\+A\+T\+\_\+\+S\+U\+B\+T\+Y\+P\+E\+\_\+\+P\+CM, 0x00000001, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xaa, 0x00, 0x38, 0x9b, 0x71)
+\item 
+\hyperlink{pa__win__wasapi_8c_aa40505d86e5d43a64feee42314677279}{\+\_\+\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+G\+U\+ID} (pa\+\_\+\+K\+S\+D\+A\+T\+A\+F\+O\+R\+M\+A\+T\+\_\+\+S\+U\+B\+T\+Y\+P\+E\+\_\+\+A\+D\+P\+CM, 0x00000002, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xaa, 0x00, 0x38, 0x9b, 0x71)
+\item 
+\hyperlink{pa__win__wasapi_8c_a68918bf0b41c53e2172ac6d55d9812ab}{\+\_\+\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+G\+U\+ID} (pa\+\_\+\+K\+S\+D\+A\+T\+A\+F\+O\+R\+M\+A\+T\+\_\+\+S\+U\+B\+T\+Y\+P\+E\+\_\+\+I\+E\+E\+E\+\_\+\+F\+L\+O\+AT, 0x00000003, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xaa, 0x00, 0x38, 0x9b, 0x71)
+\item 
+\hyperlink{pa__win__wmme_8c_ad744bd36cb3631b1dc11beb41dcc238c}{P\+A\+\_\+\+T\+H\+R\+E\+A\+D\+\_\+\+F\+U\+NC} \hyperlink{pa__win__wasapi_8c_ac575016ee1e9d6275cbc5004b2409036}{Proc\+Thread\+Event} (\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} $\ast$param)
+\item 
+\hyperlink{pa__win__wmme_8c_ad744bd36cb3631b1dc11beb41dcc238c}{P\+A\+\_\+\+T\+H\+R\+E\+A\+D\+\_\+\+F\+U\+NC} \hyperlink{pa__win__wasapi_8c_aae20a143b3c891a38a7e918ee4b1d6b8}{Proc\+Thread\+Poll} (\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} $\ast$param)
+\item 
+typedef \hyperlink{pa__win__wasapi_8c_ab7bc355a4b75848369499301290ce9ab}{B\+O\+OL} (\hyperlink{mapinls_8h_a9aa60e1ead64be77ad551e745cbfd4d3}{W\+I\+N\+A\+PI} $\ast$F\+Av\+Rt\+Create\+Thread\+Ordering\+Group)(P\+H\+A\+N\+D\+LE
+\item 
+typedef \hyperlink{pa__win__wasapi_8c_a17a3aca6faec8a591d204f32baa40bf5}{H\+A\+N\+D\+LE} (\hyperlink{mapinls_8h_a9aa60e1ead64be77ad551e745cbfd4d3}{W\+I\+N\+A\+PI} $\ast$F\+Av\+Set\+Mm\+Thread\+Characteristics)(\hyperlink{mapinls_8h_a866fd74f5159bb4d319261005a5e85e0}{L\+P\+C\+S\+TR}
+\item 
+\hyperlink{portaudio_8h_a4949e4a8ef9f9dbe8cbee414ce69841d}{Pa\+Error} \hyperlink{pa__win__wasapi_8c_a56a0d6a3498d2ca95227d2e5c9975c40}{Pa\+Wasapi\+\_\+\+Initialize} (\hyperlink{struct_pa_util_host_api_representation}{Pa\+Util\+Host\+Api\+Representation} $\ast$$\ast$host\+Api, \hyperlink{portaudio_8h_aeef6da084c57c70aa94be97411e19930}{Pa\+Host\+Api\+Index} index)
+\item 
+U\+I\+N\+T32 \hyperlink{pa__win__wasapi_8c_a34e25232f62662dafe2b79c6fbc38cc2}{A\+L\+I\+G\+N\+\_\+\+N\+E\+X\+T\+\_\+\+P\+O\+W2} (U\+I\+N\+T32 v)
+\item 
+\hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{pa__win__wasapi_8c_aa42c66da0ae19959d25a190e9dd82005}{Pa\+Wasapi\+\_\+\+Get\+Device\+Default\+Format} (\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} $\ast$p\+Format, unsigned \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} n\+Format\+Size, \hyperlink{portaudio_8h_ad79317e65bde63d76c4b8e711ac5a361}{Pa\+Device\+Index} n\+Device)
+\item 
+\hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{pa__win__wasapi_8c_a6a8c5307dff661ae7ee0d7bb8bf73469}{Pa\+Wasapi\+\_\+\+Get\+Device\+Role} (\hyperlink{portaudio_8h_ad79317e65bde63d76c4b8e711ac5a361}{Pa\+Device\+Index} n\+Device)
+\item 
+\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} wchar\+\_\+t $\ast$ \hyperlink{pa__win__wasapi_8c_a2ed6fd7668a8395be51d661b99b74ae6}{Pa\+Wasapi\+\_\+\+Get\+Input\+Device\+ID} (\hyperlink{portaudio_8h_a19874734f89958fccf86785490d53b4c}{Pa\+Stream} $\ast$\hyperlink{lib_2expat_8h_a755339d27872b13735c2cab829e47157}{s})
+\item 
+\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} wchar\+\_\+t $\ast$ \hyperlink{pa__win__wasapi_8c_a07d58f9548d783818bd617128761545f}{Pa\+Wasapi\+\_\+\+Get\+Output\+Device\+ID} (\hyperlink{portaudio_8h_a19874734f89958fccf86785490d53b4c}{Pa\+Stream} $\ast$\hyperlink{lib_2expat_8h_a755339d27872b13735c2cab829e47157}{s})
+\item 
+\hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{pa__win__wasapi_8c_a15bf85dfb80dc090cf03550be6ab054b}{Pa\+Wasapi\+\_\+\+Is\+Loopback} (\hyperlink{portaudio_8h_ad79317e65bde63d76c4b8e711ac5a361}{Pa\+Device\+Index} n\+Device)
+\item 
+\hyperlink{portaudio_8h_a4949e4a8ef9f9dbe8cbee414ce69841d}{Pa\+Error} \hyperlink{pa__win__wasapi_8c_af8f04003c6123e6fdcfdf7308761a75e}{Pa\+Wasapi\+\_\+\+Get\+Frames\+Per\+Host\+Buffer} (\hyperlink{portaudio_8h_a19874734f89958fccf86785490d53b4c}{Pa\+Stream} $\ast$p\+Stream, unsigned \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} $\ast$n\+Input, unsigned \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} $\ast$n\+Output)
+\item 
+unsigned long \hyperlink{pa__win__wasapi_8c_afe88b93d518a48a088c658b7c8ab25b1}{Pa\+Util\+\_\+\+Get\+Output\+Frame\+Count} (\hyperlink{struct_pa_util_buffer_processor}{Pa\+Util\+Buffer\+Processor} $\ast$bp)
+\item 
+\hyperlink{_sound_touch_d_l_l_8h_aa8c0374618b33785ccb02f74bcfebc46}{H\+A\+N\+D\+LE} \hyperlink{pa__win__wasapi_8c_aa8e7f1e1beb2ef450c45ca6d6b9234d7}{M\+M\+C\+S\+S\+\_\+activate} (\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} char $\ast$\hyperlink{lib_2expat_8h_a1b49b495b59f9e73205b69ad1a2965b0}{name})
+\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{pa__win__wasapi_8c_a32561c759b333bdffc1a7fe3fdf5dd04}{M\+M\+C\+S\+S\+\_\+deactivate} (\hyperlink{_sound_touch_d_l_l_8h_aa8c0374618b33785ccb02f74bcfebc46}{H\+A\+N\+D\+LE} h\+Task)
+\item 
+\hyperlink{portaudio_8h_a4949e4a8ef9f9dbe8cbee414ce69841d}{Pa\+Error} \hyperlink{pa__win__wasapi_8c_a2d48ae4d2124209ed8a6264c6febedc7}{Pa\+Wasapi\+\_\+\+Thread\+Priority\+Boost} (\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} $\ast$$\ast$h\+Task, \hyperlink{pa__win__wasapi_8h_a561291b0188f6f29246ea669b48e2661}{Pa\+Wasapi\+Thread\+Priority} n\+Priority\+Class)
+\item 
+\hyperlink{portaudio_8h_a4949e4a8ef9f9dbe8cbee414ce69841d}{Pa\+Error} \hyperlink{pa__win__wasapi_8c_ac5c875fb9165712ff696512f750f7de3}{Pa\+Wasapi\+\_\+\+Thread\+Priority\+Revert} (\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} $\ast$h\+Task)
+\item 
+\hyperlink{portaudio_8h_a4949e4a8ef9f9dbe8cbee414ce69841d}{Pa\+Error} \hyperlink{pa__win__wasapi_8c_a46583f8e4b1132c198e2451fd48f7490}{Pa\+Wasapi\+\_\+\+Get\+Jack\+Count} (\hyperlink{portaudio_8h_ad79317e65bde63d76c4b8e711ac5a361}{Pa\+Device\+Index} n\+Device, \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} $\ast$jcount)
+\item 
+\hyperlink{portaudio_8h_a4949e4a8ef9f9dbe8cbee414ce69841d}{Pa\+Error} \hyperlink{pa__win__wasapi_8c_a042829efac1aca1d77608d136a523465}{Pa\+Wasapi\+\_\+\+Get\+Jack\+Description} (\hyperlink{portaudio_8h_ad79317e65bde63d76c4b8e711ac5a361}{Pa\+Device\+Index} n\+Device, \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} jindex, \hyperlink{struct_pa_wasapi_jack_description}{Pa\+Wasapi\+Jack\+Description} $\ast$p\+Jack\+Description)
+\item 
+\hyperlink{px__win__ds_8c_a6ad46d30b0323d7b029e41f32f8a2571}{H\+R\+E\+S\+U\+LT} \hyperlink{pa__win__wasapi_8c_afd01325e0f1dc8cdc8429695848cd320}{Process\+Output\+Buffer} (\hyperlink{struct_pa_wasapi_stream}{Pa\+Wasapi\+Stream} $\ast$stream, \hyperlink{struct_pa_wasapi_host_processor}{Pa\+Wasapi\+Host\+Processor} $\ast$\hyperlink{xmlparse_8c_ae2e049b4850fa94870e78619701bbeb0}{processor}, U\+I\+N\+T32 frames)
+\item 
+\hyperlink{px__win__ds_8c_a6ad46d30b0323d7b029e41f32f8a2571}{H\+R\+E\+S\+U\+LT} \hyperlink{pa__win__wasapi_8c_a37f64191221d539235537b8cfa71b456}{Process\+Input\+Buffer} (\hyperlink{struct_pa_wasapi_stream}{Pa\+Wasapi\+Stream} $\ast$stream, \hyperlink{struct_pa_wasapi_host_processor}{Pa\+Wasapi\+Host\+Processor} $\ast$\hyperlink{xmlparse_8c_ae2e049b4850fa94870e78619701bbeb0}{processor})
+\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+typedef \hyperlink{pa__win__wasapi_8c_ad025b87f212fcc6085a0b88ed1acd0e2}{L\+P\+D\+W\+O\+RD}
+\item 
+F\+Av\+Rt\+Create\+Thread\+Ordering\+Group \hyperlink{pa__win__wasapi_8c_ad998bad539a112ce8182c22c5cf0481e}{p\+Av\+Rt\+Create\+Thread\+Ordering\+Group} = \hyperlink{px__mixer_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{N\+U\+LL}
+\item 
+F\+Av\+Rt\+Delete\+Thread\+Ordering\+Group \hyperlink{pa__win__wasapi_8c_a5604278b62c1f5c62e906ab2e53ba6ab}{p\+Av\+Rt\+Delete\+Thread\+Ordering\+Group} = \hyperlink{px__mixer_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{N\+U\+LL}
+\item 
+F\+Av\+Rt\+Wait\+On\+Thread\+Ordering\+Group \hyperlink{pa__win__wasapi_8c_ab0d78159e0a0e2a6575ca053983461d8}{p\+Av\+Rt\+Wait\+On\+Thread\+Ordering\+Group} = \hyperlink{px__mixer_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{N\+U\+LL}
+\item 
+F\+Av\+Set\+Mm\+Thread\+Characteristics \hyperlink{pa__win__wasapi_8c_a892964d92daf945b57491f24eb331056}{p\+Av\+Set\+Mm\+Thread\+Characteristics} = \hyperlink{px__mixer_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{N\+U\+LL}
+\item 
+\hyperlink{pa__win__wasapi_8c_a00005277f6e80b50489b77a3641c50f3}{F\+Av\+Revert\+Mm\+Thread\+Characteristics} \hyperlink{pa__win__wasapi_8c_a800438cc51e4a6661c2cdb986a16e093}{p\+Av\+Revert\+Mm\+Thread\+Characteristics} = \hyperlink{px__mixer_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{N\+U\+LL}
+\item 
+F\+Av\+Set\+Mm\+Thread\+Priority \hyperlink{pa__win__wasapi_8c_a00926c56ee41e2e33e834e6552a9fe0d}{p\+Av\+Set\+Mm\+Thread\+Priority} = \hyperlink{px__mixer_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{N\+U\+LL}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+W\+A\+S\+A\+PI implementation of support for a host A\+PI. 
+
+\begin{DoxyNote}{Note}
+pa\+\_\+wasapi currently requires minimum VC 2005, and the latest Vista S\+DK 
+\end{DoxyNote}
+
+
+\subsection{Macro Definition Documentation}
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!\+\_\+\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+C\+L\+S\+ID@{\+\_\+\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+C\+L\+S\+ID}}
+\index{\+\_\+\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+C\+L\+S\+ID@{\+\_\+\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+C\+L\+S\+ID}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{\+\_\+\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+C\+L\+S\+ID}{__DEFINE_CLSID}}]{\setlength{\rightskip}{0pt plus 5cm}\#define \+\_\+\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+C\+L\+S\+ID(
+\begin{DoxyParamCaption}
+\item[{}]{n, }
+\item[{}]{{\bf l}, }
+\item[{}]{w1, }
+\item[{}]{w2, }
+\item[{}]{b1, }
+\item[{}]{b2, }
+\item[{}]{b3, }
+\item[{}]{b4, }
+\item[{}]{b5, }
+\item[{}]{b6, }
+\item[{}]{b7, }
+\item[{}]{b8}
+\end{DoxyParamCaption}
+)~static {\bf const} C\+L\+S\+ID n {\bf G\+U\+I\+D\+\_\+\+S\+E\+CT} = \{{\bf l},w1,w2,\{b1,b2,b3,b4,b5,b6,b7,b8\}\}}\hypertarget{pa__win__wasapi_8c_a684dc8a813711bb4515ee0c59cf4311f}{}\label{pa__win__wasapi_8c_a684dc8a813711bb4515ee0c59cf4311f}
+
+
+Definition at line 169 of file pa\+\_\+win\+\_\+wasapi.\+c.
+
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!\+\_\+\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+G\+U\+ID@{\+\_\+\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+G\+U\+ID}}
+\index{\+\_\+\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+G\+U\+ID@{\+\_\+\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+G\+U\+ID}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{\+\_\+\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+G\+U\+ID}{__DEFINE_GUID}}]{\setlength{\rightskip}{0pt plus 5cm}\#define \+\_\+\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+G\+U\+ID(
+\begin{DoxyParamCaption}
+\item[{}]{n, }
+\item[{}]{{\bf l}, }
+\item[{}]{w1, }
+\item[{}]{w2, }
+\item[{}]{b1, }
+\item[{}]{b2, }
+\item[{}]{b3, }
+\item[{}]{b4, }
+\item[{}]{b5, }
+\item[{}]{b6, }
+\item[{}]{b7, }
+\item[{}]{b8}
+\end{DoxyParamCaption}
+)~static {\bf const} G\+U\+ID n {\bf G\+U\+I\+D\+\_\+\+S\+E\+CT} = \{{\bf l},w1,w2,\{b1,b2,b3,b4,b5,b6,b7,b8\}\}}\hypertarget{pa__win__wasapi_8c_a5270bc6f60431a3ab7cc5f171493b5dd}{}\label{pa__win__wasapi_8c_a5270bc6f60431a3ab7cc5f171493b5dd}
+
+
+Definition at line 167 of file pa\+\_\+win\+\_\+wasapi.\+c.
+
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!\+\_\+\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+I\+ID@{\+\_\+\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+I\+ID}}
+\index{\+\_\+\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+I\+ID@{\+\_\+\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+I\+ID}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{\+\_\+\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+I\+ID}{__DEFINE_IID}}]{\setlength{\rightskip}{0pt plus 5cm}\#define \+\_\+\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+I\+ID(
+\begin{DoxyParamCaption}
+\item[{}]{n, }
+\item[{}]{{\bf l}, }
+\item[{}]{w1, }
+\item[{}]{w2, }
+\item[{}]{b1, }
+\item[{}]{b2, }
+\item[{}]{b3, }
+\item[{}]{b4, }
+\item[{}]{b5, }
+\item[{}]{b6, }
+\item[{}]{b7, }
+\item[{}]{b8}
+\end{DoxyParamCaption}
+)~static {\bf const} I\+ID n {\bf G\+U\+I\+D\+\_\+\+S\+E\+CT} = \{{\bf l},w1,w2,\{b1,b2,b3,b4,b5,b6,b7,b8\}\}}\hypertarget{pa__win__wasapi_8c_ad5dca404e98a4186b60cba66787c5e1a}{}\label{pa__win__wasapi_8c_ad5dca404e98a4186b60cba66787c5e1a}
+
+
+Definition at line 168 of file pa\+\_\+win\+\_\+wasapi.\+c.
+
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!\+\_\+\+\_\+\+L\+P\+C\+G\+U\+I\+D\+\_\+\+D\+E\+F\+I\+N\+E\+D\+\_\+\+\_\+@{\+\_\+\+\_\+\+L\+P\+C\+G\+U\+I\+D\+\_\+\+D\+E\+F\+I\+N\+E\+D\+\_\+\+\_\+}}
+\index{\+\_\+\+\_\+\+L\+P\+C\+G\+U\+I\+D\+\_\+\+D\+E\+F\+I\+N\+E\+D\+\_\+\+\_\+@{\+\_\+\+\_\+\+L\+P\+C\+G\+U\+I\+D\+\_\+\+D\+E\+F\+I\+N\+E\+D\+\_\+\+\_\+}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{\+\_\+\+\_\+\+L\+P\+C\+G\+U\+I\+D\+\_\+\+D\+E\+F\+I\+N\+E\+D\+\_\+\+\_\+}{__LPCGUID_DEFINED__}}]{\setlength{\rightskip}{0pt plus 5cm}\#define \+\_\+\+\_\+\+L\+P\+C\+G\+U\+I\+D\+\_\+\+D\+E\+F\+I\+N\+E\+D\+\_\+\+\_\+}\hypertarget{pa__win__wasapi_8c_a47e37ab430bf80d50648a0d5ac18b103}{}\label{pa__win__wasapi_8c_a47e37ab430bf80d50648a0d5ac18b103}
+
+
+Definition at line 102 of file pa\+\_\+win\+\_\+wasapi.\+c.
+
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!\+\_\+\+\_\+\+M\+I\+D\+L\+\_\+\+C\+O\+N\+ST@{\+\_\+\+\_\+\+M\+I\+D\+L\+\_\+\+C\+O\+N\+ST}}
+\index{\+\_\+\+\_\+\+M\+I\+D\+L\+\_\+\+C\+O\+N\+ST@{\+\_\+\+\_\+\+M\+I\+D\+L\+\_\+\+C\+O\+N\+ST}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{\+\_\+\+\_\+\+M\+I\+D\+L\+\_\+\+C\+O\+N\+ST}{__MIDL_CONST}}]{\setlength{\rightskip}{0pt plus 5cm}\#define \+\_\+\+\_\+\+M\+I\+D\+L\+\_\+\+C\+O\+N\+ST~{\bf const}}\hypertarget{pa__win__wasapi_8c_a673c1f31132e45e35ddee6d1d92b9bb1}{}\label{pa__win__wasapi_8c_a673c1f31132e45e35ddee6d1d92b9bb1}
+
+
+Definition at line 118 of file pa\+\_\+win\+\_\+wasapi.\+c.
+
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!\+\_\+\+\_\+\+M\+I\+N\+G\+W\+\_\+\+E\+X\+T\+E\+N\+S\+I\+ON@{\+\_\+\+\_\+\+M\+I\+N\+G\+W\+\_\+\+E\+X\+T\+E\+N\+S\+I\+ON}}
+\index{\+\_\+\+\_\+\+M\+I\+N\+G\+W\+\_\+\+E\+X\+T\+E\+N\+S\+I\+ON@{\+\_\+\+\_\+\+M\+I\+N\+G\+W\+\_\+\+E\+X\+T\+E\+N\+S\+I\+ON}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{\+\_\+\+\_\+\+M\+I\+N\+G\+W\+\_\+\+E\+X\+T\+E\+N\+S\+I\+ON}{__MINGW_EXTENSION}}]{\setlength{\rightskip}{0pt plus 5cm}\#define \+\_\+\+\_\+\+M\+I\+N\+G\+W\+\_\+\+E\+X\+T\+E\+N\+S\+I\+ON}\hypertarget{pa__win__wasapi_8c_adc323f9409c3f1374367fecf9a2e3496}{}\label{pa__win__wasapi_8c_adc323f9409c3f1374367fecf9a2e3496}
+
+
+Definition at line 146 of file pa\+\_\+win\+\_\+wasapi.\+c.
+
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!\+\_\+\+Get\+Proc@{\+\_\+\+Get\+Proc}}
+\index{\+\_\+\+Get\+Proc@{\+\_\+\+Get\+Proc}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{\+\_\+\+Get\+Proc}{_GetProc}}]{\setlength{\rightskip}{0pt plus 5cm}\#define \+\_\+\+Get\+Proc(
+\begin{DoxyParamCaption}
+\item[{}]{fun, }
+\item[{}]{type, }
+\item[{}]{{\bf name}}
+\end{DoxyParamCaption}
+)}\hypertarget{pa__win__wasapi_8c_aaa99ea4974b034b9c0ed40a450076802}{}\label{pa__win__wasapi_8c_aaa99ea4974b034b9c0ed40a450076802}
+{\bfseries Value\+:}
+\begin{DoxyCode}
+\{                                                        \(\backslash\)
+                                        fun = (\hyperlink{namespacewaflib_1_1_tools_1_1tex_a7638d43e3ce55594540ea118202a9a40}{type}) GetProcAddress(hDInputDLL,
+      \hyperlink{lib_2expat_8h_a1b49b495b59f9e73205b69ad1a2965b0}{name});       \(\backslash\)
+                                        if (fun == \hyperlink{getopt1_8c_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}) \{                                  \(\backslash\)
+                                            PRINT((\textcolor{stringliteral}{"GetProcAddr failed for %s"} ,
+      \hyperlink{lib_2expat_8h_a1b49b495b59f9e73205b69ad1a2965b0}{name}));     \(\backslash\)
+                                            return \hyperlink{cext_8h_aa93f0eb578d23995850d61f7d61c55c1}{FALSE};                                   \(\backslash\)
+                                        \}                                                   \(\backslash\)
+                                    \}                                                       \(\backslash\)
+\end{DoxyCode}
+
+
+Definition at line 290 of file pa\+\_\+win\+\_\+wasapi.\+c.
+
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!\+\_\+\+W\+A\+S\+A\+P\+I\+\_\+\+M\+O\+N\+O\+\_\+\+T\+O\+\_\+\+S\+T\+E\+R\+E\+O\+\_\+\+M\+I\+X\+E\+R\+\_\+1\+\_\+\+T\+O\+\_\+2@{\+\_\+\+W\+A\+S\+A\+P\+I\+\_\+\+M\+O\+N\+O\+\_\+\+T\+O\+\_\+\+S\+T\+E\+R\+E\+O\+\_\+\+M\+I\+X\+E\+R\+\_\+1\+\_\+\+T\+O\+\_\+2}}
+\index{\+\_\+\+W\+A\+S\+A\+P\+I\+\_\+\+M\+O\+N\+O\+\_\+\+T\+O\+\_\+\+S\+T\+E\+R\+E\+O\+\_\+\+M\+I\+X\+E\+R\+\_\+1\+\_\+\+T\+O\+\_\+2@{\+\_\+\+W\+A\+S\+A\+P\+I\+\_\+\+M\+O\+N\+O\+\_\+\+T\+O\+\_\+\+S\+T\+E\+R\+E\+O\+\_\+\+M\+I\+X\+E\+R\+\_\+1\+\_\+\+T\+O\+\_\+2}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{\+\_\+\+W\+A\+S\+A\+P\+I\+\_\+\+M\+O\+N\+O\+\_\+\+T\+O\+\_\+\+S\+T\+E\+R\+E\+O\+\_\+\+M\+I\+X\+E\+R\+\_\+1\+\_\+\+T\+O\+\_\+2}{_WASAPI_MONO_TO_STEREO_MIXER_1_TO_2}}]{\setlength{\rightskip}{0pt plus 5cm}\#define \+\_\+\+W\+A\+S\+A\+P\+I\+\_\+\+M\+O\+N\+O\+\_\+\+T\+O\+\_\+\+S\+T\+E\+R\+E\+O\+\_\+\+M\+I\+X\+E\+R\+\_\+1\+\_\+\+T\+O\+\_\+2(
+\begin{DoxyParamCaption}
+\item[{}]{T\+Y\+PE}
+\end{DoxyParamCaption}
+)}\hypertarget{pa__win__wasapi_8c_ada6662bf23deb36ae82097ee77924945}{}\label{pa__win__wasapi_8c_ada6662bf23deb36ae82097ee77924945}
+{\bfseries Value\+:}
+\begin{DoxyCode}
+TYPE * \hyperlink{cdefs_8h_a4127c12268159bf73f8e69b23c34c610}{\_\_restrict} to   = \_\_to;\(\backslash\)
+    TYPE * \hyperlink{cdefs_8h_a4127c12268159bf73f8e69b23c34c610}{\_\_restrict} \hyperlink{nasm_8h_a5f350118b553429484632e5603292389}{from} = \_\_from;\(\backslash\)
+    TYPE * \hyperlink{cdefs_8h_a4127c12268159bf73f8e69b23c34c610}{\_\_restrict} \hyperlink{convtest_8m_afb358f48b1646c750fb9da6c6585be2b}{end}  = \hyperlink{nasm_8h_a5f350118b553429484632e5603292389}{from} + \hyperlink{cascade_8c_afea6e77db19a2f8c91419904fe665a3a}{count};\(\backslash\)
+    while (\hyperlink{nasm_8h_a5f350118b553429484632e5603292389}{from} != \hyperlink{convtest_8m_afb358f48b1646c750fb9da6c6585be2b}{end})\(\backslash\)
+    \{\(\backslash\)
+        *to ++ = *\hyperlink{nasm_8h_a5f350118b553429484632e5603292389}{from};\(\backslash\)
+        *to ++ = *\hyperlink{nasm_8h_a5f350118b553429484632e5603292389}{from};\(\backslash\)
+        ++ \hyperlink{nasm_8h_a5f350118b553429484632e5603292389}{from};\(\backslash\)
+    \}
+\end{DoxyCode}
+
+
+Definition at line 1058 of file pa\+\_\+win\+\_\+wasapi.\+c.
+
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!\+\_\+\+W\+A\+S\+A\+P\+I\+\_\+\+M\+O\+N\+O\+\_\+\+T\+O\+\_\+\+S\+T\+E\+R\+E\+O\+\_\+\+M\+I\+X\+E\+R\+\_\+2\+\_\+\+T\+O\+\_\+1\+\_\+\+F\+L\+T32@{\+\_\+\+W\+A\+S\+A\+P\+I\+\_\+\+M\+O\+N\+O\+\_\+\+T\+O\+\_\+\+S\+T\+E\+R\+E\+O\+\_\+\+M\+I\+X\+E\+R\+\_\+2\+\_\+\+T\+O\+\_\+1\+\_\+\+F\+L\+T32}}
+\index{\+\_\+\+W\+A\+S\+A\+P\+I\+\_\+\+M\+O\+N\+O\+\_\+\+T\+O\+\_\+\+S\+T\+E\+R\+E\+O\+\_\+\+M\+I\+X\+E\+R\+\_\+2\+\_\+\+T\+O\+\_\+1\+\_\+\+F\+L\+T32@{\+\_\+\+W\+A\+S\+A\+P\+I\+\_\+\+M\+O\+N\+O\+\_\+\+T\+O\+\_\+\+S\+T\+E\+R\+E\+O\+\_\+\+M\+I\+X\+E\+R\+\_\+2\+\_\+\+T\+O\+\_\+1\+\_\+\+F\+L\+T32}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{\+\_\+\+W\+A\+S\+A\+P\+I\+\_\+\+M\+O\+N\+O\+\_\+\+T\+O\+\_\+\+S\+T\+E\+R\+E\+O\+\_\+\+M\+I\+X\+E\+R\+\_\+2\+\_\+\+T\+O\+\_\+1\+\_\+\+F\+L\+T32}{_WASAPI_MONO_TO_STEREO_MIXER_2_TO_1_FLT32}}]{\setlength{\rightskip}{0pt plus 5cm}\#define \+\_\+\+W\+A\+S\+A\+P\+I\+\_\+\+M\+O\+N\+O\+\_\+\+T\+O\+\_\+\+S\+T\+E\+R\+E\+O\+\_\+\+M\+I\+X\+E\+R\+\_\+2\+\_\+\+T\+O\+\_\+1\+\_\+\+F\+L\+T32(
+\begin{DoxyParamCaption}
+\item[{}]{T\+Y\+PE}
+\end{DoxyParamCaption}
+)}\hypertarget{pa__win__wasapi_8c_a7a033fd62998defc98fd8b3318b1f437}{}\label{pa__win__wasapi_8c_a7a033fd62998defc98fd8b3318b1f437}
+{\bfseries Value\+:}
+\begin{DoxyCode}
+TYPE * \hyperlink{cdefs_8h_a4127c12268159bf73f8e69b23c34c610}{\_\_restrict} to   = (TYPE *)\_\_to;\(\backslash\)
+    TYPE * \hyperlink{cdefs_8h_a4127c12268159bf73f8e69b23c34c610}{\_\_restrict} \hyperlink{nasm_8h_a5f350118b553429484632e5603292389}{from} = (TYPE *)\_\_from;\(\backslash\)
+    TYPE * \hyperlink{cdefs_8h_a4127c12268159bf73f8e69b23c34c610}{\_\_restrict} \hyperlink{convtest_8m_afb358f48b1646c750fb9da6c6585be2b}{end}  = to + \hyperlink{cascade_8c_afea6e77db19a2f8c91419904fe665a3a}{count};\(\backslash\)
+    while (to != \hyperlink{convtest_8m_afb358f48b1646c750fb9da6c6585be2b}{end})\(\backslash\)
+    \{\(\backslash\)
+        *to ++ = (TYPE)((\textcolor{keywordtype}{float})(\hyperlink{nasm_8h_a5f350118b553429484632e5603292389}{from}[0] + \hyperlink{nasm_8h_a5f350118b553429484632e5603292389}{from}[1]) * 0.5\hyperlink{rfft2d_test_m_l_8m_aacd36fb6ac9ce14cec71f2ca852524d4}{f});\hyperlink{nasm_8h_a5f350118b553429484632e5603292389}{\(\backslash\)}
+\hyperlink{nasm_8h_a5f350118b553429484632e5603292389}{        from} += 2;\(\backslash\)
+    \}
+\end{DoxyCode}
+
+
+Definition at line 1070 of file pa\+\_\+win\+\_\+wasapi.\+c.
+
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!\+\_\+\+W\+A\+S\+A\+P\+I\+\_\+\+M\+O\+N\+O\+\_\+\+T\+O\+\_\+\+S\+T\+E\+R\+E\+O\+\_\+\+M\+I\+X\+E\+R\+\_\+2\+\_\+\+T\+O\+\_\+1\+\_\+\+I\+N\+T32@{\+\_\+\+W\+A\+S\+A\+P\+I\+\_\+\+M\+O\+N\+O\+\_\+\+T\+O\+\_\+\+S\+T\+E\+R\+E\+O\+\_\+\+M\+I\+X\+E\+R\+\_\+2\+\_\+\+T\+O\+\_\+1\+\_\+\+I\+N\+T32}}
+\index{\+\_\+\+W\+A\+S\+A\+P\+I\+\_\+\+M\+O\+N\+O\+\_\+\+T\+O\+\_\+\+S\+T\+E\+R\+E\+O\+\_\+\+M\+I\+X\+E\+R\+\_\+2\+\_\+\+T\+O\+\_\+1\+\_\+\+I\+N\+T32@{\+\_\+\+W\+A\+S\+A\+P\+I\+\_\+\+M\+O\+N\+O\+\_\+\+T\+O\+\_\+\+S\+T\+E\+R\+E\+O\+\_\+\+M\+I\+X\+E\+R\+\_\+2\+\_\+\+T\+O\+\_\+1\+\_\+\+I\+N\+T32}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{\+\_\+\+W\+A\+S\+A\+P\+I\+\_\+\+M\+O\+N\+O\+\_\+\+T\+O\+\_\+\+S\+T\+E\+R\+E\+O\+\_\+\+M\+I\+X\+E\+R\+\_\+2\+\_\+\+T\+O\+\_\+1\+\_\+\+I\+N\+T32}{_WASAPI_MONO_TO_STEREO_MIXER_2_TO_1_INT32}}]{\setlength{\rightskip}{0pt plus 5cm}\#define \+\_\+\+W\+A\+S\+A\+P\+I\+\_\+\+M\+O\+N\+O\+\_\+\+T\+O\+\_\+\+S\+T\+E\+R\+E\+O\+\_\+\+M\+I\+X\+E\+R\+\_\+2\+\_\+\+T\+O\+\_\+1\+\_\+\+I\+N\+T32(
+\begin{DoxyParamCaption}
+\item[{}]{T\+Y\+PE}
+\end{DoxyParamCaption}
+)}\hypertarget{pa__win__wasapi_8c_a0dcd21c9e597e6295abca02c11622736}{}\label{pa__win__wasapi_8c_a0dcd21c9e597e6295abca02c11622736}
+{\bfseries Value\+:}
+\begin{DoxyCode}
+TYPE * \hyperlink{cdefs_8h_a4127c12268159bf73f8e69b23c34c610}{\_\_restrict} to   = (TYPE *)\_\_to;\(\backslash\)
+    TYPE * \hyperlink{cdefs_8h_a4127c12268159bf73f8e69b23c34c610}{\_\_restrict} \hyperlink{nasm_8h_a5f350118b553429484632e5603292389}{from} = (TYPE *)\_\_from;\(\backslash\)
+    TYPE * \hyperlink{cdefs_8h_a4127c12268159bf73f8e69b23c34c610}{\_\_restrict} \hyperlink{convtest_8m_afb358f48b1646c750fb9da6c6585be2b}{end}  = to + \hyperlink{cascade_8c_afea6e77db19a2f8c91419904fe665a3a}{count};\(\backslash\)
+    while (to != \hyperlink{convtest_8m_afb358f48b1646c750fb9da6c6585be2b}{end})\(\backslash\)
+    \{\(\backslash\)
+        *to ++ = (TYPE)(((\hyperlink{namespaceportaudio_a30bc71f065706d41a5d9208ea861e4a6a6dd61123fe207d74b9af1bc56ade8108}{INT32})\hyperlink{nasm_8h_a5f350118b553429484632e5603292389}{from}[0] + (\hyperlink{namespaceportaudio_a30bc71f065706d41a5d9208ea861e4a6a6dd61123fe207d74b9af1bc56ade8108}{INT32})\hyperlink{nasm_8h_a5f350118b553429484632e5603292389}{from}[1]) >> 1);
+      \hyperlink{nasm_8h_a5f350118b553429484632e5603292389}{\(\backslash\)}
+\hyperlink{nasm_8h_a5f350118b553429484632e5603292389}{        from} += 2;\(\backslash\)
+    \}
+\end{DoxyCode}
+
+
+Definition at line 1081 of file pa\+\_\+win\+\_\+wasapi.\+c.
+
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!\+\_\+\+W\+A\+S\+A\+P\+I\+\_\+\+M\+O\+N\+O\+\_\+\+T\+O\+\_\+\+S\+T\+E\+R\+E\+O\+\_\+\+M\+I\+X\+E\+R\+\_\+2\+\_\+\+T\+O\+\_\+1\+\_\+\+I\+N\+T64@{\+\_\+\+W\+A\+S\+A\+P\+I\+\_\+\+M\+O\+N\+O\+\_\+\+T\+O\+\_\+\+S\+T\+E\+R\+E\+O\+\_\+\+M\+I\+X\+E\+R\+\_\+2\+\_\+\+T\+O\+\_\+1\+\_\+\+I\+N\+T64}}
+\index{\+\_\+\+W\+A\+S\+A\+P\+I\+\_\+\+M\+O\+N\+O\+\_\+\+T\+O\+\_\+\+S\+T\+E\+R\+E\+O\+\_\+\+M\+I\+X\+E\+R\+\_\+2\+\_\+\+T\+O\+\_\+1\+\_\+\+I\+N\+T64@{\+\_\+\+W\+A\+S\+A\+P\+I\+\_\+\+M\+O\+N\+O\+\_\+\+T\+O\+\_\+\+S\+T\+E\+R\+E\+O\+\_\+\+M\+I\+X\+E\+R\+\_\+2\+\_\+\+T\+O\+\_\+1\+\_\+\+I\+N\+T64}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{\+\_\+\+W\+A\+S\+A\+P\+I\+\_\+\+M\+O\+N\+O\+\_\+\+T\+O\+\_\+\+S\+T\+E\+R\+E\+O\+\_\+\+M\+I\+X\+E\+R\+\_\+2\+\_\+\+T\+O\+\_\+1\+\_\+\+I\+N\+T64}{_WASAPI_MONO_TO_STEREO_MIXER_2_TO_1_INT64}}]{\setlength{\rightskip}{0pt plus 5cm}\#define \+\_\+\+W\+A\+S\+A\+P\+I\+\_\+\+M\+O\+N\+O\+\_\+\+T\+O\+\_\+\+S\+T\+E\+R\+E\+O\+\_\+\+M\+I\+X\+E\+R\+\_\+2\+\_\+\+T\+O\+\_\+1\+\_\+\+I\+N\+T64(
+\begin{DoxyParamCaption}
+\item[{}]{T\+Y\+PE}
+\end{DoxyParamCaption}
+)}\hypertarget{pa__win__wasapi_8c_a12872b4e5be48d44a65a4b47531a65b3}{}\label{pa__win__wasapi_8c_a12872b4e5be48d44a65a4b47531a65b3}
+{\bfseries Value\+:}
+\begin{DoxyCode}
+TYPE * \hyperlink{cdefs_8h_a4127c12268159bf73f8e69b23c34c610}{\_\_restrict} to   = (TYPE *)\_\_to;\(\backslash\)
+    TYPE * \hyperlink{cdefs_8h_a4127c12268159bf73f8e69b23c34c610}{\_\_restrict} \hyperlink{nasm_8h_a5f350118b553429484632e5603292389}{from} = (TYPE *)\_\_from;\(\backslash\)
+    TYPE * \hyperlink{cdefs_8h_a4127c12268159bf73f8e69b23c34c610}{\_\_restrict} \hyperlink{convtest_8m_afb358f48b1646c750fb9da6c6585be2b}{end}  = to + \hyperlink{cascade_8c_afea6e77db19a2f8c91419904fe665a3a}{count};\(\backslash\)
+    while (to != \hyperlink{convtest_8m_afb358f48b1646c750fb9da6c6585be2b}{end})\(\backslash\)
+    \{\(\backslash\)
+        *to ++ = (TYPE)(((\hyperlink{win32__test_8c_ace148f1ae00fea97a12fddab93c90377}{INT64})\hyperlink{nasm_8h_a5f350118b553429484632e5603292389}{from}[0] + (\hyperlink{win32__test_8c_ace148f1ae00fea97a12fddab93c90377}{INT64})\hyperlink{nasm_8h_a5f350118b553429484632e5603292389}{from}[1]) >> 1);
+      \hyperlink{nasm_8h_a5f350118b553429484632e5603292389}{\(\backslash\)}
+\hyperlink{nasm_8h_a5f350118b553429484632e5603292389}{        from} += 2;\(\backslash\)
+    \}
+\end{DoxyCode}
+
+
+Definition at line 1092 of file pa\+\_\+win\+\_\+wasapi.\+c.
+
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!\+\_\+\+W\+A\+S\+A\+P\+I\+\_\+\+M\+O\+N\+O\+\_\+\+T\+O\+\_\+\+S\+T\+E\+R\+E\+O\+\_\+\+M\+I\+X\+E\+R\+\_\+2\+\_\+\+T\+O\+\_\+1\+\_\+L@{\+\_\+\+W\+A\+S\+A\+P\+I\+\_\+\+M\+O\+N\+O\+\_\+\+T\+O\+\_\+\+S\+T\+E\+R\+E\+O\+\_\+\+M\+I\+X\+E\+R\+\_\+2\+\_\+\+T\+O\+\_\+1\+\_\+L}}
+\index{\+\_\+\+W\+A\+S\+A\+P\+I\+\_\+\+M\+O\+N\+O\+\_\+\+T\+O\+\_\+\+S\+T\+E\+R\+E\+O\+\_\+\+M\+I\+X\+E\+R\+\_\+2\+\_\+\+T\+O\+\_\+1\+\_\+L@{\+\_\+\+W\+A\+S\+A\+P\+I\+\_\+\+M\+O\+N\+O\+\_\+\+T\+O\+\_\+\+S\+T\+E\+R\+E\+O\+\_\+\+M\+I\+X\+E\+R\+\_\+2\+\_\+\+T\+O\+\_\+1\+\_\+L}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{\+\_\+\+W\+A\+S\+A\+P\+I\+\_\+\+M\+O\+N\+O\+\_\+\+T\+O\+\_\+\+S\+T\+E\+R\+E\+O\+\_\+\+M\+I\+X\+E\+R\+\_\+2\+\_\+\+T\+O\+\_\+1\+\_\+L}{_WASAPI_MONO_TO_STEREO_MIXER_2_TO_1_L}}]{\setlength{\rightskip}{0pt plus 5cm}\#define \+\_\+\+W\+A\+S\+A\+P\+I\+\_\+\+M\+O\+N\+O\+\_\+\+T\+O\+\_\+\+S\+T\+E\+R\+E\+O\+\_\+\+M\+I\+X\+E\+R\+\_\+2\+\_\+\+T\+O\+\_\+1\+\_\+L(
+\begin{DoxyParamCaption}
+\item[{}]{T\+Y\+PE}
+\end{DoxyParamCaption}
+)}\hypertarget{pa__win__wasapi_8c_aa55d5cb14030dd39ad1e24a82216f71b}{}\label{pa__win__wasapi_8c_aa55d5cb14030dd39ad1e24a82216f71b}
+{\bfseries Value\+:}
+\begin{DoxyCode}
+TYPE * \hyperlink{cdefs_8h_a4127c12268159bf73f8e69b23c34c610}{\_\_restrict} to   = (TYPE *)\_\_to;\(\backslash\)
+    TYPE * \hyperlink{cdefs_8h_a4127c12268159bf73f8e69b23c34c610}{\_\_restrict} \hyperlink{nasm_8h_a5f350118b553429484632e5603292389}{from} = (TYPE *)\_\_from;\(\backslash\)
+    TYPE * \hyperlink{cdefs_8h_a4127c12268159bf73f8e69b23c34c610}{\_\_restrict} \hyperlink{convtest_8m_afb358f48b1646c750fb9da6c6585be2b}{end}  = to + \hyperlink{cascade_8c_afea6e77db19a2f8c91419904fe665a3a}{count};\(\backslash\)
+    while (to != \hyperlink{convtest_8m_afb358f48b1646c750fb9da6c6585be2b}{end})\(\backslash\)
+    \{\(\backslash\)
+        *to ++ = \hyperlink{nasm_8h_a5f350118b553429484632e5603292389}{from}[0];\hyperlink{nasm_8h_a5f350118b553429484632e5603292389}{\(\backslash\)}
+\hyperlink{nasm_8h_a5f350118b553429484632e5603292389}{        from} += 2;\(\backslash\)
+    \}
+\end{DoxyCode}
+
+
+Definition at line 1103 of file pa\+\_\+win\+\_\+wasapi.\+c.
+
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!\+\_\+\+W\+I\+N32\+\_\+\+W\+I\+N\+NT@{\+\_\+\+W\+I\+N32\+\_\+\+W\+I\+N\+NT}}
+\index{\+\_\+\+W\+I\+N32\+\_\+\+W\+I\+N\+NT@{\+\_\+\+W\+I\+N32\+\_\+\+W\+I\+N\+NT}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{\+\_\+\+W\+I\+N32\+\_\+\+W\+I\+N\+NT}{_WIN32_WINNT}}]{\setlength{\rightskip}{0pt plus 5cm}\#define \+\_\+\+W\+I\+N32\+\_\+\+W\+I\+N\+NT~{\bf W\+I\+N\+V\+ER}}\hypertarget{pa__win__wasapi_8c_ac50762666aa00bd3a4308158510f1748}{}\label{pa__win__wasapi_8c_ac50762666aa00bd3a4308158510f1748}
+
+
+Definition at line 85 of file pa\+\_\+win\+\_\+wasapi.\+c.
+
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!A\+U\+D\+C\+L\+N\+T\+\_\+\+E\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+E\+R\+R\+OR@{A\+U\+D\+C\+L\+N\+T\+\_\+\+E\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+E\+R\+R\+OR}}
+\index{A\+U\+D\+C\+L\+N\+T\+\_\+\+E\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+E\+R\+R\+OR@{A\+U\+D\+C\+L\+N\+T\+\_\+\+E\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+E\+R\+R\+OR}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{A\+U\+D\+C\+L\+N\+T\+\_\+\+E\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+E\+R\+R\+OR}{AUDCLNT_E_BUFFER_ERROR}}]{\setlength{\rightskip}{0pt plus 5cm}\#define A\+U\+D\+C\+L\+N\+T\+\_\+\+E\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+E\+R\+R\+OR~{\bf A\+U\+D\+C\+L\+N\+T\+\_\+\+E\+RR}(0x018)}\hypertarget{pa__win__wasapi_8c_a8fb76fb0aad37662875d8c84422b7d7d}{}\label{pa__win__wasapi_8c_a8fb76fb0aad37662875d8c84422b7d7d}
+
+
+Definition at line 233 of file pa\+\_\+win\+\_\+wasapi.\+c.
+
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!A\+U\+D\+C\+L\+N\+T\+\_\+\+E\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+S\+I\+Z\+E\+\_\+\+N\+O\+T\+\_\+\+A\+L\+I\+G\+N\+ED@{A\+U\+D\+C\+L\+N\+T\+\_\+\+E\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+S\+I\+Z\+E\+\_\+\+N\+O\+T\+\_\+\+A\+L\+I\+G\+N\+ED}}
+\index{A\+U\+D\+C\+L\+N\+T\+\_\+\+E\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+S\+I\+Z\+E\+\_\+\+N\+O\+T\+\_\+\+A\+L\+I\+G\+N\+ED@{A\+U\+D\+C\+L\+N\+T\+\_\+\+E\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+S\+I\+Z\+E\+\_\+\+N\+O\+T\+\_\+\+A\+L\+I\+G\+N\+ED}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{A\+U\+D\+C\+L\+N\+T\+\_\+\+E\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+S\+I\+Z\+E\+\_\+\+N\+O\+T\+\_\+\+A\+L\+I\+G\+N\+ED}{AUDCLNT_E_BUFFER_SIZE_NOT_ALIGNED}}]{\setlength{\rightskip}{0pt plus 5cm}\#define A\+U\+D\+C\+L\+N\+T\+\_\+\+E\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+S\+I\+Z\+E\+\_\+\+N\+O\+T\+\_\+\+A\+L\+I\+G\+N\+ED~{\bf A\+U\+D\+C\+L\+N\+T\+\_\+\+E\+RR}(0x019)}\hypertarget{pa__win__wasapi_8c_a7d7f5a942a92bc351ee138fb96551d6f}{}\label{pa__win__wasapi_8c_a7d7f5a942a92bc351ee138fb96551d6f}
+
+
+Definition at line 236 of file pa\+\_\+win\+\_\+wasapi.\+c.
+
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!A\+U\+D\+C\+L\+N\+T\+\_\+\+E\+\_\+\+I\+N\+V\+A\+L\+I\+D\+\_\+\+D\+E\+V\+I\+C\+E\+\_\+\+P\+E\+R\+I\+OD@{A\+U\+D\+C\+L\+N\+T\+\_\+\+E\+\_\+\+I\+N\+V\+A\+L\+I\+D\+\_\+\+D\+E\+V\+I\+C\+E\+\_\+\+P\+E\+R\+I\+OD}}
+\index{A\+U\+D\+C\+L\+N\+T\+\_\+\+E\+\_\+\+I\+N\+V\+A\+L\+I\+D\+\_\+\+D\+E\+V\+I\+C\+E\+\_\+\+P\+E\+R\+I\+OD@{A\+U\+D\+C\+L\+N\+T\+\_\+\+E\+\_\+\+I\+N\+V\+A\+L\+I\+D\+\_\+\+D\+E\+V\+I\+C\+E\+\_\+\+P\+E\+R\+I\+OD}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{A\+U\+D\+C\+L\+N\+T\+\_\+\+E\+\_\+\+I\+N\+V\+A\+L\+I\+D\+\_\+\+D\+E\+V\+I\+C\+E\+\_\+\+P\+E\+R\+I\+OD}{AUDCLNT_E_INVALID_DEVICE_PERIOD}}]{\setlength{\rightskip}{0pt plus 5cm}\#define A\+U\+D\+C\+L\+N\+T\+\_\+\+E\+\_\+\+I\+N\+V\+A\+L\+I\+D\+\_\+\+D\+E\+V\+I\+C\+E\+\_\+\+P\+E\+R\+I\+OD~{\bf A\+U\+D\+C\+L\+N\+T\+\_\+\+E\+RR}(0x020)}\hypertarget{pa__win__wasapi_8c_afa7cffa38411eb69296e902cfda00b22}{}\label{pa__win__wasapi_8c_afa7cffa38411eb69296e902cfda00b22}
+
+
+Definition at line 239 of file pa\+\_\+win\+\_\+wasapi.\+c.
+
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!C\+O\+B\+J\+M\+A\+C\+R\+OS@{C\+O\+B\+J\+M\+A\+C\+R\+OS}}
+\index{C\+O\+B\+J\+M\+A\+C\+R\+OS@{C\+O\+B\+J\+M\+A\+C\+R\+OS}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{C\+O\+B\+J\+M\+A\+C\+R\+OS}{COBJMACROS}}]{\setlength{\rightskip}{0pt plus 5cm}\#define C\+O\+B\+J\+M\+A\+C\+R\+OS}\hypertarget{pa__win__wasapi_8c_a8dbf8c07441f5b076bfc6eea06513cb7}{}\label{pa__win__wasapi_8c_a8dbf8c07441f5b076bfc6eea06513cb7}
+
+
+Definition at line 152 of file pa\+\_\+win\+\_\+wasapi.\+c.
+
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!C\+R\+E\+A\+T\+E\+\_\+\+T\+H\+R\+E\+AD@{C\+R\+E\+A\+T\+E\+\_\+\+T\+H\+R\+E\+AD}}
+\index{C\+R\+E\+A\+T\+E\+\_\+\+T\+H\+R\+E\+AD@{C\+R\+E\+A\+T\+E\+\_\+\+T\+H\+R\+E\+AD}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{C\+R\+E\+A\+T\+E\+\_\+\+T\+H\+R\+E\+AD}{CREATE_THREAD}}]{\setlength{\rightskip}{0pt plus 5cm}\#define C\+R\+E\+A\+T\+E\+\_\+\+T\+H\+R\+E\+AD(
+\begin{DoxyParamCaption}
+\item[{}]{P\+R\+OC}
+\end{DoxyParamCaption}
+)~({\bf H\+A\+N\+D\+LE})\+\_\+beginthreadex( {\bf N\+U\+LL}, 0, (P\+R\+OC), stream, 0, \&stream-\/$>$dw\+Thread\+Id )}\hypertarget{pa__win__wasapi_8c_a0a9408819040e2ff021281f9e0971a35}{}\label{pa__win__wasapi_8c_a0a9408819040e2ff021281f9e0971a35}
+
+
+Definition at line 218 of file pa\+\_\+win\+\_\+wasapi.\+c.
+
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!G\+U\+I\+D\+\_\+\+S\+E\+CT@{G\+U\+I\+D\+\_\+\+S\+E\+CT}}
+\index{G\+U\+I\+D\+\_\+\+S\+E\+CT@{G\+U\+I\+D\+\_\+\+S\+E\+CT}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{G\+U\+I\+D\+\_\+\+S\+E\+CT}{GUID_SECT}}]{\setlength{\rightskip}{0pt plus 5cm}\#define G\+U\+I\+D\+\_\+\+S\+E\+CT}\hypertarget{pa__win__wasapi_8c_a979170f3a1187ea0059d94e632570a05}{}\label{pa__win__wasapi_8c_a979170f3a1187ea0059d94e632570a05}
+
+
+Definition at line 164 of file pa\+\_\+win\+\_\+wasapi.\+c.
+
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!H\+D\+A\+\_\+\+P\+A\+C\+K\+E\+T\+\_\+\+S\+I\+ZE@{H\+D\+A\+\_\+\+P\+A\+C\+K\+E\+T\+\_\+\+S\+I\+ZE}}
+\index{H\+D\+A\+\_\+\+P\+A\+C\+K\+E\+T\+\_\+\+S\+I\+ZE@{H\+D\+A\+\_\+\+P\+A\+C\+K\+E\+T\+\_\+\+S\+I\+ZE}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{H\+D\+A\+\_\+\+P\+A\+C\+K\+E\+T\+\_\+\+S\+I\+ZE}{HDA_PACKET_SIZE}}]{\setlength{\rightskip}{0pt plus 5cm}\#define H\+D\+A\+\_\+\+P\+A\+C\+K\+E\+T\+\_\+\+S\+I\+ZE~(128)}\hypertarget{pa__win__wasapi_8c_a6d765e6132c93a5601f277322ae4f98c}{}\label{pa__win__wasapi_8c_a6d765e6132c93a5601f277322ae4f98c}
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!I\+F\+\_\+\+F\+A\+I\+L\+E\+D\+\_\+\+I\+N\+T\+E\+R\+N\+A\+L\+\_\+\+E\+R\+R\+O\+R\+\_\+\+J\+U\+MP@{I\+F\+\_\+\+F\+A\+I\+L\+E\+D\+\_\+\+I\+N\+T\+E\+R\+N\+A\+L\+\_\+\+E\+R\+R\+O\+R\+\_\+\+J\+U\+MP}}
+\index{I\+F\+\_\+\+F\+A\+I\+L\+E\+D\+\_\+\+I\+N\+T\+E\+R\+N\+A\+L\+\_\+\+E\+R\+R\+O\+R\+\_\+\+J\+U\+MP@{I\+F\+\_\+\+F\+A\+I\+L\+E\+D\+\_\+\+I\+N\+T\+E\+R\+N\+A\+L\+\_\+\+E\+R\+R\+O\+R\+\_\+\+J\+U\+MP}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{I\+F\+\_\+\+F\+A\+I\+L\+E\+D\+\_\+\+I\+N\+T\+E\+R\+N\+A\+L\+\_\+\+E\+R\+R\+O\+R\+\_\+\+J\+U\+MP}{IF_FAILED_INTERNAL_ERROR_JUMP}}]{\setlength{\rightskip}{0pt plus 5cm}\#define I\+F\+\_\+\+F\+A\+I\+L\+E\+D\+\_\+\+I\+N\+T\+E\+R\+N\+A\+L\+\_\+\+E\+R\+R\+O\+R\+\_\+\+J\+U\+MP(
+\begin{DoxyParamCaption}
+\item[{}]{hr, }
+\item[{}]{{\bf error}, }
+\item[{}]{{\bf label}}
+\end{DoxyParamCaption}
+)~{\bf if}(F\+A\+I\+L\+ED(hr)) \{ {\bf error} = {\bf pa\+Internal\+Error}; goto {\bf label}; \}}\hypertarget{pa__win__wasapi_8c_a6ab838f91461092984ade025965e713e}{}\label{pa__win__wasapi_8c_a6ab838f91461092984ade025965e713e}
+
+
+Definition at line 265 of file pa\+\_\+win\+\_\+wasapi.\+c.
+
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!I\+F\+\_\+\+F\+A\+I\+L\+E\+D\+\_\+\+J\+U\+MP@{I\+F\+\_\+\+F\+A\+I\+L\+E\+D\+\_\+\+J\+U\+MP}}
+\index{I\+F\+\_\+\+F\+A\+I\+L\+E\+D\+\_\+\+J\+U\+MP@{I\+F\+\_\+\+F\+A\+I\+L\+E\+D\+\_\+\+J\+U\+MP}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{I\+F\+\_\+\+F\+A\+I\+L\+E\+D\+\_\+\+J\+U\+MP}{IF_FAILED_JUMP}}]{\setlength{\rightskip}{0pt plus 5cm}\#define I\+F\+\_\+\+F\+A\+I\+L\+E\+D\+\_\+\+J\+U\+MP(
+\begin{DoxyParamCaption}
+\item[{}]{hr, }
+\item[{}]{{\bf label}}
+\end{DoxyParamCaption}
+)~{\bf if}(F\+A\+I\+L\+ED(hr)) goto {\bf label};}\hypertarget{pa__win__wasapi_8c_a1e9952fda08455274b0399512ddd1830}{}\label{pa__win__wasapi_8c_a1e9952fda08455274b0399512ddd1830}
+
+
+Definition at line 261 of file pa\+\_\+win\+\_\+wasapi.\+c.
+
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!I\+N\+I\+T\+G\+U\+ID@{I\+N\+I\+T\+G\+U\+ID}}
+\index{I\+N\+I\+T\+G\+U\+ID@{I\+N\+I\+T\+G\+U\+ID}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{I\+N\+I\+T\+G\+U\+ID}{INITGUID}}]{\setlength{\rightskip}{0pt plus 5cm}\#define I\+N\+I\+T\+G\+U\+ID}\hypertarget{pa__win__wasapi_8c_af11aade3f3741fb554915d10d3f514eb}{}\label{pa__win__wasapi_8c_af11aade3f3741fb554915d10d3f514eb}
+
+
+Definition at line 153 of file pa\+\_\+win\+\_\+wasapi.\+c.
+
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!Log\+Host\+Error@{Log\+Host\+Error}}
+\index{Log\+Host\+Error@{Log\+Host\+Error}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{Log\+Host\+Error}{LogHostError}}]{\setlength{\rightskip}{0pt plus 5cm}\#define Log\+Host\+Error(
+\begin{DoxyParamCaption}
+\item[{}]{H\+R\+ES}
+\end{DoxyParamCaption}
+)~\+\_\+\+\_\+\+Log\+Host\+Error(H\+R\+ES, \+\_\+\+\_\+\+F\+U\+N\+C\+T\+I\+O\+N\+\_\+\+\_\+, \+\_\+\+\_\+\+F\+I\+L\+E\+\_\+\+\_\+, \+\_\+\+\_\+\+L\+I\+N\+E\+\_\+\+\_\+)}\hypertarget{pa__win__wasapi_8c_a5dfbea2594297c34125d552ea1338244}{}\label{pa__win__wasapi_8c_a5dfbea2594297c34125d552ea1338244}
+
+
+Definition at line 553 of file pa\+\_\+win\+\_\+wasapi.\+c.
+
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!Log\+Pa\+Error@{Log\+Pa\+Error}}
+\index{Log\+Pa\+Error@{Log\+Pa\+Error}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{Log\+Pa\+Error}{LogPaError}}]{\setlength{\rightskip}{0pt plus 5cm}\#define Log\+Pa\+Error(
+\begin{DoxyParamCaption}
+\item[{}]{P\+A\+E\+RR}
+\end{DoxyParamCaption}
+)~\+\_\+\+\_\+\+Log\+Pa\+Error(P\+A\+E\+RR, \+\_\+\+\_\+\+F\+U\+N\+C\+T\+I\+O\+N\+\_\+\+\_\+, \+\_\+\+\_\+\+F\+I\+L\+E\+\_\+\+\_\+, \+\_\+\+\_\+\+L\+I\+N\+E\+\_\+\+\_\+)}\hypertarget{pa__win__wasapi_8c_a633e8a11ad96f367826d8cadb02236c2}{}\label{pa__win__wasapi_8c_a633e8a11ad96f367826d8cadb02236c2}
+
+
+Definition at line 605 of file pa\+\_\+win\+\_\+wasapi.\+c.
+
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!M\+A\+X\+\_\+\+S\+T\+R\+\_\+\+L\+EN@{M\+A\+X\+\_\+\+S\+T\+R\+\_\+\+L\+EN}}
+\index{M\+A\+X\+\_\+\+S\+T\+R\+\_\+\+L\+EN@{M\+A\+X\+\_\+\+S\+T\+R\+\_\+\+L\+EN}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{M\+A\+X\+\_\+\+S\+T\+R\+\_\+\+L\+EN}{MAX_STR_LEN}}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+A\+X\+\_\+\+S\+T\+R\+\_\+\+L\+EN~512}\hypertarget{pa__win__wasapi_8c_a58ce36916c399104e18d32ff090f21c6}{}\label{pa__win__wasapi_8c_a58ce36916c399104e18d32ff090f21c6}
+
+
+Definition at line 242 of file pa\+\_\+win\+\_\+wasapi.\+c.
+
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!N\+O\+N\+A\+M\+E\+L\+E\+S\+S\+U\+N\+I\+ON@{N\+O\+N\+A\+M\+E\+L\+E\+S\+S\+U\+N\+I\+ON}}
+\index{N\+O\+N\+A\+M\+E\+L\+E\+S\+S\+U\+N\+I\+ON@{N\+O\+N\+A\+M\+E\+L\+E\+S\+S\+U\+N\+I\+ON}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{N\+O\+N\+A\+M\+E\+L\+E\+S\+S\+U\+N\+I\+ON}{NONAMELESSUNION}}]{\setlength{\rightskip}{0pt plus 5cm}\#define N\+O\+N\+A\+M\+E\+L\+E\+S\+S\+U\+N\+I\+ON}\hypertarget{pa__win__wasapi_8c_af1ecaf25e5207f6c04582d5081d99b00}{}\label{pa__win__wasapi_8c_af1ecaf25e5207f6c04582d5081d99b00}
+
+
+Definition at line 135 of file pa\+\_\+win\+\_\+wasapi.\+c.
+
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!P\+A\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+C\+L\+S\+ID@{P\+A\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+C\+L\+S\+ID}}
+\index{P\+A\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+C\+L\+S\+ID@{P\+A\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+C\+L\+S\+ID}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{P\+A\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+C\+L\+S\+ID}{PA_DEFINE_CLSID}}]{\setlength{\rightskip}{0pt plus 5cm}\#define P\+A\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+C\+L\+S\+ID(
+\begin{DoxyParamCaption}
+\item[{}]{class\+Name, }
+\item[{}]{{\bf l}, }
+\item[{}]{w1, }
+\item[{}]{w2, }
+\item[{}]{b1, }
+\item[{}]{b2, }
+\item[{}]{b3, }
+\item[{}]{b4, }
+\item[{}]{b5, }
+\item[{}]{b6, }
+\item[{}]{b7, }
+\item[{}]{b8}
+\end{DoxyParamCaption}
+)~{\bf \+\_\+\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+C\+L\+S\+ID}(pa\+\_\+\+C\+L\+S\+I\+D\+\_\+\#\#class\+Name, 0x\#\#l, 0x\#\#w1, 0x\#\#w2, 0x\#\#b1, 0x\#\#b2, 0x\#\#b3, 0x\#\#b4, 0x\#\#b5, 0x\#\#b6, 0x\#\#b7, 0x\#\#b8)}\hypertarget{pa__win__wasapi_8c_a76de14f466267894ffd0f226ec89911d}{}\label{pa__win__wasapi_8c_a76de14f466267894ffd0f226ec89911d}
+
+
+Definition at line 170 of file pa\+\_\+win\+\_\+wasapi.\+c.
+
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!P\+A\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+I\+ID@{P\+A\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+I\+ID}}
+\index{P\+A\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+I\+ID@{P\+A\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+I\+ID}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{P\+A\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+I\+ID}{PA_DEFINE_IID}}]{\setlength{\rightskip}{0pt plus 5cm}\#define P\+A\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+I\+ID(
+\begin{DoxyParamCaption}
+\item[{}]{interface\+Name, }
+\item[{}]{{\bf l}, }
+\item[{}]{w1, }
+\item[{}]{w2, }
+\item[{}]{b1, }
+\item[{}]{b2, }
+\item[{}]{b3, }
+\item[{}]{b4, }
+\item[{}]{b5, }
+\item[{}]{b6, }
+\item[{}]{b7, }
+\item[{}]{b8}
+\end{DoxyParamCaption}
+)~{\bf \+\_\+\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+I\+ID}(pa\+\_\+\+I\+I\+D\+\_\+\#\#interface\+Name, 0x\#\#l, 0x\#\#w1, 0x\#\#w2, 0x\#\#b1, 0x\#\#b2, 0x\#\#b3, 0x\#\#b4, 0x\#\#b5, 0x\#\#b6, 0x\#\#b7, 0x\#\#b8)}\hypertarget{pa__win__wasapi_8c_aca414f4cad142fa0dd6cd229095fcac2}{}\label{pa__win__wasapi_8c_aca414f4cad142fa0dd6cd229095fcac2}
+
+
+Definition at line 172 of file pa\+\_\+win\+\_\+wasapi.\+c.
+
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!P\+A\+\_\+\+S\+K\+E\+L\+E\+T\+O\+N\+\_\+\+S\+E\+T\+\_\+\+L\+A\+S\+T\+\_\+\+H\+O\+S\+T\+\_\+\+E\+R\+R\+OR@{P\+A\+\_\+\+S\+K\+E\+L\+E\+T\+O\+N\+\_\+\+S\+E\+T\+\_\+\+L\+A\+S\+T\+\_\+\+H\+O\+S\+T\+\_\+\+E\+R\+R\+OR}}
+\index{P\+A\+\_\+\+S\+K\+E\+L\+E\+T\+O\+N\+\_\+\+S\+E\+T\+\_\+\+L\+A\+S\+T\+\_\+\+H\+O\+S\+T\+\_\+\+E\+R\+R\+OR@{P\+A\+\_\+\+S\+K\+E\+L\+E\+T\+O\+N\+\_\+\+S\+E\+T\+\_\+\+L\+A\+S\+T\+\_\+\+H\+O\+S\+T\+\_\+\+E\+R\+R\+OR}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{P\+A\+\_\+\+S\+K\+E\+L\+E\+T\+O\+N\+\_\+\+S\+E\+T\+\_\+\+L\+A\+S\+T\+\_\+\+H\+O\+S\+T\+\_\+\+E\+R\+R\+OR}{PA_SKELETON_SET_LAST_HOST_ERROR}}]{\setlength{\rightskip}{0pt plus 5cm}\#define P\+A\+\_\+\+S\+K\+E\+L\+E\+T\+O\+N\+\_\+\+S\+E\+T\+\_\+\+L\+A\+S\+T\+\_\+\+H\+O\+S\+T\+\_\+\+E\+R\+R\+OR(
+\begin{DoxyParamCaption}
+\item[{}]{{\bf error\+Code}, }
+\item[{}]{error\+Text}
+\end{DoxyParamCaption}
+)~{\bf Pa\+Util\+\_\+\+Set\+Last\+Host\+Error\+Info}( {\bf pa\+W\+A\+S\+A\+PI}, {\bf error\+Code}, error\+Text )}\hypertarget{pa__win__wasapi_8c_a771580ff4e4b9a948ebd1fb0fc9f17d7}{}\label{pa__win__wasapi_8c_a771580ff4e4b9a948ebd1fb0fc9f17d7}
+
+
+Definition at line 255 of file pa\+\_\+win\+\_\+wasapi.\+c.
+
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!P\+A\+\_\+\+T\+H\+R\+E\+A\+D\+\_\+\+F\+U\+NC@{P\+A\+\_\+\+T\+H\+R\+E\+A\+D\+\_\+\+F\+U\+NC}}
+\index{P\+A\+\_\+\+T\+H\+R\+E\+A\+D\+\_\+\+F\+U\+NC@{P\+A\+\_\+\+T\+H\+R\+E\+A\+D\+\_\+\+F\+U\+NC}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{P\+A\+\_\+\+T\+H\+R\+E\+A\+D\+\_\+\+F\+U\+NC}{PA_THREAD_FUNC}}]{\setlength{\rightskip}{0pt plus 5cm}\#define P\+A\+\_\+\+T\+H\+R\+E\+A\+D\+\_\+\+F\+U\+NC~static unsigned {\bf W\+I\+N\+A\+PI}}\hypertarget{pa__win__wasapi_8c_ad744bd36cb3631b1dc11beb41dcc238c}{}\label{pa__win__wasapi_8c_ad744bd36cb3631b1dc11beb41dcc238c}
+
+
+Definition at line 219 of file pa\+\_\+win\+\_\+wasapi.\+c.
+
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!P\+A\+\_\+\+T\+H\+R\+E\+A\+D\+\_\+\+ID@{P\+A\+\_\+\+T\+H\+R\+E\+A\+D\+\_\+\+ID}}
+\index{P\+A\+\_\+\+T\+H\+R\+E\+A\+D\+\_\+\+ID@{P\+A\+\_\+\+T\+H\+R\+E\+A\+D\+\_\+\+ID}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{P\+A\+\_\+\+T\+H\+R\+E\+A\+D\+\_\+\+ID}{PA_THREAD_ID}}]{\setlength{\rightskip}{0pt plus 5cm}\#define P\+A\+\_\+\+T\+H\+R\+E\+A\+D\+\_\+\+ID~unsigned}\hypertarget{pa__win__wasapi_8c_af90ebf49f32d984f4cea06ca90506e40}{}\label{pa__win__wasapi_8c_af90ebf49f32d984f4cea06ca90506e40}
+
+
+Definition at line 220 of file pa\+\_\+win\+\_\+wasapi.\+c.
+
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!P\+A\+\_\+\+W\+A\+S\+A\+P\+I\+\_\+\+\_\+\+I\+S\+\_\+\+F\+U\+L\+L\+D\+U\+P\+L\+EX@{P\+A\+\_\+\+W\+A\+S\+A\+P\+I\+\_\+\+\_\+\+I\+S\+\_\+\+F\+U\+L\+L\+D\+U\+P\+L\+EX}}
+\index{P\+A\+\_\+\+W\+A\+S\+A\+P\+I\+\_\+\+\_\+\+I\+S\+\_\+\+F\+U\+L\+L\+D\+U\+P\+L\+EX@{P\+A\+\_\+\+W\+A\+S\+A\+P\+I\+\_\+\+\_\+\+I\+S\+\_\+\+F\+U\+L\+L\+D\+U\+P\+L\+EX}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{P\+A\+\_\+\+W\+A\+S\+A\+P\+I\+\_\+\+\_\+\+I\+S\+\_\+\+F\+U\+L\+L\+D\+U\+P\+L\+EX}{PA_WASAPI__IS_FULLDUPLEX}}]{\setlength{\rightskip}{0pt plus 5cm}\#define P\+A\+\_\+\+W\+A\+S\+A\+P\+I\+\_\+\+\_\+\+I\+S\+\_\+\+F\+U\+L\+L\+D\+U\+P\+L\+EX(
+\begin{DoxyParamCaption}
+\item[{}]{{\bf S\+T\+R\+E\+AM}}
+\end{DoxyParamCaption}
+)~(({\bf S\+T\+R\+E\+AM})-\/$>$in.\+client\+Proc \&\& ({\bf S\+T\+R\+E\+AM})-\/$>$out.\+client\+Proc)}\hypertarget{pa__win__wasapi_8c_af46190c73acf456c64118d4df2afd503}{}\label{pa__win__wasapi_8c_af46190c73acf456c64118d4df2afd503}
+
+
+Definition at line 258 of file pa\+\_\+win\+\_\+wasapi.\+c.
+
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!P\+R\+I\+NT@{P\+R\+I\+NT}}
+\index{P\+R\+I\+NT@{P\+R\+I\+NT}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{P\+R\+I\+NT}{PRINT}}]{\setlength{\rightskip}{0pt plus 5cm}\#define P\+R\+I\+NT(
+\begin{DoxyParamCaption}
+\item[{}]{x}
+\end{DoxyParamCaption}
+)~{\bf P\+A\+\_\+\+D\+E\+B\+UG}(x);}\hypertarget{pa__win__wasapi_8c_ad61844ab25ea35139950e67e9693bc9f}{}\label{pa__win__wasapi_8c_ad61844ab25ea35139950e67e9693bc9f}
+
+
+Definition at line 253 of file pa\+\_\+win\+\_\+wasapi.\+c.
+
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!P\+R\+O\+P\+E\+R\+T\+Y\+K\+E\+Y\+\_\+\+D\+E\+F\+I\+N\+ED@{P\+R\+O\+P\+E\+R\+T\+Y\+K\+E\+Y\+\_\+\+D\+E\+F\+I\+N\+ED}}
+\index{P\+R\+O\+P\+E\+R\+T\+Y\+K\+E\+Y\+\_\+\+D\+E\+F\+I\+N\+ED@{P\+R\+O\+P\+E\+R\+T\+Y\+K\+E\+Y\+\_\+\+D\+E\+F\+I\+N\+ED}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{P\+R\+O\+P\+E\+R\+T\+Y\+K\+E\+Y\+\_\+\+D\+E\+F\+I\+N\+ED}{PROPERTYKEY_DEFINED}}]{\setlength{\rightskip}{0pt plus 5cm}\#define P\+R\+O\+P\+E\+R\+T\+Y\+K\+E\+Y\+\_\+\+D\+E\+F\+I\+N\+ED}\hypertarget{pa__win__wasapi_8c_a7d2c965c2e6466eb96707b5034ccd693}{}\label{pa__win__wasapi_8c_a7d2c965c2e6466eb96707b5034ccd693}
+
+
+Definition at line 107 of file pa\+\_\+win\+\_\+wasapi.\+c.
+
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!R\+E\+F\+T\+I\+M\+E\+S\+\_\+\+P\+E\+R\+\_\+\+M\+I\+L\+L\+I\+S\+EC@{R\+E\+F\+T\+I\+M\+E\+S\+\_\+\+P\+E\+R\+\_\+\+M\+I\+L\+L\+I\+S\+EC}}
+\index{R\+E\+F\+T\+I\+M\+E\+S\+\_\+\+P\+E\+R\+\_\+\+M\+I\+L\+L\+I\+S\+EC@{R\+E\+F\+T\+I\+M\+E\+S\+\_\+\+P\+E\+R\+\_\+\+M\+I\+L\+L\+I\+S\+EC}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{R\+E\+F\+T\+I\+M\+E\+S\+\_\+\+P\+E\+R\+\_\+\+M\+I\+L\+L\+I\+S\+EC}{REFTIMES_PER_MILLISEC}}]{\setlength{\rightskip}{0pt plus 5cm}\#define R\+E\+F\+T\+I\+M\+E\+S\+\_\+\+P\+E\+R\+\_\+\+M\+I\+L\+L\+I\+S\+EC~10000}\hypertarget{pa__win__wasapi_8c_af9f1f980d99b0c1568771a74cd275f08}{}\label{pa__win__wasapi_8c_af9f1f980d99b0c1568771a74cd275f08}
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!R\+E\+F\+T\+I\+M\+E\+S\+\_\+\+P\+E\+R\+\_\+\+M\+I\+L\+L\+I\+S\+EC@{R\+E\+F\+T\+I\+M\+E\+S\+\_\+\+P\+E\+R\+\_\+\+M\+I\+L\+L\+I\+S\+EC}}
+\index{R\+E\+F\+T\+I\+M\+E\+S\+\_\+\+P\+E\+R\+\_\+\+M\+I\+L\+L\+I\+S\+EC@{R\+E\+F\+T\+I\+M\+E\+S\+\_\+\+P\+E\+R\+\_\+\+M\+I\+L\+L\+I\+S\+EC}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{R\+E\+F\+T\+I\+M\+E\+S\+\_\+\+P\+E\+R\+\_\+\+M\+I\+L\+L\+I\+S\+EC}{REFTIMES_PER_MILLISEC}}]{\setlength{\rightskip}{0pt plus 5cm}\#define R\+E\+F\+T\+I\+M\+E\+S\+\_\+\+P\+E\+R\+\_\+\+M\+I\+L\+L\+I\+S\+EC~10000}\hypertarget{pa__win__wasapi_8c_af9f1f980d99b0c1568771a74cd275f08}{}\label{pa__win__wasapi_8c_af9f1f980d99b0c1568771a74cd275f08}
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!R\+E\+F\+T\+I\+M\+E\+S\+\_\+\+P\+E\+R\+\_\+\+S\+EC@{R\+E\+F\+T\+I\+M\+E\+S\+\_\+\+P\+E\+R\+\_\+\+S\+EC}}
+\index{R\+E\+F\+T\+I\+M\+E\+S\+\_\+\+P\+E\+R\+\_\+\+S\+EC@{R\+E\+F\+T\+I\+M\+E\+S\+\_\+\+P\+E\+R\+\_\+\+S\+EC}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{R\+E\+F\+T\+I\+M\+E\+S\+\_\+\+P\+E\+R\+\_\+\+S\+EC}{REFTIMES_PER_SEC}}]{\setlength{\rightskip}{0pt plus 5cm}\#define R\+E\+F\+T\+I\+M\+E\+S\+\_\+\+P\+E\+R\+\_\+\+S\+EC~10000000}\hypertarget{pa__win__wasapi_8c_a920e4c6a2c837ff4374cf5eb69a554eb}{}\label{pa__win__wasapi_8c_a920e4c6a2c837ff4374cf5eb69a554eb}
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!R\+E\+F\+T\+I\+M\+E\+S\+\_\+\+P\+E\+R\+\_\+\+S\+EC@{R\+E\+F\+T\+I\+M\+E\+S\+\_\+\+P\+E\+R\+\_\+\+S\+EC}}
+\index{R\+E\+F\+T\+I\+M\+E\+S\+\_\+\+P\+E\+R\+\_\+\+S\+EC@{R\+E\+F\+T\+I\+M\+E\+S\+\_\+\+P\+E\+R\+\_\+\+S\+EC}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{R\+E\+F\+T\+I\+M\+E\+S\+\_\+\+P\+E\+R\+\_\+\+S\+EC}{REFTIMES_PER_SEC}}]{\setlength{\rightskip}{0pt plus 5cm}\#define R\+E\+F\+T\+I\+M\+E\+S\+\_\+\+P\+E\+R\+\_\+\+S\+EC~10000000}\hypertarget{pa__win__wasapi_8c_a920e4c6a2c837ff4374cf5eb69a554eb}{}\label{pa__win__wasapi_8c_a920e4c6a2c837ff4374cf5eb69a554eb}
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!S\+A\+F\+E\+\_\+\+C\+L\+O\+SE@{S\+A\+F\+E\+\_\+\+C\+L\+O\+SE}}
+\index{S\+A\+F\+E\+\_\+\+C\+L\+O\+SE@{S\+A\+F\+E\+\_\+\+C\+L\+O\+SE}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{S\+A\+F\+E\+\_\+\+C\+L\+O\+SE}{SAFE_CLOSE}}]{\setlength{\rightskip}{0pt plus 5cm}\#define S\+A\+F\+E\+\_\+\+C\+L\+O\+SE(
+\begin{DoxyParamCaption}
+\item[{}]{h}
+\end{DoxyParamCaption}
+)~{\bf if} ((h) != {\bf N\+U\+LL}) \{ Close\+Handle((h)); (h) = {\bf N\+U\+LL}; \}}\hypertarget{pa__win__wasapi_8c_ad951b4a0c360e7157d8229beea6c6336}{}\label{pa__win__wasapi_8c_ad951b4a0c360e7157d8229beea6c6336}
+
+
+Definition at line 268 of file pa\+\_\+win\+\_\+wasapi.\+c.
+
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!S\+A\+F\+E\+\_\+\+R\+E\+L\+E\+A\+SE@{S\+A\+F\+E\+\_\+\+R\+E\+L\+E\+A\+SE}}
+\index{S\+A\+F\+E\+\_\+\+R\+E\+L\+E\+A\+SE@{S\+A\+F\+E\+\_\+\+R\+E\+L\+E\+A\+SE}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{S\+A\+F\+E\+\_\+\+R\+E\+L\+E\+A\+SE}{SAFE_RELEASE}}]{\setlength{\rightskip}{0pt plus 5cm}\#define S\+A\+F\+E\+\_\+\+R\+E\+L\+E\+A\+SE(
+\begin{DoxyParamCaption}
+\item[{}]{punk}
+\end{DoxyParamCaption}
+)~{\bf if} ((punk) != {\bf N\+U\+LL}) \{ (punk)-\/$>$lp\+Vtbl-\/$>$Release((punk)); (punk) = {\bf N\+U\+LL}; \}}\hypertarget{pa__win__wasapi_8c_aaafc777c741d97e2d33f43fbdd949f2c}{}\label{pa__win__wasapi_8c_aaafc777c741d97e2d33f43fbdd949f2c}
+
+
+Definition at line 269 of file pa\+\_\+win\+\_\+wasapi.\+c.
+
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!S\+T\+A\+T\+I\+C\+\_\+\+A\+R\+R\+A\+Y\+\_\+\+S\+I\+ZE@{S\+T\+A\+T\+I\+C\+\_\+\+A\+R\+R\+A\+Y\+\_\+\+S\+I\+ZE}}
+\index{S\+T\+A\+T\+I\+C\+\_\+\+A\+R\+R\+A\+Y\+\_\+\+S\+I\+ZE@{S\+T\+A\+T\+I\+C\+\_\+\+A\+R\+R\+A\+Y\+\_\+\+S\+I\+ZE}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{S\+T\+A\+T\+I\+C\+\_\+\+A\+R\+R\+A\+Y\+\_\+\+S\+I\+ZE}{STATIC_ARRAY_SIZE}}]{\setlength{\rightskip}{0pt plus 5cm}\#define S\+T\+A\+T\+I\+C\+\_\+\+A\+R\+R\+A\+Y\+\_\+\+S\+I\+ZE(
+\begin{DoxyParamCaption}
+\item[{}]{array}
+\end{DoxyParamCaption}
+)~(sizeof(array)/sizeof(array\mbox{[}0\mbox{]}))}\hypertarget{pa__win__wasapi_8c_a1ffa289724d1c8dbeefe0116b976158e}{}\label{pa__win__wasapi_8c_a1ffa289724d1c8dbeefe0116b976158e}
+
+
+Definition at line 251 of file pa\+\_\+win\+\_\+wasapi.\+c.
+
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!W\+A\+V\+E\+\_\+\+F\+O\+R\+M\+A\+T\+\_\+\+I\+E\+E\+E\+\_\+\+F\+L\+O\+AT@{W\+A\+V\+E\+\_\+\+F\+O\+R\+M\+A\+T\+\_\+\+I\+E\+E\+E\+\_\+\+F\+L\+O\+AT}}
+\index{W\+A\+V\+E\+\_\+\+F\+O\+R\+M\+A\+T\+\_\+\+I\+E\+E\+E\+\_\+\+F\+L\+O\+AT@{W\+A\+V\+E\+\_\+\+F\+O\+R\+M\+A\+T\+\_\+\+I\+E\+E\+E\+\_\+\+F\+L\+O\+AT}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{W\+A\+V\+E\+\_\+\+F\+O\+R\+M\+A\+T\+\_\+\+I\+E\+E\+E\+\_\+\+F\+L\+O\+AT}{WAVE_FORMAT_IEEE_FLOAT}}]{\setlength{\rightskip}{0pt plus 5cm}\#define W\+A\+V\+E\+\_\+\+F\+O\+R\+M\+A\+T\+\_\+\+I\+E\+E\+E\+\_\+\+F\+L\+O\+AT~0x0003}\hypertarget{pa__win__wasapi_8c_a37d17ddda1e36eb0f54d80a946b897f0}{}\label{pa__win__wasapi_8c_a37d17ddda1e36eb0f54d80a946b897f0}
+
+
+Definition at line 139 of file pa\+\_\+win\+\_\+wasapi.\+c.
+
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!W\+I\+N32\+\_\+\+L\+E\+A\+N\+\_\+\+A\+N\+D\+\_\+\+M\+E\+AN@{W\+I\+N32\+\_\+\+L\+E\+A\+N\+\_\+\+A\+N\+D\+\_\+\+M\+E\+AN}}
+\index{W\+I\+N32\+\_\+\+L\+E\+A\+N\+\_\+\+A\+N\+D\+\_\+\+M\+E\+AN@{W\+I\+N32\+\_\+\+L\+E\+A\+N\+\_\+\+A\+N\+D\+\_\+\+M\+E\+AN}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{W\+I\+N32\+\_\+\+L\+E\+A\+N\+\_\+\+A\+N\+D\+\_\+\+M\+E\+AN}{WIN32_LEAN_AND_MEAN}}]{\setlength{\rightskip}{0pt plus 5cm}\#define W\+I\+N32\+\_\+\+L\+E\+A\+N\+\_\+\+A\+N\+D\+\_\+\+M\+E\+AN}\hypertarget{pa__win__wasapi_8c_ac7bef5d85e3dcd73eef56ad39ffc84a9}{}\label{pa__win__wasapi_8c_ac7bef5d85e3dcd73eef56ad39ffc84a9}
+
+
+Definition at line 45 of file pa\+\_\+win\+\_\+wasapi.\+c.
+
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!W\+I\+N\+V\+ER@{W\+I\+N\+V\+ER}}
+\index{W\+I\+N\+V\+ER@{W\+I\+N\+V\+ER}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{W\+I\+N\+V\+ER}{WINVER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define W\+I\+N\+V\+ER~0x0600}\hypertarget{pa__win__wasapi_8c_a966cd377b9f3fdeb1432460c33352af1}{}\label{pa__win__wasapi_8c_a966cd377b9f3fdeb1432460c33352af1}
+
+
+Definition at line 84 of file pa\+\_\+win\+\_\+wasapi.\+c.
+
+
+
+\subsection{Typedef Documentation}
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!A\+L\+I\+G\+N\+\_\+\+F\+U\+NC@{A\+L\+I\+G\+N\+\_\+\+F\+U\+NC}}
+\index{A\+L\+I\+G\+N\+\_\+\+F\+U\+NC@{A\+L\+I\+G\+N\+\_\+\+F\+U\+NC}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{A\+L\+I\+G\+N\+\_\+\+F\+U\+NC}{ALIGN_FUNC}}]{\setlength{\rightskip}{0pt plus 5cm}typedef U\+I\+N\+T32($\ast$ A\+L\+I\+G\+N\+\_\+\+F\+U\+NC) (U\+I\+N\+T32 v, U\+I\+N\+T32 align)}\hypertarget{pa__win__wasapi_8c_a949fa21ebe968b6a5a38bd434e5eb4f6}{}\label{pa__win__wasapi_8c_a949fa21ebe968b6a5a38bd434e5eb4f6}
+
+
+Definition at line 735 of file pa\+\_\+win\+\_\+wasapi.\+c.
+
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!A\+V\+R\+T\+\_\+\+P\+R\+I\+O\+R\+I\+TY@{A\+V\+R\+T\+\_\+\+P\+R\+I\+O\+R\+I\+TY}}
+\index{A\+V\+R\+T\+\_\+\+P\+R\+I\+O\+R\+I\+TY@{A\+V\+R\+T\+\_\+\+P\+R\+I\+O\+R\+I\+TY}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{A\+V\+R\+T\+\_\+\+P\+R\+I\+O\+R\+I\+TY}{AVRT_PRIORITY}}]{\setlength{\rightskip}{0pt plus 5cm}typedef {\bf A\+V\+R\+T\+\_\+\+P\+R\+I\+O\+R\+I\+TY}}\hypertarget{pa__win__wasapi_8c_a76e09a9c1d9b4d52236c93683cdd0a13}{}\label{pa__win__wasapi_8c_a76e09a9c1d9b4d52236c93683cdd0a13}
+
+
+Definition at line 280 of file pa\+\_\+win\+\_\+wasapi.\+c.
+
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!B\+Y\+T\+E\+\_\+\+B\+L\+OB@{B\+Y\+T\+E\+\_\+\+B\+L\+OB}}
+\index{B\+Y\+T\+E\+\_\+\+B\+L\+OB@{B\+Y\+T\+E\+\_\+\+B\+L\+OB}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{B\+Y\+T\+E\+\_\+\+B\+L\+OB}{BYTE_BLOB}}]{\setlength{\rightskip}{0pt plus 5cm}typedef struct {\bf \+\_\+\+B\+Y\+T\+E\+\_\+\+B\+L\+OB} 	 {\bf B\+Y\+T\+E\+\_\+\+B\+L\+OB}}\hypertarget{pa__win__wasapi_8c_a2fabb9f78551ca8cece2ae154336019c}{}\label{pa__win__wasapi_8c_a2fabb9f78551ca8cece2ae154336019c}
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!E\+Mixer\+Dir@{E\+Mixer\+Dir}}
+\index{E\+Mixer\+Dir@{E\+Mixer\+Dir}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{E\+Mixer\+Dir}{EMixerDir}}]{\setlength{\rightskip}{0pt plus 5cm}typedef enum {\bf E\+Mixer\+Dir}  {\bf E\+Mixer\+Dir}}\hypertarget{pa__win__wasapi_8c_a213e4b1a6f300932dad4df17045f46d2}{}\label{pa__win__wasapi_8c_a213e4b1a6f300932dad4df17045f46d2}
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!E\+Windows\+Version@{E\+Windows\+Version}}
+\index{E\+Windows\+Version@{E\+Windows\+Version}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{E\+Windows\+Version}{EWindowsVersion}}]{\setlength{\rightskip}{0pt plus 5cm}typedef enum {\bf E\+Windows\+Version}
+ {\bf E\+Windows\+Version}}\hypertarget{pa__win__wasapi_8c_a97486b2468e8463a8fb846b29dacb08b}{}\label{pa__win__wasapi_8c_a97486b2468e8463a8fb846b29dacb08b}
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!F\+Av\+Revert\+Mm\+Thread\+Characteristics@{F\+Av\+Revert\+Mm\+Thread\+Characteristics}}
+\index{F\+Av\+Revert\+Mm\+Thread\+Characteristics@{F\+Av\+Revert\+Mm\+Thread\+Characteristics}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{F\+Av\+Revert\+Mm\+Thread\+Characteristics}{FAvRevertMmThreadCharacteristics}}]{\setlength{\rightskip}{0pt plus 5cm}typedef {\bf B\+O\+OL}({\bf W\+I\+N\+A\+PI} $\ast$ F\+Av\+Revert\+Mm\+Thread\+Characteristics) ({\bf H\+A\+N\+D\+LE})}\hypertarget{pa__win__wasapi_8c_a00005277f6e80b50489b77a3641c50f3}{}\label{pa__win__wasapi_8c_a00005277f6e80b50489b77a3641c50f3}
+
+
+Definition at line 279 of file pa\+\_\+win\+\_\+wasapi.\+c.
+
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!L\+P\+C\+G\+U\+ID@{L\+P\+C\+G\+U\+ID}}
+\index{L\+P\+C\+G\+U\+ID@{L\+P\+C\+G\+U\+ID}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{L\+P\+C\+G\+U\+ID}{LPCGUID}}]{\setlength{\rightskip}{0pt plus 5cm}typedef {\bf const} G\+U\+ID$\ast$ {\bf L\+P\+C\+G\+U\+ID}}\hypertarget{pa__win__wasapi_8c_a9c061ab1f26db8746b3dab38991f48a0}{}\label{pa__win__wasapi_8c_a9c061ab1f26db8746b3dab38991f48a0}
+
+
+Definition at line 103 of file pa\+\_\+win\+\_\+wasapi.\+c.
+
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!Mix\+Mono\+To\+StereoF@{Mix\+Mono\+To\+StereoF}}
+\index{Mix\+Mono\+To\+StereoF@{Mix\+Mono\+To\+StereoF}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{Mix\+Mono\+To\+StereoF}{MixMonoToStereoF}}]{\setlength{\rightskip}{0pt plus 5cm}typedef {\bf void}($\ast$ Mix\+Mono\+To\+StereoF) ({\bf void} $\ast$\+\_\+\+\_\+to, {\bf void} $\ast$\+\_\+\+\_\+from, U\+I\+N\+T32 {\bf count})}\hypertarget{pa__win__wasapi_8c_ae15ae1737c49a3e379f0f418acff17e0}{}\label{pa__win__wasapi_8c_ae15ae1737c49a3e379f0f418acff17e0}
+
+
+Definition at line 272 of file pa\+\_\+win\+\_\+wasapi.\+c.
+
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!P\+A\+V\+R\+T\+\_\+\+P\+R\+I\+O\+R\+I\+TY@{P\+A\+V\+R\+T\+\_\+\+P\+R\+I\+O\+R\+I\+TY}}
+\index{P\+A\+V\+R\+T\+\_\+\+P\+R\+I\+O\+R\+I\+TY@{P\+A\+V\+R\+T\+\_\+\+P\+R\+I\+O\+R\+I\+TY}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{P\+A\+V\+R\+T\+\_\+\+P\+R\+I\+O\+R\+I\+TY}{PAVRT_PRIORITY}}]{\setlength{\rightskip}{0pt plus 5cm}typedef enum {\bf \+\_\+\+A\+V\+R\+T\+\_\+\+P\+R\+I\+O\+R\+I\+TY} $\ast$ {\bf P\+A\+V\+R\+T\+\_\+\+P\+R\+I\+O\+R\+I\+TY}}\hypertarget{pa__win__wasapi_8c_a37790f227e70ff2c3ca5254ccdbfae0f}{}\label{pa__win__wasapi_8c_a37790f227e70ff2c3ca5254ccdbfae0f}
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!Pa\+Wasapi\+Audio\+Client\+Params@{Pa\+Wasapi\+Audio\+Client\+Params}}
+\index{Pa\+Wasapi\+Audio\+Client\+Params@{Pa\+Wasapi\+Audio\+Client\+Params}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{Pa\+Wasapi\+Audio\+Client\+Params}{PaWasapiAudioClientParams}}]{\setlength{\rightskip}{0pt plus 5cm}typedef struct {\bf Pa\+Wasapi\+Audio\+Client\+Params}
+ {\bf Pa\+Wasapi\+Audio\+Client\+Params}}\hypertarget{pa__win__wasapi_8c_aa746eb234a17020894e1a831699a5abf}{}\label{pa__win__wasapi_8c_aa746eb234a17020894e1a831699a5abf}
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!Pa\+Wasapi\+Device\+Info@{Pa\+Wasapi\+Device\+Info}}
+\index{Pa\+Wasapi\+Device\+Info@{Pa\+Wasapi\+Device\+Info}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{Pa\+Wasapi\+Device\+Info}{PaWasapiDeviceInfo}}]{\setlength{\rightskip}{0pt plus 5cm}typedef struct {\bf Pa\+Wasapi\+Device\+Info}
+ {\bf Pa\+Wasapi\+Device\+Info}}\hypertarget{pa__win__wasapi_8c_a1feacb0ea15cada417d700941cb7a8c3}{}\label{pa__win__wasapi_8c_a1feacb0ea15cada417d700941cb7a8c3}
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!Pa\+Wasapi\+Host\+Processor@{Pa\+Wasapi\+Host\+Processor}}
+\index{Pa\+Wasapi\+Host\+Processor@{Pa\+Wasapi\+Host\+Processor}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{Pa\+Wasapi\+Host\+Processor}{PaWasapiHostProcessor}}]{\setlength{\rightskip}{0pt plus 5cm}typedef struct {\bf Pa\+Wasapi\+Host\+Processor}
+ {\bf Pa\+Wasapi\+Host\+Processor}}\hypertarget{pa__win__wasapi_8c_a5e948988d90c01dea08282c308a81e50}{}\label{pa__win__wasapi_8c_a5e948988d90c01dea08282c308a81e50}
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!Pa\+Wasapi\+Stream@{Pa\+Wasapi\+Stream}}
+\index{Pa\+Wasapi\+Stream@{Pa\+Wasapi\+Stream}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{Pa\+Wasapi\+Stream}{PaWasapiStream}}]{\setlength{\rightskip}{0pt plus 5cm}typedef struct {\bf Pa\+Wasapi\+Stream}
+ {\bf Pa\+Wasapi\+Stream}}\hypertarget{pa__win__wasapi_8c_aabfde10324faae7ee10e2d25ac11f655}{}\label{pa__win__wasapi_8c_aabfde10324faae7ee10e2d25ac11f655}
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!Pa\+Wasapi\+Sub\+Stream@{Pa\+Wasapi\+Sub\+Stream}}
+\index{Pa\+Wasapi\+Sub\+Stream@{Pa\+Wasapi\+Sub\+Stream}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{Pa\+Wasapi\+Sub\+Stream}{PaWasapiSubStream}}]{\setlength{\rightskip}{0pt plus 5cm}typedef struct {\bf Pa\+Wasapi\+Sub\+Stream}
+ {\bf Pa\+Wasapi\+Sub\+Stream}}\hypertarget{pa__win__wasapi_8c_adb52e1579b47dc7ae034deb3c0d9df1e}{}\label{pa__win__wasapi_8c_adb52e1579b47dc7ae034deb3c0d9df1e}
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!P\+L\+A\+R\+G\+E\+\_\+\+I\+N\+T\+E\+G\+ER@{P\+L\+A\+R\+G\+E\+\_\+\+I\+N\+T\+E\+G\+ER}}
+\index{P\+L\+A\+R\+G\+E\+\_\+\+I\+N\+T\+E\+G\+ER@{P\+L\+A\+R\+G\+E\+\_\+\+I\+N\+T\+E\+G\+ER}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{P\+L\+A\+R\+G\+E\+\_\+\+I\+N\+T\+E\+G\+ER}{PLARGE_INTEGER}}]{\setlength{\rightskip}{0pt plus 5cm}typedef {\bf P\+L\+A\+R\+G\+E\+\_\+\+I\+N\+T\+E\+G\+ER}}\hypertarget{pa__win__wasapi_8c_adcb5e65535b4cb03302e42da225b1d51}{}\label{pa__win__wasapi_8c_adcb5e65535b4cb03302e42da225b1d51}
+
+
+Definition at line 275 of file pa\+\_\+win\+\_\+wasapi.\+c.
+
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!P\+R\+O\+P\+E\+R\+T\+Y\+K\+EY@{P\+R\+O\+P\+E\+R\+T\+Y\+K\+EY}}
+\index{P\+R\+O\+P\+E\+R\+T\+Y\+K\+EY@{P\+R\+O\+P\+E\+R\+T\+Y\+K\+EY}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{P\+R\+O\+P\+E\+R\+T\+Y\+K\+EY}{PROPERTYKEY}}]{\setlength{\rightskip}{0pt plus 5cm}typedef struct {\bf \+\_\+tagpropertykey} 	 {\bf P\+R\+O\+P\+E\+R\+T\+Y\+K\+EY}}\hypertarget{pa__win__wasapi_8c_aa83c2fbe06e13eff5ff331ba4a302659}{}\label{pa__win__wasapi_8c_aa83c2fbe06e13eff5ff331ba4a302659}
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!R\+E\+F\+E\+R\+E\+N\+C\+E\+\_\+\+T\+I\+ME@{R\+E\+F\+E\+R\+E\+N\+C\+E\+\_\+\+T\+I\+ME}}
+\index{R\+E\+F\+E\+R\+E\+N\+C\+E\+\_\+\+T\+I\+ME@{R\+E\+F\+E\+R\+E\+N\+C\+E\+\_\+\+T\+I\+ME}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{R\+E\+F\+E\+R\+E\+N\+C\+E\+\_\+\+T\+I\+ME}{REFERENCE_TIME}}]{\setlength{\rightskip}{0pt plus 5cm}typedef L\+O\+N\+G\+L\+O\+NG {\bf R\+E\+F\+E\+R\+E\+N\+C\+E\+\_\+\+T\+I\+ME}}\hypertarget{pa__win__wasapi_8c_a83927f70641d4e9a344563bd9ddb15ae}{}\label{pa__win__wasapi_8c_a83927f70641d4e9a344563bd9ddb15ae}
+
+
+Definition at line 134 of file pa\+\_\+win\+\_\+wasapi.\+c.
+
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!Thread\+Idle\+Scheduler@{Thread\+Idle\+Scheduler}}
+\index{Thread\+Idle\+Scheduler@{Thread\+Idle\+Scheduler}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{Thread\+Idle\+Scheduler}{ThreadIdleScheduler}}]{\setlength{\rightskip}{0pt plus 5cm}typedef struct {\bf Thread\+Idle\+Scheduler}
+ {\bf Thread\+Idle\+Scheduler}}\hypertarget{pa__win__wasapi_8c_af54f7e1004799c3325dcbe28a9150a92}{}\label{pa__win__wasapi_8c_af54f7e1004799c3325dcbe28a9150a92}
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!U\+P\+\_\+\+B\+Y\+T\+E\+\_\+\+B\+L\+OB@{U\+P\+\_\+\+B\+Y\+T\+E\+\_\+\+B\+L\+OB}}
+\index{U\+P\+\_\+\+B\+Y\+T\+E\+\_\+\+B\+L\+OB@{U\+P\+\_\+\+B\+Y\+T\+E\+\_\+\+B\+L\+OB}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{U\+P\+\_\+\+B\+Y\+T\+E\+\_\+\+B\+L\+OB}{UP_BYTE_BLOB}}]{\setlength{\rightskip}{0pt plus 5cm}typedef {\bf \+\_\+\+\_\+\+R\+P\+C\+\_\+unique\+\_\+pointer} {\bf B\+Y\+T\+E\+\_\+\+B\+L\+OB}$\ast$ {\bf U\+P\+\_\+\+B\+Y\+T\+E\+\_\+\+B\+L\+OB}}\hypertarget{pa__win__wasapi_8c_afe91709fff40390914215d21253da001}{}\label{pa__win__wasapi_8c_afe91709fff40390914215d21253da001}
+
+
+Definition at line 133 of file pa\+\_\+win\+\_\+wasapi.\+c.
+
+
+
+\subsection{Enumeration Type Documentation}
+\subsubsection[{\texorpdfstring{anonymous enum}{anonymous enum}}]{\setlength{\rightskip}{0pt plus 5cm}anonymous enum}\hypertarget{pa__win__wasapi_8c_ad1df9dc2600f2dda7e99d31c00fd73e0}{}\label{pa__win__wasapi_8c_ad1df9dc2600f2dda7e99d31c00fd73e0}
+\begin{Desc}
+\item[Enumerator]\par
+\begin{description}
+\index{S\+\_\+\+I\+N\+P\+UT@{S\+\_\+\+I\+N\+P\+UT}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!S\+\_\+\+I\+N\+P\+UT@{S\+\_\+\+I\+N\+P\+UT}}\item[{\em 
+S\+\_\+\+I\+N\+P\+UT\hypertarget{pa__win__wasapi_8c_ad1df9dc2600f2dda7e99d31c00fd73e0a217b06ba7bf37ab6dc9d9751f1cf6b24}{}\label{pa__win__wasapi_8c_ad1df9dc2600f2dda7e99d31c00fd73e0a217b06ba7bf37ab6dc9d9751f1cf6b24}
+}]\index{S\+\_\+\+O\+U\+T\+P\+UT@{S\+\_\+\+O\+U\+T\+P\+UT}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!S\+\_\+\+O\+U\+T\+P\+UT@{S\+\_\+\+O\+U\+T\+P\+UT}}\item[{\em 
+S\+\_\+\+O\+U\+T\+P\+UT\hypertarget{pa__win__wasapi_8c_ad1df9dc2600f2dda7e99d31c00fd73e0a9c7ef9e6df306bfb79b635afee6c1adf}{}\label{pa__win__wasapi_8c_ad1df9dc2600f2dda7e99d31c00fd73e0a9c7ef9e6df306bfb79b635afee6c1adf}
+}]\index{S\+\_\+\+C\+O\+U\+NT@{S\+\_\+\+C\+O\+U\+NT}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!S\+\_\+\+C\+O\+U\+NT@{S\+\_\+\+C\+O\+U\+NT}}\item[{\em 
+S\+\_\+\+C\+O\+U\+NT\hypertarget{pa__win__wasapi_8c_ad1df9dc2600f2dda7e99d31c00fd73e0acac8c5a7329bfb86776b1d827f2f2e83}{}\label{pa__win__wasapi_8c_ad1df9dc2600f2dda7e99d31c00fd73e0acac8c5a7329bfb86776b1d827f2f2e83}
+}]\index{S\+\_\+\+F\+U\+L\+L\+D\+U\+P\+L\+EX@{S\+\_\+\+F\+U\+L\+L\+D\+U\+P\+L\+EX}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!S\+\_\+\+F\+U\+L\+L\+D\+U\+P\+L\+EX@{S\+\_\+\+F\+U\+L\+L\+D\+U\+P\+L\+EX}}\item[{\em 
+S\+\_\+\+F\+U\+L\+L\+D\+U\+P\+L\+EX\hypertarget{pa__win__wasapi_8c_ad1df9dc2600f2dda7e99d31c00fd73e0a973c488a4609f21d89d641b762de9fe7}{}\label{pa__win__wasapi_8c_ad1df9dc2600f2dda7e99d31c00fd73e0a973c488a4609f21d89d641b762de9fe7}
+}]\end{description}
+\end{Desc}
+
+
+Definition at line 244 of file pa\+\_\+win\+\_\+wasapi.\+c.
+
+\subsubsection[{\texorpdfstring{anonymous enum}{anonymous enum}}]{\setlength{\rightskip}{0pt plus 5cm}anonymous enum}\hypertarget{pa__win__wasapi_8c_a4eeeead548222804e141df8f1b205ca8}{}\label{pa__win__wasapi_8c_a4eeeead548222804e141df8f1b205ca8}
+\begin{Desc}
+\item[Enumerator]\par
+\begin{description}
+\index{W\+A\+S\+A\+P\+I\+\_\+\+P\+A\+C\+K\+E\+T\+S\+\_\+\+P\+E\+R\+\_\+\+I\+N\+P\+U\+T\+\_\+\+B\+U\+F\+F\+ER@{W\+A\+S\+A\+P\+I\+\_\+\+P\+A\+C\+K\+E\+T\+S\+\_\+\+P\+E\+R\+\_\+\+I\+N\+P\+U\+T\+\_\+\+B\+U\+F\+F\+ER}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!W\+A\+S\+A\+P\+I\+\_\+\+P\+A\+C\+K\+E\+T\+S\+\_\+\+P\+E\+R\+\_\+\+I\+N\+P\+U\+T\+\_\+\+B\+U\+F\+F\+ER@{W\+A\+S\+A\+P\+I\+\_\+\+P\+A\+C\+K\+E\+T\+S\+\_\+\+P\+E\+R\+\_\+\+I\+N\+P\+U\+T\+\_\+\+B\+U\+F\+F\+ER}}\item[{\em 
+W\+A\+S\+A\+P\+I\+\_\+\+P\+A\+C\+K\+E\+T\+S\+\_\+\+P\+E\+R\+\_\+\+I\+N\+P\+U\+T\+\_\+\+B\+U\+F\+F\+ER\hypertarget{pa__win__wasapi_8c_a4eeeead548222804e141df8f1b205ca8a7b6c7e83009a14df464dd680e87feaf2}{}\label{pa__win__wasapi_8c_a4eeeead548222804e141df8f1b205ca8a7b6c7e83009a14df464dd680e87feaf2}
+}]\end{description}
+\end{Desc}
+
+
+Definition at line 249 of file pa\+\_\+win\+\_\+wasapi.\+c.
+
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!\+\_\+\+A\+V\+R\+T\+\_\+\+P\+R\+I\+O\+R\+I\+TY@{\+\_\+\+A\+V\+R\+T\+\_\+\+P\+R\+I\+O\+R\+I\+TY}}
+\index{\+\_\+\+A\+V\+R\+T\+\_\+\+P\+R\+I\+O\+R\+I\+TY@{\+\_\+\+A\+V\+R\+T\+\_\+\+P\+R\+I\+O\+R\+I\+TY}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{\+\_\+\+A\+V\+R\+T\+\_\+\+P\+R\+I\+O\+R\+I\+TY}{_AVRT_PRIORITY}}]{\setlength{\rightskip}{0pt plus 5cm}enum {\bf \+\_\+\+A\+V\+R\+T\+\_\+\+P\+R\+I\+O\+R\+I\+TY}}\hypertarget{pa__win__wasapi_8c_add7d79439251a024ba77c19ad515b8f6}{}\label{pa__win__wasapi_8c_add7d79439251a024ba77c19ad515b8f6}
+\begin{Desc}
+\item[Enumerator]\par
+\begin{description}
+\index{A\+V\+R\+T\+\_\+\+P\+R\+I\+O\+R\+I\+T\+Y\+\_\+\+L\+OW@{A\+V\+R\+T\+\_\+\+P\+R\+I\+O\+R\+I\+T\+Y\+\_\+\+L\+OW}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!A\+V\+R\+T\+\_\+\+P\+R\+I\+O\+R\+I\+T\+Y\+\_\+\+L\+OW@{A\+V\+R\+T\+\_\+\+P\+R\+I\+O\+R\+I\+T\+Y\+\_\+\+L\+OW}}\item[{\em 
+A\+V\+R\+T\+\_\+\+P\+R\+I\+O\+R\+I\+T\+Y\+\_\+\+L\+OW\hypertarget{pa__win__wasapi_8c_add7d79439251a024ba77c19ad515b8f6a82f37aa1743cab1c69da7d5ff49d6a8a}{}\label{pa__win__wasapi_8c_add7d79439251a024ba77c19ad515b8f6a82f37aa1743cab1c69da7d5ff49d6a8a}
+}]\index{A\+V\+R\+T\+\_\+\+P\+R\+I\+O\+R\+I\+T\+Y\+\_\+\+N\+O\+R\+M\+AL@{A\+V\+R\+T\+\_\+\+P\+R\+I\+O\+R\+I\+T\+Y\+\_\+\+N\+O\+R\+M\+AL}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!A\+V\+R\+T\+\_\+\+P\+R\+I\+O\+R\+I\+T\+Y\+\_\+\+N\+O\+R\+M\+AL@{A\+V\+R\+T\+\_\+\+P\+R\+I\+O\+R\+I\+T\+Y\+\_\+\+N\+O\+R\+M\+AL}}\item[{\em 
+A\+V\+R\+T\+\_\+\+P\+R\+I\+O\+R\+I\+T\+Y\+\_\+\+N\+O\+R\+M\+AL\hypertarget{pa__win__wasapi_8c_add7d79439251a024ba77c19ad515b8f6a9ddb04ddf34535472b8f54f043d3a652}{}\label{pa__win__wasapi_8c_add7d79439251a024ba77c19ad515b8f6a9ddb04ddf34535472b8f54f043d3a652}
+}]\index{A\+V\+R\+T\+\_\+\+P\+R\+I\+O\+R\+I\+T\+Y\+\_\+\+H\+I\+GH@{A\+V\+R\+T\+\_\+\+P\+R\+I\+O\+R\+I\+T\+Y\+\_\+\+H\+I\+GH}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!A\+V\+R\+T\+\_\+\+P\+R\+I\+O\+R\+I\+T\+Y\+\_\+\+H\+I\+GH@{A\+V\+R\+T\+\_\+\+P\+R\+I\+O\+R\+I\+T\+Y\+\_\+\+H\+I\+GH}}\item[{\em 
+A\+V\+R\+T\+\_\+\+P\+R\+I\+O\+R\+I\+T\+Y\+\_\+\+H\+I\+GH\hypertarget{pa__win__wasapi_8c_add7d79439251a024ba77c19ad515b8f6a3d1e82a3e67940c08fff4233d7ec928f}{}\label{pa__win__wasapi_8c_add7d79439251a024ba77c19ad515b8f6a3d1e82a3e67940c08fff4233d7ec928f}
+}]\index{A\+V\+R\+T\+\_\+\+P\+R\+I\+O\+R\+I\+T\+Y\+\_\+\+C\+R\+I\+T\+I\+C\+AL@{A\+V\+R\+T\+\_\+\+P\+R\+I\+O\+R\+I\+T\+Y\+\_\+\+C\+R\+I\+T\+I\+C\+AL}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!A\+V\+R\+T\+\_\+\+P\+R\+I\+O\+R\+I\+T\+Y\+\_\+\+C\+R\+I\+T\+I\+C\+AL@{A\+V\+R\+T\+\_\+\+P\+R\+I\+O\+R\+I\+T\+Y\+\_\+\+C\+R\+I\+T\+I\+C\+AL}}\item[{\em 
+A\+V\+R\+T\+\_\+\+P\+R\+I\+O\+R\+I\+T\+Y\+\_\+\+C\+R\+I\+T\+I\+C\+AL\hypertarget{pa__win__wasapi_8c_add7d79439251a024ba77c19ad515b8f6a9868458188819915b729402bfa060ba2}{}\label{pa__win__wasapi_8c_add7d79439251a024ba77c19ad515b8f6a9868458188819915b729402bfa060ba2}
+}]\end{description}
+\end{Desc}
+
+
+Definition at line 88 of file pa\+\_\+win\+\_\+wasapi.\+c.
+
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!E\+Mixer\+Dir@{E\+Mixer\+Dir}}
+\index{E\+Mixer\+Dir@{E\+Mixer\+Dir}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{E\+Mixer\+Dir}{EMixerDir}}]{\setlength{\rightskip}{0pt plus 5cm}enum {\bf E\+Mixer\+Dir}}\hypertarget{pa__win__wasapi_8c_a779380620e3456d84f1eac21a0cd046c}{}\label{pa__win__wasapi_8c_a779380620e3456d84f1eac21a0cd046c}
+\begin{Desc}
+\item[Enumerator]\par
+\begin{description}
+\index{M\+I\+X\+\_\+\+D\+I\+R\+\_\+\+\_\+1\+T\+O2@{M\+I\+X\+\_\+\+D\+I\+R\+\_\+\+\_\+1\+T\+O2}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!M\+I\+X\+\_\+\+D\+I\+R\+\_\+\+\_\+1\+T\+O2@{M\+I\+X\+\_\+\+D\+I\+R\+\_\+\+\_\+1\+T\+O2}}\item[{\em 
+M\+I\+X\+\_\+\+D\+I\+R\+\_\+\+\_\+1\+T\+O2\hypertarget{pa__win__wasapi_8c_a779380620e3456d84f1eac21a0cd046cab2ffbd89db8f6270bf898848a9b77668}{}\label{pa__win__wasapi_8c_a779380620e3456d84f1eac21a0cd046cab2ffbd89db8f6270bf898848a9b77668}
+}]\index{M\+I\+X\+\_\+\+D\+I\+R\+\_\+\+\_\+2\+T\+O1@{M\+I\+X\+\_\+\+D\+I\+R\+\_\+\+\_\+2\+T\+O1}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!M\+I\+X\+\_\+\+D\+I\+R\+\_\+\+\_\+2\+T\+O1@{M\+I\+X\+\_\+\+D\+I\+R\+\_\+\+\_\+2\+T\+O1}}\item[{\em 
+M\+I\+X\+\_\+\+D\+I\+R\+\_\+\+\_\+2\+T\+O1\hypertarget{pa__win__wasapi_8c_a779380620e3456d84f1eac21a0cd046ca4a73cefc3d25fc95e94adf7b14ab3583}{}\label{pa__win__wasapi_8c_a779380620e3456d84f1eac21a0cd046ca4a73cefc3d25fc95e94adf7b14ab3583}
+}]\index{M\+I\+X\+\_\+\+D\+I\+R\+\_\+\+\_\+2\+T\+O1\+\_\+L@{M\+I\+X\+\_\+\+D\+I\+R\+\_\+\+\_\+2\+T\+O1\+\_\+L}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!M\+I\+X\+\_\+\+D\+I\+R\+\_\+\+\_\+2\+T\+O1\+\_\+L@{M\+I\+X\+\_\+\+D\+I\+R\+\_\+\+\_\+2\+T\+O1\+\_\+L}}\item[{\em 
+M\+I\+X\+\_\+\+D\+I\+R\+\_\+\+\_\+2\+T\+O1\+\_\+L\hypertarget{pa__win__wasapi_8c_a779380620e3456d84f1eac21a0cd046ca0858f41d4d725a8638f791327d303f33}{}\label{pa__win__wasapi_8c_a779380620e3456d84f1eac21a0cd046ca0858f41d4d725a8638f791327d303f33}
+}]\end{description}
+\end{Desc}
+
+
+Definition at line 1055 of file pa\+\_\+win\+\_\+wasapi.\+c.
+
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!E\+Windows\+Version@{E\+Windows\+Version}}
+\index{E\+Windows\+Version@{E\+Windows\+Version}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{E\+Windows\+Version}{EWindowsVersion}}]{\setlength{\rightskip}{0pt plus 5cm}enum {\bf E\+Windows\+Version}}\hypertarget{pa__win__wasapi_8c_aec13744cba5f4a8e731ab1e136a2f966}{}\label{pa__win__wasapi_8c_aec13744cba5f4a8e731ab1e136a2f966}
+\begin{Desc}
+\item[Enumerator]\par
+\begin{description}
+\index{W\+I\+N\+D\+O\+W\+S\+\_\+\+U\+N\+K\+N\+O\+WN@{W\+I\+N\+D\+O\+W\+S\+\_\+\+U\+N\+K\+N\+O\+WN}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!W\+I\+N\+D\+O\+W\+S\+\_\+\+U\+N\+K\+N\+O\+WN@{W\+I\+N\+D\+O\+W\+S\+\_\+\+U\+N\+K\+N\+O\+WN}}\item[{\em 
+W\+I\+N\+D\+O\+W\+S\+\_\+\+U\+N\+K\+N\+O\+WN\hypertarget{pa__win__wasapi_8c_aec13744cba5f4a8e731ab1e136a2f966a34af6dcbce17b7e942bd8901fc89f701}{}\label{pa__win__wasapi_8c_aec13744cba5f4a8e731ab1e136a2f966a34af6dcbce17b7e942bd8901fc89f701}
+}]\index{W\+I\+N\+D\+O\+W\+S\+\_\+\+V\+I\+S\+T\+A\+\_\+\+S\+E\+R\+V\+E\+R2008@{W\+I\+N\+D\+O\+W\+S\+\_\+\+V\+I\+S\+T\+A\+\_\+\+S\+E\+R\+V\+E\+R2008}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!W\+I\+N\+D\+O\+W\+S\+\_\+\+V\+I\+S\+T\+A\+\_\+\+S\+E\+R\+V\+E\+R2008@{W\+I\+N\+D\+O\+W\+S\+\_\+\+V\+I\+S\+T\+A\+\_\+\+S\+E\+R\+V\+E\+R2008}}\item[{\em 
+W\+I\+N\+D\+O\+W\+S\+\_\+\+V\+I\+S\+T\+A\+\_\+\+S\+E\+R\+V\+E\+R2008\hypertarget{pa__win__wasapi_8c_aec13744cba5f4a8e731ab1e136a2f966ad24275f02eb3bf7b4e1ed8e759016e5f}{}\label{pa__win__wasapi_8c_aec13744cba5f4a8e731ab1e136a2f966ad24275f02eb3bf7b4e1ed8e759016e5f}
+}]\index{W\+I\+N\+D\+O\+W\+S\+\_\+7\+\_\+\+S\+E\+R\+V\+E\+R2008\+R2@{W\+I\+N\+D\+O\+W\+S\+\_\+7\+\_\+\+S\+E\+R\+V\+E\+R2008\+R2}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!W\+I\+N\+D\+O\+W\+S\+\_\+7\+\_\+\+S\+E\+R\+V\+E\+R2008\+R2@{W\+I\+N\+D\+O\+W\+S\+\_\+7\+\_\+\+S\+E\+R\+V\+E\+R2008\+R2}}\item[{\em 
+W\+I\+N\+D\+O\+W\+S\+\_\+7\+\_\+\+S\+E\+R\+V\+E\+R2008\+R2\hypertarget{pa__win__wasapi_8c_aec13744cba5f4a8e731ab1e136a2f966a3fa4d45ad3f6f0249620f1165ee1ed4f}{}\label{pa__win__wasapi_8c_aec13744cba5f4a8e731ab1e136a2f966a3fa4d45ad3f6f0249620f1165ee1ed4f}
+}]\index{W\+I\+N\+D\+O\+W\+S\+\_\+8\+\_\+\+S\+E\+R\+V\+E\+R2012@{W\+I\+N\+D\+O\+W\+S\+\_\+8\+\_\+\+S\+E\+R\+V\+E\+R2012}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!W\+I\+N\+D\+O\+W\+S\+\_\+8\+\_\+\+S\+E\+R\+V\+E\+R2012@{W\+I\+N\+D\+O\+W\+S\+\_\+8\+\_\+\+S\+E\+R\+V\+E\+R2012}}\item[{\em 
+W\+I\+N\+D\+O\+W\+S\+\_\+8\+\_\+\+S\+E\+R\+V\+E\+R2012\hypertarget{pa__win__wasapi_8c_aec13744cba5f4a8e731ab1e136a2f966a282960d50b4587c87046a8333bf2c38c}{}\label{pa__win__wasapi_8c_aec13744cba5f4a8e731ab1e136a2f966a282960d50b4587c87046a8333bf2c38c}
+}]\index{W\+I\+N\+D\+O\+W\+S\+\_\+8\+\_\+1\+\_\+\+S\+E\+R\+V\+E\+R2012\+R2@{W\+I\+N\+D\+O\+W\+S\+\_\+8\+\_\+1\+\_\+\+S\+E\+R\+V\+E\+R2012\+R2}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!W\+I\+N\+D\+O\+W\+S\+\_\+8\+\_\+1\+\_\+\+S\+E\+R\+V\+E\+R2012\+R2@{W\+I\+N\+D\+O\+W\+S\+\_\+8\+\_\+1\+\_\+\+S\+E\+R\+V\+E\+R2012\+R2}}\item[{\em 
+W\+I\+N\+D\+O\+W\+S\+\_\+8\+\_\+1\+\_\+\+S\+E\+R\+V\+E\+R2012\+R2\hypertarget{pa__win__wasapi_8c_aec13744cba5f4a8e731ab1e136a2f966ab5cea250cefffe760d8947ae4c3107d0}{}\label{pa__win__wasapi_8c_aec13744cba5f4a8e731ab1e136a2f966ab5cea250cefffe760d8947ae4c3107d0}
+}]\index{W\+I\+N\+D\+O\+W\+S\+\_\+10\+\_\+\+S\+E\+R\+V\+E\+R2016@{W\+I\+N\+D\+O\+W\+S\+\_\+10\+\_\+\+S\+E\+R\+V\+E\+R2016}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!W\+I\+N\+D\+O\+W\+S\+\_\+10\+\_\+\+S\+E\+R\+V\+E\+R2016@{W\+I\+N\+D\+O\+W\+S\+\_\+10\+\_\+\+S\+E\+R\+V\+E\+R2016}}\item[{\em 
+W\+I\+N\+D\+O\+W\+S\+\_\+10\+\_\+\+S\+E\+R\+V\+E\+R2016\hypertarget{pa__win__wasapi_8c_aec13744cba5f4a8e731ab1e136a2f966a5b9050d995ef03019284af641563c15f}{}\label{pa__win__wasapi_8c_aec13744cba5f4a8e731ab1e136a2f966a5b9050d995ef03019284af641563c15f}
+}]\index{W\+I\+N\+D\+O\+W\+S\+\_\+\+F\+U\+T\+U\+RE@{W\+I\+N\+D\+O\+W\+S\+\_\+\+F\+U\+T\+U\+RE}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!W\+I\+N\+D\+O\+W\+S\+\_\+\+F\+U\+T\+U\+RE@{W\+I\+N\+D\+O\+W\+S\+\_\+\+F\+U\+T\+U\+RE}}\item[{\em 
+W\+I\+N\+D\+O\+W\+S\+\_\+\+F\+U\+T\+U\+RE\hypertarget{pa__win__wasapi_8c_aec13744cba5f4a8e731ab1e136a2f966a16952920e317737f75be9de6682f0d06}{}\label{pa__win__wasapi_8c_aec13744cba5f4a8e731ab1e136a2f966a16952920e317737f75be9de6682f0d06}
+}]\end{description}
+\end{Desc}
+
+
+Definition at line 877 of file pa\+\_\+win\+\_\+wasapi.\+c.
+
+
+
+\subsection{Function Documentation}
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!\+\_\+\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+G\+U\+ID@{\+\_\+\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+G\+U\+ID}}
+\index{\+\_\+\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+G\+U\+ID@{\+\_\+\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+G\+U\+ID}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{\+\_\+\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+G\+U\+I\+D(pa\+\_\+\+K\+S\+D\+A\+T\+A\+F\+O\+R\+M\+A\+T\+\_\+\+S\+U\+B\+T\+Y\+P\+E\+\_\+\+P\+C\+M, 0x00000001, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xaa, 0x00, 0x38, 0x9b, 0x71)}{__DEFINE_GUID(pa_KSDATAFORMAT_SUBTYPE_PCM, 0x00000001, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xaa, 0x00, 0x38, 0x9b, 0x71)}}]{\setlength{\rightskip}{0pt plus 5cm}\+\_\+\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+G\+U\+ID (
+\begin{DoxyParamCaption}
+\item[{pa\+\_\+\+K\+S\+D\+A\+T\+A\+F\+O\+R\+M\+A\+T\+\_\+\+S\+U\+B\+T\+Y\+P\+E\+\_\+\+P\+CM}]{, }
+\item[{0x00000001}]{, }
+\item[{0x0000}]{, }
+\item[{0x0010}]{, }
+\item[{0x80}]{, }
+\item[{0x00}]{, }
+\item[{0x00}]{, }
+\item[{0xaa}]{, }
+\item[{0x00}]{, }
+\item[{0x38}]{, }
+\item[{0x9b}]{, }
+\item[{0x71}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{pa__win__wasapi_8c_a18656159e0f57f9de0b9fb6c36c98f2d}{}\label{pa__win__wasapi_8c_a18656159e0f57f9de0b9fb6c36c98f2d}
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!\+\_\+\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+G\+U\+ID@{\+\_\+\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+G\+U\+ID}}
+\index{\+\_\+\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+G\+U\+ID@{\+\_\+\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+G\+U\+ID}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{\+\_\+\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+G\+U\+I\+D(pa\+\_\+\+K\+S\+D\+A\+T\+A\+F\+O\+R\+M\+A\+T\+\_\+\+S\+U\+B\+T\+Y\+P\+E\+\_\+\+A\+D\+P\+C\+M, 0x00000002, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xaa, 0x00, 0x38, 0x9b, 0x71)}{__DEFINE_GUID(pa_KSDATAFORMAT_SUBTYPE_ADPCM, 0x00000002, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xaa, 0x00, 0x38, 0x9b, 0x71)}}]{\setlength{\rightskip}{0pt plus 5cm}\+\_\+\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+G\+U\+ID (
+\begin{DoxyParamCaption}
+\item[{pa\+\_\+\+K\+S\+D\+A\+T\+A\+F\+O\+R\+M\+A\+T\+\_\+\+S\+U\+B\+T\+Y\+P\+E\+\_\+\+A\+D\+P\+CM}]{, }
+\item[{0x00000002}]{, }
+\item[{0x0000}]{, }
+\item[{0x0010}]{, }
+\item[{0x80}]{, }
+\item[{0x00}]{, }
+\item[{0x00}]{, }
+\item[{0xaa}]{, }
+\item[{0x00}]{, }
+\item[{0x38}]{, }
+\item[{0x9b}]{, }
+\item[{0x71}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{pa__win__wasapi_8c_aa40505d86e5d43a64feee42314677279}{}\label{pa__win__wasapi_8c_aa40505d86e5d43a64feee42314677279}
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!\+\_\+\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+G\+U\+ID@{\+\_\+\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+G\+U\+ID}}
+\index{\+\_\+\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+G\+U\+ID@{\+\_\+\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+G\+U\+ID}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{\+\_\+\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+G\+U\+I\+D(pa\+\_\+\+K\+S\+D\+A\+T\+A\+F\+O\+R\+M\+A\+T\+\_\+\+S\+U\+B\+T\+Y\+P\+E\+\_\+\+I\+E\+E\+E\+\_\+\+F\+L\+O\+A\+T, 0x00000003, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xaa, 0x00, 0x38, 0x9b, 0x71)}{__DEFINE_GUID(pa_KSDATAFORMAT_SUBTYPE_IEEE_FLOAT, 0x00000003, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xaa, 0x00, 0x38, 0x9b, 0x71)}}]{\setlength{\rightskip}{0pt plus 5cm}\+\_\+\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+G\+U\+ID (
+\begin{DoxyParamCaption}
+\item[{pa\+\_\+\+K\+S\+D\+A\+T\+A\+F\+O\+R\+M\+A\+T\+\_\+\+S\+U\+B\+T\+Y\+P\+E\+\_\+\+I\+E\+E\+E\+\_\+\+F\+L\+O\+AT}]{, }
+\item[{0x00000003}]{, }
+\item[{0x0000}]{, }
+\item[{0x0010}]{, }
+\item[{0x80}]{, }
+\item[{0x00}]{, }
+\item[{0x00}]{, }
+\item[{0xaa}]{, }
+\item[{0x00}]{, }
+\item[{0x38}]{, }
+\item[{0x9b}]{, }
+\item[{0x71}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{pa__win__wasapi_8c_a68918bf0b41c53e2172ac6d55d9812ab}{}\label{pa__win__wasapi_8c_a68918bf0b41c53e2172ac6d55d9812ab}
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!A\+L\+I\+G\+N\+\_\+\+N\+E\+X\+T\+\_\+\+P\+O\+W2@{A\+L\+I\+G\+N\+\_\+\+N\+E\+X\+T\+\_\+\+P\+O\+W2}}
+\index{A\+L\+I\+G\+N\+\_\+\+N\+E\+X\+T\+\_\+\+P\+O\+W2@{A\+L\+I\+G\+N\+\_\+\+N\+E\+X\+T\+\_\+\+P\+O\+W2}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{A\+L\+I\+G\+N\+\_\+\+N\+E\+X\+T\+\_\+\+P\+O\+W2(\+U\+I\+N\+T32 v)}{ALIGN_NEXT_POW2(UINT32 v)}}]{\setlength{\rightskip}{0pt plus 5cm}U\+I\+N\+T32 A\+L\+I\+G\+N\+\_\+\+N\+E\+X\+T\+\_\+\+P\+O\+W2 (
+\begin{DoxyParamCaption}
+\item[{U\+I\+N\+T32}]{v}
+\end{DoxyParamCaption}
+)}\hypertarget{pa__win__wasapi_8c_a34e25232f62662dafe2b79c6fbc38cc2}{}\label{pa__win__wasapi_8c_a34e25232f62662dafe2b79c6fbc38cc2}
+
+
+Definition at line 756 of file pa\+\_\+win\+\_\+wasapi.\+c.
+
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!B\+O\+OL@{B\+O\+OL}}
+\index{B\+O\+OL@{B\+O\+OL}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{B\+O\+O\+L(\+W\+I\+N\+A\+P\+I $\ast$\+F\+Av\+Rt\+Create\+Thread\+Ordering\+Group)(\+P\+H\+A\+N\+D\+LE}{BOOL(WINAPI *FAvRtCreateThreadOrderingGroup)(PHANDLE}}]{\setlength{\rightskip}{0pt plus 5cm}typedef {\bf B\+O\+OL} (
+\begin{DoxyParamCaption}
+\item[{{\bf W\+I\+N\+A\+PI} $\ast$}]{F\+Av\+Rt\+Create\+Thread\+Ordering\+Group}
+\end{DoxyParamCaption}
+)}\hypertarget{pa__win__wasapi_8c_ab7bc355a4b75848369499301290ce9ab}{}\label{pa__win__wasapi_8c_ab7bc355a4b75848369499301290ce9ab}
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!H\+A\+N\+D\+LE@{H\+A\+N\+D\+LE}}
+\index{H\+A\+N\+D\+LE@{H\+A\+N\+D\+LE}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{H\+A\+N\+D\+L\+E(\+W\+I\+N\+A\+P\+I $\ast$\+F\+Av\+Set\+Mm\+Thread\+Characteristics)(\+L\+P\+C\+S\+TR}{HANDLE(WINAPI *FAvSetMmThreadCharacteristics)(LPCSTR}}]{\setlength{\rightskip}{0pt plus 5cm}typedef {\bf H\+A\+N\+D\+LE} (
+\begin{DoxyParamCaption}
+\item[{{\bf W\+I\+N\+A\+PI} $\ast$}]{F\+Av\+Set\+Mm\+Thread\+Characteristics}
+\end{DoxyParamCaption}
+)}\hypertarget{pa__win__wasapi_8c_a17a3aca6faec8a591d204f32baa40bf5}{}\label{pa__win__wasapi_8c_a17a3aca6faec8a591d204f32baa40bf5}
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!M\+M\+C\+S\+S\+\_\+activate@{M\+M\+C\+S\+S\+\_\+activate}}
+\index{M\+M\+C\+S\+S\+\_\+activate@{M\+M\+C\+S\+S\+\_\+activate}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{M\+M\+C\+S\+S\+\_\+activate(const char $\ast$name)}{MMCSS_activate(const char *name)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf H\+A\+N\+D\+LE} M\+M\+C\+S\+S\+\_\+activate (
+\begin{DoxyParamCaption}
+\item[{{\bf const} char $\ast$}]{name}
+\end{DoxyParamCaption}
+)}\hypertarget{pa__win__wasapi_8c_aa8e7f1e1beb2ef450c45ca6d6b9234d7}{}\label{pa__win__wasapi_8c_aa8e7f1e1beb2ef450c45ca6d6b9234d7}
+
+
+Definition at line 4197 of file pa\+\_\+win\+\_\+wasapi.\+c.
+
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!M\+M\+C\+S\+S\+\_\+deactivate@{M\+M\+C\+S\+S\+\_\+deactivate}}
+\index{M\+M\+C\+S\+S\+\_\+deactivate@{M\+M\+C\+S\+S\+\_\+deactivate}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{M\+M\+C\+S\+S\+\_\+deactivate(\+H\+A\+N\+D\+L\+E h\+Task)}{MMCSS_deactivate(HANDLE hTask)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} M\+M\+C\+S\+S\+\_\+deactivate (
+\begin{DoxyParamCaption}
+\item[{{\bf H\+A\+N\+D\+LE}}]{h\+Task}
+\end{DoxyParamCaption}
+)}\hypertarget{pa__win__wasapi_8c_a32561c759b333bdffc1a7fe3fdf5dd04}{}\label{pa__win__wasapi_8c_a32561c759b333bdffc1a7fe3fdf5dd04}
+
+
+Definition at line 4223 of file pa\+\_\+win\+\_\+wasapi.\+c.
+
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!P\+A\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+C\+L\+S\+ID@{P\+A\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+C\+L\+S\+ID}}
+\index{P\+A\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+C\+L\+S\+ID@{P\+A\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+C\+L\+S\+ID}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{P\+A\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+C\+L\+S\+I\+D(\+I\+M\+M\+Device\+Enumerator, bcde0395, e52f, 467c, 8e, 3d, c4, 57, 92, 91, 69, 2e)}{PA_DEFINE_CLSID(IMMDeviceEnumerator, bcde0395, e52f, 467c, 8e, 3d, c4, 57, 92, 91, 69, 2e)}}]{\setlength{\rightskip}{0pt plus 5cm}P\+A\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+C\+L\+S\+ID (
+\begin{DoxyParamCaption}
+\item[{{\bf I\+M\+M\+Device\+Enumerator}}]{, }
+\item[{bcde0395}]{, }
+\item[{e52f}]{, }
+\item[{467c}]{, }
+\item[{8e}]{, }
+\item[{3d}]{, }
+\item[{c4}]{, }
+\item[{57}]{, }
+\item[{92}]{, }
+\item[{91}]{, }
+\item[{69}]{, }
+\item[{2e}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{pa__win__wasapi_8c_a217e090bc41b002bac8c67d506e7c293}{}\label{pa__win__wasapi_8c_a217e090bc41b002bac8c67d506e7c293}
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!P\+A\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+I\+ID@{P\+A\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+I\+ID}}
+\index{P\+A\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+I\+ID@{P\+A\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+I\+ID}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{P\+A\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+I\+I\+D(\+I\+Audio\+Client, 1cb9ad4c, dbfa, 4c32, b1, 78, c2, f5, 68, a7, 03, b2)}{PA_DEFINE_IID(IAudioClient, 1cb9ad4c, dbfa, 4c32, b1, 78, c2, f5, 68, a7, 03, b2)}}]{\setlength{\rightskip}{0pt plus 5cm}P\+A\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+I\+ID (
+\begin{DoxyParamCaption}
+\item[{{\bf I\+Audio\+Client}}]{, }
+\item[{1cb9ad4c}]{, }
+\item[{dbfa}]{, }
+\item[{4c32}]{, }
+\item[{b1}]{, }
+\item[{78}]{, }
+\item[{{\bf c2}}]{, }
+\item[{f5}]{, }
+\item[{68}]{, }
+\item[{a7}]{, }
+\item[{03}]{, }
+\item[{b2}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{pa__win__wasapi_8c_a1ece8a6630af9313888eab6508beec15}{}\label{pa__win__wasapi_8c_a1ece8a6630af9313888eab6508beec15}
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!P\+A\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+I\+ID@{P\+A\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+I\+ID}}
+\index{P\+A\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+I\+ID@{P\+A\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+I\+ID}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{P\+A\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+I\+I\+D(\+I\+Audio\+Client2, 726778cd, f60a, 4eda, 82, de, e4, 76, 10, cd, 78, aa)}{PA_DEFINE_IID(IAudioClient2, 726778cd, f60a, 4eda, 82, de, e4, 76, 10, cd, 78, aa)}}]{\setlength{\rightskip}{0pt plus 5cm}P\+A\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+I\+ID (
+\begin{DoxyParamCaption}
+\item[{I\+Audio\+Client2}]{, }
+\item[{726778cd}]{, }
+\item[{f60a}]{, }
+\item[{4eda}]{, }
+\item[{82}]{, }
+\item[{de}]{, }
+\item[{e4}]{, }
+\item[{76}]{, }
+\item[{10}]{, }
+\item[{{\bf cd}}]{, }
+\item[{78}]{, }
+\item[{aa}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{pa__win__wasapi_8c_a3b95fbf20416e2ff902c8a1cc149b2c2}{}\label{pa__win__wasapi_8c_a3b95fbf20416e2ff902c8a1cc149b2c2}
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!P\+A\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+I\+ID@{P\+A\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+I\+ID}}
+\index{P\+A\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+I\+ID@{P\+A\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+I\+ID}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{P\+A\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+I\+I\+D(\+I\+M\+M\+Endpoint, 1be09788, 6894, 4089, 85, 86, 9a, 2a, 6c, 26, 5a, c5)}{PA_DEFINE_IID(IMMEndpoint, 1be09788, 6894, 4089, 85, 86, 9a, 2a, 6c, 26, 5a, c5)}}]{\setlength{\rightskip}{0pt plus 5cm}P\+A\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+I\+ID (
+\begin{DoxyParamCaption}
+\item[{{\bf I\+M\+M\+Endpoint}}]{, }
+\item[{1be09788}]{, }
+\item[{6894}]{, }
+\item[{4089}]{, }
+\item[{85}]{, }
+\item[{86}]{, }
+\item[{9a}]{, }
+\item[{2a}]{, }
+\item[{6c}]{, }
+\item[{26}]{, }
+\item[{5a}]{, }
+\item[{c5}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{pa__win__wasapi_8c_aa5af9cc6b076410d262f921bfd2a0859}{}\label{pa__win__wasapi_8c_aa5af9cc6b076410d262f921bfd2a0859}
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!P\+A\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+I\+ID@{P\+A\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+I\+ID}}
+\index{P\+A\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+I\+ID@{P\+A\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+I\+ID}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{P\+A\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+I\+I\+D(\+I\+M\+M\+Device\+Enumerator, a95664d2, 9614, 4f35, a7, 46, de, 8d, b6, 36, 17, e6)}{PA_DEFINE_IID(IMMDeviceEnumerator, a95664d2, 9614, 4f35, a7, 46, de, 8d, b6, 36, 17, e6)}}]{\setlength{\rightskip}{0pt plus 5cm}P\+A\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+I\+ID (
+\begin{DoxyParamCaption}
+\item[{{\bf I\+M\+M\+Device\+Enumerator}}]{, }
+\item[{a95664d2}]{, }
+\item[{9614}]{, }
+\item[{4f35}]{, }
+\item[{a7}]{, }
+\item[{46}]{, }
+\item[{de}]{, }
+\item[{8d}]{, }
+\item[{b6}]{, }
+\item[{36}]{, }
+\item[{17}]{, }
+\item[{e6}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{pa__win__wasapi_8c_a7352e0e14e250246f7aed4c9bfebe118}{}\label{pa__win__wasapi_8c_a7352e0e14e250246f7aed4c9bfebe118}
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!P\+A\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+I\+ID@{P\+A\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+I\+ID}}
+\index{P\+A\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+I\+ID@{P\+A\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+I\+ID}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{P\+A\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+I\+I\+D(\+I\+Audio\+Render\+Client, f294acfc, 3146, 4483, a7, bf, ad, dc, a7, c2, 60, e2)}{PA_DEFINE_IID(IAudioRenderClient, f294acfc, 3146, 4483, a7, bf, ad, dc, a7, c2, 60, e2)}}]{\setlength{\rightskip}{0pt plus 5cm}P\+A\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+I\+ID (
+\begin{DoxyParamCaption}
+\item[{{\bf I\+Audio\+Render\+Client}}]{, }
+\item[{f294acfc}]{, }
+\item[{3146}]{, }
+\item[{4483}]{, }
+\item[{a7}]{, }
+\item[{bf}]{, }
+\item[{ad}]{, }
+\item[{dc}]{, }
+\item[{a7}]{, }
+\item[{{\bf c2}}]{, }
+\item[{60}]{, }
+\item[{e2}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{pa__win__wasapi_8c_ae55f342ce51f789b74ae90ef9f8b8afd}{}\label{pa__win__wasapi_8c_ae55f342ce51f789b74ae90ef9f8b8afd}
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!P\+A\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+I\+ID@{P\+A\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+I\+ID}}
+\index{P\+A\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+I\+ID@{P\+A\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+I\+ID}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{P\+A\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+I\+I\+D(\+I\+Audio\+Capture\+Client, c8adbd64, e71e, 48a0, a4, de, 18, 5c, 39, 5c, d3, 17)}{PA_DEFINE_IID(IAudioCaptureClient, c8adbd64, e71e, 48a0, a4, de, 18, 5c, 39, 5c, d3, 17)}}]{\setlength{\rightskip}{0pt plus 5cm}P\+A\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+I\+ID (
+\begin{DoxyParamCaption}
+\item[{{\bf I\+Audio\+Capture\+Client}}]{, }
+\item[{c8adbd64}]{, }
+\item[{e71e}]{, }
+\item[{48a0}]{, }
+\item[{a4}]{, }
+\item[{de}]{, }
+\item[{18}]{, }
+\item[{5c}]{, }
+\item[{39}]{, }
+\item[{5c}]{, }
+\item[{d3}]{, }
+\item[{17}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{pa__win__wasapi_8c_acb9f29dd14a7e4a38a3d768cd3f745e9}{}\label{pa__win__wasapi_8c_acb9f29dd14a7e4a38a3d768cd3f745e9}
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!P\+A\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+I\+ID@{P\+A\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+I\+ID}}
+\index{P\+A\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+I\+ID@{P\+A\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+I\+ID}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{P\+A\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+I\+I\+D(\+I\+Device\+Topology, 2\+A07407\+E, 6497, 4\+A18, 97, 87, 32, f7, 9b, d0, d9, 8f)}{PA_DEFINE_IID(IDeviceTopology, 2A07407E, 6497, 4A18, 97, 87, 32, f7, 9b, d0, d9, 8f)}}]{\setlength{\rightskip}{0pt plus 5cm}P\+A\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+I\+ID (
+\begin{DoxyParamCaption}
+\item[{{\bf I\+Device\+Topology}}]{, }
+\item[{2\+A07407E}]{, }
+\item[{6497}]{, }
+\item[{4\+A18}]{, }
+\item[{97}]{, }
+\item[{87}]{, }
+\item[{32}]{, }
+\item[{f7}]{, }
+\item[{9b}]{, }
+\item[{d0}]{, }
+\item[{d9}]{, }
+\item[{8f}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{pa__win__wasapi_8c_ae4739ba48dcd72f329d79eb9b4fe4cdb}{}\label{pa__win__wasapi_8c_ae4739ba48dcd72f329d79eb9b4fe4cdb}
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!P\+A\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+I\+ID@{P\+A\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+I\+ID}}
+\index{P\+A\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+I\+ID@{P\+A\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+I\+ID}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{P\+A\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+I\+I\+D(\+I\+Part, A\+E2\+D\+E0\+E4, 5\+B\+C\+A, 4\+F2\+D, aa, 46, 5d, 13, f8, fd, b3, a9)}{PA_DEFINE_IID(IPart, AE2DE0E4, 5BCA, 4F2D, aa, 46, 5d, 13, f8, fd, b3, a9)}}]{\setlength{\rightskip}{0pt plus 5cm}P\+A\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+I\+ID (
+\begin{DoxyParamCaption}
+\item[{{\bf I\+Part}}]{, }
+\item[{A\+E2\+D\+E0\+E4}]{, }
+\item[{5\+B\+CA}]{, }
+\item[{4\+F2D}]{, }
+\item[{aa}]{, }
+\item[{46}]{, }
+\item[{5d}]{, }
+\item[{13}]{, }
+\item[{f8}]{, }
+\item[{fd}]{, }
+\item[{b3}]{, }
+\item[{a9}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{pa__win__wasapi_8c_a028039501a67cfcf87ff71f37e2ade6a}{}\label{pa__win__wasapi_8c_a028039501a67cfcf87ff71f37e2ade6a}
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!P\+A\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+I\+ID@{P\+A\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+I\+ID}}
+\index{P\+A\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+I\+ID@{P\+A\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+I\+ID}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{P\+A\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+I\+I\+D(\+I\+Ks\+Jack\+Description, 4509\+F757, 2\+D46, 4637, 8e, 62, ce, 7d, b9, 44, f5, 7b)}{PA_DEFINE_IID(IKsJackDescription, 4509F757, 2D46, 4637, 8e, 62, ce, 7d, b9, 44, f5, 7b)}}]{\setlength{\rightskip}{0pt plus 5cm}P\+A\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+I\+ID (
+\begin{DoxyParamCaption}
+\item[{{\bf I\+Ks\+Jack\+Description}}]{, }
+\item[{4509\+F757}]{, }
+\item[{2\+D46}]{, }
+\item[{4637}]{, }
+\item[{8e}]{, }
+\item[{62}]{, }
+\item[{ce}]{, }
+\item[{7d}]{, }
+\item[{b9}]{, }
+\item[{44}]{, }
+\item[{f5}]{, }
+\item[{7b}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{pa__win__wasapi_8c_a8e34cd8eb85293ec3a3225127754633f}{}\label{pa__win__wasapi_8c_a8e34cd8eb85293ec3a3225127754633f}
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!Pa\+Util\+\_\+\+Get\+Output\+Frame\+Count@{Pa\+Util\+\_\+\+Get\+Output\+Frame\+Count}}
+\index{Pa\+Util\+\_\+\+Get\+Output\+Frame\+Count@{Pa\+Util\+\_\+\+Get\+Output\+Frame\+Count}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{Pa\+Util\+\_\+\+Get\+Output\+Frame\+Count(\+Pa\+Util\+Buffer\+Processor $\ast$bp)}{PaUtil_GetOutputFrameCount(PaUtilBufferProcessor *bp)}}]{\setlength{\rightskip}{0pt plus 5cm}unsigned long Pa\+Util\+\_\+\+Get\+Output\+Frame\+Count (
+\begin{DoxyParamCaption}
+\item[{{\bf Pa\+Util\+Buffer\+Processor} $\ast$}]{bp}
+\end{DoxyParamCaption}
+)}\hypertarget{pa__win__wasapi_8c_afe88b93d518a48a088c658b7c8ab25b1}{}\label{pa__win__wasapi_8c_afe88b93d518a48a088c658b7c8ab25b1}
+
+
+Definition at line 4033 of file pa\+\_\+win\+\_\+wasapi.\+c.
+
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!Pa\+Wasapi\+\_\+\+Get\+Device\+Default\+Format@{Pa\+Wasapi\+\_\+\+Get\+Device\+Default\+Format}}
+\index{Pa\+Wasapi\+\_\+\+Get\+Device\+Default\+Format@{Pa\+Wasapi\+\_\+\+Get\+Device\+Default\+Format}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{Pa\+Wasapi\+\_\+\+Get\+Device\+Default\+Format(void $\ast$p\+Format, unsigned int n\+Format\+Size, Pa\+Device\+Index n\+Device)}{PaWasapi_GetDeviceDefaultFormat(void *pFormat, unsigned int nFormatSize, PaDeviceIndex nDevice)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf int} Pa\+Wasapi\+\_\+\+Get\+Device\+Default\+Format (
+\begin{DoxyParamCaption}
+\item[{{\bf void} $\ast$}]{p\+Format, }
+\item[{unsigned {\bf int}}]{n\+Format\+Size, }
+\item[{{\bf Pa\+Device\+Index}}]{n\+Device}
+\end{DoxyParamCaption}
+)}\hypertarget{pa__win__wasapi_8c_aa42c66da0ae19959d25a190e9dd82005}{}\label{pa__win__wasapi_8c_aa42c66da0ae19959d25a190e9dd82005}
+Returns default sound format for device. \hyperlink{class_format}{Format} is represented by \hyperlink{struct_pa_win_wave_format}{Pa\+Win\+Wave\+Format} or W\+A\+V\+E\+F\+O\+R\+M\+A\+T\+E\+X\+T\+E\+N\+S\+I\+B\+LE structure.
+
+
+\begin{DoxyParams}{Parameters}
+{\em p\+Format} & Pointer to \hyperlink{struct_pa_win_wave_format}{Pa\+Win\+Wave\+Format} or W\+A\+V\+E\+F\+O\+R\+M\+A\+T\+E\+X\+T\+E\+N\+S\+I\+B\+LE structure. \\
+\hline
+{\em n\+Format\+Size} & Size of \hyperlink{struct_pa_win_wave_format}{Pa\+Win\+Wave\+Format} or W\+A\+V\+E\+F\+O\+R\+M\+A\+T\+E\+X\+T\+E\+N\+S\+I\+B\+LE structure in bytes. \\
+\hline
+{\em n\+Device} & Device index.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Non-\/negative value indicating the number of bytes copied into format decriptor or, a Pa\+Error\+Code (which are always negative) if Port\+Audio is not initialized or an error is encountered. 
+\end{DoxyReturn}
+
+
+Definition at line 1669 of file pa\+\_\+win\+\_\+wasapi.\+c.
+
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!Pa\+Wasapi\+\_\+\+Get\+Device\+Role@{Pa\+Wasapi\+\_\+\+Get\+Device\+Role}}
+\index{Pa\+Wasapi\+\_\+\+Get\+Device\+Role@{Pa\+Wasapi\+\_\+\+Get\+Device\+Role}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{Pa\+Wasapi\+\_\+\+Get\+Device\+Role(\+Pa\+Device\+Index n\+Device)}{PaWasapi_GetDeviceRole(PaDeviceIndex nDevice)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf int} Pa\+Wasapi\+\_\+\+Get\+Device\+Role (
+\begin{DoxyParamCaption}
+\item[{{\bf Pa\+Device\+Index}}]{n\+Device}
+\end{DoxyParamCaption}
+)}\hypertarget{pa__win__wasapi_8c_a6a8c5307dff661ae7ee0d7bb8bf73469}{}\label{pa__win__wasapi_8c_a6a8c5307dff661ae7ee0d7bb8bf73469}
+Returns device role (Pa\+Wasapi\+Device\+Role enum).
+
+
+\begin{DoxyParams}{Parameters}
+{\em n\+Device} & device index.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Non-\/negative value indicating device role or, a Pa\+Error\+Code (which are always negative) if Port\+Audio is not initialized or an error is encountered. 
+\end{DoxyReturn}
+
+
+Definition at line 1702 of file pa\+\_\+win\+\_\+wasapi.\+c.
+
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!Pa\+Wasapi\+\_\+\+Get\+Frames\+Per\+Host\+Buffer@{Pa\+Wasapi\+\_\+\+Get\+Frames\+Per\+Host\+Buffer}}
+\index{Pa\+Wasapi\+\_\+\+Get\+Frames\+Per\+Host\+Buffer@{Pa\+Wasapi\+\_\+\+Get\+Frames\+Per\+Host\+Buffer}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{Pa\+Wasapi\+\_\+\+Get\+Frames\+Per\+Host\+Buffer(\+Pa\+Stream $\ast$p\+Stream, unsigned int $\ast$n\+Input, unsigned int $\ast$n\+Output)}{PaWasapi_GetFramesPerHostBuffer(PaStream *pStream, unsigned int *nInput, unsigned int *nOutput)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Pa\+Error} Pa\+Wasapi\+\_\+\+Get\+Frames\+Per\+Host\+Buffer (
+\begin{DoxyParamCaption}
+\item[{{\bf Pa\+Stream} $\ast$}]{p\+Stream, }
+\item[{unsigned {\bf int} $\ast$}]{n\+Input, }
+\item[{unsigned {\bf int} $\ast$}]{n\+Output}
+\end{DoxyParamCaption}
+)}\hypertarget{pa__win__wasapi_8c_af8f04003c6123e6fdcfdf7308761a75e}{}\label{pa__win__wasapi_8c_af8f04003c6123e6fdcfdf7308761a75e}
+Get number of frames per host buffer. This is maximal value of frames of W\+A\+S\+A\+PI buffer which can be locked for operations. Use this method as helper to findout maximal values of input\+Frames/output\+Frames of Pa\+Wasapi\+Host\+Processor\+Callback.
+
+
+\begin{DoxyParams}{Parameters}
+{\em p\+Stream} & Pointer to Pa\+Stream to query. \\
+\hline
+{\em n\+Input} & Pointer to variable to receive number of input frames. Can be N\+U\+LL. \\
+\hline
+{\em n\+Output} & Pointer to variable to receive number of output frames. Can be N\+U\+LL. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Error code indicating success or failure. 
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{pa__win__wasapi_8h_ae3d91dd8eaeff3cbe9ff3bfafc5e6006}{Pa\+Wasapi\+Host\+Processor\+Callback} 
+\end{DoxySeeAlso}
+
+
+Definition at line 1774 of file pa\+\_\+win\+\_\+wasapi.\+c.
+
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!Pa\+Wasapi\+\_\+\+Get\+Input\+Device\+ID@{Pa\+Wasapi\+\_\+\+Get\+Input\+Device\+ID}}
+\index{Pa\+Wasapi\+\_\+\+Get\+Input\+Device\+ID@{Pa\+Wasapi\+\_\+\+Get\+Input\+Device\+ID}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{Pa\+Wasapi\+\_\+\+Get\+Input\+Device\+I\+D(\+Pa\+Stream $\ast$s)}{PaWasapi_GetInputDeviceID(PaStream *s)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf const} wchar\+\_\+t$\ast$ Pa\+Wasapi\+\_\+\+Get\+Input\+Device\+ID (
+\begin{DoxyParamCaption}
+\item[{{\bf Pa\+Stream} $\ast$}]{s}
+\end{DoxyParamCaption}
+)}\hypertarget{pa__win__wasapi_8c_a2ed6fd7668a8395be51d661b99b74ae6}{}\label{pa__win__wasapi_8c_a2ed6fd7668a8395be51d661b99b74ae6}
+Returns Windows device ID for input stream
+
+
+\begin{DoxyParams}{Parameters}
+{\em p\+Stream} & Pointer to Pa\+Stream to query.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+non-\/null value pointing to static device ID 
+\end{DoxyReturn}
+
+
+Definition at line 1725 of file pa\+\_\+win\+\_\+wasapi.\+c.
+
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!Pa\+Wasapi\+\_\+\+Get\+Jack\+Count@{Pa\+Wasapi\+\_\+\+Get\+Jack\+Count}}
+\index{Pa\+Wasapi\+\_\+\+Get\+Jack\+Count@{Pa\+Wasapi\+\_\+\+Get\+Jack\+Count}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{Pa\+Wasapi\+\_\+\+Get\+Jack\+Count(\+Pa\+Device\+Index n\+Device, int $\ast$jcount)}{PaWasapi_GetJackCount(PaDeviceIndex nDevice, int *jcount)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Pa\+Error} Pa\+Wasapi\+\_\+\+Get\+Jack\+Count (
+\begin{DoxyParamCaption}
+\item[{{\bf Pa\+Device\+Index}}]{n\+Device, }
+\item[{{\bf int} $\ast$}]{jcount}
+\end{DoxyParamCaption}
+)}\hypertarget{pa__win__wasapi_8c_a46583f8e4b1132c198e2451fd48f7490}{}\label{pa__win__wasapi_8c_a46583f8e4b1132c198e2451fd48f7490}
+Get number of jacks associated with a W\+A\+S\+A\+PI device. Use this method to determine if there are any jacks associated with the provided W\+A\+S\+A\+PI device. Not all audio devices will support this capability. This is valid for both input and output devices. 
+\begin{DoxyParams}{Parameters}
+{\em n\+Device} & device index. \\
+\hline
+{\em jcount} & Number of jacks is returned in this variable \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Error code indicating success or failure 
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{pa__win__wasapi_8h_a042829efac1aca1d77608d136a523465}{Pa\+Wasapi\+\_\+\+Get\+Jack\+Description} 
+\end{DoxySeeAlso}
+
+
+Definition at line 4279 of file pa\+\_\+win\+\_\+wasapi.\+c.
+
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!Pa\+Wasapi\+\_\+\+Get\+Jack\+Description@{Pa\+Wasapi\+\_\+\+Get\+Jack\+Description}}
+\index{Pa\+Wasapi\+\_\+\+Get\+Jack\+Description@{Pa\+Wasapi\+\_\+\+Get\+Jack\+Description}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{Pa\+Wasapi\+\_\+\+Get\+Jack\+Description(\+Pa\+Device\+Index n\+Device, int jindex, Pa\+Wasapi\+Jack\+Description $\ast$p\+Jack\+Description)}{PaWasapi_GetJackDescription(PaDeviceIndex nDevice, int jindex, PaWasapiJackDescription *pJackDescription)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Pa\+Error} Pa\+Wasapi\+\_\+\+Get\+Jack\+Description (
+\begin{DoxyParamCaption}
+\item[{{\bf Pa\+Device\+Index}}]{n\+Device, }
+\item[{{\bf int}}]{jindex, }
+\item[{{\bf Pa\+Wasapi\+Jack\+Description} $\ast$}]{p\+Jack\+Description}
+\end{DoxyParamCaption}
+)}\hypertarget{pa__win__wasapi_8c_a042829efac1aca1d77608d136a523465}{}\label{pa__win__wasapi_8c_a042829efac1aca1d77608d136a523465}
+Get the jack description associated with a W\+A\+S\+A\+PI device and jack number Before this function is called, use Pa\+Wasapi\+\_\+\+Get\+Jack\+Count to determine the number of jacks associated with device. If jcount is greater than zero, then each jack from 0 to jcount can be queried with this function to get the jack description. 
+\begin{DoxyParams}{Parameters}
+{\em n\+Device} & device index. \\
+\hline
+{\em jindex} & Which jack to return information \\
+\hline
+{\em \hyperlink{struct_k_s_j_a_c_k___d_e_s_c_r_i_p_t_i_o_n}{K\+S\+J\+A\+C\+K\+\_\+\+D\+E\+S\+C\+R\+I\+P\+T\+I\+ON}} & This structure filled in on success. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Error code indicating success or failure 
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{pa__win__wasapi_8h_a46583f8e4b1132c198e2451fd48f7490}{Pa\+Wasapi\+\_\+\+Get\+Jack\+Count} 
+\end{DoxySeeAlso}
+
+
+Definition at line 4437 of file pa\+\_\+win\+\_\+wasapi.\+c.
+
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!Pa\+Wasapi\+\_\+\+Get\+Output\+Device\+ID@{Pa\+Wasapi\+\_\+\+Get\+Output\+Device\+ID}}
+\index{Pa\+Wasapi\+\_\+\+Get\+Output\+Device\+ID@{Pa\+Wasapi\+\_\+\+Get\+Output\+Device\+ID}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{Pa\+Wasapi\+\_\+\+Get\+Output\+Device\+I\+D(\+Pa\+Stream $\ast$s)}{PaWasapi_GetOutputDeviceID(PaStream *s)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf const} wchar\+\_\+t$\ast$ Pa\+Wasapi\+\_\+\+Get\+Output\+Device\+ID (
+\begin{DoxyParamCaption}
+\item[{{\bf Pa\+Stream} $\ast$}]{s}
+\end{DoxyParamCaption}
+)}\hypertarget{pa__win__wasapi_8c_a07d58f9548d783818bd617128761545f}{}\label{pa__win__wasapi_8c_a07d58f9548d783818bd617128761545f}
+Returns Windows device ID for output stream
+
+
+\begin{DoxyParams}{Parameters}
+{\em p\+Stream} & Pointer to Pa\+Stream to query.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+non-\/null value pointing to static device ID 
+\end{DoxyReturn}
+
+
+Definition at line 1738 of file pa\+\_\+win\+\_\+wasapi.\+c.
+
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!Pa\+Wasapi\+\_\+\+Initialize@{Pa\+Wasapi\+\_\+\+Initialize}}
+\index{Pa\+Wasapi\+\_\+\+Initialize@{Pa\+Wasapi\+\_\+\+Initialize}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{Pa\+Wasapi\+\_\+\+Initialize(\+Pa\+Util\+Host\+Api\+Representation $\ast$$\ast$host\+Api, Pa\+Host\+Api\+Index index)}{PaWasapi_Initialize(PaUtilHostApiRepresentation **hostApi, PaHostApiIndex index)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Pa\+Error} Pa\+Wasapi\+\_\+\+Initialize (
+\begin{DoxyParamCaption}
+\item[{{\bf Pa\+Util\+Host\+Api\+Representation} $\ast$$\ast$}]{host\+Api, }
+\item[{{\bf Pa\+Host\+Api\+Index}}]{index}
+\end{DoxyParamCaption}
+)}\hypertarget{pa__win__wasapi_8c_a56a0d6a3498d2ca95227d2e5c9975c40}{}\label{pa__win__wasapi_8c_a56a0d6a3498d2ca95227d2e5c9975c40}
+
+
+Definition at line 1177 of file pa\+\_\+win\+\_\+wasapi.\+c.
+
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!Pa\+Wasapi\+\_\+\+Is\+Loopback@{Pa\+Wasapi\+\_\+\+Is\+Loopback}}
+\index{Pa\+Wasapi\+\_\+\+Is\+Loopback@{Pa\+Wasapi\+\_\+\+Is\+Loopback}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{Pa\+Wasapi\+\_\+\+Is\+Loopback(\+Pa\+Device\+Index n\+Device)}{PaWasapi_IsLoopback(PaDeviceIndex nDevice)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf int} Pa\+Wasapi\+\_\+\+Is\+Loopback (
+\begin{DoxyParamCaption}
+\item[{{\bf Pa\+Device\+Index}}]{n\+Device}
+\end{DoxyParamCaption}
+)}\hypertarget{pa__win__wasapi_8c_a15bf85dfb80dc090cf03550be6ab054b}{}\label{pa__win__wasapi_8c_a15bf85dfb80dc090cf03550be6ab054b}
+Returns device loopback indicator.
+
+
+\begin{DoxyParams}{Parameters}
+{\em n\+Device} & device index.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 = Not loopback, 1 = loopback, $<$ 0 = Pa\+Error\+Code if Port\+Audio is not initialized or an error is encountered. 
+\end{DoxyReturn}
+
+
+Definition at line 1751 of file pa\+\_\+win\+\_\+wasapi.\+c.
+
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!Pa\+Wasapi\+\_\+\+Thread\+Priority\+Boost@{Pa\+Wasapi\+\_\+\+Thread\+Priority\+Boost}}
+\index{Pa\+Wasapi\+\_\+\+Thread\+Priority\+Boost@{Pa\+Wasapi\+\_\+\+Thread\+Priority\+Boost}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{Pa\+Wasapi\+\_\+\+Thread\+Priority\+Boost(void $\ast$$\ast$h\+Task, Pa\+Wasapi\+Thread\+Priority n\+Priority\+Class)}{PaWasapi_ThreadPriorityBoost(void **hTask, PaWasapiThreadPriority nPriorityClass)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Pa\+Error} Pa\+Wasapi\+\_\+\+Thread\+Priority\+Boost (
+\begin{DoxyParamCaption}
+\item[{{\bf void} $\ast$$\ast$}]{h\+Task, }
+\item[{{\bf Pa\+Wasapi\+Thread\+Priority}}]{n\+Priority\+Class}
+\end{DoxyParamCaption}
+)}\hypertarget{pa__win__wasapi_8c_a2d48ae4d2124209ed8a6264c6febedc7}{}\label{pa__win__wasapi_8c_a2d48ae4d2124209ed8a6264c6febedc7}
+Boost thread priority of calling thread (M\+M\+C\+SS). Use it for Blocking Interface only for thread which makes calls to Pa\+\_\+\+Write\+Stream/\+Pa\+\_\+\+Read\+Stream.
+
+
+\begin{DoxyParams}{Parameters}
+{\em h\+Task} & Handle to pointer to priority task. Must be used with Pa\+Wasapi\+\_\+\+Revert\+Thread\+Priority method to revert thread priority to initial state.\\
+\hline
+{\em n\+Priority\+Class} & Id of thread priority of Pa\+Wasapi\+Thread\+Priority type. Specifying e\+Thread\+Priority\+None does nothing.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Error code indicating success or failure. 
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+Pa\+Wasapi\+\_\+\+Revert\+Thread\+Priority 
+\end{DoxySeeAlso}
+
+
+Definition at line 4235 of file pa\+\_\+win\+\_\+wasapi.\+c.
+
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!Pa\+Wasapi\+\_\+\+Thread\+Priority\+Revert@{Pa\+Wasapi\+\_\+\+Thread\+Priority\+Revert}}
+\index{Pa\+Wasapi\+\_\+\+Thread\+Priority\+Revert@{Pa\+Wasapi\+\_\+\+Thread\+Priority\+Revert}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{Pa\+Wasapi\+\_\+\+Thread\+Priority\+Revert(void $\ast$h\+Task)}{PaWasapi_ThreadPriorityRevert(void *hTask)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Pa\+Error} Pa\+Wasapi\+\_\+\+Thread\+Priority\+Revert (
+\begin{DoxyParamCaption}
+\item[{{\bf void} $\ast$}]{h\+Task}
+\end{DoxyParamCaption}
+)}\hypertarget{pa__win__wasapi_8c_ac5c875fb9165712ff696512f750f7de3}{}\label{pa__win__wasapi_8c_ac5c875fb9165712ff696512f750f7de3}
+Boost thread priority of calling thread (M\+M\+C\+SS). Use it for Blocking Interface only for thread which makes calls to Pa\+\_\+\+Write\+Stream/\+Pa\+\_\+\+Read\+Stream.
+
+
+\begin{DoxyParams}{Parameters}
+{\em h\+Task} & Task handle obtained by Pa\+Wasapi\+\_\+\+Boost\+Thread\+Priority method. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Error code indicating success or failure. 
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+Pa\+Wasapi\+\_\+\+Boost\+Thread\+Priority 
+\end{DoxySeeAlso}
+
+
+Definition at line 4265 of file pa\+\_\+win\+\_\+wasapi.\+c.
+
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!Process\+Input\+Buffer@{Process\+Input\+Buffer}}
+\index{Process\+Input\+Buffer@{Process\+Input\+Buffer}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{Process\+Input\+Buffer(\+Pa\+Wasapi\+Stream $\ast$stream, Pa\+Wasapi\+Host\+Processor $\ast$processor)}{ProcessInputBuffer(PaWasapiStream *stream, PaWasapiHostProcessor *processor)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf H\+R\+E\+S\+U\+LT} Process\+Input\+Buffer (
+\begin{DoxyParamCaption}
+\item[{{\bf Pa\+Wasapi\+Stream} $\ast$}]{stream, }
+\item[{{\bf Pa\+Wasapi\+Host\+Processor} $\ast$}]{processor}
+\end{DoxyParamCaption}
+)}\hypertarget{pa__win__wasapi_8c_a37f64191221d539235537b8cfa71b456}{}\label{pa__win__wasapi_8c_a37f64191221d539235537b8cfa71b456}
+
+
+Definition at line 4616 of file pa\+\_\+win\+\_\+wasapi.\+c.
+
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!Process\+Output\+Buffer@{Process\+Output\+Buffer}}
+\index{Process\+Output\+Buffer@{Process\+Output\+Buffer}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{Process\+Output\+Buffer(\+Pa\+Wasapi\+Stream $\ast$stream, Pa\+Wasapi\+Host\+Processor $\ast$processor, U\+I\+N\+T32 frames)}{ProcessOutputBuffer(PaWasapiStream *stream, PaWasapiHostProcessor *processor, UINT32 frames)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf H\+R\+E\+S\+U\+LT} Process\+Output\+Buffer (
+\begin{DoxyParamCaption}
+\item[{{\bf Pa\+Wasapi\+Stream} $\ast$}]{stream, }
+\item[{{\bf Pa\+Wasapi\+Host\+Processor} $\ast$}]{processor, }
+\item[{U\+I\+N\+T32}]{frames}
+\end{DoxyParamCaption}
+)}\hypertarget{pa__win__wasapi_8c_afd01325e0f1dc8cdc8429695848cd320}{}\label{pa__win__wasapi_8c_afd01325e0f1dc8cdc8429695848cd320}
+
+
+Definition at line 4552 of file pa\+\_\+win\+\_\+wasapi.\+c.
+
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!Proc\+Thread\+Event@{Proc\+Thread\+Event}}
+\index{Proc\+Thread\+Event@{Proc\+Thread\+Event}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{Proc\+Thread\+Event(void $\ast$param)}{ProcThreadEvent(void *param)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf P\+A\+\_\+\+T\+H\+R\+E\+A\+D\+\_\+\+F\+U\+NC} Proc\+Thread\+Event (
+\begin{DoxyParamCaption}
+\item[{{\bf void} $\ast$}]{param}
+\end{DoxyParamCaption}
+)}\hypertarget{pa__win__wasapi_8c_ac575016ee1e9d6275cbc5004b2409036}{}\label{pa__win__wasapi_8c_ac575016ee1e9d6275cbc5004b2409036}
+
+
+Definition at line 4716 of file pa\+\_\+win\+\_\+wasapi.\+c.
+
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!Proc\+Thread\+Poll@{Proc\+Thread\+Poll}}
+\index{Proc\+Thread\+Poll@{Proc\+Thread\+Poll}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{Proc\+Thread\+Poll(void $\ast$param)}{ProcThreadPoll(void *param)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf P\+A\+\_\+\+T\+H\+R\+E\+A\+D\+\_\+\+F\+U\+NC} Proc\+Thread\+Poll (
+\begin{DoxyParamCaption}
+\item[{{\bf void} $\ast$}]{param}
+\end{DoxyParamCaption}
+)}\hypertarget{pa__win__wasapi_8c_aae20a143b3c891a38a7e918ee4b1d6b8}{}\label{pa__win__wasapi_8c_aae20a143b3c891a38a7e918ee4b1d6b8}
+
+
+Definition at line 4918 of file pa\+\_\+win\+\_\+wasapi.\+c.
+
+
+
+\subsection{Variable Documentation}
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!L\+P\+D\+W\+O\+RD@{L\+P\+D\+W\+O\+RD}}
+\index{L\+P\+D\+W\+O\+RD@{L\+P\+D\+W\+O\+RD}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{L\+P\+D\+W\+O\+RD}{LPDWORD}}]{\setlength{\rightskip}{0pt plus 5cm}typedef L\+P\+D\+W\+O\+RD}\hypertarget{pa__win__wasapi_8c_ad025b87f212fcc6085a0b88ed1acd0e2}{}\label{pa__win__wasapi_8c_ad025b87f212fcc6085a0b88ed1acd0e2}
+
+
+Definition at line 278 of file pa\+\_\+win\+\_\+wasapi.\+c.
+
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!p\+Av\+Revert\+Mm\+Thread\+Characteristics@{p\+Av\+Revert\+Mm\+Thread\+Characteristics}}
+\index{p\+Av\+Revert\+Mm\+Thread\+Characteristics@{p\+Av\+Revert\+Mm\+Thread\+Characteristics}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{p\+Av\+Revert\+Mm\+Thread\+Characteristics}{pAvRevertMmThreadCharacteristics}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf F\+Av\+Revert\+Mm\+Thread\+Characteristics} p\+Av\+Revert\+Mm\+Thread\+Characteristics = {\bf N\+U\+LL}}\hypertarget{pa__win__wasapi_8c_a800438cc51e4a6661c2cdb986a16e093}{}\label{pa__win__wasapi_8c_a800438cc51e4a6661c2cdb986a16e093}
+
+
+Definition at line 287 of file pa\+\_\+win\+\_\+wasapi.\+c.
+
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!p\+Av\+Rt\+Create\+Thread\+Ordering\+Group@{p\+Av\+Rt\+Create\+Thread\+Ordering\+Group}}
+\index{p\+Av\+Rt\+Create\+Thread\+Ordering\+Group@{p\+Av\+Rt\+Create\+Thread\+Ordering\+Group}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{p\+Av\+Rt\+Create\+Thread\+Ordering\+Group}{pAvRtCreateThreadOrderingGroup}}]{\setlength{\rightskip}{0pt plus 5cm}F\+Av\+Rt\+Create\+Thread\+Ordering\+Group p\+Av\+Rt\+Create\+Thread\+Ordering\+Group = {\bf N\+U\+LL}}\hypertarget{pa__win__wasapi_8c_ad998bad539a112ce8182c22c5cf0481e}{}\label{pa__win__wasapi_8c_ad998bad539a112ce8182c22c5cf0481e}
+
+
+Definition at line 283 of file pa\+\_\+win\+\_\+wasapi.\+c.
+
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!p\+Av\+Rt\+Delete\+Thread\+Ordering\+Group@{p\+Av\+Rt\+Delete\+Thread\+Ordering\+Group}}
+\index{p\+Av\+Rt\+Delete\+Thread\+Ordering\+Group@{p\+Av\+Rt\+Delete\+Thread\+Ordering\+Group}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{p\+Av\+Rt\+Delete\+Thread\+Ordering\+Group}{pAvRtDeleteThreadOrderingGroup}}]{\setlength{\rightskip}{0pt plus 5cm}F\+Av\+Rt\+Delete\+Thread\+Ordering\+Group p\+Av\+Rt\+Delete\+Thread\+Ordering\+Group = {\bf N\+U\+LL}}\hypertarget{pa__win__wasapi_8c_a5604278b62c1f5c62e906ab2e53ba6ab}{}\label{pa__win__wasapi_8c_a5604278b62c1f5c62e906ab2e53ba6ab}
+
+
+Definition at line 284 of file pa\+\_\+win\+\_\+wasapi.\+c.
+
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!p\+Av\+Rt\+Wait\+On\+Thread\+Ordering\+Group@{p\+Av\+Rt\+Wait\+On\+Thread\+Ordering\+Group}}
+\index{p\+Av\+Rt\+Wait\+On\+Thread\+Ordering\+Group@{p\+Av\+Rt\+Wait\+On\+Thread\+Ordering\+Group}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{p\+Av\+Rt\+Wait\+On\+Thread\+Ordering\+Group}{pAvRtWaitOnThreadOrderingGroup}}]{\setlength{\rightskip}{0pt plus 5cm}F\+Av\+Rt\+Wait\+On\+Thread\+Ordering\+Group p\+Av\+Rt\+Wait\+On\+Thread\+Ordering\+Group = {\bf N\+U\+LL}}\hypertarget{pa__win__wasapi_8c_ab0d78159e0a0e2a6575ca053983461d8}{}\label{pa__win__wasapi_8c_ab0d78159e0a0e2a6575ca053983461d8}
+
+
+Definition at line 285 of file pa\+\_\+win\+\_\+wasapi.\+c.
+
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!p\+Av\+Set\+Mm\+Thread\+Characteristics@{p\+Av\+Set\+Mm\+Thread\+Characteristics}}
+\index{p\+Av\+Set\+Mm\+Thread\+Characteristics@{p\+Av\+Set\+Mm\+Thread\+Characteristics}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{p\+Av\+Set\+Mm\+Thread\+Characteristics}{pAvSetMmThreadCharacteristics}}]{\setlength{\rightskip}{0pt plus 5cm}F\+Av\+Set\+Mm\+Thread\+Characteristics p\+Av\+Set\+Mm\+Thread\+Characteristics = {\bf N\+U\+LL}}\hypertarget{pa__win__wasapi_8c_a892964d92daf945b57491f24eb331056}{}\label{pa__win__wasapi_8c_a892964d92daf945b57491f24eb331056}
+
+
+Definition at line 286 of file pa\+\_\+win\+\_\+wasapi.\+c.
+
+\index{pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}!p\+Av\+Set\+Mm\+Thread\+Priority@{p\+Av\+Set\+Mm\+Thread\+Priority}}
+\index{p\+Av\+Set\+Mm\+Thread\+Priority@{p\+Av\+Set\+Mm\+Thread\+Priority}!pa\+\_\+win\+\_\+wasapi.\+c@{pa\+\_\+win\+\_\+wasapi.\+c}}
+\subsubsection[{\texorpdfstring{p\+Av\+Set\+Mm\+Thread\+Priority}{pAvSetMmThreadPriority}}]{\setlength{\rightskip}{0pt plus 5cm}F\+Av\+Set\+Mm\+Thread\+Priority p\+Av\+Set\+Mm\+Thread\+Priority = {\bf N\+U\+LL}}\hypertarget{pa__win__wasapi_8c_a00926c56ee41e2e33e834e6552a9fe0d}{}\label{pa__win__wasapi_8c_a00926c56ee41e2e33e834e6552a9fe0d}
+
+
+Definition at line 288 of file pa\+\_\+win\+\_\+wasapi.\+c.
+

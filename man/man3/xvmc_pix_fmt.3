@@ -1,0 +1,226 @@
+.TH "xvmc_pix_fmt" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+xvmc_pix_fmt \- 
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <xvmc\&.h>\fP
+.SS "Public Attributes"
+
+.in +1c
+.ti -1c
+.RI "\fBint\fP \fBxvmc_id\fP"
+.br
+.ti -1c
+.RI "short * \fBdata_blocks\fP"
+.br
+.ti -1c
+.RI "XvMCMacroBlock * \fBmv_blocks\fP"
+.br
+.ti -1c
+.RI "\fBint\fP \fBallocated_mv_blocks\fP"
+.br
+.ti -1c
+.RI "\fBint\fP \fBallocated_data_blocks\fP"
+.br
+.ti -1c
+.RI "\fBint\fP \fBidct\fP"
+.br
+.ti -1c
+.RI "\fBint\fP \fBunsigned_intra\fP"
+.br
+.ti -1c
+.RI "XvMCSurface * \fBp_surface\fP"
+.br
+.in -1c
+.PP
+.RI "\fB\fP"
+.br
+
+.in +1c
+.in +1c
+.ti -1c
+.RI "XvMCSurface * \fBp_past_surface\fP"
+.br
+.ti -1c
+.RI "XvMCSurface * \fBp_future_surface\fP"
+.br
+.ti -1c
+.RI "unsigned \fBint\fP \fBpicture_structure\fP"
+.br
+.ti -1c
+.RI "unsigned \fBint\fP \fBflags\fP"
+.br
+.ti -1c
+.RI "\fBint\fP \fBstart_mv_blocks_num\fP"
+.br
+.ti -1c
+.RI "\fBint\fP \fBfilled_mv_blocks_num\fP"
+.br
+.ti -1c
+.RI "\fBint\fP \fBnext_free_data_block_num\fP"
+.br
+.in -1c
+.in -1c
+.SH "Detailed Description"
+.PP 
+Definition at line 47 of file xvmc\&.h\&.
+.SH "Member Data Documentation"
+.PP 
+.SS "\fBint\fP xvmc_pix_fmt::allocated_data_blocks"
+Number of blocks that can be stored at once in the data_blocks array\&.
+.IP "\(bu" 2
+application - set during initialization
+.IP "\(bu" 2
+libavcodec - unchanged 
+.PP
+
+.PP
+Definition at line 83 of file xvmc\&.h\&.
+.SS "\fBint\fP xvmc_pix_fmt::allocated_mv_blocks"
+Number of macroblock descriptions that can be stored in the mv_blocks array\&.
+.IP "\(bu" 2
+application - set during initialization
+.IP "\(bu" 2
+libavcodec - unchanged 
+.PP
+
+.PP
+Definition at line 77 of file xvmc\&.h\&.
+.SS "short* xvmc_pix_fmt::data_blocks"
+Pointer to the block array allocated by XvMCCreateBlocks()\&. The array has to be freed by XvMCDestroyBlocks()\&. Each group of 64 values represents one data block of differential pixel information (in MoCo mode) or coefficients for IDCT\&.
+.IP "\(bu" 2
+application - set the pointer during initialization
+.IP "\(bu" 2
+libavcodec - fills coefficients/pixel data into the array 
+.PP
+
+.PP
+Definition at line 63 of file xvmc\&.h\&.
+.SS "\fBint\fP xvmc_pix_fmt::filled_mv_blocks_num"
+Number of new macroblock descriptions in the mv_blocks array (after start_mv_blocks_num) that are filled by libavcodec and have to be passed to the hardware\&.
+.IP "\(bu" 2
+application - zeroes it on get_buffer() or after successful ff_draw_horiz_band()\&.
+.IP "\(bu" 2
+libavcodec - increment with one of each stored MB 
+.PP
+
+.PP
+Definition at line 151 of file xvmc\&.h\&.
+.SS "unsigned \fBint\fP xvmc_pix_fmt::flags"
+XVMC_SECOND_FIELD - 1st or 2nd field in the sequence
+.IP "\(bu" 2
+application - unchanged
+.IP "\(bu" 2
+libavcodec - set 
+.PP
+
+.PP
+Definition at line 132 of file xvmc\&.h\&.
+.SS "\fBint\fP xvmc_pix_fmt::idct"
+Indicate that the hardware would interpret data_blocks as IDCT coefficients and perform IDCT on them\&.
+.IP "\(bu" 2
+application - set during initialization
+.IP "\(bu" 2
+libavcodec - unchanged 
+.PP
+
+.PP
+Definition at line 90 of file xvmc\&.h\&.
+.SS "XvMCMacroBlock* xvmc_pix_fmt::mv_blocks"
+Pointer to the macroblock description array allocated by XvMCCreateMacroBlocks() and freed by XvMCDestroyMacroBlocks()\&.
+.IP "\(bu" 2
+application - set the pointer during initialization
+.IP "\(bu" 2
+libavcodec - fills description data into the array 
+.PP
+
+.PP
+Definition at line 70 of file xvmc\&.h\&.
+.SS "\fBint\fP xvmc_pix_fmt::next_free_data_block_num"
+Number of the next free data block; one data block consists of 64 short values in the data_blocks array\&. All blocks before this one have already been claimed by placing their position into the corresponding block description structure field, that are part of the mv_blocks array\&.
+.IP "\(bu" 2
+application - zeroes it on get_buffer()\&. A successful ff_draw_horiz_band() may zero it together with start_mb_blocks_num\&.
+.IP "\(bu" 2
+libavcodec - each decoded macroblock increases it by the number of coded blocks it contains\&. 
+.PP
+
+.PP
+Definition at line 164 of file xvmc\&.h\&.
+.SS "XvMCSurface* xvmc_pix_fmt::p_future_surface"
+Pointer to the surface used as future reference
+.IP "\(bu" 2
+application - unchanged
+.IP "\(bu" 2
+libavcodec - set 
+.PP
+
+.PP
+Definition at line 120 of file xvmc\&.h\&.
+.SS "XvMCSurface* xvmc_pix_fmt::p_past_surface"
+Set by the decoder before calling ff_draw_horiz_band(), needed by the XvMCRenderSurface function\&. Pointer to the surface used as past reference
+.IP "\(bu" 2
+application - unchanged
+.IP "\(bu" 2
+libavcodec - set 
+.PP
+
+.PP
+Definition at line 114 of file xvmc\&.h\&.
+.SS "XvMCSurface* xvmc_pix_fmt::p_surface"
+Pointer to the surface allocated by XvMCCreateSurface()\&. It has to be freed by XvMCDestroySurface() on application exit\&. It identifies the frame and its state on the video hardware\&.
+.IP "\(bu" 2
+application - set during initialization
+.IP "\(bu" 2
+libavcodec - unchanged 
+.PP
+
+.PP
+Definition at line 105 of file xvmc\&.h\&.
+.SS "unsigned \fBint\fP xvmc_pix_fmt::picture_structure"
+top/bottom field or frame
+.IP "\(bu" 2
+application - unchanged
+.IP "\(bu" 2
+libavcodec - set 
+.PP
+
+.PP
+Definition at line 126 of file xvmc\&.h\&.
+.SS "\fBint\fP xvmc_pix_fmt::start_mv_blocks_num"
+Number of macroblock descriptions in the mv_blocks array that have already been passed to the hardware\&.
+.IP "\(bu" 2
+application - zeroes it on get_buffer()\&. A successful ff_draw_horiz_band() may increment it with filled_mb_block_num or zero both\&.
+.IP "\(bu" 2
+libavcodec - unchanged 
+.PP
+
+.PP
+Definition at line 142 of file xvmc\&.h\&.
+.SS "\fBint\fP xvmc_pix_fmt::unsigned_intra"
+In MoCo mode it indicates that intra macroblocks are assumed to be in unsigned format; same as the XVMC_INTRA_UNSIGNED flag\&.
+.IP "\(bu" 2
+application - set during initialization
+.IP "\(bu" 2
+libavcodec - unchanged 
+.PP
+
+.PP
+Definition at line 97 of file xvmc\&.h\&.
+.SS "\fBint\fP xvmc_pix_fmt::xvmc_id"
+The field contains the special constant value AV_XVMC_ID\&. It is used as a test that the application correctly uses the API, and that there is no corruption caused by pixel routines\&.
+.IP "\(bu" 2
+application - set during initialization
+.IP "\(bu" 2
+libavcodec - unchanged 
+.PP
+
+.PP
+Definition at line 54 of file xvmc\&.h\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

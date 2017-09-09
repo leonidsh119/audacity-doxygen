@@ -1,0 +1,175 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/src/effects/nyquist/Nyquist.cpp" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/src/effects/nyquist/Nyquist.cpp \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include '\&.\&./\&.\&./Audacity\&.h'\fP
+.br
+\fC#include <algorithm>\fP
+.br
+\fC#include <math\&.h>\fP
+.br
+\fC#include <locale\&.h>\fP
+.br
+\fC#include <wx/checkbox\&.h>\fP
+.br
+\fC#include <wx/choice\&.h>\fP
+.br
+\fC#include <wx/datetime\&.h>\fP
+.br
+\fC#include <wx/intl\&.h>\fP
+.br
+\fC#include <wx/log\&.h>\fP
+.br
+\fC#include <wx/msgdlg\&.h>\fP
+.br
+\fC#include <wx/sstream\&.h>\fP
+.br
+\fC#include <wx/textdlg\&.h>\fP
+.br
+\fC#include <wx/txtstrm\&.h>\fP
+.br
+\fC#include <wx/valgen\&.h>\fP
+.br
+\fC#include <wx/wfstream\&.h>\fP
+.br
+\fC#include <wx/numformatter\&.h>\fP
+.br
+\fC#include '\&.\&./\&.\&./AudacityApp\&.h'\fP
+.br
+\fC#include '\&.\&./\&.\&./FileNames\&.h'\fP
+.br
+\fC#include '\&.\&./\&.\&./Internat\&.h'\fP
+.br
+\fC#include '\&.\&./\&.\&./LabelTrack\&.h'\fP
+.br
+\fC#include '\&.\&./\&.\&./prefs/SpectrogramSettings\&.h'\fP
+.br
+\fC#include '\&.\&./\&.\&./Project\&.h'\fP
+.br
+\fC#include '\&.\&./\&.\&./ShuttleGui\&.h'\fP
+.br
+\fC#include '\&.\&./\&.\&./WaveClip\&.h'\fP
+.br
+\fC#include '\&.\&./\&.\&./WaveTrack\&.h'\fP
+.br
+\fC#include '\&.\&./\&.\&./widgets/valnum\&.h'\fP
+.br
+\fC#include '\&.\&./\&.\&./Prefs\&.h'\fP
+.br
+\fC#include '\&.\&./\&.\&./prefs/WaveformSettings\&.h'\fP
+.br
+\fC#include 'FileDialog\&.h'\fP
+.br
+\fC#include 'Nyquist\&.h'\fP
+.br
+\fC#include <iostream>\fP
+.br
+\fC#include <ostream>\fP
+.br
+\fC#include <sstream>\fP
+.br
+\fC#include <float\&.h>\fP
+.br
+\fC#include '\&.\&./\&.\&./Experimental\&.h'\fP
+.br
+\fC#include <wx/arrimpl\&.cpp>\fP
+.br
+
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBNYQ_MAX_LEN\fP   ((\fBsampleCount\fP) 2147483647)"
+.br
+.ti -1c
+.RI "#define \fBUNINITIALIZED_CONTROL\fP   ((double)99999999\&.99)"
+.br
+.in -1c
+.SS "Enumerations"
+
+.in +1c
+.ti -1c
+.RI "enum { \fBID_Editor\fP = 10000, \fBID_Version\fP, \fBID_Load\fP, \fBID_Save\fP, \fBID_Slider\fP = 11000, \fBID_Choice\fP = 13000 }"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBWX_DEFINE_OBJARRAY\fP (NyqControlArray)"
+.br
+.ti -1c
+.RI "\fBEVT_COMMAND_RANGE\fP (\fBID_Slider\fP, \fBID_Slider\fP+99, wxEVT_COMMAND_SLIDER_UPDATED, NyquistEffect::OnSlider) EVT_COMMAND_RANGE(\fBID_Text\fP"
+.br
+.ti -1c
+.RI "NyquistEffect::OnText \fBEVT_COMMAND_RANGE\fP (\fBID_Choice\fP, \fBID_Choice\fP+99, wxEVT_COMMAND_CHOICE_SELECTED, NyquistEffect::OnChoice) \fBNyquistEffect\fP"
+.br
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "\fBID_Text\fP = 12000"
+.br
+.ti -1c
+.RI "\fBwxEVT_COMMAND_TEXT_UPDATED\fP"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define NYQ_MAX_LEN   ((\fBsampleCount\fP) 2147483647)"
+
+.PP
+Definition at line 89 of file Nyquist\&.cpp\&.
+.SS "#define UNINITIALIZED_CONTROL   ((double)99999999\&.99)"
+
+.PP
+Definition at line 91 of file Nyquist\&.cpp\&.
+.SH "Enumeration Type Documentation"
+.PP 
+.SS "anonymous enum"
+
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fIID_Editor \fP\fP
+.TP
+\fB\fIID_Version \fP\fP
+.TP
+\fB\fIID_Load \fP\fP
+.TP
+\fB\fIID_Save \fP\fP
+.TP
+\fB\fIID_Slider \fP\fP
+.TP
+\fB\fIID_Choice \fP\fP
+.PP
+Definition at line 76 of file Nyquist\&.cpp\&.
+.SH "Function Documentation"
+.PP 
+.SS "EVT_COMMAND_RANGE (\fBID_Slider\fP, \fBID_Slider\fP+ 99, wxEVT_COMMAND_SLIDER_UPDATED, NyquistEffect::OnSlider)"
+
+.SS "NyquistEffect::OnText EVT_COMMAND_RANGE (\fBID_Choice\fP, \fBID_Choice\fP+ 99, wxEVT_COMMAND_CHOICE_SELECTED, NyquistEffect::OnChoice)"
+
+.PP
+Definition at line 113 of file Nyquist\&.cpp\&.
+.SS "WX_DEFINE_OBJARRAY (NyqControlArray)"
+
+.SH "Variable Documentation"
+.PP 
+.SS "ID_Text = 12000"
+
+.PP
+Definition at line 111 of file Nyquist\&.cpp\&.
+.SS "wxEVT_COMMAND_TEXT_UPDATED"
+
+.PP
+Definition at line 111 of file Nyquist\&.cpp\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

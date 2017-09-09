@@ -1,0 +1,374 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/lib-src/libnyquist/nyquist/sys/win/msvc/winstuff.c" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/lib-src/libnyquist/nyquist/sys/win/msvc/winstuff.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <windows\&.h>\fP
+.br
+\fC#include <process\&.h>\fP
+.br
+\fC#include <signal\&.h>\fP
+.br
+\fC#include 'exitpa\&.h'\fP
+.br
+\fC#include <stdio\&.h>\fP
+.br
+\fC#include <memory\&.h>\fP
+.br
+\fC#include <string\&.h>\fP
+.br
+\fC#include 'xlisp\&.h'\fP
+.br
+\fC#include 'cext\&.h'\fP
+.br
+\fC#include 'userio\&.h'\fP
+.br
+\fC#include 'sliderdata\&.h'\fP
+.br
+\fC#include 'sound\&.h'\fP
+.br
+\fC#include 'falloc\&.h'\fP
+.br
+
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBNEED_INPUT\fP   \fBif\fP (\fBinput_thread_handle\fP == \-1) \fBstart_input_thread\fP();"
+.br
+.ti -1c
+.RI "#define \fBinput_buffer_max\fP   1024"
+.br
+.ti -1c
+.RI "#define \fBinput_buffer_mask\fP   (\fBinput_buffer_max\fP \- 1)"
+.br
+.ti -1c
+.RI "#define \fBMSGBUF_MAX\fP   64"
+.br
+.ti -1c
+.RI "#define \fBOSDIR_LIST_READY\fP   0"
+.br
+.ti -1c
+.RI "#define \fBOSDIR_LIST_STARTED\fP   1"
+.br
+.ti -1c
+.RI "#define \fBOSDIR_LIST_DONE\fP   2"
+.br
+.ti -1c
+.RI "#define \fBOSDIR_MAX_PATH\fP   256"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "char * \fBmacgets\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBint\fP \fB_isatty\fP (\fBint\fP)"
+.br
+.ti -1c
+.RI "\fBBOOL\fP \fBWINAPI\fP \fBctrl_c_handler\fP (\fBDWORD\fP dwCtrlType)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBinput_thread_run\fP (\fBvoid\fP *args)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBstart_input_thread\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBosinit\fP (char *banner)"
+.br
+.ti -1c
+.RI "FILE * \fBosaopen\fP (char *\fBname\fP, char *mode)"
+.br
+.ti -1c
+.RI "FILE * \fBosbopen\fP (char *\fBname\fP, char *mode)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBosclose\fP (FILE *fp)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBosaputc\fP (\fBint\fP ch, FILE *fp)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBosbputc\fP (\fBint\fP ch, FILE *fp)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBosoutflush\fP (FILE *fp)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBosagetc\fP (FILE *fp)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBostgetc\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBostputc\fP (\fBint\fP ch)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBostoutflush\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBosflush\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBoscheck\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBoserror\fP (char *msg)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBosfinish\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBrenamebackup\fP (char *\fBfilename\fP)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBosdir_list_start\fP (char *path)"
+.br
+.ti -1c
+.RI "\fBconst\fP char * \fBosdir_list_next\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBosdir_list_finish\fP ()"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxechoenabled\fP ()"
+.br
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "\fBconst\fP char \fBos_pathchar\fP = '\\\\'"
+.br
+.ti -1c
+.RI "\fBconst\fP char \fBos_sepchar\fP = ','"
+.br
+.ti -1c
+.RI "FILE * \fBtfp\fP"
+.br
+.ti -1c
+.RI "\fBint\fP \fBcursorPos\fP"
+.br
+.ti -1c
+.RI "\fBint\fP \fBredirect_flag\fP"
+.br
+.ti -1c
+.RI "\fBint\fP \fBlposition\fP"
+.br
+.ti -1c
+.RI "unsigned long \fBinput_thread_handle\fP = \-1"
+.br
+.ti -1c
+.RI "char \fBinput_buffer\fP [1024]"
+.br
+.ti -1c
+.RI "volatile \fBint\fP \fBinput_buffer_head\fP = 0"
+.br
+.ti -1c
+.RI "volatile \fBint\fP \fBinput_buffer_tail\fP = 0"
+.br
+.ti -1c
+.RI "volatile \fBint\fP \fBbuffer_eof\fP = 0"
+.br
+.ti -1c
+.RI "\fBHANDLE\fP \fBinput_buffer_ready\fP = \fBNULL\fP"
+.br
+.ti -1c
+.RI "\fBint\fP \fBabort_flag\fP"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define input_buffer_mask   (\fBinput_buffer_max\fP \- 1)"
+
+.PP
+Definition at line 84 of file winstuff\&.c\&.
+.SS "#define input_buffer_max   1024"
+
+.PP
+Definition at line 83 of file winstuff\&.c\&.
+.SS "#define MSGBUF_MAX   64"
+
+.SS "#define NEED_INPUT   \fBif\fP (\fBinput_thread_handle\fP == \-1) \fBstart_input_thread\fP();"
+
+.PP
+Definition at line 82 of file winstuff\&.c\&.
+.SS "#define OSDIR_LIST_DONE   2"
+
+.PP
+Definition at line 370 of file winstuff\&.c\&.
+.SS "#define OSDIR_LIST_READY   0"
+
+.PP
+Definition at line 368 of file winstuff\&.c\&.
+.SS "#define OSDIR_LIST_STARTED   1"
+
+.PP
+Definition at line 369 of file winstuff\&.c\&.
+.SS "#define OSDIR_MAX_PATH   256"
+
+.PP
+Definition at line 372 of file winstuff\&.c\&.
+.SH "Function Documentation"
+.PP 
+.SS "\fBint\fP _isatty (\fBint\fP)"
+
+.SS "\fBBOOL\fP \fBWINAPI\fP ctrl_c_handler (\fBDWORD\fP dwCtrlType)"
+
+.PP
+Definition at line 91 of file winstuff\&.c\&.
+.SS "\fBvoid\fP input_thread_run (\fBvoid\fP * args)"
+
+.PP
+Definition at line 104 of file winstuff\&.c\&.
+.SS "char* macgets (\fBvoid\fP)"
+
+.PP
+Definition at line 587 of file MacCommandWin\&.c\&.
+.SS "\fBint\fP osagetc (FILE * fp)"
+
+.PP
+Definition at line 246 of file winstuff\&.c\&.
+.SS "FILE* osaopen (char * name, char * mode)"
+
+.PP
+Definition at line 220 of file winstuff\&.c\&.
+.SS "\fBint\fP osaputc (\fBint\fP ch, FILE * fp)"
+
+.PP
+Definition at line 241 of file winstuff\&.c\&.
+.SS "FILE* osbopen (char * name, char * mode)"
+
+.PP
+Definition at line 229 of file winstuff\&.c\&.
+.SS "\fBint\fP osbputc (\fBint\fP ch, FILE * fp)"
+
+.PP
+Definition at line 242 of file winstuff\&.c\&.
+.SS "\fBvoid\fP oscheck (\fBvoid\fP)"
+
+.PP
+Definition at line 299 of file winstuff\&.c\&.
+.SS "\fBint\fP osclose (FILE * fp)"
+
+.PP
+Definition at line 240 of file winstuff\&.c\&.
+.SS "\fBvoid\fP osdir_list_finish (\fBvoid\fP)"
+
+.PP
+Definition at line 405 of file winstuff\&.c\&.
+.SS "\fBconst\fP char* osdir_list_next (\fBvoid\fP)"
+
+.PP
+Definition at line 396 of file winstuff\&.c\&.
+.SS "\fBint\fP osdir_list_start (char * path)"
+
+.PP
+Definition at line 376 of file winstuff\&.c\&.
+.SS "\fBvoid\fP oserror (char * msg)"
+
+.PP
+Definition at line 347 of file winstuff\&.c\&.
+.SS "\fBvoid\fP osfinish (\fBvoid\fP)"
+
+.PP
+Definition at line 353 of file winstuff\&.c\&.
+.SS "\fBvoid\fP osflush (\fBvoid\fP)"
+
+.PP
+Definition at line 292 of file winstuff\&.c\&.
+.SS "\fBvoid\fP osinit (char * banner)"
+
+.PP
+Definition at line 198 of file winstuff\&.c\&.
+.SS "\fBvoid\fP osoutflush (FILE * fp)"
+
+.PP
+Definition at line 243 of file winstuff\&.c\&.
+.SS "\fBint\fP ostgetc (\fBvoid\fP)"
+
+.PP
+Definition at line 254 of file winstuff\&.c\&.
+.SS "\fBvoid\fP ostoutflush (\fBvoid\fP)"
+
+.PP
+Definition at line 285 of file winstuff\&.c\&.
+.SS "\fBvoid\fP ostputc (\fBint\fP ch)"
+
+.PP
+Definition at line 278 of file winstuff\&.c\&.
+.SS "\fBint\fP renamebackup (char * filename)"
+
+.PP
+Definition at line 361 of file winstuff\&.c\&.
+.SS "\fBvoid\fP start_input_thread ()"
+
+.PP
+Definition at line 188 of file winstuff\&.c\&.
+.SS "\fBLVAL\fP xechoenabled (\fBvoid\fP)"
+
+.PP
+Definition at line 415 of file winstuff\&.c\&.
+.SH "Variable Documentation"
+.PP 
+.SS "\fBint\fP abort_flag"
+
+.PP
+Definition at line 187 of file userio\&.c\&.
+.SS "volatile \fBint\fP buffer_eof = 0"
+
+.PP
+Definition at line 88 of file winstuff\&.c\&.
+.SS "\fBint\fP cursorPos"
+
+.PP
+Definition at line 19 of file MacCommandWin\&.c\&.
+.SS "char input_buffer[1024]"
+
+.PP
+Definition at line 85 of file winstuff\&.c\&.
+.SS "volatile \fBint\fP input_buffer_head = 0"
+
+.PP
+Definition at line 86 of file winstuff\&.c\&.
+.SS "\fBHANDLE\fP input_buffer_ready = \fBNULL\fP"
+
+.PP
+Definition at line 89 of file winstuff\&.c\&.
+.SS "volatile \fBint\fP input_buffer_tail = 0"
+
+.PP
+Definition at line 87 of file winstuff\&.c\&.
+.SS "unsigned long input_thread_handle = \-1"
+
+.PP
+Definition at line 81 of file winstuff\&.c\&.
+.SS "\fBint\fP lposition"
+
+.PP
+Definition at line 76 of file winstuff\&.c\&.
+.SS "\fBconst\fP char os_pathchar = '\\\\'"
+
+.PP
+Definition at line 49 of file winstuff\&.c\&.
+.SS "\fBconst\fP char os_sepchar = ','"
+
+.PP
+Definition at line 50 of file winstuff\&.c\&.
+.SS "\fBint\fP redirect_flag"
+
+.PP
+Definition at line 253 of file winstuff\&.c\&.
+.SS "FILE* tfp"
+
+.PP
+Definition at line 90 of file xlglob\&.c\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

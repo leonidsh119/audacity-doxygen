@@ -1,0 +1,42 @@
+Planned refactoring of \hyperlink{_track_panel_8cpp}{Track\+Panel.\+cpp}
+
+
+\begin{DoxyItemize}
+\item Move menus from current \hyperlink{class_track_panel}{Track\+Panel} into \hyperlink{class_track_info}{Track\+Info}.
+\item Convert \hyperlink{class_track_info}{Track\+Info} from \textquotesingle{}flyweight\textquotesingle{} to heavyweight.
+\item Split Gui\+Stereo\+Track and Gui\+Wave\+Track out from \hyperlink{class_track_panel}{Track\+Panel}.
+
+J\+KC\+: Incremental refactoring started April/2003
+
+Possibly aiming for Gui classes something like this -\/ it\textquotesingle{}s under discussion\+:
+\end{DoxyItemize}
+
+
+\begin{DoxyPre}
+   +----------------------------------------------------+
+   |      \hyperlink{class_adorned_ruler_panel}{AdornedRulerPanel}                             |
+   +----------------------------------------------------+
+   +----------------------------------------------------+
+   |+------------+ +-----------------------------------+|
+   ||            | | (L)  GuiWaveTrack                 ||
+   || \hyperlink{class_track_info}{TrackInfo}  | +-----------------------------------+|
+   ||            | +-----------------------------------+|
+   ||            | | (R)  GuiWaveTrack                 ||
+   |+------------+ +-----------------------------------+|
+   +-------- GuiStereoTrack ----------------------------+
+   +----------------------------------------------------+
+   |+------------+ +-----------------------------------+|
+   ||            | | (L)  GuiWaveTrack                 ||
+   || \hyperlink{class_track_info}{TrackInfo}  | +-----------------------------------+|
+   ||            | +-----------------------------------+|
+   ||            | | (R)  GuiWaveTrack                 ||
+   |+------------+ +-----------------------------------+|
+   +-------- GuiStereoTrack ----------------------------+
+\end{DoxyPre}
+
+
+With the whole lot sitting in a \hyperlink{class_track_panel}{Track\+Panel} which forwards events to the sub objects.
+
+The Gui\+Stereo\+Track class will do the special logic for Stereo channel grouping.
+
+The precise names of the classes are subject to revision. Have deliberately not created N\+EW files for the new classes such as \hyperlink{class_adorned_ruler_panel}{Adorned\+Ruler\+Panel} and \hyperlink{class_track_info}{Track\+Info} -\/ yet. 

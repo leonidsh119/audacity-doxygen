@@ -1,0 +1,261 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/src/effects/Reverb.cpp" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/src/effects/Reverb.cpp \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include '\&.\&./Audacity\&.h'\fP
+.br
+\fC#include 'Reverb\&.h'\fP
+.br
+\fC#include <wx/arrstr\&.h>\fP
+.br
+\fC#include <wx/intl\&.h>\fP
+.br
+\fC#include '\&.\&./Prefs\&.h'\fP
+.br
+\fC#include '\&.\&./ShuttleGui\&.h'\fP
+.br
+\fC#include '\&.\&./widgets/valnum\&.h'\fP
+.br
+\fC#include 'Reverb_libSoX\&.h'\fP
+.br
+
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "struct \fBReverb_priv_t\fP"
+.br
+.in -1c
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBSpinSliderEvent\fP(n)"
+.br
+.ti -1c
+.RI "#define \fBBLOCK\fP   16384"
+.br
+.ti -1c
+.RI "#define \fBSpinSlider\fP(n,  \fBp\fP)"
+.br
+.ti -1c
+.RI "#define \fBSetSpinSlider\fP(n)"
+.br
+.ti -1c
+.RI "#define \fBSpinSliderHandlers\fP(n)"
+.br
+.in -1c
+.SS "Enumerations"
+
+.in +1c
+.ti -1c
+.RI "enum { \fBID_RoomSize\fP = 10000, \fBID_PreDelay\fP, \fBID_Reverberance\fP, \fBID_HfDamping\fP, \fBID_ToneLow\fP, \fBID_ToneHigh\fP, \fBID_WetGain\fP, \fBID_DryGain\fP, \fBID_StereoWidth\fP, \fBID_WetOnly\fP }"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBParam\fP (RoomSize, double, \fBXO\fP('RoomSize'), 75, 0, 100, 1)"
+.br
+.ti -1c
+.RI "\fBParam\fP (PreDelay, double, \fBXO\fP('Delay'), 10, 0, 200, 1)"
+.br
+.ti -1c
+.RI "\fBParam\fP (Reverberance, double, \fBXO\fP('Reverberance'), 50, 0, 100, 1)"
+.br
+.ti -1c
+.RI "\fBParam\fP (HfDamping, double, \fBXO\fP('HfDamping'), 50, 0, 100, 1)"
+.br
+.ti -1c
+.RI "\fBParam\fP (ToneLow, double, \fBXO\fP('ToneLow'), 100, 0, 100, 1)"
+.br
+.ti -1c
+.RI "\fBParam\fP (ToneHigh, double, \fBXO\fP('ToneHigh'), 100, 0, 100, 1)"
+.br
+.ti -1c
+.RI "\fBParam\fP (WetGain, double, \fBXO\fP('WetGain'),\-1,\-20, 10, 1)"
+.br
+.ti -1c
+.RI "\fBParam\fP (DryGain, double, \fBXO\fP('DryGain'),\-1,\-20, 10, 1)"
+.br
+.ti -1c
+.RI "\fBParam\fP (StereoWidth, double, \fBXO\fP('StereoWidth'), 100, 0, 100, 1)"
+.br
+.ti -1c
+.RI "\fBParam\fP (WetOnly, \fBbool\fP, \fBXO\fP('WetOnly'), false, \fBfalse\fP, \fBtrue\fP, 1)"
+.br
+.ti -1c
+.RI "\fBSpinSliderEvent\fP (RoomSize) SpinSliderEvent(PreDelay) SpinSliderEvent(Reverberance) SpinSliderEvent(HfDamping) SpinSliderEvent(ToneLow) SpinSliderEvent(ToneHigh) SpinSliderEvent(WetGain) SpinSliderEvent(DryGain) SpinSliderEvent(StereoWidth) \fBEffectReverb\fP"
+.br
+.ti -1c
+.RI "\fBSpinSliderHandlers\fP (RoomSize)"
+.br
+.ti -1c
+.RI "\fBSpinSliderHandlers\fP (PreDelay)"
+.br
+.ti -1c
+.RI "\fBSpinSliderHandlers\fP (Reverberance)"
+.br
+.ti -1c
+.RI "\fBSpinSliderHandlers\fP (HfDamping)"
+.br
+.ti -1c
+.RI "\fBSpinSliderHandlers\fP (ToneLow)"
+.br
+.ti -1c
+.RI "\fBSpinSliderHandlers\fP (ToneHigh)"
+.br
+.ti -1c
+.RI "\fBSpinSliderHandlers\fP (WetGain)"
+.br
+.ti -1c
+.RI "\fBSpinSliderHandlers\fP (DryGain)"
+.br
+.ti -1c
+.RI "\fBSpinSliderHandlers\fP (StereoWidth)"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define \fBBLOCK\fP   16384"
+
+.PP
+Definition at line 162 of file Reverb\&.cpp\&.
+.SS "#define SetSpinSlider(n)"
+\fBValue:\fP
+.PP
+.nf
+m ## n ## S->SetValue((int) mParams\&.m ## n); \
+   m ## n ## T->SetValue(wxString::Format(wxT("%d"), (int) mParams\&.m ## n));
+.fi
+.SS "#define SpinSlider(n, \fBp\fP)"
+\fBValue:\fP
+.PP
+.nf
+m ## n ## T = S\&.Id(ID_ ## n)\&. \
+         AddSpinCtrl( p, DEF_ ## n, MAX_ ## n, MIN_ ## n); \
+      S\&.SetStyle(wxSL_HORIZONTAL); \
+      m ## n ## S = S\&.Id(ID_ ## n)\&. \
+         AddSlider(wxT(""), DEF_ ## n, MAX_ ## n, MIN_ ## n);
+.fi
+.SS "#define SpinSliderEvent(n)"
+\fBValue:\fP
+.PP
+.nf
+EVT_SLIDER(ID_ ## n, EffectReverb::On ## n ## Slider) \
+   EVT_TEXT(ID_ ## n, EffectReverb::On ## n ## Text)
+.fi
+.PP
+Definition at line 91 of file Reverb\&.cpp\&.
+.SS "#define SpinSliderHandlers(n)"
+\fBValue:\fP
+.PP
+.nf
+void EffectReverb::On ## n ## Slider(wxCommandEvent & evt) \
+   { \
+      if (mProcessingEvent) return; \
+      mProcessingEvent = true; \
+      m ## n ## T->SetValue(wxString::Format(wxT("%d"), evt\&.GetInt())); \
+      mProcessingEvent = false; \
+   } \
+   void EffectReverb::On ## n ## Text(wxCommandEvent & evt) \
+   { \
+      if (mProcessingEvent) return; \
+      mProcessingEvent = true; \
+      m ## n ## S->SetValue(TrapLong(evt\&.GetInt(), MIN_ ## n, MAX_ ## n)); \
+      mProcessingEvent = false; \
+   }
+.fi
+.PP
+Definition at line 494 of file Reverb\&.cpp\&.
+.SH "Enumeration Type Documentation"
+.PP 
+.SS "anonymous enum"
+
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fIID_RoomSize \fP\fP
+.TP
+\fB\fIID_PreDelay \fP\fP
+.TP
+\fB\fIID_Reverberance \fP\fP
+.TP
+\fB\fIID_HfDamping \fP\fP
+.TP
+\fB\fIID_ToneLow \fP\fP
+.TP
+\fB\fIID_ToneHigh \fP\fP
+.TP
+\fB\fIID_WetGain \fP\fP
+.TP
+\fB\fIID_DryGain \fP\fP
+.TP
+\fB\fIID_StereoWidth \fP\fP
+.TP
+\fB\fIID_WetOnly \fP\fP
+.PP
+Definition at line 30 of file Reverb\&.cpp\&.
+.SH "Function Documentation"
+.PP 
+.SS "Param (RoomSize, double, \fBXO\fP('RoomSize'), 75, 0, 100, 1)"
+
+.SS "Param (PreDelay, double, \fBXO\fP('Delay'), 10, 0, 200, 1)"
+
+.SS "Param (Reverberance, double, \fBXO\fP('Reverberance'), 50, 0, 100, 1)"
+
+.SS "Param (HfDamping, double, \fBXO\fP('HfDamping'), 50, 0, 100, 1)"
+
+.SS "Param (ToneLow, double, \fBXO\fP('ToneLow'), 100, 0, 100, 1)"
+
+.SS "Param (ToneHigh, double, \fBXO\fP('ToneHigh'), 100, 0, 100, 1)"
+
+.SS "Param (WetGain, double, \fBXO\fP('WetGain'), \- 1, \- 20, 10, 1)"
+
+.SS "Param (DryGain, double, \fBXO\fP('DryGain'), \- 1, \- 20, 10, 1)"
+
+.SS "Param (StereoWidth, double, \fBXO\fP('StereoWidth'), 100, 0, 100, 1)"
+
+.SS "Param (WetOnly, \fBbool\fP, \fBXO\fP('WetOnly'), \fBfalse\fP, \fBfalse\fP, \fBtrue\fP, 1)"
+
+.SS "SpinSliderEvent (RoomSize)"
+
+.PP
+Definition at line 95 of file Reverb\&.cpp\&.
+.SS "SpinSliderHandlers (RoomSize)"
+
+.SS "SpinSliderHandlers (PreDelay)"
+
+.SS "SpinSliderHandlers (Reverberance)"
+
+.SS "SpinSliderHandlers (HfDamping)"
+
+.SS "SpinSliderHandlers (ToneLow)"
+
+.SS "SpinSliderHandlers (ToneHigh)"
+
+.SS "SpinSliderHandlers (WetGain)"
+
+.SS "SpinSliderHandlers (DryGain)"
+
+.SS "SpinSliderHandlers (StereoWidth)"
+
+.SH "Variable Documentation"
+.PP 
+.SS "\fBconst\fP wxChar* \fBname\fP"
+
+.PP
+Definition at line 60 of file Reverb\&.cpp\&.
+.SS "\fBEffectReverb::Params\fP params"
+
+.PP
+Definition at line 61 of file Reverb\&.cpp\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

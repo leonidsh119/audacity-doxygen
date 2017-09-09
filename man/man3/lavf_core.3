@@ -1,0 +1,137 @@
+.TH "lavf_core" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+lavf_core \- Core functions
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "unsigned \fBavformat_version\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBconst\fP char * \fBavformat_configuration\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBconst\fP char * \fBavformat_license\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBav_register_all\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBav_register_input_format\fP (\fBAVInputFormat\fP *\fBformat\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBav_register_output_format\fP (\fBAVOutputFormat\fP *\fBformat\fP)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBavformat_network_init\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBavformat_network_deinit\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBAVInputFormat\fP * \fBav_iformat_next\fP (\fBAVInputFormat\fP *\fBf\fP)"
+.br
+.ti -1c
+.RI "\fBAVOutputFormat\fP * \fBav_oformat_next\fP (\fBAVOutputFormat\fP *\fBf\fP)"
+.br
+.ti -1c
+.RI "\fBAVFormatContext\fP * \fBavformat_alloc_context\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBavformat_free_context\fP (\fBAVFormatContext\fP *\fBs\fP)"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBAVClass\fP * \fBavformat_get_class\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBAVStream\fP * \fBavformat_new_stream\fP (\fBAVFormatContext\fP *\fBs\fP, \fBconst\fP \fBAVCodec\fP *\fBc\fP)"
+.br
+.ti -1c
+.RI "\fBAVProgram\fP * \fBav_new_program\fP (\fBAVFormatContext\fP *\fBs\fP, \fBint\fP id)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Functions for querying libavformat capabilities, allocating core structures, etc\&. 
+.SH "Function Documentation"
+.PP 
+.SS "\fBAVInputFormat\fP* av_iformat_next (\fBAVInputFormat\fP * f)"
+If f is NULL, returns the first registered input format, if f is non-NULL, returns the next registered input format after f or NULL if f is the last one\&. 
+.SS "\fBAVProgram\fP* av_new_program (\fBAVFormatContext\fP * s, \fBint\fP id)"
+
+.SS "\fBAVOutputFormat\fP* av_oformat_next (\fBAVOutputFormat\fP * f)"
+If f is NULL, returns the first registered output format, if f is non-NULL, returns the next registered output format after f or NULL if f is the last one\&. 
+.SS "\fBvoid\fP av_register_all (\fBvoid\fP)"
+Initialize libavformat and register all the muxers, demuxers and protocols\&. If you do not call this function, then you can select exactly which formats you want to support\&.
+.PP
+\fBSee also:\fP
+.RS 4
+\fBav_register_input_format()\fP 
+.PP
+\fBav_register_output_format()\fP 
+.RE
+.PP
+
+.SS "\fBvoid\fP av_register_input_format (\fBAVInputFormat\fP * format)"
+
+.SS "\fBvoid\fP av_register_output_format (\fBAVOutputFormat\fP * format)"
+
+.SS "\fBAVFormatContext\fP* avformat_alloc_context (\fBvoid\fP)"
+Allocate an \fBAVFormatContext\fP\&. \fBavformat_free_context()\fP can be used to free the context and everything allocated by the framework within it\&. 
+.SS "\fBconst\fP char* avformat_configuration (\fBvoid\fP)"
+Return the libavformat build-time configuration\&. 
+.SS "\fBvoid\fP avformat_free_context (\fBAVFormatContext\fP * s)"
+Free an \fBAVFormatContext\fP and all its streams\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIs\fP context to free 
+.RE
+.PP
+
+.SS "\fBconst\fP \fBAVClass\fP* avformat_get_class (\fBvoid\fP)"
+Get the \fBAVClass\fP for \fBAVFormatContext\fP\&. It can be used in combination with AV_OPT_SEARCH_FAKE_OBJ for examining options\&.
+.PP
+\fBSee also:\fP
+.RS 4
+\fBav_opt_find()\fP\&. 
+.RE
+.PP
+
+.SS "\fBconst\fP char* avformat_license (\fBvoid\fP)"
+Return the libavformat license\&. 
+.SS "\fBint\fP avformat_network_deinit (\fBvoid\fP)"
+Undo the initialization done by avformat_network_init\&. 
+.SS "\fBint\fP avformat_network_init (\fBvoid\fP)"
+Do global initialization of network components\&. This is optional, but recommended, since it avoids the overhead of implicitly doing the setup for each session\&.
+.PP
+Calling this function will become mandatory if using network protocols at some major version bump\&. 
+.SS "\fBAVStream\fP* avformat_new_stream (\fBAVFormatContext\fP * s, \fBconst\fP \fBAVCodec\fP * c)"
+Add a new stream to a media file\&.
+.PP
+When demuxing, it is called by the demuxer in read_header()\&. If the flag AVFMTCTX_NOHEADER is set in s\&.ctx_flags, then it may also be called in read_packet()\&.
+.PP
+When muxing, should be called by the user before \fBavformat_write_header()\fP\&.
+.PP
+User is required to call \fBavcodec_close()\fP and \fBavformat_free_context()\fP to clean up the allocation by \fBavformat_new_stream()\fP\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIs\fP media file handle 
+.br
+\fIc\fP If non-NULL, the \fBAVCodecContext\fP corresponding to the new stream will be initialized to use this codec\&. This is needed for e\&.g\&. codec-specific defaults to be set, so codec should be provided if it is known\&.
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+newly created stream or NULL on error\&. 
+.RE
+.PP
+
+.SS "unsigned avformat_version (\fBvoid\fP)"
+Return the LIBAVFORMAT_VERSION_INT constant\&. 
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

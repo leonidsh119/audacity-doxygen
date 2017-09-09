@@ -1,0 +1,3213 @@
+.TH "AudacityProject" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+AudacityProject \- \fBAudacityProject\fP provides the main window, with tools and tracks contained within it\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <Project\&.h>\fP
+.PP
+Inherits wxFrame, \fBTrackPanelListener\fP, \fBSelectionBarListener\fP, \fBSpectralSelectionBarListener\fP, \fBXMLTagHandler\fP, and \fBAudioIOListener\fP\&.
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "class \fBOnEffectFlags\fP"
+.br
+.in -1c
+.SS "Public Types"
+
+.in +1c
+.ti -1c
+.RI "enum \fBMoveChoice\fP { \fBOnMoveUpID\fP, \fBOnMoveDownID\fP, \fBOnMoveTopID\fP, \fBOnMoveBottomID\fP }"
+.br
+.ti -1c
+.RI "typedef \fBbool\fP(WaveTrack::* \fBEditFunction\fP) (double, double)"
+.br
+.ti -1c
+.RI "typedef \fBbool\fP(WaveTrack::* \fBEditDestFunction\fP) (double, double, \fBTrack\fP **)"
+.br
+.in -1c
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBAudacityProject\fP (wxWindow *parent, wxWindowID id, \fBconst\fP wxPoint &pos, \fBconst\fP wxSize &\fBsize\fP)"
+.br
+.ti -1c
+.RI "virtual \fB~AudacityProject\fP ()"
+.br
+.ti -1c
+.RI "\fBAudioIOStartStreamOptions\fP \fBGetDefaultPlayOptions\fP ()"
+.br
+.ti -1c
+.RI "\fBTrackList\fP * \fBGetTracks\fP ()"
+.br
+.ti -1c
+.RI "\fBUndoManager\fP * \fBGetUndoManager\fP ()"
+.br
+.ti -1c
+.RI "\fBsampleFormat\fP \fBGetDefaultFormat\fP ()"
+.br
+.ti -1c
+.RI "double \fBGetRate\fP () \fBconst\fP "
+.br
+.ti -1c
+.RI "\fBbool\fP \fBZoomInAvailable\fP () \fBconst\fP "
+.br
+.ti -1c
+.RI "\fBbool\fP \fBZoomOutAvailable\fP () \fBconst\fP "
+.br
+.ti -1c
+.RI "double \fBGetSel0\fP ()"
+.br
+.ti -1c
+.RI "double \fBGetSel1\fP ()"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBZoomInfo\fP & \fBGetZoomInfo\fP () \fBconst\fP "
+.br
+.ti -1c
+.RI "\fBTrack\fP * \fBGetFirstVisible\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBUpdateFirstVisible\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBGetPlayRegion\fP (double *playRegionStart, double *playRegionEnd)"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBIsPlayRegionLocked\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBSetSel0\fP (double)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBSetSel1\fP (double)"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBClipboard\fP ()"
+.br
+.ti -1c
+.RI "wxString \fBGetName\fP ()"
+.br
+.ti -1c
+.RI "\fBDirManager\fP * \fBGetDirManager\fP ()"
+.br
+.ti -1c
+.RI "\fBTrackFactory\fP * \fBGetTrackFactory\fP ()"
+.br
+.ti -1c
+.RI "\fBAdornedRulerPanel\fP * \fBGetRulerPanel\fP ()"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBTags\fP * \fBGetTags\fP ()"
+.br
+.ti -1c
+.RI "\fBint\fP \fBGetAudioIOToken\fP () \fBconst\fP "
+.br
+.ti -1c
+.RI "\fBbool\fP \fBIsAudioActive\fP () \fBconst\fP "
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBSetAudioIOToken\fP (\fBint\fP \fBtoken\fP)"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBIsActive\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOpenFile\fP (\fBconst\fP wxString &fileName, \fBbool\fP addtohistory=\fBtrue\fP)"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBWarnOfLegacyFile\fP ()"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBImport\fP (\fBconst\fP wxString &fileName, \fBWaveTrackArray\fP *pTrackArray=\fBNULL\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBAddImportedTracks\fP (\fBconst\fP wxString &fileName, \fBTrack\fP **newTracks, \fBint\fP numTracks)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBLockAllBlocks\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBUnlockAllBlocks\fP ()"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBSave\fP (\fBbool\fP overwrite=\fBtrue\fP, \fBbool\fP fromSaveAs=\fBfalse\fP, \fBbool\fP bWantSaveCompressed=\fBfalse\fP)"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBSaveAs\fP (\fBbool\fP bWantSaveCompressed=\fBfalse\fP)"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBSaveAs\fP (\fBconst\fP wxString &newFileName, \fBbool\fP bWantSaveCompressed=\fBfalse\fP, \fBbool\fP addToHistory=\fBtrue\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBClear\fP ()"
+.br
+.ti -1c
+.RI "wxString \fBGetFileName\fP ()"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBGetDirty\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBSetProjectTitle\fP ()"
+.br
+.ti -1c
+.RI "\fBTrackPanel\fP * \fBGetTrackPanel\fP ()"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBGetIsEmpty\fP ()"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBGetTracksFitVerticallyZoomed\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBSetTracksFitVerticallyZoomed\fP (\fBbool\fP flag)"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBGetShowId3Dialog\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBSetShowId3Dialog\fP (\fBbool\fP flag)"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBGetNormalizeOnLoad\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBSetNormalizeOnLoad\fP (\fBbool\fP flag)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBSetMissingAliasFileDialog\fP (wxDialog *dialog)"
+.br
+.RI "\fISets the wxDialog that is being displayed Used by the custom dialog warning constructor and destructor\&. \fP"
+.ti -1c
+.RI "wxDialog * \fBGetMissingAliasFileDialog\fP ()"
+.br
+.RI "\fIreturns a pointer to the wxDialog if it is displayed, NULL otherwise\&. \fP"
+.ti -1c
+.RI "\fBint\fP \fBDoAddLabel\fP (\fBconst\fP \fBSelectedRegion\fP &region, \fBbool\fP preserveFocus=\fBfalse\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnStop\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnPause\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnRecord\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnRecordAppend\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnStopSelect\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnSkipStart\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnSkipEnd\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnSeekLeftShort\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnSeekRightShort\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnSeekLeftLong\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnSeekRightLong\fP ()"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBMakeReadyToPlay\fP (\fBbool\fP loop=\fBfalse\fP, \fBbool\fP cutpreview=\fBfalse\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnPlayStop\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnPlayStopSelect\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnPlayOneSecond\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnPlayToSelection\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnPlayBeforeSelectionStart\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnPlayAfterSelectionStart\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnPlayBeforeSelectionEnd\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnPlayAfterSelectionEnd\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnPlayBeforeAndAfterSelectionStart\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnPlayBeforeAndAfterSelectionEnd\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnPlayLooped\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnPlayCutPreview\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnTrackPan\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnTrackPanLeft\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnTrackPanRight\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnTrackGain\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnTrackGainInc\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnTrackGainDec\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnTrackMenu\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnTrackMute\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnTrackSolo\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnTrackClose\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnTrackMoveUp\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnTrackMoveDown\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnTrackMoveTop\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnTrackMoveBottom\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBMoveTrack\fP (\fBTrack\fP *\fBtarget\fP, \fBMoveChoice\fP choice)"
+.br
+.RI "\fIMove a track up, down, to top or to bottom\&. \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBOnInputDevice\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnOutputDevice\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnAudioHost\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnInputChannels\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnOutputGain\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnInputGain\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnOutputGainInc\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnOutputGainDec\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnInputGainInc\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnInputGainDec\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnPlayAtSpeed\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnPlayAtSpeedLooped\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnPlayAtSpeedCutPreview\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnSetPlaySpeed\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnPlaySpeedInc\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnPlaySpeedDec\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnCursorUp\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnCursorDown\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnFirstTrack\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnLastTrack\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnShiftUp\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnShiftDown\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnToggle\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnCursorLeft\fP (\fBconst\fP wxEvent *evt)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnCursorRight\fP (\fBconst\fP wxEvent *evt)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnSelExtendLeft\fP (\fBconst\fP wxEvent *evt)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnSelExtendRight\fP (\fBconst\fP wxEvent *evt)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnSelContractLeft\fP (\fBconst\fP wxEvent *evt)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnSelContractRight\fP (\fBconst\fP wxEvent *evt)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnCursorShortJumpLeft\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnCursorShortJumpRight\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnCursorLongJumpLeft\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnCursorLongJumpRight\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnSelSetExtendLeft\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnSelSetExtendRight\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnSetLeftSelection\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnSetRightSelection\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnSelToStart\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnSelToEnd\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnZeroCrossing\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnLockPlayRegion\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnUnlockPlayRegion\fP ()"
+.br
+.ti -1c
+.RI "double \fBGetTime\fP (\fBTrack\fP *\fBt\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnSortTime\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnSortName\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnSnapToOff\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnSnapToNearest\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnSnapToPrior\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnFullScreen\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnNew\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnOpen\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnClose\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnSave\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnSaveAs\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnCheckDependencies\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnExport\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnExportSelection\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnExportMultiple\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnExportLabels\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnExportMIDI\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnPreferences\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnPageSetup\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnPrint\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnExit\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnUndo\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnRedo\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnCut\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnSplitCut\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnCopy\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnPaste\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnPasteNewLabel\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnPasteOver\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnTrim\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnDelete\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnSplitDelete\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnSilence\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnSplit\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnSplitNew\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnJoin\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnDisjoin\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnDuplicate\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnCutLabels\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnSplitCutLabels\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnCopyLabels\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnDeleteLabels\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnSplitDeleteLabels\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnSilenceLabels\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnSplitLabels\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnJoinLabels\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnDisjoinLabels\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnSelectAll\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnSelectNone\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnToggleSpectralSelection\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBDoNextPeakFrequency\fP (\fBbool\fP up)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnNextHigherPeakFrequency\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnNextLowerPeakFrequency\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnSelectCursorEnd\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnSelectStartCursor\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnSelectSyncLockSel\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnSelectAllTracks\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnZoomIn\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnZoomOut\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnZoomNormal\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnZoomFit\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnZoomFitV\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBDoZoomFitV\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnZoomSel\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnGoSelStart\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnGoSelEnd\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnExpandAllTracks\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnCollapseAllTracks\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnMuteAllTracks\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnUnMuteAllTracks\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnShowClipping\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnHistory\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnKaraoke\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnMixerBoard\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnPlotSpectrum\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnContrast\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnShowTransportToolBar\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnShowDeviceToolBar\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnShowEditToolBar\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnShowMeterToolBar\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnShowRecordMeterToolBar\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnShowPlayMeterToolBar\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnShowMixerToolBar\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnShowSelectionToolBar\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnShowSpectralSelectionToolBar\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnShowToolsToolBar\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnShowTranscriptionToolBar\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnResetToolBars\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnSoundActivated\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnToggleSoundActivated\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnTogglePlayRecording\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnToggleSWPlaythrough\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnRescanDevices\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnImport\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnImportLabels\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnImportMIDI\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBDoImportMIDI\fP (\fBconst\fP wxString &fileName)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnImportRaw\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnEditMetadata\fP ()"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBDoEditMetadata\fP (\fBconst\fP wxString &title, \fBconst\fP wxString &shortUndoDescription, \fBbool\fP force)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnMixAndRender\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnMixAndRenderToNewTrack\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBHandleMixAndRender\fP (\fBbool\fP toNewTrack)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnSelectionSave\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnSelectionRestore\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnCursorTrackStart\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnCursorTrackEnd\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnCursorSelStart\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnCursorSelEnd\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnAlignNoSync\fP (\fBint\fP index)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnAlign\fP (\fBint\fP index)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnAlignMoveSel\fP (\fBint\fP index)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBHandleAlign\fP (\fBint\fP index, \fBbool\fP moveSel)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnNewWaveTrack\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnNewStereoTrack\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnNewLabelTrack\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnNewTimeTrack\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnTimerRecord\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnRemoveTracks\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnSyncLock\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnAddLabel\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnAddLabelPlaying\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnEditLabels\fP ()"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBOnEffect\fP (\fBconst\fP \fBPluginID\fP &ID, \fBint\fP flags=\fBOnEffectFlags::kNone\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnRepeatLastEffect\fP (\fBint\fP index)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnApplyChain\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnEditChains\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnStereoToMono\fP (\fBint\fP index)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnManagePluginsMenu\fP (\fBEffectType\fP Type)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnManageGenerators\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnManageEffects\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnManageAnalyzers\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnAbout\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnQuickHelp\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnManual\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnCheckForUpdates\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnShowLog\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnHelpWelcome\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnBenchmark\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnScreenshot\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnAudioDeviceInfo\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnSeparator\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBPrevFrame\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBNextFrame\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBPrevWindow\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBNextWindow\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnResample\fP ()"
+.br
+.ti -1c
+.RI "\fBCommandManager\fP * \fBGetCommandManager\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBRebuildMenuBar\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBRebuildOtherMenus\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBMayStartMonitoring\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnMenu\fP (wxCommandEvent &event)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnUpdateUI\fP (wxUpdateUIEvent &event)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnActivate\fP (wxActivateEvent &event)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnMouseEvent\fP (wxMouseEvent &event)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnIconize\fP (wxIconizeEvent &event)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnSize\fP (wxSizeEvent &event)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnShow\fP (wxShowEvent &event)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnMove\fP (wxMoveEvent &event)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnScroll\fP (wxScrollEvent &event)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnCloseWindow\fP (wxCloseEvent &event)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnTimer\fP (wxTimerEvent &event)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnToolBarUpdate\fP (wxCommandEvent &event)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnOpenAudioFile\fP (wxCommandEvent &event)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnODTaskUpdate\fP (wxCommandEvent &event)"
+.br
+.RI "\fIHandles the redrawing necessary for tasks as they partially update in the background\&. \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBOnODTaskComplete\fP (wxCommandEvent &event)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnTrackListUpdated\fP (wxCommandEvent &event)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBHandleResize\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBUpdateLayout\fP ()"
+.br
+.ti -1c
+.RI "double \fBGetScreenEndTime\fP () \fBconst\fP "
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBZoomInByFactor\fP (double ZoomFactor)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBZoomOutByFactor\fP (double ZoomFactor)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBUpdateMenus\fP (\fBbool\fP checkActive=\fBtrue\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBUpdatePrefs\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBUpdatePrefsVariables\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBRedrawProject\fP (\fBconst\fP \fBbool\fP bForceWaveTracks=\fBfalse\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBRefreshCursor\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBSelectNone\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBSelectAllIfNone\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBZoom\fP (double level)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBZoomBy\fP (double multiplier)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBRewind\fP (\fBbool\fP shift)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBSkipEnd\fP (\fBbool\fP shift)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBEditByLabel\fP (\fBEditFunction\fP action, \fBbool\fP bSyncLockedTracks)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBEditClipboardByLabel\fP (\fBEditDestFunction\fP action)"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBIsSyncLocked\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBSetSyncLock\fP (\fBbool\fP flag)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBDoTrackMute\fP (\fBTrack\fP *pTrack, \fBbool\fP \fBexclusive\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBDoTrackSolo\fP (\fBTrack\fP *pTrack, \fBbool\fP \fBexclusive\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBSetTrackGain\fP (\fBTrack\fP *track, \fBLWSlider\fP *slider)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBSetTrackPan\fP (\fBTrack\fP *track, \fBLWSlider\fP *slider)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBRemoveTrack\fP (\fBTrack\fP *toRemove)"
+.br
+.RI "\fIRemoves the specified track\&. Called from HandleClosing\&. \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBHandleTrackMute\fP (\fBTrack\fP *\fBt\fP, \fBconst\fP \fBbool\fP \fBexclusive\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBHandleTrackSolo\fP (\fBTrack\fP *\fBt\fP, \fBconst\fP \fBbool\fP alternate)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBSetSnapTo\fP (\fBint\fP snap)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBGetSnapTo\fP () \fBconst\fP "
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBSetSelectionFormat\fP (\fBconst\fP wxString &\fBformat\fP)"
+.br
+.ti -1c
+.RI "\fBconst\fP wxString & \fBGetSelectionFormat\fP () \fBconst\fP "
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBSetFrequencySelectionFormatName\fP (\fBconst\fP wxString &\fBformat\fP)"
+.br
+.ti -1c
+.RI "\fBconst\fP wxString & \fBGetFrequencySelectionFormatName\fP () \fBconst\fP "
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBSetBandwidthSelectionFormatName\fP (\fBconst\fP wxString &\fBformat\fP)"
+.br
+.ti -1c
+.RI "\fBconst\fP wxString & \fBGetBandwidthSelectionFormatName\fP () \fBconst\fP "
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnScrollLeft\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnScrollRight\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnScrollLeftButton\fP (wxScrollEvent &event)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnScrollRightButton\fP (wxScrollEvent &event)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBFinishAutoScroll\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBFixScrollbars\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBSafeDisplayStatusMessage\fP (\fBconst\fP wxChar *msg)"
+.br
+.ti -1c
+.RI "double \fBScrollingLowerBoundTime\fP () \fBconst\fP "
+.br
+.ti -1c
+.RI "double \fBPixelWidthBeforeTime\fP (double scrollto) \fBconst\fP "
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBSetHorizontalThumb\fP (double scrollto)"
+.br
+.ti -1c
+.RI "wxSize \fBGetTPTracksUsableArea\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBRefreshTPTrack\fP (\fBTrack\fP *pTrk, \fBbool\fP refreshbacking=\fBtrue\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBTP_DisplaySelection\fP () override"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBTP_DisplayStatusMessage\fP (\fBconst\fP wxString &msg) override"
+.br
+.ti -1c
+.RI "\fBToolsToolBar\fP * \fBTP_GetToolsToolBar\fP () override"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBTP_PushState\fP (\fBconst\fP wxString &longDesc, \fBconst\fP wxString &shortDesc, \fBUndoPush\fP flags) override"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBTP_ModifyState\fP (\fBbool\fP bWantsAutoSave) override"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBTP_RedrawScrollbars\fP () override"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBTP_ScrollLeft\fP () override"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBTP_ScrollRight\fP () override"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBTP_ScrollWindow\fP (double scrollto) override"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBTP_ScrollUpDown\fP (\fBint\fP delta) override"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBTP_HandleResize\fP () override"
+.br
+.ti -1c
+.RI "\fBControlToolBar\fP * \fBGetControlToolBar\fP ()"
+.br
+.ti -1c
+.RI "\fBDeviceToolBar\fP * \fBGetDeviceToolBar\fP ()"
+.br
+.ti -1c
+.RI "\fBEditToolBar\fP * \fBGetEditToolBar\fP ()"
+.br
+.ti -1c
+.RI "\fBMixerToolBar\fP * \fBGetMixerToolBar\fP ()"
+.br
+.ti -1c
+.RI "\fBSelectionBar\fP * \fBGetSelectionBar\fP ()"
+.br
+.ti -1c
+.RI "\fBSpectralSelectionBar\fP * \fBGetSpectralSelectionBar\fP ()"
+.br
+.ti -1c
+.RI "\fBToolsToolBar\fP * \fBGetToolsToolBar\fP ()"
+.br
+.ti -1c
+.RI "\fBTranscriptionToolBar\fP * \fBGetTranscriptionToolBar\fP ()"
+.br
+.ti -1c
+.RI "\fBMeter\fP * \fBGetPlaybackMeter\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBSetPlaybackMeter\fP (\fBMeter\fP *playback)"
+.br
+.ti -1c
+.RI "\fBMeter\fP * \fBGetCaptureMeter\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBSetCaptureMeter\fP (\fBMeter\fP *capture)"
+.br
+.ti -1c
+.RI "\fBLyricsWindow\fP * \fBGetLyricsWindow\fP ()"
+.br
+.ti -1c
+.RI "\fBMixerBoard\fP * \fBGetMixerBoard\fP ()"
+.br
+.ti -1c
+.RI "wxStatusBar * \fBGetStatusBar\fP ()"
+.br
+.ti -1c
+.RI "double \fBAS_GetRate\fP () override"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBAS_SetRate\fP (double \fBrate\fP) override"
+.br
+.ti -1c
+.RI "\fBint\fP \fBAS_GetSnapTo\fP () override"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBAS_SetSnapTo\fP (\fBint\fP snap) override"
+.br
+.ti -1c
+.RI "\fBconst\fP wxString & \fBAS_GetSelectionFormat\fP () override"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBAS_SetSelectionFormat\fP (\fBconst\fP wxString &\fBformat\fP) override"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBAS_ModifySelection\fP (double &\fBstart\fP, double &\fBend\fP, \fBbool\fP \fBdone\fP) override"
+.br
+.ti -1c
+.RI "double \fBSSBL_GetRate\fP () \fBconst\fP  override"
+.br
+.ti -1c
+.RI "\fBconst\fP wxString & \fBSSBL_GetFrequencySelectionFormatName\fP () override"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBSSBL_SetFrequencySelectionFormatName\fP (\fBconst\fP wxString &formatName) override"
+.br
+.ti -1c
+.RI "\fBconst\fP wxString & \fBSSBL_GetBandwidthSelectionFormatName\fP () override"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBSSBL_SetBandwidthSelectionFormatName\fP (\fBconst\fP wxString &formatName) override"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBSSBL_ModifySpectralSelection\fP (double &bottom, double &top, \fBbool\fP \fBdone\fP) override"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBSetStateTo\fP (unsigned \fBint\fP n)"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBHandleXMLTag\fP (\fBconst\fP wxChar *\fBtag\fP, \fBconst\fP wxChar **attrs) override"
+.br
+.ti -1c
+.RI "\fBXMLTagHandler\fP * \fBHandleXMLChild\fP (\fBconst\fP wxChar *\fBtag\fP) override"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBWriteXML\fP (\fBXMLWriter\fP &xmlFile)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBWriteXMLHeader\fP (\fBXMLWriter\fP &xmlFile)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnAudioIORate\fP (\fBint\fP \fBrate\fP) override"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnAudioIOStartRecording\fP () override"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnAudioIOStopRecording\fP () override"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBOnAudioIONewBlockFiles\fP (\fBconst\fP \fBAutoSaveFile\fP &blockFileLog) override"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBTryToMakeActionAllowed\fP (wxUint32 &flags, wxUint32 flagsRqd, wxUint32 \fBmask\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBPushState\fP (\fBconst\fP wxString &\fBdesc\fP, \fBconst\fP wxString &shortDesc)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBPushState\fP (\fBconst\fP wxString &\fBdesc\fP, \fBconst\fP wxString &shortDesc, \fBUndoPush\fP flags)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBRollbackState\fP ()"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBIsSoloSimple\fP ()"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBIsSoloNone\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBSetNormalizedWindowState\fP (wxRect pSizeAndLocation)"
+.br
+.ti -1c
+.RI "wxRect \fBGetNormalizedWindowState\fP () \fBconst\fP "
+.br
+.ti -1c
+.RI "\fBbool\fP \fBIsTimerRecordCancelled\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBResetTimerRecordFlag\fP ()"
+.br
+.in -1c
+.SS "Static Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "static wxArrayString \fBShowOpenDialog\fP (\fBconst\fP wxString &extraformat=wxEmptyString, \fBconst\fP wxString &extrafilter=wxEmptyString)"
+.br
+.RI "\fIShow an open dialogue for opening audio files, and possibly other sorts of files\&. \fP"
+.ti -1c
+.RI "static \fBbool\fP \fBIsAlreadyOpen\fP (\fBconst\fP wxString &projPathName)"
+.br
+.ti -1c
+.RI "static \fBvoid\fP \fBOpenFiles\fP (\fBAudacityProject\fP *proj)"
+.br
+.ti -1c
+.RI "static \fBbool\fP \fBHasKeyboardCapture\fP (\fBconst\fP wxWindow *handler)"
+.br
+.ti -1c
+.RI "static wxWindow * \fBGetKeyboardCaptureHandler\fP ()"
+.br
+.ti -1c
+.RI "static \fBvoid\fP \fBCaptureKeyboard\fP (wxWindow *handler)"
+.br
+.ti -1c
+.RI "static \fBvoid\fP \fBReleaseKeyboard\fP (wxWindow *handler)"
+.br
+.ti -1c
+.RI "static \fBTrackList\fP * \fBGetClipboardTracks\fP ()"
+.br
+.ti -1c
+.RI "static \fBvoid\fP \fBDeleteClipboard\fP ()"
+.br
+.ti -1c
+.RI "static \fBvoid\fP \fBDeleteAllProjectsDeleteLock\fP ()"
+.br
+.ti -1c
+.RI "static \fBvoid\fP \fBAllProjectsDeleteLock\fP ()"
+.br
+.RI "\fIPrevents DELETE from external thread - for e\&.g\&. use of GetActiveProject\&. \fP"
+.ti -1c
+.RI "static \fBvoid\fP \fBAllProjectsDeleteUnlock\fP ()"
+.br
+.RI "\fIReallows deletion of projects from outside threads\&. \fP"
+.in -1c
+.SS "Public Attributes"
+
+.in +1c
+.ti -1c
+.RI "size_t \fBmAlignLabelsCount\fP"
+.br
+.ti -1c
+.RI "\fBPlayMode\fP \fBmLastPlayMode\fP { \fBnormalPlay\fP }"
+.br
+.ti -1c
+.RI "\fBViewInfo\fP \fBmViewInfo\fP"
+.br
+.ti -1c
+.RI "\fBToolManager\fP * \fBmToolManager\fP {}"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBmShowSplashScreen\fP"
+.br
+.ti -1c
+.RI "wxString \fBmHelpPref\fP"
+.br
+.ti -1c
+.RI "wxString \fBmSoloPref\fP"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBmbBusyImporting\fP { \fBfalse\fP }"
+.br
+.in -1c
+.SS "Friends"
+
+.in +1c
+.ti -1c
+.RI "class \fBScreenshotCommand\fP"
+.br
+.ti -1c
+.RI "class \fBCommandManager\fP"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+\fBAudacityProject\fP provides the main window, with tools and tracks contained within it\&. 
+
+In Audacity, the main window you work in is called a project\&. AudacityProjects can contain an arbitrary number of tracks of many different types, but if a project contains just one or two tracks then it can be saved in standard formats like WAV or AIFF\&. This window is the one that contains the menu bar (except on the Mac)\&.
+.PP
+\fBAttention:\fP
+.RS 4
+The menu functions for \fBAudacityProject\fP, those for creating the menu bars and acting on clicks, are found in file \fBMenus\&.cpp\fP 
+.RE
+.PP
+
+.PP
+Definition at line 147 of file Project\&.h\&.
+.SH "Member Typedef Documentation"
+.PP 
+.SS "typedef \fBbool\fP(WaveTrack::*  AudacityProject::EditDestFunction) (double, double, \fBTrack\fP **)"
+
+.PP
+Definition at line 334 of file Project\&.h\&.
+.SS "typedef \fBbool\fP(WaveTrack::*  AudacityProject::EditFunction) (double, double)"
+
+.PP
+Definition at line 333 of file Project\&.h\&.
+.SH "Member Enumeration Documentation"
+.PP 
+.SS "enum \fBAudacityProject::MoveChoice\fP"
+
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fIOnMoveUpID \fP\fP
+.TP
+\fB\fIOnMoveDownID \fP\fP
+.TP
+\fB\fIOnMoveTopID \fP\fP
+.TP
+\fB\fIOnMoveBottomID \fP\fP
+.PP
+Definition at line 108 of file Project\&.h\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "AudacityProject::AudacityProject (wxWindow * parent, wxWindowID id, \fBconst\fP wxPoint & pos, \fBconst\fP wxSize & size)"
+
+.PP
+Definition at line 788 of file Project\&.cpp\&.
+.SS "AudacityProject::~AudacityProject ()\fC [virtual]\fP"
+
+.PP
+Definition at line 1049 of file Project\&.cpp\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "\fBvoid\fP AudacityProject::AddImportedTracks (\fBconst\fP wxString & fileName, \fBTrack\fP ** newTracks, \fBint\fP numTracks)"
+
+.PP
+Definition at line 3673 of file Project\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::AllProjectsDeleteLock ()\fC [static]\fP"
+
+.PP
+Prevents DELETE from external thread - for e\&.g\&. use of GetActiveProject\&. Prevents deletion of projects from outside threads\&. 
+.PP
+Definition at line 1933 of file Project\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::AllProjectsDeleteUnlock ()\fC [static]\fP"
+
+.PP
+Reallows deletion of projects from outside threads\&. 
+.PP
+Definition at line 1939 of file Project\&.cpp\&.
+.SS "double AudacityProject::AS_GetRate ()\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Implements \fBSelectionBarListener\fP\&.
+.PP
+Definition at line 1284 of file Project\&.cpp\&.
+.SS "\fBconst\fP wxString & AudacityProject::AS_GetSelectionFormat ()\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Implements \fBSelectionBarListener\fP\&.
+.PP
+Definition at line 1313 of file Project\&.cpp\&.
+.SS "\fBint\fP AudacityProject::AS_GetSnapTo ()\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Implements \fBSelectionBarListener\fP\&.
+.PP
+Definition at line 1294 of file Project\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::AS_ModifySelection (double & start, double & end, \fBbool\fP done)\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Implements \fBSelectionBarListener\fP\&.
+.PP
+Definition at line 1433 of file Project\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::AS_SetRate (double rate)\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Implements \fBSelectionBarListener\fP\&.
+.PP
+Definition at line 1289 of file Project\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::AS_SetSelectionFormat (\fBconst\fP wxString & format)\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Implements \fBSelectionBarListener\fP\&.
+.PP
+Definition at line 1318 of file Project\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::AS_SetSnapTo (\fBint\fP snap)\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Implements \fBSelectionBarListener\fP\&.
+.PP
+Definition at line 1299 of file Project\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::CaptureKeyboard (wxWindow * handler)\fC [static]\fP"
+
+.PP
+Definition at line 5191 of file Project\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::Clear ()"
+
+.PP
+Definition at line 4199 of file Project\&.cpp\&.
+.SS "\fBbool\fP AudacityProject::Clipboard ()\fC [inline]\fP"
+
+.PP
+Definition at line 182 of file Project\&.h\&.
+.SS "\fBvoid\fP AudacityProject::DeleteAllProjectsDeleteLock ()\fC [static]\fP"
+
+.PP
+Definition at line 4180 of file Project\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::DeleteClipboard ()\fC [static]\fP"
+
+.PP
+Definition at line 4170 of file Project\&.cpp\&.
+.SS "\fBint\fP AudacityProject::DoAddLabel (\fBconst\fP \fBSelectedRegion\fP & region, \fBbool\fP preserveFocus = \fC\fBfalse\fP\fP)"
+
+.PP
+Definition at line 6359 of file Menus\&.cpp\&.
+.SS "\fBbool\fP AudacityProject::DoEditMetadata (\fBconst\fP wxString & title, \fBconst\fP wxString & shortUndoDescription, \fBbool\fP force)"
+
+.PP
+Definition at line 5598 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::DoImportMIDI (\fBconst\fP wxString & fileName)"
+
+.SS "\fBvoid\fP AudacityProject::DoNextPeakFrequency (\fBbool\fP up)"
+
+.PP
+Definition at line 4897 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::DoTrackMute (\fBTrack\fP * pTrack, \fBbool\fP exclusive)"
+
+.PP
+Definition at line 4936 of file Project\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::DoTrackSolo (\fBTrack\fP * pTrack, \fBbool\fP exclusive)"
+
+.PP
+Definition at line 4952 of file Project\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::DoZoomFitV ()"
+
+.PP
+Definition at line 5166 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::EditByLabel (\fBEditFunction\fP action, \fBbool\fP bSyncLockedTracks)"
+
+.PP
+Definition at line 4522 of file Project\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::EditClipboardByLabel (\fBEditDestFunction\fP action)"
+
+.PP
+Definition at line 4569 of file Project\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::FinishAutoScroll ()"
+
+.PP
+Definition at line 1442 of file Project\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::FixScrollbars ()"
+
+.PP
+Definition at line 1598 of file Project\&.cpp\&.
+.SS "\fBint\fP AudacityProject::GetAudioIOToken () const"
+
+.PP
+Definition at line 1199 of file Project\&.cpp\&.
+.SS "\fBconst\fP wxString & AudacityProject::GetBandwidthSelectionFormatName () const"
+
+.PP
+Definition at line 1404 of file Project\&.cpp\&.
+.SS "\fBMeter\fP * AudacityProject::GetCaptureMeter ()"
+
+.PP
+Definition at line 4380 of file Project\&.cpp\&.
+.SS "\fBTrackList\fP * AudacityProject::GetClipboardTracks ()\fC [static]\fP"
+
+.PP
+Definition at line 4164 of file Project\&.cpp\&.
+.SS "\fBCommandManager\fP* AudacityProject::GetCommandManager ()\fC [inline]\fP"
+
+.PP
+Definition at line 274 of file Project\&.h\&.
+.SS "\fBControlToolBar\fP * AudacityProject::GetControlToolBar ()"
+
+.PP
+Definition at line 4295 of file Project\&.cpp\&.
+.SS "\fBsampleFormat\fP AudacityProject::GetDefaultFormat ()\fC [inline]\fP"
+
+.PP
+Definition at line 164 of file Project\&.h\&.
+.SS "\fBAudioIOStartStreamOptions\fP AudacityProject::GetDefaultPlayOptions ()"
+
+.PP
+Definition at line 1062 of file Project\&.cpp\&.
+.SS "\fBDeviceToolBar\fP * AudacityProject::GetDeviceToolBar ()"
+
+.PP
+Definition at line 4308 of file Project\&.cpp\&.
+.SS "\fBDirManager\fP * AudacityProject::GetDirManager ()"
+
+.PP
+Definition at line 1184 of file Project\&.cpp\&.
+.SS "\fBbool\fP AudacityProject::GetDirty ()\fC [inline]\fP"
+
+.PP
+Definition at line 247 of file Project\&.h\&.
+.SS "\fBEditToolBar\fP * AudacityProject::GetEditToolBar ()"
+
+.PP
+Definition at line 4316 of file Project\&.cpp\&.
+.SS "wxString AudacityProject::GetFileName ()\fC [inline]\fP"
+
+.PP
+Definition at line 246 of file Project\&.h\&.
+.SS "\fBTrack\fP * AudacityProject::GetFirstVisible ()"
+
+.PP
+Definition at line 1751 of file Project\&.cpp\&.
+.SS "\fBconst\fP wxString & AudacityProject::GetFrequencySelectionFormatName () const"
+
+.PP
+Definition at line 1389 of file Project\&.cpp\&.
+.SS "\fBbool\fP AudacityProject::GetIsEmpty ()"
+
+.PP
+Definition at line 1251 of file Project\&.cpp\&.
+.SS "wxWindow * AudacityProject::GetKeyboardCaptureHandler ()\fC [static]\fP"
+
+.PP
+Definition at line 5179 of file Project\&.cpp\&.
+.SS "\fBLyricsWindow\fP* AudacityProject::GetLyricsWindow ()\fC [inline]\fP"
+
+.PP
+Definition at line 435 of file Project\&.h\&.
+.SS "wxDialog * AudacityProject::GetMissingAliasFileDialog ()"
+
+.PP
+returns a pointer to the wxDialog if it is displayed, NULL otherwise\&. 
+.PP
+Definition at line 1123 of file Project\&.cpp\&.
+.SS "\fBMixerBoard\fP* AudacityProject::GetMixerBoard ()\fC [inline]\fP"
+
+.PP
+Definition at line 436 of file Project\&.h\&.
+.SS "\fBMixerToolBar\fP * AudacityProject::GetMixerToolBar ()"
+
+.PP
+Definition at line 4324 of file Project\&.cpp\&.
+.SS "wxString AudacityProject::GetName ()"
+
+.PP
+Definition at line 1220 of file Project\&.cpp\&.
+.SS "wxRect AudacityProject::GetNormalizedWindowState () const\fC [inline]\fP"
+
+.PP
+Definition at line 606 of file Project\&.h\&.
+.SS "\fBbool\fP AudacityProject::GetNormalizeOnLoad ()\fC [inline]\fP"
+
+.PP
+Definition at line 260 of file Project\&.h\&.
+.SS "\fBMeter\fP * AudacityProject::GetPlaybackMeter ()"
+
+.PP
+Definition at line 4366 of file Project\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::GetPlayRegion (double * playRegionStart, double * playRegionEnd)"
+
+.PP
+Definition at line 4748 of file Project\&.cpp\&.
+.SS "double AudacityProject::GetRate () const\fC [inline]\fP"
+
+.PP
+Definition at line 166 of file Project\&.h\&.
+.SS "\fBAdornedRulerPanel\fP * AudacityProject::GetRulerPanel ()"
+
+.PP
+Definition at line 1194 of file Project\&.cpp\&.
+.SS "double AudacityProject::GetScreenEndTime () const"
+
+.PP
+Definition at line 5019 of file Menus\&.cpp\&.
+.SS "double AudacityProject::GetSel0 ()\fC [inline]\fP"
+
+.PP
+Definition at line 169 of file Project\&.h\&.
+.SS "double AudacityProject::GetSel1 ()\fC [inline]\fP"
+
+.PP
+Definition at line 170 of file Project\&.h\&.
+.SS "\fBSelectionBar\fP * AudacityProject::GetSelectionBar ()"
+
+.PP
+Definition at line 4332 of file Project\&.cpp\&.
+.SS "\fBconst\fP wxString & AudacityProject::GetSelectionFormat () const"
+
+.PP
+Definition at line 1427 of file Project\&.cpp\&.
+.SS "\fBbool\fP AudacityProject::GetShowId3Dialog ()\fC [inline]\fP"
+
+.PP
+Definition at line 257 of file Project\&.h\&.
+.SS "\fBint\fP AudacityProject::GetSnapTo () const"
+
+.PP
+Definition at line 4913 of file Project\&.cpp\&.
+.SS "\fBSpectralSelectionBar\fP * AudacityProject::GetSpectralSelectionBar ()"
+
+.PP
+Definition at line 4341 of file Project\&.cpp\&.
+.SS "wxStatusBar* AudacityProject::GetStatusBar ()\fC [inline]\fP"
+
+.PP
+Definition at line 438 of file Project\&.h\&.
+.SS "\fBconst\fP \fBTags\fP * AudacityProject::GetTags ()"
+
+.PP
+Definition at line 1215 of file Project\&.cpp\&.
+.SS "double AudacityProject::GetTime (\fBTrack\fP * t)"
+
+.PP
+Definition at line 2401 of file Menus\&.cpp\&.
+.SS "\fBToolsToolBar\fP * AudacityProject::GetToolsToolBar ()"
+
+.PP
+Definition at line 4350 of file Project\&.cpp\&.
+.SS "wxSize AudacityProject::GetTPTracksUsableArea ()"
+
+.PP
+Definition at line 4699 of file Project\&.cpp\&.
+.SS "\fBTrackFactory\fP * AudacityProject::GetTrackFactory ()"
+
+.PP
+Definition at line 1189 of file Project\&.cpp\&.
+.SS "\fBTrackPanel\fP* AudacityProject::GetTrackPanel ()\fC [inline]\fP"
+
+.PP
+Definition at line 250 of file Project\&.h\&.
+.SS "\fBTrackList\fP* AudacityProject::GetTracks ()\fC [inline]\fP"
+
+.PP
+Definition at line 161 of file Project\&.h\&.
+.SS "\fBbool\fP AudacityProject::GetTracksFitVerticallyZoomed ()\fC [inline]\fP"
+
+.PP
+Definition at line 254 of file Project\&.h\&.
+.SS "\fBTranscriptionToolBar\fP * AudacityProject::GetTranscriptionToolBar ()"
+
+.PP
+Definition at line 4358 of file Project\&.cpp\&.
+.SS "\fBUndoManager\fP* AudacityProject::GetUndoManager ()\fC [inline]\fP"
+
+.PP
+Definition at line 162 of file Project\&.h\&.
+.SS "\fBconst\fP \fBZoomInfo\fP& AudacityProject::GetZoomInfo () const\fC [inline]\fP"
+
+.PP
+Definition at line 171 of file Project\&.h\&.
+.SS "\fBvoid\fP AudacityProject::HandleAlign (\fBint\fP index, \fBbool\fP moveSel)"
+
+.PP
+Definition at line 5781 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::HandleMixAndRender (\fBbool\fP toNewTrack)"
+
+.PP
+Definition at line 5614 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::HandleResize ()"
+
+.PP
+Definition at line 1819 of file Project\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::HandleTrackMute (\fBTrack\fP * t, \fBconst\fP \fBbool\fP exclusive)"
+
+.PP
+Definition at line 5045 of file Project\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::HandleTrackSolo (\fBTrack\fP * t, \fBconst\fP \fBbool\fP alternate)"
+
+.PP
+Definition at line 5113 of file Project\&.cpp\&.
+.SS "\fBXMLTagHandler\fP * AudacityProject::HandleXMLChild (\fBconst\fP wxChar * tag)\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Implements \fBXMLTagHandler\fP\&.
+.PP
+Definition at line 3143 of file Project\&.cpp\&.
+.SS "\fBbool\fP AudacityProject::HandleXMLTag (\fBconst\fP wxChar * tag, \fBconst\fP wxChar ** attrs)\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Implements \fBXMLTagHandler\fP\&.
+.PP
+Definition at line 2928 of file Project\&.cpp\&.
+.SS "\fBbool\fP AudacityProject::HasKeyboardCapture (\fBconst\fP wxWindow * handler)\fC [static]\fP"
+
+.PP
+Definition at line 5173 of file Project\&.cpp\&.
+.SS "\fBbool\fP AudacityProject::Import (\fBconst\fP wxString & fileName, \fBWaveTrackArray\fP * pTrackArray = \fC\fBNULL\fP\fP)"
+
+.PP
+Definition at line 3753 of file Project\&.cpp\&.
+.SS "\fBbool\fP AudacityProject::IsActive ()"
+
+.PP
+Definition at line 2105 of file Project\&.cpp\&.
+.SS "\fBbool\fP AudacityProject::IsAlreadyOpen (\fBconst\fP wxString & projPathName)\fC [static]\fP"
+
+.PP
+Definition at line 2469 of file Project\&.cpp\&.
+.SS "\fBbool\fP AudacityProject::IsAudioActive () const"
+
+.PP
+Definition at line 1209 of file Project\&.cpp\&.
+.SS "\fBbool\fP AudacityProject::IsPlayRegionLocked ()\fC [inline]\fP"
+
+.PP
+Definition at line 177 of file Project\&.h\&.
+.SS "\fBbool\fP AudacityProject::IsSoloNone ()\fC [inline]\fP"
+
+.PP
+Definition at line 515 of file Project\&.h\&.
+.SS "\fBbool\fP AudacityProject::IsSoloSimple ()\fC [inline]\fP"
+
+.PP
+Definition at line 514 of file Project\&.h\&.
+.SS "\fBbool\fP AudacityProject::IsSyncLocked ()"
+
+.PP
+Definition at line 4918 of file Project\&.cpp\&.
+.SS "\fBbool\fP AudacityProject::IsTimerRecordCancelled ()\fC [inline]\fP"
+
+.PP
+Definition at line 608 of file Project\&.h\&.
+.SS "\fBvoid\fP AudacityProject::LockAllBlocks ()"
+
+.PP
+Definition at line 3309 of file Project\&.cpp\&.
+.SS "\fBbool\fP AudacityProject::MakeReadyToPlay (\fBbool\fP loop = \fC\fBfalse\fP\fP, \fBbool\fP cutpreview = \fC\fBfalse\fP\fP)"
+MakeReadyToPlay stops whatever is currently playing and pops the play button up\&. Then, if nothing is now playing, it pushes the play button down and enables the stop button\&. 
+.PP
+Definition at line 2037 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::MayStartMonitoring ()"
+
+.PP
+Definition at line 4831 of file Project\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::MoveTrack (\fBTrack\fP * target, \fBMoveChoice\fP choice)"
+
+.PP
+Move a track up, down, to top or to bottom\&. 
+.PP
+Definition at line 3036 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::NextFrame ()"
+
+.PP
+Definition at line 2732 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::NextWindow ()"
+
+.PP
+Definition at line 2768 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnAbout ()"
+
+.PP
+Definition at line 6529 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnActivate (wxActivateEvent & event)"
+
+.PP
+Definition at line 2055 of file Project\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnAddLabel ()"
+
+.PP
+Definition at line 6440 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnAddLabelPlaying ()"
+
+.PP
+Definition at line 6445 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnAlign (\fBint\fP index)"
+
+.PP
+Definition at line 5966 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnAlignMoveSel (\fBint\fP index)"
+
+.PP
+Definition at line 5971 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnAlignNoSync (\fBint\fP index)"
+
+.PP
+Definition at line 5960 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnApplyChain ()"
+
+.PP
+Definition at line 6466 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnAudioDeviceInfo ()"
+
+.PP
+Definition at line 6589 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnAudioHost ()"
+
+.PP
+Definition at line 3108 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnAudioIONewBlockFiles (\fBconst\fP \fBAutoSaveFile\fP & blockFileLog)\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Implements \fBAudioIOListener\fP\&.
+.PP
+Definition at line 4892 of file Project\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnAudioIORate (\fBint\fP rate)\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Implements \fBAudioIOListener\fP\&.
+.PP
+Definition at line 4846 of file Project\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnAudioIOStartRecording ()\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Implements \fBAudioIOListener\fP\&.
+.PP
+Definition at line 4857 of file Project\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnAudioIOStopRecording ()\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Implements \fBAudioIOListener\fP\&.
+.PP
+Definition at line 4865 of file Project\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnBenchmark ()"
+
+.PP
+Definition at line 6567 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnCheckDependencies ()"
+
+.PP
+Definition at line 3528 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnCheckForUpdates ()"
+
+.PP
+Definition at line 6554 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnClose ()"
+
+.PP
+Definition at line 3505 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnCloseWindow (wxCloseEvent & event)"
+
+.PP
+Definition at line 2120 of file Project\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnCollapseAllTracks ()"
+
+.PP
+Definition at line 6633 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnContrast ()"
+
+.PP
+Definition at line 5311 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnCopy ()"
+
+.PP
+Definition at line 3945 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnCopyLabels ()"
+
+.PP
+Definition at line 4633 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnCursorDown ()"
+
+.PP
+Definition at line 2576 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnCursorLeft (\fBconst\fP wxEvent * evt)"
+
+.PP
+Definition at line 2606 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnCursorLongJumpLeft ()"
+
+.PP
+Definition at line 2626 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnCursorLongJumpRight ()"
+
+.PP
+Definition at line 2631 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnCursorRight (\fBconst\fP wxEvent * evt)"
+
+.PP
+Definition at line 2611 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnCursorSelEnd ()"
+
+.PP
+Definition at line 5773 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnCursorSelStart ()"
+
+.PP
+Definition at line 5765 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnCursorShortJumpLeft ()"
+
+.PP
+Definition at line 2616 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnCursorShortJumpRight ()"
+
+.PP
+Definition at line 2621 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnCursorTrackEnd ()"
+
+.PP
+Definition at line 5741 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnCursorTrackStart ()"
+
+.PP
+Definition at line 5718 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnCursorUp ()"
+
+.PP
+Definition at line 2571 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnCut ()"
+
+.PP
+Definition at line 3814 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnCutLabels ()"
+
+.PP
+Definition at line 4588 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnDelete ()"
+
+.PP
+Definition at line 4457 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnDeleteLabels ()"
+
+.PP
+Definition at line 4649 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnDisjoin ()"
+
+.PP
+Definition at line 4491 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnDisjoinLabels ()"
+
+.PP
+Definition at line 4728 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnDuplicate ()"
+
+.PP
+Definition at line 4557 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnEditChains ()"
+
+.PP
+Definition at line 6473 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnEditLabels ()"
+
+.PP
+Definition at line 6454 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnEditMetadata ()"
+
+.PP
+Definition at line 5592 of file Menus\&.cpp\&.
+.SS "\fBbool\fP AudacityProject::OnEffect (\fBconst\fP \fBPluginID\fP & ID, \fBint\fP flags = \fC\fBOnEffectFlags::kNone\fP\fP)"
+\fBOnEffect()\fP takes a PluginID and has the \fBEffectManager\fP execute the assocated effect\&.
+.PP
+At the moment flags are used only to indicate whether to prompt for parameters, whether to save the state to history and whether to allow 'Repeat Last \fBEffect\fP'\&. 
+.PP
+Definition at line 3322 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnExit (\fBvoid\fP)"
+
+.PP
+Definition at line 3533 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnExpandAllTracks ()"
+
+.PP
+Definition at line 6648 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnExport ()"
+
+.PP
+Definition at line 3693 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnExportLabels ()"
+
+.PP
+Definition at line 3538 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnExportMIDI ()"
+
+.SS "\fBvoid\fP AudacityProject::OnExportMultiple ()"
+
+.PP
+Definition at line 3711 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnExportSelection ()"
+
+.PP
+Definition at line 3701 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnFirstTrack ()"
+
+.PP
+Definition at line 2581 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnFullScreen ()"
+
+.PP
+Definition at line 6825 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnGoSelEnd ()"
+
+.PP
+Definition at line 5247 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnGoSelStart ()"
+
+.PP
+Definition at line 5239 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnHelpWelcome ()"
+
+.PP
+Definition at line 6535 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnHistory ()"
+
+.PP
+Definition at line 5265 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnIconize (wxIconizeEvent & event)"
+
+.PP
+Definition at line 1829 of file Project\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnImport ()"
+
+.PP
+Definition at line 5435 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnImportLabels ()"
+
+.PP
+Definition at line 5472 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnImportMIDI ()"
+
+.SS "\fBvoid\fP AudacityProject::OnImportRaw ()"
+
+.PP
+Definition at line 5560 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnInputChannels ()"
+
+.PP
+Definition at line 3116 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnInputDevice ()"
+
+.PP
+Definition at line 3092 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnInputGain ()"
+
+.PP
+Definition at line 3132 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnInputGainDec ()"
+
+.PP
+Definition at line 3164 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnInputGainInc ()"
+
+.PP
+Definition at line 3156 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnJoin ()"
+
+.PP
+Definition at line 4516 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnJoinLabels ()"
+
+.PP
+Definition at line 4712 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnKaraoke ()"
+
+.PP
+Definition at line 5274 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnLastTrack ()"
+
+.PP
+Definition at line 2586 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnLockPlayRegion ()"
+
+.PP
+Definition at line 6700 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnManageAnalyzers ()"
+
+.PP
+Definition at line 3478 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnManageEffects ()"
+
+.PP
+Definition at line 3473 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnManageGenerators ()"
+
+.PP
+Definition at line 3468 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnManagePluginsMenu (\fBEffectType\fP Type)"
+
+.PP
+Definition at line 3446 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnManual ()"
+
+.PP
+Definition at line 6547 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnMenu (wxCommandEvent & event)"
+
+.PP
+Definition at line 2037 of file Project\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnMixAndRender ()"
+
+.PP
+Definition at line 5690 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnMixAndRenderToNewTrack ()"
+
+.PP
+Definition at line 5695 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnMixerBoard ()"
+
+.PP
+Definition at line 5283 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnMouseEvent (wxMouseEvent & event)"
+
+.PP
+Definition at line 2110 of file Project\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnMove (wxMoveEvent & event)"
+
+.PP
+Definition at line 1852 of file Project\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnMuteAllTracks ()"
+
+.PP
+Definition at line 6664 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnNew ()"
+
+.PP
+Definition at line 3495 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnNewLabelTrack ()"
+
+.PP
+Definition at line 6290 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnNewStereoTrack ()"
+
+.PP
+Definition at line 6268 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnNewTimeTrack ()"
+
+.PP
+Definition at line 6305 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnNewWaveTrack ()"
+
+.PP
+Definition at line 6254 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnNextHigherPeakFrequency ()"
+
+.PP
+Definition at line 4918 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnNextLowerPeakFrequency ()"
+
+.PP
+Definition at line 4924 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnODTaskComplete (wxCommandEvent & event)"
+
+.PP
+Definition at line 1954 of file Project\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnODTaskUpdate (wxCommandEvent & event)"
+
+.PP
+Handles the redrawing necessary for tasks as they partially update in the background\&. 
+.PP
+Definition at line 1945 of file Project\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnOpen ()"
+
+.PP
+Definition at line 3500 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnOpenAudioFile (wxCommandEvent & event)"
+
+.PP
+Definition at line 2352 of file Project\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnOutputDevice ()"
+
+.PP
+Definition at line 3100 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnOutputGain ()"
+
+.PP
+Definition at line 3124 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnOutputGainDec ()"
+
+.PP
+Definition at line 3148 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnOutputGainInc ()"
+
+.PP
+Definition at line 3140 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnPageSetup ()"
+
+.PP
+Definition at line 3749 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnPaste ()"
+
+.PP
+Definition at line 3990 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnPasteNewLabel ()"
+
+.PP
+Definition at line 4335 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnPasteOver ()"
+
+.PP
+Definition at line 4405 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnPause ()"
+
+.PP
+Definition at line 2305 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnPlayAfterSelectionEnd ()"
+
+.PP
+Definition at line 2171 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnPlayAfterSelectionStart ()"
+
+.PP
+Definition at line 2134 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnPlayAtSpeed ()"
+
+.PP
+Definition at line 3172 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnPlayAtSpeedCutPreview ()"
+
+.PP
+Definition at line 3188 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnPlayAtSpeedLooped ()"
+
+.PP
+Definition at line 3180 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnPlayBeforeAndAfterSelectionEnd ()"
+
+.PP
+Definition at line 2205 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnPlayBeforeAndAfterSelectionStart ()"
+
+.PP
+Definition at line 2185 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnPlayBeforeSelectionEnd ()"
+
+.PP
+Definition at line 2152 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnPlayBeforeSelectionStart ()"
+
+.PP
+Definition at line 2120 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnPlayCutPreview ()"
+
+.PP
+Definition at line 2236 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnPlayLooped ()"
+
+.PP
+Definition at line 2226 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnPlayOneSecond ()"
+
+.PP
+Definition at line 2062 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnPlaySpeedDec ()"
+
+.PP
+Definition at line 3212 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnPlaySpeedInc ()"
+
+.PP
+Definition at line 3204 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnPlayStop ()"
+
+.PP
+Definition at line 2245 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnPlayStopSelect ()"
+
+.PP
+Definition at line 2329 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnPlayToSelection ()"
+The idea for this function (and first implementation) was from Juhana Sadeharju\&. The function plays the sound between the current mouse position and the nearest selection boundary\&. This gives four possible play regions depending on where the current mouse position is relative to the left and right boundaries of the selection region\&. 
+.PP
+Definition at line 2081 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnPlotSpectrum ()"
+
+.PP
+Definition at line 5295 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnPreferences ()"
+
+.PP
+Definition at line 3719 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnPrint ()"
+
+.PP
+Definition at line 3754 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnQuickHelp ()"
+
+.PP
+Definition at line 6540 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnRecord ()"
+
+.PP
+Definition at line 2312 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnRecordAppend ()"
+
+.PP
+Definition at line 2320 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnRedo ()"
+
+.PP
+Definition at line 3789 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnRemoveTracks ()"
+
+.PP
+Definition at line 6479 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnRepeatLastEffect (\fBint\fP index)"
+
+.PP
+Definition at line 3435 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnResample ()"
+
+.PP
+Definition at line 6720 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnRescanDevices ()"
+
+.PP
+Definition at line 6354 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnResetToolBars ()"
+
+.PP
+Definition at line 5425 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnSave ()"
+
+.PP
+Definition at line 3511 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnSaveAs ()"
+
+.PP
+Definition at line 3516 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnScreenshot ()"
+
+.PP
+Definition at line 6584 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnScroll (wxScrollEvent & event)"
+
+.PP
+Definition at line 1960 of file Project\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnScrollLeft ()"
+This method handles general left-scrolling, either for drag-scrolling or when the scrollbar is clicked to the left of the thumb 
+.PP
+Definition at line 1460 of file Project\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnScrollLeftButton (wxScrollEvent & event)"
+This handles the event when the left direction button on the scrollbar is depresssed 
+.PP
+Definition at line 1495 of file Project\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnScrollRight ()"
+This method handles general right-scrolling, either for drag-scrolling or when the scrollbar is clicked to the right of the thumb 
+.PP
+Definition at line 1477 of file Project\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnScrollRightButton (wxScrollEvent & event)"
+This handles the event when the right direction button on the scrollbar is depresssed 
+.PP
+Definition at line 1511 of file Project\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnSeekLeftLong ()"
+
+.PP
+Definition at line 2549 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnSeekLeftShort ()"
+
+.PP
+Definition at line 2539 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnSeekRightLong ()"
+
+.PP
+Definition at line 2554 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnSeekRightShort ()"
+
+.PP
+Definition at line 2544 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnSelContractLeft (\fBconst\fP wxEvent * evt)"
+
+.PP
+Definition at line 2656 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnSelContractRight (\fBconst\fP wxEvent * evt)"
+
+.PP
+Definition at line 2661 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnSelectAll ()"
+
+.PP
+Definition at line 4863 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnSelectAllTracks ()"
+
+.PP
+Definition at line 4996 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnSelectCursorEnd ()"
+
+.PP
+Definition at line 4930 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnSelectionRestore ()"
+
+.PP
+Definition at line 5705 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnSelectionSave ()"
+
+.PP
+Definition at line 5700 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnSelectNone ()"
+
+.PP
+Definition at line 4882 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnSelectStartCursor ()"
+
+.PP
+Definition at line 4953 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnSelectSyncLockSel ()"
+
+.PP
+Definition at line 4976 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnSelExtendLeft (\fBconst\fP wxEvent * evt)"
+
+.PP
+Definition at line 2646 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnSelExtendRight (\fBconst\fP wxEvent * evt)"
+
+.PP
+Definition at line 2651 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnSelSetExtendLeft ()"
+
+.PP
+Definition at line 2636 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnSelSetExtendRight ()"
+
+.PP
+Definition at line 2641 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnSelToEnd ()"
+
+.PP
+Definition at line 2565 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnSelToStart ()"
+
+.PP
+Definition at line 2559 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnSeparator ()"
+
+.PP
+Definition at line 6628 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnSetLeftSelection ()"
+
+.PP
+Definition at line 2669 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnSetPlaySpeed ()"
+
+.PP
+Definition at line 3196 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnSetRightSelection ()"
+
+.PP
+Definition at line 2701 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnShiftDown ()"
+
+.PP
+Definition at line 2596 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnShiftUp ()"
+
+.PP
+Definition at line 2591 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnShow (wxShowEvent & event)"
+
+.PP
+Definition at line 1877 of file Project\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnShowClipping ()"
+
+.PP
+Definition at line 5255 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnShowDeviceToolBar ()"
+
+.PP
+Definition at line 5350 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnShowEditToolBar ()"
+
+.PP
+Definition at line 5356 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnShowLog ()"
+
+.PP
+Definition at line 6559 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnShowMeterToolBar ()"
+
+.PP
+Definition at line 5362 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnShowMixerToolBar ()"
+
+.PP
+Definition at line 5393 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnShowPlayMeterToolBar ()"
+
+.PP
+Definition at line 5383 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnShowRecordMeterToolBar ()"
+
+.PP
+Definition at line 5373 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnShowSelectionToolBar ()"
+
+.PP
+Definition at line 5399 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnShowSpectralSelectionToolBar ()"
+
+.PP
+Definition at line 5406 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnShowToolsToolBar ()"
+
+.PP
+Definition at line 5413 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnShowTranscriptionToolBar ()"
+
+.PP
+Definition at line 5419 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnShowTransportToolBar ()"
+
+.PP
+Definition at line 5344 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnSilence ()"
+
+.PP
+Definition at line 4541 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnSilenceLabels ()"
+
+.PP
+Definition at line 4683 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnSize (wxSizeEvent & event)"
+
+.PP
+Definition at line 1859 of file Project\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnSkipEnd ()"
+
+.PP
+Definition at line 2531 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnSkipStart ()"
+
+.PP
+Definition at line 2523 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnSnapToNearest ()"
+
+.PP
+Definition at line 6815 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnSnapToOff ()"
+
+.PP
+Definition at line 6810 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnSnapToPrior ()"
+
+.PP
+Definition at line 6820 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnSortName ()"
+
+.PP
+Definition at line 2514 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnSortTime ()"
+
+.PP
+Definition at line 2505 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnSoundActivated ()"
+
+.PP
+Definition at line 6348 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnSplit ()"
+
+.PP
+Definition at line 4746 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnSplitCut ()"
+
+.PP
+Definition at line 3903 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnSplitCutLabels ()"
+
+.PP
+Definition at line 4615 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnSplitDelete ()"
+
+.PP
+Definition at line 4462 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnSplitDeleteLabels ()"
+
+.PP
+Definition at line 4667 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnSplitLabels ()"
+
+.PP
+Definition at line 4699 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnSplitNew ()"
+
+.PP
+Definition at line 4819 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnStereoToMono (\fBint\fP index)"
+
+.PP
+Definition at line 3485 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnStop ()"
+
+.PP
+Definition at line 2297 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnStopSelect ()"
+
+.PP
+Definition at line 2352 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnSyncLock ()"
+
+.PP
+Definition at line 6427 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnTimer (wxTimerEvent & event)"
+
+.PP
+Definition at line 4395 of file Project\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnTimerRecord ()"
+
+.PP
+Definition at line 6325 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnToggle ()"
+
+.PP
+Definition at line 2601 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnTogglePlayRecording ()"
+
+.PP
+Definition at line 2372 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnToggleSoundActivated ()"
+
+.PP
+Definition at line 2363 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnToggleSpectralSelection ()"
+
+.PP
+Definition at line 4890 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnToggleSWPlaythrough ()"
+
+.PP
+Definition at line 2381 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnToolBarUpdate (wxCommandEvent & event)"
+A toolbar has been updated, so handle it like a sizing event\&. 
+.PP
+Definition at line 1917 of file Project\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnTrackClose ()"
+
+.PP
+Definition at line 2979 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnTrackGain ()"
+This will pop up the track gain dialog for specified track 
+.PP
+Definition at line 2910 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnTrackGainDec ()"
+
+.PP
+Definition at line 2938 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnTrackGainInc ()"
+
+.PP
+Definition at line 2925 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnTrackListUpdated (wxCommandEvent & event)"
+
+.PP
+Definition at line 1925 of file Project\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnTrackMenu ()"
+
+.PP
+Definition at line 2951 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnTrackMoveBottom ()"
+
+.PP
+Definition at line 3025 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnTrackMoveDown ()"
+
+.PP
+Definition at line 3007 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnTrackMoveTop ()"
+
+.PP
+Definition at line 3016 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnTrackMoveUp ()"
+
+.PP
+Definition at line 2998 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnTrackMute ()"
+
+.PP
+Definition at line 2956 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnTrackPan ()"
+
+.PP
+Definition at line 2870 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnTrackPanLeft ()"
+
+.PP
+Definition at line 2884 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnTrackPanRight ()"
+
+.PP
+Definition at line 2897 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnTrackSolo ()"
+
+.PP
+Definition at line 2967 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnTrim ()"
+
+.PP
+Definition at line 4418 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnUndo ()"
+
+.PP
+Definition at line 3763 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnUnlockPlayRegion ()"
+
+.PP
+Definition at line 6714 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnUnMuteAllTracks ()"
+
+.PP
+Definition at line 6683 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnUpdateUI (wxUpdateUIEvent & event)"
+
+.PP
+Definition at line 2050 of file Project\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnZeroCrossing ()"
+
+.PP
+Definition at line 3299 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnZoomFit ()"
+
+.PP
+Definition at line 5147 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnZoomFitV ()"
+
+.PP
+Definition at line 5205 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnZoomIn ()"
+
+.PP
+Definition at line 5014 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnZoomNormal ()"
+
+.PP
+Definition at line 5141 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnZoomOut ()"
+
+.PP
+Definition at line 5096 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OnZoomSel ()"
+
+.PP
+Definition at line 5214 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OpenFile (\fBconst\fP wxString & fileName, \fBbool\fP addtohistory = \fC\fBtrue\fP\fP)"
+Parse project file
+.PP
+Definition at line 2572 of file Project\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::OpenFiles (\fBAudacityProject\fP * proj)\fC [static]\fP"
+
+.PP
+Definition at line 2489 of file Project\&.cpp\&.
+.SS "double AudacityProject::PixelWidthBeforeTime (double scrollto) const"
+
+.PP
+Definition at line 1537 of file Project\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::PrevFrame ()"
+
+.PP
+Definition at line 2750 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::PrevWindow ()"
+
+.PP
+Definition at line 2819 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::PushState (\fBconst\fP wxString & desc, \fBconst\fP wxString & shortDesc)"
+
+.PP
+Definition at line 4000 of file Project\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::PushState (\fBconst\fP wxString & desc, \fBconst\fP wxString & shortDesc, \fBUndoPush\fP flags)"
+
+.PP
+Definition at line 4005 of file Project\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::RebuildMenuBar ()"
+
+.PP
+Definition at line 1629 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::RebuildOtherMenus ()"
+
+.PP
+Definition at line 1659 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::RedrawProject (\fBconst\fP \fBbool\fP bForceWaveTracks = \fC\fBfalse\fP\fP)"
+
+.PP
+Definition at line 1128 of file Project\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::RefreshCursor ()"
+
+.PP
+Definition at line 1154 of file Project\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::RefreshTPTrack (\fBTrack\fP * pTrk, \fBbool\fP refreshbacking = \fC\fBtrue\fP\fP)"
+
+.PP
+Definition at line 4706 of file Project\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::ReleaseKeyboard (wxWindow * handler)\fC [static]\fP"
+
+.PP
+Definition at line 5202 of file Project\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::RemoveTrack (\fBTrack\fP * toRemove)"
+
+.PP
+Removes the specified track\&. Called from HandleClosing\&. 
+.PP
+Definition at line 5003 of file Project\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::ResetTimerRecordFlag ()\fC [inline]\fP"
+
+.PP
+Definition at line 609 of file Project\&.h\&.
+.SS "\fBvoid\fP AudacityProject::Rewind (\fBbool\fP shift)"
+
+.PP
+Definition at line 4259 of file Project\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::RollbackState ()"
+
+.PP
+Definition at line 4038 of file Project\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::SafeDisplayStatusMessage (\fBconst\fP wxChar * msg)"
+
+.PP
+Definition at line 4652 of file Project\&.cpp\&.
+.SS "\fBbool\fP AudacityProject::Save (\fBbool\fP overwrite = \fC\fBtrue\fP\fP, \fBbool\fP fromSaveAs = \fC\fBfalse\fP\fP, \fBbool\fP bWantSaveCompressed = \fC\fBfalse\fP\fP)"
+
+.PP
+Definition at line 3363 of file Project\&.cpp\&.
+.SS "\fBbool\fP AudacityProject::SaveAs (\fBbool\fP bWantSaveCompressed = \fC\fBfalse\fP\fP)"
+
+.PP
+Definition at line 3881 of file Project\&.cpp\&.
+.SS "\fBbool\fP AudacityProject::SaveAs (\fBconst\fP wxString & newFileName, \fBbool\fP bWantSaveCompressed = \fC\fBfalse\fP\fP, \fBbool\fP addToHistory = \fC\fBtrue\fP\fP)"
+
+.PP
+Definition at line 3846 of file Project\&.cpp\&.
+.SS "double AudacityProject::ScrollingLowerBoundTime () const"
+
+.PP
+Definition at line 1527 of file Project\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::SelectAllIfNone ()"
+
+.PP
+Definition at line 1815 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::SelectNone ()"
+
+.PP
+Definition at line 4224 of file Project\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::SetAudioIOToken (\fBint\fP token)"
+
+.PP
+Definition at line 1204 of file Project\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::SetBandwidthSelectionFormatName (\fBconst\fP wxString & format)"
+
+.PP
+Definition at line 1409 of file Project\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::SetCaptureMeter (\fBMeter\fP * capture)"
+
+.PP
+Definition at line 4385 of file Project\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::SetFrequencySelectionFormatName (\fBconst\fP wxString & format)"
+
+.PP
+Definition at line 1394 of file Project\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::SetHorizontalThumb (double scrollto)"
+
+.PP
+Definition at line 1545 of file Project\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::SetMissingAliasFileDialog (wxDialog * dialog)"
+
+.PP
+Sets the wxDialog that is being displayed Used by the custom dialog warning constructor and destructor\&. 
+.PP
+Definition at line 1118 of file Project\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::SetNormalizedWindowState (wxRect pSizeAndLocation)\fC [inline]\fP"
+
+.PP
+Definition at line 605 of file Project\&.h\&.
+.SS "\fBvoid\fP AudacityProject::SetNormalizeOnLoad (\fBbool\fP flag)\fC [inline]\fP"
+
+.PP
+Definition at line 261 of file Project\&.h\&.
+.SS "\fBvoid\fP AudacityProject::SetPlaybackMeter (\fBMeter\fP * playback)"
+
+.PP
+Definition at line 4371 of file Project\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::SetProjectTitle ()"
+
+.PP
+Definition at line 1232 of file Project\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::SetSel0 (double newSel0)"
+
+.PP
+Definition at line 1159 of file Project\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::SetSel1 (double newSel1)"
+
+.PP
+Definition at line 1166 of file Project\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::SetSelectionFormat (\fBconst\fP wxString & format)"
+
+.PP
+Definition at line 1419 of file Project\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::SetShowId3Dialog (\fBbool\fP flag)\fC [inline]\fP"
+
+.PP
+Definition at line 258 of file Project\&.h\&.
+.SS "\fBvoid\fP AudacityProject::SetSnapTo (\fBint\fP snap)"
+
+.PP
+Definition at line 4905 of file Project\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::SetStateTo (unsigned \fBint\fP n)"
+
+.PP
+Definition at line 4108 of file Project\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::SetSyncLock (\fBbool\fP flag)"
+
+.PP
+Definition at line 4927 of file Project\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::SetTrackGain (\fBTrack\fP * track, \fBLWSlider\fP * slider)"
+
+.PP
+Definition at line 4968 of file Project\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::SetTrackPan (\fBTrack\fP * track, \fBLWSlider\fP * slider)"
+
+.PP
+Definition at line 4985 of file Project\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::SetTracksFitVerticallyZoomed (\fBbool\fP flag)\fC [inline]\fP"
+
+.PP
+Definition at line 255 of file Project\&.h\&.
+.SS "wxArrayString AudacityProject::ShowOpenDialog (\fBconst\fP wxString & extraformat = \fCwxEmptyString\fP, \fBconst\fP wxString & extrafilter = \fCwxEmptyString\fP)\fC [static]\fP"
+
+.PP
+Show an open dialogue for opening audio files, and possibly other sorts of files\&. The file type filter will automatically contain:
+.IP "\(bu" 2
+'All files' with any extension or none,
+.IP "\(bu" 2
+'All supported files' based on the file formats supported in this build of Audacity,
+.IP "\(bu" 2
+All of the individual formats specified by the importer plug-ins which are built into this build of Audacity, each with the relevant file extensions for that format\&. The dialogue will start in the DefaultOpenPath directory read from the preferences, failing that the working directory\&. The file format filter will be set to the DefaultOpenType from the preferences, failing that the first format specified in the dialogue\&. These two parameters will be saved to the preferences once the user has chosen a file to open\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIextraformat\fP Specify the name of an additional format to allow opening in this dialogue\&. This string is free-form, but should be short enough to fit in the file dialogue filter drop-down\&. It should be translated\&. 
+.br
+\fIextrafilter\fP Specify the file extension(s) for the additional format specified by extraformat\&. The patterns must include the wildcard (e\&.g\&. '*\&.aup' not 'aup' or '\&.aup'), separate multiple patters with a semicolon, e\&.g\&. '*\&.aup;*\&.AUP' because patterns are case-sensitive\&. Do not add a trailing semicolon to the string\&. This string should not be translated 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+Array of file paths which the user selected to open (multiple selections allowed)\&. 
+.RE
+.PP
+
+.PP
+< List of file format names and extensions, separated
+.PP
+by | characters between \fIformats\fP and extensions for each \fIformat\fP, i\&.e\&. format1name | *\&.ext | format2name | *\&.ex1;*\&.ex2
+.PP
+< One long list of all supported file extensions,
+.PP
+semicolon separated 
+.PP
+Definition at line 2364 of file Project\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::SkipEnd (\fBbool\fP shift)"
+
+.PP
+Definition at line 4277 of file Project\&.cpp\&.
+.SS "\fBconst\fP wxString & AudacityProject::SSBL_GetBandwidthSelectionFormatName ()\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Implements \fBSpectralSelectionBarListener\fP\&.
+.PP
+Definition at line 1358 of file Project\&.cpp\&.
+.SS "\fBconst\fP wxString & AudacityProject::SSBL_GetFrequencySelectionFormatName ()\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Implements \fBSpectralSelectionBarListener\fP\&.
+.PP
+Definition at line 1345 of file Project\&.cpp\&.
+.SS "double AudacityProject::SSBL_GetRate () const\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Implements \fBSpectralSelectionBarListener\fP\&.
+.PP
+Definition at line 1329 of file Project\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::SSBL_ModifySpectralSelection (double & bottom, double & top, \fBbool\fP done)\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Implements \fBSpectralSelectionBarListener\fP\&.
+.PP
+Definition at line 1371 of file Project\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::SSBL_SetBandwidthSelectionFormatName (\fBconst\fP wxString & formatName)\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Implements \fBSpectralSelectionBarListener\fP\&.
+.PP
+Definition at line 1363 of file Project\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::SSBL_SetFrequencySelectionFormatName (\fBconst\fP wxString & formatName)\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Implements \fBSpectralSelectionBarListener\fP\&.
+.PP
+Definition at line 1350 of file Project\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::TP_DisplaySelection ()\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Implements \fBTrackPanelListener\fP\&.
+.PP
+Definition at line 4669 of file Project\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::TP_DisplayStatusMessage (\fBconst\fP wxString & msg)\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Implements \fBTrackPanelListener\fP\&.
+.PP
+Definition at line 4644 of file Project\&.cpp\&.
+.SS "\fBToolsToolBar\fP * AudacityProject::TP_GetToolsToolBar ()\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Implements \fBTrackPanelListener\fP\&.
+.PP
+Definition at line 4303 of file Project\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::TP_HandleResize ()\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Implements \fBTrackPanelListener\fP\&.
+.PP
+Definition at line 4743 of file Project\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::TP_ModifyState (\fBbool\fP bWantsAutoSave)\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Implements \fBTrackPanelListener\fP\&.
+.PP
+Definition at line 4720 of file Project\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::TP_PushState (\fBconst\fP wxString & longDesc, \fBconst\fP wxString & shortDesc, \fBUndoPush\fP flags)\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Implements \fBTrackPanelListener\fP\&.
+.PP
+Definition at line 4713 of file Project\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::TP_RedrawScrollbars ()\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Implements \fBTrackPanelListener\fP\&.
+.PP
+Definition at line 4738 of file Project\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::TP_ScrollLeft ()\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Implements \fBTrackPanelListener\fP\&.
+.PP
+Definition at line 4726 of file Project\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::TP_ScrollRight ()\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Implements \fBTrackPanelListener\fP\&.
+.PP
+Definition at line 4732 of file Project\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::TP_ScrollUpDown (\fBint\fP delta)\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Implements \fBTrackPanelListener\fP\&.
+.PP
+Definition at line 1574 of file Project\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::TP_ScrollWindow (double scrollto)\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Implements \fBTrackPanelListener\fP\&.
+.PP
+Definition at line 1559 of file Project\&.cpp\&.
+.SS "\fBbool\fP AudacityProject::TryToMakeActionAllowed (wxUint32 & flags, wxUint32 flagsRqd, wxUint32 mask)"
+Determines if flags for command are compatible with current state\&. If not, then try some recovery action to make it so\&. 
+.PP
+\fBReturns:\fP
+.RS 4
+whether compatible or not after any actions taken\&. 
+.RE
+.PP
+
+.PP
+Definition at line 2007 of file Project\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::UnlockAllBlocks ()"
+
+.PP
+Definition at line 3321 of file Project\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::UpdateFirstVisible ()"
+
+.PP
+Definition at line 1768 of file Project\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::UpdateLayout ()"
+
+.PP
+Definition at line 1796 of file Project\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::UpdateMenus (\fBbool\fP checkActive = \fC\fBtrue\fP\fP)"
+
+.PP
+Definition at line 1889 of file Menus\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::UpdatePrefs ()"
+
+.PP
+Definition at line 1093 of file Project\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::UpdatePrefsVariables ()"
+
+.PP
+Definition at line 1070 of file Project\&.cpp\&.
+.SS "\fBbool\fP AudacityProject::WarnOfLegacyFile ()"
+
+.PP
+Definition at line 2555 of file Project\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::WriteXML (\fBXMLWriter\fP & xmlFile)"
+
+.PP
+Definition at line 3205 of file Project\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::WriteXMLHeader (\fBXMLWriter\fP & xmlFile)"
+
+.PP
+Definition at line 3190 of file Project\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::Zoom (double level)"
+
+.PP
+Definition at line 4238 of file Project\&.cpp\&.
+.SS "\fBvoid\fP AudacityProject::ZoomBy (double multiplier)"
+
+.PP
+Definition at line 4245 of file Project\&.cpp\&.
+.SS "\fBbool\fP AudacityProject::ZoomInAvailable () const\fC [inline]\fP"
+
+.PP
+Definition at line 167 of file Project\&.h\&.
+.SS "\fBvoid\fP AudacityProject::ZoomInByFactor (double ZoomFactor)"
+
+.PP
+Definition at line 5024 of file Menus\&.cpp\&.
+.SS "\fBbool\fP AudacityProject::ZoomOutAvailable () const\fC [inline]\fP"
+
+.PP
+Definition at line 168 of file Project\&.h\&.
+.SS "\fBvoid\fP AudacityProject::ZoomOutByFactor (double ZoomFactor)"
+
+.PP
+Definition at line 5102 of file Menus\&.cpp\&.
+.SH "Friends And Related Function Documentation"
+.PP 
+.SS "friend class \fBCommandManager\fP\fC [friend]\fP"
+
+.PP
+Definition at line 689 of file Project\&.h\&.
+.SS "friend class \fBScreenshotCommand\fP\fC [friend]\fP"
+
+.PP
+Definition at line 662 of file Project\&.h\&.
+.SH "Member Data Documentation"
+.PP 
+.SS "size_t AudacityProject::mAlignLabelsCount"
+
+.PP
+Definition at line 345 of file Project\&.h\&.
+.SS "\fBbool\fP AudacityProject::mbBusyImporting { \fBfalse\fP }"
+
+.PP
+Definition at line 603 of file Project\&.h\&.
+.SS "wxString AudacityProject::mHelpPref"
+
+.PP
+Definition at line 601 of file Project\&.h\&.
+.SS "\fBPlayMode\fP AudacityProject::mLastPlayMode { \fBnormalPlay\fP }"
+
+.PP
+Definition at line 476 of file Project\&.h\&.
+.SS "\fBbool\fP AudacityProject::mShowSplashScreen"
+
+.PP
+Definition at line 600 of file Project\&.h\&.
+.SS "wxString AudacityProject::mSoloPref"
+
+.PP
+Definition at line 602 of file Project\&.h\&.
+.SS "\fBToolManager\fP* AudacityProject::mToolManager {}"
+
+.PP
+Definition at line 599 of file Project\&.h\&.
+.SS "\fBViewInfo\fP AudacityProject::mViewInfo"
+
+.PP
+Definition at line 477 of file Project\&.h\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

@@ -1,0 +1,930 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="group__lavc__packet" kind="group">
+    <compoundname>lavc_packet</compoundname>
+    <title>AVPacket</title>
+    <innerclass refid="struct_a_v_packet" prot="public">AVPacket</innerclass>
+      <sectiondef kind="enum">
+      <memberdef kind="enum" id="group__lavc__packet_1ga9a80bfcacc586b483a973272800edb97" prot="public" static="no">
+        <name>AVPacketSideDataType</name>
+        <enumvalue id="group__lavc__packet_1gga9a80bfcacc586b483a973272800edb97a9b3c18a18a684fcbb1a2cc25cc6869dd" prot="public">
+          <name>AV_PKT_DATA_PALETTE</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="group__lavc__packet_1gga9a80bfcacc586b483a973272800edb97ad353d4a7841087354593a97bef92841a" prot="public">
+          <name>AV_PKT_DATA_NEW_EXTRADATA</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="group__lavc__packet_1gga9a80bfcacc586b483a973272800edb97ad42d2eb8c04516552e0c422257192bc0" prot="public">
+          <name>AV_PKT_DATA_PARAM_CHANGE</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+<para>An AV_PKT_DATA_PARAM_CHANGE side data packet is laid out as follows: <programlisting><codeline><highlight class="normal">u32le<sp/>param_flags</highlight></codeline>
+<codeline><highlight class="normal">if<sp/>(param_flags<sp/>&amp;<sp/>AV_SIDE_DATA_PARAM_CHANGE_CHANNEL_COUNT)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>s32le<sp/>channel_count</highlight></codeline>
+<codeline><highlight class="normal">if<sp/>(param_flags<sp/>&amp;<sp/>AV_SIDE_DATA_PARAM_CHANGE_CHANNEL_LAYOUT)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>u64le<sp/>channel_layout</highlight></codeline>
+<codeline><highlight class="normal">if<sp/>(param_flags<sp/>&amp;<sp/>AV_SIDE_DATA_PARAM_CHANGE_SAMPLE_RATE)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>s32le<sp/>sample_rate</highlight></codeline>
+<codeline><highlight class="normal">if<sp/>(param_flags<sp/>&amp;<sp/>AV_SIDE_DATA_PARAM_CHANGE_DIMENSIONS)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>s32le<sp/>width</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>s32le<sp/>height</highlight></codeline>
+</programlisting> </para>          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="group__lavc__packet_1gga9a80bfcacc586b483a973272800edb97a48dc789fa9d31046e153233374f52b86" prot="public">
+          <name>AV_PKT_DATA_H263_MB_INFO</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+<para>An AV_PKT_DATA_H263_MB_INFO side data packet contains a number of structures with info about macroblocks relevant to splitting the packet into smaller packets on macroblock edges (e.g. as for RFC 2190). That is, it does not necessarily contain info about all macroblocks, as long as the distance between macroblocks in the info is smaller than the target payload size. Each MB info structure is 12 bytes, and is laid out as follows: <programlisting><codeline><highlight class="normal">u32le<sp/>bit<sp/>offset<sp/>from<sp/>the<sp/>start<sp/>of<sp/>the<sp/>packet</highlight></codeline>
+<codeline><highlight class="normal">u8<sp/><sp/><sp/><sp/>current<sp/>quantizer<sp/>at<sp/>the<sp/>start<sp/>of<sp/>the<sp/>macroblock</highlight></codeline>
+<codeline><highlight class="normal">u8<sp/><sp/><sp/><sp/>GOB<sp/>number</highlight></codeline>
+<codeline><highlight class="normal">u16le<sp/>macroblock<sp/>address<sp/>within<sp/>the<sp/>GOB</highlight></codeline>
+<codeline><highlight class="normal">u8<sp/><sp/><sp/><sp/>horizontal<sp/>MV<sp/>predictor</highlight></codeline>
+<codeline><highlight class="normal">u8<sp/><sp/><sp/><sp/>vertical<sp/>MV<sp/>predictor</highlight></codeline>
+<codeline><highlight class="normal">u8<sp/><sp/><sp/><sp/>horizontal<sp/>MV<sp/>predictor<sp/>for<sp/>block<sp/>number<sp/>3</highlight></codeline>
+<codeline><highlight class="normal">u8<sp/><sp/><sp/><sp/>vertical<sp/>MV<sp/>predictor<sp/>for<sp/>block<sp/>number<sp/>3</highlight></codeline>
+</programlisting> </para>          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="group__lavc__packet_1gga9a80bfcacc586b483a973272800edb97a2093332d8086d25a04942ede61007f6a" prot="public">
+          <name>AV_PKT_DATA_SKIP_SAMPLES</name>
+          <initializer>=70</initializer>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+<para>Recommmends skipping the specified number of samples <programlisting><codeline><highlight class="normal">u32le<sp/>number<sp/>of<sp/>samples<sp/>to<sp/>skip<sp/>from<sp/>start<sp/>of<sp/>this<sp/>packet</highlight></codeline>
+<codeline><highlight class="normal">u32le<sp/>number<sp/>of<sp/>samples<sp/>to<sp/>skip<sp/>from<sp/>end<sp/>of<sp/>this<sp/>packet</highlight></codeline>
+<codeline><highlight class="normal">u8<sp/><sp/><sp/><sp/>reason<sp/>for<sp/>start<sp/>skip</highlight></codeline>
+<codeline><highlight class="normal">u8<sp/><sp/><sp/><sp/>reason<sp/>for<sp/>end<sp/><sp/><sp/>skip<sp/>(0=padding<sp/>silence,<sp/>1=convergence)</highlight></codeline>
+</programlisting> </para>          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="group__lavc__packet_1gga9a80bfcacc586b483a973272800edb97a0933bb1f539acca421bfaa293cb3ee95" prot="public">
+          <name>AV_PKT_DATA_JP_DUALMONO</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+<para>An AV_PKT_DATA_JP_DUALMONO side data packet indicates that the packet may contain &quot;dual mono&quot; audio specific to Japanese DTV and if it is true, recommends only the selected channel to be used. <programlisting><codeline><highlight class="normal">u8<sp/><sp/><sp/><sp/>selected<sp/>channels<sp/>(0=mail/left,<sp/>1=sub/right,<sp/>2=both)</highlight></codeline>
+</programlisting> </para>          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="group__lavc__packet_1gga9a80bfcacc586b483a973272800edb97a18d2e9d2c572fbe22a5880176fc41e9a" prot="public">
+          <name>AV_PKT_DATA_STRINGS_METADATA</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+<para>A list of zero terminated key/value strings. There is no end marker for the list, so it is required to rely on the side data size to stop. </para>          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="group__lavc__packet_1gga9a80bfcacc586b483a973272800edb97a94c6e44bd31184da4d72ed4d322ffc69" prot="public">
+          <name>AV_PKT_DATA_SUBTITLE_POSITION</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+<para>Subtitle event position <programlisting><codeline><highlight class="normal">u32le<sp/>x1</highlight></codeline>
+<codeline><highlight class="normal">u32le<sp/>y1</highlight></codeline>
+<codeline><highlight class="normal">u32le<sp/>x2</highlight></codeline>
+<codeline><highlight class="normal">u32le<sp/>y2</highlight></codeline>
+</programlisting> </para>          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="group__lavc__packet_1gga9a80bfcacc586b483a973272800edb97a72e6d25102c0504549754fcd9ac871b7" prot="public">
+          <name>AV_PKT_DATA_MATROSKA_BLOCKADDITIONAL</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+<para>Data found in BlockAdditional element of matroska container. There is no end marker for the data, so it is required to rely on the side data size to recognize the end. 8 byte id (as found in BlockAddId) followed by data. </para>          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="group__lavc__packet_1gga9a80bfcacc586b483a973272800edb97ad95c0f65ae13f5c2f03bf32accc5ecb2" prot="public">
+          <name>AV_PKT_DATA_WEBVTT_IDENTIFIER</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+<para>The optional first identifier line of a WebVTT cue. </para>          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="group__lavc__packet_1gga9a80bfcacc586b483a973272800edb97a8dfefd91c6ee7f37af363a93a8211119" prot="public">
+          <name>AV_PKT_DATA_WEBVTT_SETTINGS</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+<para>The optional settings (rendering instructions) that immediately follow the timestamp specifier of a WebVTT cue. </para>          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="group__lavc__packet_1gga9a80bfcacc586b483a973272800edb97a8f5f41fa3f854d68604ed81950bc8ee9" prot="public">
+          <name>AV_PKT_DATA_METADATA_UPDATE</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+<para>A list of zero terminated key/value strings. There is no end marker for the list, so it is required to rely on the side data size to stop. This side data includes updated metadata which appeared in the stream. </para>          </detaileddescription>
+        </enumvalue>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/_dev/OpenU/Audacity/audacity/lib-src/ffmpeg/libavcodec/avcodec.h" line="963" column="1" bodyfile="C:/_dev/OpenU/Audacity/audacity/lib-src/ffmpeg/libavcodec/avcodec.h" bodystart="963" bodyend="1068"/>
+      </memberdef>
+      <memberdef kind="enum" id="group__lavc__packet_1ga437bfa981d4c8968ca92f41ecbcb8054" prot="public" static="no">
+        <name>AVSideDataParamChangeFlags</name>
+        <enumvalue id="group__lavc__packet_1gga437bfa981d4c8968ca92f41ecbcb8054a18ac29a4e928b1ef8eff4893ae70073c" prot="public">
+          <name>AV_SIDE_DATA_PARAM_CHANGE_CHANNEL_COUNT</name>
+          <initializer>= 0x0001</initializer>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="group__lavc__packet_1gga437bfa981d4c8968ca92f41ecbcb8054a1afb2793dfb14b0db3caca605b2baabc" prot="public">
+          <name>AV_SIDE_DATA_PARAM_CHANGE_CHANNEL_LAYOUT</name>
+          <initializer>= 0x0002</initializer>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="group__lavc__packet_1gga437bfa981d4c8968ca92f41ecbcb8054ac0fd6e147f7e6ebe14002f95594e5317" prot="public">
+          <name>AV_SIDE_DATA_PARAM_CHANGE_SAMPLE_RATE</name>
+          <initializer>= 0x0004</initializer>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="group__lavc__packet_1gga437bfa981d4c8968ca92f41ecbcb8054af1a5e3b694261807e0ed9032b424c165" prot="public">
+          <name>AV_SIDE_DATA_PARAM_CHANGE_DIMENSIONS</name>
+          <initializer>= 0x0008</initializer>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/_dev/OpenU/Audacity/audacity/lib-src/ffmpeg/libavcodec/avcodec.h" line="1168" column="1" bodyfile="C:/_dev/OpenU/Audacity/audacity/lib-src/ffmpeg/libavcodec/avcodec.h" bodystart="1168" bodyend="1173"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="typedef">
+      <memberdef kind="typedef" id="group__lavc__packet_1ga0d1607e2c2c502bcd41713233553e7b8" prot="public" static="no">
+        <type>struct <ref refid="struct_a_v_packet" kindref="compound">AVPacket</ref></type>
+        <definition>typedef struct AVPacket  AVPacket</definition>
+        <argsstring></argsstring>
+        <name>AVPacket</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>This structure stores compressed data. It is typically exported by demuxers and then passed as input to decoders, or received as output from encoders and then passed to muxers.</para><para>For video, it should typically contain one compressed frame. For audio it may contain several compressed frames.</para><para><ref refid="struct_a_v_packet" kindref="compound">AVPacket</ref> is one of the few structs in FFmpeg, whose size is a part of public ABI. Thus it may be allocated on stack and no new fields can be added to it without libavcodec and libavformat major bump.</para><para>The semantics of data ownership depends on the buf or destruct (deprecated) fields. If either is set, the packet data is dynamically allocated and is valid indefinitely until <ref refid="group__lavc__packet_1gae65881462e78f98b268f34661d921ee0" kindref="member">av_free_packet()</ref> is called (which in turn calls <ref refid="group__lavu__buffer_1ga135e9e929b5033bb8f68322497b2effc" kindref="member">av_buffer_unref()</ref>/the destruct callback to free the data). If neither is set, the packet data is typically backed by some static buffer somewhere and is only valid for a limited time (e.g. until the next read call when demuxing).</para><para>The side data is always allocated with <ref refid="group__lavu__mem_1gacbca30ebc510a7e4156d66e7aceb2dc8" kindref="member">av_malloc()</ref> and is freed in <ref refid="group__lavc__packet_1gae65881462e78f98b268f34661d921ee0" kindref="member">av_free_packet()</ref>. </para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/_dev/OpenU/Audacity/audacity/lib-src/ffmpeg/libavcodec/avcodec.h" line="1164" column="1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="group__lavc__packet_1ga7582daad8c59bb6e5df39db6f9881d97" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="attributes_8h_1aa6d076561d3a9eea4729ee632652de02" kindref="member">attribute_deprecated</ref> <ref refid="sound_8c_1ae35f5844602719cf66324f4de2a658b3" kindref="member">void</ref></type>
+        <definition>attribute_deprecated void av_destruct_packet</definition>
+        <argsstring>(AVPacket *pkt)</argsstring>
+        <name>av_destruct_packet</name>
+        <param>
+          <type><ref refid="struct_a_v_packet" kindref="compound">AVPacket</ref> *</type>
+          <declname>pkt</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Default packet destructor. <xrefsect id="deprecated_1_deprecated000004"><xreftitle>Deprecated</xreftitle><xrefdescription><para>use the AVBuffer API instead </para></xrefdescription></xrefsect></para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/_dev/OpenU/Audacity/audacity/lib-src/ffmpeg/libavcodec/avcodec.h" line="3521" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="group__lavc__packet_1gac9cb9756175b96e7441575803757fb73" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="sound_8c_1ae35f5844602719cf66324f4de2a658b3" kindref="member">void</ref></type>
+        <definition>void av_init_packet</definition>
+        <argsstring>(AVPacket *pkt)</argsstring>
+        <name>av_init_packet</name>
+        <param>
+          <type><ref refid="struct_a_v_packet" kindref="compound">AVPacket</ref> *</type>
+          <declname>pkt</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Initialize optional fields of a packet with default values.</para><para>Note, this does not touch the data and size members, which have to be initialized separately.</para><para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>pkt</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>packet </para></parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/_dev/OpenU/Audacity/audacity/lib-src/ffmpeg/libavcodec/avcodec.h" line="3532" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="group__lavc__packet_1gadfa708660b85a56749c753124de2da7d" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="xmltok_8h_1a5a0d4a5641ce434f1d23533f2b2e6653" kindref="member">int</ref></type>
+        <definition>int av_new_packet</definition>
+        <argsstring>(AVPacket *pkt, int size)</argsstring>
+        <name>av_new_packet</name>
+        <param>
+          <type><ref refid="struct_a_v_packet" kindref="compound">AVPacket</ref> *</type>
+          <declname>pkt</declname>
+        </param>
+        <param>
+          <type><ref refid="xmltok_8h_1a5a0d4a5641ce434f1d23533f2b2e6653" kindref="member">int</ref></type>
+          <declname>size</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Allocate the payload of a packet and initialize its fields with default values.</para><para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>pkt</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>packet </para></parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>size</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>wanted payload size </para></parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>0 if OK, AVERROR_xxx otherwise </para></simplesect>
+</para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/_dev/OpenU/Audacity/audacity/lib-src/ffmpeg/libavcodec/avcodec.h" line="3542" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="group__lavc__packet_1gaceba1c21e5718f87abdf61cf21500485" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="sound_8c_1ae35f5844602719cf66324f4de2a658b3" kindref="member">void</ref></type>
+        <definition>void av_shrink_packet</definition>
+        <argsstring>(AVPacket *pkt, int size)</argsstring>
+        <name>av_shrink_packet</name>
+        <param>
+          <type><ref refid="struct_a_v_packet" kindref="compound">AVPacket</ref> *</type>
+          <declname>pkt</declname>
+        </param>
+        <param>
+          <type><ref refid="xmltok_8h_1a5a0d4a5641ce434f1d23533f2b2e6653" kindref="member">int</ref></type>
+          <declname>size</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Reduce packet size, correctly zeroing padding</para><para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>pkt</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>packet </para></parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>size</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>new size </para></parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/_dev/OpenU/Audacity/audacity/lib-src/ffmpeg/libavcodec/avcodec.h" line="3550" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="group__lavc__packet_1ga74f66e072998b8ce81ef3aba8d617a58" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="xmltok_8h_1a5a0d4a5641ce434f1d23533f2b2e6653" kindref="member">int</ref></type>
+        <definition>int av_grow_packet</definition>
+        <argsstring>(AVPacket *pkt, int grow_by)</argsstring>
+        <name>av_grow_packet</name>
+        <param>
+          <type><ref refid="struct_a_v_packet" kindref="compound">AVPacket</ref> *</type>
+          <declname>pkt</declname>
+        </param>
+        <param>
+          <type><ref refid="xmltok_8h_1a5a0d4a5641ce434f1d23533f2b2e6653" kindref="member">int</ref></type>
+          <declname>grow_by</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Increase packet size, correctly zeroing padding</para><para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>pkt</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>packet </para></parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>grow_by</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>number of bytes by which to increase the size of the packet </para></parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/_dev/OpenU/Audacity/audacity/lib-src/ffmpeg/libavcodec/avcodec.h" line="3558" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="group__lavc__packet_1ga7ca877e1f0ded89a27199b65e9a077dc" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="xmltok_8h_1a5a0d4a5641ce434f1d23533f2b2e6653" kindref="member">int</ref></type>
+        <definition>int av_packet_from_data</definition>
+        <argsstring>(AVPacket *pkt, uint8_t *data, int size)</argsstring>
+        <name>av_packet_from_data</name>
+        <param>
+          <type><ref refid="struct_a_v_packet" kindref="compound">AVPacket</ref> *</type>
+          <declname>pkt</declname>
+        </param>
+        <param>
+          <type><ref refid="lib-src_2ffmpeg_2win32_2stdint_8h_1a9a941819355e6f658991890ff66b4b0e" kindref="member">uint8_t</ref> *</type>
+          <declname>data</declname>
+        </param>
+        <param>
+          <type><ref refid="xmltok_8h_1a5a0d4a5641ce434f1d23533f2b2e6653" kindref="member">int</ref></type>
+          <declname>size</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Initialize a reference-counted packet from <ref refid="group__lavu__mem_1gacbca30ebc510a7e4156d66e7aceb2dc8" kindref="member">av_malloc()</ref>ed data.</para><para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>pkt</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>packet to be initialized. This function will set the data, size, buf and destruct fields, all others are left untouched. </para></parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>data</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Data allocated by <ref refid="group__lavu__mem_1gacbca30ebc510a7e4156d66e7aceb2dc8" kindref="member">av_malloc()</ref> to be used as packet data. If this function returns successfully, the data is owned by the underlying AVBuffer. The caller may not access the data through other means. </para></parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>size</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>size of data in bytes, without the padding. I.e. the full buffer size is assumed to be size + FF_INPUT_BUFFER_PADDING_SIZE.</para></parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>0 on success, a negative AVERROR on error </para></simplesect>
+</para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/_dev/OpenU/Audacity/audacity/lib-src/ffmpeg/libavcodec/avcodec.h" line="3573" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="group__lavc__packet_1ga04c83bc8a685960564a169f3a050b915" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="xmltok_8h_1a5a0d4a5641ce434f1d23533f2b2e6653" kindref="member">int</ref></type>
+        <definition>int av_dup_packet</definition>
+        <argsstring>(AVPacket *pkt)</argsstring>
+        <name>av_dup_packet</name>
+        <param>
+          <type><ref refid="struct_a_v_packet" kindref="compound">AVPacket</ref> *</type>
+          <declname>pkt</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para><simplesect kind="warning"><para>This is a hack - the packet memory allocation stuff is broken. The packet is allocated if it was not really allocated. </para></simplesect>
+</para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/_dev/OpenU/Audacity/audacity/lib-src/ffmpeg/libavcodec/avcodec.h" line="3579" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="group__lavc__packet_1gaaa43c60c5af14b713c56d43dfedfdf02" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="xmltok_8h_1a5a0d4a5641ce434f1d23533f2b2e6653" kindref="member">int</ref></type>
+        <definition>int av_copy_packet</definition>
+        <argsstring>(AVPacket *dst, AVPacket *src)</argsstring>
+        <name>av_copy_packet</name>
+        <param>
+          <type><ref refid="struct_a_v_packet" kindref="compound">AVPacket</ref> *</type>
+          <declname>dst</declname>
+        </param>
+        <param>
+          <type><ref refid="struct_a_v_packet" kindref="compound">AVPacket</ref> *</type>
+          <declname>src</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Copy packet, including contents</para><para><simplesect kind="return"><para>0 on success, negative AVERROR on fail </para></simplesect>
+</para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/_dev/OpenU/Audacity/audacity/lib-src/ffmpeg/libavcodec/avcodec.h" line="3586" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="group__lavc__packet_1ga263069cd61a00a55dd64deb9fcbfa331" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="xmltok_8h_1a5a0d4a5641ce434f1d23533f2b2e6653" kindref="member">int</ref></type>
+        <definition>int av_copy_packet_side_data</definition>
+        <argsstring>(AVPacket *dst, AVPacket *src)</argsstring>
+        <name>av_copy_packet_side_data</name>
+        <param>
+          <type><ref refid="struct_a_v_packet" kindref="compound">AVPacket</ref> *</type>
+          <declname>dst</declname>
+        </param>
+        <param>
+          <type><ref refid="struct_a_v_packet" kindref="compound">AVPacket</ref> *</type>
+          <declname>src</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Copy packet side data</para><para><simplesect kind="return"><para>0 on success, negative AVERROR on fail </para></simplesect>
+</para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/_dev/OpenU/Audacity/audacity/lib-src/ffmpeg/libavcodec/avcodec.h" line="3593" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="group__lavc__packet_1gae65881462e78f98b268f34661d921ee0" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="sound_8c_1ae35f5844602719cf66324f4de2a658b3" kindref="member">void</ref></type>
+        <definition>void av_free_packet</definition>
+        <argsstring>(AVPacket *pkt)</argsstring>
+        <name>av_free_packet</name>
+        <param>
+          <type><ref refid="struct_a_v_packet" kindref="compound">AVPacket</ref> *</type>
+          <declname>pkt</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Free a packet.</para><para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>pkt</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>packet to free </para></parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/_dev/OpenU/Audacity/audacity/lib-src/ffmpeg/libavcodec/avcodec.h" line="3600" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="group__lavc__packet_1gac59f9714ac34774b43b3797c80b06c68" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="lib-src_2ffmpeg_2win32_2stdint_8h_1a9a941819355e6f658991890ff66b4b0e" kindref="member">uint8_t</ref> *</type>
+        <definition>uint8_t* av_packet_new_side_data</definition>
+        <argsstring>(AVPacket *pkt, enum AVPacketSideDataType type, int size)</argsstring>
+        <name>av_packet_new_side_data</name>
+        <param>
+          <type><ref refid="struct_a_v_packet" kindref="compound">AVPacket</ref> *</type>
+          <declname>pkt</declname>
+        </param>
+        <param>
+          <type>enum <ref refid="group__lavc__packet_1ga9a80bfcacc586b483a973272800edb97" kindref="member">AVPacketSideDataType</ref></type>
+          <declname>type</declname>
+        </param>
+        <param>
+          <type><ref refid="xmltok_8h_1a5a0d4a5641ce434f1d23533f2b2e6653" kindref="member">int</ref></type>
+          <declname>size</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Allocate new information of a packet.</para><para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>pkt</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>packet </para></parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>type</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>side information type </para></parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>size</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>side information size </para></parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>pointer to fresh allocated data or NULL otherwise </para></simplesect>
+</para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/_dev/OpenU/Audacity/audacity/lib-src/ffmpeg/libavcodec/avcodec.h" line="3610" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="group__lavc__packet_1gaefae1892a6e7de60928da347ec74f460" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="xmltok_8h_1a5a0d4a5641ce434f1d23533f2b2e6653" kindref="member">int</ref></type>
+        <definition>int av_packet_shrink_side_data</definition>
+        <argsstring>(AVPacket *pkt, enum AVPacketSideDataType type, int size)</argsstring>
+        <name>av_packet_shrink_side_data</name>
+        <param>
+          <type><ref refid="struct_a_v_packet" kindref="compound">AVPacket</ref> *</type>
+          <declname>pkt</declname>
+        </param>
+        <param>
+          <type>enum <ref refid="group__lavc__packet_1ga9a80bfcacc586b483a973272800edb97" kindref="member">AVPacketSideDataType</ref></type>
+          <declname>type</declname>
+        </param>
+        <param>
+          <type><ref refid="xmltok_8h_1a5a0d4a5641ce434f1d23533f2b2e6653" kindref="member">int</ref></type>
+          <declname>size</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Shrink the already allocated side data buffer</para><para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>pkt</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>packet </para></parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>type</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>side information type </para></parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>size</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>new side information size </para></parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>0 on success, &lt; 0 on failure </para></simplesect>
+</para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/_dev/OpenU/Audacity/audacity/lib-src/ffmpeg/libavcodec/avcodec.h" line="3621" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="group__lavc__packet_1ga13f8dba52eed886ad2c7d2510da289f8" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="lib-src_2ffmpeg_2win32_2stdint_8h_1a9a941819355e6f658991890ff66b4b0e" kindref="member">uint8_t</ref> *</type>
+        <definition>uint8_t* av_packet_get_side_data</definition>
+        <argsstring>(AVPacket *pkt, enum AVPacketSideDataType type, int *size)</argsstring>
+        <name>av_packet_get_side_data</name>
+        <param>
+          <type><ref refid="struct_a_v_packet" kindref="compound">AVPacket</ref> *</type>
+          <declname>pkt</declname>
+        </param>
+        <param>
+          <type>enum <ref refid="group__lavc__packet_1ga9a80bfcacc586b483a973272800edb97" kindref="member">AVPacketSideDataType</ref></type>
+          <declname>type</declname>
+        </param>
+        <param>
+          <type><ref refid="xmltok_8h_1a5a0d4a5641ce434f1d23533f2b2e6653" kindref="member">int</ref> *</type>
+          <declname>size</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Get side information from packet.</para><para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>pkt</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>packet </para></parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>type</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>desired side information type </para></parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>size</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>pointer for side information size to store (optional) </para></parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>pointer to data if present or NULL otherwise </para></simplesect>
+</para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/_dev/OpenU/Audacity/audacity/lib-src/ffmpeg/libavcodec/avcodec.h" line="3632" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="group__lavc__packet_1gae27195b8483cfe56407a664af5b52951" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="xmltok_8h_1a5a0d4a5641ce434f1d23533f2b2e6653" kindref="member">int</ref></type>
+        <definition>int av_packet_merge_side_data</definition>
+        <argsstring>(AVPacket *pkt)</argsstring>
+        <name>av_packet_merge_side_data</name>
+        <param>
+          <type><ref refid="struct_a_v_packet" kindref="compound">AVPacket</ref> *</type>
+          <declname>pkt</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/_dev/OpenU/Audacity/audacity/lib-src/ffmpeg/libavcodec/avcodec.h" line="3635" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="group__lavc__packet_1ga7febd324eb8a1109e74416e9c82045b1" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="xmltok_8h_1a5a0d4a5641ce434f1d23533f2b2e6653" kindref="member">int</ref></type>
+        <definition>int av_packet_split_side_data</definition>
+        <argsstring>(AVPacket *pkt)</argsstring>
+        <name>av_packet_split_side_data</name>
+        <param>
+          <type><ref refid="struct_a_v_packet" kindref="compound">AVPacket</ref> *</type>
+          <declname>pkt</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/_dev/OpenU/Audacity/audacity/lib-src/ffmpeg/libavcodec/avcodec.h" line="3637" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="group__lavc__packet_1ga7a0673855be71c876334ed04c6989ae8" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="lib-src_2ffmpeg_2win32_2stdint_8h_1a9a941819355e6f658991890ff66b4b0e" kindref="member">uint8_t</ref> *</type>
+        <definition>uint8_t* av_packet_pack_dictionary</definition>
+        <argsstring>(AVDictionary *dict, int *size)</argsstring>
+        <name>av_packet_pack_dictionary</name>
+        <param>
+          <type><ref refid="group__lavu__dict_1ga1d7cc0833bee918994a600556410315f" kindref="member">AVDictionary</ref> *</type>
+          <declname>dict</declname>
+        </param>
+        <param>
+          <type><ref refid="xmltok_8h_1a5a0d4a5641ce434f1d23533f2b2e6653" kindref="member">int</ref> *</type>
+          <declname>size</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Pack a dictionary for use in side_data.</para><para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>dict</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The dictionary to pack. </para></parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>size</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>pointer to store the size of the returned data </para></parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>pointer to data if successful, NULL otherwise </para></simplesect>
+</para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/_dev/OpenU/Audacity/audacity/lib-src/ffmpeg/libavcodec/avcodec.h" line="3646" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="group__lavc__packet_1ga1db169cc19e8194eca7311f877783a50" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="xmltok_8h_1a5a0d4a5641ce434f1d23533f2b2e6653" kindref="member">int</ref></type>
+        <definition>int av_packet_unpack_dictionary</definition>
+        <argsstring>(const uint8_t *data, int size, AVDictionary **dict)</argsstring>
+        <name>av_packet_unpack_dictionary</name>
+        <param>
+          <type><ref refid="getopt1_8c_1a2c212835823e3c54a8ab6d95c652660e" kindref="member">const</ref> <ref refid="lib-src_2ffmpeg_2win32_2stdint_8h_1a9a941819355e6f658991890ff66b4b0e" kindref="member">uint8_t</ref> *</type>
+          <declname>data</declname>
+        </param>
+        <param>
+          <type><ref refid="xmltok_8h_1a5a0d4a5641ce434f1d23533f2b2e6653" kindref="member">int</ref></type>
+          <declname>size</declname>
+        </param>
+        <param>
+          <type><ref refid="group__lavu__dict_1ga1d7cc0833bee918994a600556410315f" kindref="member">AVDictionary</ref> **</type>
+          <declname>dict</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Unpack a dictionary from side_data.</para><para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>data</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>data from side_data </para></parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>size</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>size of the data </para></parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>dict</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the metadata storage dictionary </para></parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>0 on success, &lt; 0 on failure </para></simplesect>
+</para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/_dev/OpenU/Audacity/audacity/lib-src/ffmpeg/libavcodec/avcodec.h" line="3655" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="group__lavc__packet_1ga5cf4ba712aca9b300daf1eea1b8a9ebb" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="sound_8c_1ae35f5844602719cf66324f4de2a658b3" kindref="member">void</ref></type>
+        <definition>void av_packet_free_side_data</definition>
+        <argsstring>(AVPacket *pkt)</argsstring>
+        <name>av_packet_free_side_data</name>
+        <param>
+          <type><ref refid="struct_a_v_packet" kindref="compound">AVPacket</ref> *</type>
+          <declname>pkt</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Convenience function to free all the side data stored. All the other fields stay untouched.</para><para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>pkt</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>packet </para></parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/_dev/OpenU/Audacity/audacity/lib-src/ffmpeg/libavcodec/avcodec.h" line="3664" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="group__lavc__packet_1gaec4e65b9bc4f37a15958d10e79028bf9" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="xmltok_8h_1a5a0d4a5641ce434f1d23533f2b2e6653" kindref="member">int</ref></type>
+        <definition>int av_packet_ref</definition>
+        <argsstring>(AVPacket *dst, AVPacket *src)</argsstring>
+        <name>av_packet_ref</name>
+        <param>
+          <type><ref refid="struct_a_v_packet" kindref="compound">AVPacket</ref> *</type>
+          <declname>dst</declname>
+        </param>
+        <param>
+          <type><ref refid="struct_a_v_packet" kindref="compound">AVPacket</ref> *</type>
+          <declname>src</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Setup a new reference to the data described by a given packet</para><para>If src is reference-counted, setup dst as a new reference to the buffer in src. Otherwise allocate a new buffer in dst and copy the data from src into it.</para><para>All the other fields are copied from src.</para><para><simplesect kind="see"><para><ref refid="group__lavc__packet_1ga63d5a489b419bd5d45cfd09091cbcbc2" kindref="member">av_packet_unref</ref></para></simplesect>
+<parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>dst</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Destination packet </para></parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>src</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Source packet</para></parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>0 on success, a negative AVERROR on error. </para></simplesect>
+</para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/_dev/OpenU/Audacity/audacity/lib-src/ffmpeg/libavcodec/avcodec.h" line="3682" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="group__lavc__packet_1ga63d5a489b419bd5d45cfd09091cbcbc2" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="sound_8c_1ae35f5844602719cf66324f4de2a658b3" kindref="member">void</ref></type>
+        <definition>void av_packet_unref</definition>
+        <argsstring>(AVPacket *pkt)</argsstring>
+        <name>av_packet_unref</name>
+        <param>
+          <type><ref refid="struct_a_v_packet" kindref="compound">AVPacket</ref> *</type>
+          <declname>pkt</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Wipe the packet.</para><para>Unreference the buffer referenced by the packet and reset the remaining packet fields to their default values.</para><para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>pkt</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The packet to be unreferenced. </para></parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/_dev/OpenU/Audacity/audacity/lib-src/ffmpeg/libavcodec/avcodec.h" line="3692" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="group__lavc__packet_1ga91dbb1359f99547adb544ee96a406b21" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="sound_8c_1ae35f5844602719cf66324f4de2a658b3" kindref="member">void</ref></type>
+        <definition>void av_packet_move_ref</definition>
+        <argsstring>(AVPacket *dst, AVPacket *src)</argsstring>
+        <name>av_packet_move_ref</name>
+        <param>
+          <type><ref refid="struct_a_v_packet" kindref="compound">AVPacket</ref> *</type>
+          <declname>dst</declname>
+        </param>
+        <param>
+          <type><ref refid="struct_a_v_packet" kindref="compound">AVPacket</ref> *</type>
+          <declname>src</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Move every field in src to dst and reset src.</para><para><simplesect kind="see"><para><ref refid="group__lavc__packet_1ga63d5a489b419bd5d45cfd09091cbcbc2" kindref="member">av_packet_unref</ref></para></simplesect>
+<parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>src</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Source packet, will be reset </para></parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>dst</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Destination packet </para></parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/_dev/OpenU/Audacity/audacity/lib-src/ffmpeg/libavcodec/avcodec.h" line="3702" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="group__lavc__packet_1gade00f67930f4e2a3401b67b701d5b3a2" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="xmltok_8h_1a5a0d4a5641ce434f1d23533f2b2e6653" kindref="member">int</ref></type>
+        <definition>int av_packet_copy_props</definition>
+        <argsstring>(AVPacket *dst, const AVPacket *src)</argsstring>
+        <name>av_packet_copy_props</name>
+        <param>
+          <type><ref refid="struct_a_v_packet" kindref="compound">AVPacket</ref> *</type>
+          <declname>dst</declname>
+        </param>
+        <param>
+          <type><ref refid="getopt1_8c_1a2c212835823e3c54a8ab6d95c652660e" kindref="member">const</ref> <ref refid="struct_a_v_packet" kindref="compound">AVPacket</ref> *</type>
+          <declname>src</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Copy only &quot;properties&quot; fields from src to dst.</para><para>Properties for the purpose of this function are all the fields beside those related to the packet data (buf, data, size)</para><para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>dst</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Destination packet </para></parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>src</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Source packet</para></parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>0 on success AVERROR on failure. </para></simplesect>
+</para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/_dev/OpenU/Audacity/audacity/lib-src/ffmpeg/libavcodec/avcodec.h" line="3716" column="1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="define">
+      <memberdef kind="define" id="group__lavc__packet_1ga75603d7c2b8adf5829f4fd2fb860168f" prot="public" static="no">
+        <name>AV_PKT_FLAG_KEY</name>
+        <initializer>0x0001</initializer>
+        <briefdescription>
+<para>The packet contains a keyframe. </para>        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/_dev/OpenU/Audacity/audacity/lib-src/ffmpeg/libavcodec/avcodec.h" line="1165" column="9" bodyfile="C:/_dev/OpenU/Audacity/audacity/lib-src/ffmpeg/libavcodec/avcodec.h" bodystart="1165" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__lavc__packet_1ga46187df0d7711108ece88804dcc38025" prot="public" static="no">
+        <name>AV_PKT_FLAG_CORRUPT</name>
+        <initializer>0x0002</initializer>
+        <briefdescription>
+<para>The packet content is corrupted. </para>        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/_dev/OpenU/Audacity/audacity/lib-src/ffmpeg/libavcodec/avcodec.h" line="1166" column="9" bodyfile="C:/_dev/OpenU/Audacity/audacity/lib-src/ffmpeg/libavcodec/avcodec.h" bodystart="1166" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para>Types and functions for working with <ref refid="struct_a_v_packet" kindref="compound">AVPacket</ref>. </para>    </detaileddescription>
+  </compounddef>
+</doxygen>

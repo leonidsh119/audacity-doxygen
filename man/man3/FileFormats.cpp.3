@@ -1,0 +1,207 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/src/FileFormats.cpp" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/src/FileFormats.cpp \- Works with libsndfile to provide encoding and other file information\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <wx/arrstr\&.h>\fP
+.br
+\fC#include <wx/intl\&.h>\fP
+.br
+\fC#include 'sndfile\&.h'\fP
+.br
+\fC#include 'FileFormats\&.h'\fP
+.br
+\fC#include 'Internat\&.h'\fP
+.br
+
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBint\fP \fBsf_num_headers\fP ()"
+.br
+.RI "\fIGet the number of container formats supported by libsndfile\&. \fP"
+.ti -1c
+.RI "wxString \fBsf_header_index_name\fP (\fBint\fP \fBformat\fP)"
+.br
+.RI "\fIGet the name of a container format from libsndfile\&. \fP"
+.ti -1c
+.RI "unsigned \fBint\fP \fBsf_header_index_to_type\fP (\fBint\fP \fBi\fP)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBsf_num_encodings\fP ()"
+.br
+.RI "\fIGet the number of data encodings libsndfile supports (in any container or none\&. \fP"
+.ti -1c
+.RI "wxString \fBsf_encoding_index_name\fP (\fBint\fP \fBi\fP)"
+.br
+.RI "\fIGet the string name of the data encoding of the requested format\&. \fP"
+.ti -1c
+.RI "unsigned \fBint\fP \fBsf_encoding_index_to_subtype\fP (\fBint\fP \fBi\fP)"
+.br
+.ti -1c
+.RI "wxString \fBsf_header_name\fP (\fBint\fP \fBformat\fP)"
+.br
+.RI "\fIGet the string name of the specified container format\&. \fP"
+.ti -1c
+.RI "wxString \fBsf_header_shortname\fP (\fBint\fP \fBformat\fP)"
+.br
+.RI "\fIGet an abbreviated form of the string name of the specified format\&. \fP"
+.ti -1c
+.RI "wxString \fBsf_header_extension\fP (\fBint\fP \fBformat\fP)"
+.br
+.RI "\fIGet the most common file extension for the given format\&. \fP"
+.ti -1c
+.RI "wxString \fBsf_encoding_name\fP (\fBint\fP \fBencoding\fP)"
+.br
+.RI "\fIGet the string name of the specified data encoding\&. \fP"
+.ti -1c
+.RI "\fBint\fP \fBsf_num_simple_formats\fP ()"
+.br
+.ti -1c
+.RI "\fBSF_FORMAT_INFO\fP * \fBsf_simple_format\fP (\fBint\fP \fBi\fP)"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBsf_subtype_more_than_16_bits\fP (unsigned \fBint\fP \fBformat\fP)"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBsf_subtype_is_integer\fP (unsigned \fBint\fP \fBformat\fP)"
+.br
+.ti -1c
+.RI "wxArrayString \fBsf_get_all_extensions\fP ()"
+.br
+.ti -1c
+.RI "wxString \fBsf_normalize_name\fP (\fBconst\fP char *\fBname\fP)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Works with libsndfile to provide encoding and other file information\&. 
+
+
+.PP
+Definition in file \fBFileFormats\&.cpp\fP\&.
+.SH "Function Documentation"
+.PP 
+.SS "wxString sf_encoding_index_name (\fBint\fP encoding_num)"
+
+.PP
+Get the string name of the data encoding of the requested format\&. uses SFC_GET_FORMAT_SUBTYPE 
+.PP
+Definition at line 81 of file FileFormats\&.cpp\&.
+.SS "unsigned \fBint\fP sf_encoding_index_to_subtype (\fBint\fP i)"
+
+.PP
+Definition at line 92 of file FileFormats\&.cpp\&.
+.SS "wxString sf_encoding_name (\fBint\fP encoding_num)"
+
+.PP
+Get the string name of the specified data encoding\&. AND encoding_num with SF_FORMAT_SUBMASK to get only the data encoding and then use SFC_GET_FORMAT_INFO to get the description 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIencoding_num\fP the libsndfile encoding to get the name for (only the data encoding is used) 
+.RE
+.PP
+
+.PP
+Definition at line 158 of file FileFormats\&.cpp\&.
+.SS "wxArrayString sf_get_all_extensions ()"
+
+.PP
+Definition at line 208 of file FileFormats\&.cpp\&.
+.SS "wxString sf_header_extension (\fBint\fP format)"
+
+.PP
+Get the most common file extension for the given format\&. AND the given format with SF_FORMAT_TYPEMASK to get just the container format, then retreive the most common extension using SFC_GET_FORMAT_INFO\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIformat\fP the libsndfile format to get the name for (only the container part is used) 
+.RE
+.PP
+
+.PP
+Definition at line 147 of file FileFormats\&.cpp\&.
+.SS "wxString sf_header_index_name (\fBint\fP format_num)"
+
+.PP
+Get the name of a container format from libsndfile\&. Uses SFC_GET_FORMAT_MAJOR in the \fBsf_command()\fP interface\&. Resulting C string from libsndfile is converted to a wxString 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIformat_num\fP The libsndfile format number for the container format required 
+.RE
+.PP
+
+.PP
+Definition at line 44 of file FileFormats\&.cpp\&.
+.SS "unsigned \fBint\fP sf_header_index_to_type (\fBint\fP i)"
+
+.PP
+Definition at line 56 of file FileFormats\&.cpp\&.
+.SS "wxString sf_header_name (\fBint\fP format)"
+
+.PP
+Get the string name of the specified container format\&. AND format with SF_FORMAT_TYPEMASK to get only the container format and then use SFC_GET_FORMAT_INFO to get the description 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIformat\fP the libsndfile format to get the name for (only the container part is used) 
+.RE
+.PP
+
+.PP
+Definition at line 108 of file FileFormats\&.cpp\&.
+.SS "wxString sf_header_shortname (\fBint\fP format)"
+
+.PP
+Get an abbreviated form of the string name of the specified format\&. Do \fBsf_header_name()\fP then truncate the string at the first space in the name to get just the first word of the format name\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIformat\fP the libsndfile format to get the name for (only the container part is used) 
+.RE
+.PP
+
+.PP
+Definition at line 119 of file FileFormats\&.cpp\&.
+.SS "wxString sf_normalize_name (\fBconst\fP char * name)"
+
+.PP
+Definition at line 240 of file FileFormats\&.cpp\&.
+.SS "\fBint\fP sf_num_encodings ()"
+
+.PP
+Get the number of data encodings libsndfile supports (in any container or none\&. 
+.PP
+Definition at line 72 of file FileFormats\&.cpp\&.
+.SS "\fBint\fP sf_num_headers ()"
+
+.PP
+Get the number of container formats supported by libsndfile\&. Uses SFC_GET_FORMAT_MAJOR_COUNT in sf_command interface 
+.PP
+Definition at line 34 of file FileFormats\&.cpp\&.
+.SS "\fBint\fP sf_num_simple_formats ()"
+
+.PP
+Definition at line 169 of file FileFormats\&.cpp\&.
+.SS "\fBSF_FORMAT_INFO\fP* sf_simple_format (\fBint\fP i)"
+
+.PP
+Definition at line 180 of file FileFormats\&.cpp\&.
+.SS "\fBbool\fP sf_subtype_is_integer (unsigned \fBint\fP format)"
+
+.PP
+Definition at line 200 of file FileFormats\&.cpp\&.
+.SS "\fBbool\fP sf_subtype_more_than_16_bits (unsigned \fBint\fP format)"
+
+.PP
+Definition at line 191 of file FileFormats\&.cpp\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

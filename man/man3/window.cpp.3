@@ -1,0 +1,360 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/win/wxWidgets_additions/wxWidgets-3.0.2/src/msw/window.cpp" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/win/wxWidgets_additions/wxWidgets-3.0.2/src/msw/window.cpp \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include 'wx/wxprec\&.h'\fP
+.br
+\fC#include 'wx/window\&.h'\fP
+.br
+\fC#include 'wx/msw/wrapwin\&.h'\fP
+.br
+\fC#include 'wx/msw/wrapcctl\&.h'\fP
+.br
+\fC#include 'wx/msw/missing\&.h'\fP
+.br
+\fC#include 'wx/accel\&.h'\fP
+.br
+\fC#include 'wx/menu\&.h'\fP
+.br
+\fC#include 'wx/dc\&.h'\fP
+.br
+\fC#include 'wx/dcclient\&.h'\fP
+.br
+\fC#include 'wx/dcmemory\&.h'\fP
+.br
+\fC#include 'wx/dialog\&.h'\fP
+.br
+\fC#include 'wx/utils\&.h'\fP
+.br
+\fC#include 'wx/app\&.h'\fP
+.br
+\fC#include 'wx/layout\&.h'\fP
+.br
+\fC#include 'wx/frame\&.h'\fP
+.br
+\fC#include 'wx/listbox\&.h'\fP
+.br
+\fC#include 'wx/button\&.h'\fP
+.br
+\fC#include 'wx/msgdlg\&.h'\fP
+.br
+\fC#include 'wx/settings\&.h'\fP
+.br
+\fC#include 'wx/statbox\&.h'\fP
+.br
+\fC#include 'wx/sizer\&.h'\fP
+.br
+\fC#include 'wx/intl\&.h'\fP
+.br
+\fC#include 'wx/log\&.h'\fP
+.br
+\fC#include 'wx/textctrl\&.h'\fP
+.br
+\fC#include 'wx/menuitem\&.h'\fP
+.br
+\fC#include 'wx/module\&.h'\fP
+.br
+\fC#include 'wx/hashmap\&.h'\fP
+.br
+\fC#include 'wx/evtloop\&.h'\fP
+.br
+\fC#include 'wx/power\&.h'\fP
+.br
+\fC#include 'wx/scopeguard\&.h'\fP
+.br
+\fC#include 'wx/sysopt\&.h'\fP
+.br
+\fC#include 'wx/msw/private\&.h'\fP
+.br
+\fC#include 'wx/msw/private/keyboard\&.h'\fP
+.br
+\fC#include 'wx/msw/dcclient\&.h'\fP
+.br
+\fC#include 'wx/private/textmeasure\&.h'\fP
+.br
+\fC#include 'wx/notebook\&.h'\fP
+.br
+\fC#include 'wx/listctrl\&.h'\fP
+.br
+\fC#include 'wx/dynlib\&.h'\fP
+.br
+\fC#include <string\&.h>\fP
+.br
+\fC#include <shellapi\&.h>\fP
+.br
+\fC#include <mmsystem\&.h>\fP
+.br
+
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "class \fBwxIdleWakeUpModule\fP"
+.br
+.in -1c
+.SS "Namespaces"
+
+.in +1c
+.ti -1c
+.RI " \fBwxMSWKeyboard\fP"
+.br
+.in -1c
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBAW_HOR_POSITIVE\fP   0x00000001"
+.br
+.ti -1c
+.RI "#define \fBAW_HOR_NEGATIVE\fP   0x00000002"
+.br
+.ti -1c
+.RI "#define \fBAW_VER_POSITIVE\fP   0x00000004"
+.br
+.ti -1c
+.RI "#define \fBAW_VER_NEGATIVE\fP   0x00000008"
+.br
+.ti -1c
+.RI "#define \fBAW_CENTER\fP   0x00000010"
+.br
+.ti -1c
+.RI "#define \fBAW_HIDE\fP   0x00010000"
+.br
+.ti -1c
+.RI "#define \fBAW_ACTIVATE\fP   0x00020000"
+.br
+.ti -1c
+.RI "#define \fBAW_SLIDE\fP   0x00040000"
+.br
+.ti -1c
+.RI "#define \fBAW_BLEND\fP   0x00080000"
+.br
+.ti -1c
+.RI "#define \fBwxUSE_MOUSEEVENT_HACK\fP   1"
+.br
+.ti -1c
+.RI "#define \fBMAPVK_VK_TO_CHAR\fP   2"
+.br
+.ti -1c
+.RI "#define \fBWXUNUSED_UNLESS_ODRAWN\fP(param)"
+.br
+.ti -1c
+.RI "#define \fBINIT_CMAP_ENTRY\fP(col)"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "LRESULT WXDLLEXPORT APIENTRY _EXPORT \fBwxWndProc\fP (HWND hWnd, \fBUINT\fP message, WPARAM wParam, LPARAM lParam)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBwxRemoveHandleAssociation\fP (wxWindowMSW *win)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBwxAssociateWinWithHandle\fP (HWND hWnd, wxWindowMSW *win)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBwxGetCursorPosMSW\fP (POINT *pt)"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBwxCheckWindowWndProc\fP (WXHWND hWnd, WXFARPROC WXUNUSED(wndProc))"
+.br
+.ti -1c
+.RI "wxWindow * \fBwxFindWinFromHandle\fP (HWND hwnd)"
+.br
+.ti -1c
+.RI "wxCOLORMAP * \fBwxGetStdColourMap\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBwxGetCharSize\fP (WXHWND wnd, \fBint\fP *x, \fBint\fP *y, \fBconst\fP wxFont &the_font)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBwxMSWKeyboard::VKToWX\fP (WXWORD \fBvk\fP, WXLPARAM lParam, wchar_t *uc)"
+.br
+.ti -1c
+.RI "WXWORD \fBwxMSWKeyboard::WXToVK\fP (\fBint\fP \fBwxk\fP, \fBbool\fP *isExtended)"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBwxGetKeyState\fP (wxKeyCode key)"
+.br
+.ti -1c
+.RI "wxMouseState \fBwxGetMouseState\fP ()"
+.br
+.ti -1c
+.RI "wxWindow * \fBwxGetActiveWindow\fP ()"
+.br
+.ti -1c
+.RI "wxWindow * \fBwxGetWindowFromHWND\fP (WXHWND hWnd)"
+.br
+.ti -1c
+.RI "\fBint\fP APIENTRY \fBwxKeyboardHook\fP (\fBint\fP nCode, \fBWORD\fP wParam, \fBDWORD\fP lParam)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBwxSetKeyboardHook\fP (\fBbool\fP doIt)"
+.br
+.ti -1c
+.RI "wxWindow * \fBwxFindWindowAtPointer\fP (wxPoint &pt)"
+.br
+.ti -1c
+.RI "wxWindow * \fBwxFindWindowAtPoint\fP (\fBconst\fP wxPoint &pt)"
+.br
+.ti -1c
+.RI "wxPoint \fBwxGetMousePosition\fP ()"
+.br
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "\fBbool\fP \fBwxDidCreatePaintDC\fP = \fBfalse\fP"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define AW_ACTIVATE   0x00020000"
+
+.PP
+Definition at line 148 of file window\&.cpp\&.
+.SS "#define AW_BLEND   0x00080000"
+
+.PP
+Definition at line 150 of file window\&.cpp\&.
+.SS "#define AW_CENTER   0x00000010"
+
+.PP
+Definition at line 146 of file window\&.cpp\&.
+.SS "#define AW_HIDE   0x00010000"
+
+.PP
+Definition at line 147 of file window\&.cpp\&.
+.SS "#define AW_HOR_NEGATIVE   0x00000002"
+
+.PP
+Definition at line 143 of file window\&.cpp\&.
+.SS "#define AW_HOR_POSITIVE   0x00000001"
+
+.PP
+Definition at line 142 of file window\&.cpp\&.
+.SS "#define AW_SLIDE   0x00040000"
+
+.PP
+Definition at line 149 of file window\&.cpp\&.
+.SS "#define AW_VER_NEGATIVE   0x00000008"
+
+.PP
+Definition at line 145 of file window\&.cpp\&.
+.SS "#define AW_VER_POSITIVE   0x00000004"
+
+.PP
+Definition at line 144 of file window\&.cpp\&.
+.SS "#define INIT_CMAP_ENTRY(col)"
+\fBValue:\fP
+.PP
+.nf
+s_cmap[wxSTD_COL_##col]\&.from = s_stdColours[wxSTD_COL_##col]; \
+            s_cmap[wxSTD_COL_##col]\&.to = ::GetSysColor(COLOR_##col)
+.fi
+.SS "#define MAPVK_VK_TO_CHAR   2"
+
+.PP
+Definition at line 172 of file window\&.cpp\&.
+.SS "#define WXUNUSED_UNLESS_ODRAWN(param)"
+
+.PP
+Definition at line 4395 of file window\&.cpp\&.
+.SS "#define wxUSE_MOUSEEVENT_HACK   1"
+
+.PP
+Definition at line 162 of file window\&.cpp\&.
+.SH "Function Documentation"
+.PP 
+.SS "\fBvoid\fP wxAssociateWinWithHandle (HWND hWnd, wxWindowMSW * win)"
+
+.PP
+Definition at line 3668 of file window\&.cpp\&.
+.SS "\fBbool\fP wxCheckWindowWndProc (WXHWND hWnd, WXFARPROC  WXUNUSEDwndProc)"
+
+.PP
+Definition at line 1268 of file window\&.cpp\&.
+.SS "wxWindow* wxFindWindowAtPoint (\fBconst\fP wxPoint & pt)"
+
+.PP
+Definition at line 7289 of file window\&.cpp\&.
+.SS "wxWindow* wxFindWindowAtPointer (wxPoint & pt)"
+
+.PP
+Definition at line 7283 of file window\&.cpp\&.
+.SS "wxWindow* wxFindWinFromHandle (HWND hwnd)"
+
+.PP
+Definition at line 3662 of file window\&.cpp\&.
+.SS "wxWindow* wxGetActiveWindow ()"
+
+.PP
+Definition at line 6612 of file window\&.cpp\&.
+.SS "\fBvoid\fP wxGetCharSize (WXHWND wnd, \fBint\fP * x, \fBint\fP * y, \fBconst\fP wxFont & the_font)"
+
+.PP
+Definition at line 6159 of file window\&.cpp\&.
+.SS "\fBvoid\fP wxGetCursorPosMSW (POINT * pt)"
+
+.PP
+Definition at line 329 of file window\&.cpp\&.
+.SS "\fBbool\fP wxGetKeyState (wxKeyCode key)"
+
+.PP
+Definition at line 6560 of file window\&.cpp\&.
+.SS "wxPoint wxGetMousePosition ()"
+
+.PP
+Definition at line 7321 of file window\&.cpp\&.
+.SS "wxMouseState wxGetMouseState ()"
+
+.PP
+Definition at line 6587 of file window\&.cpp\&.
+.SS "wxCOLORMAP* wxGetStdColourMap ()"
+
+.PP
+Definition at line 4696 of file window\&.cpp\&.
+.SS "wxWindow* wxGetWindowFromHWND (WXHWND hWnd)"
+
+.PP
+Definition at line 6622 of file window\&.cpp\&.
+.SS "\fBint\fP APIENTRY wxKeyboardHook (\fBint\fP nCode, \fBWORD\fP wParam, \fBDWORD\fP lParam)"
+
+.PP
+Definition at line 6689 of file window\&.cpp\&.
+.SS "\fBvoid\fP wxRemoveHandleAssociation (wxWindowMSW * win)"
+
+.PP
+Definition at line 3697 of file window\&.cpp\&.
+.SS "\fBvoid\fP wxSetKeyboardHook (\fBbool\fP doIt)"
+
+.PP
+Definition at line 6749 of file window\&.cpp\&.
+.SS "LRESULT WXDLLEXPORT APIENTRY _EXPORT wxWndProc (HWND hWnd, \fBUINT\fP message, WPARAM wParam, LPARAM lParam)"
+
+.PP
+Definition at line 2681 of file window\&.cpp\&.
+.SH "Variable Documentation"
+.PP 
+.SS "\fBint\fP vk"
+
+.PP
+Definition at line 6215 of file window\&.cpp\&.
+.SS "\fBbool\fP wxDidCreatePaintDC = \fBfalse\fP"
+
+.PP
+Definition at line 4837 of file window\&.cpp\&.
+.SS "wxKeyCode wxk"
+
+.PP
+Definition at line 6216 of file window\&.cpp\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

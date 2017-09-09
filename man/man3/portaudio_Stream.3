@@ -1,0 +1,169 @@
+.TH "portaudio::Stream" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+portaudio::Stream \- A \fBStream\fP represents an active or inactive input and/or output data stream in the \fBSystem\fP\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <Stream\&.hxx>\fP
+.PP
+Inherited by \fBportaudio::BlockingStream\fP, and \fBportaudio::CallbackStream\fP\&.
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "virtual \fB~Stream\fP ()"
+.br
+.ti -1c
+.RI "virtual \fBvoid\fP \fBclose\fP ()"
+.br
+.RI "\fICloses the \fBStream\fP if it's open, else does nothing\&. ///\&. \fP"
+.ti -1c
+.RI "\fBbool\fP \fBisOpen\fP () \fBconst\fP "
+.br
+.RI "\fIReturns true if the \fBStream\fP is open\&. ///\&. \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBsetStreamFinishedCallback\fP (\fBPaStreamFinishedCallback\fP *callback)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBstart\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBstop\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBabort\fP ()"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBisStopped\fP () \fBconst\fP "
+.br
+.ti -1c
+.RI "\fBbool\fP \fBisActive\fP () \fBconst\fP "
+.br
+.ti -1c
+.RI "\fBPaTime\fP \fBinputLatency\fP () \fBconst\fP "
+.br
+.ti -1c
+.RI "\fBPaTime\fP \fBoutputLatency\fP () \fBconst\fP "
+.br
+.ti -1c
+.RI "double \fBsampleRate\fP () \fBconst\fP "
+.br
+.ti -1c
+.RI "\fBPaTime\fP \fBtime\fP () \fBconst\fP "
+.br
+.ti -1c
+.RI "\fBconst\fP \fBPaStream\fP * \fBpaStream\fP () \fBconst\fP "
+.br
+.ti -1c
+.RI "\fBPaStream\fP * \fBpaStream\fP ()"
+.br
+.in -1c
+.SS "Protected Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBStream\fP ()"
+.br
+.in -1c
+.SS "Protected Attributes"
+
+.in +1c
+.ti -1c
+.RI "\fBPaStream\fP * \fBstream_\fP"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+A \fBStream\fP represents an active or inactive input and/or output data stream in the \fBSystem\fP\&. 
+
+Concrete \fBStream\fP classes should ensure themselves being in a closed state at destruction (i\&.e\&. by calling their own \fBclose()\fP method in their deconstructor)\&. Following good C++ programming practices, care must be taken to ensure no exceptions are thrown by the deconstructor of these classes\&. As a consequence, clients need to explicitly call \fBclose()\fP to ensure the stream closed successfully\&.
+.PP
+The \fBStream\fP object can be used to manipulate the \fBStream\fP's state\&. Also, time-constant and time-varying information about the \fBStream\fP can be retreived\&. 
+.PP
+Definition at line 34 of file Stream\&.hxx\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "portaudio::Stream::~Stream ()\fC [virtual]\fP"
+
+.PP
+Definition at line 17 of file Stream\&.cxx\&.
+.SS "portaudio::Stream::Stream ()\fC [protected]\fP"
+
+.PP
+Definition at line 13 of file Stream\&.cxx\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "\fBvoid\fP portaudio::Stream::abort ()"
+
+.PP
+Definition at line 77 of file Stream\&.cxx\&.
+.SS "\fBvoid\fP portaudio::Stream::close (\fBvoid\fP)\fC [virtual]\fP"
+
+.PP
+Closes the \fBStream\fP if it's open, else does nothing\&. ///\&. 
+.PP
+Definition at line 29 of file Stream\&.cxx\&.
+.SS "\fBPaTime\fP portaudio::Stream::inputLatency () const"
+Returns the best known input latency for the \fBStream\fP\&. This value may differ from the suggested input latency set in the \fBStreamParameters\fP\&. Includes all sources of latency known to PortAudio such as internal buffering, and Host API reported latency\&. Doesn't include any estimates of unknown latency\&. 
+.PP
+Definition at line 113 of file Stream\&.cxx\&.
+.SS "\fBbool\fP portaudio::Stream::isActive () const"
+
+.PP
+Definition at line 95 of file Stream\&.cxx\&.
+.SS "\fBbool\fP portaudio::Stream::isOpen (\fBvoid\fP) const"
+
+.PP
+Returns true if the \fBStream\fP is open\&. ///\&. 
+.PP
+Definition at line 44 of file Stream\&.cxx\&.
+.SS "\fBbool\fP portaudio::Stream::isStopped () const"
+
+.PP
+Definition at line 85 of file Stream\&.cxx\&.
+.SS "\fBPaTime\fP portaudio::Stream::outputLatency () const"
+Returns the best known output latency for the \fBStream\fP\&. This value may differ from the suggested output latency set in the \fBStreamParameters\fP\&. Includes all sources of latency known to PortAudio such as internal buffering, and Host API reported latency\&. Doesn't include any estimates of unknown latency\&. 
+.PP
+Definition at line 131 of file Stream\&.cxx\&.
+.SS "\fBconst\fP \fBPaStream\fP * portaudio::Stream::paStream () const"
+Accessor (const) for PortAudio PaStream pointer, useful for interfacing with PortAudio add-ons such as PortMixer for instance\&. Normally accessing this pointer should not be needed as PortAudioCpp aims to provide all of PortAudio's functionality\&. 
+.PP
+Definition at line 177 of file Stream\&.cxx\&.
+.SS "\fBPaStream\fP * portaudio::Stream::paStream ()"
+Accessor (non-const) for PortAudio PaStream pointer, useful for interfacing with PortAudio add-ons such as PortMixer for instance\&. Normally accessing this pointer should not be needed as PortAudioCpp aims to provide all of PortAudio's functionality\&. 
+.PP
+Definition at line 188 of file Stream\&.cxx\&.
+.SS "double portaudio::Stream::sampleRate (\fBvoid\fP) const"
+Returns the sample rate of the \fBStream\fP\&. Usually this will be the best known estimate of the used sample rate\&. For instance when opening a \fBStream\fP setting 44100\&.0 Hz in the \fBStreamParameters\fP, the actual sample rate might be something like 44103\&.2 Hz (due to imperfections in the sound card hardware)\&. 
+.PP
+Definition at line 150 of file Stream\&.cxx\&.
+.SS "\fBvoid\fP portaudio::Stream::setStreamFinishedCallback (\fBPaStreamFinishedCallback\fP * callback)"
+
+.PP
+Definition at line 51 of file Stream\&.cxx\&.
+.SS "\fBvoid\fP portaudio::Stream::start ()"
+
+.PP
+Definition at line 61 of file Stream\&.cxx\&.
+.SS "\fBvoid\fP portaudio::Stream::stop ()"
+
+.PP
+Definition at line 69 of file Stream\&.cxx\&.
+.SS "\fBPaTime\fP portaudio::Stream::time () const"
+
+.PP
+Definition at line 164 of file Stream\&.cxx\&.
+.SH "Member Data Documentation"
+.PP 
+.SS "\fBPaStream\fP* portaudio::Stream::stream_\fC [protected]\fP"
+
+.PP
+Definition at line 70 of file Stream\&.hxx\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

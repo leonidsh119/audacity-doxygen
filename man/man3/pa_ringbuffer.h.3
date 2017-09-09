@@ -1,0 +1,284 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/lib-src/portaudio-v19/src/common/pa_ringbuffer.h" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/lib-src/portaudio-v19/src/common/pa_ringbuffer.h \- Single-reader single-writer lock-free ring buffer\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "struct \fBPaUtilRingBuffer\fP"
+.br
+.in -1c
+.SS "Typedefs"
+
+.in +1c
+.ti -1c
+.RI "typedef long \fBring_buffer_size_t\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBPaUtilRingBuffer\fP \fBPaUtilRingBuffer\fP"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBring_buffer_size_t\fP \fBPaUtil_InitializeRingBuffer\fP (\fBPaUtilRingBuffer\fP *rbuf, \fBring_buffer_size_t\fP elementSizeBytes, \fBring_buffer_size_t\fP elementCount, \fBvoid\fP *dataPtr)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBPaUtil_FlushRingBuffer\fP (\fBPaUtilRingBuffer\fP *rbuf)"
+.br
+.ti -1c
+.RI "\fBring_buffer_size_t\fP \fBPaUtil_GetRingBufferWriteAvailable\fP (\fBconst\fP \fBPaUtilRingBuffer\fP *rbuf)"
+.br
+.ti -1c
+.RI "\fBring_buffer_size_t\fP \fBPaUtil_GetRingBufferReadAvailable\fP (\fBconst\fP \fBPaUtilRingBuffer\fP *rbuf)"
+.br
+.ti -1c
+.RI "\fBring_buffer_size_t\fP \fBPaUtil_WriteRingBuffer\fP (\fBPaUtilRingBuffer\fP *rbuf, \fBconst\fP \fBvoid\fP *\fBdata\fP, \fBring_buffer_size_t\fP elementCount)"
+.br
+.ti -1c
+.RI "\fBring_buffer_size_t\fP \fBPaUtil_ReadRingBuffer\fP (\fBPaUtilRingBuffer\fP *rbuf, \fBvoid\fP *\fBdata\fP, \fBring_buffer_size_t\fP elementCount)"
+.br
+.ti -1c
+.RI "\fBring_buffer_size_t\fP \fBPaUtil_GetRingBufferWriteRegions\fP (\fBPaUtilRingBuffer\fP *rbuf, \fBring_buffer_size_t\fP elementCount, \fBvoid\fP **dataPtr1, \fBring_buffer_size_t\fP *sizePtr1, \fBvoid\fP **dataPtr2, \fBring_buffer_size_t\fP *sizePtr2)"
+.br
+.ti -1c
+.RI "\fBring_buffer_size_t\fP \fBPaUtil_AdvanceRingBufferWriteIndex\fP (\fBPaUtilRingBuffer\fP *rbuf, \fBring_buffer_size_t\fP elementCount)"
+.br
+.ti -1c
+.RI "\fBring_buffer_size_t\fP \fBPaUtil_GetRingBufferReadRegions\fP (\fBPaUtilRingBuffer\fP *rbuf, \fBring_buffer_size_t\fP elementCount, \fBvoid\fP **dataPtr1, \fBring_buffer_size_t\fP *sizePtr1, \fBvoid\fP **dataPtr2, \fBring_buffer_size_t\fP *sizePtr2)"
+.br
+.ti -1c
+.RI "\fBring_buffer_size_t\fP \fBPaUtil_AdvanceRingBufferReadIndex\fP (\fBPaUtilRingBuffer\fP *rbuf, \fBring_buffer_size_t\fP elementCount)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Single-reader single-writer lock-free ring buffer\&. 
+
+\fBPaUtilRingBuffer\fP is a ring buffer used to transport samples between different execution contexts (threads, OS callbacks, interrupt handlers) without requiring the use of any locks\&. This only works when there is a single reader and a single writer (ie\&. one thread or callback writes to the ring buffer, another thread or callback reads from it)\&.
+.PP
+The \fBPaUtilRingBuffer\fP structure manages a ring buffer containing N elements, where N must be a power of two\&. An element may be any size (specified in bytes)\&.
+.PP
+The memory area used to store the buffer elements must be allocated by the client prior to calling \fBPaUtil_InitializeRingBuffer()\fP and must outlive the use of the ring buffer\&.
+.PP
+\fBNote:\fP
+.RS 4
+The ring buffer functions are not normally exposed in the PortAudio libraries\&. If you want to call them then you will need to add pa_ringbuffer\&.c to your application source code\&. 
+.RE
+.PP
+
+.PP
+Definition in file \fBpa_ringbuffer\&.h\fP\&.
+.SH "Typedef Documentation"
+.PP 
+.SS "typedef struct \fBPaUtilRingBuffer\fP \fBPaUtilRingBuffer\fP"
+
+.SS "typedef long \fBring_buffer_size_t\fP"
+
+.PP
+Definition at line 83 of file pa_ringbuffer\&.h\&.
+.SH "Function Documentation"
+.PP 
+.SS "\fBring_buffer_size_t\fP PaUtil_AdvanceRingBufferReadIndex (\fBPaUtilRingBuffer\fP * rbuf, \fBring_buffer_size_t\fP elementCount)"
+Advance the read index to the next location to be read\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIrbuf\fP The ring buffer\&.
+.br
+\fIelementCount\fP The number of elements to advance\&.
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+The new position\&. 
+.RE
+.PP
+
+.PP
+Definition at line 187 of file pa_ringbuffer\&.c\&.
+.SS "\fBring_buffer_size_t\fP PaUtil_AdvanceRingBufferWriteIndex (\fBPaUtilRingBuffer\fP * rbuf, \fBring_buffer_size_t\fP elementCount)"
+Advance the write index to the next location to be written\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIrbuf\fP The ring buffer\&.
+.br
+\fIelementCount\fP The number of elements to advance\&.
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+The new position\&. 
+.RE
+.PP
+
+.PP
+Definition at line 139 of file pa_ringbuffer\&.c\&.
+.SS "\fBvoid\fP PaUtil_FlushRingBuffer (\fBPaUtilRingBuffer\fP * rbuf)"
+Reset buffer to empty\&. Should only be called when buffer is NOT being read or written\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIrbuf\fP The ring buffer\&. 
+.RE
+.PP
+
+.PP
+Definition at line 93 of file pa_ringbuffer\&.c\&.
+.SS "\fBring_buffer_size_t\fP PaUtil_GetRingBufferReadAvailable (\fBconst\fP \fBPaUtilRingBuffer\fP * rbuf)"
+Retrieve the number of elements available in the ring buffer for reading\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIrbuf\fP The ring buffer\&.
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+The number of elements available for reading\&. 
+.RE
+.PP
+
+.PP
+Definition at line 80 of file pa_ringbuffer\&.c\&.
+.SS "\fBring_buffer_size_t\fP PaUtil_GetRingBufferReadRegions (\fBPaUtilRingBuffer\fP * rbuf, \fBring_buffer_size_t\fP elementCount, \fBvoid\fP ** dataPtr1, \fBring_buffer_size_t\fP * sizePtr1, \fBvoid\fP ** dataPtr2, \fBring_buffer_size_t\fP * sizePtr2)"
+Get address of region(s) from which we can read data\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIrbuf\fP The ring buffer\&.
+.br
+\fIelementCount\fP The number of elements desired\&.
+.br
+\fIdataPtr1\fP The address where the first (or only) region pointer will be stored\&.
+.br
+\fIsizePtr1\fP The address where the first (or only) region length will be stored\&.
+.br
+\fIdataPtr2\fP The address where the second region pointer will be stored if the first region is too small to satisfy elementCount\&.
+.br
+\fIsizePtr2\fP The address where the second region length will be stored if the first region is too small to satisfy elementCount\&.
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+The number of elements available for reading\&. 
+.RE
+.PP
+
+.PP
+Definition at line 154 of file pa_ringbuffer\&.c\&.
+.SS "\fBring_buffer_size_t\fP PaUtil_GetRingBufferWriteAvailable (\fBconst\fP \fBPaUtilRingBuffer\fP * rbuf)"
+Retrieve the number of elements available in the ring buffer for writing\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIrbuf\fP The ring buffer\&.
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+The number of elements available for writing\&. 
+.RE
+.PP
+
+.PP
+Definition at line 86 of file pa_ringbuffer\&.c\&.
+.SS "\fBring_buffer_size_t\fP PaUtil_GetRingBufferWriteRegions (\fBPaUtilRingBuffer\fP * rbuf, \fBring_buffer_size_t\fP elementCount, \fBvoid\fP ** dataPtr1, \fBring_buffer_size_t\fP * sizePtr1, \fBvoid\fP ** dataPtr2, \fBring_buffer_size_t\fP * sizePtr2)"
+Get address of region(s) to which we can write data\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIrbuf\fP The ring buffer\&.
+.br
+\fIelementCount\fP The number of elements desired\&.
+.br
+\fIdataPtr1\fP The address where the first (or only) region pointer will be stored\&.
+.br
+\fIsizePtr1\fP The address where the first (or only) region length will be stored\&.
+.br
+\fIdataPtr2\fP The address where the second region pointer will be stored if the first region is too small to satisfy elementCount\&.
+.br
+\fIsizePtr2\fP The address where the second region length will be stored if the first region is too small to satisfy elementCount\&.
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+The room available to be written or elementCount, whichever is smaller\&. 
+.RE
+.PP
+
+.PP
+Definition at line 104 of file pa_ringbuffer\&.c\&.
+.SS "\fBring_buffer_size_t\fP PaUtil_InitializeRingBuffer (\fBPaUtilRingBuffer\fP * rbuf, \fBring_buffer_size_t\fP elementSizeBytes, \fBring_buffer_size_t\fP elementCount, \fBvoid\fP * dataPtr)"
+Initialize Ring Buffer to empty state ready to have elements written to it\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIrbuf\fP The ring buffer\&.
+.br
+\fIelementSizeBytes\fP The size of a single data element in bytes\&.
+.br
+\fIelementCount\fP The number of elements in the buffer (must be a power of 2)\&.
+.br
+\fIdataPtr\fP A pointer to a previously allocated area where the data will be maintained\&. It must be elementCount*elementSizeBytes long\&.
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+-1 if elementCount is not a power of 2, otherwise 0\&. 
+.RE
+.PP
+
+.PP
+Definition at line 66 of file pa_ringbuffer\&.c\&.
+.SS "\fBring_buffer_size_t\fP PaUtil_ReadRingBuffer (\fBPaUtilRingBuffer\fP * rbuf, \fBvoid\fP * data, \fBring_buffer_size_t\fP elementCount)"
+Read data from the ring buffer\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIrbuf\fP The ring buffer\&.
+.br
+\fIdata\fP The address where the data should be stored\&.
+.br
+\fIelementCount\fP The number of elements to be read\&.
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+The number of elements read\&. 
+.RE
+.PP
+
+.PP
+Definition at line 220 of file pa_ringbuffer\&.c\&.
+.SS "\fBring_buffer_size_t\fP PaUtil_WriteRingBuffer (\fBPaUtilRingBuffer\fP * rbuf, \fBconst\fP \fBvoid\fP * data, \fBring_buffer_size_t\fP elementCount)"
+Write data to the ring buffer\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIrbuf\fP The ring buffer\&.
+.br
+\fIdata\fP The address of new data to write to the buffer\&.
+.br
+\fIelementCount\fP The number of elements to be written\&.
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+The number of elements written\&. 
+.RE
+.PP
+
+.PP
+Definition at line 198 of file pa_ringbuffer\&.c\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

@@ -1,0 +1,287 @@
+\hypertarget{_menus_8cpp}{}\section{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/src/\+Menus.cpp File Reference}
+\label{_menus_8cpp}\index{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/src/\+Menus.\+cpp@{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/src/\+Menus.\+cpp}}
+
+
+All \hyperlink{class_audacity_project}{Audacity\+Project} functions that provide the menus. Implements \hyperlink{class_audacity_project_command_functor}{Audacity\+Project\+Command\+Functor}.  
+
+
+{\ttfamily \#include \char`\"{}Audacity.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Project.\+h\char`\"{}}\\*
+{\ttfamily \#include $<$iterator$>$}\\*
+{\ttfamily \#include $<$limits$>$}\\*
+{\ttfamily \#include $<$math.\+h$>$}\\*
+{\ttfamily \#include $<$wx/defs.\+h$>$}\\*
+{\ttfamily \#include $<$wx/docview.\+h$>$}\\*
+{\ttfamily \#include $<$wx/msgdlg.\+h$>$}\\*
+{\ttfamily \#include $<$wx/filedlg.\+h$>$}\\*
+{\ttfamily \#include $<$wx/textfile.\+h$>$}\\*
+{\ttfamily \#include $<$wx/textdlg.\+h$>$}\\*
+{\ttfamily \#include $<$wx/progdlg.\+h$>$}\\*
+{\ttfamily \#include $<$wx/scrolbar.\+h$>$}\\*
+{\ttfamily \#include $<$wx/ffile.\+h$>$}\\*
+{\ttfamily \#include $<$wx/statusbr.\+h$>$}\\*
+{\ttfamily \#include $<$wx/utils.\+h$>$}\\*
+{\ttfamily \#include \char`\"{}Freq\+Window.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}effects/\+Contrast.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Track\+Panel.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}effects/\+Effect\+Manager.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Audacity\+App.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Audacity\+Logger.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Audio\+I\+O.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Dependencies.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}float\+\_\+cast.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Label\+Track.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}import/\+Import\+Raw.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}export/\+Export.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}export/\+Export\+Multiple.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}prefs/\+Prefs\+Dialog.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Shuttle\+Gui.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}History\+Window.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Lyrics\+Window.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Mixer\+Board.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Internat.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}File\+Formats.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Module\+Manager.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Plugin\+Manager.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Prefs.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Printing.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Tags.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Time\+Track.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Mix.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}About\+Dialog.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Benchmark.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Screenshot.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}ondemand/\+O\+D\+Manager.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Resample.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Batch\+Process\+Dialog.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Batch\+Commands.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}prefs/\+Batch\+Prefs.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}toolbars/\+Tool\+Manager.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}toolbars/\+Control\+Tool\+Bar.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}toolbars/\+Tools\+Tool\+Bar.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}toolbars/\+Edit\+Tool\+Bar.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}toolbars/\+Device\+Tool\+Bar.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}toolbars/\+Mixer\+Tool\+Bar.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}toolbars/\+Transcription\+Tool\+Bar.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}widgets/\+Linking\+Html\+Window.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Experimental.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Platform\+Compatibility.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}File\+Names.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Time\+Dialog.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Timer\+Record\+Dialog.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Sound\+Activated\+Record.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Label\+Dialog.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}File\+Dialog.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Splash\+Dialog.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}widgets/\+Help\+System.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Device\+Manager.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Snap.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Undo\+Manager.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Wave\+Track.\+h\char`\"{}}\\*
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \hyperlink{class_void_functor}{Void\+Functor}
+\item 
+class \hyperlink{class_key_functor}{Key\+Functor}
+\item 
+class \hyperlink{class_list_functor}{List\+Functor}
+\item 
+class \hyperlink{class_plugin_functor}{Plugin\+Functor}
+\end{DoxyCompactItemize}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{_menus_8cpp_ab3b52f547f78e9870fc7d05740e14822}{FN}(X)~(\hyperlink{_menus_8cpp_a93a32fd9ab91097b8418ec9258145f68}{Make\+Functor}(this, \&Audacity\+Project\+:: X ))
+\item 
+\#define \hyperlink{_menus_8cpp_a8edc66856675ad661f0d277198a973f9}{F\+NS}(X,  \hyperlink{xlftab_8c_af933676109efed7ab34cea71d748a517}{S})~(\hyperlink{_menus_8cpp_a93a32fd9ab91097b8418ec9258145f68}{Make\+Functor}(this, (\hyperlink{xlftab_8c_af933676109efed7ab34cea71d748a517}{S}), \&Audacity\+Project\+:: X ))
+\end{DoxyCompactItemize}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+using \hyperlink{_menus_8cpp_a2781a8c79bad79334eb170fb066d4227}{aud\+Command\+Function}) = \hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void}(Audacity\+Project\+::$\ast$)(
+\item 
+using \hyperlink{_menus_8cpp_a1f4349ab89cb2cd1d204737787e7b1e3}{aud\+Command\+Key\+Function} = \hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void}(Audacity\+Project\+::$\ast$)(\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} wx\+Event $\ast$)
+\item 
+using \hyperlink{_menus_8cpp_ab09ba37fc37d2aadcf2fd28bba0d58d4}{aud\+Command\+List\+Function} = \hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void}(Audacity\+Project\+::$\ast$)(\hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int})
+\item 
+using \hyperlink{_menus_8cpp_a2312027c4ed4a38feb598743652d0469}{aud\+Command\+Plugin\+Function} = \hyperlink{mac_2config_2i386_2lib-src_2libsoxr_2soxr-config_8h_abb452686968e48b67397da5f97445f5b}{bool}(Audacity\+Project\+::$\ast$)(\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{include_2audacity_2_types_8h_abe9b737fcebc2b5bea606246e1eab52e}{Plugin\+ID} \&, \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int})
+\end{DoxyCompactItemize}
+\subsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \{ \\*
+\hyperlink{_menus_8cpp_aded9ca14dda7907d5a7b2bf085928aafae74df0337bb3f18b60e90639fec4b5c5}{k\+Align\+Start\+Zero} = 0, 
+\hyperlink{_menus_8cpp_aded9ca14dda7907d5a7b2bf085928aafa812c85c4844c5cfccafab5e185314287}{k\+Align\+Start\+Sel\+Start}, 
+\hyperlink{_menus_8cpp_aded9ca14dda7907d5a7b2bf085928aafa9940ddb1a64195be44ca545af9d6afd8}{k\+Align\+Start\+Sel\+End}, 
+\hyperlink{_menus_8cpp_aded9ca14dda7907d5a7b2bf085928aafa6904678fa07dca5e818e3e97fed396c0}{k\+Align\+End\+Sel\+Start}, 
+\\*
+\hyperlink{_menus_8cpp_aded9ca14dda7907d5a7b2bf085928aafac8b6045ed14c3b0a08406739a1eff1b2}{k\+Align\+End\+Sel\+End}, 
+\hyperlink{_menus_8cpp_aded9ca14dda7907d5a7b2bf085928aafa4d32abd4cf5d53645caacb94df8d5678}{k\+Align\+End\+To\+End}, 
+\hyperlink{_menus_8cpp_aded9ca14dda7907d5a7b2bf085928aafa3a361aafedcc01bc5ecbd1df3ae9c973}{k\+Align\+Together}
+ \}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{_command_manager_8h_a91ef9d090adbf621553a557ce3a8de32}{Command\+Functor\+Pointer} \hyperlink{_menus_8cpp_ab517160f515f380990da59f907c202b2}{Make\+Functor} (\hyperlink{class_audacity_project}{Audacity\+Project} $\ast$project, \hyperlink{_menus_8cpp_a2781a8c79bad79334eb170fb066d4227}{aud\+Command\+Function} pfn)
+\item 
+\hyperlink{_command_manager_8h_a91ef9d090adbf621553a557ce3a8de32}{Command\+Functor\+Pointer} \hyperlink{_menus_8cpp_abaa52b7616297c70f1fa013221c6a066}{Make\+Functor} (\hyperlink{class_audacity_project}{Audacity\+Project} $\ast$project, \hyperlink{_menus_8cpp_a1f4349ab89cb2cd1d204737787e7b1e3}{aud\+Command\+Key\+Function} pfn)
+\item 
+\hyperlink{_command_manager_8h_a91ef9d090adbf621553a557ce3a8de32}{Command\+Functor\+Pointer} \hyperlink{_menus_8cpp_a9ba001527ad78337055032c340f5d5e6}{Make\+Functor} (\hyperlink{class_audacity_project}{Audacity\+Project} $\ast$project, \hyperlink{_menus_8cpp_ab09ba37fc37d2aadcf2fd28bba0d58d4}{aud\+Command\+List\+Function} pfn)
+\item 
+\hyperlink{_command_manager_8h_a91ef9d090adbf621553a557ce3a8de32}{Command\+Functor\+Pointer} \hyperlink{_menus_8cpp_a93a32fd9ab91097b8418ec9258145f68}{Make\+Functor} (\hyperlink{class_audacity_project}{Audacity\+Project} $\ast$project, \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{include_2audacity_2_types_8h_abe9b737fcebc2b5bea606246e1eab52e}{Plugin\+ID} \&id, \hyperlink{_menus_8cpp_a2312027c4ed4a38feb598743652d0469}{aud\+Command\+Plugin\+Function} pfn)
+\item 
+\hyperlink{_menus_8cpp_aa1b37c8ec630684c32324cfbe391f46f}{W\+X\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+A\+R\+R\+A\+Y\+\_\+\+P\+TR} (\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{class_plugin_descriptor}{Plugin\+Descriptor} $\ast$, Effect\+Plugs)
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+All \hyperlink{class_audacity_project}{Audacity\+Project} functions that provide the menus. Implements \hyperlink{class_audacity_project_command_functor}{Audacity\+Project\+Command\+Functor}. 
+
+This file implements the method that creates the menu bar, plus all of the methods that get called when you select an item from a menu.
+
+All of the menu bar handling is part of the class \hyperlink{class_audacity_project}{Audacity\+Project}, but the event handlers for all of the menu items have been moved to \hyperlink{_menus_8h}{Menus.\+h} and \hyperlink{_menus_8cpp}{Menus.\+cpp} for clarity. 
+
+\subsection{Macro Definition Documentation}
+\index{Menus.\+cpp@{Menus.\+cpp}!FN@{FN}}
+\index{FN@{FN}!Menus.\+cpp@{Menus.\+cpp}}
+\subsubsection[{\texorpdfstring{FN}{FN}}]{\setlength{\rightskip}{0pt plus 5cm}\#define FN(
+\begin{DoxyParamCaption}
+\item[{}]{X}
+\end{DoxyParamCaption}
+)~({\bf Make\+Functor}(this, \&Audacity\+Project\+:: X ))}\hypertarget{_menus_8cpp_ab3b52f547f78e9870fc7d05740e14822}{}\label{_menus_8cpp_ab3b52f547f78e9870fc7d05740e14822}
+
+
+Definition at line 214 of file Menus.\+cpp.
+
+\index{Menus.\+cpp@{Menus.\+cpp}!F\+NS@{F\+NS}}
+\index{F\+NS@{F\+NS}!Menus.\+cpp@{Menus.\+cpp}}
+\subsubsection[{\texorpdfstring{F\+NS}{FNS}}]{\setlength{\rightskip}{0pt plus 5cm}\#define F\+NS(
+\begin{DoxyParamCaption}
+\item[{}]{X, }
+\item[{}]{{\bf S}}
+\end{DoxyParamCaption}
+)~({\bf Make\+Functor}(this, ({\bf S}), \&Audacity\+Project\+:: X ))}\hypertarget{_menus_8cpp_a8edc66856675ad661f0d277198a973f9}{}\label{_menus_8cpp_a8edc66856675ad661f0d277198a973f9}
+
+
+Definition at line 215 of file Menus.\+cpp.
+
+
+
+\subsection{Typedef Documentation}
+\index{Menus.\+cpp@{Menus.\+cpp}!aud\+Command\+Function@{aud\+Command\+Function}}
+\index{aud\+Command\+Function@{aud\+Command\+Function}!Menus.\+cpp@{Menus.\+cpp}}
+\subsubsection[{\texorpdfstring{aud\+Command\+Function}{audCommandFunction}}]{\setlength{\rightskip}{0pt plus 5cm}using aud\+Command\+Function =  {\bf void} (Audacity\+Project\+::$\ast$)(}\hypertarget{_menus_8cpp_a2781a8c79bad79334eb170fb066d4227}{}\label{_menus_8cpp_a2781a8c79bad79334eb170fb066d4227}
+
+
+Definition at line 150 of file Menus.\+cpp.
+
+\index{Menus.\+cpp@{Menus.\+cpp}!aud\+Command\+Key\+Function@{aud\+Command\+Key\+Function}}
+\index{aud\+Command\+Key\+Function@{aud\+Command\+Key\+Function}!Menus.\+cpp@{Menus.\+cpp}}
+\subsubsection[{\texorpdfstring{aud\+Command\+Key\+Function}{audCommandKeyFunction}}]{\setlength{\rightskip}{0pt plus 5cm}using {\bf aud\+Command\+Key\+Function} =  {\bf void} (Audacity\+Project\+::$\ast$)({\bf const} wx\+Event $\ast$)}\hypertarget{_menus_8cpp_a1f4349ab89cb2cd1d204737787e7b1e3}{}\label{_menus_8cpp_a1f4349ab89cb2cd1d204737787e7b1e3}
+
+
+Definition at line 163 of file Menus.\+cpp.
+
+\index{Menus.\+cpp@{Menus.\+cpp}!aud\+Command\+List\+Function@{aud\+Command\+List\+Function}}
+\index{aud\+Command\+List\+Function@{aud\+Command\+List\+Function}!Menus.\+cpp@{Menus.\+cpp}}
+\subsubsection[{\texorpdfstring{aud\+Command\+List\+Function}{audCommandListFunction}}]{\setlength{\rightskip}{0pt plus 5cm}using {\bf aud\+Command\+List\+Function} =  {\bf void} (Audacity\+Project\+::$\ast$)({\bf int})}\hypertarget{_menus_8cpp_ab09ba37fc37d2aadcf2fd28bba0d58d4}{}\label{_menus_8cpp_ab09ba37fc37d2aadcf2fd28bba0d58d4}
+
+
+Definition at line 176 of file Menus.\+cpp.
+
+\index{Menus.\+cpp@{Menus.\+cpp}!aud\+Command\+Plugin\+Function@{aud\+Command\+Plugin\+Function}}
+\index{aud\+Command\+Plugin\+Function@{aud\+Command\+Plugin\+Function}!Menus.\+cpp@{Menus.\+cpp}}
+\subsubsection[{\texorpdfstring{aud\+Command\+Plugin\+Function}{audCommandPluginFunction}}]{\setlength{\rightskip}{0pt plus 5cm}using {\bf aud\+Command\+Plugin\+Function} =  {\bf bool} (Audacity\+Project\+::$\ast$)({\bf const} {\bf Plugin\+ID} \&, {\bf int})}\hypertarget{_menus_8cpp_a2312027c4ed4a38feb598743652d0469}{}\label{_menus_8cpp_a2312027c4ed4a38feb598743652d0469}
+
+
+Definition at line 189 of file Menus.\+cpp.
+
+
+
+\subsection{Enumeration Type Documentation}
+\subsubsection[{\texorpdfstring{anonymous enum}{anonymous enum}}]{\setlength{\rightskip}{0pt plus 5cm}anonymous enum}\hypertarget{_menus_8cpp_aded9ca14dda7907d5a7b2bf085928aaf}{}\label{_menus_8cpp_aded9ca14dda7907d5a7b2bf085928aaf}
+\begin{Desc}
+\item[Enumerator]\par
+\begin{description}
+\index{k\+Align\+Start\+Zero@{k\+Align\+Start\+Zero}!Menus.\+cpp@{Menus.\+cpp}}\index{Menus.\+cpp@{Menus.\+cpp}!k\+Align\+Start\+Zero@{k\+Align\+Start\+Zero}}\item[{\em 
+k\+Align\+Start\+Zero\hypertarget{_menus_8cpp_aded9ca14dda7907d5a7b2bf085928aafae74df0337bb3f18b60e90639fec4b5c5}{}\label{_menus_8cpp_aded9ca14dda7907d5a7b2bf085928aafae74df0337bb3f18b60e90639fec4b5c5}
+}]\index{k\+Align\+Start\+Sel\+Start@{k\+Align\+Start\+Sel\+Start}!Menus.\+cpp@{Menus.\+cpp}}\index{Menus.\+cpp@{Menus.\+cpp}!k\+Align\+Start\+Sel\+Start@{k\+Align\+Start\+Sel\+Start}}\item[{\em 
+k\+Align\+Start\+Sel\+Start\hypertarget{_menus_8cpp_aded9ca14dda7907d5a7b2bf085928aafa812c85c4844c5cfccafab5e185314287}{}\label{_menus_8cpp_aded9ca14dda7907d5a7b2bf085928aafa812c85c4844c5cfccafab5e185314287}
+}]\index{k\+Align\+Start\+Sel\+End@{k\+Align\+Start\+Sel\+End}!Menus.\+cpp@{Menus.\+cpp}}\index{Menus.\+cpp@{Menus.\+cpp}!k\+Align\+Start\+Sel\+End@{k\+Align\+Start\+Sel\+End}}\item[{\em 
+k\+Align\+Start\+Sel\+End\hypertarget{_menus_8cpp_aded9ca14dda7907d5a7b2bf085928aafa9940ddb1a64195be44ca545af9d6afd8}{}\label{_menus_8cpp_aded9ca14dda7907d5a7b2bf085928aafa9940ddb1a64195be44ca545af9d6afd8}
+}]\index{k\+Align\+End\+Sel\+Start@{k\+Align\+End\+Sel\+Start}!Menus.\+cpp@{Menus.\+cpp}}\index{Menus.\+cpp@{Menus.\+cpp}!k\+Align\+End\+Sel\+Start@{k\+Align\+End\+Sel\+Start}}\item[{\em 
+k\+Align\+End\+Sel\+Start\hypertarget{_menus_8cpp_aded9ca14dda7907d5a7b2bf085928aafa6904678fa07dca5e818e3e97fed396c0}{}\label{_menus_8cpp_aded9ca14dda7907d5a7b2bf085928aafa6904678fa07dca5e818e3e97fed396c0}
+}]\index{k\+Align\+End\+Sel\+End@{k\+Align\+End\+Sel\+End}!Menus.\+cpp@{Menus.\+cpp}}\index{Menus.\+cpp@{Menus.\+cpp}!k\+Align\+End\+Sel\+End@{k\+Align\+End\+Sel\+End}}\item[{\em 
+k\+Align\+End\+Sel\+End\hypertarget{_menus_8cpp_aded9ca14dda7907d5a7b2bf085928aafac8b6045ed14c3b0a08406739a1eff1b2}{}\label{_menus_8cpp_aded9ca14dda7907d5a7b2bf085928aafac8b6045ed14c3b0a08406739a1eff1b2}
+}]\index{k\+Align\+End\+To\+End@{k\+Align\+End\+To\+End}!Menus.\+cpp@{Menus.\+cpp}}\index{Menus.\+cpp@{Menus.\+cpp}!k\+Align\+End\+To\+End@{k\+Align\+End\+To\+End}}\item[{\em 
+k\+Align\+End\+To\+End\hypertarget{_menus_8cpp_aded9ca14dda7907d5a7b2bf085928aafa4d32abd4cf5d53645caacb94df8d5678}{}\label{_menus_8cpp_aded9ca14dda7907d5a7b2bf085928aafa4d32abd4cf5d53645caacb94df8d5678}
+}]\index{k\+Align\+Together@{k\+Align\+Together}!Menus.\+cpp@{Menus.\+cpp}}\index{Menus.\+cpp@{Menus.\+cpp}!k\+Align\+Together@{k\+Align\+Together}}\item[{\em 
+k\+Align\+Together\hypertarget{_menus_8cpp_aded9ca14dda7907d5a7b2bf085928aafa3a361aafedcc01bc5ecbd1df3ae9c973}{}\label{_menus_8cpp_aded9ca14dda7907d5a7b2bf085928aafa3a361aafedcc01bc5ecbd1df3ae9c973}
+}]\end{description}
+\end{Desc}
+
+
+Definition at line 136 of file Menus.\+cpp.
+
+
+
+\subsection{Function Documentation}
+\index{Menus.\+cpp@{Menus.\+cpp}!Make\+Functor@{Make\+Functor}}
+\index{Make\+Functor@{Make\+Functor}!Menus.\+cpp@{Menus.\+cpp}}
+\subsubsection[{\texorpdfstring{Make\+Functor(\+Audacity\+Project $\ast$project, aud\+Command\+Function pfn)}{MakeFunctor(AudacityProject *project, audCommandFunction pfn)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Command\+Functor\+Pointer} Make\+Functor (
+\begin{DoxyParamCaption}
+\item[{{\bf Audacity\+Project} $\ast$}]{project, }
+\item[{{\bf aud\+Command\+Function}}]{pfn}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{_menus_8cpp_ab517160f515f380990da59f907c202b2}{}\label{_menus_8cpp_ab517160f515f380990da59f907c202b2}
+
+
+Definition at line 204 of file Menus.\+cpp.
+
+\index{Menus.\+cpp@{Menus.\+cpp}!Make\+Functor@{Make\+Functor}}
+\index{Make\+Functor@{Make\+Functor}!Menus.\+cpp@{Menus.\+cpp}}
+\subsubsection[{\texorpdfstring{Make\+Functor(\+Audacity\+Project $\ast$project, aud\+Command\+Key\+Function pfn)}{MakeFunctor(AudacityProject *project, audCommandKeyFunction pfn)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Command\+Functor\+Pointer} Make\+Functor (
+\begin{DoxyParamCaption}
+\item[{{\bf Audacity\+Project} $\ast$}]{project, }
+\item[{{\bf aud\+Command\+Key\+Function}}]{pfn}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{_menus_8cpp_abaa52b7616297c70f1fa013221c6a066}{}\label{_menus_8cpp_abaa52b7616297c70f1fa013221c6a066}
+
+
+Definition at line 206 of file Menus.\+cpp.
+
+\index{Menus.\+cpp@{Menus.\+cpp}!Make\+Functor@{Make\+Functor}}
+\index{Make\+Functor@{Make\+Functor}!Menus.\+cpp@{Menus.\+cpp}}
+\subsubsection[{\texorpdfstring{Make\+Functor(\+Audacity\+Project $\ast$project, aud\+Command\+List\+Function pfn)}{MakeFunctor(AudacityProject *project, audCommandListFunction pfn)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Command\+Functor\+Pointer} Make\+Functor (
+\begin{DoxyParamCaption}
+\item[{{\bf Audacity\+Project} $\ast$}]{project, }
+\item[{{\bf aud\+Command\+List\+Function}}]{pfn}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{_menus_8cpp_a9ba001527ad78337055032c340f5d5e6}{}\label{_menus_8cpp_a9ba001527ad78337055032c340f5d5e6}
+
+
+Definition at line 208 of file Menus.\+cpp.
+
+\index{Menus.\+cpp@{Menus.\+cpp}!Make\+Functor@{Make\+Functor}}
+\index{Make\+Functor@{Make\+Functor}!Menus.\+cpp@{Menus.\+cpp}}
+\subsubsection[{\texorpdfstring{Make\+Functor(\+Audacity\+Project $\ast$project, const Plugin\+I\+D \&id, aud\+Command\+Plugin\+Function pfn)}{MakeFunctor(AudacityProject *project, const PluginID &id, audCommandPluginFunction pfn)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Command\+Functor\+Pointer} Make\+Functor (
+\begin{DoxyParamCaption}
+\item[{{\bf Audacity\+Project} $\ast$}]{project, }
+\item[{{\bf const} {\bf Plugin\+ID} \&}]{id, }
+\item[{{\bf aud\+Command\+Plugin\+Function}}]{pfn}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{_menus_8cpp_a93a32fd9ab91097b8418ec9258145f68}{}\label{_menus_8cpp_a93a32fd9ab91097b8418ec9258145f68}
+
+
+Definition at line 210 of file Menus.\+cpp.
+
+\index{Menus.\+cpp@{Menus.\+cpp}!W\+X\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+A\+R\+R\+A\+Y\+\_\+\+P\+TR@{W\+X\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+A\+R\+R\+A\+Y\+\_\+\+P\+TR}}
+\index{W\+X\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+A\+R\+R\+A\+Y\+\_\+\+P\+TR@{W\+X\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+A\+R\+R\+A\+Y\+\_\+\+P\+TR}!Menus.\+cpp@{Menus.\+cpp}}
+\subsubsection[{\texorpdfstring{W\+X\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+A\+R\+R\+A\+Y\+\_\+\+P\+T\+R(const Plugin\+Descriptor $\ast$, Effect\+Plugs)}{WX_DEFINE_ARRAY_PTR(const PluginDescriptor *, EffectPlugs)}}]{\setlength{\rightskip}{0pt plus 5cm}W\+X\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+A\+R\+R\+A\+Y\+\_\+\+P\+TR (
+\begin{DoxyParamCaption}
+\item[{{\bf const} {\bf Plugin\+Descriptor} $\ast$}]{, }
+\item[{Effect\+Plugs}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{_menus_8cpp_aa1b37c8ec630684c32324cfbe391f46f}{}\label{_menus_8cpp_aa1b37c8ec630684c32324cfbe391f46f}

@@ -1,0 +1,273 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/src/effects/Equalization.cpp" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/src/effects/Equalization.cpp \- Implements EffectEqualiztaion, EqualizationDialog, \fBEqualizationPanel\fP, \fBEQCurve\fP and \fBEQPoint\fP\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+\fC#include '\&.\&./Audacity\&.h'\fP
+.br
+\fC#include 'Equalization\&.h'\fP
+.br
+\fC#include <math\&.h>\fP
+.br
+\fC#include <vector>\fP
+.br
+\fC#include <wx/bitmap\&.h>\fP
+.br
+\fC#include <wx/button\&.h>\fP
+.br
+\fC#include <wx/msgdlg\&.h>\fP
+.br
+\fC#include <wx/brush\&.h>\fP
+.br
+\fC#include <wx/dcmemory\&.h>\fP
+.br
+\fC#include <wx/event\&.h>\fP
+.br
+\fC#include <wx/image\&.h>\fP
+.br
+\fC#include <wx/intl\&.h>\fP
+.br
+\fC#include <wx/choice\&.h>\fP
+.br
+\fC#include <wx/radiobut\&.h>\fP
+.br
+\fC#include <wx/stattext\&.h>\fP
+.br
+\fC#include <wx/string\&.h>\fP
+.br
+\fC#include <wx/textdlg\&.h>\fP
+.br
+\fC#include <wx/ffile\&.h>\fP
+.br
+\fC#include <wx/filefn\&.h>\fP
+.br
+\fC#include <wx/stdpaths\&.h>\fP
+.br
+\fC#include <wx/settings\&.h>\fP
+.br
+\fC#include <wx/checkbox\&.h>\fP
+.br
+\fC#include <wx/tooltip\&.h>\fP
+.br
+\fC#include <wx/utils\&.h>\fP
+.br
+\fC#include '\&.\&./Experimental\&.h'\fP
+.br
+\fC#include '\&.\&./AColor\&.h'\fP
+.br
+\fC#include '\&.\&./ShuttleGui\&.h'\fP
+.br
+\fC#include '\&.\&./PlatformCompatibility\&.h'\fP
+.br
+\fC#include '\&.\&./FileNames\&.h'\fP
+.br
+\fC#include '\&.\&./Envelope\&.h'\fP
+.br
+\fC#include '\&.\&./widgets/LinkingHtmlWindow\&.h'\fP
+.br
+\fC#include '\&.\&./widgets/ErrorDialog\&.h'\fP
+.br
+\fC#include '\&.\&./FFT\&.h'\fP
+.br
+\fC#include '\&.\&./Prefs\&.h'\fP
+.br
+\fC#include '\&.\&./Project\&.h'\fP
+.br
+\fC#include '\&.\&./WaveTrack\&.h'\fP
+.br
+\fC#include '\&.\&./widgets/Ruler\&.h'\fP
+.br
+\fC#include '\&.\&./xml/XMLFileReader\&.h'\fP
+.br
+\fC#include '\&.\&./Theme\&.h'\fP
+.br
+\fC#include '\&.\&./AllThemeResources\&.h'\fP
+.br
+\fC#include '\&.\&./float_cast\&.h'\fP
+.br
+\fC#include 'FileDialog\&.h'\fP
+.br
+\fC#include <wx/arrimpl\&.cpp>\fP
+.br
+
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBEQCURVES_VERSION\fP   1"
+.br
+.ti -1c
+.RI "#define \fBEQCURVES_REVISION\fP   0"
+.br
+.ti -1c
+.RI "#define \fBUPDATE_ALL\fP   0"
+.br
+.in -1c
+.SS "Enumerations"
+
+.in +1c
+.ti -1c
+.RI "enum { \fBID_Length\fP = 10000, \fBID_dBMax\fP, \fBID_dBMin\fP, \fBID_Clear\fP, \fBID_Invert\fP, \fBID_Mode\fP, \fBID_Draw\fP, \fBID_Graphic\fP, \fBID_Interp\fP, \fBID_Linear\fP, \fBID_Grid\fP, \fBID_Curve\fP, \fBID_Manage\fP, \fBID_Delete\fP, \fBID_Slider\fP }"
+.br
+.ti -1c
+.RI "enum \fBkInterpolations\fP { \fBkBspline\fP, \fBkCosine\fP, \fBkCubic\fP, \fBkNumInterpolations\fP, \fBkLinear\fP, \fBkLogarithmic\fP, \fBkNumInterpolations\fP }"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBParam\fP (FilterLength, \fBint\fP, \fBXO\fP('FilterLength'), 4001, 21, 8191, 0)"
+.br
+.ti -1c
+.RI "\fBParam\fP (CurveName, wxChar *, \fBXO\fP('CurveName'), wxT('unnamed'), wxT(''), wxT(''), wxT(''))"
+.br
+.ti -1c
+.RI "\fBParam\fP (InterpLin, \fBbool\fP, \fBXO\fP('InterpolateLin'), false, \fBfalse\fP, \fBtrue\fP, \fBfalse\fP)"
+.br
+.ti -1c
+.RI "\fBParam\fP (InterpMeth, \fBint\fP, \fBXO\fP('InterpolationMethod'), 0, 0, 0, 0)"
+.br
+.ti -1c
+.RI "\fBParam\fP (DrawMode, \fBbool\fP, wxT(''), \fBtrue\fP, \fBfalse\fP, \fBtrue\fP, \fBfalse\fP)"
+.br
+.ti -1c
+.RI "\fBParam\fP (DrawGrid, \fBbool\fP, wxT(''), \fBtrue\fP, \fBfalse\fP, \fBtrue\fP, \fBfalse\fP)"
+.br
+.ti -1c
+.RI "\fBParam\fP (dBMin, float, wxT(''),\-30\&.0,\-120\&.0,\-10\&.0, 0)"
+.br
+.ti -1c
+.RI "\fBParam\fP (dBMax, float, wxT(''), 30\&.0, 0\&.0, 60\&.0, 0)"
+.br
+.ti -1c
+.RI "\fBWX_DEFINE_OBJARRAY\fP (EQPointArray)"
+.br
+.ti -1c
+.RI "\fBWX_DEFINE_OBJARRAY\fP (EQCurveArray)"
+.br
+.ti -1c
+.RI "\fBEVT_COMMAND_RANGE\fP (\fBID_Slider\fP, \fBID_Slider\fP+\fBNUMBER_OF_BANDS\fP\-1, wxEVT_COMMAND_SLIDER_UPDATED, EffectEqualization::OnSlider) \fBEffectEqualization\fP"
+.br
+.RI "\fI
+.PP
+ \fP"
+.in -1c
+.SH "Detailed Description"
+.PP 
+Implements EffectEqualiztaion, EqualizationDialog, \fBEqualizationPanel\fP, \fBEQCurve\fP and \fBEQPoint\fP\&. 
+
+
+.PP
+Definition in file \fBEqualization\&.cpp\fP\&.
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define EQCURVES_REVISION   0"
+
+.PP
+Definition at line 145 of file Equalization\&.cpp\&.
+.SS "#define EQCURVES_VERSION   1"
+
+.PP
+Definition at line 144 of file Equalization\&.cpp\&.
+.SS "#define UPDATE_ALL   0"
+
+.PP
+Definition at line 146 of file Equalization\&.cpp\&.
+.SH "Enumeration Type Documentation"
+.PP 
+.SS "anonymous enum"
+
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fIID_Length \fP\fP
+.TP
+\fB\fIID_dBMax \fP\fP
+.TP
+\fB\fIID_dBMin \fP\fP
+.TP
+\fB\fIID_Clear \fP\fP
+.TP
+\fB\fIID_Invert \fP\fP
+.TP
+\fB\fIID_Mode \fP\fP
+.TP
+\fB\fIID_Draw \fP\fP
+.TP
+\fB\fIID_Graphic \fP\fP
+.TP
+\fB\fIID_Interp \fP\fP
+.TP
+\fB\fIID_Linear \fP\fP
+.TP
+\fB\fIID_Grid \fP\fP
+.TP
+\fB\fIID_Curve \fP\fP
+.TP
+\fB\fIID_Manage \fP\fP
+.TP
+\fB\fIID_Delete \fP\fP
+.TP
+\fB\fIID_Slider \fP\fP
+.PP
+Definition at line 108 of file Equalization\&.cpp\&.
+.SS "enum \fBkInterpolations\fP"
+
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fIkBspline \fP\fP
+.TP
+\fB\fIkCosine \fP\fP
+.TP
+\fB\fIkCubic \fP\fP
+.TP
+\fB\fIkNumInterpolations \fP\fP
+.TP
+\fB\fIkLinear \fP\fP
+.TP
+\fB\fIkLogarithmic \fP\fP
+.TP
+\fB\fIkNumInterpolations \fP\fP
+.PP
+Definition at line 135 of file Equalization\&.cpp\&.
+.SH "Function Documentation"
+.PP 
+.SS "EVT_COMMAND_RANGE (\fBID_Slider\fP, \fBID_Slider\fP+\fBNUMBER_OF_BANDS\fP\- 1, wxEVT_COMMAND_SLIDER_UPDATED, EffectEqualization::OnSlider)"
+
+.PP
+
+.PP
+ 
+.PP
+Definition at line 189 of file Equalization\&.cpp\&.
+.SS "Param (FilterLength, \fBint\fP, \fBXO\fP('FilterLength'), 4001, 21, 8191, 0)"
+
+.SS "Param (CurveName, wxChar *, \fBXO\fP('CurveName'), wxT('unnamed'), wxT(''), wxT(''), wxT(''))"
+
+.SS "Param (InterpLin, \fBbool\fP, \fBXO\fP('InterpolateLin'), \fBfalse\fP, \fBfalse\fP, \fBtrue\fP, \fBfalse\fP)"
+
+.SS "Param (InterpMeth, \fBint\fP, \fBXO\fP('InterpolationMethod'), 0, 0, 0, 0)"
+
+.SS "Param (DrawMode, \fBbool\fP, wxT(''), \fBtrue\fP, \fBfalse\fP, \fBtrue\fP, \fBfalse\fP)"
+
+.SS "Param (DrawGrid, \fBbool\fP, wxT(''), \fBtrue\fP, \fBfalse\fP, \fBtrue\fP, \fBfalse\fP)"
+
+.SS "Param (dBMin, float, wxT(''), \-30\&. 0, \-120\&. 0, \-10\&. 0, 0)"
+
+.SS "Param (dBMax, float, wxT(''), 30\&. 0, 0\&. 0, 60\&. 0, 0)"
+
+.SS "WX_DEFINE_OBJARRAY (EQPointArray)"
+
+.SS "WX_DEFINE_OBJARRAY (EQCurveArray)"
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

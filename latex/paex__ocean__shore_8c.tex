@@ -1,0 +1,210 @@
+\hypertarget{paex__ocean__shore_8c}{}\section{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/portaudio-\/v19/examples/paex\+\_\+ocean\+\_\+shore.c File Reference}
+\label{paex__ocean__shore_8c}\index{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/portaudio-\/v19/examples/paex\+\_\+ocean\+\_\+shore.\+c@{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/portaudio-\/v19/examples/paex\+\_\+ocean\+\_\+shore.\+c}}
+
+
+Generate Pink \hyperlink{class_noise}{Noise} using Gardner method, and make \char`\"{}waves\char`\"{}. Provides an example of how to post stuff to/from the audio callback using lock-\/free F\+I\+F\+Os implemented by the PA ringbuffer.  
+
+
+{\ttfamily \#include $<$stdio.\+h$>$}\\*
+{\ttfamily \#include $<$stdlib.\+h$>$}\\*
+{\ttfamily \#include $<$string.\+h$>$}\\*
+{\ttfamily \#include $<$math.\+h$>$}\\*
+{\ttfamily \#include $<$time.\+h$>$}\\*
+{\ttfamily \#include \char`\"{}portaudio.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}pa\+\_\+ringbuffer.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}pa\+\_\+util.\+h\char`\"{}}\\*
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{struct_pink_noise}{Pink\+Noise}
+\item 
+class \hyperlink{struct_bi_quad}{Bi\+Quad}
+\begin{DoxyCompactList}\small\item\em S\+TK biquad (two-\/pole, two-\/zero) filter class. \end{DoxyCompactList}\item 
+struct \hyperlink{struct_ocean_wave}{Ocean\+Wave}
+\item 
+struct \hyperlink{structpa_test_data}{pa\+Test\+Data}
+\end{DoxyCompactItemize}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{paex__ocean__shore_8c_aacad2d0d75b07d001133a8227bb16a09}{P\+I\+N\+K\+\_\+\+M\+A\+X\+\_\+\+R\+A\+N\+D\+O\+M\+\_\+\+R\+O\+WS}~(30)
+\item 
+\#define \hyperlink{paex__ocean__shore_8c_a543ce37e1e5c7fde4ec39c832136683c}{P\+I\+N\+K\+\_\+\+R\+A\+N\+D\+O\+M\+\_\+\+B\+I\+TS}~(24)
+\item 
+\#define \hyperlink{paex__ocean__shore_8c_a2bc95aedc61109291640be3c2847d21d}{P\+I\+N\+K\+\_\+\+R\+A\+N\+D\+O\+M\+\_\+\+S\+H\+I\+FT}~((sizeof(long)$\ast$8)-\/\hyperlink{paex__pink_8c_a543ce37e1e5c7fde4ec39c832136683c}{P\+I\+N\+K\+\_\+\+R\+A\+N\+D\+O\+M\+\_\+\+B\+I\+TS})
+\item 
+\#define \hyperlink{paex__ocean__shore_8c_a34df5bd2cb5b7e429e8041a7cb92da91}{N\+E\+W\+\_\+\+R\+O\+W\+\_\+\+S\+I\+ZE}~(12 + (8$\ast$rand())/R\+A\+N\+D\+\_\+\+M\+AX)
+\end{DoxyCompactItemize}
+\subsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \hyperlink{paex__ocean__shore_8c_a6ef105f364067626d9f25c5589aaff2e}{Env\+State} \{ \hyperlink{paex__ocean__shore_8c_a6ef105f364067626d9f25c5589aaff2ea60a93a744a578f0f98121e67b8dc64a7}{State\+\_\+k\+Attack}, 
+\hyperlink{paex__ocean__shore_8c_a6ef105f364067626d9f25c5589aaff2ead5fd09fd11e185840ca39f3487341375}{State\+\_\+k\+Pre\+Decay}, 
+\hyperlink{paex__ocean__shore_8c_a6ef105f364067626d9f25c5589aaff2eababe61c394b789cd0bf974a2e1fb3445}{State\+\_\+k\+Decay}, 
+\hyperlink{paex__ocean__shore_8c_a6ef105f364067626d9f25c5589aaff2ea126bff26d4928e6c99a2b63c3a192a34}{State\+\_\+k\+Cnt}
+ \}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{paex__ocean__shore_8c_af0dae67ebb88c9e578848aa1fceaf8f8}{Initialize\+Pink\+Noise} (\hyperlink{struct_pink_noise}{Pink\+Noise} $\ast$pink, \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} num\+Rows)
+\item 
+float \hyperlink{paex__ocean__shore_8c_acfbee971d40a150d4a00611ed7b69cd3}{Generate\+Pink\+Noise} (\hyperlink{struct_pink_noise}{Pink\+Noise} $\ast$pink)
+\item 
+unsigned \hyperlink{paex__ocean__shore_8c_aac16b3933990e9a8bddb66b509789dae}{Generate\+Wave} (\hyperlink{struct_ocean_wave}{Ocean\+Wave} $\ast$wave, float $\ast$\hyperlink{mm_8c_aeb3fcf4ab0f02cc4420e5a97568a07ef}{output}, unsigned no\+Of\+Frames)
+\item 
+float \hyperlink{paex__ocean__shore_8c_aa24e8a7f0ab18cae3d70fc59689e4273}{Process\+Biquad} (\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{struct_bi_quad}{Bi\+Quad} $\ast$coeffs, float $\ast$memory, float input)
+\item 
+\hyperlink{struct_ocean_wave}{Ocean\+Wave} $\ast$ \hyperlink{paex__ocean__shore_8c_a30a60e65df767391a25a662460604318}{Initialize\+Wave} (double SR, float attack\+In\+Seconds, float max\+Level, float position\+Left\+Right)
+\item 
+\hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{paex__ocean__shore_8c_a840291bc02cba5474a4cb46a9b9566fe}{main} (\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void})
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Generate Pink \hyperlink{class_noise}{Noise} using Gardner method, and make \char`\"{}waves\char`\"{}. Provides an example of how to post stuff to/from the audio callback using lock-\/free F\+I\+F\+Os implemented by the PA ringbuffer. 
+
+Optimization suggested by James Mc\+Cartney uses a tree to select which random value to replace. 
+\begin{DoxyPre}
+    x x x x x x x x x x x x x x x x 
+    x   x   x   x   x   x   x   x   
+    x       x       x       x       
+     x               x               
+       x   
+\end{DoxyPre}
+ Tree is generated by counting trailing zeros in an increasing index. When the index is zero, no random number is selected.
+
+\begin{DoxyAuthor}{Author}
+Phil Burk \href{http://www.softsynth.com}{\tt http\+://www.\+softsynth.\+com} Robert Bielik 
+\end{DoxyAuthor}
+
+
+\subsection{Macro Definition Documentation}
+\index{paex\+\_\+ocean\+\_\+shore.\+c@{paex\+\_\+ocean\+\_\+shore.\+c}!N\+E\+W\+\_\+\+R\+O\+W\+\_\+\+S\+I\+ZE@{N\+E\+W\+\_\+\+R\+O\+W\+\_\+\+S\+I\+ZE}}
+\index{N\+E\+W\+\_\+\+R\+O\+W\+\_\+\+S\+I\+ZE@{N\+E\+W\+\_\+\+R\+O\+W\+\_\+\+S\+I\+ZE}!paex\+\_\+ocean\+\_\+shore.\+c@{paex\+\_\+ocean\+\_\+shore.\+c}}
+\subsubsection[{\texorpdfstring{N\+E\+W\+\_\+\+R\+O\+W\+\_\+\+S\+I\+ZE}{NEW_ROW_SIZE}}]{\setlength{\rightskip}{0pt plus 5cm}\#define N\+E\+W\+\_\+\+R\+O\+W\+\_\+\+S\+I\+ZE~(12 + (8$\ast$rand())/R\+A\+N\+D\+\_\+\+M\+AX)}\hypertarget{paex__ocean__shore_8c_a34df5bd2cb5b7e429e8041a7cb92da91}{}\label{paex__ocean__shore_8c_a34df5bd2cb5b7e429e8041a7cb92da91}
+
+
+Definition at line 362 of file paex\+\_\+ocean\+\_\+shore.\+c.
+
+\index{paex\+\_\+ocean\+\_\+shore.\+c@{paex\+\_\+ocean\+\_\+shore.\+c}!P\+I\+N\+K\+\_\+\+M\+A\+X\+\_\+\+R\+A\+N\+D\+O\+M\+\_\+\+R\+O\+WS@{P\+I\+N\+K\+\_\+\+M\+A\+X\+\_\+\+R\+A\+N\+D\+O\+M\+\_\+\+R\+O\+WS}}
+\index{P\+I\+N\+K\+\_\+\+M\+A\+X\+\_\+\+R\+A\+N\+D\+O\+M\+\_\+\+R\+O\+WS@{P\+I\+N\+K\+\_\+\+M\+A\+X\+\_\+\+R\+A\+N\+D\+O\+M\+\_\+\+R\+O\+WS}!paex\+\_\+ocean\+\_\+shore.\+c@{paex\+\_\+ocean\+\_\+shore.\+c}}
+\subsubsection[{\texorpdfstring{P\+I\+N\+K\+\_\+\+M\+A\+X\+\_\+\+R\+A\+N\+D\+O\+M\+\_\+\+R\+O\+WS}{PINK_MAX_RANDOM_ROWS}}]{\setlength{\rightskip}{0pt plus 5cm}\#define P\+I\+N\+K\+\_\+\+M\+A\+X\+\_\+\+R\+A\+N\+D\+O\+M\+\_\+\+R\+O\+WS~(30)}\hypertarget{paex__ocean__shore_8c_aacad2d0d75b07d001133a8227bb16a09}{}\label{paex__ocean__shore_8c_aacad2d0d75b07d001133a8227bb16a09}
+
+
+Definition at line 69 of file paex\+\_\+ocean\+\_\+shore.\+c.
+
+\index{paex\+\_\+ocean\+\_\+shore.\+c@{paex\+\_\+ocean\+\_\+shore.\+c}!P\+I\+N\+K\+\_\+\+R\+A\+N\+D\+O\+M\+\_\+\+B\+I\+TS@{P\+I\+N\+K\+\_\+\+R\+A\+N\+D\+O\+M\+\_\+\+B\+I\+TS}}
+\index{P\+I\+N\+K\+\_\+\+R\+A\+N\+D\+O\+M\+\_\+\+B\+I\+TS@{P\+I\+N\+K\+\_\+\+R\+A\+N\+D\+O\+M\+\_\+\+B\+I\+TS}!paex\+\_\+ocean\+\_\+shore.\+c@{paex\+\_\+ocean\+\_\+shore.\+c}}
+\subsubsection[{\texorpdfstring{P\+I\+N\+K\+\_\+\+R\+A\+N\+D\+O\+M\+\_\+\+B\+I\+TS}{PINK_RANDOM_BITS}}]{\setlength{\rightskip}{0pt plus 5cm}\#define P\+I\+N\+K\+\_\+\+R\+A\+N\+D\+O\+M\+\_\+\+B\+I\+TS~(24)}\hypertarget{paex__ocean__shore_8c_a543ce37e1e5c7fde4ec39c832136683c}{}\label{paex__ocean__shore_8c_a543ce37e1e5c7fde4ec39c832136683c}
+
+
+Definition at line 70 of file paex\+\_\+ocean\+\_\+shore.\+c.
+
+\index{paex\+\_\+ocean\+\_\+shore.\+c@{paex\+\_\+ocean\+\_\+shore.\+c}!P\+I\+N\+K\+\_\+\+R\+A\+N\+D\+O\+M\+\_\+\+S\+H\+I\+FT@{P\+I\+N\+K\+\_\+\+R\+A\+N\+D\+O\+M\+\_\+\+S\+H\+I\+FT}}
+\index{P\+I\+N\+K\+\_\+\+R\+A\+N\+D\+O\+M\+\_\+\+S\+H\+I\+FT@{P\+I\+N\+K\+\_\+\+R\+A\+N\+D\+O\+M\+\_\+\+S\+H\+I\+FT}!paex\+\_\+ocean\+\_\+shore.\+c@{paex\+\_\+ocean\+\_\+shore.\+c}}
+\subsubsection[{\texorpdfstring{P\+I\+N\+K\+\_\+\+R\+A\+N\+D\+O\+M\+\_\+\+S\+H\+I\+FT}{PINK_RANDOM_SHIFT}}]{\setlength{\rightskip}{0pt plus 5cm}\#define P\+I\+N\+K\+\_\+\+R\+A\+N\+D\+O\+M\+\_\+\+S\+H\+I\+FT~((sizeof(long)$\ast$8)-\/{\bf P\+I\+N\+K\+\_\+\+R\+A\+N\+D\+O\+M\+\_\+\+B\+I\+TS})}\hypertarget{paex__ocean__shore_8c_a2bc95aedc61109291640be3c2847d21d}{}\label{paex__ocean__shore_8c_a2bc95aedc61109291640be3c2847d21d}
+
+
+Definition at line 71 of file paex\+\_\+ocean\+\_\+shore.\+c.
+
+
+
+\subsection{Enumeration Type Documentation}
+\index{paex\+\_\+ocean\+\_\+shore.\+c@{paex\+\_\+ocean\+\_\+shore.\+c}!Env\+State@{Env\+State}}
+\index{Env\+State@{Env\+State}!paex\+\_\+ocean\+\_\+shore.\+c@{paex\+\_\+ocean\+\_\+shore.\+c}}
+\subsubsection[{\texorpdfstring{Env\+State}{EnvState}}]{\setlength{\rightskip}{0pt plus 5cm}enum {\bf Env\+State}}\hypertarget{paex__ocean__shore_8c_a6ef105f364067626d9f25c5589aaff2e}{}\label{paex__ocean__shore_8c_a6ef105f364067626d9f25c5589aaff2e}
+\begin{Desc}
+\item[Enumerator]\par
+\begin{description}
+\index{State\+\_\+k\+Attack@{State\+\_\+k\+Attack}!paex\+\_\+ocean\+\_\+shore.\+c@{paex\+\_\+ocean\+\_\+shore.\+c}}\index{paex\+\_\+ocean\+\_\+shore.\+c@{paex\+\_\+ocean\+\_\+shore.\+c}!State\+\_\+k\+Attack@{State\+\_\+k\+Attack}}\item[{\em 
+State\+\_\+k\+Attack\hypertarget{paex__ocean__shore_8c_a6ef105f364067626d9f25c5589aaff2ea60a93a744a578f0f98121e67b8dc64a7}{}\label{paex__ocean__shore_8c_a6ef105f364067626d9f25c5589aaff2ea60a93a744a578f0f98121e67b8dc64a7}
+}]\index{State\+\_\+k\+Pre\+Decay@{State\+\_\+k\+Pre\+Decay}!paex\+\_\+ocean\+\_\+shore.\+c@{paex\+\_\+ocean\+\_\+shore.\+c}}\index{paex\+\_\+ocean\+\_\+shore.\+c@{paex\+\_\+ocean\+\_\+shore.\+c}!State\+\_\+k\+Pre\+Decay@{State\+\_\+k\+Pre\+Decay}}\item[{\em 
+State\+\_\+k\+Pre\+Decay\hypertarget{paex__ocean__shore_8c_a6ef105f364067626d9f25c5589aaff2ead5fd09fd11e185840ca39f3487341375}{}\label{paex__ocean__shore_8c_a6ef105f364067626d9f25c5589aaff2ead5fd09fd11e185840ca39f3487341375}
+}]\index{State\+\_\+k\+Decay@{State\+\_\+k\+Decay}!paex\+\_\+ocean\+\_\+shore.\+c@{paex\+\_\+ocean\+\_\+shore.\+c}}\index{paex\+\_\+ocean\+\_\+shore.\+c@{paex\+\_\+ocean\+\_\+shore.\+c}!State\+\_\+k\+Decay@{State\+\_\+k\+Decay}}\item[{\em 
+State\+\_\+k\+Decay\hypertarget{paex__ocean__shore_8c_a6ef105f364067626d9f25c5589aaff2eababe61c394b789cd0bf974a2e1fb3445}{}\label{paex__ocean__shore_8c_a6ef105f364067626d9f25c5589aaff2eababe61c394b789cd0bf974a2e1fb3445}
+}]\index{State\+\_\+k\+Cnt@{State\+\_\+k\+Cnt}!paex\+\_\+ocean\+\_\+shore.\+c@{paex\+\_\+ocean\+\_\+shore.\+c}}\index{paex\+\_\+ocean\+\_\+shore.\+c@{paex\+\_\+ocean\+\_\+shore.\+c}!State\+\_\+k\+Cnt@{State\+\_\+k\+Cnt}}\item[{\em 
+State\+\_\+k\+Cnt\hypertarget{paex__ocean__shore_8c_a6ef105f364067626d9f25c5589aaff2ea126bff26d4928e6c99a2b63c3a192a34}{}\label{paex__ocean__shore_8c_a6ef105f364067626d9f25c5589aaff2ea126bff26d4928e6c99a2b63c3a192a34}
+}]\end{description}
+\end{Desc}
+
+
+Definition at line 92 of file paex\+\_\+ocean\+\_\+shore.\+c.
+
+
+
+\subsection{Function Documentation}
+\index{paex\+\_\+ocean\+\_\+shore.\+c@{paex\+\_\+ocean\+\_\+shore.\+c}!Generate\+Pink\+Noise@{Generate\+Pink\+Noise}}
+\index{Generate\+Pink\+Noise@{Generate\+Pink\+Noise}!paex\+\_\+ocean\+\_\+shore.\+c@{paex\+\_\+ocean\+\_\+shore.\+c}}
+\subsubsection[{\texorpdfstring{Generate\+Pink\+Noise(\+Pink\+Noise $\ast$pink)}{GeneratePinkNoise(PinkNoise *pink)}}]{\setlength{\rightskip}{0pt plus 5cm}float Generate\+Pink\+Noise (
+\begin{DoxyParamCaption}
+\item[{{\bf Pink\+Noise} $\ast$}]{pink}
+\end{DoxyParamCaption}
+)}\hypertarget{paex__ocean__shore_8c_acfbee971d40a150d4a00611ed7b69cd3}{}\label{paex__ocean__shore_8c_acfbee971d40a150d4a00611ed7b69cd3}
+
+
+Definition at line 152 of file paex\+\_\+ocean\+\_\+shore.\+c.
+
+\index{paex\+\_\+ocean\+\_\+shore.\+c@{paex\+\_\+ocean\+\_\+shore.\+c}!Generate\+Wave@{Generate\+Wave}}
+\index{Generate\+Wave@{Generate\+Wave}!paex\+\_\+ocean\+\_\+shore.\+c@{paex\+\_\+ocean\+\_\+shore.\+c}}
+\subsubsection[{\texorpdfstring{Generate\+Wave(\+Ocean\+Wave $\ast$wave, float $\ast$output, unsigned no\+Of\+Frames)}{GenerateWave(OceanWave *wave, float *output, unsigned noOfFrames)}}]{\setlength{\rightskip}{0pt plus 5cm}unsigned Generate\+Wave (
+\begin{DoxyParamCaption}
+\item[{{\bf Ocean\+Wave} $\ast$}]{wave, }
+\item[{float $\ast$}]{output, }
+\item[{unsigned}]{no\+Of\+Frames}
+\end{DoxyParamCaption}
+)}\hypertarget{paex__ocean__shore_8c_aac16b3933990e9a8bddb66b509789dae}{}\label{paex__ocean__shore_8c_aac16b3933990e9a8bddb66b509789dae}
+
+
+Definition at line 201 of file paex\+\_\+ocean\+\_\+shore.\+c.
+
+\index{paex\+\_\+ocean\+\_\+shore.\+c@{paex\+\_\+ocean\+\_\+shore.\+c}!Initialize\+Pink\+Noise@{Initialize\+Pink\+Noise}}
+\index{Initialize\+Pink\+Noise@{Initialize\+Pink\+Noise}!paex\+\_\+ocean\+\_\+shore.\+c@{paex\+\_\+ocean\+\_\+shore.\+c}}
+\subsubsection[{\texorpdfstring{Initialize\+Pink\+Noise(\+Pink\+Noise $\ast$pink, int num\+Rows)}{InitializePinkNoise(PinkNoise *pink, int numRows)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} Initialize\+Pink\+Noise (
+\begin{DoxyParamCaption}
+\item[{{\bf Pink\+Noise} $\ast$}]{pink, }
+\item[{{\bf int}}]{num\+Rows}
+\end{DoxyParamCaption}
+)}\hypertarget{paex__ocean__shore_8c_af0dae67ebb88c9e578848aa1fceaf8f8}{}\label{paex__ocean__shore_8c_af0dae67ebb88c9e578848aa1fceaf8f8}
+
+
+Definition at line 137 of file paex\+\_\+ocean\+\_\+shore.\+c.
+
+\index{paex\+\_\+ocean\+\_\+shore.\+c@{paex\+\_\+ocean\+\_\+shore.\+c}!Initialize\+Wave@{Initialize\+Wave}}
+\index{Initialize\+Wave@{Initialize\+Wave}!paex\+\_\+ocean\+\_\+shore.\+c@{paex\+\_\+ocean\+\_\+shore.\+c}}
+\subsubsection[{\texorpdfstring{Initialize\+Wave(double S\+R, float attack\+In\+Seconds, float max\+Level, float position\+Left\+Right)}{InitializeWave(double SR, float attackInSeconds, float maxLevel, float positionLeftRight)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Ocean\+Wave}$\ast$ Initialize\+Wave (
+\begin{DoxyParamCaption}
+\item[{double}]{SR, }
+\item[{float}]{attack\+In\+Seconds, }
+\item[{float}]{max\+Level, }
+\item[{float}]{position\+Left\+Right}
+\end{DoxyParamCaption}
+)}\hypertarget{paex__ocean__shore_8c_a30a60e65df767391a25a662460604318}{}\label{paex__ocean__shore_8c_a30a60e65df767391a25a662460604318}
+
+
+Definition at line 364 of file paex\+\_\+ocean\+\_\+shore.\+c.
+
+\index{paex\+\_\+ocean\+\_\+shore.\+c@{paex\+\_\+ocean\+\_\+shore.\+c}!main@{main}}
+\index{main@{main}!paex\+\_\+ocean\+\_\+shore.\+c@{paex\+\_\+ocean\+\_\+shore.\+c}}
+\subsubsection[{\texorpdfstring{main(void)}{main(void)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf int} main (
+\begin{DoxyParamCaption}
+\item[{{\bf void}}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{paex__ocean__shore_8c_a840291bc02cba5474a4cb46a9b9566fe}{}\label{paex__ocean__shore_8c_a840291bc02cba5474a4cb46a9b9566fe}
+
+
+Definition at line 397 of file paex\+\_\+ocean\+\_\+shore.\+c.
+
+\index{paex\+\_\+ocean\+\_\+shore.\+c@{paex\+\_\+ocean\+\_\+shore.\+c}!Process\+Biquad@{Process\+Biquad}}
+\index{Process\+Biquad@{Process\+Biquad}!paex\+\_\+ocean\+\_\+shore.\+c@{paex\+\_\+ocean\+\_\+shore.\+c}}
+\subsubsection[{\texorpdfstring{Process\+Biquad(const Bi\+Quad $\ast$coeffs, float $\ast$memory, float input)}{ProcessBiquad(const BiQuad *coeffs, float *memory, float input)}}]{\setlength{\rightskip}{0pt plus 5cm}float Process\+Biquad (
+\begin{DoxyParamCaption}
+\item[{{\bf const} {\bf Bi\+Quad} $\ast$}]{coeffs, }
+\item[{float $\ast$}]{memory, }
+\item[{float}]{input}
+\end{DoxyParamCaption}
+)}\hypertarget{paex__ocean__shore_8c_aa24e8a7f0ab18cae3d70fc59689e4273}{}\label{paex__ocean__shore_8c_aa24e8a7f0ab18cae3d70fc59689e4273}
+
+
+Definition at line 189 of file paex\+\_\+ocean\+\_\+shore.\+c.
+

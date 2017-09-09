@@ -1,0 +1,182 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/lib-src/portaudio-v19/src/hostapi/oss/pa_unix_oss.c" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/lib-src/portaudio-v19/src/hostapi/oss/pa_unix_oss.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <stdio\&.h>\fP
+.br
+\fC#include <string\&.h>\fP
+.br
+\fC#include <math\&.h>\fP
+.br
+\fC#include <fcntl\&.h>\fP
+.br
+\fC#include <sys/ioctl\&.h>\fP
+.br
+\fC#include <unistd\&.h>\fP
+.br
+\fC#include <pthread\&.h>\fP
+.br
+\fC#include <stdlib\&.h>\fP
+.br
+\fC#include <assert\&.h>\fP
+.br
+\fC#include <errno\&.h>\fP
+.br
+\fC#include <sys/types\&.h>\fP
+.br
+\fC#include <sys/stat\&.h>\fP
+.br
+\fC#include <sys/poll\&.h>\fP
+.br
+\fC#include <limits\&.h>\fP
+.br
+\fC#include <semaphore\&.h>\fP
+.br
+\fC#include 'portaudio\&.h'\fP
+.br
+\fC#include 'pa_util\&.h'\fP
+.br
+\fC#include 'pa_allocation\&.h'\fP
+.br
+\fC#include 'pa_hostapi\&.h'\fP
+.br
+\fC#include 'pa_stream\&.h'\fP
+.br
+\fC#include 'pa_cpuload\&.h'\fP
+.br
+\fC#include 'pa_process\&.h'\fP
+.br
+\fC#include 'pa_unix_util\&.h'\fP
+.br
+\fC#include 'pa_debugprint\&.h'\fP
+.br
+
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "struct \fBPaOSSHostApiRepresentation\fP"
+.br
+.ti -1c
+.RI "struct \fBPaOssStreamComponent\fP"
+.br
+.ti -1c
+.RI "struct \fBPaOssStream\fP"
+.br
+.in -1c
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBENSURE_\fP(expr,  code)"
+.br
+.ti -1c
+.RI "#define \fBAFMT_S16_NE\fP   Get_AFMT_S16_NE()"
+.br
+.in -1c
+.SS "Typedefs"
+
+.in +1c
+.ti -1c
+.RI "typedef struct \fBPaOssStream\fP \fBPaOssStream\fP"
+.br
+.in -1c
+.SS "Enumerations"
+
+.in +1c
+.ti -1c
+.RI "enum \fBStreamMode\fP { \fBStreamMode_In\fP, \fBStreamMode_Out\fP }"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBPaError\fP \fBPaOSS_Initialize\fP (\fBPaUtilHostApiRepresentation\fP **hostApi, \fBPaHostApiIndex\fP hostApiIndex)"
+.br
+.ti -1c
+.RI "\fBPaError\fP \fBPaUtil_InitializeDeviceInfo\fP (\fBPaDeviceInfo\fP *deviceInfo, \fBconst\fP char *\fBname\fP, \fBPaHostApiIndex\fP hostApiIndex, \fBint\fP maxInputChannels, \fBint\fP maxOutputChannels, \fBPaTime\fP defaultLowInputLatency, \fBPaTime\fP defaultLowOutputLatency, \fBPaTime\fP defaultHighInputLatency, \fBPaTime\fP defaultHighOutputLatency, double defaultSampleRate, \fBPaUtilAllocationGroup\fP *allocations)"
+.br
+.ti -1c
+.RI "\fBconst\fP char * \fBPaOSS_GetStreamInputDevice\fP (\fBPaStream\fP *\fBs\fP)"
+.br
+.ti -1c
+.RI "\fBconst\fP char * \fBPaOSS_GetStreamOutputDevice\fP (\fBPaStream\fP *\fBs\fP)"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define AFMT_S16_NE   Get_AFMT_S16_NE()"
+
+.PP
+Definition at line 114 of file pa_unix_oss\&.c\&.
+.SS "#define ENSURE_(expr, code)"
+\fBValue:\fP
+.PP
+.nf
+do { \
+        if( UNLIKELY( (sysErr_ = (expr)) < 0 ) ) \
+        { \
+            /* PaUtil_SetLastHostErrorInfo should only be used in the main thread */ \
+            if( (code) == paUnanticipatedHostError && pthread_self() == mainThread_ ) \
+            { \
+                PaUtil_SetLastHostErrorInfo( paOSS, sysErr_, strerror( errno ) ); \
+            } \\
+            \\
+            PaUtil_DebugPrint(( "Expression '" #expr "' failed in '" __FILE__ "', line: " STRINGIZE( __LINE__ ) "\n" )); \
+            result = (code); \
+            goto error; \
+        } \
+    } while( 0 );
+.fi
+.PP
+Definition at line 97 of file pa_unix_oss\&.c\&.
+.SH "Typedef Documentation"
+.PP 
+.SS "typedef struct \fBPaOssStream\fP
+ \fBPaOssStream\fP"
+Implementation specific representation of a PaStream\&. 
+.SH "Enumeration Type Documentation"
+.PP 
+.SS "enum \fBStreamMode\fP"
+
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fIStreamMode_In \fP\fP
+.TP
+\fB\fIStreamMode_Out \fP\fP
+.PP
+Definition at line 196 of file pa_unix_oss\&.c\&.
+.SH "Function Documentation"
+.PP 
+.SS "\fBconst\fP char* PaOSS_GetStreamInputDevice (\fBPaStream\fP * s)"
+
+.PP
+Definition at line 2046 of file pa_unix_oss\&.c\&.
+.SS "\fBconst\fP char* PaOSS_GetStreamOutputDevice (\fBPaStream\fP * s)"
+
+.PP
+Definition at line 2058 of file pa_unix_oss\&.c\&.
+.SS "\fBPaError\fP PaOSS_Initialize (\fBPaUtilHostApiRepresentation\fP ** hostApi, \fBPaHostApiIndex\fP hostApiIndex)"
+Initialize the OSS API implementation\&.
+.PP
+This function will initialize host API datastructures and query host devices for information\&.
+.PP
+Aspect DeviceCapabilities: Enumeration of host API devices is initiated from here
+.PP
+Aspect FreeResources: If an error is encountered under way we have to free each resource allocated in this function, this happens with the usual 'error' label\&. 
+.PP
+Definition at line 241 of file pa_unix_oss\&.c\&.
+.SS "\fBPaError\fP PaUtil_InitializeDeviceInfo (\fBPaDeviceInfo\fP * deviceInfo, \fBconst\fP char * name, \fBPaHostApiIndex\fP hostApiIndex, \fBint\fP maxInputChannels, \fBint\fP maxOutputChannels, \fBPaTime\fP defaultLowInputLatency, \fBPaTime\fP defaultLowOutputLatency, \fBPaTime\fP defaultHighInputLatency, \fBPaTime\fP defaultHighOutputLatency, double defaultSampleRate, \fBPaUtilAllocationGroup\fP * allocations)"
+
+.PP
+Definition at line 292 of file pa_unix_oss\&.c\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

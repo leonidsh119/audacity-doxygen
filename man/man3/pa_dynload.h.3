@@ -1,0 +1,128 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/lib-src/portaudio-v19/src/common/pa_dynload.h" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/lib-src/portaudio-v19/src/common/pa_dynload.h \- Dynamic library helper functions\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+\fC#include 'pa_debugprint\&.h'\fP
+.br
+
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBPADL_INLINE\fP   \fBinline\fP"
+.br
+.ti -1c
+.RI "#define \fBFFX\fP   extern"
+.br
+.ti -1c
+.RI "#define \fBPADL_FUNC_WITH_RETURN\fP(r,  n,  \fBa\fP,  \fBp\fP)                                                          "
+.br
+.ti -1c
+.RI "#define \fBPADL_FUNC_NO_RETURN\fP(n,  \fBa\fP,  \fBp\fP)                                                                    "
+.br
+.ti -1c
+.RI "#define \fBPADL_FINDSYMBOL\fP(\fBl\fP,  \fBf\fP,  e)                                                                            "
+.br
+.in -1c
+.SS "Typedefs"
+
+.in +1c
+.ti -1c
+.RI "typedef \fBvoid\fP * \fBpaDynamicLib\fP"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBpaDynamicLib\fP \fBPaDL_Load\fP (char *\fBname\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBPaDL_Unload\fP (\fBpaDynamicLib\fP lib)"
+.br
+.ti -1c
+.RI "\fBvoid\fP * \fBPaDL_FindSymbol\fP (\fBpaDynamicLib\fP lib, char *\fBname\fP)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Dynamic library helper functions\&. 
+
+
+.PP
+Definition in file \fBpa_dynload\&.h\fP\&.
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define FFX   extern"
+
+.PP
+Definition at line 108 of file pa_dynload\&.h\&.
+.SS "#define PADL_FINDSYMBOL(\fBl\fP, \fBf\fP, e)"
+\fBValue:\fP
+.PP
+.nf
+*(void**)& paDynFunc_ ## f ## _fp = PaDL_FindSymbol(l, #f);          \
+   if (!paDynFunc_ ## f ## _fp)                                         \
+   {                                                                    \
+      PA_DEBUG(("Could not locate address of %s\n", #f));               \
+      e;                                                                \
+   }
+.fi
+.PP
+Definition at line 125 of file pa_dynload\&.h\&.
+.SS "#define PADL_FUNC_NO_RETURN(n, \fBa\fP, \fBp\fP)"
+\fBValue:\fP
+.PP
+.nf
+FFX void (*paDynFunc_ ## n ## _fp) a;                                \
+   PADL_INLINE void n a                                                 \
+   {                                                                    \
+      paDynFunc_ ## n ## _fp p;                                         \
+   }                                                                    \
+.fi
+.PP
+Definition at line 118 of file pa_dynload\&.h\&.
+.SS "#define PADL_FUNC_WITH_RETURN(r, n, \fBa\fP, \fBp\fP)"
+\fBValue:\fP
+.PP
+.nf
+FFX r (*paDynFunc_ ## n ## _fp) a;                                   \
+   PADL_INLINE r n a                                                    \
+   {                                                                    \
+      return paDynFunc_ ## n ## _fp p;                                  \
+   }                                                                    \
+.fi
+.PP
+Definition at line 111 of file pa_dynload\&.h\&.
+.SS "#define PADL_INLINE   \fBinline\fP"
+
+.PP
+Definition at line 65 of file pa_dynload\&.h\&.
+.SH "Typedef Documentation"
+.PP 
+.SS "typedef \fBvoid\fP* \fBpaDynamicLib\fP"
+
+.PP
+Definition at line 64 of file pa_dynload\&.h\&.
+.SH "Function Documentation"
+.PP 
+.SS "\fBvoid\fP* PaDL_FindSymbol (\fBpaDynamicLib\fP lib, char * name)"
+
+.PP
+Definition at line 89 of file pa_dynload\&.c\&.
+.SS "\fBpaDynamicLib\fP PaDL_Load (char * name)"
+
+.PP
+Definition at line 59 of file pa_dynload\&.c\&.
+.SS "\fBvoid\fP PaDL_Unload (\fBpaDynamicLib\fP lib)"
+
+.PP
+Definition at line 80 of file pa_dynload\&.c\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

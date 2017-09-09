@@ -1,0 +1,632 @@
+.TH "FLAC__StreamEncoderPrivate" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+FLAC__StreamEncoderPrivate \- 
+.SH SYNOPSIS
+.br
+.PP
+.SS "Public Attributes"
+
+.in +1c
+.ti -1c
+.RI "unsigned \fBinput_capacity\fP"
+.br
+.ti -1c
+.RI "\fBFLAC__int32\fP * \fBinteger_signal\fP [\fBFLAC__MAX_CHANNELS\fP]"
+.br
+.ti -1c
+.RI "\fBFLAC__int32\fP * \fBinteger_signal_mid_side\fP [2]"
+.br
+.ti -1c
+.RI "\fBFLAC__real\fP * \fBreal_signal\fP [\fBFLAC__MAX_CHANNELS\fP]"
+.br
+.ti -1c
+.RI "\fBFLAC__real\fP * \fBreal_signal_mid_side\fP [2]"
+.br
+.ti -1c
+.RI "\fBFLAC__real\fP * \fBwindow\fP [\fBFLAC__MAX_APODIZATION_FUNCTIONS\fP]"
+.br
+.ti -1c
+.RI "\fBFLAC__real\fP * \fBwindowed_signal\fP"
+.br
+.ti -1c
+.RI "unsigned \fBsubframe_bps\fP [\fBFLAC__MAX_CHANNELS\fP]"
+.br
+.ti -1c
+.RI "unsigned \fBsubframe_bps_mid_side\fP [2]"
+.br
+.ti -1c
+.RI "\fBFLAC__int32\fP * \fBresidual_workspace\fP [\fBFLAC__MAX_CHANNELS\fP][2]"
+.br
+.ti -1c
+.RI "\fBFLAC__int32\fP * \fBresidual_workspace_mid_side\fP [2][2]"
+.br
+.ti -1c
+.RI "\fBFLAC__Subframe\fP \fBsubframe_workspace\fP [\fBFLAC__MAX_CHANNELS\fP][2]"
+.br
+.ti -1c
+.RI "\fBFLAC__Subframe\fP \fBsubframe_workspace_mid_side\fP [2][2]"
+.br
+.ti -1c
+.RI "\fBFLAC__Subframe\fP * \fBsubframe_workspace_ptr\fP [\fBFLAC__MAX_CHANNELS\fP][2]"
+.br
+.ti -1c
+.RI "\fBFLAC__Subframe\fP * \fBsubframe_workspace_ptr_mid_side\fP [2][2]"
+.br
+.ti -1c
+.RI "\fBFLAC__EntropyCodingMethod_PartitionedRiceContents\fP \fBpartitioned_rice_contents_workspace\fP [\fBFLAC__MAX_CHANNELS\fP][2]"
+.br
+.ti -1c
+.RI "\fBFLAC__EntropyCodingMethod_PartitionedRiceContents\fP \fBpartitioned_rice_contents_workspace_mid_side\fP [\fBFLAC__MAX_CHANNELS\fP][2]"
+.br
+.ti -1c
+.RI "\fBFLAC__EntropyCodingMethod_PartitionedRiceContents\fP * \fBpartitioned_rice_contents_workspace_ptr\fP [\fBFLAC__MAX_CHANNELS\fP][2]"
+.br
+.ti -1c
+.RI "\fBFLAC__EntropyCodingMethod_PartitionedRiceContents\fP * \fBpartitioned_rice_contents_workspace_ptr_mid_side\fP [\fBFLAC__MAX_CHANNELS\fP][2]"
+.br
+.ti -1c
+.RI "unsigned \fBbest_subframe\fP [\fBFLAC__MAX_CHANNELS\fP]"
+.br
+.ti -1c
+.RI "unsigned \fBbest_subframe_mid_side\fP [2]"
+.br
+.ti -1c
+.RI "unsigned \fBbest_subframe_bits\fP [\fBFLAC__MAX_CHANNELS\fP]"
+.br
+.ti -1c
+.RI "unsigned \fBbest_subframe_bits_mid_side\fP [2]"
+.br
+.ti -1c
+.RI "\fBFLAC__uint64\fP * \fBabs_residual_partition_sums\fP"
+.br
+.ti -1c
+.RI "unsigned * \fBraw_bits_per_partition\fP"
+.br
+.ti -1c
+.RI "\fBFLAC__BitWriter\fP * \fBframe\fP"
+.br
+.ti -1c
+.RI "unsigned \fBloose_mid_side_stereo_frames\fP"
+.br
+.ti -1c
+.RI "unsigned \fBloose_mid_side_stereo_frame_count\fP"
+.br
+.ti -1c
+.RI "\fBFLAC__ChannelAssignment\fP \fBlast_channel_assignment\fP"
+.br
+.ti -1c
+.RI "\fBFLAC__StreamMetadata\fP \fBstreaminfo\fP"
+.br
+.ti -1c
+.RI "\fBFLAC__StreamMetadata_SeekTable\fP * \fBseek_table\fP"
+.br
+.ti -1c
+.RI "unsigned \fBcurrent_sample_number\fP"
+.br
+.ti -1c
+.RI "unsigned \fBcurrent_frame_number\fP"
+.br
+.ti -1c
+.RI "\fBFLAC__MD5Context\fP \fBmd5context\fP"
+.br
+.ti -1c
+.RI "\fBFLAC__CPUInfo\fP \fBcpuinfo\fP"
+.br
+.ti -1c
+.RI "\fBvoid\fP(* \fBlocal_precompute_partition_info_sums\fP )(\fBconst\fP \fBFLAC__int32\fP residual[], \fBFLAC__uint64\fP \fBabs_residual_partition_sums\fP[], unsigned residual_samples, unsigned predictor_order, unsigned min_partition_order, unsigned max_partition_order, unsigned bps)"
+.br
+.ti -1c
+.RI "unsigned(* \fBlocal_fixed_compute_best_predictor\fP )(\fBconst\fP \fBFLAC__int32\fP \fBdata\fP[], unsigned data_len, \fBFLAC__float\fP residual_bits_per_sample[\fBFLAC__MAX_FIXED_ORDER\fP+1])"
+.br
+.ti -1c
+.RI "unsigned(* \fBlocal_fixed_compute_best_predictor_wide\fP )(\fBconst\fP \fBFLAC__int32\fP \fBdata\fP[], unsigned data_len, \fBFLAC__float\fP residual_bits_per_sample[\fBFLAC__MAX_FIXED_ORDER\fP+1])"
+.br
+.ti -1c
+.RI "\fBvoid\fP(* \fBlocal_lpc_compute_autocorrelation\fP )(\fBconst\fP \fBFLAC__real\fP \fBdata\fP[], unsigned data_len, unsigned lag, \fBFLAC__real\fP autoc[])"
+.br
+.ti -1c
+.RI "\fBvoid\fP(* \fBlocal_lpc_compute_residual_from_qlp_coefficients\fP )(\fBconst\fP \fBFLAC__int32\fP *\fBdata\fP, unsigned data_len, \fBconst\fP \fBFLAC__int32\fP qlp_coeff[], unsigned \fBorder\fP, \fBint\fP lp_quantization, \fBFLAC__int32\fP residual[])"
+.br
+.ti -1c
+.RI "\fBvoid\fP(* \fBlocal_lpc_compute_residual_from_qlp_coefficients_64bit\fP )(\fBconst\fP \fBFLAC__int32\fP *\fBdata\fP, unsigned data_len, \fBconst\fP \fBFLAC__int32\fP qlp_coeff[], unsigned \fBorder\fP, \fBint\fP lp_quantization, \fBFLAC__int32\fP residual[])"
+.br
+.ti -1c
+.RI "\fBvoid\fP(* \fBlocal_lpc_compute_residual_from_qlp_coefficients_16bit\fP )(\fBconst\fP \fBFLAC__int32\fP *\fBdata\fP, unsigned data_len, \fBconst\fP \fBFLAC__int32\fP qlp_coeff[], unsigned \fBorder\fP, \fBint\fP lp_quantization, \fBFLAC__int32\fP residual[])"
+.br
+.ti -1c
+.RI "\fBFLAC__bool\fP \fBuse_wide_by_block\fP"
+.br
+.ti -1c
+.RI "\fBFLAC__bool\fP \fBuse_wide_by_partition\fP"
+.br
+.ti -1c
+.RI "\fBFLAC__bool\fP \fBuse_wide_by_order\fP"
+.br
+.ti -1c
+.RI "\fBFLAC__bool\fP \fBdisable_constant_subframes\fP"
+.br
+.ti -1c
+.RI "\fBFLAC__bool\fP \fBdisable_fixed_subframes\fP"
+.br
+.ti -1c
+.RI "\fBFLAC__bool\fP \fBdisable_verbatim_subframes\fP"
+.br
+.ti -1c
+.RI "\fBFLAC__StreamEncoderReadCallback\fP \fBread_callback\fP"
+.br
+.ti -1c
+.RI "\fBFLAC__StreamEncoderSeekCallback\fP \fBseek_callback\fP"
+.br
+.ti -1c
+.RI "\fBFLAC__StreamEncoderTellCallback\fP \fBtell_callback\fP"
+.br
+.ti -1c
+.RI "\fBFLAC__StreamEncoderWriteCallback\fP \fBwrite_callback\fP"
+.br
+.ti -1c
+.RI "\fBFLAC__StreamEncoderMetadataCallback\fP \fBmetadata_callback\fP"
+.br
+.ti -1c
+.RI "\fBFLAC__StreamEncoderProgressCallback\fP \fBprogress_callback\fP"
+.br
+.ti -1c
+.RI "\fBvoid\fP * \fBclient_data\fP"
+.br
+.ti -1c
+.RI "unsigned \fBfirst_seekpoint_to_check\fP"
+.br
+.ti -1c
+.RI "FILE * \fBfile\fP"
+.br
+.ti -1c
+.RI "\fBFLAC__uint64\fP \fBbytes_written\fP"
+.br
+.ti -1c
+.RI "\fBFLAC__uint64\fP \fBsamples_written\fP"
+.br
+.ti -1c
+.RI "unsigned \fBframes_written\fP"
+.br
+.ti -1c
+.RI "unsigned \fBtotal_frames_estimate\fP"
+.br
+.ti -1c
+.RI "\fBFLAC__int32\fP * \fBinteger_signal_unaligned\fP [\fBFLAC__MAX_CHANNELS\fP]"
+.br
+.ti -1c
+.RI "\fBFLAC__int32\fP * \fBinteger_signal_mid_side_unaligned\fP [2]"
+.br
+.ti -1c
+.RI "\fBFLAC__real\fP * \fBreal_signal_unaligned\fP [\fBFLAC__MAX_CHANNELS\fP]"
+.br
+.ti -1c
+.RI "\fBFLAC__real\fP * \fBreal_signal_mid_side_unaligned\fP [2]"
+.br
+.ti -1c
+.RI "\fBFLAC__real\fP * \fBwindow_unaligned\fP [\fBFLAC__MAX_APODIZATION_FUNCTIONS\fP]"
+.br
+.ti -1c
+.RI "\fBFLAC__real\fP * \fBwindowed_signal_unaligned\fP"
+.br
+.ti -1c
+.RI "\fBFLAC__int32\fP * \fBresidual_workspace_unaligned\fP [\fBFLAC__MAX_CHANNELS\fP][2]"
+.br
+.ti -1c
+.RI "\fBFLAC__int32\fP * \fBresidual_workspace_mid_side_unaligned\fP [2][2]"
+.br
+.ti -1c
+.RI "\fBFLAC__uint64\fP * \fBabs_residual_partition_sums_unaligned\fP"
+.br
+.ti -1c
+.RI "unsigned * \fBraw_bits_per_partition_unaligned\fP"
+.br
+.ti -1c
+.RI "\fBFLAC__real\fP \fBlp_coeff\fP [\fBFLAC__MAX_LPC_ORDER\fP][\fBFLAC__MAX_LPC_ORDER\fP]"
+.br
+.ti -1c
+.RI "\fBFLAC__EntropyCodingMethod_PartitionedRiceContents\fP \fBpartitioned_rice_contents_extra\fP [2]"
+.br
+.ti -1c
+.RI "struct {"
+.br
+.ti -1c
+.RI "   \fBFLAC__StreamDecoder\fP * \fBdecoder\fP"
+.br
+.ti -1c
+.RI "   \fBEncoderStateHint\fP \fBstate_hint\fP"
+.br
+.ti -1c
+.RI "   \fBFLAC__bool\fP \fBneeds_magic_hack\fP"
+.br
+.ti -1c
+.RI "   \fBverify_input_fifo\fP \fBinput_fifo\fP"
+.br
+.ti -1c
+.RI "   \fBverify_output\fP \fBoutput\fP"
+.br
+.ti -1c
+.RI "   struct {"
+.br
+.ti -1c
+.RI "      \fBFLAC__uint64\fP \fBabsolute_sample\fP"
+.br
+.ti -1c
+.RI "      unsigned \fBframe_number\fP"
+.br
+.ti -1c
+.RI "      unsigned \fBchannel\fP"
+.br
+.ti -1c
+.RI "      unsigned \fBsample\fP"
+.br
+.ti -1c
+.RI "      \fBFLAC__int32\fP \fBexpected\fP"
+.br
+.ti -1c
+.RI "      \fBFLAC__int32\fP \fBgot\fP"
+.br
+.ti -1c
+.RI "   } \fBerror_stats\fP"
+.br
+.ti -1c
+.RI "} \fBverify\fP"
+.br
+.ti -1c
+.RI "\fBFLAC__bool\fP \fBis_being_deleted\fP"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Definition at line 312 of file stream_encoder\&.c\&.
+.SH "Member Data Documentation"
+.PP 
+.SS "\fBFLAC__uint64\fP* FLAC__StreamEncoderPrivate::abs_residual_partition_sums"
+
+.PP
+Definition at line 338 of file stream_encoder\&.c\&.
+.SS "\fBFLAC__uint64\fP* FLAC__StreamEncoderPrivate::abs_residual_partition_sums_unaligned"
+
+.PP
+Definition at line 397 of file stream_encoder\&.c\&.
+.SS "\fBFLAC__uint64\fP FLAC__StreamEncoderPrivate::absolute_sample"
+
+.PP
+Definition at line 417 of file stream_encoder\&.c\&.
+.SS "unsigned FLAC__StreamEncoderPrivate::best_subframe[\fBFLAC__MAX_CHANNELS\fP]"
+
+.PP
+Definition at line 334 of file stream_encoder\&.c\&.
+.SS "unsigned FLAC__StreamEncoderPrivate::best_subframe_bits[\fBFLAC__MAX_CHANNELS\fP]"
+
+.PP
+Definition at line 336 of file stream_encoder\&.c\&.
+.SS "unsigned FLAC__StreamEncoderPrivate::best_subframe_bits_mid_side[2]"
+
+.PP
+Definition at line 337 of file stream_encoder\&.c\&.
+.SS "unsigned FLAC__StreamEncoderPrivate::best_subframe_mid_side[2]"
+
+.PP
+Definition at line 335 of file stream_encoder\&.c\&.
+.SS "\fBFLAC__uint64\fP FLAC__StreamEncoderPrivate::bytes_written"
+
+.PP
+Definition at line 382 of file stream_encoder\&.c\&.
+.SS "unsigned FLAC__StreamEncoderPrivate::channel"
+
+.PP
+Definition at line 419 of file stream_encoder\&.c\&.
+.SS "\fBvoid\fP* FLAC__StreamEncoderPrivate::client_data"
+
+.PP
+Definition at line 379 of file stream_encoder\&.c\&.
+.SS "\fBFLAC__CPUInfo\fP FLAC__StreamEncoderPrivate::cpuinfo"
+
+.PP
+Definition at line 349 of file stream_encoder\&.c\&.
+.SS "unsigned FLAC__StreamEncoderPrivate::current_frame_number"
+
+.PP
+Definition at line 347 of file stream_encoder\&.c\&.
+.SS "unsigned FLAC__StreamEncoderPrivate::current_sample_number"
+
+.PP
+Definition at line 346 of file stream_encoder\&.c\&.
+.SS "\fBFLAC__StreamDecoder\fP* FLAC__StreamEncoderPrivate::decoder"
+
+.PP
+Definition at line 411 of file stream_encoder\&.c\&.
+.SS "\fBFLAC__bool\fP FLAC__StreamEncoderPrivate::disable_constant_subframes"
+
+.PP
+Definition at line 367 of file stream_encoder\&.c\&.
+.SS "\fBFLAC__bool\fP FLAC__StreamEncoderPrivate::disable_fixed_subframes"
+
+.PP
+Definition at line 368 of file stream_encoder\&.c\&.
+.SS "\fBFLAC__bool\fP FLAC__StreamEncoderPrivate::disable_verbatim_subframes"
+
+.PP
+Definition at line 369 of file stream_encoder\&.c\&.
+.SS "struct { \&.\&.\&. }   FLAC__StreamEncoderPrivate::error_stats"
+
+.SS "\fBFLAC__int32\fP FLAC__StreamEncoderPrivate::expected"
+
+.PP
+Definition at line 421 of file stream_encoder\&.c\&.
+.SS "FILE* FLAC__StreamEncoderPrivate::file"
+
+.PP
+Definition at line 381 of file stream_encoder\&.c\&.
+.SS "unsigned FLAC__StreamEncoderPrivate::first_seekpoint_to_check"
+
+.PP
+Definition at line 380 of file stream_encoder\&.c\&.
+.SS "\fBFLAC__BitWriter\fP* FLAC__StreamEncoderPrivate::frame"
+
+.PP
+Definition at line 340 of file stream_encoder\&.c\&.
+.SS "unsigned FLAC__StreamEncoderPrivate::frame_number"
+
+.PP
+Definition at line 418 of file stream_encoder\&.c\&.
+.SS "unsigned FLAC__StreamEncoderPrivate::frames_written"
+
+.PP
+Definition at line 384 of file stream_encoder\&.c\&.
+.SS "\fBFLAC__int32\fP FLAC__StreamEncoderPrivate::got"
+
+.PP
+Definition at line 422 of file stream_encoder\&.c\&.
+.SS "unsigned FLAC__StreamEncoderPrivate::input_capacity"
+
+.PP
+Definition at line 313 of file stream_encoder\&.c\&.
+.SS "\fBverify_input_fifo\fP FLAC__StreamEncoderPrivate::input_fifo"
+
+.PP
+Definition at line 414 of file stream_encoder\&.c\&.
+.SS "\fBFLAC__int32\fP* FLAC__StreamEncoderPrivate::integer_signal[\fBFLAC__MAX_CHANNELS\fP]"
+
+.PP
+Definition at line 314 of file stream_encoder\&.c\&.
+.SS "\fBFLAC__int32\fP* FLAC__StreamEncoderPrivate::integer_signal_mid_side[2]"
+
+.PP
+Definition at line 315 of file stream_encoder\&.c\&.
+.SS "\fBFLAC__int32\fP* FLAC__StreamEncoderPrivate::integer_signal_mid_side_unaligned[2]"
+
+.PP
+Definition at line 388 of file stream_encoder\&.c\&.
+.SS "\fBFLAC__int32\fP* FLAC__StreamEncoderPrivate::integer_signal_unaligned[\fBFLAC__MAX_CHANNELS\fP]"
+
+.PP
+Definition at line 387 of file stream_encoder\&.c\&.
+.SS "\fBFLAC__bool\fP FLAC__StreamEncoderPrivate::is_being_deleted"
+
+.PP
+Definition at line 425 of file stream_encoder\&.c\&.
+.SS "\fBFLAC__ChannelAssignment\fP FLAC__StreamEncoderPrivate::last_channel_assignment"
+
+.PP
+Definition at line 343 of file stream_encoder\&.c\&.
+.SS "unsigned(* FLAC__StreamEncoderPrivate::local_fixed_compute_best_predictor) (\fBconst\fP \fBFLAC__int32\fP \fBdata\fP[], unsigned data_len, \fBFLAC__float\fP residual_bits_per_sample[\fBFLAC__MAX_FIXED_ORDER\fP+1])"
+
+.PP
+Definition at line 352 of file stream_encoder\&.c\&.
+.SS "unsigned(* FLAC__StreamEncoderPrivate::local_fixed_compute_best_predictor_wide) (\fBconst\fP \fBFLAC__int32\fP \fBdata\fP[], unsigned data_len, \fBFLAC__float\fP residual_bits_per_sample[\fBFLAC__MAX_FIXED_ORDER\fP+1])"
+
+.PP
+Definition at line 353 of file stream_encoder\&.c\&.
+.SS "\fBvoid\fP(* FLAC__StreamEncoderPrivate::local_lpc_compute_autocorrelation) (\fBconst\fP \fBFLAC__real\fP \fBdata\fP[], unsigned data_len, unsigned lag, \fBFLAC__real\fP autoc[])"
+
+.PP
+Definition at line 359 of file stream_encoder\&.c\&.
+.SS "\fBvoid\fP(* FLAC__StreamEncoderPrivate::local_lpc_compute_residual_from_qlp_coefficients) (\fBconst\fP \fBFLAC__int32\fP *\fBdata\fP, unsigned data_len, \fBconst\fP \fBFLAC__int32\fP qlp_coeff[], unsigned \fBorder\fP, \fBint\fP lp_quantization, \fBFLAC__int32\fP residual[])"
+
+.PP
+Definition at line 360 of file stream_encoder\&.c\&.
+.SS "\fBvoid\fP(* FLAC__StreamEncoderPrivate::local_lpc_compute_residual_from_qlp_coefficients_16bit) (\fBconst\fP \fBFLAC__int32\fP *\fBdata\fP, unsigned data_len, \fBconst\fP \fBFLAC__int32\fP qlp_coeff[], unsigned \fBorder\fP, \fBint\fP lp_quantization, \fBFLAC__int32\fP residual[])"
+
+.PP
+Definition at line 362 of file stream_encoder\&.c\&.
+.SS "\fBvoid\fP(* FLAC__StreamEncoderPrivate::local_lpc_compute_residual_from_qlp_coefficients_64bit) (\fBconst\fP \fBFLAC__int32\fP *\fBdata\fP, unsigned data_len, \fBconst\fP \fBFLAC__int32\fP qlp_coeff[], unsigned \fBorder\fP, \fBint\fP lp_quantization, \fBFLAC__int32\fP residual[])"
+
+.PP
+Definition at line 361 of file stream_encoder\&.c\&.
+.SS "\fBvoid\fP(* FLAC__StreamEncoderPrivate::local_precompute_partition_info_sums) (\fBconst\fP \fBFLAC__int32\fP residual[], \fBFLAC__uint64\fP \fBabs_residual_partition_sums\fP[], unsigned residual_samples, unsigned predictor_order, unsigned min_partition_order, unsigned max_partition_order, unsigned bps)"
+
+.PP
+Definition at line 350 of file stream_encoder\&.c\&.
+.SS "unsigned FLAC__StreamEncoderPrivate::loose_mid_side_stereo_frame_count"
+
+.PP
+Definition at line 342 of file stream_encoder\&.c\&.
+.SS "unsigned FLAC__StreamEncoderPrivate::loose_mid_side_stereo_frames"
+
+.PP
+Definition at line 341 of file stream_encoder\&.c\&.
+.SS "\fBFLAC__real\fP FLAC__StreamEncoderPrivate::lp_coeff[\fBFLAC__MAX_LPC_ORDER\fP][\fBFLAC__MAX_LPC_ORDER\fP]"
+
+.PP
+Definition at line 404 of file stream_encoder\&.c\&.
+.SS "\fBFLAC__MD5Context\fP FLAC__StreamEncoderPrivate::md5context"
+
+.PP
+Definition at line 348 of file stream_encoder\&.c\&.
+.SS "\fBFLAC__StreamEncoderMetadataCallback\fP FLAC__StreamEncoderPrivate::metadata_callback"
+
+.PP
+Definition at line 377 of file stream_encoder\&.c\&.
+.SS "\fBFLAC__bool\fP FLAC__StreamEncoderPrivate::needs_magic_hack"
+
+.PP
+Definition at line 413 of file stream_encoder\&.c\&.
+.SS "\fBverify_output\fP FLAC__StreamEncoderPrivate::output"
+
+.PP
+Definition at line 415 of file stream_encoder\&.c\&.
+.SS "\fBFLAC__EntropyCodingMethod_PartitionedRiceContents\fP FLAC__StreamEncoderPrivate::partitioned_rice_contents_extra[2]"
+
+.PP
+Definition at line 406 of file stream_encoder\&.c\&.
+.SS "\fBFLAC__EntropyCodingMethod_PartitionedRiceContents\fP FLAC__StreamEncoderPrivate::partitioned_rice_contents_workspace[\fBFLAC__MAX_CHANNELS\fP][2]"
+
+.PP
+Definition at line 330 of file stream_encoder\&.c\&.
+.SS "\fBFLAC__EntropyCodingMethod_PartitionedRiceContents\fP FLAC__StreamEncoderPrivate::partitioned_rice_contents_workspace_mid_side[\fBFLAC__MAX_CHANNELS\fP][2]"
+
+.PP
+Definition at line 331 of file stream_encoder\&.c\&.
+.SS "\fBFLAC__EntropyCodingMethod_PartitionedRiceContents\fP* FLAC__StreamEncoderPrivate::partitioned_rice_contents_workspace_ptr[\fBFLAC__MAX_CHANNELS\fP][2]"
+
+.PP
+Definition at line 332 of file stream_encoder\&.c\&.
+.SS "\fBFLAC__EntropyCodingMethod_PartitionedRiceContents\fP* FLAC__StreamEncoderPrivate::partitioned_rice_contents_workspace_ptr_mid_side[\fBFLAC__MAX_CHANNELS\fP][2]"
+
+.PP
+Definition at line 333 of file stream_encoder\&.c\&.
+.SS "\fBFLAC__StreamEncoderProgressCallback\fP FLAC__StreamEncoderPrivate::progress_callback"
+
+.PP
+Definition at line 378 of file stream_encoder\&.c\&.
+.SS "unsigned* FLAC__StreamEncoderPrivate::raw_bits_per_partition"
+
+.PP
+Definition at line 339 of file stream_encoder\&.c\&.
+.SS "unsigned* FLAC__StreamEncoderPrivate::raw_bits_per_partition_unaligned"
+
+.PP
+Definition at line 398 of file stream_encoder\&.c\&.
+.SS "\fBFLAC__StreamEncoderReadCallback\fP FLAC__StreamEncoderPrivate::read_callback"
+
+.PP
+Definition at line 373 of file stream_encoder\&.c\&.
+.SS "\fBFLAC__real\fP* FLAC__StreamEncoderPrivate::real_signal[\fBFLAC__MAX_CHANNELS\fP]"
+
+.PP
+Definition at line 317 of file stream_encoder\&.c\&.
+.SS "\fBFLAC__real\fP* FLAC__StreamEncoderPrivate::real_signal_mid_side[2]"
+
+.PP
+Definition at line 318 of file stream_encoder\&.c\&.
+.SS "\fBFLAC__real\fP* FLAC__StreamEncoderPrivate::real_signal_mid_side_unaligned[2]"
+
+.PP
+Definition at line 391 of file stream_encoder\&.c\&.
+.SS "\fBFLAC__real\fP* FLAC__StreamEncoderPrivate::real_signal_unaligned[\fBFLAC__MAX_CHANNELS\fP]"
+
+.PP
+Definition at line 390 of file stream_encoder\&.c\&.
+.SS "\fBFLAC__int32\fP* FLAC__StreamEncoderPrivate::residual_workspace[\fBFLAC__MAX_CHANNELS\fP][2]"
+
+.PP
+Definition at line 324 of file stream_encoder\&.c\&.
+.SS "\fBFLAC__int32\fP* FLAC__StreamEncoderPrivate::residual_workspace_mid_side[2][2]"
+
+.PP
+Definition at line 325 of file stream_encoder\&.c\&.
+.SS "\fBFLAC__int32\fP* FLAC__StreamEncoderPrivate::residual_workspace_mid_side_unaligned[2][2]"
+
+.PP
+Definition at line 396 of file stream_encoder\&.c\&.
+.SS "\fBFLAC__int32\fP* FLAC__StreamEncoderPrivate::residual_workspace_unaligned[\fBFLAC__MAX_CHANNELS\fP][2]"
+
+.PP
+Definition at line 395 of file stream_encoder\&.c\&.
+.SS "unsigned FLAC__StreamEncoderPrivate::sample"
+
+.PP
+Definition at line 420 of file stream_encoder\&.c\&.
+.SS "\fBFLAC__uint64\fP FLAC__StreamEncoderPrivate::samples_written"
+
+.PP
+Definition at line 383 of file stream_encoder\&.c\&.
+.SS "\fBFLAC__StreamEncoderSeekCallback\fP FLAC__StreamEncoderPrivate::seek_callback"
+
+.PP
+Definition at line 374 of file stream_encoder\&.c\&.
+.SS "\fBFLAC__StreamMetadata_SeekTable\fP* FLAC__StreamEncoderPrivate::seek_table"
+
+.PP
+Definition at line 345 of file stream_encoder\&.c\&.
+.SS "\fBEncoderStateHint\fP FLAC__StreamEncoderPrivate::state_hint"
+
+.PP
+Definition at line 412 of file stream_encoder\&.c\&.
+.SS "\fBFLAC__StreamMetadata\fP FLAC__StreamEncoderPrivate::streaminfo"
+
+.PP
+Definition at line 344 of file stream_encoder\&.c\&.
+.SS "unsigned FLAC__StreamEncoderPrivate::subframe_bps[\fBFLAC__MAX_CHANNELS\fP]"
+
+.PP
+Definition at line 322 of file stream_encoder\&.c\&.
+.SS "unsigned FLAC__StreamEncoderPrivate::subframe_bps_mid_side[2]"
+
+.PP
+Definition at line 323 of file stream_encoder\&.c\&.
+.SS "\fBFLAC__Subframe\fP FLAC__StreamEncoderPrivate::subframe_workspace[\fBFLAC__MAX_CHANNELS\fP][2]"
+
+.PP
+Definition at line 326 of file stream_encoder\&.c\&.
+.SS "\fBFLAC__Subframe\fP FLAC__StreamEncoderPrivate::subframe_workspace_mid_side[2][2]"
+
+.PP
+Definition at line 327 of file stream_encoder\&.c\&.
+.SS "\fBFLAC__Subframe\fP* FLAC__StreamEncoderPrivate::subframe_workspace_ptr[\fBFLAC__MAX_CHANNELS\fP][2]"
+
+.PP
+Definition at line 328 of file stream_encoder\&.c\&.
+.SS "\fBFLAC__Subframe\fP* FLAC__StreamEncoderPrivate::subframe_workspace_ptr_mid_side[2][2]"
+
+.PP
+Definition at line 329 of file stream_encoder\&.c\&.
+.SS "\fBFLAC__StreamEncoderTellCallback\fP FLAC__StreamEncoderPrivate::tell_callback"
+
+.PP
+Definition at line 375 of file stream_encoder\&.c\&.
+.SS "unsigned FLAC__StreamEncoderPrivate::total_frames_estimate"
+
+.PP
+Definition at line 385 of file stream_encoder\&.c\&.
+.SS "\fBFLAC__bool\fP FLAC__StreamEncoderPrivate::use_wide_by_block"
+
+.PP
+Definition at line 364 of file stream_encoder\&.c\&.
+.SS "\fBFLAC__bool\fP FLAC__StreamEncoderPrivate::use_wide_by_order"
+
+.PP
+Definition at line 366 of file stream_encoder\&.c\&.
+.SS "\fBFLAC__bool\fP FLAC__StreamEncoderPrivate::use_wide_by_partition"
+
+.PP
+Definition at line 365 of file stream_encoder\&.c\&.
+.SS "struct { \&.\&.\&. }   FLAC__StreamEncoderPrivate::verify"
+
+.SS "\fBFLAC__real\fP* FLAC__StreamEncoderPrivate::window[\fBFLAC__MAX_APODIZATION_FUNCTIONS\fP]"
+
+.PP
+Definition at line 319 of file stream_encoder\&.c\&.
+.SS "\fBFLAC__real\fP* FLAC__StreamEncoderPrivate::window_unaligned[\fBFLAC__MAX_APODIZATION_FUNCTIONS\fP]"
+
+.PP
+Definition at line 392 of file stream_encoder\&.c\&.
+.SS "\fBFLAC__real\fP* FLAC__StreamEncoderPrivate::windowed_signal"
+
+.PP
+Definition at line 320 of file stream_encoder\&.c\&.
+.SS "\fBFLAC__real\fP* FLAC__StreamEncoderPrivate::windowed_signal_unaligned"
+
+.PP
+Definition at line 393 of file stream_encoder\&.c\&.
+.SS "\fBFLAC__StreamEncoderWriteCallback\fP FLAC__StreamEncoderPrivate::write_callback"
+
+.PP
+Definition at line 376 of file stream_encoder\&.c\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

@@ -1,0 +1,239 @@
+.TH "ImageRoll" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+ImageRoll \- An \fBImageRoll\fP is an image that can be expanded to an arbitrary size; it is made up of both fixed pieces and repeating pieces\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <ImageRoll\&.h>\fP
+.SS "Public Types"
+
+.in +1c
+.ti -1c
+.RI "enum \fBRollType\fP { \fBUninitialized\fP, \fBFixedImage\fP, \fBHorizontalRoll\fP, \fBVerticalRoll\fP, \fBFrame\fP }"
+.br
+.in -1c
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBImageRoll\fP ()"
+.br
+.ti -1c
+.RI "\fBImageRoll\fP (\fBconst\fP wxImage &src)"
+.br
+.ti -1c
+.RI "\fBImageRoll\fP (\fBRollType\fP type, \fBconst\fP wxImage &src, wxColour magicColor)"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBOk\fP () \fBconst\fP "
+.br
+.ti -1c
+.RI "wxSize \fBGetMinSize\fP () \fBconst\fP "
+.br
+.ti -1c
+.RI "wxSize \fBGetMaxSize\fP () \fBconst\fP "
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBDraw\fP (wxDC &dc, wxRect rect, \fBwxRasterOperationMode\fP logicalFunc=wxCOPY)"
+.br
+.in -1c
+.SS "Static Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "static ImageArray \fBSplitH\fP (\fBconst\fP wxImage &src, wxColour magicColor)"
+.br
+.ti -1c
+.RI "static ImageArray \fBSplitV\fP (\fBconst\fP wxImage &src, wxColour magicColor)"
+.br
+.in -1c
+.SS "Protected Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBvoid\fP \fBDrawBitmap\fP (wxDC &dc, wxBitmap &bitmap, \fBint\fP x, \fBint\fP y, \fBwxRasterOperationMode\fP logicalFunc=wxCOPY)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBInit\fP (\fBRollType\fP type, \fBconst\fP wxImage &src, wxColour magicColor)"
+.br
+.in -1c
+.SS "Protected Attributes"
+
+.in +1c
+.ti -1c
+.RI "\fBRollType\fP \fBmType\fP"
+.br
+.ti -1c
+.RI "BitmapArray \fBmPieces\fP"
+.br
+.ti -1c
+.RI "wxSize \fBmMinSize\fP"
+.br
+.ti -1c
+.RI "wxSize \fBmMaxSize\fP"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+An \fBImageRoll\fP is an image that can be expanded to an arbitrary size; it is made up of both fixed pieces and repeating pieces\&. 
+
+A typical \fBImageRoll\fP might be made up of two fixed ends and a repeating middle part:
+.PP
+.PP
+.nf
+  /-----\                       /-----\
+  |LEFT |--REPEATING--REPEATING-|RIGHT|
+  \-----/                       \-----/
+.fi
+.PP
+.PP
+As you resize the image, it could look like this:
+.PP
+.PP
+.nf
+  /-----\ /-----\
+  |LEFT |-|RIGHT|
+  \-----/ \-----/
+.fi
+.PP
+.PP
+Or like this:
+.PP
+.PP
+.nf
+  /-----\                                  /-----\
+  |LEFT |--REPEATING--REPEATING--REPEATING-|RIGHT|
+  \-----/                                  \-----/
+.fi
+.PP
+.PP
+Note that an \fBImageRoll\fP can have a center piece; in fact, its pieces always alternate fixed, repeating, fixed, repeating, etc\&. - although one of these pieces is allowed to be of size zero, making it skipped\&. Here's an example with a center piece:
+.PP
+.PP
+.nf
+  /-----\                /------\                /-----\
+  |LEFT |-REPEAT--REPEAT-|CENTER|-repeat--repeat-|RIGHT|
+  \-----/                \------/                \-----/
+.fi
+.PP
+.PP
+Note that the left and right repeating sections can be different\&. Of course, an \fBImageRoll\fP can be oriented vertically as well\&. In the future, support for an \fBImageRoll\fP that expands both horizontally and vertically at the same time will be supported\&.
+.PP
+An \fBImageRoll\fP is initialized with a \fIsingle\fP wxImage that defines all of its pieces\&. This is done by way of a 'magic color' which separates each piece in the image\&. If the magic colored pixel is denoted by 'X', the above \fBImageRoll\fP could be encoded like this:
+.PP
+.PP
+.nf
+  /-----\X        X/------\X        X/-----\
+  |LEFT |X-REPEAT-X|CENTER|X-repeat-X|RIGHT|
+  \-----/X        X\------/X        X\-----/
+.fi
+.PP
+.PP
+Putting two lines of magic color in a row will create a blank piece\&. For example, for an \fBImageRoll\fP with a center piece but no left and right pieces:
+.PP
+.PP
+.nf
+  X        X/------\X        X
+  X-REPEAT-X|CENTER|X-repeat-X
+  X        X\------/X        X
+.fi
+.PP
+.PP
+Once again, the pieces are always assumed to alternate: fixed, repeating, fixed, repeating, etc\&. The magic color is specified when you construct the \fBImageRoll\fP from a wxImage\&.
+.PP
+In the constructor, you also choose whether it is a horizontal or vertical \fBImageRoll\fP (and later a 'Frame' as well)\&. You can also choose a 'fixed' \fBImageRoll\fP, which behaves just like a wxImage - this is handy so that you can use ImageRolls everywhere you were previously using wxImages\&. 
+.PP
+Definition at line 29 of file ImageRoll\&.h\&.
+.SH "Member Enumeration Documentation"
+.PP 
+.SS "enum \fBImageRoll::RollType\fP"
+
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fIUninitialized \fP\fP
+.TP
+\fB\fIFixedImage \fP\fP
+.TP
+\fB\fIHorizontalRoll \fP\fP
+.TP
+\fB\fIVerticalRoll \fP\fP
+.TP
+\fB\fIFrame \fP\fP
+.PP
+Definition at line 32 of file ImageRoll\&.h\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "ImageRoll::ImageRoll ()"
+
+.PP
+Definition at line 282 of file ImageRoll\&.cpp\&.
+.SS "ImageRoll::ImageRoll (\fBconst\fP wxImage & src)"
+
+.PP
+Definition at line 292 of file ImageRoll\&.cpp\&.
+.SS "ImageRoll::ImageRoll (\fBRollType\fP type, \fBconst\fP wxImage & src, wxColour magicColor)"
+
+.PP
+Definition at line 287 of file ImageRoll\&.cpp\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "\fBvoid\fP ImageRoll::Draw (wxDC & dc, wxRect rect, \fBwxRasterOperationMode\fP logicalFunc = \fCwxCOPY\fP)"
+
+.PP
+Definition at line 315 of file ImageRoll\&.cpp\&.
+.SS "\fBvoid\fP ImageRoll::DrawBitmap (wxDC & dc, wxBitmap & bitmap, \fBint\fP x, \fBint\fP y, \fBwxRasterOperationMode\fP logicalFunc = \fCwxCOPY\fP)\fC [protected]\fP"
+
+.PP
+Definition at line 302 of file ImageRoll\&.cpp\&.
+.SS "wxSize ImageRoll::GetMaxSize () const\fC [inline]\fP"
+
+.PP
+Definition at line 47 of file ImageRoll\&.h\&.
+.SS "wxSize ImageRoll::GetMinSize () const\fC [inline]\fP"
+
+.PP
+Definition at line 46 of file ImageRoll\&.h\&.
+.SS "\fBvoid\fP ImageRoll::Init (\fBRollType\fP type, \fBconst\fP wxImage & src, wxColour magicColor)\fC [protected]\fP"
+
+.PP
+Definition at line 219 of file ImageRoll\&.cpp\&.
+.SS "\fBbool\fP ImageRoll::Ok () const"
+
+.PP
+Definition at line 297 of file ImageRoll\&.cpp\&.
+.SS "ImageArray ImageRoll::SplitH (\fBconst\fP wxImage & src, wxColour magicColor)\fC [static]\fP"
+
+.PP
+Definition at line 109 of file ImageRoll\&.cpp\&.
+.SS "ImageArray ImageRoll::SplitV (\fBconst\fP wxImage & src, wxColour magicColor)\fC [static]\fP"
+
+.PP
+Definition at line 165 of file ImageRoll\&.cpp\&.
+.SH "Member Data Documentation"
+.PP 
+.SS "wxSize ImageRoll::mMaxSize\fC [protected]\fP"
+
+.PP
+Definition at line 65 of file ImageRoll\&.h\&.
+.SS "wxSize ImageRoll::mMinSize\fC [protected]\fP"
+
+.PP
+Definition at line 64 of file ImageRoll\&.h\&.
+.SS "BitmapArray ImageRoll::mPieces\fC [protected]\fP"
+
+.PP
+Definition at line 63 of file ImageRoll\&.h\&.
+.SS "\fBRollType\fP ImageRoll::mType\fC [protected]\fP"
+
+.PP
+Definition at line 62 of file ImageRoll\&.h\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

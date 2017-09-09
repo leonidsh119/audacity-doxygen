@@ -1,0 +1,77 @@
+\hypertarget{_b_p_m_detect_8cpp}{}\section{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/soundtouch/source/\+Sound\+Touch/\+B\+P\+M\+Detect.cpp File Reference}
+\label{_b_p_m_detect_8cpp}\index{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/soundtouch/source/\+Sound\+Touch/\+B\+P\+M\+Detect.\+cpp@{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/soundtouch/source/\+Sound\+Touch/\+B\+P\+M\+Detect.\+cpp}}
+{\ttfamily \#include $<$math.\+h$>$}\\*
+{\ttfamily \#include $<$assert.\+h$>$}\\*
+{\ttfamily \#include $<$string.\+h$>$}\\*
+{\ttfamily \#include $<$stdio.\+h$>$}\\*
+{\ttfamily \#include \char`\"{}F\+I\+F\+O\+Sample\+Buffer.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Peak\+Finder.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}B\+P\+M\+Detect.\+h\char`\"{}}\\*
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{_b_p_m_detect_8cpp_a35201affee7a2320380b18d7ca4ea843}{I\+N\+P\+U\+T\+\_\+\+B\+L\+O\+C\+K\+\_\+\+S\+A\+M\+P\+L\+ES}~2048
+\item 
+\#define \hyperlink{_b_p_m_detect_8cpp_ab1746563359fb039a1106c98cd4ea825}{D\+E\+C\+I\+M\+A\+T\+E\+D\+\_\+\+B\+L\+O\+C\+K\+\_\+\+S\+A\+M\+P\+L\+ES}~256
+\item 
+\#define \hyperlink{_b_p_m_detect_8cpp_ae5dccd0eea01e21de6191a32fbbe3710}{\+\_\+\+Save\+Debug\+Data}(\hyperlink{rfft2d_test_m_l_8m_a4124bc0a9335c27f086f24ba207a4912}{a},  \hyperlink{convtest_8m_a21ad0bd836b90d08f4cf640b4c298e7c}{b},  \hyperlink{rfft2d_test_m_l_8m_ae0323a9039add2978bf5b49550572c7c}{c},  \hyperlink{poly-fir_8h_a2530554172d8629149ec56816eeaa947}{d})
+\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} float \hyperlink{_b_p_m_detect_8cpp_ad3ff07f0b8c88827955b9b24d3601553}{avgdecay} = 0.\+99986f
+\item 
+\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} float \hyperlink{_b_p_m_detect_8cpp_ac480c56b2f45839fc7fdcbd6d1e01782}{avgnorm} = (1 -\/ \hyperlink{_b_p_m_detect_8cpp_ad3ff07f0b8c88827955b9b24d3601553}{avgdecay})
+\begin{DoxyCompactList}\small\item\em Normalization coefficient for calculating R\+MS sliding average approximation. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Macro Definition Documentation}
+\index{B\+P\+M\+Detect.\+cpp@{B\+P\+M\+Detect.\+cpp}!\+\_\+\+Save\+Debug\+Data@{\+\_\+\+Save\+Debug\+Data}}
+\index{\+\_\+\+Save\+Debug\+Data@{\+\_\+\+Save\+Debug\+Data}!B\+P\+M\+Detect.\+cpp@{B\+P\+M\+Detect.\+cpp}}
+\subsubsection[{\texorpdfstring{\+\_\+\+Save\+Debug\+Data}{_SaveDebugData}}]{\setlength{\rightskip}{0pt plus 5cm}\#define \+\_\+\+Save\+Debug\+Data(
+\begin{DoxyParamCaption}
+\item[{}]{{\bf a}, }
+\item[{}]{{\bf b}, }
+\item[{}]{{\bf c}, }
+\item[{}]{{\bf d}}
+\end{DoxyParamCaption}
+)}\hypertarget{_b_p_m_detect_8cpp_ae5dccd0eea01e21de6191a32fbbe3710}{}\label{_b_p_m_detect_8cpp_ae5dccd0eea01e21de6191a32fbbe3710}
+
+
+Definition at line 104 of file B\+P\+M\+Detect.\+cpp.
+
+\index{B\+P\+M\+Detect.\+cpp@{B\+P\+M\+Detect.\+cpp}!D\+E\+C\+I\+M\+A\+T\+E\+D\+\_\+\+B\+L\+O\+C\+K\+\_\+\+S\+A\+M\+P\+L\+ES@{D\+E\+C\+I\+M\+A\+T\+E\+D\+\_\+\+B\+L\+O\+C\+K\+\_\+\+S\+A\+M\+P\+L\+ES}}
+\index{D\+E\+C\+I\+M\+A\+T\+E\+D\+\_\+\+B\+L\+O\+C\+K\+\_\+\+S\+A\+M\+P\+L\+ES@{D\+E\+C\+I\+M\+A\+T\+E\+D\+\_\+\+B\+L\+O\+C\+K\+\_\+\+S\+A\+M\+P\+L\+ES}!B\+P\+M\+Detect.\+cpp@{B\+P\+M\+Detect.\+cpp}}
+\subsubsection[{\texorpdfstring{D\+E\+C\+I\+M\+A\+T\+E\+D\+\_\+\+B\+L\+O\+C\+K\+\_\+\+S\+A\+M\+P\+L\+ES}{DECIMATED_BLOCK_SAMPLES}}]{\setlength{\rightskip}{0pt plus 5cm}\#define D\+E\+C\+I\+M\+A\+T\+E\+D\+\_\+\+B\+L\+O\+C\+K\+\_\+\+S\+A\+M\+P\+L\+ES~256}\hypertarget{_b_p_m_detect_8cpp_ab1746563359fb039a1106c98cd4ea825}{}\label{_b_p_m_detect_8cpp_ab1746563359fb039a1106c98cd4ea825}
+
+
+Definition at line 68 of file B\+P\+M\+Detect.\+cpp.
+
+\index{B\+P\+M\+Detect.\+cpp@{B\+P\+M\+Detect.\+cpp}!I\+N\+P\+U\+T\+\_\+\+B\+L\+O\+C\+K\+\_\+\+S\+A\+M\+P\+L\+ES@{I\+N\+P\+U\+T\+\_\+\+B\+L\+O\+C\+K\+\_\+\+S\+A\+M\+P\+L\+ES}}
+\index{I\+N\+P\+U\+T\+\_\+\+B\+L\+O\+C\+K\+\_\+\+S\+A\+M\+P\+L\+ES@{I\+N\+P\+U\+T\+\_\+\+B\+L\+O\+C\+K\+\_\+\+S\+A\+M\+P\+L\+ES}!B\+P\+M\+Detect.\+cpp@{B\+P\+M\+Detect.\+cpp}}
+\subsubsection[{\texorpdfstring{I\+N\+P\+U\+T\+\_\+\+B\+L\+O\+C\+K\+\_\+\+S\+A\+M\+P\+L\+ES}{INPUT_BLOCK_SAMPLES}}]{\setlength{\rightskip}{0pt plus 5cm}\#define I\+N\+P\+U\+T\+\_\+\+B\+L\+O\+C\+K\+\_\+\+S\+A\+M\+P\+L\+ES~2048}\hypertarget{_b_p_m_detect_8cpp_a35201affee7a2320380b18d7ca4ea843}{}\label{_b_p_m_detect_8cpp_a35201affee7a2320380b18d7ca4ea843}
+
+
+Definition at line 67 of file B\+P\+M\+Detect.\+cpp.
+
+
+
+\subsection{Variable Documentation}
+\index{B\+P\+M\+Detect.\+cpp@{B\+P\+M\+Detect.\+cpp}!avgdecay@{avgdecay}}
+\index{avgdecay@{avgdecay}!B\+P\+M\+Detect.\+cpp@{B\+P\+M\+Detect.\+cpp}}
+\subsubsection[{\texorpdfstring{avgdecay}{avgdecay}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf const} float avgdecay = 0.\+99986f}\hypertarget{_b_p_m_detect_8cpp_ad3ff07f0b8c88827955b9b24d3601553}{}\label{_b_p_m_detect_8cpp_ad3ff07f0b8c88827955b9b24d3601553}
+decay constant for calculating R\+MS volume sliding average approximation (time constant is about 10 sec) 
+
+Definition at line 72 of file B\+P\+M\+Detect.\+cpp.
+
+\index{B\+P\+M\+Detect.\+cpp@{B\+P\+M\+Detect.\+cpp}!avgnorm@{avgnorm}}
+\index{avgnorm@{avgnorm}!B\+P\+M\+Detect.\+cpp@{B\+P\+M\+Detect.\+cpp}}
+\subsubsection[{\texorpdfstring{avgnorm}{avgnorm}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf const} float avgnorm = (1 -\/ {\bf avgdecay})}\hypertarget{_b_p_m_detect_8cpp_ac480c56b2f45839fc7fdcbd6d1e01782}{}\label{_b_p_m_detect_8cpp_ac480c56b2f45839fc7fdcbd6d1e01782}
+
+
+Normalization coefficient for calculating R\+MS sliding average approximation. 
+
+
+
+Definition at line 75 of file B\+P\+M\+Detect.\+cpp.
+

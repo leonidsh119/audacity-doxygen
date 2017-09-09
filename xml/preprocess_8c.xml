@@ -1,0 +1,171 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="preprocess_8c" kind="file" language="C++">
+    <compoundname>preprocess.c</compoundname>
+    <includes local="no">stdio.h</includes>
+    <includes refid="assert_8h" local="no">assert.h</includes>
+    <includes refid="gsm610__priv_8h" local="yes">gsm610_priv.h</includes>
+    <incdepgraph>
+      <node id="19780">
+        <label>assert.h</label>
+        <link refid="assert_8h"/>
+      </node>
+      <node id="19778">
+        <label>C:/_dev/OpenU/Audacity/audacity/lib-src/libsndfile/src/GSM610/preprocess.c</label>
+        <link refid="preprocess.c"/>
+        <childnode refid="19779" relation="include">
+        </childnode>
+        <childnode refid="19780" relation="include">
+        </childnode>
+        <childnode refid="19781" relation="include">
+        </childnode>
+      </node>
+      <node id="19781">
+        <label>gsm610_priv.h</label>
+        <link refid="gsm610__priv_8h"/>
+      </node>
+      <node id="19779">
+        <label>stdio.h</label>
+      </node>
+    </incdepgraph>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="preprocess_8c_1ab7a0e2f75c176a3720332248cb922a20" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="sound_8c_1ae35f5844602719cf66324f4de2a658b3" kindref="member">void</ref></type>
+        <definition>void Gsm_Preprocess</definition>
+        <argsstring>(struct gsm_state *S, word *s, word *so)</argsstring>
+        <name>Gsm_Preprocess</name>
+        <param>
+          <type>struct <ref refid="structgsm__state" kindref="compound">gsm_state</ref> *</type>
+          <declname>S</declname>
+        </param>
+        <param>
+          <type><ref refid="gsm610__priv_8h_1a0b023cbb2bf7d034c2269d58d7455ac8" kindref="member">word</ref> *</type>
+          <declname>s</declname>
+        </param>
+        <param>
+          <type><ref refid="gsm610__priv_8h_1a0b023cbb2bf7d034c2269d58d7455ac8" kindref="member">word</ref> *</type>
+          <declname>so</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/_dev/OpenU/Audacity/audacity/lib-src/libsndfile/src/GSM610/preprocess.c" line="29" column="1" bodyfile="C:/_dev/OpenU/Audacity/audacity/lib-src/libsndfile/src/GSM610/preprocess.c" bodystart="29" bodyend="105"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="comment">/*</highlight></codeline>
+<codeline lineno="2"><highlight class="comment"><sp/>*<sp/>Copyright<sp/>1992<sp/>by<sp/>Jutta<sp/>Degener<sp/>and<sp/>Carsten<sp/>Bormann,<sp/>Technische</highlight></codeline>
+<codeline lineno="3"><highlight class="comment"><sp/>*<sp/>Universitaet<sp/>Berlin.<sp/><sp/>See<sp/>the<sp/>accompanying<sp/>file<sp/>&quot;COPYRIGHT&quot;<sp/>for</highlight></codeline>
+<codeline lineno="4"><highlight class="comment"><sp/>*<sp/>details.<sp/><sp/>THERE<sp/>IS<sp/>ABSOLUTELY<sp/>NO<sp/>WARRANTY<sp/>FOR<sp/>THIS<sp/>SOFTWARE.</highlight></codeline>
+<codeline lineno="5"><highlight class="comment"><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/><sp/><sp/><sp/>&lt;stdio.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/><sp/><sp/><sp/>&lt;<ref refid="assert_8h" kindref="compound">assert.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="gsm610__priv_8h" kindref="compound">gsm610_priv.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight><highlight class="comment">/*<sp/><sp/>4.2.0<sp/>..<sp/>4.2.3<sp/><sp/>PREPROCESSING<sp/>SECTION</highlight></codeline>
+<codeline lineno="13"><highlight class="comment"><sp/>*<sp/><sp/></highlight></codeline>
+<codeline lineno="14"><highlight class="comment"><sp/>*<sp/><sp/><sp/><sp/><sp/><sp/>After<sp/>A-law<sp/>to<sp/>linear<sp/>conversion<sp/>(or<sp/>directly<sp/>from<sp/>the</highlight></codeline>
+<codeline lineno="15"><highlight class="comment"><sp/>*<sp/><sp/><sp/><sp/><sp/><sp/>Ato<sp/>D<sp/>converter)<sp/>the<sp/>following<sp/>scaling<sp/>is<sp/>assumed<sp/>for</highlight></codeline>
+<codeline lineno="16"><highlight class="comment"><sp/>*<sp/><sp/>input<sp/>to<sp/>the<sp/>RPE-LTP<sp/>algorithm:</highlight></codeline>
+<codeline lineno="17"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="18"><highlight class="comment"><sp/>*<sp/><sp/><sp/><sp/><sp/><sp/>in:<sp/><sp/>0.1.....................12</highlight></codeline>
+<codeline lineno="19"><highlight class="comment"><sp/>*<sp/><sp/><sp/><sp/><sp/><sp/><sp/>S.v.v.v.v.v.v.v.v.v.v.v.v.*.*.*</highlight></codeline>
+<codeline lineno="20"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="21"><highlight class="comment"><sp/>*<sp/><sp/>Where<sp/>S<sp/>is<sp/>the<sp/>sign<sp/>bit,<sp/>v<sp/>a<sp/>valid<sp/>bit,<sp/>and<sp/>*<sp/>a<sp/>&quot;don&apos;t<sp/>care&quot;<sp/>bit.</highlight></codeline>
+<codeline lineno="22"><highlight class="comment"><sp/>*<sp/><sp/>The<sp/>original<sp/>signal<sp/>is<sp/>called<sp/>sop[..]</highlight></codeline>
+<codeline lineno="23"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="24"><highlight class="comment"><sp/>*<sp/><sp/><sp/><sp/><sp/><sp/>out:<sp/><sp/><sp/>0.1...................<sp/>12<sp/></highlight></codeline>
+<codeline lineno="25"><highlight class="comment"><sp/>*<sp/><sp/><sp/><sp/><sp/><sp/><sp/>S.S.v.v.v.v.v.v.v.v.v.v.v.v.0.0</highlight></codeline>
+<codeline lineno="26"><highlight class="comment"><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="27"><highlight class="normal"></highlight></codeline>
+<codeline lineno="28"><highlight class="normal"></highlight></codeline>
+<codeline lineno="29" refid="preprocess_8c_1ab7a0e2f75c176a3720332248cb922a20" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="preprocess_8c_1ab7a0e2f75c176a3720332248cb922a20" kindref="member">Gsm_Preprocess</ref><sp/>(</highlight></codeline>
+<codeline lineno="30"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">struct</highlight><highlight class="normal"><sp/><ref refid="structgsm__state" kindref="compound">gsm_state</ref><sp/>*<sp/><ref refid="xlftab_8c_1af933676109efed7ab34cea71d748a517" kindref="member">S</ref>,</highlight></codeline>
+<codeline lineno="31"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="gsm610__priv_8h_1a0b023cbb2bf7d034c2269d58d7455ac8" kindref="member">word</ref><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>*<sp/><ref refid="lib_2expat_8h_1a755339d27872b13735c2cab829e47157" kindref="member">s</ref>,</highlight></codeline>
+<codeline lineno="32"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="gsm610__priv_8h_1a0b023cbb2bf7d034c2269d58d7455ac8" kindref="member">word</ref><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>*<sp/>so<sp/>)<sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">/*<sp/>[0..159]<sp/><sp/><sp/><sp/><sp/>IN/OUT<sp/><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="33"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="34"><highlight class="normal"></highlight></codeline>
+<codeline lineno="35"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="gsm610__priv_8h_1a0b023cbb2bf7d034c2269d58d7455ac8" kindref="member">word</ref><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="structgsm__state_1aa893fbc493fffa33f0fc19950647cfa6" kindref="member">z1</ref><sp/>=<sp/>S-&gt;<ref refid="structgsm__state_1aa893fbc493fffa33f0fc19950647cfa6" kindref="member">z1</ref>;</highlight></codeline>
+<codeline lineno="36"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="gsm610__priv_8h_1a1f59e5e4587116bf95fb654f2a95712e" kindref="member">longword</ref><sp/><ref refid="structgsm__state_1a8c0db6b1ec993de5385c90843b921eee" kindref="member">L_z2</ref><sp/>=<sp/>S-&gt;<ref refid="structgsm__state_1a8c0db6b1ec993de5385c90843b921eee" kindref="member">L_z2</ref>;</highlight></codeline>
+<codeline lineno="37"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="gsm610__priv_8h_1a0b023cbb2bf7d034c2269d58d7455ac8" kindref="member">word</ref><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="structgsm__state_1a564b1f8742453a87c8cfb0cad7b8f213" kindref="member">mp</ref><sp/>=<sp/>S-&gt;<ref refid="structgsm__state_1a564b1f8742453a87c8cfb0cad7b8f213" kindref="member">mp</ref>;</highlight></codeline>
+<codeline lineno="38"><highlight class="normal"></highlight></codeline>
+<codeline lineno="39"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="gsm610__priv_8h_1a0b023cbb2bf7d034c2269d58d7455ac8" kindref="member">word</ref><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>s1;</highlight></codeline>
+<codeline lineno="40"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="gsm610__priv_8h_1a1f59e5e4587116bf95fb654f2a95712e" kindref="member">longword</ref><sp/><sp/><sp/><sp/><sp/><sp/>L_s2;</highlight></codeline>
+<codeline lineno="41"><highlight class="normal"></highlight></codeline>
+<codeline lineno="42"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="gsm610__priv_8h_1a1f59e5e4587116bf95fb654f2a95712e" kindref="member">longword</ref><sp/><sp/><sp/><sp/><sp/><sp/>L_temp;</highlight></codeline>
+<codeline lineno="43"><highlight class="normal"></highlight></codeline>
+<codeline lineno="44"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="gsm610__priv_8h_1a0b023cbb2bf7d034c2269d58d7455ac8" kindref="member">word</ref><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>msp,<sp/>lsp;</highlight></codeline>
+<codeline lineno="45"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="gsm610__priv_8h_1a0b023cbb2bf7d034c2269d58d7455ac8" kindref="member">word</ref><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>SO;</highlight></codeline>
+<codeline lineno="46"><highlight class="normal"></highlight></codeline>
+<codeline lineno="47"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">register</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="rfft2d_test_m_l_8m_1adc468c70fb574ebd07287b38d0d0676d" kindref="member">k</ref><sp/>=<sp/>160;</highlight></codeline>
+<codeline lineno="48"><highlight class="normal"></highlight></codeline>
+<codeline lineno="49"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">while</highlight><highlight class="normal"><sp/>(k--)<sp/>{</highlight></codeline>
+<codeline lineno="50"><highlight class="normal"></highlight></codeline>
+<codeline lineno="51"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">/*<sp/><sp/>4.2.1<sp/><sp/><sp/>Downscaling<sp/>of<sp/>the<sp/>input<sp/>signal</highlight></codeline>
+<codeline lineno="52"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="53"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>SO<sp/>=<sp/>SASR_W(<sp/>*s,<sp/>3<sp/>)<sp/>&lt;&lt;<sp/>2;</highlight></codeline>
+<codeline lineno="54"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>s++;</highlight></codeline>
+<codeline lineno="55"><highlight class="normal"></highlight></codeline>
+<codeline lineno="56"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="libid3tag_2global_8h_1af576bf8ffa22a44e53018c67095ffbf0" kindref="member">assert</ref><sp/>(SO<sp/>&gt;=<sp/>-0x4000);<sp/></highlight><highlight class="comment">/*<sp/>downscaled<sp/>by<sp/><sp/><sp/><sp/><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="57"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="libid3tag_2global_8h_1af576bf8ffa22a44e53018c67095ffbf0" kindref="member">assert</ref><sp/>(SO<sp/>&lt;=<sp/><sp/>0x3FFC);<sp/></highlight><highlight class="comment">/*<sp/>previous<sp/>routine.<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="58"><highlight class="normal"></highlight></codeline>
+<codeline lineno="59"><highlight class="normal"></highlight></codeline>
+<codeline lineno="60"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">/*<sp/><sp/>4.2.2<sp/><sp/><sp/>Offset<sp/>compensation</highlight></codeline>
+<codeline lineno="61"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/>*<sp/></highlight></codeline>
+<codeline lineno="62"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/>*<sp/><sp/>This<sp/>part<sp/>implements<sp/>a<sp/>high-pass<sp/>filter<sp/>and<sp/>requires<sp/>extended</highlight></codeline>
+<codeline lineno="63"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/>*<sp/><sp/>arithmetic<sp/>precision<sp/>for<sp/>the<sp/>recursive<sp/>part<sp/>of<sp/>this<sp/>filter.</highlight></codeline>
+<codeline lineno="64"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/>*<sp/><sp/>The<sp/>input<sp/>of<sp/>this<sp/>procedure<sp/>is<sp/>the<sp/>array<sp/>so[0...159]<sp/>and<sp/>the</highlight></codeline>
+<codeline lineno="65"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/>*<sp/><sp/>output<sp/>the<sp/>array<sp/>sof[<sp/>0...159<sp/>].</highlight></codeline>
+<codeline lineno="66"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="67"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">/*<sp/><sp/><sp/>Compute<sp/>the<sp/>non-recursive<sp/>part</highlight></codeline>
+<codeline lineno="68"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="69"><highlight class="normal"></highlight></codeline>
+<codeline lineno="70"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>s1<sp/>=<sp/>SO<sp/>-<sp/><ref refid="structgsm__state_1aa893fbc493fffa33f0fc19950647cfa6" kindref="member">z1</ref>;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">/*<sp/>s1<sp/>=<sp/>gsm_sub(<sp/>*so,<sp/>z1<sp/>);<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="71"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>z1<sp/>=<sp/>SO;</highlight></codeline>
+<codeline lineno="72"><highlight class="normal"></highlight></codeline>
+<codeline lineno="73"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="libid3tag_2global_8h_1af576bf8ffa22a44e53018c67095ffbf0" kindref="member">assert</ref>(s1<sp/>!=<sp/><ref refid="gsm610__priv_8h_1a2fa940c1267fae76795f705cc556b0f0" kindref="member">MIN_WORD</ref>);</highlight></codeline>
+<codeline lineno="74"><highlight class="normal"></highlight></codeline>
+<codeline lineno="75"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">/*<sp/><sp/><sp/>Compute<sp/>the<sp/>recursive<sp/>part</highlight></codeline>
+<codeline lineno="76"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="77"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>L_s2<sp/>=<sp/>s1;</highlight></codeline>
+<codeline lineno="78"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>L_s2<sp/>&lt;&lt;=<sp/>15;</highlight></codeline>
+<codeline lineno="79"><highlight class="normal"></highlight></codeline>
+<codeline lineno="80"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">/*<sp/><sp/><sp/>Execution<sp/>of<sp/>a<sp/>31<sp/>bv<sp/>16<sp/>bits<sp/>multiplication</highlight></codeline>
+<codeline lineno="81"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="82"><highlight class="normal"></highlight></codeline>
+<codeline lineno="83"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>msp<sp/>=<sp/>SASR_L(<sp/>L_z2,<sp/>15<sp/>);</highlight></codeline>
+<codeline lineno="84"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>lsp<sp/>=<sp/>L_z2-((<ref refid="gsm610__priv_8h_1a1f59e5e4587116bf95fb654f2a95712e" kindref="member">longword</ref>)msp&lt;&lt;15);<sp/></highlight><highlight class="comment">/*<sp/>gsm_L_sub(L_z2,(msp&lt;&lt;15));<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="85"><highlight class="normal"></highlight></codeline>
+<codeline lineno="86"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>L_s2<sp/><sp/>+=<sp/>GSM_MULT_R(<sp/>lsp,<sp/>32735<sp/>);</highlight></codeline>
+<codeline lineno="87"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>L_temp<sp/>=<sp/>(<ref refid="gsm610__priv_8h_1a1f59e5e4587116bf95fb654f2a95712e" kindref="member">longword</ref>)msp<sp/>*<sp/>32735;<sp/></highlight><highlight class="comment">/*<sp/>GSM_L_MULT(msp,32735)<sp/>&gt;&gt;<sp/>1;*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="88"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>L_z2<sp/><sp/><sp/>=<sp/>GSM_L_ADD(<sp/>L_temp,<sp/>L_s2<sp/>);</highlight></codeline>
+<codeline lineno="89"><highlight class="normal"></highlight></codeline>
+<codeline lineno="90"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">/*<sp/><sp/><sp/><sp/>Compute<sp/>sof[k]<sp/>with<sp/>rounding</highlight></codeline>
+<codeline lineno="91"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="92"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>L_temp<sp/>=<sp/>GSM_L_ADD(<sp/>L_z2,<sp/>16384<sp/>);</highlight></codeline>
+<codeline lineno="93"><highlight class="normal"></highlight></codeline>
+<codeline lineno="94"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">/*<sp/><sp/><sp/>4.2.3<sp/><sp/>Preemphasis</highlight></codeline>
+<codeline lineno="95"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="96"><highlight class="normal"></highlight></codeline>
+<codeline lineno="97"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>msp<sp/><sp/><sp/>=<sp/>GSM_MULT_R(<sp/>mp,<sp/>-28180<sp/>);</highlight></codeline>
+<codeline lineno="98"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>mp<sp/><sp/><sp/><sp/>=<sp/>SASR_L(<sp/>L_temp,<sp/>15<sp/>);</highlight></codeline>
+<codeline lineno="99"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>*so++<sp/>=<sp/>GSM_ADD(<sp/>mp,<sp/>msp<sp/>);</highlight></codeline>
+<codeline lineno="100"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="101"><highlight class="normal"></highlight></codeline>
+<codeline lineno="102"><highlight class="normal"><sp/><sp/><sp/><sp/>S-&gt;<ref refid="structgsm__state_1aa893fbc493fffa33f0fc19950647cfa6" kindref="member">z1</ref><sp/><sp/><sp/>=<sp/><ref refid="structgsm__state_1aa893fbc493fffa33f0fc19950647cfa6" kindref="member">z1</ref>;</highlight></codeline>
+<codeline lineno="103"><highlight class="normal"><sp/><sp/><sp/><sp/>S-&gt;<ref refid="structgsm__state_1a8c0db6b1ec993de5385c90843b921eee" kindref="member">L_z2</ref><sp/>=<sp/><ref refid="structgsm__state_1a8c0db6b1ec993de5385c90843b921eee" kindref="member">L_z2</ref>;</highlight></codeline>
+<codeline lineno="104"><highlight class="normal"><sp/><sp/><sp/><sp/>S-&gt;<ref refid="structgsm__state_1a564b1f8742453a87c8cfb0cad7b8f213" kindref="member">mp</ref><sp/><sp/><sp/>=<sp/><ref refid="structgsm__state_1a564b1f8742453a87c8cfb0cad7b8f213" kindref="member">mp</ref>;</highlight></codeline>
+<codeline lineno="105"><highlight class="normal">}</highlight></codeline>
+    </programlisting>
+    <location file="C:/_dev/OpenU/Audacity/audacity/lib-src/libsndfile/src/GSM610/preprocess.c"/>
+  </compounddef>
+</doxygen>

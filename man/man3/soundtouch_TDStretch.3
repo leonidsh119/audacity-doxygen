@@ -1,0 +1,453 @@
+.TH "soundtouch::TDStretch" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+soundtouch::TDStretch \- 
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <TDStretch\&.h>\fP
+.PP
+Inherits \fBsoundtouch::FIFOProcessor\fP\&.
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBTDStretch\fP ()"
+.br
+.ti -1c
+.RI "virtual \fB~TDStretch\fP ()"
+.br
+.ti -1c
+.RI "\fBFIFOSamplePipe\fP * \fBgetOutput\fP ()"
+.br
+.RI "\fIReturns the output buffer object\&. \fP"
+.ti -1c
+.RI "\fBFIFOSamplePipe\fP * \fBgetInput\fP ()"
+.br
+.RI "\fIReturns the input buffer object\&. \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBsetTempo\fP (float newTempo)"
+.br
+.ti -1c
+.RI "virtual \fBvoid\fP \fBclear\fP ()"
+.br
+.RI "\fIReturns nonzero if there aren't any samples available for outputting\&. \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBclearInput\fP ()"
+.br
+.RI "\fIClears the input buffer\&. \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBsetChannels\fP (\fBint\fP numChannels)"
+.br
+.RI "\fISets the number of channels, 1 = mono, 2 = stereo\&. \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBenableQuickSeek\fP (\fBBOOL\fP enable)"
+.br
+.ti -1c
+.RI "\fBBOOL\fP \fBisQuickSeekEnabled\fP () \fBconst\fP "
+.br
+.RI "\fIReturns nonzero if the quick seeking algorithm is enabled\&. \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBsetParameters\fP (\fBint\fP \fBsampleRate\fP, \fBint\fP sequenceMS=\-1, \fBint\fP seekwindowMS=\-1, \fBint\fP overlapMS=\-1)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBgetParameters\fP (\fBint\fP *pSampleRate, \fBint\fP *pSequenceMs, \fBint\fP *pSeekWindowMs, \fBint\fP *pOverlapMs) \fBconst\fP "
+.br
+.ti -1c
+.RI "virtual \fBvoid\fP \fBputSamples\fP (\fBconst\fP \fBSAMPLETYPE\fP *\fBsamples\fP, \fBuint\fP \fBnumSamples\fP)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBgetInputSampleReq\fP () \fBconst\fP "
+.br
+.RI "\fIreturn nominal input sample requirement for triggering a processing batch \fP"
+.ti -1c
+.RI "\fBint\fP \fBgetOutputBatchSize\fP () \fBconst\fP "
+.br
+.RI "\fIreturn nominal output sample amount when running a processing batch \fP"
+.in -1c
+.SS "Static Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "static \fBvoid\fP * \fBoperator new\fP (size_t \fBs\fP)"
+.br
+.ti -1c
+.RI "static \fBTDStretch\fP * \fBnewInstance\fP ()"
+.br
+.in -1c
+.SS "Protected Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBvoid\fP \fBacceptNewOverlapLength\fP (\fBint\fP newOverlapLength)"
+.br
+.RI "\fISet new overlap length parameter & reallocate RefMidBuffer if necessary\&. \fP"
+.ti -1c
+.RI "virtual \fBvoid\fP \fBclearCrossCorrState\fP ()"
+.br
+.RI "\fIclear cross correlation routine state if necessary \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBcalculateOverlapLength\fP (\fBint\fP \fBoverlapMs\fP)"
+.br
+.ti -1c
+.RI "virtual double \fBcalcCrossCorr\fP (\fBconst\fP \fBSAMPLETYPE\fP *mixingPos, \fBconst\fP \fBSAMPLETYPE\fP *\fBcompare\fP) \fBconst\fP "
+.br
+.ti -1c
+.RI "virtual \fBint\fP \fBseekBestOverlapPositionFull\fP (\fBconst\fP \fBSAMPLETYPE\fP *refPos)"
+.br
+.ti -1c
+.RI "virtual \fBint\fP \fBseekBestOverlapPositionQuick\fP (\fBconst\fP \fBSAMPLETYPE\fP *refPos)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBseekBestOverlapPosition\fP (\fBconst\fP \fBSAMPLETYPE\fP *refPos)"
+.br
+.ti -1c
+.RI "virtual \fBvoid\fP \fBoverlapStereo\fP (\fBSAMPLETYPE\fP *\fBoutput\fP, \fBconst\fP \fBSAMPLETYPE\fP *input) \fBconst\fP "
+.br
+.ti -1c
+.RI "virtual \fBvoid\fP \fBoverlapMono\fP (\fBSAMPLETYPE\fP *\fBoutput\fP, \fBconst\fP \fBSAMPLETYPE\fP *input) \fBconst\fP "
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBclearMidBuffer\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBoverlap\fP (\fBSAMPLETYPE\fP *\fBoutput\fP, \fBconst\fP \fBSAMPLETYPE\fP *input, \fBuint\fP ovlPos) \fBconst\fP "
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBcalcSeqParameters\fP ()"
+.br
+.RI "\fICalculates processing sequence length according to tempo setting\&. \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBprocessSamples\fP ()"
+.br
+.in -1c
+.SS "Protected Attributes"
+
+.in +1c
+.ti -1c
+.RI "\fBint\fP \fBchannels\fP"
+.br
+.ti -1c
+.RI "\fBint\fP \fBsampleReq\fP"
+.br
+.ti -1c
+.RI "float \fBtempo\fP"
+.br
+.ti -1c
+.RI "\fBSAMPLETYPE\fP * \fBpMidBuffer\fP"
+.br
+.ti -1c
+.RI "\fBSAMPLETYPE\fP * \fBpMidBufferUnaligned\fP"
+.br
+.ti -1c
+.RI "\fBint\fP \fBoverlapLength\fP"
+.br
+.ti -1c
+.RI "\fBint\fP \fBseekLength\fP"
+.br
+.ti -1c
+.RI "\fBint\fP \fBseekWindowLength\fP"
+.br
+.ti -1c
+.RI "\fBint\fP \fBoverlapDividerBits\fP"
+.br
+.ti -1c
+.RI "\fBint\fP \fBslopingDivider\fP"
+.br
+.ti -1c
+.RI "float \fBnominalSkip\fP"
+.br
+.ti -1c
+.RI "float \fBskipFract\fP"
+.br
+.ti -1c
+.RI "\fBFIFOSampleBuffer\fP \fBoutputBuffer\fP"
+.br
+.ti -1c
+.RI "\fBFIFOSampleBuffer\fP \fBinputBuffer\fP"
+.br
+.ti -1c
+.RI "\fBBOOL\fP \fBbQuickSeek\fP"
+.br
+.ti -1c
+.RI "\fBint\fP \fBsampleRate\fP"
+.br
+.ti -1c
+.RI "\fBint\fP \fBsequenceMs\fP"
+.br
+.ti -1c
+.RI "\fBint\fP \fBseekWindowMs\fP"
+.br
+.ti -1c
+.RI "\fBint\fP \fBoverlapMs\fP"
+.br
+.ti -1c
+.RI "\fBBOOL\fP \fBbAutoSeqSetting\fP"
+.br
+.ti -1c
+.RI "\fBBOOL\fP \fBbAutoSeekSetting\fP"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Class that does the time-stretch (tempo change) effect for the processed sound\&. 
+.PP
+Definition at line 110 of file TDStretch\&.h\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "TDStretch::TDStretch ()"
+
+.PP
+Definition at line 87 of file TDStretch\&.cpp\&.
+.SS "TDStretch::~TDStretch ()\fC [virtual]\fP"
+
+.PP
+Definition at line 111 of file TDStretch\&.cpp\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "\fBvoid\fP TDStretch::acceptNewOverlapLength (\fBint\fP newOverlapLength)\fC [protected]\fP"
+
+.PP
+Set new overlap length parameter & reallocate RefMidBuffer if necessary\&. 
+.PP
+Definition at line 579 of file TDStretch\&.cpp\&.
+.SS "virtual double soundtouch::TDStretch::calcCrossCorr (\fBconst\fP \fBSAMPLETYPE\fP * mixingPos, \fBconst\fP \fBSAMPLETYPE\fP * compare) const\fC [protected]\fP, \fC [virtual]\fP"
+
+.SS "\fBvoid\fP TDStretch::calcSeqParameters ()\fC [protected]\fP"
+
+.PP
+Calculates processing sequence length according to tempo setting\&. 
+.PP
+Definition at line 385 of file TDStretch\&.cpp\&.
+.SS "\fBvoid\fP soundtouch::TDStretch::calculateOverlapLength (\fBint\fP overlapMs)\fC [protected]\fP"
+
+.SS "\fBvoid\fP TDStretch::clear (\fBvoid\fP)\fC [virtual]\fP"
+
+.PP
+Returns nonzero if there aren't any samples available for outputting\&. 
+.PP
+Implements \fBsoundtouch::FIFOSamplePipe\fP\&.
+.PP
+Definition at line 227 of file TDStretch\&.cpp\&.
+.SS "\fBvoid\fP TDStretch::clearCrossCorrState ()\fC [protected]\fP, \fC [virtual]\fP"
+
+.PP
+clear cross correlation routine state if necessary 
+.PP
+Definition at line 378 of file TDStretch\&.cpp\&.
+.SS "\fBvoid\fP TDStretch::clearInput ()"
+
+.PP
+Clears the input buffer\&. 
+.PP
+Definition at line 219 of file TDStretch\&.cpp\&.
+.SS "\fBvoid\fP TDStretch::clearMidBuffer ()\fC [protected]\fP"
+
+.PP
+Definition at line 213 of file TDStretch\&.cpp\&.
+.SS "\fBvoid\fP TDStretch::enableQuickSeek (\fBBOOL\fP enable)"
+Enables/disables the quick position seeking algorithm\&. Zero to disable, nonzero to enable 
+.PP
+Definition at line 237 of file TDStretch\&.cpp\&.
+.SS "\fBFIFOSamplePipe\fP* soundtouch::TDStretch::getInput ()\fC [inline]\fP"
+
+.PP
+Returns the input buffer object\&. 
+.PP
+Definition at line 179 of file TDStretch\&.h\&.
+.SS "\fBint\fP soundtouch::TDStretch::getInputSampleReq () const\fC [inline]\fP"
+
+.PP
+return nominal input sample requirement for triggering a processing batch 
+.PP
+Definition at line 229 of file TDStretch\&.h\&.
+.SS "\fBFIFOSamplePipe\fP* soundtouch::TDStretch::getOutput ()\fC [inline]\fP"
+
+.PP
+Returns the output buffer object\&. 
+.PP
+Definition at line 176 of file TDStretch\&.h\&.
+.SS "\fBint\fP soundtouch::TDStretch::getOutputBatchSize () const\fC [inline]\fP"
+
+.PP
+return nominal output sample amount when running a processing batch 
+.PP
+Definition at line 235 of file TDStretch\&.h\&.
+.SS "\fBvoid\fP TDStretch::getParameters (\fBint\fP * pSampleRate, \fBint\fP * pSequenceMs, \fBint\fP * pSeekWindowMs, \fBint\fP * pOverlapMs) const"
+Get routine control parameters, see \fBsetParameters()\fP function\&. Any of the parameters to this function can be NULL, in such case corresponding parameter value isn't returned\&. 
+.PP
+Definition at line 170 of file TDStretch\&.cpp\&.
+.SS "\fBBOOL\fP TDStretch::isQuickSeekEnabled () const"
+
+.PP
+Returns nonzero if the quick seeking algorithm is enabled\&. 
+.PP
+Definition at line 244 of file TDStretch\&.cpp\&.
+.SS "\fBTDStretch\fP * TDStretch::newInstance ()\fC [static]\fP"
+Use this function instead of 'new' operator to create a new instance of this class\&. This function automatically chooses a correct feature set depending on if the CPU supports MMX/SSE/etc extensions\&. 
+.PP
+Definition at line 610 of file TDStretch\&.cpp\&.
+.SS "\fBvoid\fP * TDStretch::operator new (size_t s)\fC [static]\fP"
+Operator 'new' is overloaded so that it automatically creates a suitable instance depending on if we've a MMX/SSE/etc-capable CPU available or not\&. 
+.PP
+Definition at line 602 of file TDStretch\&.cpp\&.
+.SS "\fBvoid\fP TDStretch::overlap (\fBSAMPLETYPE\fP * output, \fBconst\fP \fBSAMPLETYPE\fP * input, \fBuint\fP ovlPos) const\fC [inline]\fP, \fC [protected]\fP"
+
+.PP
+Definition at line 266 of file TDStretch\&.cpp\&.
+.SS "\fBvoid\fP TDStretch::overlapMono (\fBSAMPLETYPE\fP * output, \fBconst\fP \fBSAMPLETYPE\fP * input) const\fC [protected]\fP, \fC [virtual]\fP"
+
+.PP
+Definition at line 195 of file TDStretch\&.cpp\&.
+.SS "virtual \fBvoid\fP soundtouch::TDStretch::overlapStereo (\fBSAMPLETYPE\fP * output, \fBconst\fP \fBSAMPLETYPE\fP * input) const\fC [protected]\fP, \fC [virtual]\fP"
+
+.SS "\fBvoid\fP TDStretch::processSamples ()\fC [protected]\fP"
+Changes the tempo of the given sound samples\&. Returns amount of samples returned in the 'output' buffer\&. The maximum amount of samples that can be returned at a time is set by the 'set_returnBuffer_size' function\&. 
+.PP
+Definition at line 505 of file TDStretch\&.cpp\&.
+.SS "\fBvoid\fP TDStretch::putSamples (\fBconst\fP \fBSAMPLETYPE\fP * samples, \fBuint\fP numSamples)\fC [virtual]\fP"
+Adds 'numsamples' pcs of samples from the 'samples' memory position into the input of the object\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIsamples\fP Input sample data 
+.br
+\fInumSamples\fP Number of samples in 'samples' so that one sample contains both channels if stereo 
+.RE
+.PP
+
+.PP
+Implements \fBsoundtouch::FIFOSamplePipe\fP\&.
+.PP
+Definition at line 568 of file TDStretch\&.cpp\&.
+.SS "\fBint\fP TDStretch::seekBestOverlapPosition (\fBconst\fP \fBSAMPLETYPE\fP * refPos)\fC [protected]\fP"
+
+.PP
+Definition at line 251 of file TDStretch\&.cpp\&.
+.SS "\fBint\fP TDStretch::seekBestOverlapPositionFull (\fBconst\fP \fBSAMPLETYPE\fP * refPos)\fC [protected]\fP, \fC [virtual]\fP"
+
+.PP
+Definition at line 286 of file TDStretch\&.cpp\&.
+.SS "\fBint\fP TDStretch::seekBestOverlapPositionQuick (\fBconst\fP \fBSAMPLETYPE\fP * refPos)\fC [protected]\fP, \fC [virtual]\fP"
+
+.PP
+Definition at line 326 of file TDStretch\&.cpp\&.
+.SS "\fBvoid\fP TDStretch::setChannels (\fBint\fP numChannels)"
+
+.PP
+Sets the number of channels, 1 = mono, 2 = stereo\&. 
+.PP
+Definition at line 457 of file TDStretch\&.cpp\&.
+.SS "\fBvoid\fP TDStretch::setParameters (\fBint\fP sampleRate, \fBint\fP sequenceMS = \fC\-1\fP, \fBint\fP seekwindowMS = \fC\-1\fP, \fBint\fP overlapMS = \fC\-1\fP)"
+Sets routine control parameters\&. These control are certain time constants defining how the sound is stretched to the desired duration\&. 'sampleRate' = sample rate of the sound 'sequenceMS' = one processing sequence length in milliseconds 'seekwindowMS' = seeking window length for scanning the best overlapping position 'overlapMS' = overlapping length 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIsampleRate\fP Samplerate of sound being processed (Hz) 
+.br
+\fIsequenceMS\fP Single processing sequence length (ms) 
+.br
+\fIseekwindowMS\fP Offset seeking window length (ms) 
+.br
+\fIoverlapMS\fP \fBSequence\fP overlapping length (ms) 
+.RE
+.PP
+
+.PP
+Definition at line 127 of file TDStretch\&.cpp\&.
+.SS "\fBvoid\fP TDStretch::setTempo (float newTempo)"
+Sets new target tempo\&. Normal tempo = 'SCALE', smaller values represent slower tempo, larger faster tempo\&. 
+.PP
+Definition at line 435 of file TDStretch\&.cpp\&.
+.SH "Member Data Documentation"
+.PP 
+.SS "\fBBOOL\fP soundtouch::TDStretch::bAutoSeekSetting\fC [protected]\fP"
+
+.PP
+Definition at line 135 of file TDStretch\&.h\&.
+.SS "\fBBOOL\fP soundtouch::TDStretch::bAutoSeqSetting\fC [protected]\fP"
+
+.PP
+Definition at line 134 of file TDStretch\&.h\&.
+.SS "\fBBOOL\fP soundtouch::TDStretch::bQuickSeek\fC [protected]\fP"
+
+.PP
+Definition at line 128 of file TDStretch\&.h\&.
+.SS "\fBint\fP soundtouch::TDStretch::channels\fC [protected]\fP"
+
+.PP
+Definition at line 113 of file TDStretch\&.h\&.
+.SS "\fBFIFOSampleBuffer\fP soundtouch::TDStretch::inputBuffer\fC [protected]\fP"
+
+.PP
+Definition at line 127 of file TDStretch\&.h\&.
+.SS "float soundtouch::TDStretch::nominalSkip\fC [protected]\fP"
+
+.PP
+Definition at line 124 of file TDStretch\&.h\&.
+.SS "\fBFIFOSampleBuffer\fP soundtouch::TDStretch::outputBuffer\fC [protected]\fP"
+
+.PP
+Definition at line 126 of file TDStretch\&.h\&.
+.SS "\fBint\fP soundtouch::TDStretch::overlapDividerBits\fC [protected]\fP"
+
+.PP
+Definition at line 122 of file TDStretch\&.h\&.
+.SS "\fBint\fP soundtouch::TDStretch::overlapLength\fC [protected]\fP"
+
+.PP
+Definition at line 119 of file TDStretch\&.h\&.
+.SS "\fBint\fP soundtouch::TDStretch::overlapMs\fC [protected]\fP"
+
+.PP
+Definition at line 133 of file TDStretch\&.h\&.
+.SS "\fBSAMPLETYPE\fP* soundtouch::TDStretch::pMidBuffer\fC [protected]\fP"
+
+.PP
+Definition at line 117 of file TDStretch\&.h\&.
+.SS "\fBSAMPLETYPE\fP* soundtouch::TDStretch::pMidBufferUnaligned\fC [protected]\fP"
+
+.PP
+Definition at line 118 of file TDStretch\&.h\&.
+.SS "\fBint\fP soundtouch::TDStretch::sampleRate\fC [protected]\fP"
+
+.PP
+Definition at line 130 of file TDStretch\&.h\&.
+.SS "\fBint\fP soundtouch::TDStretch::sampleReq\fC [protected]\fP"
+
+.PP
+Definition at line 114 of file TDStretch\&.h\&.
+.SS "\fBint\fP soundtouch::TDStretch::seekLength\fC [protected]\fP"
+
+.PP
+Definition at line 120 of file TDStretch\&.h\&.
+.SS "\fBint\fP soundtouch::TDStretch::seekWindowLength\fC [protected]\fP"
+
+.PP
+Definition at line 121 of file TDStretch\&.h\&.
+.SS "\fBint\fP soundtouch::TDStretch::seekWindowMs\fC [protected]\fP"
+
+.PP
+Definition at line 132 of file TDStretch\&.h\&.
+.SS "\fBint\fP soundtouch::TDStretch::sequenceMs\fC [protected]\fP"
+
+.PP
+Definition at line 131 of file TDStretch\&.h\&.
+.SS "float soundtouch::TDStretch::skipFract\fC [protected]\fP"
+
+.PP
+Definition at line 125 of file TDStretch\&.h\&.
+.SS "\fBint\fP soundtouch::TDStretch::slopingDivider\fC [protected]\fP"
+
+.PP
+Definition at line 123 of file TDStretch\&.h\&.
+.SS "float soundtouch::TDStretch::tempo\fC [protected]\fP"
+
+.PP
+Definition at line 115 of file TDStretch\&.h\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

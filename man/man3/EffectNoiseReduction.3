@@ -1,0 +1,144 @@
+.TH "EffectNoiseReduction" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+EffectNoiseReduction \- A two-pass effect to reduce background noise\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <NoiseReduction\&.h>\fP
+.PP
+Inherits \fBEffect\fP\&.
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "class \fBDialog\fP"
+.br
+.RI "\fI\fBDialog\fP used with \fBEffectNoiseReduction\fP\&. \fP"
+.ti -1c
+.RI "class \fBSettings\fP"
+.br
+.ti -1c
+.RI "class \fBStatistics\fP"
+.br
+.ti -1c
+.RI "class \fBWorker\fP"
+.br
+.in -1c
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBEffectNoiseReduction\fP ()"
+.br
+.ti -1c
+.RI "virtual \fB~EffectNoiseReduction\fP ()"
+.br
+.ti -1c
+.RI "wxString \fBGetSymbol\fP () override"
+.br
+.ti -1c
+.RI "wxString \fBGetDescription\fP () override"
+.br
+.ti -1c
+.RI "\fBEffectType\fP \fBGetType\fP () override"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBPromptUser\fP (wxWindow *parent) override"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBInit\fP () override"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBCheckWhetherSkipEffect\fP () override"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBProcess\fP () override"
+.br
+.in -1c
+.SS "Friends"
+
+.in +1c
+.ti -1c
+.RI "class \fBDialog\fP"
+.br
+.in -1c
+.SS "Additional Inherited Members"
+.SH "Detailed Description"
+.PP 
+A two-pass effect to reduce background noise\&. 
+
+The first pass is done over just noise\&. For each windowed sample of the sound, we take a FFT and then statistics are tabulated for each frequency band\&.
+.PP
+During the noise reduction phase, we start by setting a gain control for each frequency band such that if the sound has exceeded the previously-determined threshold, the gain is set to 0 dB, otherwise the gain is set lower (e\&.g\&. -18 dB), to suppress the noise\&. Then time-smoothing is applied so that the gain for each frequency band moves slowly, and then frequency-smoothing is applied so that a single frequency is never suppressed or boosted in isolation\&. Lookahead is employed; this effect is not designed for real-time but if it were, there would be a significant delay\&.
+.PP
+The gain controls are applied to the complex FFT of the signal, and then the inverse FFT is applied\&. A Hanning window may be applied (depending on the advanced window types setting), and then the output signal is then pieced together using overlap/add\&. 
+.PP
+Definition at line 22 of file NoiseReduction\&.h\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "EffectNoiseReduction::EffectNoiseReduction ()"
+
+.PP
+Definition at line 414 of file NoiseReduction\&.cpp\&.
+.SS "EffectNoiseReduction::~EffectNoiseReduction ()\fC [virtual]\fP"
+
+.PP
+Definition at line 420 of file NoiseReduction\&.cpp\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "\fBbool\fP EffectNoiseReduction::CheckWhetherSkipEffect ()\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Reimplemented from \fBEffect\fP\&.
+.PP
+Definition at line 448 of file NoiseReduction\&.cpp\&.
+.SS "wxString EffectNoiseReduction::GetDescription ()\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Reimplemented from \fBEffect\fP\&.
+.PP
+Definition at line 431 of file NoiseReduction\&.cpp\&.
+.SS "wxString EffectNoiseReduction::GetSymbol ()\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Reimplemented from \fBEffect\fP\&.
+.PP
+Definition at line 426 of file NoiseReduction\&.cpp\&.
+.SS "\fBEffectType\fP EffectNoiseReduction::GetType ()\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Reimplemented from \fBEffect\fP\&.
+.PP
+Definition at line 438 of file NoiseReduction\&.cpp\&.
+.SS "\fBbool\fP EffectNoiseReduction::Init ()\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Reimplemented from \fBEffect\fP\&.
+.PP
+Definition at line 443 of file NoiseReduction\&.cpp\&.
+.SS "\fBbool\fP EffectNoiseReduction::Process ()\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Reimplemented from \fBEffect\fP\&.
+.PP
+Definition at line 597 of file NoiseReduction\&.cpp\&.
+.SS "\fBbool\fP EffectNoiseReduction::PromptUser (wxWindow * parent)\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Reimplemented from \fBEffect\fP\&.
+.PP
+Definition at line 453 of file NoiseReduction\&.cpp\&.
+.SH "Friends And Related Function Documentation"
+.PP 
+.SS "friend class \fBDialog\fP\fC [friend]\fP"
+
+.PP
+Definition at line 54 of file NoiseReduction\&.h\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

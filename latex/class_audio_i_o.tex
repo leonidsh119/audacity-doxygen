@@ -1,0 +1,907 @@
+\hypertarget{class_audio_i_o}{}\section{Audio\+IO Class Reference}
+\label{class_audio_i_o}\index{Audio\+IO@{Audio\+IO}}
+
+
+\hyperlink{class_audio_i_o}{Audio\+IO} uses the Port\+Audio library to play and record sound.  
+
+
+
+
+{\ttfamily \#include $<$Audio\+I\+O.\+h$>$}
+
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{struct_audio_i_o_1_1_scrub_queue}{Scrub\+Queue}
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{class_audio_i_o_a68c6824c106711b4768dd3847a233366}{Audio\+IO} ()
+\item 
+\hyperlink{class_audio_i_o_a747b3a9f103ce40e9b8d5e8dfb1cfce2}{$\sim$\+Audio\+IO} ()
+\item 
+\hyperlink{class_audio_i_o_listener}{Audio\+I\+O\+Listener} $\ast$ \hyperlink{class_audio_i_o_a78477917ca8c9800ce6f5074a7044399}{Get\+Listener} ()
+\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{class_audio_i_o_a8d9df4aba253fa43612ac02bafa994fd}{Set\+Listener} (\hyperlink{class_audio_i_o_listener}{Audio\+I\+O\+Listener} $\ast$listener)
+\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{class_audio_i_o_a447c4b556a0f66a61ead1c97ed4ae7e7}{Start\+Monitoring} (double sample\+Rate)
+\begin{DoxyCompactList}\small\item\em Start up Portaudio for capture and recording as needed for input monitoring and software playthrough only. \end{DoxyCompactList}\item 
+\hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{class_audio_i_o_ac2be97e813dfdedb3504b20f8b61cdd7}{Start\+Stream} (\hyperlink{class_wave_track_array}{Wave\+Track\+Array} playback\+Tracks, \hyperlink{class_wave_track_array}{Wave\+Track\+Array} capture\+Tracks, double sample\+Rate, double t0, double t1, \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{struct_audio_i_o_start_stream_options}{Audio\+I\+O\+Start\+Stream\+Options} \&options=\hyperlink{struct_audio_i_o_start_stream_options}{Audio\+I\+O\+Start\+Stream\+Options}())
+\begin{DoxyCompactList}\small\item\em Start recording or playing back audio. \end{DoxyCompactList}\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{class_audio_i_o_a018ef510a8616f1feeb0f542f82b1d44}{Stop\+Stream} ()
+\begin{DoxyCompactList}\small\item\em Stop recording, playback or input monitoring. \end{DoxyCompactList}\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{class_audio_i_o_a40488ff8506e6238963049844728a6c6}{Seek\+Stream} (double seconds)
+\begin{DoxyCompactList}\small\item\em Move the playback / recording position of the current stream by the specified amount from where it is now. \end{DoxyCompactList}\item 
+\hyperlink{mac_2config_2i386_2lib-src_2libsoxr_2soxr-config_8h_abb452686968e48b67397da5f97445f5b}{bool} \hyperlink{class_audio_i_o_ada30edb1aa1b556aebb4ba0b9bbc697e}{Is\+Scrubbing} ()
+\item 
+\hyperlink{mac_2config_2i386_2lib-src_2libsoxr_2soxr-config_8h_abb452686968e48b67397da5f97445f5b}{bool} \hyperlink{class_audio_i_o_a89c8c6c8da819d583b92e32508fbae7b}{Enqueue\+Scrub\+By\+Position} (double end\+Time, double max\+Speed, \hyperlink{mac_2config_2i386_2lib-src_2libsoxr_2soxr-config_8h_abb452686968e48b67397da5f97445f5b}{bool} may\+Skip)
+\begin{DoxyCompactList}\small\item\em enqueue a N\+EW end time, using the last end as the new start, to be played over the same duration, as between this and the last enqueuing (or the starting of the stream). Except, we do not exceed maximum scrub speed, so may need to adjust either the start or the end. If may\+Skip is true, then when mouse movement exceeds maximum scrub speed, adjust the beginning of the scrub interval rather than the end, so that the scrub skips or \char`\"{}stutters\char`\"{} to stay near the cursor. But if the \char`\"{}stutter\char`\"{} is too short for the minimum, then there is no effect on the work queue. Return true if some work was really enqueued. \end{DoxyCompactList}\item 
+\hyperlink{mac_2config_2i386_2lib-src_2libsoxr_2soxr-config_8h_abb452686968e48b67397da5f97445f5b}{bool} \hyperlink{class_audio_i_o_aa5680009162f44b9156622851767e328}{Enqueue\+Scrub\+By\+Signed\+Speed} (double speed, double max\+Speed, \hyperlink{mac_2config_2i386_2lib-src_2libsoxr_2soxr-config_8h_abb452686968e48b67397da5f97445f5b}{bool} may\+Skip)
+\begin{DoxyCompactList}\small\item\em enqueue a N\+EW positive or negative scrubbing speed, using the last end as the N\+EW start, to be played over the same duration, as between this and the last enqueueing (or the starting of the stream). Except, we do not exceed maximum scrub speed, so may need to adjust either the start or the end. If may\+Skip is true, then when mouse movement exceeds maximum scrub speed, adjust the beginning of the scrub interval rather than the end, so that the scrub skips or \char`\"{}stutters\char`\"{} to stay near the cursor. But if the \char`\"{}stutter\char`\"{} is too short for the minimum, then there is no effect on the work queue. Return true if some work was really enqueued. \end{DoxyCompactList}\item 
+\hyperlink{mac_2config_2i386_2lib-src_2libsoxr_2soxr-config_8h_abb452686968e48b67397da5f97445f5b}{bool} \hyperlink{class_audio_i_o_a10f4e839ded338c433a4cd46a6ba41b1}{Is\+Busy} ()
+\begin{DoxyCompactList}\small\item\em Returns true if audio i/o is busy starting, stopping, playing, or recording. \end{DoxyCompactList}\item 
+\hyperlink{mac_2config_2i386_2lib-src_2libsoxr_2soxr-config_8h_abb452686968e48b67397da5f97445f5b}{bool} \hyperlink{class_audio_i_o_a07490d6ae881910c5ea13cdf011835f3}{Is\+Stream\+Active} ()
+\begin{DoxyCompactList}\small\item\em Returns true if the audio i/o is running at all, but not during cleanup. \end{DoxyCompactList}\item 
+\hyperlink{mac_2config_2i386_2lib-src_2libsoxr_2soxr-config_8h_abb452686968e48b67397da5f97445f5b}{bool} \hyperlink{class_audio_i_o_aab4123922c22aac622db1512d01c6c18}{Is\+Stream\+Active} (\hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{seqread_8c_a472e2484c39e6e56a4c486a7d779841d}{token})
+\item 
+wx\+Long\+Long \hyperlink{class_audio_i_o_a313e20357b22f7adbbdd274ef1e2e84e}{Get\+Last\+Playback\+Time} () \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} 
+\item 
+\hyperlink{mac_2config_2i386_2lib-src_2libsoxr_2soxr-config_8h_abb452686968e48b67397da5f97445f5b}{bool} \hyperlink{class_audio_i_o_ae38ba2eafdaf5a1579366d788fd669d9}{Is\+Audio\+Token\+Active} (\hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{seqread_8c_a472e2484c39e6e56a4c486a7d779841d}{token})
+\begin{DoxyCompactList}\small\item\em Returns true if the stream is active, or even if audio I/O is busy cleaning up its data or writing to disk. \end{DoxyCompactList}\item 
+\hyperlink{mac_2config_2i386_2lib-src_2libsoxr_2soxr-config_8h_abb452686968e48b67397da5f97445f5b}{bool} \hyperlink{class_audio_i_o_a81838290ddb586dc13726abf901b8260}{Is\+Monitoring} ()
+\begin{DoxyCompactList}\small\item\em Returns true if we\textquotesingle{}re monitoring input (but not recording or playing actual audio) \end{DoxyCompactList}\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{class_audio_i_o_a49f8574c7ce8410e3ab254fe95c44388}{Set\+Paused} (\hyperlink{mac_2config_2i386_2lib-src_2libsoxr_2soxr-config_8h_abb452686968e48b67397da5f97445f5b}{bool} state)
+\begin{DoxyCompactList}\small\item\em Pause and un-\/pause playback and recording. \end{DoxyCompactList}\item 
+\hyperlink{mac_2config_2i386_2lib-src_2libsoxr_2soxr-config_8h_abb452686968e48b67397da5f97445f5b}{bool} \hyperlink{class_audio_i_o_aa83356a7bb2153f67f4c82b72ed5185b}{Is\+Paused} ()
+\begin{DoxyCompactList}\small\item\em Find out if playback / recording is currently paused. \end{DoxyCompactList}\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{class_audio_i_o_ab90a44dee504b8748bf321416a25067b}{Set\+Mixer} (\hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} input\+Source)
+\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{class_audio_i_o_a6e08d80f05a4106be20dfaa96723c957}{Set\+Mixer} (\hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} input\+Source, float input\+Volume, float playback\+Volume)
+\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{class_audio_i_o_a2341f380ecf5d7630ed1879a1b66e28c}{Get\+Mixer} (\hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} $\ast$input\+Source, float $\ast$input\+Volume, float $\ast$playback\+Volume)
+\item 
+\hyperlink{mac_2config_2i386_2lib-src_2libsoxr_2soxr-config_8h_abb452686968e48b67397da5f97445f5b}{bool} \hyperlink{class_audio_i_o_a104cc037e35b66adb8864a35e8376f8e}{Input\+Mixer\+Works} ()
+\begin{DoxyCompactList}\small\item\em Find out if the input hardware level control is available. \end{DoxyCompactList}\item 
+\hyperlink{mac_2config_2i386_2lib-src_2libsoxr_2soxr-config_8h_abb452686968e48b67397da5f97445f5b}{bool} \hyperlink{class_audio_i_o_abc4c1f9f7609603270df993ee8af1af2}{Output\+Mixer\+Emulated} ()
+\begin{DoxyCompactList}\small\item\em Find out if the output level control is being emulated via software attenuation. \end{DoxyCompactList}\item 
+wx\+Array\+String \hyperlink{class_audio_i_o_a871ad77e029d77ff4ae461b2be5325cd}{Get\+Input\+Source\+Names} ()
+\begin{DoxyCompactList}\small\item\em Get the list of inputs to the current mixer device. \end{DoxyCompactList}\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{class_audio_i_o_aef42a8e615a55e2b914a989e8b63af0b}{Handle\+Device\+Change} ()
+\begin{DoxyCompactList}\small\item\em update state after changing what audio devices are selected \end{DoxyCompactList}\item 
+double \hyperlink{class_audio_i_o_adaf7977e341e8012b03dca8c733f24e1}{Get\+Stream\+Time} ()
+\begin{DoxyCompactList}\small\item\em During playback, the (unwarped) track time most recently played. \end{DoxyCompactList}\item 
+\hyperlink{include_2audacity_2_types_8h_a9938d2e2f6adef23e745cd80ef379792}{sample\+Format} \hyperlink{class_audio_i_o_a5735d00a230e2a59a9702dfbf1a8b85d}{Get\+Capture\+Format} ()
+\item 
+\hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{class_audio_i_o_a841f37644672ecb5ea445bfb52907c1f}{Get\+Num\+Capture\+Channels} ()
+\item 
+wx\+String \hyperlink{class_audio_i_o_a134b6a56921f9c6bd197d80de4ddce48}{Get\+Device\+Info} ()
+\begin{DoxyCompactList}\small\item\em Get diagnostic information on all the available audio I/O devices. \end{DoxyCompactList}\item 
+\hyperlink{mac_2config_2i386_2lib-src_2libsoxr_2soxr-config_8h_abb452686968e48b67397da5f97445f5b}{bool} \hyperlink{class_audio_i_o_a7735a1b6d723e8342d22f9ddcf61d8e6}{Is\+Available} (\hyperlink{class_audacity_project}{Audacity\+Project} $\ast$projecT)
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_function}{Function} to automatically set an acceptable volume. \end{DoxyCompactList}\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{class_audio_i_o_a0ef8578b176133229c30a656fe41478e}{Set\+Capture\+Meter} (\hyperlink{class_audacity_project}{Audacity\+Project} $\ast$project, \hyperlink{class_meter}{Meter} $\ast$meter)
+\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{class_audio_i_o_a615aec62315405636bfe8b6e2a326cbe}{Set\+Playback\+Meter} (\hyperlink{class_audacity_project}{Audacity\+Project} $\ast$project, \hyperlink{class_meter}{Meter} $\ast$meter)
+\end{DoxyCompactItemize}
+\subsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static double \hyperlink{class_audio_i_o_a377107ccda3176965ac68d757ba517a7}{Get\+Max\+Scrub\+Speed} ()
+\item 
+static double \hyperlink{class_audio_i_o_a40f26467a7d142f0edea9b3ac893dddd}{Get\+Min\+Scrub\+Speed} ()
+\item 
+static wx\+Array\+Long \hyperlink{class_audio_i_o_a8d5c6376948069792d356c4d465f65af}{Get\+Supported\+Playback\+Rates} (\hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} Dev\+Index=-\/1, double \hyperlink{seqread_8c_ad89d3fac2deab7a9cf6cfc8d15341b85}{rate}=0.\+0)
+\begin{DoxyCompactList}\small\item\em Get a list of sample rates the output (playback) device supports. \end{DoxyCompactList}\item 
+static wx\+Array\+Long \hyperlink{class_audio_i_o_a5a038799b288476cf6896129739c0ce5}{Get\+Supported\+Capture\+Rates} (\hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} dev\+Index=-\/1, double \hyperlink{seqread_8c_ad89d3fac2deab7a9cf6cfc8d15341b85}{rate}=0.\+0)
+\begin{DoxyCompactList}\small\item\em Get a list of sample rates the input (recording) device supports. \end{DoxyCompactList}\item 
+static wx\+Array\+Long \hyperlink{class_audio_i_o_acb6e16f4da1d263491071ce5b26a9abd}{Get\+Supported\+Sample\+Rates} (\hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} play\+Device=-\/1, \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} rec\+Device=-\/1, double \hyperlink{seqread_8c_ad89d3fac2deab7a9cf6cfc8d15341b85}{rate}=0.\+0)
+\begin{DoxyCompactList}\small\item\em Get a list of sample rates the current input/output device combination supports. \end{DoxyCompactList}\item 
+static \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{class_audio_i_o_a71facd3c7274394b70eaff652e1bc97e}{Get\+Optimal\+Supported\+Sample\+Rate} ()
+\begin{DoxyCompactList}\small\item\em Get a supported sample rate which can be used a an optimal default. \end{DoxyCompactList}\item 
+static \hyperlink{mac_2config_2i386_2lib-src_2libsoxr_2soxr-config_8h_abb452686968e48b67397da5f97445f5b}{bool} \hyperlink{class_audio_i_o_acfaf9b48ca72d2d34ebfb8873e0ae7dd}{Validate\+Device\+Names} (\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} wx\+String \&play, \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} wx\+String \&rec)
+\begin{DoxyCompactList}\small\item\em Ensure selected device names are valid. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+static \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{class_audio_i_o_a42f4cf4090548388aa1c762bb59778ba}{Standard\+Rates} \mbox{[}$\,$\mbox{]}
+\begin{DoxyCompactList}\small\item\em Array of common audio sample rates. \end{DoxyCompactList}\item 
+static \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{class_audio_i_o_a4d794f0244d6be2f833a6627cbfcdae8}{Num\+Standard\+Rates}
+\begin{DoxyCompactList}\small\item\em How many standard sample rates there are. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Friends}
+\begin{DoxyCompactItemize}
+\item 
+class \hyperlink{class_audio_i_o_a894b7c943c91bb34f845aeb117786dff}{Audio\+Thread}
+\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{class_audio_i_o_a5c082d9ef3612f42a4a78edffdf2a0db}{Init\+Audio\+IO} ()
+\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{class_audio_i_o_a362633315924afe19ab0fe0cf4bd32da}{Deinit\+Audio\+IO} ()
+\item 
+\hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{class_audio_i_o_a0d694f00df707ad21d421a1b29ad46ea}{audacity\+Audio\+Callback} (\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} $\ast$input\+Buffer, \hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} $\ast$output\+Buffer, unsigned long frames\+Per\+Buffer, \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{struct_pa_stream_callback_time_info}{Pa\+Stream\+Callback\+Time\+Info} $\ast$time\+Info, \hyperlink{portaudio_8h_a55a005924bcfa0424594f4f65cd4ae82}{Pa\+Stream\+Callback\+Flags} status\+Flags, \hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} $\ast$\hyperlink{xmlparse_8c_a4b666535c828e23ccd16510a0a1a1943}{user\+Data})
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\hyperlink{class_audio_i_o}{Audio\+IO} uses the Port\+Audio library to play and record sound. 
+
+Great care and attention to detail are necessary for understanding and modifying this system. The code in this file is run from three different thread contexts\+: the UI thread, the disk thread (which this file creates and maintains; in the code, this is called the Audio Thread), and the Port\+Audio callback thread. To highlight this deliniation, the file is divided into three parts based on what thread context each function is intended to run in.
+
+\begin{DoxyParagraph}{E\+X\+P\+E\+R\+I\+M\+E\+N\+T\+A\+L\+\_\+\+M\+I\+D\+I\+\_\+\+P\+L\+A\+Y\+B\+A\+CK}
+If E\+X\+P\+E\+R\+I\+M\+E\+N\+T\+A\+L\+\_\+\+M\+I\+D\+I\+\_\+\+P\+L\+A\+Y\+B\+A\+CK is defined, this class also manages M\+I\+DI playback. The reason for putting M\+I\+DI here rather than in, say, class Midi\+IO, is that there is no high-\/level synchronization and transport architecture, so Audio and M\+I\+DI must be coupled in order to start/stop/pause and synchronize them.
+\end{DoxyParagraph}
+\begin{DoxyParagraph}{M\+I\+DI With Audio}
+When Audio and M\+I\+DI play simultaneously, M\+I\+DI synchronizes to Audio. This is necessary because the Audio sample clock is not the same hardware as the system time used to schedule M\+I\+DI messages. M\+I\+DI is synchronized to Audio because it is simple to pause or rush the dispatch of M\+I\+DI messages, but generally impossible to pause or rush synchronous audio samples (without distortion).
+\end{DoxyParagraph}
+\begin{DoxyParagraph}{}
+M\+I\+DI output is driven by yet another thread. In principle, we could output timestamped M\+I\+DI data at the same time we fill audio buffers from disk, but audio buffers are filled far in advance of playback time, and there is a lower latency thread (Port\+Audio\textquotesingle{}s callback) that actually sends samples to the output device. The relatively low latency to the output device allows Audacity to stop audio output quickly. We want the same behavior for M\+I\+DI, but there is not periodic callback from Port\+Midi (because M\+I\+DI is asynchronous), so this function is performed by the Midi\+Thread class.
+\end{DoxyParagraph}
+\begin{DoxyParagraph}{}
+When Audio is running, M\+I\+DI is synchronized to Audio. Globals are set in the Audio callback (audacity\+Audio\+Callback) for use by a time function that reports milliseconds to Port\+Midi. (Details below.)
+\end{DoxyParagraph}
+\begin{DoxyParagraph}{M\+I\+DI Without Audio}
+When Audio is not running, Port\+Midi uses its own millisecond timer since there is no audio to synchronize to. (Details below.)
+\end{DoxyParagraph}
+\begin{DoxyParagraph}{Implementation Notes and Details for M\+I\+DI}
+When opening devices, success\+Audio and success\+Midi indicate errors if false, so normally both are true. Use playback\+Channels, capture\+Channels and m\+Midi\+Playback\+Tracks.\+Is\+Empty() to determine if Audio or M\+I\+DI is actually in use.
+\end{DoxyParagraph}
+\begin{DoxyParagraph}{Audio Time}
+Normally, the current time during playback is given by the variable m\+Time. m\+Time normally advances by frames / samplerate each time an audio buffer is output by the audio callback. However, Audacity has a speed control that can perform continuously variable time stretching on audio. This is achieved in two places\+: the playback \char`\"{}mixer\char`\"{} that generates the samples for output processes the audio according to the speed control. In a separate algorithm, the audio callback updates m\+Time by (frames / samplerate) $\ast$ factor, where factor reflects the speed at m\+Time. This effectively integrates speed to get position. Negative speeds are allowed too, for instance in scrubbing.
+\end{DoxyParagraph}
+\begin{DoxyParagraph}{Midi Time}
+M\+I\+DI is not warped according to the speed control. This might be something that should be changed. (Editorial note\+: Wouldn\textquotesingle{}t it make more sense to display audio at the correct time and allow users to stretch audio the way they can stretch M\+I\+DI?) For now, M\+I\+DI plays at 1 second per second, so it requires an unwarped clock. In fact, M\+I\+DI time synchronization requires a millisecond clock that does not pause. Note that m\+Time will stop progress when the Pause button is pressed, even though audio samples (zeros) continue to be output.
+\end{DoxyParagraph}
+\begin{DoxyParagraph}{}
+Therefore, we define the following interface for M\+I\+DI timing\+: \begin{DoxyItemize}
+\item {\ttfamily Audio\+Time()} is the time based on all samples written so far, including zeros output during pauses. Audio\+Time() is based on the start location m\+T0, not zero. \item {\ttfamily Pause\+Time()} is the amount of time spent paused, based on a count of zero samples output. \item {\ttfamily Midi\+Time()} is an estimate in milliseconds of the current audio output time + 1s. In other words, what audacity track time corresponds to the audio (including pause insertions) at the output?\end{DoxyItemize}
+
+\end{DoxyParagraph}
+\begin{DoxyParagraph}{Audio\+Time() and Pause\+Time() computation}
+Audio\+Time() is simply m\+T0 + m\+Num\+Frames / m\+Rate. m\+Num\+Frames is incremented in each audio callback. Similarly, Pause\+Time() is m\+Num\+Pause\+Frames / m\+Rate. m\+Num\+Pause\+Frames is also incremented in each audio callback when a pause is in effect.
+\end{DoxyParagraph}
+\begin{DoxyParagraph}{Midi\+Time() computation}
+Midi\+Time() is computed based on information from Port\+Audio\textquotesingle{}s callback, which estimates the system time at which the current audio buffer will be output. Consider the (unimplemented) function Real\+To\+Track() that maps real time to track time. If output\+Time is Port\+Audio\textquotesingle{}s time estimate for the most recent output buffer, then ~\newline
+ Real\+To\+Track(output\+Time) = Audio\+Time() -\/ Pause\+Time() -\/ buffer\+Duration ~\newline
+ We want to know Real\+To\+Track of the current time, so we use this approximation for small d\+: ~\newline
+ Real\+To\+Track(t + d) = Real\+To\+Track(t) + d ~\newline
+ Letting t = output\+Time and d = (system\+Time -\/ output\+Time), we can substitute to get\+:~\newline
+ Real\+To\+Track(system\+Time) = Audio\+Time() -\/ Pause\+Time() -\/ bufferduration + (system\+Time -\/ output\+Time) ~\newline
+ Midi\+Time() should include pause time, so add Pause\+Time() to both sides of the equation. Also Midi\+Time() is offset by 1 second to avoid negative time at startup, so add 1 to both sides\+: Midi\+Time() in seconds = Real\+To\+Track(system\+Time) + Pause\+Time() + 1 = ~\newline
+ Audio\+Time() -\/ bufferduration + (system\+Time -\/ output\+Time) + 1
+\end{DoxyParagraph}
+\begin{DoxyParagraph}{}
+The difference Audio\+Time() -\/ Pause\+Time() is the time \char`\"{}cursor\char`\"{} for M\+I\+DI. When the speed control is used, M\+I\+DI and Audio will become unsynchronized. In particular, M\+I\+DI will not be synchronized with the visual cursor, which moves with scaled time reported in m\+Time.
+\end{DoxyParagraph}
+\begin{DoxyParagraph}{Midi Synchronization}
+The goal of M\+I\+DI playback is to deliver M\+I\+DI messages synchronized to audio (assuming no speed variation for now). If a midi event has time tmidi, then the timestamp for that message should be ~\newline
+ timestamp (in seconds) = tmidi + Pause\+Time() + 1.\+0 -\/ latency.~\newline
+ (This is actually off by 1ms; see \char`\"{}\+Port\+Midi Latency Parameter\char`\"{} below for more detail.) Notice the extra 1.\+0, added because Midi\+Time() is offset by 1s to avoid starting at a negative value. Also notice that we subtract latency. The user must set device latency using preferences. Some software synthesizers have very high latency (on the order of 100ms), so unless we lower timestamps and send messages early, the final output will not be synchronized. This timestamp is interpreted by Port\+Midi relative to Midi\+Time(), which is synchronized to audio output. So the only thing we need to do is output Midi messages shortly before they will be played with the correct timestamp. We will take \char`\"{}shortly before\char`\"{} to mean \char`\"{}at about the same time
+  as corresponding audio\char`\"{}. Based on this, output the event when Audio\+Time() -\/ Pause\+Time() $>$ mtime -\/ latency, adjusting the event time by adding Pause\+Time() + 1 -\/ latency. This gives at least m\+Audio\+Output\+Latency for the M\+I\+DI output to be generated (we want to generate M\+I\+DI output before the actual output time because events generated early are accurately timed according to their timestamp). However, the M\+I\+DI thread sleeps for M\+I\+D\+I\+\_\+\+S\+L\+E\+EP in its polling loop, so the worst case is really m\+Audio\+Output\+Latency + M\+I\+D\+I\+\_\+\+S\+L\+E\+EP. In case the audio output latency is very low, we will output events when Audio\+Time() + M\+I\+D\+I\+\_\+\+S\+L\+E\+EP -\/ Pause\+Time() $>$ mtime -\/ latency.
+\end{DoxyParagraph}
+\begin{DoxyParagraph}{Interaction between M\+I\+DI, Audio, and Pause}
+When Pause is used, Pause\+Time() will increase at the same rate as Audio\+Time(), and no more events will be output. Because of the time advance of m\+Audio\+Output\+Latency + M\+I\+D\+I\+\_\+\+S\+L\+E\+EP + latency and the fact that Audio\+Time() advances stepwise by m\+Audio\+Buffer\+Duration, some extra M\+I\+DI might be output, but the same is true of audio\+: something like m\+Audio\+Output\+Latency audio samples will be in the output buffer (with up to m\+Audio\+Buffer\+Duration additional samples, depending on when the Pause takes effect). When playback is resumed, there will be a slight delay corresponding to the extra data previously sent. Again, the same is true of audio. Audio and M\+I\+DI will not pause and resume at exactly the same times, but their pause and resume times will be within the low tens of milliseconds, and the streams will be synchronized in any case. I.\+e. if audio pauses 10ms earlier than M\+I\+DI, it will resume 10ms earlier as well.
+\end{DoxyParagraph}
+\begin{DoxyParagraph}{Port\+Midi Latency Parameter}
+Port\+Midi has a \char`\"{}latency\char`\"{} parameter that is added to all timestamps. This value must be greater than zero to enable timestamp-\/based timing, but serves no other function, so we will set it to 1. All timestamps must then be adjusted down by 1 before messages are sent. This adjustment is on top of all the calculations described above. It just seem too complicated to describe everything in complete detail in one place.
+\end{DoxyParagraph}
+\begin{DoxyParagraph}{Midi While Recording Only}
+All of the midi-\/to-\/audio synchronization is of course meaningless when audio is not playing. If only recording, there is the problem that synchronization is based on output time, but without audio output, there is no output time. This does not seem like a critical feature, so M\+I\+DI is not synchronized to audio without audio playback. The user can always play a track of silence while recording to synchronize.
+\end{DoxyParagraph}
+\begin{DoxyParagraph}{Midi Without Audio Playback}
+When there is no audio playback, M\+I\+DI runs according to its own clock. The midi timestamp clock starts at approximately the same time as audio recording (if any). A timestamp of 0 corresponds to m\+T0, the starting time in the Midi track(s). Thus the timestamp for an event at time tmidi should be\+: ~\newline
+ timestamp = tmidi -\/ m\+T0 + Pause\+Time() -\/ latency -\/ 0.\+001~\newline
+ Where latency is the synthesizer latency, and the extra 0.\+001 is the latency (1ms) that Port\+Midi adds to timestamps automatically.
+\end{DoxyParagraph}
+\begin{DoxyParagraph}{Midi Output Without Audio Playback}
+Midi events should be written before their timestamp expires. Since the loop that checks for events to write pauses for M\+I\+D\+I\+\_\+\+S\+L\+E\+EP, the events should be written at least M\+I\+D\+I\+\_\+\+S\+L\+E\+EP early, and due to other delays and computation, we want some extra time, so let\textquotesingle{}s allow 2$\ast$\+M\+I\+D\+I\+\_\+\+S\+L\+E\+EP. Therefore, the write time should be when\+:~\newline
+ tmidi -\/ m\+T0 + Pause\+Time() -\/ latency -\/ 0.\+001 -\/ 2 $\ast$ M\+I\+D\+I\+\_\+\+S\+L\+E\+EP $<$ \hyperlink{porttime_8h_a9a335bb8c04c85bf85d807dd448d72d0}{Pt\+\_\+\+Time()}~\newline
+, which can be rearranged to\+:~\newline
+ tmidi $<$ m\+T0 + \hyperlink{porttime_8h_a9a335bb8c04c85bf85d807dd448d72d0}{Pt\+\_\+\+Time()} + M\+I\+D\+I\+\_\+\+S\+L\+E\+EP + (M\+I\+D\+I\+\_\+\+S\+L\+E\+EP + latency) -\/ Pause\+Time~\newline
+ which matches the code in Audio\+I\+O\+::\+Fill\+Midi\+Buffers() after converting ms to s appropriately. (Note also that the 0.\+001 is dropped here -- it\textquotesingle{}s not really important).
+\end{DoxyParagraph}
+\begin{DoxyParagraph}{The code for Midi Without Audio was developed by simply trying}
+to play Midi alone and fixing everything that did not work. The \char`\"{}normal\char`\"{} \hyperlink{class_audio_i_o}{Audio\+IO} execution was full of assumptions about audio, so there is no systematic design for running without audio, merely a number of \char`\"{}patches\char`\"{} to make it work. The expression \char`\"{}m\+Num\+Playback\+Channels $>$ 0\char`\"{} is used to detect whether audio playback is active, and \char`\"{}m\+Num\+Frames $>$ 0\char`\"{} is used to indicate that playback of either Midi or Audio has actually started. (m\+Num\+Frames is normally incremented by the audio callback, but if there is no audio playback or recording, it is set to 1 at the end of initialization.
+\end{DoxyParagraph}
+\begin{DoxyParagraph}{Note\+Track Play\+Looped}
+When m\+Play\+Looped is true, output is supposed to loop from m\+T0 to m\+T1. For Note\+Tracks, we interpret this to mean that any note-\/on or control change in the range m\+T0 $<$= t $<$ m\+T1 is sent (notes that start before m\+T0 are not played even if they extend beyond m\+T0). Then, all notes are turned off. Events in the range m\+T0 $<$= t $<$ m\+T1 are then repeated, offset by (m\+T1 -\/ m\+T0), etc. We do N\+OT go back to the beginning and play all control changes (update events) up to m\+T0, nor do we \char`\"{}undo\char`\"{} any state changes between m\+T0 and m\+T1.
+\end{DoxyParagraph}
+\begin{DoxyParagraph}{Note\+Track Play\+Looped Implementation}
+The m\+Iterator object (an \hyperlink{class_alg__iterator}{Alg\+\_\+iterator}) returns N\+U\+LL when there are no more events scheduled before m\+T1. At m\+T1, we want to output all notes off messages, but the Fill\+Midi\+Buffers() loop will exit if m\+Next\+Event is N\+U\+LL, so we create a \char`\"{}fake\char`\"{} m\+Next\+Event for this special \char`\"{}event\char`\"{} of sending all notes off. After that, we destroy the iterator and use Prepare\+Midi\+Iterator() to set up a N\+EW one. At each iteration, time must advance by (m\+T1 -\/ m\+T0), so the accumulated time is held in m\+Midi\+Loop\+Offset.
+\end{DoxyParagraph}
+\begin{DoxyRefDesc}{Todo}
+\item[\hyperlink{todo__todo000043}{Todo}]run through all functions called from audio and portaudio threads to verify they are thread-\/safe. Note that synchronization of the style\+: \char`\"{}\+A sets flag to signal B, B clears flag to acknowledge completion\char`\"{} is not thread safe in a general multiple-\/\+C\+PU context. For example, B can write to a buffer and set a completion flag. The flag write can occur before the buffer write due to out-\/of-\/order execution. Then A can see the flag and read the buffer before buffer writes complete.\end{DoxyRefDesc}
+
+
+Definition at line 130 of file Audio\+I\+O.\+h.
+
+
+
+\subsection{Constructor \& Destructor Documentation}
+\index{Audio\+IO@{Audio\+IO}!Audio\+IO@{Audio\+IO}}
+\index{Audio\+IO@{Audio\+IO}!Audio\+IO@{Audio\+IO}}
+\subsubsection[{\texorpdfstring{Audio\+I\+O()}{AudioIO()}}]{\setlength{\rightskip}{0pt plus 5cm}Audio\+I\+O\+::\+Audio\+IO (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{class_audio_i_o_a68c6824c106711b4768dd3847a233366}{}\label{class_audio_i_o_a68c6824c106711b4768dd3847a233366}
+
+
+Definition at line 856 of file Audio\+I\+O.\+cpp.
+
+\index{Audio\+IO@{Audio\+IO}!````~Audio\+IO@{$\sim$\+Audio\+IO}}
+\index{````~Audio\+IO@{$\sim$\+Audio\+IO}!Audio\+IO@{Audio\+IO}}
+\subsubsection[{\texorpdfstring{$\sim$\+Audio\+I\+O()}{~AudioIO()}}]{\setlength{\rightskip}{0pt plus 5cm}Audio\+I\+O\+::$\sim$\+Audio\+IO (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{class_audio_i_o_a747b3a9f103ce40e9b8d5e8dfb1cfce2}{}\label{class_audio_i_o_a747b3a9f103ce40e9b8d5e8dfb1cfce2}
+
+
+Definition at line 960 of file Audio\+I\+O.\+cpp.
+
+
+
+\subsection{Member Function Documentation}
+\index{Audio\+IO@{Audio\+IO}!Enqueue\+Scrub\+By\+Position@{Enqueue\+Scrub\+By\+Position}}
+\index{Enqueue\+Scrub\+By\+Position@{Enqueue\+Scrub\+By\+Position}!Audio\+IO@{Audio\+IO}}
+\subsubsection[{\texorpdfstring{Enqueue\+Scrub\+By\+Position(double end\+Time, double max\+Speed, bool may\+Skip)}{EnqueueScrubByPosition(double endTime, double maxSpeed, bool maySkip)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf bool} Audio\+I\+O\+::\+Enqueue\+Scrub\+By\+Position (
+\begin{DoxyParamCaption}
+\item[{double}]{end\+Time, }
+\item[{double}]{max\+Speed, }
+\item[{{\bf bool}}]{may\+Skip}
+\end{DoxyParamCaption}
+)}\hypertarget{class_audio_i_o_a89c8c6c8da819d583b92e32508fbae7b}{}\label{class_audio_i_o_a89c8c6c8da819d583b92e32508fbae7b}
+
+
+enqueue a N\+EW end time, using the last end as the new start, to be played over the same duration, as between this and the last enqueuing (or the starting of the stream). Except, we do not exceed maximum scrub speed, so may need to adjust either the start or the end. If may\+Skip is true, then when mouse movement exceeds maximum scrub speed, adjust the beginning of the scrub interval rather than the end, so that the scrub skips or \char`\"{}stutters\char`\"{} to stay near the cursor. But if the \char`\"{}stutter\char`\"{} is too short for the minimum, then there is no effect on the work queue. Return true if some work was really enqueued. 
+
+
+
+Definition at line 2412 of file Audio\+I\+O.\+cpp.
+
+\index{Audio\+IO@{Audio\+IO}!Enqueue\+Scrub\+By\+Signed\+Speed@{Enqueue\+Scrub\+By\+Signed\+Speed}}
+\index{Enqueue\+Scrub\+By\+Signed\+Speed@{Enqueue\+Scrub\+By\+Signed\+Speed}!Audio\+IO@{Audio\+IO}}
+\subsubsection[{\texorpdfstring{Enqueue\+Scrub\+By\+Signed\+Speed(double speed, double max\+Speed, bool may\+Skip)}{EnqueueScrubBySignedSpeed(double speed, double maxSpeed, bool maySkip)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf bool} Audio\+I\+O\+::\+Enqueue\+Scrub\+By\+Signed\+Speed (
+\begin{DoxyParamCaption}
+\item[{double}]{speed, }
+\item[{double}]{max\+Speed, }
+\item[{{\bf bool}}]{may\+Skip}
+\end{DoxyParamCaption}
+)}\hypertarget{class_audio_i_o_aa5680009162f44b9156622851767e328}{}\label{class_audio_i_o_aa5680009162f44b9156622851767e328}
+
+
+enqueue a N\+EW positive or negative scrubbing speed, using the last end as the N\+EW start, to be played over the same duration, as between this and the last enqueueing (or the starting of the stream). Except, we do not exceed maximum scrub speed, so may need to adjust either the start or the end. If may\+Skip is true, then when mouse movement exceeds maximum scrub speed, adjust the beginning of the scrub interval rather than the end, so that the scrub skips or \char`\"{}stutters\char`\"{} to stay near the cursor. But if the \char`\"{}stutter\char`\"{} is too short for the minimum, then there is no effect on the work queue. Return true if some work was really enqueued. 
+
+
+
+Definition at line 2420 of file Audio\+I\+O.\+cpp.
+
+\index{Audio\+IO@{Audio\+IO}!Get\+Capture\+Format@{Get\+Capture\+Format}}
+\index{Get\+Capture\+Format@{Get\+Capture\+Format}!Audio\+IO@{Audio\+IO}}
+\subsubsection[{\texorpdfstring{Get\+Capture\+Format()}{GetCaptureFormat()}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf sample\+Format} Audio\+I\+O\+::\+Get\+Capture\+Format (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{class_audio_i_o_a5735d00a230e2a59a9702dfbf1a8b85d}{}\label{class_audio_i_o_a5735d00a230e2a59a9702dfbf1a8b85d}
+
+
+Definition at line 372 of file Audio\+I\+O.\+h.
+
+\index{Audio\+IO@{Audio\+IO}!Get\+Device\+Info@{Get\+Device\+Info}}
+\index{Get\+Device\+Info@{Get\+Device\+Info}!Audio\+IO@{Audio\+IO}}
+\subsubsection[{\texorpdfstring{Get\+Device\+Info()}{GetDeviceInfo()}}]{\setlength{\rightskip}{0pt plus 5cm}wx\+String Audio\+I\+O\+::\+Get\+Device\+Info (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{class_audio_i_o_a134b6a56921f9c6bd197d80de4ddce48}{}\label{class_audio_i_o_a134b6a56921f9c6bd197d80de4ddce48}
+
+
+Get diagnostic information on all the available audio I/O devices. 
+
+
+
+Definition at line 3027 of file Audio\+I\+O.\+cpp.
+
+\index{Audio\+IO@{Audio\+IO}!Get\+Input\+Source\+Names@{Get\+Input\+Source\+Names}}
+\index{Get\+Input\+Source\+Names@{Get\+Input\+Source\+Names}!Audio\+IO@{Audio\+IO}}
+\subsubsection[{\texorpdfstring{Get\+Input\+Source\+Names()}{GetInputSourceNames()}}]{\setlength{\rightskip}{0pt plus 5cm}wx\+Array\+String Audio\+I\+O\+::\+Get\+Input\+Source\+Names (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{class_audio_i_o_a871ad77e029d77ff4ae461b2be5325cd}{}\label{class_audio_i_o_a871ad77e029d77ff4ae461b2be5325cd}
+
+
+Get the list of inputs to the current mixer device. 
+
+Returns an array of strings giving the names of the inputs to the soundcard mixer (driven by Port\+Mixer) 
+
+Definition at line 1072 of file Audio\+I\+O.\+cpp.
+
+\index{Audio\+IO@{Audio\+IO}!Get\+Last\+Playback\+Time@{Get\+Last\+Playback\+Time}}
+\index{Get\+Last\+Playback\+Time@{Get\+Last\+Playback\+Time}!Audio\+IO@{Audio\+IO}}
+\subsubsection[{\texorpdfstring{Get\+Last\+Playback\+Time() const }{GetLastPlaybackTime() const }}]{\setlength{\rightskip}{0pt plus 5cm}wx\+Long\+Long Audio\+I\+O\+::\+Get\+Last\+Playback\+Time (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{class_audio_i_o_a313e20357b22f7adbbdd274ef1e2e84e}{}\label{class_audio_i_o_a313e20357b22f7adbbdd274ef1e2e84e}
+
+
+Definition at line 221 of file Audio\+I\+O.\+h.
+
+\index{Audio\+IO@{Audio\+IO}!Get\+Listener@{Get\+Listener}}
+\index{Get\+Listener@{Get\+Listener}!Audio\+IO@{Audio\+IO}}
+\subsubsection[{\texorpdfstring{Get\+Listener()}{GetListener()}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Audio\+I\+O\+Listener}$\ast$ Audio\+I\+O\+::\+Get\+Listener (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{class_audio_i_o_a78477917ca8c9800ce6f5074a7044399}{}\label{class_audio_i_o_a78477917ca8c9800ce6f5074a7044399}
+
+
+Definition at line 136 of file Audio\+I\+O.\+h.
+
+\index{Audio\+IO@{Audio\+IO}!Get\+Max\+Scrub\+Speed@{Get\+Max\+Scrub\+Speed}}
+\index{Get\+Max\+Scrub\+Speed@{Get\+Max\+Scrub\+Speed}!Audio\+IO@{Audio\+IO}}
+\subsubsection[{\texorpdfstring{Get\+Max\+Scrub\+Speed()}{GetMaxScrubSpeed()}}]{\setlength{\rightskip}{0pt plus 5cm}static double Audio\+I\+O\+::\+Get\+Max\+Scrub\+Speed (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}\hypertarget{class_audio_i_o_a377107ccda3176965ac68d757ba517a7}{}\label{class_audio_i_o_a377107ccda3176965ac68d757ba517a7}
+
+
+Definition at line 176 of file Audio\+I\+O.\+h.
+
+\index{Audio\+IO@{Audio\+IO}!Get\+Min\+Scrub\+Speed@{Get\+Min\+Scrub\+Speed}}
+\index{Get\+Min\+Scrub\+Speed@{Get\+Min\+Scrub\+Speed}!Audio\+IO@{Audio\+IO}}
+\subsubsection[{\texorpdfstring{Get\+Min\+Scrub\+Speed()}{GetMinScrubSpeed()}}]{\setlength{\rightskip}{0pt plus 5cm}static double Audio\+I\+O\+::\+Get\+Min\+Scrub\+Speed (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}\hypertarget{class_audio_i_o_a40f26467a7d142f0edea9b3ac893dddd}{}\label{class_audio_i_o_a40f26467a7d142f0edea9b3ac893dddd}
+
+
+Definition at line 177 of file Audio\+I\+O.\+h.
+
+\index{Audio\+IO@{Audio\+IO}!Get\+Mixer@{Get\+Mixer}}
+\index{Get\+Mixer@{Get\+Mixer}!Audio\+IO@{Audio\+IO}}
+\subsubsection[{\texorpdfstring{Get\+Mixer(int $\ast$input\+Source, float $\ast$input\+Volume, float $\ast$playback\+Volume)}{GetMixer(int *inputSource, float *inputVolume, float *playbackVolume)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} Audio\+I\+O\+::\+Get\+Mixer (
+\begin{DoxyParamCaption}
+\item[{{\bf int} $\ast$}]{input\+Source, }
+\item[{float $\ast$}]{input\+Volume, }
+\item[{float $\ast$}]{playback\+Volume}
+\end{DoxyParamCaption}
+)}\hypertarget{class_audio_i_o_a2341f380ecf5d7630ed1879a1b66e28c}{}\label{class_audio_i_o_a2341f380ecf5d7630ed1879a1b66e28c}
+
+
+Definition at line 1031 of file Audio\+I\+O.\+cpp.
+
+\index{Audio\+IO@{Audio\+IO}!Get\+Num\+Capture\+Channels@{Get\+Num\+Capture\+Channels}}
+\index{Get\+Num\+Capture\+Channels@{Get\+Num\+Capture\+Channels}!Audio\+IO@{Audio\+IO}}
+\subsubsection[{\texorpdfstring{Get\+Num\+Capture\+Channels()}{GetNumCaptureChannels()}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf int} Audio\+I\+O\+::\+Get\+Num\+Capture\+Channels (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{class_audio_i_o_a841f37644672ecb5ea445bfb52907c1f}{}\label{class_audio_i_o_a841f37644672ecb5ea445bfb52907c1f}
+
+
+Definition at line 373 of file Audio\+I\+O.\+h.
+
+\index{Audio\+IO@{Audio\+IO}!Get\+Optimal\+Supported\+Sample\+Rate@{Get\+Optimal\+Supported\+Sample\+Rate}}
+\index{Get\+Optimal\+Supported\+Sample\+Rate@{Get\+Optimal\+Supported\+Sample\+Rate}!Audio\+IO@{Audio\+IO}}
+\subsubsection[{\texorpdfstring{Get\+Optimal\+Supported\+Sample\+Rate()}{GetOptimalSupportedSampleRate()}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf int} Audio\+I\+O\+::\+Get\+Optimal\+Supported\+Sample\+Rate (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [static]}}\hypertarget{class_audio_i_o_a71facd3c7274394b70eaff652e1bc97e}{}\label{class_audio_i_o_a71facd3c7274394b70eaff652e1bc97e}
+
+
+Get a supported sample rate which can be used a an optimal default. 
+
+Currently, this uses the first supported rate in the list \mbox{[}44100, 48000, highest sample rate\mbox{]}. Used in Project as a default value for project rates if one cannot be retrieved from the preferences. So all in all not that useful or important really
+
+\begin{DoxyRefDesc}{Todo}
+\item[\hyperlink{todo__todo000044}{Todo}]\+: should this take into account Port\+Audio\textquotesingle{}s value for \hyperlink{struct_pa_device_info_a68f435353bfe1a4c9b632203a9afcacb}{Pa\+Device\+Info\+::default\+Sample\+Rate}? In principal this should let us work out which rates are \char`\"{}real\char`\"{} and which resampled in the drivers, and so prefer the real rates. \end{DoxyRefDesc}
+
+
+Definition at line 2686 of file Audio\+I\+O.\+cpp.
+
+\index{Audio\+IO@{Audio\+IO}!Get\+Stream\+Time@{Get\+Stream\+Time}}
+\index{Get\+Stream\+Time@{Get\+Stream\+Time}!Audio\+IO@{Audio\+IO}}
+\subsubsection[{\texorpdfstring{Get\+Stream\+Time()}{GetStreamTime()}}]{\setlength{\rightskip}{0pt plus 5cm}double Audio\+I\+O\+::\+Get\+Stream\+Time (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{class_audio_i_o_adaf7977e341e8012b03dca8c733f24e1}{}\label{class_audio_i_o_adaf7977e341e8012b03dca8c733f24e1}
+
+
+During playback, the (unwarped) track time most recently played. 
+
+When playing looped, this will start from t0 again, too. So the returned time should be always between t0 and t1 
+
+Definition at line 2506 of file Audio\+I\+O.\+cpp.
+
+\index{Audio\+IO@{Audio\+IO}!Get\+Supported\+Capture\+Rates@{Get\+Supported\+Capture\+Rates}}
+\index{Get\+Supported\+Capture\+Rates@{Get\+Supported\+Capture\+Rates}!Audio\+IO@{Audio\+IO}}
+\subsubsection[{\texorpdfstring{Get\+Supported\+Capture\+Rates(int dev\+Index=-\/1, double rate=0.\+0)}{GetSupportedCaptureRates(int devIndex=-1, double rate=0.0)}}]{\setlength{\rightskip}{0pt plus 5cm}wx\+Array\+Long Audio\+I\+O\+::\+Get\+Supported\+Capture\+Rates (
+\begin{DoxyParamCaption}
+\item[{{\bf int}}]{dev\+Index = {\ttfamily -\/1}, }
+\item[{double}]{rate = {\ttfamily 0.0}}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [static]}}\hypertarget{class_audio_i_o_a5a038799b288476cf6896129739c0ce5}{}\label{class_audio_i_o_a5a038799b288476cf6896129739c0ce5}
+
+
+Get a list of sample rates the input (recording) device supports. 
+
+If no information about available sample rates can be fetched, an empty list is returned.
+
+You can explicitely give the index of the device. If you don\textquotesingle{}t give it, the currently selected device from the preferences will be used.
+
+You may also specify a rate for which to check in addition to the standard rates. 
+
+Definition at line 2576 of file Audio\+I\+O.\+cpp.
+
+\index{Audio\+IO@{Audio\+IO}!Get\+Supported\+Playback\+Rates@{Get\+Supported\+Playback\+Rates}}
+\index{Get\+Supported\+Playback\+Rates@{Get\+Supported\+Playback\+Rates}!Audio\+IO@{Audio\+IO}}
+\subsubsection[{\texorpdfstring{Get\+Supported\+Playback\+Rates(int Dev\+Index=-\/1, double rate=0.\+0)}{GetSupportedPlaybackRates(int DevIndex=-1, double rate=0.0)}}]{\setlength{\rightskip}{0pt plus 5cm}wx\+Array\+Long Audio\+I\+O\+::\+Get\+Supported\+Playback\+Rates (
+\begin{DoxyParamCaption}
+\item[{{\bf int}}]{Dev\+Index = {\ttfamily -\/1}, }
+\item[{double}]{rate = {\ttfamily 0.0}}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [static]}}\hypertarget{class_audio_i_o_a8d5c6376948069792d356c4d465f65af}{}\label{class_audio_i_o_a8d5c6376948069792d356c4d465f65af}
+
+
+Get a list of sample rates the output (playback) device supports. 
+
+If no information about available sample rates can be fetched, an empty list is returned.
+
+You can explicitely give the index of the device. If you don\textquotesingle{}t give it, the currently selected device from the preferences will be used.
+
+You may also specify a rate for which to check in addition to the standard rates. 
+
+Definition at line 2515 of file Audio\+I\+O.\+cpp.
+
+\index{Audio\+IO@{Audio\+IO}!Get\+Supported\+Sample\+Rates@{Get\+Supported\+Sample\+Rates}}
+\index{Get\+Supported\+Sample\+Rates@{Get\+Supported\+Sample\+Rates}!Audio\+IO@{Audio\+IO}}
+\subsubsection[{\texorpdfstring{Get\+Supported\+Sample\+Rates(int play\+Device=-\/1, int rec\+Device=-\/1, double rate=0.\+0)}{GetSupportedSampleRates(int playDevice=-1, int recDevice=-1, double rate=0.0)}}]{\setlength{\rightskip}{0pt plus 5cm}wx\+Array\+Long Audio\+I\+O\+::\+Get\+Supported\+Sample\+Rates (
+\begin{DoxyParamCaption}
+\item[{{\bf int}}]{play\+Device = {\ttfamily -\/1}, }
+\item[{{\bf int}}]{rec\+Device = {\ttfamily -\/1}, }
+\item[{double}]{rate = {\ttfamily 0.0}}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [static]}}\hypertarget{class_audio_i_o_acb6e16f4da1d263491071ce5b26a9abd}{}\label{class_audio_i_o_acb6e16f4da1d263491071ce5b26a9abd}
+
+
+Get a list of sample rates the current input/output device combination supports. 
+
+Since there is no concept (yet) for different input/output sample rates, this currently returns only sample rates that are supported on both the output and input device. If no information about available sample rates can be fetched, it returns a default list. You can explicitely give the indexes of the play\+Device/rec\+Device. If you don\textquotesingle{}t give them, the selected devices from the preferences will be used. You may also specify a rate for which to check in addition to the standard rates. 
+
+Definition at line 2642 of file Audio\+I\+O.\+cpp.
+
+\index{Audio\+IO@{Audio\+IO}!Handle\+Device\+Change@{Handle\+Device\+Change}}
+\index{Handle\+Device\+Change@{Handle\+Device\+Change}!Audio\+IO@{Audio\+IO}}
+\subsubsection[{\texorpdfstring{Handle\+Device\+Change()}{HandleDeviceChange()}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} Audio\+I\+O\+::\+Handle\+Device\+Change (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{class_audio_i_o_aef42a8e615a55e2b914a989e8b63af0b}{}\label{class_audio_i_o_aef42a8e615a55e2b914a989e8b63af0b}
+
+
+update state after changing what audio devices are selected 
+
+Called when the devices stored in the preferences are changed to update the audio mixer capabilities
+
+\begin{DoxyRefDesc}{Todo}
+\item[\hyperlink{todo__todo000045}{Todo}]\+: Make this do a sample rate query and store the result in the \hyperlink{class_audio_i_o}{Audio\+IO} object to avoid doing it later? Would simplify the Get\+Supported$\ast$\+Rate functions considerably \end{DoxyRefDesc}
+
+
+Definition at line 1100 of file Audio\+I\+O.\+cpp.
+
+\index{Audio\+IO@{Audio\+IO}!Input\+Mixer\+Works@{Input\+Mixer\+Works}}
+\index{Input\+Mixer\+Works@{Input\+Mixer\+Works}!Audio\+IO@{Audio\+IO}}
+\subsubsection[{\texorpdfstring{Input\+Mixer\+Works()}{InputMixerWorks()}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf bool} Audio\+I\+O\+::\+Input\+Mixer\+Works (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{class_audio_i_o_a104cc037e35b66adb8864a35e8376f8e}{}\label{class_audio_i_o_a104cc037e35b66adb8864a35e8376f8e}
+
+
+Find out if the input hardware level control is available. 
+
+Checks the m\+Input\+Mixer\+Works variable, which is set up in \hyperlink{class_audio_i_o_aef42a8e615a55e2b914a989e8b63af0b}{Audio\+I\+O\+::\+Handle\+Device\+Change()}. External people care, because we want to disable the UI if it doesn\textquotesingle{}t work. 
+
+Definition at line 1062 of file Audio\+I\+O.\+cpp.
+
+\index{Audio\+IO@{Audio\+IO}!Is\+Audio\+Token\+Active@{Is\+Audio\+Token\+Active}}
+\index{Is\+Audio\+Token\+Active@{Is\+Audio\+Token\+Active}!Audio\+IO@{Audio\+IO}}
+\subsubsection[{\texorpdfstring{Is\+Audio\+Token\+Active(int token)}{IsAudioTokenActive(int token)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf bool} Audio\+I\+O\+::\+Is\+Audio\+Token\+Active (
+\begin{DoxyParamCaption}
+\item[{{\bf int}}]{token}
+\end{DoxyParamCaption}
+)}\hypertarget{class_audio_i_o_ae38ba2eafdaf5a1579366d788fd669d9}{}\label{class_audio_i_o_ae38ba2eafdaf5a1579366d788fd669d9}
+
+
+Returns true if the stream is active, or even if audio I/O is busy cleaning up its data or writing to disk. 
+
+This is used by \hyperlink{class_track_panel}{Track\+Panel} to determine when a track has been completely recorded, and it\textquotesingle{}s safe to flush to disk. 
+
+Definition at line 2455 of file Audio\+I\+O.\+cpp.
+
+\index{Audio\+IO@{Audio\+IO}!Is\+Available@{Is\+Available}}
+\index{Is\+Available@{Is\+Available}!Audio\+IO@{Audio\+IO}}
+\subsubsection[{\texorpdfstring{Is\+Available(\+Audacity\+Project $\ast$projec\+T)}{IsAvailable(AudacityProject *projecT)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf bool} Audio\+I\+O\+::\+Is\+Available (
+\begin{DoxyParamCaption}
+\item[{{\bf Audacity\+Project} $\ast$}]{projecT}
+\end{DoxyParamCaption}
+)}\hypertarget{class_audio_i_o_a7735a1b6d723e8342d22f9ddcf61d8e6}{}\label{class_audio_i_o_a7735a1b6d723e8342d22f9ddcf61d8e6}
+
+
+\hyperlink{class_function}{Function} to automatically set an acceptable volume. 
+
+
+
+Definition at line 2067 of file Audio\+I\+O.\+cpp.
+
+\index{Audio\+IO@{Audio\+IO}!Is\+Busy@{Is\+Busy}}
+\index{Is\+Busy@{Is\+Busy}!Audio\+IO@{Audio\+IO}}
+\subsubsection[{\texorpdfstring{Is\+Busy()}{IsBusy()}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf bool} Audio\+I\+O\+::\+Is\+Busy (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{class_audio_i_o_a10f4e839ded338c433a4cd46a6ba41b1}{}\label{class_audio_i_o_a10f4e839ded338c433a4cd46a6ba41b1}
+
+
+Returns true if audio i/o is busy starting, stopping, playing, or recording. 
+
+When this is false, it\textquotesingle{}s safe to start playing or recording 
+
+Definition at line 2429 of file Audio\+I\+O.\+cpp.
+
+\index{Audio\+IO@{Audio\+IO}!Is\+Monitoring@{Is\+Monitoring}}
+\index{Is\+Monitoring@{Is\+Monitoring}!Audio\+IO@{Audio\+IO}}
+\subsubsection[{\texorpdfstring{Is\+Monitoring()}{IsMonitoring()}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf bool} Audio\+I\+O\+::\+Is\+Monitoring (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{class_audio_i_o_a81838290ddb586dc13726abf901b8260}{}\label{class_audio_i_o_a81838290ddb586dc13726abf901b8260}
+
+
+Returns true if we\textquotesingle{}re monitoring input (but not recording or playing actual audio) 
+
+
+
+Definition at line 2460 of file Audio\+I\+O.\+cpp.
+
+\index{Audio\+IO@{Audio\+IO}!Is\+Paused@{Is\+Paused}}
+\index{Is\+Paused@{Is\+Paused}!Audio\+IO@{Audio\+IO}}
+\subsubsection[{\texorpdfstring{Is\+Paused()}{IsPaused()}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf bool} Audio\+I\+O\+::\+Is\+Paused (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{class_audio_i_o_aa83356a7bb2153f67f4c82b72ed5185b}{}\label{class_audio_i_o_aa83356a7bb2153f67f4c82b72ed5185b}
+
+
+Find out if playback / recording is currently paused. 
+
+
+
+Definition at line 2406 of file Audio\+I\+O.\+cpp.
+
+\index{Audio\+IO@{Audio\+IO}!Is\+Scrubbing@{Is\+Scrubbing}}
+\index{Is\+Scrubbing@{Is\+Scrubbing}!Audio\+IO@{Audio\+IO}}
+\subsubsection[{\texorpdfstring{Is\+Scrubbing()}{IsScrubbing()}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf bool} Audio\+I\+O\+::\+Is\+Scrubbing (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{class_audio_i_o_ada30edb1aa1b556aebb4ba0b9bbc697e}{}\label{class_audio_i_o_ada30edb1aa1b556aebb4ba0b9bbc697e}
+
+
+Definition at line 174 of file Audio\+I\+O.\+h.
+
+\index{Audio\+IO@{Audio\+IO}!Is\+Stream\+Active@{Is\+Stream\+Active}}
+\index{Is\+Stream\+Active@{Is\+Stream\+Active}!Audio\+IO@{Audio\+IO}}
+\subsubsection[{\texorpdfstring{Is\+Stream\+Active()}{IsStreamActive()}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf bool} Audio\+I\+O\+::\+Is\+Stream\+Active (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{class_audio_i_o_a07490d6ae881910c5ea13cdf011835f3}{}\label{class_audio_i_o_a07490d6ae881910c5ea13cdf011835f3}
+
+
+Returns true if the audio i/o is running at all, but not during cleanup. 
+
+Doesn\textquotesingle{}t return true if the device has been closed but some disk i/o or cleanup is still going on. If you want to know if it\textquotesingle{}s safe to start a N\+EW stream, use \hyperlink{class_audio_i_o_a10f4e839ded338c433a4cd46a6ba41b1}{Is\+Busy()} 
+
+Definition at line 2437 of file Audio\+I\+O.\+cpp.
+
+\index{Audio\+IO@{Audio\+IO}!Is\+Stream\+Active@{Is\+Stream\+Active}}
+\index{Is\+Stream\+Active@{Is\+Stream\+Active}!Audio\+IO@{Audio\+IO}}
+\subsubsection[{\texorpdfstring{Is\+Stream\+Active(int token)}{IsStreamActive(int token)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf bool} Audio\+I\+O\+::\+Is\+Stream\+Active (
+\begin{DoxyParamCaption}
+\item[{{\bf int}}]{token}
+\end{DoxyParamCaption}
+)}\hypertarget{class_audio_i_o_aab4123922c22aac622db1512d01c6c18}{}\label{class_audio_i_o_aab4123922c22aac622db1512d01c6c18}
+
+
+Definition at line 2450 of file Audio\+I\+O.\+cpp.
+
+\index{Audio\+IO@{Audio\+IO}!Output\+Mixer\+Emulated@{Output\+Mixer\+Emulated}}
+\index{Output\+Mixer\+Emulated@{Output\+Mixer\+Emulated}!Audio\+IO@{Audio\+IO}}
+\subsubsection[{\texorpdfstring{Output\+Mixer\+Emulated()}{OutputMixerEmulated()}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf bool} Audio\+I\+O\+::\+Output\+Mixer\+Emulated (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{class_audio_i_o_abc4c1f9f7609603270df993ee8af1af2}{}\label{class_audio_i_o_abc4c1f9f7609603270df993ee8af1af2}
+
+
+Find out if the output level control is being emulated via software attenuation. 
+
+Checks the m\+Emulate\+Mixer\+Output\+Vol variable, which is set up in \hyperlink{class_audio_i_o_aef42a8e615a55e2b914a989e8b63af0b}{Audio\+I\+O\+::\+Handle\+Device\+Change()}. External classes care, because we want to modify the UI if it doesn\textquotesingle{}t work. 
+
+Definition at line 1067 of file Audio\+I\+O.\+cpp.
+
+\index{Audio\+IO@{Audio\+IO}!Seek\+Stream@{Seek\+Stream}}
+\index{Seek\+Stream@{Seek\+Stream}!Audio\+IO@{Audio\+IO}}
+\subsubsection[{\texorpdfstring{Seek\+Stream(double seconds)}{SeekStream(double seconds)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} Audio\+I\+O\+::\+Seek\+Stream (
+\begin{DoxyParamCaption}
+\item[{double}]{seconds}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{class_audio_i_o_a40488ff8506e6238963049844728a6c6}{}\label{class_audio_i_o_a40488ff8506e6238963049844728a6c6}
+
+
+Move the playback / recording position of the current stream by the specified amount from where it is now. 
+
+
+
+Definition at line 171 of file Audio\+I\+O.\+h.
+
+\index{Audio\+IO@{Audio\+IO}!Set\+Capture\+Meter@{Set\+Capture\+Meter}}
+\index{Set\+Capture\+Meter@{Set\+Capture\+Meter}!Audio\+IO@{Audio\+IO}}
+\subsubsection[{\texorpdfstring{Set\+Capture\+Meter(\+Audacity\+Project $\ast$project, Meter $\ast$meter)}{SetCaptureMeter(AudacityProject *project, Meter *meter)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} Audio\+I\+O\+::\+Set\+Capture\+Meter (
+\begin{DoxyParamCaption}
+\item[{{\bf Audacity\+Project} $\ast$}]{project, }
+\item[{{\bf Meter} $\ast$}]{meter}
+\end{DoxyParamCaption}
+)}\hypertarget{class_audio_i_o_a0ef8578b176133229c30a656fe41478e}{}\label{class_audio_i_o_a0ef8578b176133229c30a656fe41478e}
+
+
+Definition at line 2072 of file Audio\+I\+O.\+cpp.
+
+\index{Audio\+IO@{Audio\+IO}!Set\+Listener@{Set\+Listener}}
+\index{Set\+Listener@{Set\+Listener}!Audio\+IO@{Audio\+IO}}
+\subsubsection[{\texorpdfstring{Set\+Listener(\+Audio\+I\+O\+Listener $\ast$listener)}{SetListener(AudioIOListener *listener)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} Audio\+I\+O\+::\+Set\+Listener (
+\begin{DoxyParamCaption}
+\item[{{\bf Audio\+I\+O\+Listener} $\ast$}]{listener}
+\end{DoxyParamCaption}
+)}\hypertarget{class_audio_i_o_a8d9df4aba253fa43612ac02bafa994fd}{}\label{class_audio_i_o_a8d9df4aba253fa43612ac02bafa994fd}
+
+
+Definition at line 3491 of file Audio\+I\+O.\+cpp.
+
+\index{Audio\+IO@{Audio\+IO}!Set\+Mixer@{Set\+Mixer}}
+\index{Set\+Mixer@{Set\+Mixer}!Audio\+IO@{Audio\+IO}}
+\subsubsection[{\texorpdfstring{Set\+Mixer(int input\+Source)}{SetMixer(int inputSource)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} Audio\+I\+O\+::\+Set\+Mixer (
+\begin{DoxyParamCaption}
+\item[{{\bf int}}]{input\+Source}
+\end{DoxyParamCaption}
+)}\hypertarget{class_audio_i_o_ab90a44dee504b8748bf321416a25067b}{}\label{class_audio_i_o_ab90a44dee504b8748bf321416a25067b}
+
+
+Definition at line 999 of file Audio\+I\+O.\+cpp.
+
+\index{Audio\+IO@{Audio\+IO}!Set\+Mixer@{Set\+Mixer}}
+\index{Set\+Mixer@{Set\+Mixer}!Audio\+IO@{Audio\+IO}}
+\subsubsection[{\texorpdfstring{Set\+Mixer(int input\+Source, float input\+Volume, float playback\+Volume)}{SetMixer(int inputSource, float inputVolume, float playbackVolume)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} Audio\+I\+O\+::\+Set\+Mixer (
+\begin{DoxyParamCaption}
+\item[{{\bf int}}]{input\+Source, }
+\item[{float}]{input\+Volume, }
+\item[{float}]{playback\+Volume}
+\end{DoxyParamCaption}
+)}\hypertarget{class_audio_i_o_a6e08d80f05a4106be20dfaa96723c957}{}\label{class_audio_i_o_a6e08d80f05a4106be20dfaa96723c957}
+
+
+Definition at line 1007 of file Audio\+I\+O.\+cpp.
+
+\index{Audio\+IO@{Audio\+IO}!Set\+Paused@{Set\+Paused}}
+\index{Set\+Paused@{Set\+Paused}!Audio\+IO@{Audio\+IO}}
+\subsubsection[{\texorpdfstring{Set\+Paused(bool state)}{SetPaused(bool state)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} Audio\+I\+O\+::\+Set\+Paused (
+\begin{DoxyParamCaption}
+\item[{{\bf bool}}]{state}
+\end{DoxyParamCaption}
+)}\hypertarget{class_audio_i_o_a49f8574c7ce8410e3ab254fe95c44388}{}\label{class_audio_i_o_a49f8574c7ce8410e3ab254fe95c44388}
+
+
+Pause and un-\/pause playback and recording. 
+
+
+
+Definition at line 2389 of file Audio\+I\+O.\+cpp.
+
+\index{Audio\+IO@{Audio\+IO}!Set\+Playback\+Meter@{Set\+Playback\+Meter}}
+\index{Set\+Playback\+Meter@{Set\+Playback\+Meter}!Audio\+IO@{Audio\+IO}}
+\subsubsection[{\texorpdfstring{Set\+Playback\+Meter(\+Audacity\+Project $\ast$project, Meter $\ast$meter)}{SetPlaybackMeter(AudacityProject *project, Meter *meter)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} Audio\+I\+O\+::\+Set\+Playback\+Meter (
+\begin{DoxyParamCaption}
+\item[{{\bf Audacity\+Project} $\ast$}]{project, }
+\item[{{\bf Meter} $\ast$}]{meter}
+\end{DoxyParamCaption}
+)}\hypertarget{class_audio_i_o_a615aec62315405636bfe8b6e2a326cbe}{}\label{class_audio_i_o_a615aec62315405636bfe8b6e2a326cbe}
+
+
+Definition at line 2084 of file Audio\+I\+O.\+cpp.
+
+\index{Audio\+IO@{Audio\+IO}!Start\+Monitoring@{Start\+Monitoring}}
+\index{Start\+Monitoring@{Start\+Monitoring}!Audio\+IO@{Audio\+IO}}
+\subsubsection[{\texorpdfstring{Start\+Monitoring(double sample\+Rate)}{StartMonitoring(double sampleRate)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} Audio\+I\+O\+::\+Start\+Monitoring (
+\begin{DoxyParamCaption}
+\item[{double}]{sample\+Rate}
+\end{DoxyParamCaption}
+)}\hypertarget{class_audio_i_o_a447c4b556a0f66a61ead1c97ed4ae7e7}{}\label{class_audio_i_o_a447c4b556a0f66a61ead1c97ed4ae7e7}
+
+
+Start up Portaudio for capture and recording as needed for input monitoring and software playthrough only. 
+
+This uses the Default project sample format, current sample rate, and selected number of input channels to open the recording device and start reading input data. If software playthrough is enabled, it also opens the output device in stereo to play the data through 
+
+Definition at line 1459 of file Audio\+I\+O.\+cpp.
+
+\index{Audio\+IO@{Audio\+IO}!Start\+Stream@{Start\+Stream}}
+\index{Start\+Stream@{Start\+Stream}!Audio\+IO@{Audio\+IO}}
+\subsubsection[{\texorpdfstring{Start\+Stream(\+Wave\+Track\+Array playback\+Tracks, Wave\+Track\+Array capture\+Tracks, double sample\+Rate, double t0, double t1, const Audio\+I\+O\+Start\+Stream\+Options \&options=\+Audio\+I\+O\+Start\+Stream\+Options())}{StartStream(WaveTrackArray playbackTracks, WaveTrackArray captureTracks, double sampleRate, double t0, double t1, const AudioIOStartStreamOptions &options=AudioIOStartStreamOptions())}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf int} Audio\+I\+O\+::\+Start\+Stream (
+\begin{DoxyParamCaption}
+\item[{{\bf Wave\+Track\+Array}}]{playback\+Tracks, }
+\item[{{\bf Wave\+Track\+Array}}]{capture\+Tracks, }
+\item[{double}]{sample\+Rate, }
+\item[{double}]{t0, }
+\item[{double}]{t1, }
+\item[{{\bf const} {\bf Audio\+I\+O\+Start\+Stream\+Options} \&}]{options = {\ttfamily {\bf Audio\+I\+O\+Start\+Stream\+Options}()}}
+\end{DoxyParamCaption}
+)}\hypertarget{class_audio_i_o_ac2be97e813dfdedb3504b20f8b61cdd7}{}\label{class_audio_i_o_ac2be97e813dfdedb3504b20f8b61cdd7}
+
+
+Start recording or playing back audio. 
+
+Allocates buffers for recording and playback, gets the Audio thread to fill them, and sets the stream rolling. If successful, returns a token identifying this particular stream instance. For use with \hyperlink{class_audio_i_o_a07490d6ae881910c5ea13cdf011835f3}{Is\+Stream\+Active()} below 
+
+Definition at line 1490 of file Audio\+I\+O.\+cpp.
+
+\index{Audio\+IO@{Audio\+IO}!Stop\+Stream@{Stop\+Stream}}
+\index{Stop\+Stream@{Stop\+Stream}!Audio\+IO@{Audio\+IO}}
+\subsubsection[{\texorpdfstring{Stop\+Stream()}{StopStream()}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} Audio\+I\+O\+::\+Stop\+Stream (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{class_audio_i_o_a018ef510a8616f1feeb0f542f82b1d44}{}\label{class_audio_i_o_a018ef510a8616f1feeb0f542f82b1d44}
+
+
+Stop recording, playback or input monitoring. 
+
+Does quite a bit of housekeeping, including switching off monitoring, flushing recording buffers out to wave tracks, and applies latency correction to recorded tracks if necessary 
+
+Definition at line 2111 of file Audio\+I\+O.\+cpp.
+
+\index{Audio\+IO@{Audio\+IO}!Validate\+Device\+Names@{Validate\+Device\+Names}}
+\index{Validate\+Device\+Names@{Validate\+Device\+Names}!Audio\+IO@{Audio\+IO}}
+\subsubsection[{\texorpdfstring{Validate\+Device\+Names(const wx\+String \&play, const wx\+String \&rec)}{ValidateDeviceNames(const wxString &play, const wxString &rec)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf bool} Audio\+I\+O\+::\+Validate\+Device\+Names (
+\begin{DoxyParamCaption}
+\item[{{\bf const} wx\+String \&}]{play, }
+\item[{{\bf const} wx\+String \&}]{rec}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [static]}}\hypertarget{class_audio_i_o_acfaf9b48ca72d2d34ebfb8873e0ae7dd}{}\label{class_audio_i_o_acfaf9b48ca72d2d34ebfb8873e0ae7dd}
+
+
+Ensure selected device names are valid. 
+
+
+
+Definition at line 844 of file Audio\+I\+O.\+cpp.
+
+
+
+\subsection{Friends And Related Function Documentation}
+\index{Audio\+IO@{Audio\+IO}!audacity\+Audio\+Callback@{audacity\+Audio\+Callback}}
+\index{audacity\+Audio\+Callback@{audacity\+Audio\+Callback}!Audio\+IO@{Audio\+IO}}
+\subsubsection[{\texorpdfstring{audacity\+Audio\+Callback}{audacityAudioCallback}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf int} audacity\+Audio\+Callback (
+\begin{DoxyParamCaption}
+\item[{{\bf const} {\bf void} $\ast$}]{input\+Buffer, }
+\item[{{\bf void} $\ast$}]{output\+Buffer, }
+\item[{unsigned long}]{frames\+Per\+Buffer, }
+\item[{{\bf const} {\bf Pa\+Stream\+Callback\+Time\+Info} $\ast$}]{time\+Info, }
+\item[{{\bf Pa\+Stream\+Callback\+Flags}}]{status\+Flags, }
+\item[{{\bf void} $\ast$}]{user\+Data}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [friend]}}\hypertarget{class_audio_i_o_a0d694f00df707ad21d421a1b29ad46ea}{}\label{class_audio_i_o_a0d694f00df707ad21d421a1b29ad46ea}
+brief The function which is called from Port\+Audio\textquotesingle{}s callback thread context to collect and deliver audio for / from the sound device.
+
+This covers recording, playback, and doing both simultaneously. It is also invoked to do monitoring and software playthrough. Note that dealing with the two buffers needs some care to ensure that the right things happen for all possible cases. 
+\begin{DoxyParams}{Parameters}
+{\em input\+Buffer} & Buffer of length frames\+Per\+Buffer containing samples from the sound card, or null if not capturing audio. Note that the data type will depend on the format of audio data that was chosen when the stream was created (so could be floats or various integers) \\
+\hline
+{\em output\+Buffer} & Uninitialised buffer of length frames\+Per\+Buffer which will be sent to the sound card after the callback, or null if not playing audio back. \\
+\hline
+{\em frames\+Per\+Buffer} & The length of the playback and recording buffers \\
+\hline
+{\em \hyperlink{struct_pa_stream_callback_time_info}{Pa\+Stream\+Callback\+Time\+Info}} & Pointer to Port\+Audio time information structure, which tells us how long we have been playing / recording \\
+\hline
+{\em status\+Flags} & Port\+Audio stream status flags \\
+\hline
+{\em user\+Data} & pointer to user-\/defined data structure. Provided for flexibility by Port\+Audio, but not used by Audacity -\/ the data is stored in the \hyperlink{class_audio_i_o}{Audio\+IO} class instead. \\
+\hline
+\end{DoxyParams}
+\index{Audio\+IO@{Audio\+IO}!Audio\+Thread@{Audio\+Thread}}
+\index{Audio\+Thread@{Audio\+Thread}!Audio\+IO@{Audio\+IO}}
+\subsubsection[{\texorpdfstring{Audio\+Thread}{AudioThread}}]{\setlength{\rightskip}{0pt plus 5cm}friend class {\bf Audio\+Thread}\hspace{0.3cm}{\ttfamily [friend]}}\hypertarget{class_audio_i_o_a894b7c943c91bb34f845aeb117786dff}{}\label{class_audio_i_o_a894b7c943c91bb34f845aeb117786dff}
+
+
+Definition at line 655 of file Audio\+I\+O.\+h.
+
+\index{Audio\+IO@{Audio\+IO}!Deinit\+Audio\+IO@{Deinit\+Audio\+IO}}
+\index{Deinit\+Audio\+IO@{Deinit\+Audio\+IO}!Audio\+IO@{Audio\+IO}}
+\subsubsection[{\texorpdfstring{Deinit\+Audio\+IO}{DeinitAudioIO}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} Deinit\+Audio\+IO (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [friend]}}\hypertarget{class_audio_i_o_a362633315924afe19ab0fe0cf4bd32da}{}\label{class_audio_i_o_a362633315924afe19ab0fe0cf4bd32da}
+
+
+Definition at line 825 of file Audio\+I\+O.\+cpp.
+
+\index{Audio\+IO@{Audio\+IO}!Init\+Audio\+IO@{Init\+Audio\+IO}}
+\index{Init\+Audio\+IO@{Init\+Audio\+IO}!Audio\+IO@{Audio\+IO}}
+\subsubsection[{\texorpdfstring{Init\+Audio\+IO}{InitAudioIO}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} Init\+Audio\+IO (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [friend]}}\hypertarget{class_audio_i_o_a5c082d9ef3612f42a4a78edffdf2a0db}{}\label{class_audio_i_o_a5c082d9ef3612f42a4a78edffdf2a0db}
+
+
+Definition at line 795 of file Audio\+I\+O.\+cpp.
+
+
+
+\subsection{Member Data Documentation}
+\index{Audio\+IO@{Audio\+IO}!Num\+Standard\+Rates@{Num\+Standard\+Rates}}
+\index{Num\+Standard\+Rates@{Num\+Standard\+Rates}!Audio\+IO@{Audio\+IO}}
+\subsubsection[{\texorpdfstring{Num\+Standard\+Rates}{NumStandardRates}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf const} {\bf int} Audio\+I\+O\+::\+Num\+Standard\+Rates\hspace{0.3cm}{\ttfamily [static]}}\hypertarget{class_audio_i_o_a4d794f0244d6be2f833a6627cbfcdae8}{}\label{class_audio_i_o_a4d794f0244d6be2f833a6627cbfcdae8}
+{\bfseries Initial value\+:}
+\begin{DoxyCode}
+= \textcolor{keyword}{sizeof}(\hyperlink{class_audio_i_o_a42f4cf4090548388aa1c762bb59778ba}{AudioIO::StandardRates}) /
+                                      \textcolor{keyword}{sizeof}(\hyperlink{class_audio_i_o_a42f4cf4090548388aa1c762bb59778ba}{AudioIO::StandardRates}[0])
+\end{DoxyCode}
+
+
+How many standard sample rates there are. 
+
+
+
+Definition at line 381 of file Audio\+I\+O.\+h.
+
+\index{Audio\+IO@{Audio\+IO}!Standard\+Rates@{Standard\+Rates}}
+\index{Standard\+Rates@{Standard\+Rates}!Audio\+IO@{Audio\+IO}}
+\subsubsection[{\texorpdfstring{Standard\+Rates}{StandardRates}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf const} {\bf int} Audio\+I\+O\+::\+Standard\+Rates\hspace{0.3cm}{\ttfamily [static]}}\hypertarget{class_audio_i_o_a42f4cf4090548388aa1c762bb59778ba}{}\label{class_audio_i_o_a42f4cf4090548388aa1c762bb59778ba}
+{\bfseries Initial value\+:}
+\begin{DoxyCode}
+= \{
+   8000,
+   11025,
+   16000,
+   22050,
+   32000,
+   44100,
+   48000,
+   88200,
+   96000,
+   176400,
+   192000,
+   352800,
+   384000
+\}
+\end{DoxyCode}
+
+
+Array of common audio sample rates. 
+
+These are the rates we will always support, regardless of hardware support for them (by resampling in audacity if needed) 
+
+Definition at line 379 of file Audio\+I\+O.\+h.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/src/\hyperlink{_audio_i_o_8h}{Audio\+I\+O.\+h}\item 
+C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/src/\hyperlink{_audio_i_o_8cpp}{Audio\+I\+O.\+cpp}\end{DoxyCompactItemize}

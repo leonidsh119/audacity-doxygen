@@ -1,0 +1,550 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/lib-src/libnyquist/nyquist/xlisp/xlcont.c" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/lib-src/libnyquist/nyquist/xlisp/xlcont.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include 'xlisp\&.h'\fP
+.br
+
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBLIST\fP   \-1"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBFORWARD\fP \fBLOCAL\fP \fBLVAL\fP \fBbquote1\fP (\fBLVAL\fP expr)"
+.br
+.ti -1c
+.RI "\fBFORWARD\fP \fBLOCAL\fP \fBvoid\fP \fBplaceform\fP (\fBLVAL\fP place, \fBLVAL\fP \fBvalue\fP)"
+.br
+.ti -1c
+.RI "\fBFORWARD\fP \fBLOCAL\fP \fBLVAL\fP \fBlet\fP (\fBint\fP pflag)"
+.br
+.ti -1c
+.RI "\fBFORWARD\fP \fBLOCAL\fP \fBLVAL\fP \fBflet\fP (\fBLVAL\fP type, \fBint\fP letflag)"
+.br
+.ti -1c
+.RI "\fBFORWARD\fP \fBLOCAL\fP \fBLVAL\fP \fBprog\fP (\fBint\fP pflag)"
+.br
+.ti -1c
+.RI "\fBFORWARD\fP \fBLOCAL\fP \fBLVAL\fP \fBprogx\fP (\fBint\fP n)"
+.br
+.ti -1c
+.RI "\fBFORWARD\fP \fBLOCAL\fP \fBLVAL\fP \fBdoloop\fP (\fBint\fP pflag)"
+.br
+.ti -1c
+.RI "\fBFORWARD\fP \fBLOCAL\fP \fBLVAL\fP \fBevarg\fP (\fBLVAL\fP *pargs)"
+.br
+.ti -1c
+.RI "\fBFORWARD\fP \fBLOCAL\fP \fBLVAL\fP \fBmatch\fP (\fBint\fP type, \fBLVAL\fP *pargs)"
+.br
+.ti -1c
+.RI "\fBFORWARD\fP \fBLOCAL\fP \fBLVAL\fP \fBevmatch\fP (\fBint\fP type, \fBLVAL\fP *pargs)"
+.br
+.ti -1c
+.RI "\fBFORWARD\fP \fBLOCAL\fP \fBvoid\fP \fBtoofew\fP (\fBLVAL\fP args)"
+.br
+.ti -1c
+.RI "\fBFORWARD\fP \fBLOCAL\fP \fBvoid\fP \fBtoomany\fP (\fBLVAL\fP args)"
+.br
+.ti -1c
+.RI "\fBFORWARD\fP \fBLOCAL\fP \fBvoid\fP \fBsetffunction\fP (\fBLVAL\fP fun, \fBLVAL\fP place, \fBLVAL\fP \fBvalue\fP)"
+.br
+.ti -1c
+.RI "\fBFORWARD\fP \fBLOCAL\fP \fBint\fP \fBkeypresent\fP (\fBLVAL\fP key, \fBLVAL\fP list)"
+.br
+.ti -1c
+.RI "\fBFORWARD\fP \fBLOCAL\fP \fBvoid\fP \fBdobindings\fP (\fBLVAL\fP list, \fBLVAL\fP env)"
+.br
+.ti -1c
+.RI "\fBFORWARD\fP \fBLOCAL\fP \fBvoid\fP \fBtagbody\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBFORWARD\fP \fBLOCAL\fP \fBvoid\fP \fBdoupdates\fP (\fBLVAL\fP list, \fBint\fP pflag)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxquote\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxfunction\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxbquote\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlambda\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxgetlambda\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxsetq\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxpsetq\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxsetf\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxdefun\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxdefmacro\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxcond\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxwhen\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxunless\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxcase\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxand\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBx_or\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxif\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlet\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxletstar\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxflet\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlabels\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxmacrolet\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxprog\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxprogstar\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxgo\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxreturn\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxrtnfrom\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxprog1\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxprog2\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxprogn\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxprogv\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxloop\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxdo\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxdostar\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxdolist\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxdotimes\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxblock\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxtagbody\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxcatch\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxthrow\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxunwindprotect\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxerrset\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxtrace\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxuntrace\fP (\fBvoid\fP)"
+.br
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "\fBLVAL\fP \fBxlvalue\fP"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBs_setf\fP"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBs_car\fP"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBs_cdr\fP"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBs_nth\fP"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBs_aref\fP"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBs_get\fP"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBs_svalue\fP"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBs_sfunction\fP"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBs_splist\fP"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBs_lambda\fP"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBs_macro\fP"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define LIST   \-1"
+
+.PP
+Definition at line 41 of file xlcont\&.c\&.
+.SH "Function Documentation"
+.PP 
+.SS "\fBLOCAL\fP \fBLVAL\fP bquote1 (\fBLVAL\fP expr)"
+
+.PP
+Definition at line 91 of file xlcont\&.c\&.
+.SS "\fBLOCAL\fP \fBvoid\fP dobindings (\fBLVAL\fP list, \fBLVAL\fP env)"
+
+.PP
+Definition at line 1221 of file xlcont\&.c\&.
+.SS "\fBLOCAL\fP \fBLVAL\fP doloop (\fBint\fP pflag)"
+
+.PP
+Definition at line 858 of file xlcont\&.c\&.
+.SS "\fBLOCAL\fP \fBvoid\fP doupdates (\fBLVAL\fP list, \fBint\fP pflag)"
+
+.PP
+Definition at line 1258 of file xlcont\&.c\&.
+.SS "\fBLOCAL\fP \fBLVAL\fP evarg (\fBLVAL\fP * pargs)"
+
+.PP
+Definition at line 1352 of file xlcont\&.c\&.
+.SS "\fBLOCAL\fP \fBLVAL\fP evmatch (\fBint\fP type, \fBLVAL\fP * pargs)"
+
+.PP
+Definition at line 1380 of file xlcont\&.c\&.
+.SS "\fBLOCAL\fP \fBLVAL\fP flet (\fBLVAL\fP type, \fBint\fP letflag)"
+
+.PP
+Definition at line 595 of file xlcont\&.c\&.
+.SS "\fBLOCAL\fP \fBint\fP keypresent (\fBLVAL\fP key, \fBLVAL\fP list)"
+
+.PP
+Definition at line 478 of file xlcont\&.c\&.
+.SS "\fBLOCAL\fP \fBLVAL\fP let (\fBint\fP pflag)"
+
+.PP
+Definition at line 543 of file xlcont\&.c\&.
+.SS "\fBLOCAL\fP \fBLVAL\fP match (\fBint\fP type, \fBLVAL\fP * pargs)"
+
+.PP
+Definition at line 1323 of file xlcont\&.c\&.
+.SS "\fBLOCAL\fP \fBvoid\fP placeform (\fBLVAL\fP place, \fBLVAL\fP value)"
+
+.PP
+Definition at line 247 of file xlcont\&.c\&.
+.SS "\fBLOCAL\fP \fBLVAL\fP prog (\fBint\fP pflag)"
+
+.PP
+Definition at line 641 of file xlcont\&.c\&.
+.SS "\fBLOCAL\fP \fBLVAL\fP progx (\fBint\fP n)"
+
+.PP
+Definition at line 742 of file xlcont\&.c\&.
+.SS "\fBLOCAL\fP \fBvoid\fP setffunction (\fBLVAL\fP fun, \fBLVAL\fP place, \fBLVAL\fP value)"
+
+.PP
+Definition at line 316 of file xlcont\&.c\&.
+.SS "\fBLOCAL\fP \fBvoid\fP tagbody (\fBvoid\fP)"
+
+.PP
+Definition at line 1296 of file xlcont\&.c\&.
+.SS "\fBLOCAL\fP \fBvoid\fP toofew (\fBLVAL\fP args)"
+
+.PP
+Definition at line 1418 of file xlcont\&.c\&.
+.SS "\fBLOCAL\fP \fBvoid\fP toomany (\fBLVAL\fP args)"
+
+.PP
+Definition at line 1424 of file xlcont\&.c\&.
+.SS "\fBLVAL\fP x_or (\fBvoid\fP)"
+
+.PP
+Definition at line 502 of file xlcont\&.c\&.
+.SS "\fBLVAL\fP xand (\fBvoid\fP)"
+
+.PP
+Definition at line 487 of file xlcont\&.c\&.
+.SS "\fBLVAL\fP xblock (\fBvoid\fP)"
+
+.PP
+Definition at line 1022 of file xlcont\&.c\&.
+.SS "\fBLVAL\fP xbquote (\fBvoid\fP)"
+
+.PP
+Definition at line 78 of file xlcont\&.c\&.
+.SS "\fBLVAL\fP xcase (\fBvoid\fP)"
+
+.PP
+Definition at line 434 of file xlcont\&.c\&.
+.SS "\fBLVAL\fP xcatch (\fBvoid\fP)"
+
+.PP
+Definition at line 1053 of file xlcont\&.c\&.
+.SS "\fBLVAL\fP xcond (\fBvoid\fP)"
+
+.PP
+Definition at line 379 of file xlcont\&.c\&.
+.SS "\fBLVAL\fP xdefmacro (\fBvoid\fP)"
+
+.PP
+Definition at line 360 of file xlcont\&.c\&.
+.SS "\fBLVAL\fP xdefun (\fBvoid\fP)"
+
+.PP
+Definition at line 341 of file xlcont\&.c\&.
+.SS "\fBLVAL\fP xdo (\fBvoid\fP)"
+
+.PP
+Definition at line 846 of file xlcont\&.c\&.
+.SS "\fBLVAL\fP xdolist (\fBvoid\fP)"
+
+.PP
+Definition at line 917 of file xlcont\&.c\&.
+.SS "\fBLVAL\fP xdostar (\fBvoid\fP)"
+
+.PP
+Definition at line 852 of file xlcont\&.c\&.
+.SS "\fBLVAL\fP xdotimes (\fBvoid\fP)"
+
+.PP
+Definition at line 972 of file xlcont\&.c\&.
+.SS "\fBLVAL\fP xerrset (\fBvoid\fP)"
+
+.PP
+Definition at line 1144 of file xlcont\&.c\&.
+.SS "\fBLVAL\fP xflet (\fBvoid\fP)"
+
+.PP
+Definition at line 577 of file xlcont\&.c\&.
+.SS "\fBLVAL\fP xfunction (\fBvoid\fP)"
+
+.PP
+Definition at line 53 of file xlcont\&.c\&.
+.SS "\fBLVAL\fP xgetlambda (\fBvoid\fP)"
+
+.PP
+Definition at line 161 of file xlcont\&.c\&.
+.SS "\fBLVAL\fP xgo (\fBvoid\fP)"
+
+.PP
+Definition at line 687 of file xlcont\&.c\&.
+.SS "\fBLVAL\fP xif (\fBvoid\fP)"
+
+.PP
+Definition at line 516 of file xlcont\&.c\&.
+.SS "\fBLVAL\fP xlabels (\fBvoid\fP)"
+
+.PP
+Definition at line 583 of file xlcont\&.c\&.
+.SS "\fBLVAL\fP xlambda (\fBvoid\fP)"
+
+.PP
+Definition at line 143 of file xlcont\&.c\&.
+.SS "\fBLVAL\fP xlet (\fBvoid\fP)"
+
+.PP
+Definition at line 531 of file xlcont\&.c\&.
+.SS "\fBLVAL\fP xletstar (\fBvoid\fP)"
+
+.PP
+Definition at line 537 of file xlcont\&.c\&.
+.SS "\fBLVAL\fP xloop (\fBvoid\fP)"
+
+.PP
+Definition at line 816 of file xlcont\&.c\&.
+.SS "\fBLVAL\fP xmacrolet (\fBvoid\fP)"
+
+.PP
+Definition at line 589 of file xlcont\&.c\&.
+.SS "\fBLVAL\fP xprog (\fBvoid\fP)"
+
+.PP
+Definition at line 629 of file xlcont\&.c\&.
+.SS "\fBLVAL\fP xprog1 (\fBvoid\fP)"
+
+.PP
+Definition at line 730 of file xlcont\&.c\&.
+.SS "\fBLVAL\fP xprog2 (\fBvoid\fP)"
+
+.PP
+Definition at line 736 of file xlcont\&.c\&.
+.SS "\fBLVAL\fP xprogn (\fBvoid\fP)"
+
+.PP
+Definition at line 765 of file xlcont\&.c\&.
+.SS "\fBLVAL\fP xprogstar (\fBvoid\fP)"
+
+.PP
+Definition at line 635 of file xlcont\&.c\&.
+.SS "\fBLVAL\fP xprogv (\fBvoid\fP)"
+
+.PP
+Definition at line 778 of file xlcont\&.c\&.
+.SS "\fBLVAL\fP xpsetq (\fBvoid\fP)"
+
+.PP
+Definition at line 186 of file xlcont\&.c\&.
+.SS "\fBLVAL\fP xquote (\fBvoid\fP)"
+
+.PP
+Definition at line 44 of file xlcont\&.c\&.
+.SS "\fBLVAL\fP xreturn (\fBvoid\fP)"
+
+.PP
+Definition at line 701 of file xlcont\&.c\&.
+.SS "\fBLVAL\fP xrtnfrom (\fBvoid\fP)"
+
+.PP
+Definition at line 715 of file xlcont\&.c\&.
+.SS "\fBLVAL\fP xsetf (\fBvoid\fP)"
+
+.PP
+Definition at line 212 of file xlcont\&.c\&.
+.SS "\fBLVAL\fP xsetq (\fBvoid\fP)"
+
+.PP
+Definition at line 170 of file xlcont\&.c\&.
+.SS "\fBLVAL\fP xtagbody (\fBvoid\fP)"
+
+.PP
+Definition at line 1046 of file xlcont\&.c\&.
+.SS "\fBLVAL\fP xthrow (\fBvoid\fP)"
+
+.PP
+Definition at line 1086 of file xlcont\&.c\&.
+.SS "\fBLVAL\fP xtrace (\fBvoid\fP)"
+
+.PP
+Definition at line 1173 of file xlcont\&.c\&.
+.SS "\fBLVAL\fP xunless (\fBvoid\fP)"
+
+.PP
+Definition at line 420 of file xlcont\&.c\&.
+.SS "\fBLVAL\fP xuntrace (\fBvoid\fP)"
+
+.PP
+Definition at line 1195 of file xlcont\&.c\&.
+.SS "\fBLVAL\fP xunwindprotect (\fBvoid\fP)"
+
+.PP
+Definition at line 1101 of file xlcont\&.c\&.
+.SS "\fBLVAL\fP xwhen (\fBvoid\fP)"
+
+.PP
+Definition at line 406 of file xlcont\&.c\&.
+.SH "Variable Documentation"
+.PP 
+.SS "\fBLVAL\fP s_aref"
+
+.PP
+Definition at line 31 of file xlglob\&.c\&.
+.SS "\fBLVAL\fP s_car"
+
+.PP
+Definition at line 31 of file xlglob\&.c\&.
+.SS "\fBLVAL\fP s_cdr"
+
+.PP
+Definition at line 31 of file xlglob\&.c\&.
+.SS "\fBLVAL\fP s_get"
+
+.PP
+Definition at line 31 of file xlglob\&.c\&.
+.SS "\fBLVAL\fP s_lambda"
+
+.PP
+Definition at line 25 of file xlglob\&.c\&.
+.SS "\fBLVAL\fP s_macro"
+
+.PP
+Definition at line 25 of file xlglob\&.c\&.
+.SS "\fBLVAL\fP s_nth"
+
+.PP
+Definition at line 31 of file xlglob\&.c\&.
+.SS "\fBLVAL\fP s_setf"
+
+.PP
+Definition at line 31 of file xlglob\&.c\&.
+.SS "\fBLVAL\fP s_sfunction"
+
+.PP
+Definition at line 32 of file xlglob\&.c\&.
+.SS "\fBLVAL\fP s_splist"
+
+.PP
+Definition at line 32 of file xlglob\&.c\&.
+.SS "\fBLVAL\fP s_svalue"
+
+.PP
+Definition at line 32 of file xlglob\&.c\&.
+.SS "\fBLVAL\fP xlvalue"
+
+.PP
+Definition at line 76 of file xlglob\&.c\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

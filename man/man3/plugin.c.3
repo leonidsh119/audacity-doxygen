@@ -1,0 +1,194 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/lib-src/lv2/lilv/src/plugin.c" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/lib-src/lv2/lilv/src/plugin.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <assert\&.h>\fP
+.br
+\fC#include <math\&.h>\fP
+.br
+\fC#include <stdarg\&.h>\fP
+.br
+\fC#include <stdint\&.h>\fP
+.br
+\fC#include <stdio\&.h>\fP
+.br
+\fC#include <stdlib\&.h>\fP
+.br
+\fC#include <string\&.h>\fP
+.br
+\fC#include 'lilv_config\&.h'\fP
+.br
+\fC#include 'lilv_internal\&.h'\fP
+.br
+\fC#include 'lv2/lv2plug\&.in/ns/extensions/ui/ui\&.h'\fP
+.br
+
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fB__STDC_LIMIT_MACROS\fP"
+.br
+.ti -1c
+.RI "#define \fBNS_DOAP\fP   (\fBconst\fP \fBuint8_t\fP*)'http://usefulinc\&.com/\fBns\fP/doap#'"
+.br
+.ti -1c
+.RI "#define \fBNS_FOAF\fP   (\fBconst\fP \fBuint8_t\fP*)'http://xmlns\&.com/foaf/0\&.1/'"
+.br
+.ti -1c
+.RI "#define \fBUSTR\fP(\fBs\fP)   ((\fBconst\fP \fBuint8_t\fP*)\fBs\fP)"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBLilvPlugin\fP * \fBlilv_plugin_new\fP (\fBLilvWorld\fP *world, \fBLilvNode\fP *\fBuri\fP, \fBLilvNode\fP *bundle_uri)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBlilv_plugin_free\fP (\fBLilvPlugin\fP *\fBp\fP)"
+.br
+.ti -1c
+.RI "\fBLilvNode\fP * \fBlilv_plugin_get_unique\fP (\fBconst\fP \fBLilvPlugin\fP *\fBp\fP, \fBconst\fP \fBSordNode\fP *subject, \fBconst\fP \fBSordNode\fP *\fBpredicate\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBlilv_plugin_load_if_necessary\fP (\fBconst\fP \fBLilvPlugin\fP *\fBp\fP)"
+.br
+.ti -1c
+.RI "\fBLILV_API\fP \fBconst\fP \fBLilvNode\fP * \fBlilv_plugin_get_uri\fP (\fBconst\fP \fBLilvPlugin\fP *\fBp\fP)"
+.br
+.ti -1c
+.RI "\fBLILV_API\fP \fBconst\fP \fBLilvNode\fP * \fBlilv_plugin_get_bundle_uri\fP (\fBconst\fP \fBLilvPlugin\fP *\fBp\fP)"
+.br
+.ti -1c
+.RI "\fBLILV_API\fP \fBconst\fP \fBLilvNode\fP * \fBlilv_plugin_get_library_uri\fP (\fBconst\fP \fBLilvPlugin\fP *const_p)"
+.br
+.ti -1c
+.RI "\fBLILV_API\fP \fBconst\fP \fBLilvNodes\fP * \fBlilv_plugin_get_data_uris\fP (\fBconst\fP \fBLilvPlugin\fP *\fBp\fP)"
+.br
+.ti -1c
+.RI "\fBLILV_API\fP \fBconst\fP \fBLilvPluginClass\fP * \fBlilv_plugin_get_class\fP (\fBconst\fP \fBLilvPlugin\fP *const_p)"
+.br
+.ti -1c
+.RI "\fBLILV_API\fP \fBbool\fP \fBlilv_plugin_verify\fP (\fBconst\fP \fBLilvPlugin\fP *plugin)"
+.br
+.ti -1c
+.RI "\fBLILV_API\fP \fBLilvNode\fP * \fBlilv_plugin_get_name\fP (\fBconst\fP \fBLilvPlugin\fP *plugin)"
+.br
+.ti -1c
+.RI "\fBLILV_API\fP \fBLilvNodes\fP * \fBlilv_plugin_get_value\fP (\fBconst\fP \fBLilvPlugin\fP *\fBp\fP, \fBconst\fP \fBLilvNode\fP *\fBpredicate\fP)"
+.br
+.ti -1c
+.RI "\fBLILV_API\fP \fBuint32_t\fP \fBlilv_plugin_get_num_ports\fP (\fBconst\fP \fBLilvPlugin\fP *\fBp\fP)"
+.br
+.ti -1c
+.RI "\fBLILV_API\fP \fBvoid\fP \fBlilv_plugin_get_port_ranges_float\fP (\fBconst\fP \fBLilvPlugin\fP *\fBp\fP, float *min_values, float *max_values, float *def_values)"
+.br
+.ti -1c
+.RI "\fBLILV_API\fP \fBuint32_t\fP \fBlilv_plugin_get_num_ports_of_class_va\fP (\fBconst\fP \fBLilvPlugin\fP *\fBp\fP, \fBconst\fP \fBLilvNode\fP *class_1, va_list args)"
+.br
+.ti -1c
+.RI "\fBLILV_API\fP \fBuint32_t\fP \fBlilv_plugin_get_num_ports_of_class\fP (\fBconst\fP \fBLilvPlugin\fP *\fBp\fP, \fBconst\fP \fBLilvNode\fP *class_1,\&.\&.\&.)"
+.br
+.ti -1c
+.RI "\fBLILV_API\fP \fBbool\fP \fBlilv_plugin_has_latency\fP (\fBconst\fP \fBLilvPlugin\fP *\fBp\fP)"
+.br
+.ti -1c
+.RI "\fBLILV_API\fP \fBconst\fP \fBLilvPort\fP * \fBlilv_plugin_get_port_by_designation\fP (\fBconst\fP \fBLilvPlugin\fP *plugin, \fBconst\fP \fBLilvNode\fP *port_class, \fBconst\fP \fBLilvNode\fP *designation)"
+.br
+.ti -1c
+.RI "\fBLILV_API\fP \fBuint32_t\fP \fBlilv_plugin_get_latency_port_index\fP (\fBconst\fP \fBLilvPlugin\fP *\fBp\fP)"
+.br
+.ti -1c
+.RI "\fBLILV_API\fP \fBbool\fP \fBlilv_plugin_has_feature\fP (\fBconst\fP \fBLilvPlugin\fP *\fBp\fP, \fBconst\fP \fBLilvNode\fP *feature)"
+.br
+.ti -1c
+.RI "\fBLILV_API\fP \fBLilvNodes\fP * \fBlilv_plugin_get_supported_features\fP (\fBconst\fP \fBLilvPlugin\fP *\fBp\fP)"
+.br
+.ti -1c
+.RI "\fBLILV_API\fP \fBLilvNodes\fP * \fBlilv_plugin_get_optional_features\fP (\fBconst\fP \fBLilvPlugin\fP *\fBp\fP)"
+.br
+.ti -1c
+.RI "\fBLILV_API\fP \fBLilvNodes\fP * \fBlilv_plugin_get_required_features\fP (\fBconst\fP \fBLilvPlugin\fP *\fBp\fP)"
+.br
+.ti -1c
+.RI "\fBLILV_API\fP \fBbool\fP \fBlilv_plugin_has_extension_data\fP (\fBconst\fP \fBLilvPlugin\fP *\fBp\fP, \fBconst\fP \fBLilvNode\fP *\fBuri\fP)"
+.br
+.ti -1c
+.RI "\fBLILV_API\fP \fBLilvNodes\fP * \fBlilv_plugin_get_extension_data\fP (\fBconst\fP \fBLilvPlugin\fP *\fBp\fP)"
+.br
+.ti -1c
+.RI "\fBLILV_API\fP \fBconst\fP \fBLilvPort\fP * \fBlilv_plugin_get_port_by_index\fP (\fBconst\fP \fBLilvPlugin\fP *\fBp\fP, \fBuint32_t\fP index)"
+.br
+.ti -1c
+.RI "\fBLILV_API\fP \fBconst\fP \fBLilvPort\fP * \fBlilv_plugin_get_port_by_symbol\fP (\fBconst\fP \fBLilvPlugin\fP *\fBp\fP, \fBconst\fP \fBLilvNode\fP *symbol)"
+.br
+.ti -1c
+.RI "\fBLILV_API\fP \fBLilvNode\fP * \fBlilv_plugin_get_project\fP (\fBconst\fP \fBLilvPlugin\fP *\fBp\fP)"
+.br
+.ti -1c
+.RI "\fBLILV_API\fP \fBLilvNode\fP * \fBlilv_plugin_get_author_name\fP (\fBconst\fP \fBLilvPlugin\fP *plugin)"
+.br
+.ti -1c
+.RI "\fBLILV_API\fP \fBLilvNode\fP * \fBlilv_plugin_get_author_email\fP (\fBconst\fP \fBLilvPlugin\fP *plugin)"
+.br
+.ti -1c
+.RI "\fBLILV_API\fP \fBLilvNode\fP * \fBlilv_plugin_get_author_homepage\fP (\fBconst\fP \fBLilvPlugin\fP *plugin)"
+.br
+.ti -1c
+.RI "\fBLILV_API\fP \fBbool\fP \fBlilv_plugin_is_replaced\fP (\fBconst\fP \fBLilvPlugin\fP *plugin)"
+.br
+.ti -1c
+.RI "\fBLILV_API\fP \fBLilvUIs\fP * \fBlilv_plugin_get_uis\fP (\fBconst\fP \fBLilvPlugin\fP *\fBp\fP)"
+.br
+.ti -1c
+.RI "\fBLILV_API\fP \fBLilvNodes\fP * \fBlilv_plugin_get_related\fP (\fBconst\fP \fBLilvPlugin\fP *plugin, \fBconst\fP \fBLilvNode\fP *type)"
+.br
+.ti -1c
+.RI "\fBLILV_API\fP \fBvoid\fP \fBlilv_plugin_write_description\fP (\fBLilvWorld\fP *world, \fBconst\fP \fBLilvPlugin\fP *plugin, \fBconst\fP \fBLilvNode\fP *base_uri, FILE *plugin_file)"
+.br
+.ti -1c
+.RI "\fBLILV_API\fP \fBvoid\fP \fBlilv_plugin_write_manifest_entry\fP (\fBLilvWorld\fP *world, \fBconst\fP \fBLilvPlugin\fP *plugin, \fBconst\fP \fBLilvNode\fP *base_uri, FILE *manifest_file, \fBconst\fP char *plugin_file_path)"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define __STDC_LIMIT_MACROS"
+
+.PP
+Definition at line 17 of file plugin\&.c\&.
+.SS "#define NS_DOAP   (\fBconst\fP \fBuint8_t\fP*)'http://usefulinc\&.com/\fBns\fP/doap#'"
+
+.PP
+Definition at line 32 of file plugin\&.c\&.
+.SS "#define NS_FOAF   (\fBconst\fP \fBuint8_t\fP*)'http://xmlns\&.com/foaf/0\&.1/'"
+
+.PP
+Definition at line 33 of file plugin\&.c\&.
+.SS "#define USTR(\fBs\fP)   ((\fBconst\fP \fBuint8_t\fP*)\fBs\fP)"
+
+.SH "Function Documentation"
+.PP 
+.SS "\fBvoid\fP lilv_plugin_free (\fBLilvPlugin\fP * p)"
+
+.PP
+Definition at line 72 of file plugin\&.c\&.
+.SS "\fBLilvNode\fP* lilv_plugin_get_unique (\fBconst\fP \fBLilvPlugin\fP * p, \fBconst\fP \fBSordNode\fP * subject, \fBconst\fP \fBSordNode\fP * predicate)"
+
+.PP
+Definition at line 122 of file plugin\&.c\&.
+.SS "\fBvoid\fP lilv_plugin_load_if_necessary (\fBconst\fP \fBLilvPlugin\fP * p)"
+
+.PP
+Definition at line 321 of file plugin\&.c\&.
+.SS "\fBLilvPlugin\fP* lilv_plugin_new (\fBLilvWorld\fP * world, \fBLilvNode\fP * uri, \fBLilvNode\fP * bundle_uri)"
+Ownership of \fCuri\fP is taken 
+.PP
+Definition at line 37 of file plugin\&.c\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

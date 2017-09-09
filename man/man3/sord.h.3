@@ -1,0 +1,277 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/lib-src/lv2/sord/sord/sord.h" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/lib-src/lv2/sord/sord/sord.h \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <stddef\&.h>\fP
+.br
+\fC#include <stdint\&.h>\fP
+.br
+\fC#include <stdio\&.h>\fP
+.br
+\fC#include 'serd/serd\&.h'\fP
+.br
+\fC#include <stdbool\&.h>\fP
+.br
+
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBSORD_API\fP"
+.br
+.in -1c
+.SS "Typedefs"
+
+.in +1c
+.ti -1c
+.RI "typedef struct \fBSordWorldImpl\fP \fBSordWorld\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBSordModelImpl\fP \fBSordModel\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBSordInserterImpl\fP \fBSordInserter\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBSordIterImpl\fP \fBSordIter\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBSordNodeImpl\fP \fBSordNode\fP"
+.br
+.ti -1c
+.RI "typedef \fBconst\fP \fBSordNode\fP * \fBSordQuad\fP[4]"
+.br
+.in -1c
+.SS "Enumerations"
+
+.in +1c
+.ti -1c
+.RI "enum \fBSordQuadIndex\fP { \fBSORD_SUBJECT\fP = 0, \fBSORD_PREDICATE\fP = 1, \fBSORD_OBJECT\fP = 2, \fBSORD_GRAPH\fP = 3 }"
+.br
+.ti -1c
+.RI "enum \fBSordNodeType\fP { \fBSORD_URI\fP = 1, \fBSORD_BLANK\fP = 2, \fBSORD_LITERAL\fP = 3 }"
+.br
+.ti -1c
+.RI "enum \fBSordIndexOption\fP { \fBSORD_SPO\fP = 1, \fBSORD_SOP\fP = 1 << 1, \fBSORD_OPS\fP = 1 << 2, \fBSORD_OSP\fP = 1 << 3, \fBSORD_PSO\fP = 1 << 4, \fBSORD_POS\fP = 1 << 5 }"
+.br
+.in -1c
+.SS "Functions"
+
+.PP
+.RI "\fBWorld\fP"
+.br
+
+.in +1c
+.in +1c
+.ti -1c
+.RI "\fBSORD_API\fP \fBSordWorld\fP * \fBsord_world_new\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBSORD_API\fP \fBvoid\fP \fBsord_world_free\fP (\fBSordWorld\fP *world)"
+.br
+.ti -1c
+.RI "\fBSORD_API\fP \fBvoid\fP \fBsord_world_set_error_sink\fP (\fBSordWorld\fP *world, \fBSerdErrorSink\fP error_sink, \fBvoid\fP *handle)"
+.br
+.in -1c
+.in -1c
+.PP
+.RI "\fBNode\fP"
+.br
+
+.in +1c
+.in +1c
+.ti -1c
+.RI "\fBSORD_API\fP \fBSordNode\fP * \fBsord_new_uri\fP (\fBSordWorld\fP *world, \fBconst\fP \fBuint8_t\fP *\fBuri\fP)"
+.br
+.ti -1c
+.RI "\fBSORD_API\fP \fBSordNode\fP * \fBsord_new_relative_uri\fP (\fBSordWorld\fP *world, \fBconst\fP \fBuint8_t\fP *\fBstr\fP, \fBconst\fP \fBuint8_t\fP *base_uri)"
+.br
+.ti -1c
+.RI "\fBSORD_API\fP \fBSordNode\fP * \fBsord_new_blank\fP (\fBSordWorld\fP *world, \fBconst\fP \fBuint8_t\fP *\fBstr\fP)"
+.br
+.ti -1c
+.RI "\fBSORD_API\fP \fBSordNode\fP * \fBsord_new_literal\fP (\fBSordWorld\fP *world, \fBSordNode\fP *datatype, \fBconst\fP \fBuint8_t\fP *\fBstr\fP, \fBconst\fP char *lang)"
+.br
+.ti -1c
+.RI "\fBSORD_API\fP \fBSordNode\fP * \fBsord_node_copy\fP (\fBconst\fP \fBSordNode\fP *\fBnode\fP)"
+.br
+.ti -1c
+.RI "\fBSORD_API\fP \fBvoid\fP \fBsord_node_free\fP (\fBSordWorld\fP *world, \fBSordNode\fP *\fBnode\fP)"
+.br
+.ti -1c
+.RI "\fBSORD_API\fP \fBSordNodeType\fP \fBsord_node_get_type\fP (\fBconst\fP \fBSordNode\fP *\fBnode\fP)"
+.br
+.ti -1c
+.RI "\fBSORD_API\fP \fBconst\fP \fBuint8_t\fP * \fBsord_node_get_string\fP (\fBconst\fP \fBSordNode\fP *\fBnode\fP)"
+.br
+.ti -1c
+.RI "\fBSORD_API\fP \fBconst\fP \fBuint8_t\fP * \fBsord_node_get_string_counted\fP (\fBconst\fP \fBSordNode\fP *\fBnode\fP, size_t *\fBlen\fP)"
+.br
+.ti -1c
+.RI "\fBSORD_API\fP \fBconst\fP char * \fBsord_node_get_language\fP (\fBconst\fP \fBSordNode\fP *\fBnode\fP)"
+.br
+.ti -1c
+.RI "\fBSORD_API\fP \fBSordNode\fP * \fBsord_node_get_datatype\fP (\fBconst\fP \fBSordNode\fP *\fBnode\fP)"
+.br
+.ti -1c
+.RI "\fBSORD_API\fP \fBSerdNodeFlags\fP \fBsord_node_get_flags\fP (\fBconst\fP \fBSordNode\fP *\fBnode\fP)"
+.br
+.ti -1c
+.RI "\fBSORD_API\fP \fBbool\fP \fBsord_node_is_inline_object\fP (\fBconst\fP \fBSordNode\fP *\fBnode\fP)"
+.br
+.ti -1c
+.RI "\fBSORD_API\fP \fBbool\fP \fBsord_node_equals\fP (\fBconst\fP \fBSordNode\fP *\fBa\fP, \fBconst\fP \fBSordNode\fP *\fBb\fP)"
+.br
+.ti -1c
+.RI "\fBSORD_API\fP \fBconst\fP \fBSerdNode\fP * \fBsord_node_to_serd_node\fP (\fBconst\fP \fBSordNode\fP *\fBnode\fP)"
+.br
+.ti -1c
+.RI "\fBSORD_API\fP \fBSordNode\fP * \fBsord_node_from_serd_node\fP (\fBSordWorld\fP *world, \fBSerdEnv\fP *env, \fBconst\fP \fBSerdNode\fP *\fBnode\fP, \fBconst\fP \fBSerdNode\fP *datatype, \fBconst\fP \fBSerdNode\fP *lang)"
+.br
+.in -1c
+.in -1c
+.PP
+.RI "\fBModel\fP"
+.br
+
+.in +1c
+.in +1c
+.ti -1c
+.RI "\fBSORD_API\fP \fBSordModel\fP * \fBsord_new\fP (\fBSordWorld\fP *world, unsigned indices, \fBbool\fP graphs)"
+.br
+.ti -1c
+.RI "\fBSORD_API\fP \fBvoid\fP \fBsord_free\fP (\fBSordModel\fP *\fBmodel\fP)"
+.br
+.ti -1c
+.RI "\fBSORD_API\fP \fBSordWorld\fP * \fBsord_get_world\fP (\fBSordModel\fP *\fBmodel\fP)"
+.br
+.ti -1c
+.RI "\fBSORD_API\fP size_t \fBsord_num_nodes\fP (\fBconst\fP \fBSordWorld\fP *world)"
+.br
+.ti -1c
+.RI "\fBSORD_API\fP size_t \fBsord_num_quads\fP (\fBconst\fP \fBSordModel\fP *\fBmodel\fP)"
+.br
+.ti -1c
+.RI "\fBSORD_API\fP \fBSordIter\fP * \fBsord_begin\fP (\fBconst\fP \fBSordModel\fP *\fBmodel\fP)"
+.br
+.ti -1c
+.RI "\fBSORD_API\fP \fBSordIter\fP * \fBsord_find\fP (\fBSordModel\fP *\fBmodel\fP, \fBconst\fP \fBSordQuad\fP pat)"
+.br
+.ti -1c
+.RI "\fBSORD_API\fP \fBSordIter\fP * \fBsord_search\fP (\fBSordModel\fP *\fBmodel\fP, \fBconst\fP \fBSordNode\fP *\fBs\fP, \fBconst\fP \fBSordNode\fP *\fBp\fP, \fBconst\fP \fBSordNode\fP *o, \fBconst\fP \fBSordNode\fP *g)"
+.br
+.ti -1c
+.RI "\fBSORD_API\fP \fBSordNode\fP * \fBsord_get\fP (\fBSordModel\fP *\fBmodel\fP, \fBconst\fP \fBSordNode\fP *\fBs\fP, \fBconst\fP \fBSordNode\fP *\fBp\fP, \fBconst\fP \fBSordNode\fP *o, \fBconst\fP \fBSordNode\fP *g)"
+.br
+.ti -1c
+.RI "\fBSORD_API\fP \fBbool\fP \fBsord_ask\fP (\fBSordModel\fP *\fBmodel\fP, \fBconst\fP \fBSordNode\fP *\fBs\fP, \fBconst\fP \fBSordNode\fP *\fBp\fP, \fBconst\fP \fBSordNode\fP *o, \fBconst\fP \fBSordNode\fP *g)"
+.br
+.ti -1c
+.RI "\fBSORD_API\fP \fBuint64_t\fP \fBsord_count\fP (\fBSordModel\fP *\fBmodel\fP, \fBconst\fP \fBSordNode\fP *\fBs\fP, \fBconst\fP \fBSordNode\fP *\fBp\fP, \fBconst\fP \fBSordNode\fP *o, \fBconst\fP \fBSordNode\fP *g)"
+.br
+.ti -1c
+.RI "\fBSORD_API\fP \fBbool\fP \fBsord_contains\fP (\fBSordModel\fP *\fBmodel\fP, \fBconst\fP \fBSordQuad\fP pat)"
+.br
+.ti -1c
+.RI "\fBSORD_API\fP \fBbool\fP \fBsord_add\fP (\fBSordModel\fP *\fBmodel\fP, \fBconst\fP \fBSordQuad\fP quad)"
+.br
+.ti -1c
+.RI "\fBSORD_API\fP \fBvoid\fP \fBsord_remove\fP (\fBSordModel\fP *\fBmodel\fP, \fBconst\fP \fBSordQuad\fP quad)"
+.br
+.in -1c
+.in -1c
+.PP
+.RI "\fBInserter\fP"
+.br
+
+.in +1c
+.in +1c
+.ti -1c
+.RI "\fBSORD_API\fP \fBSordInserter\fP * \fBsord_inserter_new\fP (\fBSordModel\fP *\fBmodel\fP, \fBSerdEnv\fP *env)"
+.br
+.ti -1c
+.RI "\fBSORD_API\fP \fBvoid\fP \fBsord_inserter_free\fP (\fBSordInserter\fP *inserter)"
+.br
+.ti -1c
+.RI "\fBSORD_API\fP \fBSerdStatus\fP \fBsord_inserter_set_base_uri\fP (\fBSordInserter\fP *inserter, \fBconst\fP \fBSerdNode\fP *\fBuri\fP)"
+.br
+.ti -1c
+.RI "\fBSORD_API\fP \fBSerdStatus\fP \fBsord_inserter_set_prefix\fP (\fBSordInserter\fP *inserter, \fBconst\fP \fBSerdNode\fP *\fBname\fP, \fBconst\fP \fBSerdNode\fP *\fBuri\fP)"
+.br
+.ti -1c
+.RI "\fBSORD_API\fP \fBSerdStatus\fP \fBsord_inserter_write_statement\fP (\fBSordInserter\fP *inserter, \fBSerdStatementFlags\fP flags, \fBconst\fP \fBSerdNode\fP *graph, \fBconst\fP \fBSerdNode\fP *subject, \fBconst\fP \fBSerdNode\fP *\fBpredicate\fP, \fBconst\fP \fBSerdNode\fP *object, \fBconst\fP \fBSerdNode\fP *object_datatype, \fBconst\fP \fBSerdNode\fP *object_lang)"
+.br
+.in -1c
+.in -1c
+.PP
+.RI "\fBIteration\fP"
+.br
+
+.in +1c
+.in +1c
+.ti -1c
+.RI "\fBSORD_API\fP \fBvoid\fP \fBsord_iter_get\fP (\fBconst\fP \fBSordIter\fP *iter, \fBSordQuad\fP quad)"
+.br
+.ti -1c
+.RI "\fBSORD_API\fP \fBconst\fP \fBSordNode\fP * \fBsord_iter_get_node\fP (\fBconst\fP \fBSordIter\fP *iter, \fBSordQuadIndex\fP index)"
+.br
+.ti -1c
+.RI "\fBSORD_API\fP \fBconst\fP \fBSordModel\fP * \fBsord_iter_get_model\fP (\fBSordIter\fP *iter)"
+.br
+.ti -1c
+.RI "\fBSORD_API\fP \fBbool\fP \fBsord_iter_next\fP (\fBSordIter\fP *iter)"
+.br
+.ti -1c
+.RI "\fBSORD_API\fP \fBbool\fP \fBsord_iter_end\fP (\fBconst\fP \fBSordIter\fP *iter)"
+.br
+.ti -1c
+.RI "\fBSORD_API\fP \fBvoid\fP \fBsord_iter_free\fP (\fBSordIter\fP *iter)"
+.br
+.in -1c
+.in -1c
+.PP
+.RI "\fBUtilities\fP"
+.br
+
+.in +1c
+.in +1c
+.ti -1c
+.RI "\fBSORD_API\fP \fBbool\fP \fBsord_quad_match\fP (\fBconst\fP \fBSordQuad\fP x, \fBconst\fP \fBSordQuad\fP y)"
+.br
+.in -1c
+.in -1c
+.PP
+.RI "\fBSerialisation\fP"
+.br
+
+.in +1c
+.in +1c
+.ti -1c
+.RI "\fBSORD_API\fP \fBSerdReader\fP * \fBsord_new_reader\fP (\fBSordModel\fP *\fBmodel\fP, \fBSerdEnv\fP *env, \fBSerdSyntax\fP \fBsyntax\fP, \fBSordNode\fP *graph)"
+.br
+.ti -1c
+.RI "\fBSORD_API\fP \fBbool\fP \fBsord_write\fP (\fBSordModel\fP *\fBmodel\fP, \fBSerdWriter\fP *writer, \fBSordNode\fP *graph)"
+.br
+.ti -1c
+.RI "\fBSORD_API\fP \fBbool\fP \fBsord_write_iter\fP (\fBSordIter\fP *iter, \fBSerdWriter\fP *writer)"
+.br
+.in -1c
+.in -1c
+.SH "Detailed Description"
+.PP 
+API for \fBSord\fP, a lightweight RDF model library\&. 
+.PP
+Definition in file \fBsord\&.h\fP\&.
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define SORD_API"
+
+.PP
+Definition at line 44 of file sord\&.h\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

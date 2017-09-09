@@ -1,0 +1,343 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="_f_i_r_filter_8cpp" kind="file" language="C++">
+    <compoundname>FIRFilter.cpp</compoundname>
+    <includes refid="memory_8h" local="no">memory.h</includes>
+    <includes refid="assert_8h" local="no">assert.h</includes>
+    <includes local="no">math.h</includes>
+    <includes local="no">stdlib.h</includes>
+    <includes refid="_f_i_r_filter_8h" local="yes">FIRFilter.h</includes>
+    <includes refid="cpu__detect_8h" local="yes">cpu_detect.h</includes>
+    <incdepgraph>
+      <node id="32255">
+        <label>C:/_dev/OpenU/Audacity/audacity/lib-src/soundtouch/source/SoundTouch/FIRFilter.cpp</label>
+        <link refid="FIRFilter.cpp"/>
+        <childnode refid="32256" relation="include">
+        </childnode>
+        <childnode refid="32261" relation="include">
+        </childnode>
+        <childnode refid="32262" relation="include">
+        </childnode>
+        <childnode refid="32257" relation="include">
+        </childnode>
+        <childnode refid="32263" relation="include">
+        </childnode>
+        <childnode refid="32267" relation="include">
+        </childnode>
+      </node>
+      <node id="32259">
+        <label>FLAC/ordinals.h</label>
+        <link refid="ordinals_8h"/>
+        <childnode refid="32260" relation="include">
+        </childnode>
+      </node>
+      <node id="32267">
+        <label>cpu_detect.h</label>
+        <link refid="cpu__detect_8h"/>
+        <childnode refid="32265" relation="include">
+        </childnode>
+      </node>
+      <node id="32260">
+        <label>stdint.h</label>
+      </node>
+      <node id="32257">
+        <label>stdlib.h</label>
+      </node>
+      <node id="32266">
+        <label>stdexcept</label>
+      </node>
+      <node id="32256">
+        <label>memory.h</label>
+        <link refid="memory_8h"/>
+        <childnode refid="32257" relation="include">
+        </childnode>
+        <childnode refid="32258" relation="include">
+        </childnode>
+        <childnode refid="32259" relation="include">
+        </childnode>
+      </node>
+      <node id="32264">
+        <label>stddef.h</label>
+      </node>
+      <node id="32263">
+        <label>FIRFilter.h</label>
+        <link refid="_f_i_r_filter_8h"/>
+        <childnode refid="32264" relation="include">
+        </childnode>
+        <childnode refid="32265" relation="include">
+        </childnode>
+      </node>
+      <node id="32261">
+        <label>assert.h</label>
+        <link refid="assert_8h"/>
+      </node>
+      <node id="32258">
+        <label>private/float.h</label>
+        <link refid="float_8h"/>
+        <childnode refid="32259" relation="include">
+        </childnode>
+      </node>
+      <node id="32262">
+        <label>math.h</label>
+      </node>
+      <node id="32265">
+        <label>STTypes.h</label>
+        <link refid="_s_t_types_8h"/>
+        <childnode refid="32266" relation="include">
+        </childnode>
+      </node>
+    </incdepgraph>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight><highlight class="comment">//<sp/>Last<sp/>changed<sp/><sp/>:<sp/>$Date:<sp/>2011-09-02<sp/>21:56:11<sp/>+0300<sp/>(Fri,<sp/>02<sp/>Sep<sp/>2011)<sp/>$</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight><highlight class="comment">//<sp/>File<sp/>revision<sp/>:<sp/>$Revision:<sp/>4<sp/>$</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="16"><highlight class="normal"></highlight><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="17"><highlight class="normal"></highlight><highlight class="comment">//<sp/>$Id:<sp/>FIRFilter.cpp<sp/>131<sp/>2011-09-02<sp/>18:56:11Z<sp/>oparviai<sp/>$</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="18"><highlight class="normal"></highlight><highlight class="comment">//</highlight></codeline>
+<codeline lineno="20"><highlight class="comment"></highlight><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="21"><highlight class="normal"></highlight><highlight class="comment">//<sp/>License<sp/>:</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="22"><highlight class="normal"></highlight><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="23"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>SoundTouch<sp/>audio<sp/>processing<sp/>library</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="24"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>Copyright<sp/>(c)<sp/>Olli<sp/>Parviainen</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="25"><highlight class="normal"></highlight><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="26"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>This<sp/>library<sp/>is<sp/>free<sp/>software;<sp/>you<sp/>can<sp/>redistribute<sp/>it<sp/>and/or</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="27"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>modify<sp/>it<sp/>under<sp/>the<sp/>terms<sp/>of<sp/>the<sp/>GNU<sp/>Lesser<sp/>General<sp/>Public</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="28"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>License<sp/>as<sp/>published<sp/>by<sp/>the<sp/>Free<sp/>Software<sp/>Foundation;<sp/>either</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="29"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>version<sp/>2.1<sp/>of<sp/>the<sp/>License,<sp/>or<sp/>(at<sp/>your<sp/>option)<sp/>any<sp/>later<sp/>version.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="30"><highlight class="normal"></highlight><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="31"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>This<sp/>library<sp/>is<sp/>distributed<sp/>in<sp/>the<sp/>hope<sp/>that<sp/>it<sp/>will<sp/>be<sp/>useful,</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="32"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>but<sp/>WITHOUT<sp/>ANY<sp/>WARRANTY;<sp/>without<sp/>even<sp/>the<sp/>implied<sp/>warranty<sp/>of</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="33"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>MERCHANTABILITY<sp/>or<sp/>FITNESS<sp/>FOR<sp/>A<sp/>PARTICULAR<sp/>PURPOSE.<sp/><sp/>See<sp/>the<sp/>GNU</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="34"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>Lesser<sp/>General<sp/>Public<sp/>License<sp/>for<sp/>more<sp/>details.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="35"><highlight class="normal"></highlight><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="36"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>You<sp/>should<sp/>have<sp/>received<sp/>a<sp/>copy<sp/>of<sp/>the<sp/>GNU<sp/>Lesser<sp/>General<sp/>Public</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="37"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>License<sp/>along<sp/>with<sp/>this<sp/>library;<sp/>if<sp/>not,<sp/>write<sp/>to<sp/>the<sp/>Free<sp/>Software</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="38"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>Foundation,<sp/>Inc.,<sp/>59<sp/>Temple<sp/>Place,<sp/>Suite<sp/>330,<sp/>Boston,<sp/>MA<sp/><sp/>02111-1307<sp/><sp/>USA</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="39"><highlight class="normal"></highlight><highlight class="comment">//</highlight></codeline>
+<codeline lineno="41"><highlight class="comment"></highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="42"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="memory_8h" kindref="compound">memory.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="43"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="assert_8h" kindref="compound">assert.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="44"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;math.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="45"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;stdlib.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="46"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="_f_i_r_filter_8h" kindref="compound">FIRFilter.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="47"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="cpu__detect_8h" kindref="compound">cpu_detect.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="48"><highlight class="normal"></highlight></codeline>
+<codeline lineno="49"><highlight class="normal"></highlight><highlight class="keyword">using<sp/>namespace<sp/></highlight><highlight class="normal"><ref refid="namespacesoundtouch" kindref="compound">soundtouch</ref>;</highlight></codeline>
+<codeline lineno="50"><highlight class="normal"></highlight></codeline>
+<codeline lineno="51"><highlight class="normal"></highlight><highlight class="comment">/*****************************************************************************</highlight></codeline>
+<codeline lineno="52"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="53"><highlight class="comment"><sp/>*<sp/>Implementation<sp/>of<sp/>the<sp/>class<sp/>&apos;FIRFilter&apos;</highlight></codeline>
+<codeline lineno="54"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="55"><highlight class="comment"><sp/>*****************************************************************************/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="56"><highlight class="normal"></highlight></codeline>
+<codeline lineno="57" refid="classsoundtouch_1_1_f_i_r_filter_1a39141358fb43d609855ebca52727997f" refkind="member"><highlight class="normal"><ref refid="classsoundtouch_1_1_f_i_r_filter_1a39141358fb43d609855ebca52727997f" kindref="member">FIRFilter::FIRFilter</ref>()</highlight></codeline>
+<codeline lineno="58"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="59"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="classsoundtouch_1_1_f_i_r_filter_1aba176e5f043e7a72cf0d7038369e9782" kindref="member">resultDivFactor</ref><sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="60"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="classsoundtouch_1_1_f_i_r_filter_1a8b963c3014ad852faa4e28c10757b444" kindref="member">resultDivider</ref><sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="61"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="classsoundtouch_1_1_f_i_r_filter_1a7356511d82da56342cfcb4ade1528ecd" kindref="member">length</ref><sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="62"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="classsoundtouch_1_1_f_i_r_filter_1a910f5d2e012a4dc25d0f280b143a7159" kindref="member">lengthDiv8</ref><sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="63"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="classsoundtouch_1_1_f_i_r_filter_1a6286018ebf5c70419c9786f085d5de51" kindref="member">filterCoeffs</ref><sp/>=<sp/><ref refid="getopt1_8c_1a070d2ce7b6bb7e5c05602aa8c308d0c4" kindref="member">NULL</ref>;</highlight></codeline>
+<codeline lineno="64"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="65"><highlight class="normal"></highlight></codeline>
+<codeline lineno="66"><highlight class="normal"></highlight></codeline>
+<codeline lineno="67" refid="classsoundtouch_1_1_f_i_r_filter_1a7d376351ab71190d49b8b7abaa304767" refkind="member"><highlight class="normal"><ref refid="classsoundtouch_1_1_f_i_r_filter_1a7d376351ab71190d49b8b7abaa304767" kindref="member">FIRFilter::~FIRFilter</ref>()</highlight></codeline>
+<codeline lineno="68"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="69"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">delete</highlight><highlight class="normal">[]<sp/><ref refid="classsoundtouch_1_1_f_i_r_filter_1a6286018ebf5c70419c9786f085d5de51" kindref="member">filterCoeffs</ref>;</highlight></codeline>
+<codeline lineno="70"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="71"><highlight class="normal"></highlight></codeline>
+<codeline lineno="72"><highlight class="normal"></highlight><highlight class="comment">//<sp/>Usual<sp/>C-version<sp/>of<sp/>the<sp/>filter<sp/>routine<sp/>for<sp/>stereo<sp/>sound</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="73" refid="classsoundtouch_1_1_f_i_r_filter_1af9bb0383d7c16b128cda2be308e05ee4" refkind="member"><highlight class="normal"><ref refid="_s_t_types_8h_1a91ad9478d81a7aaf2593e8d9c3d06a14" kindref="member">uint</ref><sp/><ref refid="classsoundtouch_1_1_f_i_r_filter_1af9bb0383d7c16b128cda2be308e05ee4" kindref="member">FIRFilter::evaluateFilterStereo</ref>(<ref refid="namespacesoundtouch_1a97cfd29a7abb4d4b2a72f803d5b5850c" kindref="member">SAMPLETYPE</ref><sp/>*<ref refid="namespacelv2specgen_1af69976955f051ccef12ad2f85392e818" kindref="member">dest</ref>,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="namespacesoundtouch_1a97cfd29a7abb4d4b2a72f803d5b5850c" kindref="member">SAMPLETYPE</ref><sp/>*src,<sp/><ref refid="_s_t_types_8h_1a91ad9478d81a7aaf2593e8d9c3d06a14" kindref="member">uint</ref><sp/>numSamples)</highlight><highlight class="keyword"><sp/>const</highlight></codeline>
+<codeline lineno="74"><highlight class="keyword"></highlight><highlight class="normal">{</highlight></codeline>
+<codeline lineno="75"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="_s_t_types_8h_1a91ad9478d81a7aaf2593e8d9c3d06a14" kindref="member">uint</ref><sp/><ref refid="checksum_8c_1ab80e330a3bc9e38c1297fe17381e92b4" kindref="member">i</ref>,<sp/>j,<sp/><ref refid="convtest_8m_1afb358f48b1646c750fb9da6c6585be2b" kindref="member">end</ref>;</highlight></codeline>
+<codeline lineno="76"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="namespacesoundtouch_1a6d7c3b986241334e59ba402af1bbc127" kindref="member">LONG_SAMPLETYPE</ref><sp/>suml,<sp/>sumr;</highlight></codeline>
+<codeline lineno="77"><highlight class="normal"></highlight><highlight class="preprocessor">#ifdef<sp/>SOUNDTOUCH_FLOAT_SAMPLES</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="78"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>when<sp/>using<sp/>floating<sp/>point<sp/>samples,<sp/>use<sp/>a<sp/>scaler<sp/>instead<sp/>of<sp/>a<sp/>divider</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="79"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>because<sp/>division<sp/>is<sp/>much<sp/>slower<sp/>operation<sp/>than<sp/>multiplying.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="80"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>dScaler<sp/>=<sp/>1.0<sp/>/<sp/>(double)<ref refid="classsoundtouch_1_1_f_i_r_filter_1a8b963c3014ad852faa4e28c10757b444" kindref="member">resultDivider</ref>;</highlight></codeline>
+<codeline lineno="81"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="82"><highlight class="normal"></highlight></codeline>
+<codeline lineno="83"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="libid3tag_2global_8h_1af576bf8ffa22a44e53018c67095ffbf0" kindref="member">assert</ref>(<ref refid="classsoundtouch_1_1_f_i_r_filter_1a7356511d82da56342cfcb4ade1528ecd" kindref="member">length</ref><sp/>!=<sp/>0);</highlight></codeline>
+<codeline lineno="84"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="libid3tag_2global_8h_1af576bf8ffa22a44e53018c67095ffbf0" kindref="member">assert</ref>(src<sp/>!=<sp/><ref refid="getopt1_8c_1a070d2ce7b6bb7e5c05602aa8c308d0c4" kindref="member">NULL</ref>);</highlight></codeline>
+<codeline lineno="85"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="libid3tag_2global_8h_1af576bf8ffa22a44e53018c67095ffbf0" kindref="member">assert</ref>(dest<sp/>!=<sp/><ref refid="getopt1_8c_1a070d2ce7b6bb7e5c05602aa8c308d0c4" kindref="member">NULL</ref>);</highlight></codeline>
+<codeline lineno="86"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="libid3tag_2global_8h_1af576bf8ffa22a44e53018c67095ffbf0" kindref="member">assert</ref>(<ref refid="classsoundtouch_1_1_f_i_r_filter_1a6286018ebf5c70419c9786f085d5de51" kindref="member">filterCoeffs</ref><sp/>!=<sp/><ref refid="getopt1_8c_1a070d2ce7b6bb7e5c05602aa8c308d0c4" kindref="member">NULL</ref>);</highlight></codeline>
+<codeline lineno="87"><highlight class="normal"></highlight></codeline>
+<codeline lineno="88"><highlight class="normal"><sp/><sp/><sp/><sp/>end<sp/>=<sp/>2<sp/>*<sp/>(numSamples<sp/>-<sp/><ref refid="classsoundtouch_1_1_f_i_r_filter_1a7356511d82da56342cfcb4ade1528ecd" kindref="member">length</ref>);</highlight></codeline>
+<codeline lineno="89"><highlight class="normal"></highlight></codeline>
+<codeline lineno="90"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(j<sp/>=<sp/>0;<sp/>j<sp/>&lt;<sp/><ref refid="convtest_8m_1afb358f48b1646c750fb9da6c6585be2b" kindref="member">end</ref>;<sp/>j<sp/>+=<sp/>2)<sp/></highlight></codeline>
+<codeline lineno="91"><highlight class="normal"><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="92"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="namespacesoundtouch_1a97cfd29a7abb4d4b2a72f803d5b5850c" kindref="member">SAMPLETYPE</ref><sp/>*ptr;</highlight></codeline>
+<codeline lineno="93"><highlight class="normal"></highlight></codeline>
+<codeline lineno="94"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>suml<sp/>=<sp/>sumr<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="95"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>ptr<sp/>=<sp/>src<sp/>+<sp/>j;</highlight></codeline>
+<codeline lineno="96"><highlight class="normal"></highlight></codeline>
+<codeline lineno="97"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(i<sp/>=<sp/>0;<sp/>i<sp/>&lt;<sp/><ref refid="classsoundtouch_1_1_f_i_r_filter_1a7356511d82da56342cfcb4ade1528ecd" kindref="member">length</ref>;<sp/>i<sp/>+=<sp/>4)<sp/></highlight></codeline>
+<codeline lineno="98"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="99"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>loop<sp/>is<sp/>unrolled<sp/>by<sp/>factor<sp/>of<sp/>4<sp/>here<sp/>for<sp/>efficiency</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="100"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>suml<sp/>+=<sp/>ptr[2<sp/>*<sp/>i<sp/>+<sp/>0]<sp/>*<sp/><ref refid="classsoundtouch_1_1_f_i_r_filter_1a6286018ebf5c70419c9786f085d5de51" kindref="member">filterCoeffs</ref>[i<sp/>+<sp/>0]<sp/>+</highlight></codeline>
+<codeline lineno="101"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>ptr[2<sp/>*<sp/>i<sp/>+<sp/>2]<sp/>*<sp/><ref refid="classsoundtouch_1_1_f_i_r_filter_1a6286018ebf5c70419c9786f085d5de51" kindref="member">filterCoeffs</ref>[i<sp/>+<sp/>1]<sp/>+</highlight></codeline>
+<codeline lineno="102"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>ptr[2<sp/>*<sp/>i<sp/>+<sp/>4]<sp/>*<sp/><ref refid="classsoundtouch_1_1_f_i_r_filter_1a6286018ebf5c70419c9786f085d5de51" kindref="member">filterCoeffs</ref>[i<sp/>+<sp/>2]<sp/>+</highlight></codeline>
+<codeline lineno="103"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>ptr[2<sp/>*<sp/>i<sp/>+<sp/>6]<sp/>*<sp/><ref refid="classsoundtouch_1_1_f_i_r_filter_1a6286018ebf5c70419c9786f085d5de51" kindref="member">filterCoeffs</ref>[i<sp/>+<sp/>3];</highlight></codeline>
+<codeline lineno="104"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>sumr<sp/>+=<sp/>ptr[2<sp/>*<sp/>i<sp/>+<sp/>1]<sp/>*<sp/>filterCoeffs[i<sp/>+<sp/>0]<sp/>+</highlight></codeline>
+<codeline lineno="105"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>ptr[2<sp/>*<sp/>i<sp/>+<sp/>3]<sp/>*<sp/>filterCoeffs[i<sp/>+<sp/>1]<sp/>+</highlight></codeline>
+<codeline lineno="106"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>ptr[2<sp/>*<sp/>i<sp/>+<sp/>5]<sp/>*<sp/>filterCoeffs[i<sp/>+<sp/>2]<sp/>+</highlight></codeline>
+<codeline lineno="107"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>ptr[2<sp/>*<sp/>i<sp/>+<sp/>7]<sp/>*<sp/>filterCoeffs[i<sp/>+<sp/>3];</highlight></codeline>
+<codeline lineno="108"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="109"><highlight class="normal"></highlight></codeline>
+<codeline lineno="110"><highlight class="normal"></highlight><highlight class="preprocessor">#ifdef<sp/>SOUNDTOUCH_INTEGER_SAMPLES</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="111"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>suml<sp/>&gt;&gt;=<sp/><ref refid="classsoundtouch_1_1_f_i_r_filter_1aba176e5f043e7a72cf0d7038369e9782" kindref="member">resultDivFactor</ref>;</highlight></codeline>
+<codeline lineno="112"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>sumr<sp/>&gt;&gt;=<sp/><ref refid="classsoundtouch_1_1_f_i_r_filter_1aba176e5f043e7a72cf0d7038369e9782" kindref="member">resultDivFactor</ref>;</highlight></codeline>
+<codeline lineno="113"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>saturate<sp/>to<sp/>16<sp/>bit<sp/>integer<sp/>limits</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="114"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>suml<sp/>=<sp/>(suml<sp/>&lt;<sp/>-32768)<sp/>?<sp/>-32768<sp/>:<sp/>(suml<sp/>&gt;<sp/>32767)<sp/>?<sp/>32767<sp/>:<sp/>suml;</highlight></codeline>
+<codeline lineno="115"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>saturate<sp/>to<sp/>16<sp/>bit<sp/>integer<sp/>limits</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="116"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>sumr<sp/>=<sp/>(sumr<sp/>&lt;<sp/>-32768)<sp/>?<sp/>-32768<sp/>:<sp/>(sumr<sp/>&gt;<sp/>32767)<sp/>?<sp/>32767<sp/>:<sp/>sumr;</highlight></codeline>
+<codeline lineno="117"><highlight class="normal"></highlight><highlight class="preprocessor">#else</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="118"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>suml<sp/>*=<sp/>dScaler;</highlight></codeline>
+<codeline lineno="119"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>sumr<sp/>*=<sp/>dScaler;</highlight></codeline>
+<codeline lineno="120"><highlight class="normal"></highlight><highlight class="preprocessor">#endif<sp/>//<sp/>SOUNDTOUCH_INTEGER_SAMPLES</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="121"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>dest[j]<sp/>=<sp/>(<ref refid="namespacesoundtouch_1a97cfd29a7abb4d4b2a72f803d5b5850c" kindref="member">SAMPLETYPE</ref>)suml;</highlight></codeline>
+<codeline lineno="122"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>dest[j<sp/>+<sp/>1]<sp/>=<sp/>(<ref refid="namespacesoundtouch_1a97cfd29a7abb4d4b2a72f803d5b5850c" kindref="member">SAMPLETYPE</ref>)sumr;</highlight></codeline>
+<codeline lineno="123"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="124"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>numSamples<sp/>-<sp/><ref refid="classsoundtouch_1_1_f_i_r_filter_1a7356511d82da56342cfcb4ade1528ecd" kindref="member">length</ref>;</highlight></codeline>
+<codeline lineno="125"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="126"><highlight class="normal"></highlight></codeline>
+<codeline lineno="127"><highlight class="normal"></highlight></codeline>
+<codeline lineno="128"><highlight class="normal"></highlight></codeline>
+<codeline lineno="129"><highlight class="normal"></highlight></codeline>
+<codeline lineno="130"><highlight class="normal"></highlight><highlight class="comment">//<sp/>Usual<sp/>C-version<sp/>of<sp/>the<sp/>filter<sp/>routine<sp/>for<sp/>mono<sp/>sound</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="131" refid="classsoundtouch_1_1_f_i_r_filter_1a9cb4d800241c5857895243d78608a5dc" refkind="member"><highlight class="normal"><ref refid="_s_t_types_8h_1a91ad9478d81a7aaf2593e8d9c3d06a14" kindref="member">uint</ref><sp/><ref refid="classsoundtouch_1_1_f_i_r_filter_1a9cb4d800241c5857895243d78608a5dc" kindref="member">FIRFilter::evaluateFilterMono</ref>(<ref refid="namespacesoundtouch_1a97cfd29a7abb4d4b2a72f803d5b5850c" kindref="member">SAMPLETYPE</ref><sp/>*<ref refid="namespacelv2specgen_1af69976955f051ccef12ad2f85392e818" kindref="member">dest</ref>,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="namespacesoundtouch_1a97cfd29a7abb4d4b2a72f803d5b5850c" kindref="member">SAMPLETYPE</ref><sp/>*src,<sp/><ref refid="_s_t_types_8h_1a91ad9478d81a7aaf2593e8d9c3d06a14" kindref="member">uint</ref><sp/>numSamples)</highlight><highlight class="keyword"><sp/>const</highlight></codeline>
+<codeline lineno="132"><highlight class="keyword"></highlight><highlight class="normal">{</highlight></codeline>
+<codeline lineno="133"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="_s_t_types_8h_1a91ad9478d81a7aaf2593e8d9c3d06a14" kindref="member">uint</ref><sp/><ref refid="checksum_8c_1ab80e330a3bc9e38c1297fe17381e92b4" kindref="member">i</ref>,<sp/>j,<sp/><ref refid="convtest_8m_1afb358f48b1646c750fb9da6c6585be2b" kindref="member">end</ref>;</highlight></codeline>
+<codeline lineno="134"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="namespacesoundtouch_1a6d7c3b986241334e59ba402af1bbc127" kindref="member">LONG_SAMPLETYPE</ref><sp/>sum;</highlight></codeline>
+<codeline lineno="135"><highlight class="normal"></highlight><highlight class="preprocessor">#ifdef<sp/>SOUNDTOUCH_FLOAT_SAMPLES</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="136"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>when<sp/>using<sp/>floating<sp/>point<sp/>samples,<sp/>use<sp/>a<sp/>scaler<sp/>instead<sp/>of<sp/>a<sp/>divider</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="137"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>because<sp/>division<sp/>is<sp/>much<sp/>slower<sp/>operation<sp/>than<sp/>multiplying.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="138"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>dScaler<sp/>=<sp/>1.0<sp/>/<sp/>(double)<ref refid="classsoundtouch_1_1_f_i_r_filter_1a8b963c3014ad852faa4e28c10757b444" kindref="member">resultDivider</ref>;</highlight></codeline>
+<codeline lineno="139"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="140"><highlight class="normal"></highlight></codeline>
+<codeline lineno="141"><highlight class="normal"></highlight></codeline>
+<codeline lineno="142"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="libid3tag_2global_8h_1af576bf8ffa22a44e53018c67095ffbf0" kindref="member">assert</ref>(<ref refid="classsoundtouch_1_1_f_i_r_filter_1a7356511d82da56342cfcb4ade1528ecd" kindref="member">length</ref><sp/>!=<sp/>0);</highlight></codeline>
+<codeline lineno="143"><highlight class="normal"></highlight></codeline>
+<codeline lineno="144"><highlight class="normal"><sp/><sp/><sp/><sp/>end<sp/>=<sp/>numSamples<sp/>-<sp/><ref refid="classsoundtouch_1_1_f_i_r_filter_1a7356511d82da56342cfcb4ade1528ecd" kindref="member">length</ref>;</highlight></codeline>
+<codeline lineno="145"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(j<sp/>=<sp/>0;<sp/>j<sp/>&lt;<sp/><ref refid="convtest_8m_1afb358f48b1646c750fb9da6c6585be2b" kindref="member">end</ref>;<sp/>j<sp/>++)<sp/></highlight></codeline>
+<codeline lineno="146"><highlight class="normal"><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="147"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>sum<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="148"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(i<sp/>=<sp/>0;<sp/>i<sp/>&lt;<sp/><ref refid="classsoundtouch_1_1_f_i_r_filter_1a7356511d82da56342cfcb4ade1528ecd" kindref="member">length</ref>;<sp/>i<sp/>+=<sp/>4)<sp/></highlight></codeline>
+<codeline lineno="149"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="150"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>loop<sp/>is<sp/>unrolled<sp/>by<sp/>factor<sp/>of<sp/>4<sp/>here<sp/>for<sp/>efficiency</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="151"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>sum<sp/>+=<sp/>src[i<sp/>+<sp/>0]<sp/>*<sp/><ref refid="classsoundtouch_1_1_f_i_r_filter_1a6286018ebf5c70419c9786f085d5de51" kindref="member">filterCoeffs</ref>[i<sp/>+<sp/>0]<sp/>+<sp/></highlight></codeline>
+<codeline lineno="152"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>src[i<sp/>+<sp/>1]<sp/>*<sp/><ref refid="classsoundtouch_1_1_f_i_r_filter_1a6286018ebf5c70419c9786f085d5de51" kindref="member">filterCoeffs</ref>[i<sp/>+<sp/>1]<sp/>+<sp/></highlight></codeline>
+<codeline lineno="153"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>src[i<sp/>+<sp/>2]<sp/>*<sp/><ref refid="classsoundtouch_1_1_f_i_r_filter_1a6286018ebf5c70419c9786f085d5de51" kindref="member">filterCoeffs</ref>[i<sp/>+<sp/>2]<sp/>+<sp/></highlight></codeline>
+<codeline lineno="154"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>src[i<sp/>+<sp/>3]<sp/>*<sp/><ref refid="classsoundtouch_1_1_f_i_r_filter_1a6286018ebf5c70419c9786f085d5de51" kindref="member">filterCoeffs</ref>[i<sp/>+<sp/>3];</highlight></codeline>
+<codeline lineno="155"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="156"><highlight class="normal"></highlight><highlight class="preprocessor">#ifdef<sp/>SOUNDTOUCH_INTEGER_SAMPLES</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="157"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>sum<sp/>&gt;&gt;=<sp/><ref refid="classsoundtouch_1_1_f_i_r_filter_1aba176e5f043e7a72cf0d7038369e9782" kindref="member">resultDivFactor</ref>;</highlight></codeline>
+<codeline lineno="158"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>saturate<sp/>to<sp/>16<sp/>bit<sp/>integer<sp/>limits</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="159"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>sum<sp/>=<sp/>(sum<sp/>&lt;<sp/>-32768)<sp/>?<sp/>-32768<sp/>:<sp/>(sum<sp/>&gt;<sp/>32767)<sp/>?<sp/>32767<sp/>:<sp/>sum;</highlight></codeline>
+<codeline lineno="160"><highlight class="normal"></highlight><highlight class="preprocessor">#else</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="161"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>sum<sp/>*=<sp/>dScaler;</highlight></codeline>
+<codeline lineno="162"><highlight class="normal"></highlight><highlight class="preprocessor">#endif<sp/>//<sp/>SOUNDTOUCH_INTEGER_SAMPLES</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="163"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>dest[j]<sp/>=<sp/>(<ref refid="namespacesoundtouch_1a97cfd29a7abb4d4b2a72f803d5b5850c" kindref="member">SAMPLETYPE</ref>)sum;</highlight></codeline>
+<codeline lineno="164"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>src<sp/>++;</highlight></codeline>
+<codeline lineno="165"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="166"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="convtest_8m_1afb358f48b1646c750fb9da6c6585be2b" kindref="member">end</ref>;</highlight></codeline>
+<codeline lineno="167"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="168"><highlight class="normal"></highlight></codeline>
+<codeline lineno="169"><highlight class="normal"></highlight></codeline>
+<codeline lineno="170"><highlight class="normal"></highlight><highlight class="comment">//<sp/>Set<sp/>filter<sp/>coeffiecients<sp/>and<sp/>length.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="171"><highlight class="normal"></highlight><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="172"><highlight class="normal"></highlight><highlight class="comment">//<sp/>Throws<sp/>an<sp/>exception<sp/>if<sp/>filter<sp/>length<sp/>isn&apos;t<sp/>divisible<sp/>by<sp/>8</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="173" refid="classsoundtouch_1_1_f_i_r_filter_1aa34eceb950aa83e7272016cec90d98d0" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classsoundtouch_1_1_f_i_r_filter_1aa34eceb950aa83e7272016cec90d98d0" kindref="member">FIRFilter::setCoefficients</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="namespacesoundtouch_1a97cfd29a7abb4d4b2a72f803d5b5850c" kindref="member">SAMPLETYPE</ref><sp/>*coeffs,<sp/><ref refid="_s_t_types_8h_1a91ad9478d81a7aaf2593e8d9c3d06a14" kindref="member">uint</ref><sp/>newLength,<sp/><ref refid="_s_t_types_8h_1a91ad9478d81a7aaf2593e8d9c3d06a14" kindref="member">uint</ref><sp/>uResultDivFactor)</highlight></codeline>
+<codeline lineno="174"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="175"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="libid3tag_2global_8h_1af576bf8ffa22a44e53018c67095ffbf0" kindref="member">assert</ref>(newLength<sp/>&gt;<sp/>0);</highlight></codeline>
+<codeline lineno="176"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(newLength<sp/>%<sp/>8)<sp/><ref refid="_s_t_types_8h_1afa654bbb8cd596f823ab5ff898767363" kindref="member">ST_THROW_RT_ERROR</ref>(</highlight><highlight class="stringliteral">&quot;FIR<sp/>filter<sp/>length<sp/>not<sp/>divisible<sp/>by<sp/>8&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="177"><highlight class="normal"></highlight></codeline>
+<codeline lineno="178"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="classsoundtouch_1_1_f_i_r_filter_1a910f5d2e012a4dc25d0f280b143a7159" kindref="member">lengthDiv8</ref><sp/>=<sp/>newLength<sp/>/<sp/>8;</highlight></codeline>
+<codeline lineno="179"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="classsoundtouch_1_1_f_i_r_filter_1a7356511d82da56342cfcb4ade1528ecd" kindref="member">length</ref><sp/>=<sp/><ref refid="classsoundtouch_1_1_f_i_r_filter_1a910f5d2e012a4dc25d0f280b143a7159" kindref="member">lengthDiv8</ref><sp/>*<sp/>8;</highlight></codeline>
+<codeline lineno="180"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="libid3tag_2global_8h_1af576bf8ffa22a44e53018c67095ffbf0" kindref="member">assert</ref>(<ref refid="classsoundtouch_1_1_f_i_r_filter_1a7356511d82da56342cfcb4ade1528ecd" kindref="member">length</ref><sp/>==<sp/>newLength);</highlight></codeline>
+<codeline lineno="181"><highlight class="normal"></highlight></codeline>
+<codeline lineno="182"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="classsoundtouch_1_1_f_i_r_filter_1aba176e5f043e7a72cf0d7038369e9782" kindref="member">resultDivFactor</ref><sp/>=<sp/>uResultDivFactor;</highlight></codeline>
+<codeline lineno="183"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="classsoundtouch_1_1_f_i_r_filter_1a8b963c3014ad852faa4e28c10757b444" kindref="member">resultDivider</ref><sp/>=<sp/>(<ref refid="namespacesoundtouch_1a97cfd29a7abb4d4b2a72f803d5b5850c" kindref="member">SAMPLETYPE</ref>)::pow(2.0,<sp/>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal">)<ref refid="classsoundtouch_1_1_f_i_r_filter_1aba176e5f043e7a72cf0d7038369e9782" kindref="member">resultDivFactor</ref>);</highlight></codeline>
+<codeline lineno="184"><highlight class="normal"></highlight></codeline>
+<codeline lineno="185"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">delete</highlight><highlight class="normal">[]<sp/><ref refid="classsoundtouch_1_1_f_i_r_filter_1a6286018ebf5c70419c9786f085d5de51" kindref="member">filterCoeffs</ref>;</highlight></codeline>
+<codeline lineno="186"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="classsoundtouch_1_1_f_i_r_filter_1a6286018ebf5c70419c9786f085d5de51" kindref="member">filterCoeffs</ref><sp/>=<sp/></highlight><highlight class="keyword">new</highlight><highlight class="normal"><sp/><ref refid="namespacesoundtouch_1a97cfd29a7abb4d4b2a72f803d5b5850c" kindref="member">SAMPLETYPE</ref>[<ref refid="classsoundtouch_1_1_f_i_r_filter_1a7356511d82da56342cfcb4ade1528ecd" kindref="member">length</ref>];</highlight></codeline>
+<codeline lineno="187"><highlight class="normal"><sp/><sp/><sp/><sp/>memcpy(<ref refid="classsoundtouch_1_1_f_i_r_filter_1a6286018ebf5c70419c9786f085d5de51" kindref="member">filterCoeffs</ref>,<sp/>coeffs,<sp/><ref refid="classsoundtouch_1_1_f_i_r_filter_1a7356511d82da56342cfcb4ade1528ecd" kindref="member">length</ref><sp/>*<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(<ref refid="namespacesoundtouch_1a97cfd29a7abb4d4b2a72f803d5b5850c" kindref="member">SAMPLETYPE</ref>));</highlight></codeline>
+<codeline lineno="188"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="189"><highlight class="normal"></highlight></codeline>
+<codeline lineno="190"><highlight class="normal"></highlight></codeline>
+<codeline lineno="191" refid="classsoundtouch_1_1_f_i_r_filter_1a0416006ff1fe7a8dc0b0506c966d03b1" refkind="member"><highlight class="normal"><ref refid="_s_t_types_8h_1a91ad9478d81a7aaf2593e8d9c3d06a14" kindref="member">uint</ref><sp/><ref refid="classsoundtouch_1_1_f_i_r_filter_1a0416006ff1fe7a8dc0b0506c966d03b1" kindref="member">FIRFilter::getLength</ref>()</highlight><highlight class="keyword"><sp/>const</highlight></codeline>
+<codeline lineno="192"><highlight class="keyword"></highlight><highlight class="normal">{</highlight></codeline>
+<codeline lineno="193"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="classsoundtouch_1_1_f_i_r_filter_1a7356511d82da56342cfcb4ade1528ecd" kindref="member">length</ref>;</highlight></codeline>
+<codeline lineno="194"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="195"><highlight class="normal"></highlight></codeline>
+<codeline lineno="196"><highlight class="normal"></highlight></codeline>
+<codeline lineno="197"><highlight class="normal"></highlight></codeline>
+<codeline lineno="198"><highlight class="normal"></highlight><highlight class="comment">//<sp/>Applies<sp/>the<sp/>filter<sp/>to<sp/>the<sp/>given<sp/>sequence<sp/>of<sp/>samples.<sp/></highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="199"><highlight class="normal"></highlight><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="200"><highlight class="normal"></highlight><highlight class="comment">//<sp/>Note<sp/>:<sp/>The<sp/>amount<sp/>of<sp/>outputted<sp/>samples<sp/>is<sp/>by<sp/>value<sp/>of<sp/>&apos;filter_length&apos;<sp/></highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="201"><highlight class="normal"></highlight><highlight class="comment">//<sp/>smaller<sp/>than<sp/>the<sp/>amount<sp/>of<sp/>input<sp/>samples.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="202" refid="classsoundtouch_1_1_f_i_r_filter_1a7fa5b31a139badbadb272aeb412ec980" refkind="member"><highlight class="normal"><ref refid="_s_t_types_8h_1a91ad9478d81a7aaf2593e8d9c3d06a14" kindref="member">uint</ref><sp/><ref refid="classsoundtouch_1_1_f_i_r_filter_1a7fa5b31a139badbadb272aeb412ec980" kindref="member">FIRFilter::evaluate</ref>(<ref refid="namespacesoundtouch_1a97cfd29a7abb4d4b2a72f803d5b5850c" kindref="member">SAMPLETYPE</ref><sp/>*<ref refid="namespacelv2specgen_1af69976955f051ccef12ad2f85392e818" kindref="member">dest</ref>,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="namespacesoundtouch_1a97cfd29a7abb4d4b2a72f803d5b5850c" kindref="member">SAMPLETYPE</ref><sp/>*src,<sp/><ref refid="_s_t_types_8h_1a91ad9478d81a7aaf2593e8d9c3d06a14" kindref="member">uint</ref><sp/>numSamples,<sp/><ref refid="_s_t_types_8h_1a91ad9478d81a7aaf2593e8d9c3d06a14" kindref="member">uint</ref><sp/>numChannels)</highlight><highlight class="keyword"><sp/>const</highlight></codeline>
+<codeline lineno="203"><highlight class="keyword"></highlight><highlight class="normal">{</highlight></codeline>
+<codeline lineno="204"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="libid3tag_2global_8h_1af576bf8ffa22a44e53018c67095ffbf0" kindref="member">assert</ref>(numChannels<sp/>==<sp/>1<sp/>||<sp/>numChannels<sp/>==<sp/>2);</highlight></codeline>
+<codeline lineno="205"><highlight class="normal"></highlight></codeline>
+<codeline lineno="206"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="libid3tag_2global_8h_1af576bf8ffa22a44e53018c67095ffbf0" kindref="member">assert</ref>(<ref refid="classsoundtouch_1_1_f_i_r_filter_1a7356511d82da56342cfcb4ade1528ecd" kindref="member">length</ref><sp/>&gt;<sp/>0);</highlight></codeline>
+<codeline lineno="207"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="libid3tag_2global_8h_1af576bf8ffa22a44e53018c67095ffbf0" kindref="member">assert</ref>(<ref refid="classsoundtouch_1_1_f_i_r_filter_1a910f5d2e012a4dc25d0f280b143a7159" kindref="member">lengthDiv8</ref><sp/>*<sp/>8<sp/>==<sp/><ref refid="classsoundtouch_1_1_f_i_r_filter_1a7356511d82da56342cfcb4ade1528ecd" kindref="member">length</ref>);</highlight></codeline>
+<codeline lineno="208"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(numSamples<sp/>&lt;<sp/><ref refid="classsoundtouch_1_1_f_i_r_filter_1a7356511d82da56342cfcb4ade1528ecd" kindref="member">length</ref>)<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="209"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(numChannels<sp/>==<sp/>2)<sp/></highlight></codeline>
+<codeline lineno="210"><highlight class="normal"><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="211"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="classsoundtouch_1_1_f_i_r_filter_1af9bb0383d7c16b128cda2be308e05ee4" kindref="member">evaluateFilterStereo</ref>(dest,<sp/>src,<sp/>numSamples);</highlight></codeline>
+<codeline lineno="212"><highlight class="normal"><sp/><sp/><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="213"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="classsoundtouch_1_1_f_i_r_filter_1a9cb4d800241c5857895243d78608a5dc" kindref="member">evaluateFilterMono</ref>(dest,<sp/>src,<sp/>numSamples);</highlight></codeline>
+<codeline lineno="214"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="215"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="216"><highlight class="normal"></highlight></codeline>
+<codeline lineno="217"><highlight class="normal"></highlight></codeline>
+<codeline lineno="218"><highlight class="normal"></highlight></codeline>
+<codeline lineno="219"><highlight class="normal"></highlight><highlight class="comment">//<sp/>Operator<sp/>&apos;new&apos;<sp/>is<sp/>overloaded<sp/>so<sp/>that<sp/>it<sp/>automatically<sp/>creates<sp/>a<sp/>suitable<sp/>instance<sp/></highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="220"><highlight class="normal"></highlight><highlight class="comment">//<sp/>depending<sp/>on<sp/>if<sp/>we&apos;ve<sp/>a<sp/>MMX-capable<sp/>CPU<sp/>available<sp/>or<sp/>not.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="221" refid="classsoundtouch_1_1_f_i_r_filter_1a119eb1b1b79779fc772a0f30e55ea5a1" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>*<sp/>FIRFilter::operator<sp/></highlight><highlight class="keyword">new</highlight><highlight class="normal">(</highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/><ref refid="lib_2expat_8h_1a755339d27872b13735c2cab829e47157" kindref="member">s</ref>)</highlight></codeline>
+<codeline lineno="222"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="223"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Notice!<sp/>don&apos;t<sp/>use<sp/>&quot;new<sp/>FIRFilter&quot;<sp/>directly,<sp/>use<sp/>&quot;newInstance&quot;<sp/>to<sp/>create<sp/>a<sp/>new<sp/>instance<sp/>instead!</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="224"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="_s_t_types_8h_1afa654bbb8cd596f823ab5ff898767363" kindref="member">ST_THROW_RT_ERROR</ref>(</highlight><highlight class="stringliteral">&quot;Error<sp/>in<sp/>FIRFilter::new:<sp/>Don&apos;t<sp/>use<sp/>&apos;new<sp/>FIRFilter&apos;,<sp/>use<sp/>&apos;newInstance&apos;<sp/>member<sp/>instead!&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="225"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="classsoundtouch_1_1_f_i_r_filter_1a8aff233332b85a6e3e182150b0c50e1c" kindref="member">newInstance</ref>();</highlight></codeline>
+<codeline lineno="226"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="227"><highlight class="normal"></highlight></codeline>
+<codeline lineno="228"><highlight class="normal"></highlight></codeline>
+<codeline lineno="229" refid="classsoundtouch_1_1_f_i_r_filter_1a8aff233332b85a6e3e182150b0c50e1c" refkind="member"><highlight class="normal"><ref refid="classsoundtouch_1_1_f_i_r_filter" kindref="compound">FIRFilter</ref><sp/>*<sp/><ref refid="classsoundtouch_1_1_f_i_r_filter_1a8aff233332b85a6e3e182150b0c50e1c" kindref="member">FIRFilter::newInstance</ref>()</highlight></codeline>
+<codeline lineno="230"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="231"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="_s_t_types_8h_1a91ad9478d81a7aaf2593e8d9c3d06a14" kindref="member">uint</ref><sp/>uExtensions;</highlight></codeline>
+<codeline lineno="232"><highlight class="normal"></highlight></codeline>
+<codeline lineno="233"><highlight class="normal"><sp/><sp/><sp/><sp/>uExtensions<sp/>=<sp/><ref refid="cpu__detect_8h_1aee61147b9bf0a52f630232321dd1377d" kindref="member">detectCPUextensions</ref>();</highlight></codeline>
+<codeline lineno="234"><highlight class="normal"></highlight></codeline>
+<codeline lineno="235"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Check<sp/>if<sp/>MMX/SSE<sp/>instruction<sp/>set<sp/>extensions<sp/>supported<sp/>by<sp/>CPU</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="236"><highlight class="normal"></highlight></codeline>
+<codeline lineno="237"><highlight class="normal"></highlight><highlight class="preprocessor">#ifdef<sp/>SOUNDTOUCH_ALLOW_MMX</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="238"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>MMX<sp/>routines<sp/>available<sp/>only<sp/>with<sp/>integer<sp/>sample<sp/>types</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="239"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(uExtensions<sp/>&amp;<sp/><ref refid="cpu__detect_8h_1a471bb7933cc22fa379a1858470097ddb" kindref="member">SUPPORT_MMX</ref>)</highlight></codeline>
+<codeline lineno="240"><highlight class="normal"><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="241"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>return<sp/>::new<sp/>FIRFilterMMX;</highlight></codeline>
+<codeline lineno="242"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="243"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="244"><highlight class="normal"></highlight><highlight class="preprocessor">#endif<sp/>//<sp/>SOUNDTOUCH_ALLOW_MMX</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="245"><highlight class="normal"></highlight></codeline>
+<codeline lineno="246"><highlight class="normal"></highlight><highlight class="preprocessor">#ifdef<sp/>SOUNDTOUCH_ALLOW_SSE</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="247"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(uExtensions<sp/>&amp;<sp/><ref refid="cpu__detect_8h_1ab212f6609dace96e23f99047bcf98011" kindref="member">SUPPORT_SSE</ref>)</highlight></codeline>
+<codeline lineno="248"><highlight class="normal"><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="249"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>SSE<sp/>support</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="250"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>return<sp/>::new<sp/>FIRFilterSSE;</highlight></codeline>
+<codeline lineno="251"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="252"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="253"><highlight class="normal"></highlight><highlight class="preprocessor">#endif<sp/>//<sp/>SOUNDTOUCH_ALLOW_SSE</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="254"><highlight class="normal"></highlight></codeline>
+<codeline lineno="255"><highlight class="normal"><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="256"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>ISA<sp/>optimizations<sp/>not<sp/>supported,<sp/>use<sp/>plain<sp/>C<sp/>version</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="257"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>return<sp/>::new<sp/><ref refid="classsoundtouch_1_1_f_i_r_filter_1a39141358fb43d609855ebca52727997f" kindref="member">FIRFilter</ref>;</highlight></codeline>
+<codeline lineno="258"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="259"><highlight class="normal">}</highlight></codeline>
+    </programlisting>
+    <location file="C:/_dev/OpenU/Audacity/audacity/lib-src/soundtouch/source/SoundTouch/FIRFilter.cpp"/>
+  </compounddef>
+</doxygen>

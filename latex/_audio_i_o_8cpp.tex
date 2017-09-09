@@ -1,0 +1,211 @@
+\hypertarget{_audio_i_o_8cpp}{}\section{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/src/\+Audio\+IO.cpp File Reference}
+\label{_audio_i_o_8cpp}\index{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/src/\+Audio\+I\+O.\+cpp@{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/src/\+Audio\+I\+O.\+cpp}}
+{\ttfamily \#include \char`\"{}Audacity.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Experimental.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Audio\+I\+O.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}float\+\_\+cast.\+h\char`\"{}}\\*
+{\ttfamily \#include $<$math.\+h$>$}\\*
+{\ttfamily \#include $<$stdlib.\+h$>$}\\*
+{\ttfamily \#include $<$algorithm$>$}\\*
+{\ttfamily \#include $<$wx/log.\+h$>$}\\*
+{\ttfamily \#include $<$wx/textctrl.\+h$>$}\\*
+{\ttfamily \#include $<$wx/msgdlg.\+h$>$}\\*
+{\ttfamily \#include $<$wx/timer.\+h$>$}\\*
+{\ttfamily \#include $<$wx/intl.\+h$>$}\\*
+{\ttfamily \#include $<$wx/debug.\+h$>$}\\*
+{\ttfamily \#include $<$wx/sstream.\+h$>$}\\*
+{\ttfamily \#include $<$wx/txtstrm.\+h$>$}\\*
+{\ttfamily \#include \char`\"{}Audacity\+App.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Mix.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Mixer\+Board.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Resample.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Ring\+Buffer.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}prefs/\+G\+U\+I\+Settings.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Prefs.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Project.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Time\+Track.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Wave\+Track.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Auto\+Recovery.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}toolbars/\+Control\+Tool\+Bar.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}widgets/\+Meter.\+h\char`\"{}}\\*
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{struct_audio_i_o_1_1_scrub_queue}{Audio\+I\+O\+::\+Scrub\+Queue}
+\item 
+class \hyperlink{class_audio_thread}{Audio\+Thread}
+\begin{DoxyCompactList}\small\item\em Defined different on Mac and other platforms (on Mac it does not use wx\+Widgets wx\+Thread), this class sits in a thread loop reading and writing audio. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{_audio_i_o_8cpp_afa99ec4acc4ecb2dc3c2d05da15d0e3f}{M\+AX}(\hyperlink{rfft2d_test_m_l_8m_a4124bc0a9335c27f086f24ba207a4912}{a},  \hyperlink{convtest_8m_a21ad0bd836b90d08f4cf640b4c298e7c}{b})~((\hyperlink{rfft2d_test_m_l_8m_a4124bc0a9335c27f086f24ba207a4912}{a}) $>$ (\hyperlink{convtest_8m_a21ad0bd836b90d08f4cf640b4c298e7c}{b}) ? (\hyperlink{rfft2d_test_m_l_8m_a4124bc0a9335c27f086f24ba207a4912}{a}) \+: (\hyperlink{convtest_8m_a21ad0bd836b90d08f4cf640b4c298e7c}{b}))
+\item 
+\#define \hyperlink{_audio_i_o_8cpp_acc008afd16bfe86dc2957499c066f444}{O\+R\+I\+G\+I\+N\+A\+L\+\_\+\+D\+O\+\_\+\+N\+O\+T\+\_\+\+P\+L\+A\+Y\+\_\+\+A\+L\+L\+\_\+\+M\+U\+T\+E\+D\+\_\+\+T\+R\+A\+C\+K\+S\+\_\+\+T\+O\+\_\+\+E\+ND}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{_audio_i_o_8cpp_afe09dca1dfac7c8652e5e0cfd37cd793}{D\+E\+F\+I\+N\+E\+\_\+\+E\+V\+E\+N\+T\+\_\+\+T\+Y\+PE} (E\+V\+T\+\_\+\+A\+U\+D\+I\+O\+I\+O\+\_\+\+P\+L\+A\+Y\+B\+A\+CK)
+\item 
+\hyperlink{_audio_i_o_8cpp_a7684d0120755b2a8a76e061ea5561b6f}{D\+E\+F\+I\+N\+E\+\_\+\+E\+V\+E\+N\+T\+\_\+\+T\+Y\+PE} (E\+V\+T\+\_\+\+A\+U\+D\+I\+O\+I\+O\+\_\+\+C\+A\+P\+T\+U\+RE)
+\item 
+\hyperlink{_audio_i_o_8cpp_a38c7827c763c9df58e9d1b46a8e9d2c3}{D\+E\+F\+I\+N\+E\+\_\+\+E\+V\+E\+N\+T\+\_\+\+T\+Y\+PE} (E\+V\+T\+\_\+\+A\+U\+D\+I\+O\+I\+O\+\_\+\+M\+O\+N\+I\+T\+OR)
+\item 
+\hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{_audio_i_o_8cpp_a0d694f00df707ad21d421a1b29ad46ea}{audacity\+Audio\+Callback} (\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} $\ast$input\+Buffer, \hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} $\ast$output\+Buffer, unsigned long frames\+Per\+Buffer, \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{struct_pa_stream_callback_time_info}{Pa\+Stream\+Callback\+Time\+Info} $\ast$time\+Info, \hyperlink{portaudio_8h_a55a005924bcfa0424594f4f65cd4ae82}{Pa\+Stream\+Callback\+Flags} status\+Flags, \hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} $\ast$\hyperlink{xmlparse_8c_a4b666535c828e23ccd16510a0a1a1943}{user\+Data})
+\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{_audio_i_o_8cpp_a5c082d9ef3612f42a4a78edffdf2a0db}{Init\+Audio\+IO} ()
+\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{_audio_i_o_8cpp_a362633315924afe19ab0fe0cf4bd32da}{Deinit\+Audio\+IO} ()
+\item 
+wx\+String \hyperlink{_audio_i_o_8cpp_a289724ea943616e20d183ab0e6481bf7}{Device\+Name} (\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{struct_pa_device_info}{Pa\+Device\+Info} $\ast$\hyperlink{lib_2expat_8h_a20806b446e455c50dc5653b7d43e3de2}{info})
+\item 
+wx\+String \hyperlink{_audio_i_o_8cpp_a953244abb4687d841dc666950d0c9a31}{Host\+Name} (\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{struct_pa_device_info}{Pa\+Device\+Info} $\ast$\hyperlink{lib_2expat_8h_a20806b446e455c50dc5653b7d43e3de2}{info})
+\item 
+\hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{_audio_i_o_8cpp_a0d61f0f479afd18f75c3982362665da8}{audacity\+Audio\+Callback} (\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} $\ast$input\+Buffer, \hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} $\ast$output\+Buffer, unsigned long frames\+Per\+Buffer,       \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{struct_pa_stream_callback_time_info}{Pa\+Stream\+Callback\+Time\+Info} $\ast$W\+X\+U\+N\+U\+S\+ED(time\+Info), \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{portaudio_8h_a55a005924bcfa0424594f4f65cd4ae82}{Pa\+Stream\+Callback\+Flags} W\+X\+U\+N\+U\+S\+ED(status\+Flags), \hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} $\ast$W\+X\+U\+N\+U\+S\+ED(\hyperlink{xmlparse_8c_a4b666535c828e23ccd16510a0a1a1943}{user\+Data}))
+\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{class_audio_i_o}{Audio\+IO} $\ast$ \hyperlink{_audio_i_o_8cpp_a142d4fde5f1429059adcac9ea1f63425}{g\+Audio\+IO}
+\end{DoxyCompactItemize}
+
+
+\subsection{Macro Definition Documentation}
+\index{Audio\+I\+O.\+cpp@{Audio\+I\+O.\+cpp}!M\+AX@{M\+AX}}
+\index{M\+AX@{M\+AX}!Audio\+I\+O.\+cpp@{Audio\+I\+O.\+cpp}}
+\subsubsection[{\texorpdfstring{M\+AX}{MAX}}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+AX(
+\begin{DoxyParamCaption}
+\item[{}]{{\bf a}, }
+\item[{}]{{\bf b}}
+\end{DoxyParamCaption}
+)~(({\bf a}) $>$ ({\bf b}) ? ({\bf a}) \+: ({\bf b}))}\hypertarget{_audio_i_o_8cpp_afa99ec4acc4ecb2dc3c2d05da15d0e3f}{}\label{_audio_i_o_8cpp_afa99ec4acc4ecb2dc3c2d05da15d0e3f}
+
+
+Definition at line 3915 of file Audio\+I\+O.\+cpp.
+
+\index{Audio\+I\+O.\+cpp@{Audio\+I\+O.\+cpp}!O\+R\+I\+G\+I\+N\+A\+L\+\_\+\+D\+O\+\_\+\+N\+O\+T\+\_\+\+P\+L\+A\+Y\+\_\+\+A\+L\+L\+\_\+\+M\+U\+T\+E\+D\+\_\+\+T\+R\+A\+C\+K\+S\+\_\+\+T\+O\+\_\+\+E\+ND@{O\+R\+I\+G\+I\+N\+A\+L\+\_\+\+D\+O\+\_\+\+N\+O\+T\+\_\+\+P\+L\+A\+Y\+\_\+\+A\+L\+L\+\_\+\+M\+U\+T\+E\+D\+\_\+\+T\+R\+A\+C\+K\+S\+\_\+\+T\+O\+\_\+\+E\+ND}}
+\index{O\+R\+I\+G\+I\+N\+A\+L\+\_\+\+D\+O\+\_\+\+N\+O\+T\+\_\+\+P\+L\+A\+Y\+\_\+\+A\+L\+L\+\_\+\+M\+U\+T\+E\+D\+\_\+\+T\+R\+A\+C\+K\+S\+\_\+\+T\+O\+\_\+\+E\+ND@{O\+R\+I\+G\+I\+N\+A\+L\+\_\+\+D\+O\+\_\+\+N\+O\+T\+\_\+\+P\+L\+A\+Y\+\_\+\+A\+L\+L\+\_\+\+M\+U\+T\+E\+D\+\_\+\+T\+R\+A\+C\+K\+S\+\_\+\+T\+O\+\_\+\+E\+ND}!Audio\+I\+O.\+cpp@{Audio\+I\+O.\+cpp}}
+\subsubsection[{\texorpdfstring{O\+R\+I\+G\+I\+N\+A\+L\+\_\+\+D\+O\+\_\+\+N\+O\+T\+\_\+\+P\+L\+A\+Y\+\_\+\+A\+L\+L\+\_\+\+M\+U\+T\+E\+D\+\_\+\+T\+R\+A\+C\+K\+S\+\_\+\+T\+O\+\_\+\+E\+ND}{ORIGINAL_DO_NOT_PLAY_ALL_MUTED_TRACKS_TO_END}}]{\setlength{\rightskip}{0pt plus 5cm}\#define O\+R\+I\+G\+I\+N\+A\+L\+\_\+\+D\+O\+\_\+\+N\+O\+T\+\_\+\+P\+L\+A\+Y\+\_\+\+A\+L\+L\+\_\+\+M\+U\+T\+E\+D\+\_\+\+T\+R\+A\+C\+K\+S\+\_\+\+T\+O\+\_\+\+E\+ND}\hypertarget{_audio_i_o_8cpp_acc008afd16bfe86dc2957499c066f444}{}\label{_audio_i_o_8cpp_acc008afd16bfe86dc2957499c066f444}
+
+
+\subsection{Function Documentation}
+\index{Audio\+I\+O.\+cpp@{Audio\+I\+O.\+cpp}!audacity\+Audio\+Callback@{audacity\+Audio\+Callback}}
+\index{audacity\+Audio\+Callback@{audacity\+Audio\+Callback}!Audio\+I\+O.\+cpp@{Audio\+I\+O.\+cpp}}
+\subsubsection[{\texorpdfstring{audacity\+Audio\+Callback(const void $\ast$input\+Buffer, void $\ast$output\+Buffer, unsigned long frames\+Per\+Buffer, const Pa\+Stream\+Callback\+Time\+Info $\ast$time\+Info, Pa\+Stream\+Callback\+Flags status\+Flags, void $\ast$user\+Data)}{audacityAudioCallback(const void *inputBuffer, void *outputBuffer, unsigned long framesPerBuffer, const PaStreamCallbackTimeInfo *timeInfo, PaStreamCallbackFlags statusFlags, void *userData)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf int} audacity\+Audio\+Callback (
+\begin{DoxyParamCaption}
+\item[{{\bf const} {\bf void} $\ast$}]{input\+Buffer, }
+\item[{{\bf void} $\ast$}]{output\+Buffer, }
+\item[{unsigned long}]{frames\+Per\+Buffer, }
+\item[{{\bf const} {\bf Pa\+Stream\+Callback\+Time\+Info} $\ast$}]{time\+Info, }
+\item[{{\bf Pa\+Stream\+Callback\+Flags}}]{status\+Flags, }
+\item[{{\bf void} $\ast$}]{user\+Data}
+\end{DoxyParamCaption}
+)}\hypertarget{_audio_i_o_8cpp_a0d694f00df707ad21d421a1b29ad46ea}{}\label{_audio_i_o_8cpp_a0d694f00df707ad21d421a1b29ad46ea}
+brief The function which is called from Port\+Audio\textquotesingle{}s callback thread context to collect and deliver audio for / from the sound device.
+
+This covers recording, playback, and doing both simultaneously. It is also invoked to do monitoring and software playthrough. Note that dealing with the two buffers needs some care to ensure that the right things happen for all possible cases. 
+\begin{DoxyParams}{Parameters}
+{\em input\+Buffer} & Buffer of length frames\+Per\+Buffer containing samples from the sound card, or null if not capturing audio. Note that the data type will depend on the format of audio data that was chosen when the stream was created (so could be floats or various integers) \\
+\hline
+{\em output\+Buffer} & Uninitialised buffer of length frames\+Per\+Buffer which will be sent to the sound card after the callback, or null if not playing audio back. \\
+\hline
+{\em frames\+Per\+Buffer} & The length of the playback and recording buffers \\
+\hline
+{\em \hyperlink{struct_pa_stream_callback_time_info}{Pa\+Stream\+Callback\+Time\+Info}} & Pointer to Port\+Audio time information structure, which tells us how long we have been playing / recording \\
+\hline
+{\em status\+Flags} & Port\+Audio stream status flags \\
+\hline
+{\em user\+Data} & pointer to user-\/defined data structure. Provided for flexibility by Port\+Audio, but not used by Audacity -\/ the data is stored in the \hyperlink{class_audio_i_o}{Audio\+IO} class instead. \\
+\hline
+\end{DoxyParams}
+\index{Audio\+I\+O.\+cpp@{Audio\+I\+O.\+cpp}!audacity\+Audio\+Callback@{audacity\+Audio\+Callback}}
+\index{audacity\+Audio\+Callback@{audacity\+Audio\+Callback}!Audio\+I\+O.\+cpp@{Audio\+I\+O.\+cpp}}
+\subsubsection[{\texorpdfstring{audacity\+Audio\+Callback(const void $\ast$input\+Buffer, void $\ast$output\+Buffer, unsigned long frames\+Per\+Buffer,       const Pa\+Stream\+Callback\+Time\+Info $\ast$\+W\+X\+U\+N\+U\+S\+E\+D(time\+Info), const Pa\+Stream\+Callback\+Flags W\+X\+U\+N\+U\+S\+E\+D(status\+Flags), void $\ast$\+W\+X\+U\+N\+U\+S\+E\+D(user\+Data))}{audacityAudioCallback(const void *inputBuffer, void *outputBuffer, unsigned long framesPerBuffer,       const PaStreamCallbackTimeInfo *WXUNUSED(timeInfo), const PaStreamCallbackFlags WXUNUSED(statusFlags), void *WXUNUSED(userData))}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf int} audacity\+Audio\+Callback (
+\begin{DoxyParamCaption}
+\item[{{\bf const} {\bf void} $\ast$}]{input\+Buffer, }
+\item[{{\bf void} $\ast$}]{output\+Buffer, }
+\item[{unsigned long}]{frames\+Per\+Buffer, }
+\item[{{\bf const} {\bf Pa\+Stream\+Callback\+Time\+Info} $\ast$}]{W\+X\+U\+N\+U\+S\+EDtime\+Info, }
+\item[{{\bf const} {\bf Pa\+Stream\+Callback\+Flags} }]{W\+X\+U\+N\+U\+S\+EDstatus\+Flags, }
+\item[{{\bf void} $\ast$}]{W\+X\+U\+N\+U\+S\+EDuser\+Data}
+\end{DoxyParamCaption}
+)}\hypertarget{_audio_i_o_8cpp_a0d61f0f479afd18f75c3982362665da8}{}\label{_audio_i_o_8cpp_a0d61f0f479afd18f75c3982362665da8}
+
+
+Definition at line 3938 of file Audio\+I\+O.\+cpp.
+
+\index{Audio\+I\+O.\+cpp@{Audio\+I\+O.\+cpp}!D\+E\+F\+I\+N\+E\+\_\+\+E\+V\+E\+N\+T\+\_\+\+T\+Y\+PE@{D\+E\+F\+I\+N\+E\+\_\+\+E\+V\+E\+N\+T\+\_\+\+T\+Y\+PE}}
+\index{D\+E\+F\+I\+N\+E\+\_\+\+E\+V\+E\+N\+T\+\_\+\+T\+Y\+PE@{D\+E\+F\+I\+N\+E\+\_\+\+E\+V\+E\+N\+T\+\_\+\+T\+Y\+PE}!Audio\+I\+O.\+cpp@{Audio\+I\+O.\+cpp}}
+\subsubsection[{\texorpdfstring{D\+E\+F\+I\+N\+E\+\_\+\+E\+V\+E\+N\+T\+\_\+\+T\+Y\+P\+E(\+E\+V\+T\+\_\+\+A\+U\+D\+I\+O\+I\+O\+\_\+\+P\+L\+A\+Y\+B\+A\+C\+K)}{DEFINE_EVENT_TYPE(EVT_AUDIOIO_PLAYBACK)}}]{\setlength{\rightskip}{0pt plus 5cm}D\+E\+F\+I\+N\+E\+\_\+\+E\+V\+E\+N\+T\+\_\+\+T\+Y\+PE (
+\begin{DoxyParamCaption}
+\item[{E\+V\+T\+\_\+\+A\+U\+D\+I\+O\+I\+O\+\_\+\+P\+L\+A\+Y\+B\+A\+CK}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{_audio_i_o_8cpp_afe09dca1dfac7c8652e5e0cfd37cd793}{}\label{_audio_i_o_8cpp_afe09dca1dfac7c8652e5e0cfd37cd793}
+\index{Audio\+I\+O.\+cpp@{Audio\+I\+O.\+cpp}!D\+E\+F\+I\+N\+E\+\_\+\+E\+V\+E\+N\+T\+\_\+\+T\+Y\+PE@{D\+E\+F\+I\+N\+E\+\_\+\+E\+V\+E\+N\+T\+\_\+\+T\+Y\+PE}}
+\index{D\+E\+F\+I\+N\+E\+\_\+\+E\+V\+E\+N\+T\+\_\+\+T\+Y\+PE@{D\+E\+F\+I\+N\+E\+\_\+\+E\+V\+E\+N\+T\+\_\+\+T\+Y\+PE}!Audio\+I\+O.\+cpp@{Audio\+I\+O.\+cpp}}
+\subsubsection[{\texorpdfstring{D\+E\+F\+I\+N\+E\+\_\+\+E\+V\+E\+N\+T\+\_\+\+T\+Y\+P\+E(\+E\+V\+T\+\_\+\+A\+U\+D\+I\+O\+I\+O\+\_\+\+C\+A\+P\+T\+U\+R\+E)}{DEFINE_EVENT_TYPE(EVT_AUDIOIO_CAPTURE)}}]{\setlength{\rightskip}{0pt plus 5cm}D\+E\+F\+I\+N\+E\+\_\+\+E\+V\+E\+N\+T\+\_\+\+T\+Y\+PE (
+\begin{DoxyParamCaption}
+\item[{E\+V\+T\+\_\+\+A\+U\+D\+I\+O\+I\+O\+\_\+\+C\+A\+P\+T\+U\+RE}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{_audio_i_o_8cpp_a7684d0120755b2a8a76e061ea5561b6f}{}\label{_audio_i_o_8cpp_a7684d0120755b2a8a76e061ea5561b6f}
+\index{Audio\+I\+O.\+cpp@{Audio\+I\+O.\+cpp}!D\+E\+F\+I\+N\+E\+\_\+\+E\+V\+E\+N\+T\+\_\+\+T\+Y\+PE@{D\+E\+F\+I\+N\+E\+\_\+\+E\+V\+E\+N\+T\+\_\+\+T\+Y\+PE}}
+\index{D\+E\+F\+I\+N\+E\+\_\+\+E\+V\+E\+N\+T\+\_\+\+T\+Y\+PE@{D\+E\+F\+I\+N\+E\+\_\+\+E\+V\+E\+N\+T\+\_\+\+T\+Y\+PE}!Audio\+I\+O.\+cpp@{Audio\+I\+O.\+cpp}}
+\subsubsection[{\texorpdfstring{D\+E\+F\+I\+N\+E\+\_\+\+E\+V\+E\+N\+T\+\_\+\+T\+Y\+P\+E(\+E\+V\+T\+\_\+\+A\+U\+D\+I\+O\+I\+O\+\_\+\+M\+O\+N\+I\+T\+O\+R)}{DEFINE_EVENT_TYPE(EVT_AUDIOIO_MONITOR)}}]{\setlength{\rightskip}{0pt plus 5cm}D\+E\+F\+I\+N\+E\+\_\+\+E\+V\+E\+N\+T\+\_\+\+T\+Y\+PE (
+\begin{DoxyParamCaption}
+\item[{E\+V\+T\+\_\+\+A\+U\+D\+I\+O\+I\+O\+\_\+\+M\+O\+N\+I\+T\+OR}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{_audio_i_o_8cpp_a38c7827c763c9df58e9d1b46a8e9d2c3}{}\label{_audio_i_o_8cpp_a38c7827c763c9df58e9d1b46a8e9d2c3}
+\index{Audio\+I\+O.\+cpp@{Audio\+I\+O.\+cpp}!Deinit\+Audio\+IO@{Deinit\+Audio\+IO}}
+\index{Deinit\+Audio\+IO@{Deinit\+Audio\+IO}!Audio\+I\+O.\+cpp@{Audio\+I\+O.\+cpp}}
+\subsubsection[{\texorpdfstring{Deinit\+Audio\+I\+O()}{DeinitAudioIO()}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} Deinit\+Audio\+IO (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{_audio_i_o_8cpp_a362633315924afe19ab0fe0cf4bd32da}{}\label{_audio_i_o_8cpp_a362633315924afe19ab0fe0cf4bd32da}
+
+
+Definition at line 825 of file Audio\+I\+O.\+cpp.
+
+\index{Audio\+I\+O.\+cpp@{Audio\+I\+O.\+cpp}!Device\+Name@{Device\+Name}}
+\index{Device\+Name@{Device\+Name}!Audio\+I\+O.\+cpp@{Audio\+I\+O.\+cpp}}
+\subsubsection[{\texorpdfstring{Device\+Name(const Pa\+Device\+Info $\ast$info)}{DeviceName(const PaDeviceInfo *info)}}]{\setlength{\rightskip}{0pt plus 5cm}wx\+String Device\+Name (
+\begin{DoxyParamCaption}
+\item[{{\bf const} {\bf Pa\+Device\+Info} $\ast$}]{info}
+\end{DoxyParamCaption}
+)}\hypertarget{_audio_i_o_8cpp_a289724ea943616e20d183ab0e6481bf7}{}\label{_audio_i_o_8cpp_a289724ea943616e20d183ab0e6481bf7}
+
+
+Definition at line 830 of file Audio\+I\+O.\+cpp.
+
+\index{Audio\+I\+O.\+cpp@{Audio\+I\+O.\+cpp}!Host\+Name@{Host\+Name}}
+\index{Host\+Name@{Host\+Name}!Audio\+I\+O.\+cpp@{Audio\+I\+O.\+cpp}}
+\subsubsection[{\texorpdfstring{Host\+Name(const Pa\+Device\+Info $\ast$info)}{HostName(const PaDeviceInfo *info)}}]{\setlength{\rightskip}{0pt plus 5cm}wx\+String Host\+Name (
+\begin{DoxyParamCaption}
+\item[{{\bf const} {\bf Pa\+Device\+Info} $\ast$}]{info}
+\end{DoxyParamCaption}
+)}\hypertarget{_audio_i_o_8cpp_a953244abb4687d841dc666950d0c9a31}{}\label{_audio_i_o_8cpp_a953244abb4687d841dc666950d0c9a31}
+
+
+Definition at line 837 of file Audio\+I\+O.\+cpp.
+
+\index{Audio\+I\+O.\+cpp@{Audio\+I\+O.\+cpp}!Init\+Audio\+IO@{Init\+Audio\+IO}}
+\index{Init\+Audio\+IO@{Init\+Audio\+IO}!Audio\+I\+O.\+cpp@{Audio\+I\+O.\+cpp}}
+\subsubsection[{\texorpdfstring{Init\+Audio\+I\+O()}{InitAudioIO()}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} Init\+Audio\+IO (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{_audio_i_o_8cpp_a5c082d9ef3612f42a4a78edffdf2a0db}{}\label{_audio_i_o_8cpp_a5c082d9ef3612f42a4a78edffdf2a0db}
+
+
+Definition at line 795 of file Audio\+I\+O.\+cpp.
+
+
+
+\subsection{Variable Documentation}
+\index{Audio\+I\+O.\+cpp@{Audio\+I\+O.\+cpp}!g\+Audio\+IO@{g\+Audio\+IO}}
+\index{g\+Audio\+IO@{g\+Audio\+IO}!Audio\+I\+O.\+cpp@{Audio\+I\+O.\+cpp}}
+\subsubsection[{\texorpdfstring{g\+Audio\+IO}{gAudioIO}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Audio\+IO}$\ast$ g\+Audio\+IO}\hypertarget{_audio_i_o_8cpp_a142d4fde5f1429059adcac9ea1f63425}{}\label{_audio_i_o_8cpp_a142d4fde5f1429059adcac9ea1f63425}
+
+
+Definition at line 329 of file Audio\+I\+O.\+cpp.
+

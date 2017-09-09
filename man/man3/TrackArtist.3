@@ -1,0 +1,198 @@
+.TH "TrackArtist" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+TrackArtist \- This class handles the actual rendering of WaveTracks (both waveforms and spectra), NoteTracks, LabelTracks and TimeTracks\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <TrackArtist\&.h>\fP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBTrackArtist\fP ()"
+.br
+.ti -1c
+.RI "\fB~TrackArtist\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBSetColours\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBDrawTracks\fP (\fBTrackList\fP *tracks, \fBTrack\fP *\fBstart\fP, wxDC &dc, wxRegion &reg, wxRect &rect, wxRect &clip, \fBconst\fP \fBSelectedRegion\fP &selectedRegion, \fBconst\fP \fBZoomInfo\fP &zoomInfo, \fBbool\fP drawEnvelope, \fBbool\fP bigPoints, \fBbool\fP drawSliders)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBDrawTrack\fP (\fBconst\fP \fBTrack\fP *\fBt\fP, wxDC &dc, \fBconst\fP wxRect &rect, \fBconst\fP \fBSelectedRegion\fP &selectedRegion, \fBconst\fP \fBZoomInfo\fP &zoomInfo, \fBbool\fP drawEnvelope, \fBbool\fP bigPoints, \fBbool\fP drawSliders, \fBbool\fP hasSolo)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBDrawVRuler\fP (\fBconst\fP \fBTrack\fP *\fBt\fP, wxDC *dc, wxRect &rect)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBUpdateVRuler\fP (\fBconst\fP \fBTrack\fP *\fBt\fP, wxRect &rect)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBSetInset\fP (\fBint\fP left, \fBint\fP top, \fBint\fP right, \fBint\fP bottom)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBUpdatePrefs\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBSetBackgroundBrushes\fP (wxBrush unselectedBrush, wxBrush selectedBrush, wxPen unselectedPen, wxPen selectedPen)"
+.br
+.in -1c
+.SS "Static Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "static \fBvoid\fP \fBDrawSyncLockTiles\fP (wxDC *dc, wxRect rect)"
+.br
+.ti -1c
+.RI "static \fBvoid\fP \fBDrawBackgroundWithSelection\fP (wxDC *dc, \fBconst\fP wxRect &rect, \fBconst\fP \fBTrack\fP *track, wxBrush &selBrush, wxBrush &unselBrush, \fBconst\fP \fBSelectedRegion\fP &selectedRegion, \fBconst\fP \fBZoomInfo\fP &zoomInfo)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+This class handles the actual rendering of WaveTracks (both waveforms and spectra), NoteTracks, LabelTracks and TimeTracks\&. 
+
+It's actually a little harder than it looks, because for waveforms at least it needs to cache the samples that are currently on-screen\&.
+.PP
+\fBHow Audacity Redisplay Works 
+.br
+ Roger Dannenberg\fP 
+.br
+Oct 2010 
+.br
+ This is a brief guide to Audacity redisplay -- it may not be complete\&. It is my attempt to understand the complicated graphics strategy\&.
+.PP
+One basic idea is that redrawing waveforms is rather slow, so Audacity saves waveform images in bitmaps to make redrawing faster\&. In particular, during audio playback (and recording), the vertical time indicator is drawn over the waveform about 20 times per second\&. To avoid unnecessary computation, the indicator is erased by copying a column of pixels from a bitmap image of the waveform\&. Notice that this implies a two-stage process: first, waveforms are drawn to the bitmp; then, the bitmap (or pieces of it) are copied to the screen, perhaps along with other graphics\&.
+.PP
+The bitmap is for the entire track panel, i\&.e\&. multiple tracks, and includes things like the Gain and Pan slders to the left of the waveform images\&.
+.PP
+The screen update uses a mixture of direct drawing and indirect paint events\&. The 'normal' way to update a graphical display is to call the Refresh() method when something invalidates the screen\&. Later, the system calls OnPaint(), which the application overrides to (re)draw the screen\&. In wxWidgets, you can also draw directly to the screen without calling Refresh() and without waiting for OnPaint() to be called\&.
+.PP
+I would expect there to be a 2-level invalidation scheme: Some changes invalidate the bitmap, forcing a bitmap redraw \fIand\fP a screen redraw\&. Other changes merely update the screen using pre-existing bitmaps\&. In Audacity, the '2-level' invalidation works like this: Anything that invalidates the bitmap calls \fBTrackPanel::Refresh()\fP, which has an eraseBackground parameter\&. This flag says to redraw the bitmap when OnPaint() is called\&. If eraseBackground is false, the existing bitmap can be used for waveform images\&. Audacity also draws directly to the screen to update the time indicator during playback\&. To move the indicator, one column of pixels is drawn to the screen to remove the indicator\&. Then the indicator is drawn at a NEW time location\&.
+.PP
+The track panel consists of many components\&. The tree of calls that update the bitmap looks like this:
+.PP
+.PP
+.nf
+TrackPanel::DrawTracks(), calls
+       TrackArtist::DrawTracks();
+       TrackPanel::DrawEverythingElse();
+               for each track,
+                       TrackPanel::DrawOutside();
+                               TrackPanel::DrawOutsideOfTrack();
+                               TrackPanel::DrawBordersAroundTrack();
+                               TrackPanel::DrawShadow();
+                               TrackInfo::DrawCloseBox();
+                               TrackInfo::DrawTitleBar();
+                               TrackInfo::DrawMinimize();
+                               TrackInfo::DrawBordersWithin();
+                               various TrackInfo sliders and buttons
+                       TrackArtist::DrawVRuler();
+               TrackPanel::DrawZooming();
+                       draws horizontal dashed lines during zoom-drag
+               TrackPanel::HighlightFocusedTrack();
+                       draws yellow highlight on selected track
+               draw snap guidelines if any
+.fi
+.PP
+.PP
+After drawing the bitmap and blitting the bitmap to the screen, the following calls are (sometimes) made\&. To keep track of what has been drawn on screen over the bitmap images, 
+.PD 0
+
+.IP "\(bu" 2
+\fCmLastCursor\fP is the position of the vertical line representing sel0, the selected time position 
+.IP "\(bu" 2
+\fCmLastIndicator\fP is the position of the moving vertical line during playback
+.PP
+.PP
+.nf
+TrackPanel::DoDrawIndicator();
+        copy pixel column from bitmap to screen to erase indicator line
+        TrackPanel::DoDrawCursor(); [if mLastCursor == mLastIndicator]
+        TrackPanel::DisplaySelection();
+        AdornedRulerPanel::DrawIndicator(); [not part of TrackPanel graphics]
+        draw indicator on each track
+TrackPanel::DoDrawCursor();
+        draw cursor on each track  [at selectedRegion\&.t0()]
+        AdornedRulerPanel::DrawCursor(); [not part of TrackPanel graphics]
+        TrackPanel::DisplaySelection();
+.fi
+.PP
+.PP
+To move the indicator, \fBTrackPanel::OnTimer()\fP calls the following, using a drawing context (DC) for the screen\&. (Refresh is not called to create an OnPaint event\&. Instead, drawing is direct to the screen\&.) 
+.PP
+.nf
+TrackPanel::DrawIndicator();
+        TrackPanel::DoDrawIndicator();
+
+.fi
+.PP
+.PP
+Notice that \fBTrackPanel::DrawZooming()\fP, \fBTrackPanel::HighlightFocusedTrack()\fP, and snap guidelines could be drawn directly to the screen rather than to the bitmap, generally eliminating redraw work\&.
+.PP
+One problem is slider udpates\&. Sliders are in the left area of the track panel\&. They are not wxWindows like wxSliders, but instead are just drawn on the \fBTrackPanel\fP\&. When slider state changes, \fIall\fP tracks do a full refresh, including recomputing the backing store\&. It would make more sense to just invalidate the region containing the slider\&. However, doing that would require either incrementally updating the bitmap (not currently done), or maintaining the sliders and other track info on the screen and not in the bitmap\&.
+.PP
+In my opinion, the bitmap should contain only the waveform, note, and label images along with gray selection highlights\&. The track info (sliders, buttons, title, etc\&.), track selection highlight, cursor, and indicator should be drawn in the normal way, and clipping regions should be used to avoid excessive copying of bitmaps (say, when sliders move), or excessive redrawing of track info widgets (say, when scrolling occurs)\&. This is a fairly tricky code change since it requires careful specification of what and where redraw should take place when any state changes\&. One surprising finding is that \fBNoteTrack\fP display is slow compared to \fBWaveTrack\fP display\&. Each note takes some time to gather attributes and select colors, and while audio draws two amplitudes per horizontal pixels, large MIDI scores can have more notes than horizontal pixels\&. This can make slider changes very sluggish, but this can also be a problem with many audio tracks\&. 
+.PP
+Definition at line 47 of file TrackArtist\&.h\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "TrackArtist::TrackArtist ()"
+
+.PP
+Definition at line 265 of file TrackArtist\&.cpp\&.
+.SS "TrackArtist::~TrackArtist ()"
+
+.PP
+Definition at line 280 of file TrackArtist\&.cpp\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "\fBvoid\fP TrackArtist::DrawBackgroundWithSelection (wxDC * dc, \fBconst\fP wxRect & rect, \fBconst\fP \fBTrack\fP * track, wxBrush & selBrush, wxBrush & unselBrush, \fBconst\fP \fBSelectedRegion\fP & selectedRegion, \fBconst\fP \fBZoomInfo\fP & zoomInfo)\fC [static]\fP"
+
+.PP
+Definition at line 3297 of file TrackArtist\&.cpp\&.
+.SS "\fBvoid\fP TrackArtist::DrawSyncLockTiles (wxDC * dc, wxRect rect)\fC [static]\fP"
+
+.PP
+Definition at line 3190 of file TrackArtist\&.cpp\&.
+.SS "\fBvoid\fP TrackArtist::DrawTrack (\fBconst\fP \fBTrack\fP * t, wxDC & dc, \fBconst\fP wxRect & rect, \fBconst\fP \fBSelectedRegion\fP & selectedRegion, \fBconst\fP \fBZoomInfo\fP & zoomInfo, \fBbool\fP drawEnvelope, \fBbool\fP bigPoints, \fBbool\fP drawSliders, \fBbool\fP hasSolo)"
+
+.PP
+Definition at line 441 of file TrackArtist\&.cpp\&.
+.SS "\fBvoid\fP TrackArtist::DrawTracks (\fBTrackList\fP * tracks, \fBTrack\fP * start, wxDC & dc, wxRegion & reg, wxRect & rect, wxRect & clip, \fBconst\fP \fBSelectedRegion\fP & selectedRegion, \fBconst\fP \fBZoomInfo\fP & zoomInfo, \fBbool\fP drawEnvelope, \fBbool\fP bigPoints, \fBbool\fP drawSliders)"
+
+.PP
+Definition at line 319 of file TrackArtist\&.cpp\&.
+.SS "\fBvoid\fP TrackArtist::DrawVRuler (\fBconst\fP \fBTrack\fP * t, wxDC * dc, wxRect & rect)"
+
+.PP
+Definition at line 509 of file TrackArtist\&.cpp\&.
+.SS "\fBvoid\fP TrackArtist::SetBackgroundBrushes (wxBrush unselectedBrush, wxBrush selectedBrush, wxPen unselectedPen, wxPen selectedPen)\fC [inline]\fP"
+
+.PP
+Definition at line 74 of file TrackArtist\&.h\&.
+.SS "\fBvoid\fP TrackArtist::SetColours ()"
+
+.PP
+Definition at line 285 of file TrackArtist\&.cpp\&.
+.SS "\fBvoid\fP TrackArtist::SetInset (\fBint\fP left, \fBint\fP top, \fBint\fP right, \fBint\fP bottom)"
+
+.PP
+Definition at line 311 of file TrackArtist\&.cpp\&.
+.SS "\fBvoid\fP TrackArtist::UpdatePrefs ()"
+
+.PP
+Definition at line 3171 of file TrackArtist\&.cpp\&.
+.SS "\fBvoid\fP TrackArtist::UpdateVRuler (\fBconst\fP \fBTrack\fP * t, wxRect & rect)"
+
+.PP
+Definition at line 669 of file TrackArtist\&.cpp\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

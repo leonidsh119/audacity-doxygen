@@ -1,0 +1,2832 @@
+.TH "lavc_core" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+lavc_core \- Core functions/structures\&.
+.SS "Modules"
+
+.in +1c
+.ti -1c
+.RI "\fBAVPacket\fP"
+.br
+.ti -1c
+.RI "\fBAVPicture\fP"
+.br
+.in -1c
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "struct \fBAVCodecDescriptor\fP"
+.br
+.ti -1c
+.RI "struct \fBRcOverride\fP"
+.br
+.ti -1c
+.RI "struct \fBAVPanScan\fP"
+.br
+.ti -1c
+.RI "struct \fBAVCodecContext\fP"
+.br
+.ti -1c
+.RI "struct \fBAVProfile\fP"
+.br
+.ti -1c
+.RI "struct \fBAVCodec\fP"
+.br
+.ti -1c
+.RI "struct \fBAVHWAccel\fP"
+.br
+.ti -1c
+.RI "struct \fBAVSubtitleRect\fP"
+.br
+.ti -1c
+.RI "struct \fBAVSubtitle\fP"
+.br
+.in -1c
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBAV_CODEC_PROP_INTRA_ONLY\fP   (1 << 0)"
+.br
+.ti -1c
+.RI "#define \fBAV_CODEC_PROP_LOSSY\fP   (1 << 1)"
+.br
+.ti -1c
+.RI "#define \fBAV_CODEC_PROP_LOSSLESS\fP   (1 << 2)"
+.br
+.ti -1c
+.RI "#define \fBAV_CODEC_PROP_BITMAP_SUB\fP   (1 << 16)"
+.br
+.ti -1c
+.RI "#define \fBAV_CODEC_PROP_TEXT_SUB\fP   (1 << 17)"
+.br
+.ti -1c
+.RI "#define \fBFF_MAX_B_FRAMES\fP   16"
+.br
+.ti -1c
+.RI "#define \fBCODEC_FLAG_UNALIGNED\fP   0x0001"
+.br
+.ti -1c
+.RI "#define \fBCODEC_FLAG_QSCALE\fP   0x0002"
+.br
+.RI "\fIUse fixed qscale\&. \fP"
+.ti -1c
+.RI "#define \fBCODEC_FLAG_4MV\fP   0x0004"
+.br
+.RI "\fI4 MV per MB allowed / advanced prediction for H\&.263\&. \fP"
+.ti -1c
+.RI "#define \fBCODEC_FLAG_OUTPUT_CORRUPT\fP   0x0008"
+.br
+.RI "\fIOutput even those frames that might be corrupted\&. \fP"
+.ti -1c
+.RI "#define \fBCODEC_FLAG_QPEL\fP   0x0010"
+.br
+.RI "\fIUse qpel MC\&. \fP"
+.ti -1c
+.RI "#define \fBCODEC_FLAG_GMC\fP   0x0020"
+.br
+.RI "\fIUse GMC\&. \fP"
+.ti -1c
+.RI "#define \fBCODEC_FLAG_MV0\fP   0x0040"
+.br
+.RI "\fIAlways try a MB with MV=<0,0>\&. \fP"
+.ti -1c
+.RI "#define \fBCODEC_FLAG_INPUT_PRESERVED\fP   0x0100"
+.br
+.ti -1c
+.RI "#define \fBCODEC_FLAG_PASS1\fP   0x0200"
+.br
+.RI "\fIUse internal 2pass ratecontrol in first pass mode\&. \fP"
+.ti -1c
+.RI "#define \fBCODEC_FLAG_PASS2\fP   0x0400"
+.br
+.RI "\fIUse internal 2pass ratecontrol in second pass mode\&. \fP"
+.ti -1c
+.RI "#define \fBCODEC_FLAG_GRAY\fP   0x2000"
+.br
+.RI "\fIOnly decode/encode grayscale\&. \fP"
+.ti -1c
+.RI "#define \fBCODEC_FLAG_EMU_EDGE\fP   0x4000"
+.br
+.ti -1c
+.RI "#define \fBCODEC_FLAG_PSNR\fP   0x8000"
+.br
+.RI "\fIerror[?] variables will be set during encoding\&. \fP"
+.ti -1c
+.RI "#define \fBCODEC_FLAG_TRUNCATED\fP"
+.br
+.ti -1c
+.RI "#define \fBCODEC_FLAG_NORMALIZE_AQP\fP   0x00020000"
+.br
+.RI "\fINormalize adaptive quantization\&. \fP"
+.ti -1c
+.RI "#define \fBCODEC_FLAG_INTERLACED_DCT\fP   0x00040000"
+.br
+.RI "\fIUse interlaced DCT\&. \fP"
+.ti -1c
+.RI "#define \fBCODEC_FLAG_LOW_DELAY\fP   0x00080000"
+.br
+.RI "\fIForce low delay\&. \fP"
+.ti -1c
+.RI "#define \fBCODEC_FLAG_GLOBAL_HEADER\fP   0x00400000"
+.br
+.RI "\fIPlace global headers in extradata instead of every keyframe\&. \fP"
+.ti -1c
+.RI "#define \fBCODEC_FLAG_BITEXACT\fP   0x00800000"
+.br
+.RI "\fIUse only bitexact stuff (except (I)DCT)\&. \fP"
+.ti -1c
+.RI "#define \fBCODEC_FLAG_AC_PRED\fP   0x01000000"
+.br
+.RI "\fIH\&.263 advanced intra coding / MPEG-4 AC prediction\&. \fP"
+.ti -1c
+.RI "#define \fBCODEC_FLAG_LOOP_FILTER\fP   0x00000800"
+.br
+.RI "\fIloop filter \fP"
+.ti -1c
+.RI "#define \fBCODEC_FLAG_INTERLACED_ME\fP   0x20000000"
+.br
+.RI "\fIinterlaced motion estimation \fP"
+.ti -1c
+.RI "#define \fBCODEC_FLAG_CLOSED_GOP\fP   0x80000000"
+.br
+.ti -1c
+.RI "#define \fBCODEC_FLAG2_FAST\fP   0x00000001"
+.br
+.RI "\fIAllow non spec compliant speedup tricks\&. \fP"
+.ti -1c
+.RI "#define \fBCODEC_FLAG2_NO_OUTPUT\fP   0x00000004"
+.br
+.RI "\fISkip bitstream encoding\&. \fP"
+.ti -1c
+.RI "#define \fBCODEC_FLAG2_LOCAL_HEADER\fP   0x00000008"
+.br
+.RI "\fIPlace global headers at every keyframe instead of in extradata\&. \fP"
+.ti -1c
+.RI "#define \fBCODEC_FLAG2_DROP_FRAME_TIMECODE\fP   0x00002000"
+.br
+.RI "\fItimecode is in drop frame format\&. DEPRECATED!!!! \fP"
+.ti -1c
+.RI "#define \fBCODEC_FLAG2_IGNORE_CROP\fP   0x00010000"
+.br
+.RI "\fIDiscard cropping information from SPS\&. \fP"
+.ti -1c
+.RI "#define \fBCODEC_FLAG2_CHUNKS\fP   0x00008000"
+.br
+.RI "\fIInput bitstream might be truncated at a packet boundaries instead of only at frame boundaries\&. \fP"
+.ti -1c
+.RI "#define \fBCODEC_FLAG2_SHOW_ALL\fP   0x00400000"
+.br
+.RI "\fIShow all frames before the first keyframe\&. \fP"
+.ti -1c
+.RI "#define \fBCODEC_CAP_DRAW_HORIZ_BAND\fP   0x0001"
+.br
+.RI "\fI\fBDecoder\fP can use draw_horiz_band callback\&. \fP"
+.ti -1c
+.RI "#define \fBCODEC_CAP_DR1\fP   0x0002"
+.br
+.ti -1c
+.RI "#define \fBCODEC_CAP_TRUNCATED\fP   0x0008"
+.br
+.ti -1c
+.RI "#define \fBCODEC_CAP_HWACCEL\fP   0x0010"
+.br
+.ti -1c
+.RI "#define \fBCODEC_CAP_DELAY\fP   0x0020"
+.br
+.ti -1c
+.RI "#define \fBCODEC_CAP_SMALL_LAST_FRAME\fP   0x0040"
+.br
+.ti -1c
+.RI "#define \fBCODEC_CAP_HWACCEL_VDPAU\fP   0x0080"
+.br
+.ti -1c
+.RI "#define \fBCODEC_CAP_SUBFRAMES\fP   0x0100"
+.br
+.ti -1c
+.RI "#define \fBCODEC_CAP_EXPERIMENTAL\fP   0x0200"
+.br
+.ti -1c
+.RI "#define \fBCODEC_CAP_CHANNEL_CONF\fP   0x0400"
+.br
+.ti -1c
+.RI "#define \fBCODEC_CAP_NEG_LINESIZES\fP   0x0800"
+.br
+.ti -1c
+.RI "#define \fBCODEC_CAP_FRAME_THREADS\fP   0x1000"
+.br
+.ti -1c
+.RI "#define \fBCODEC_CAP_SLICE_THREADS\fP   0x2000"
+.br
+.ti -1c
+.RI "#define \fBCODEC_CAP_PARAM_CHANGE\fP   0x4000"
+.br
+.ti -1c
+.RI "#define \fBCODEC_CAP_AUTO_THREADS\fP   0x8000"
+.br
+.ti -1c
+.RI "#define \fBCODEC_CAP_VARIABLE_FRAME_SIZE\fP   0x10000"
+.br
+.ti -1c
+.RI "#define \fBCODEC_CAP_INTRA_ONLY\fP   0x40000000"
+.br
+.ti -1c
+.RI "#define \fBCODEC_CAP_LOSSLESS\fP   0x80000000"
+.br
+.ti -1c
+.RI "#define \fBMB_TYPE_INTRA4x4\fP   0x0001"
+.br
+.ti -1c
+.RI "#define \fBMB_TYPE_INTRA16x16\fP   0x0002"
+.br
+.ti -1c
+.RI "#define \fBMB_TYPE_INTRA_PCM\fP   0x0004"
+.br
+.ti -1c
+.RI "#define \fBMB_TYPE_16x16\fP   0x0008"
+.br
+.ti -1c
+.RI "#define \fBMB_TYPE_16x8\fP   0x0010"
+.br
+.ti -1c
+.RI "#define \fBMB_TYPE_8x16\fP   0x0020"
+.br
+.ti -1c
+.RI "#define \fBMB_TYPE_8x8\fP   0x0040"
+.br
+.ti -1c
+.RI "#define \fBMB_TYPE_INTERLACED\fP   0x0080"
+.br
+.ti -1c
+.RI "#define \fBMB_TYPE_DIRECT2\fP   0x0100"
+.br
+.ti -1c
+.RI "#define \fBMB_TYPE_ACPRED\fP   0x0200"
+.br
+.ti -1c
+.RI "#define \fBMB_TYPE_GMC\fP   0x0400"
+.br
+.ti -1c
+.RI "#define \fBMB_TYPE_SKIP\fP   0x0800"
+.br
+.ti -1c
+.RI "#define \fBMB_TYPE_P0L0\fP   0x1000"
+.br
+.ti -1c
+.RI "#define \fBMB_TYPE_P1L0\fP   0x2000"
+.br
+.ti -1c
+.RI "#define \fBMB_TYPE_P0L1\fP   0x4000"
+.br
+.ti -1c
+.RI "#define \fBMB_TYPE_P1L1\fP   0x8000"
+.br
+.ti -1c
+.RI "#define \fBMB_TYPE_L0\fP   (\fBMB_TYPE_P0L0\fP | \fBMB_TYPE_P1L0\fP)"
+.br
+.ti -1c
+.RI "#define \fBMB_TYPE_L1\fP   (\fBMB_TYPE_P0L1\fP | \fBMB_TYPE_P1L1\fP)"
+.br
+.ti -1c
+.RI "#define \fBMB_TYPE_L0L1\fP   (\fBMB_TYPE_L0\fP   | \fBMB_TYPE_L1\fP)"
+.br
+.ti -1c
+.RI "#define \fBMB_TYPE_QUANT\fP   0x00010000"
+.br
+.ti -1c
+.RI "#define \fBMB_TYPE_CBP\fP   0x00020000"
+.br
+.ti -1c
+.RI "#define \fBFF_QSCALE_TYPE_MPEG1\fP   0"
+.br
+.ti -1c
+.RI "#define \fBFF_QSCALE_TYPE_MPEG2\fP   1"
+.br
+.ti -1c
+.RI "#define \fBFF_QSCALE_TYPE_H264\fP   2"
+.br
+.ti -1c
+.RI "#define \fBFF_QSCALE_TYPE_VP56\fP   3"
+.br
+.ti -1c
+.RI "#define \fBFF_BUFFER_TYPE_INTERNAL\fP   1"
+.br
+.ti -1c
+.RI "#define \fBFF_BUFFER_TYPE_USER\fP   2"
+.br
+.RI "\fIdirect rendering buffers (image is (de)allocated by user) \fP"
+.ti -1c
+.RI "#define \fBFF_BUFFER_TYPE_SHARED\fP   4"
+.br
+.RI "\fIBuffer from somewhere else; don't deallocate image (data/base), all other tables are not shared\&. \fP"
+.ti -1c
+.RI "#define \fBFF_BUFFER_TYPE_COPY\fP   8"
+.br
+.RI "\fIJust a (modified) copy of some other buffer, don't deallocate anything\&. \fP"
+.ti -1c
+.RI "#define \fBFF_BUFFER_HINTS_VALID\fP   0x01"
+.br
+.ti -1c
+.RI "#define \fBFF_BUFFER_HINTS_READABLE\fP   0x02"
+.br
+.ti -1c
+.RI "#define \fBFF_BUFFER_HINTS_PRESERVE\fP   0x04"
+.br
+.ti -1c
+.RI "#define \fBFF_BUFFER_HINTS_REUSABLE\fP   0x08"
+.br
+.ti -1c
+.RI "#define \fBAV_GET_BUFFER_FLAG_REF\fP   (1 << 0)"
+.br
+.ti -1c
+.RI "#define \fBAV_SUBTITLE_FLAG_FORCED\fP   0x00000001"
+.br
+.in -1c
+.SS "Typedefs"
+
+.in +1c
+.ti -1c
+.RI "typedef struct \fBAVCodecDescriptor\fP \fBAVCodecDescriptor\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBAVPanScan\fP \fBAVPanScan\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBAVCodecContext\fP \fBAVCodecContext\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBAVProfile\fP \fBAVProfile\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBAVCodecDefault\fP \fBAVCodecDefault\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBAVCodec\fP \fBAVCodec\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBAVHWAccel\fP \fBAVHWAccel\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBAVSubtitleRect\fP \fBAVSubtitleRect\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBAVSubtitle\fP \fBAVSubtitle\fP"
+.br
+.in -1c
+.SS "Enumerations"
+
+.in +1c
+.ti -1c
+.RI "enum \fBAVCodecID\fP { \fBAV_CODEC_ID_NONE\fP, \fBAV_CODEC_ID_MPEG1VIDEO\fP, \fBAV_CODEC_ID_MPEG2VIDEO\fP, \fBAV_CODEC_ID_MPEG2VIDEO_XVMC\fP, \fBAV_CODEC_ID_H261\fP, \fBAV_CODEC_ID_H263\fP, \fBAV_CODEC_ID_RV10\fP, \fBAV_CODEC_ID_RV20\fP, \fBAV_CODEC_ID_MJPEG\fP, \fBAV_CODEC_ID_MJPEGB\fP, \fBAV_CODEC_ID_LJPEG\fP, \fBAV_CODEC_ID_SP5X\fP, \fBAV_CODEC_ID_JPEGLS\fP, \fBAV_CODEC_ID_MPEG4\fP, \fBAV_CODEC_ID_RAWVIDEO\fP, \fBAV_CODEC_ID_MSMPEG4V1\fP, \fBAV_CODEC_ID_MSMPEG4V2\fP, \fBAV_CODEC_ID_MSMPEG4V3\fP, \fBAV_CODEC_ID_WMV1\fP, \fBAV_CODEC_ID_WMV2\fP, \fBAV_CODEC_ID_H263P\fP, \fBAV_CODEC_ID_H263I\fP, \fBAV_CODEC_ID_FLV1\fP, \fBAV_CODEC_ID_SVQ1\fP, \fBAV_CODEC_ID_SVQ3\fP, \fBAV_CODEC_ID_DVVIDEO\fP, \fBAV_CODEC_ID_HUFFYUV\fP, \fBAV_CODEC_ID_CYUV\fP, \fBAV_CODEC_ID_H264\fP, \fBAV_CODEC_ID_INDEO3\fP, \fBAV_CODEC_ID_VP3\fP, \fBAV_CODEC_ID_THEORA\fP, \fBAV_CODEC_ID_ASV1\fP, \fBAV_CODEC_ID_ASV2\fP, \fBAV_CODEC_ID_FFV1\fP, \fBAV_CODEC_ID_4XM\fP, \fBAV_CODEC_ID_VCR1\fP, \fBAV_CODEC_ID_CLJR\fP, \fBAV_CODEC_ID_MDEC\fP, \fBAV_CODEC_ID_ROQ\fP, \fBAV_CODEC_ID_INTERPLAY_VIDEO\fP, \fBAV_CODEC_ID_XAN_WC3\fP, \fBAV_CODEC_ID_XAN_WC4\fP, \fBAV_CODEC_ID_RPZA\fP, \fBAV_CODEC_ID_CINEPAK\fP, \fBAV_CODEC_ID_WS_VQA\fP, \fBAV_CODEC_ID_MSRLE\fP, \fBAV_CODEC_ID_MSVIDEO1\fP, \fBAV_CODEC_ID_IDCIN\fP, \fBAV_CODEC_ID_8BPS\fP, \fBAV_CODEC_ID_SMC\fP, \fBAV_CODEC_ID_FLIC\fP, \fBAV_CODEC_ID_TRUEMOTION1\fP, \fBAV_CODEC_ID_VMDVIDEO\fP, \fBAV_CODEC_ID_MSZH\fP, \fBAV_CODEC_ID_ZLIB\fP, \fBAV_CODEC_ID_QTRLE\fP, \fBAV_CODEC_ID_TSCC\fP, \fBAV_CODEC_ID_ULTI\fP, \fBAV_CODEC_ID_QDRAW\fP, \fBAV_CODEC_ID_VIXL\fP, \fBAV_CODEC_ID_QPEG\fP, \fBAV_CODEC_ID_PNG\fP, \fBAV_CODEC_ID_PPM\fP, \fBAV_CODEC_ID_PBM\fP, \fBAV_CODEC_ID_PGM\fP, \fBAV_CODEC_ID_PGMYUV\fP, \fBAV_CODEC_ID_PAM\fP, \fBAV_CODEC_ID_FFVHUFF\fP, \fBAV_CODEC_ID_RV30\fP, \fBAV_CODEC_ID_RV40\fP, \fBAV_CODEC_ID_VC1\fP, \fBAV_CODEC_ID_WMV3\fP, \fBAV_CODEC_ID_LOCO\fP, \fBAV_CODEC_ID_WNV1\fP, \fBAV_CODEC_ID_AASC\fP, \fBAV_CODEC_ID_INDEO2\fP, \fBAV_CODEC_ID_FRAPS\fP, \fBAV_CODEC_ID_TRUEMOTION2\fP, \fBAV_CODEC_ID_BMP\fP, \fBAV_CODEC_ID_CSCD\fP, \fBAV_CODEC_ID_MMVIDEO\fP, \fBAV_CODEC_ID_ZMBV\fP, \fBAV_CODEC_ID_AVS\fP, \fBAV_CODEC_ID_SMACKVIDEO\fP, \fBAV_CODEC_ID_NUV\fP, \fBAV_CODEC_ID_KMVC\fP, \fBAV_CODEC_ID_FLASHSV\fP, \fBAV_CODEC_ID_CAVS\fP, \fBAV_CODEC_ID_JPEG2000\fP, \fBAV_CODEC_ID_VMNC\fP, \fBAV_CODEC_ID_VP5\fP, \fBAV_CODEC_ID_VP6\fP, \fBAV_CODEC_ID_VP6F\fP, \fBAV_CODEC_ID_TARGA\fP, \fBAV_CODEC_ID_DSICINVIDEO\fP, \fBAV_CODEC_ID_TIERTEXSEQVIDEO\fP, \fBAV_CODEC_ID_TIFF\fP, \fBAV_CODEC_ID_GIF\fP, \fBAV_CODEC_ID_DXA\fP, \fBAV_CODEC_ID_DNXHD\fP, \fBAV_CODEC_ID_THP\fP, \fBAV_CODEC_ID_SGI\fP, \fBAV_CODEC_ID_C93\fP, \fBAV_CODEC_ID_BETHSOFTVID\fP, \fBAV_CODEC_ID_PTX\fP, \fBAV_CODEC_ID_TXD\fP, \fBAV_CODEC_ID_VP6A\fP, \fBAV_CODEC_ID_AMV\fP, \fBAV_CODEC_ID_VB\fP, \fBAV_CODEC_ID_PCX\fP, \fBAV_CODEC_ID_SUNRAST\fP, \fBAV_CODEC_ID_INDEO4\fP, \fBAV_CODEC_ID_INDEO5\fP, \fBAV_CODEC_ID_MIMIC\fP, \fBAV_CODEC_ID_RL2\fP, \fBAV_CODEC_ID_ESCAPE124\fP, \fBAV_CODEC_ID_DIRAC\fP, \fBAV_CODEC_ID_BFI\fP, \fBAV_CODEC_ID_CMV\fP, \fBAV_CODEC_ID_MOTIONPIXELS\fP, \fBAV_CODEC_ID_TGV\fP, \fBAV_CODEC_ID_TGQ\fP, \fBAV_CODEC_ID_TQI\fP, \fBAV_CODEC_ID_AURA\fP, \fBAV_CODEC_ID_AURA2\fP, \fBAV_CODEC_ID_V210X\fP, \fBAV_CODEC_ID_TMV\fP, \fBAV_CODEC_ID_V210\fP, \fBAV_CODEC_ID_DPX\fP, \fBAV_CODEC_ID_MAD\fP, \fBAV_CODEC_ID_FRWU\fP, \fBAV_CODEC_ID_FLASHSV2\fP, \fBAV_CODEC_ID_CDGRAPHICS\fP, \fBAV_CODEC_ID_R210\fP, \fBAV_CODEC_ID_ANM\fP, \fBAV_CODEC_ID_BINKVIDEO\fP, \fBAV_CODEC_ID_IFF_ILBM\fP, \fBAV_CODEC_ID_IFF_BYTERUN1\fP, \fBAV_CODEC_ID_KGV1\fP, \fBAV_CODEC_ID_YOP\fP, \fBAV_CODEC_ID_VP8\fP, \fBAV_CODEC_ID_PICTOR\fP, \fBAV_CODEC_ID_ANSI\fP, \fBAV_CODEC_ID_A64_MULTI\fP, \fBAV_CODEC_ID_A64_MULTI5\fP, \fBAV_CODEC_ID_R10K\fP, \fBAV_CODEC_ID_MXPEG\fP, \fBAV_CODEC_ID_LAGARITH\fP, \fBAV_CODEC_ID_PRORES\fP, \fBAV_CODEC_ID_JV\fP, \fBAV_CODEC_ID_DFA\fP, \fBAV_CODEC_ID_WMV3IMAGE\fP, \fBAV_CODEC_ID_VC1IMAGE\fP, \fBAV_CODEC_ID_UTVIDEO\fP, \fBAV_CODEC_ID_BMV_VIDEO\fP, \fBAV_CODEC_ID_VBLE\fP, \fBAV_CODEC_ID_DXTORY\fP, \fBAV_CODEC_ID_V410\fP, \fBAV_CODEC_ID_XWD\fP, \fBAV_CODEC_ID_CDXL\fP, \fBAV_CODEC_ID_XBM\fP, \fBAV_CODEC_ID_ZEROCODEC\fP, \fBAV_CODEC_ID_MSS1\fP, \fBAV_CODEC_ID_MSA1\fP, \fBAV_CODEC_ID_TSCC2\fP, \fBAV_CODEC_ID_MTS2\fP, \fBAV_CODEC_ID_CLLC\fP, \fBAV_CODEC_ID_MSS2\fP, \fBAV_CODEC_ID_VP9\fP, \fBAV_CODEC_ID_AIC\fP, \fBAV_CODEC_ID_ESCAPE130_DEPRECATED\fP, \fBAV_CODEC_ID_G2M_DEPRECATED\fP, \fBAV_CODEC_ID_WEBP_DEPRECATED\fP, \fBAV_CODEC_ID_HNM4_VIDEO\fP, \fBAV_CODEC_ID_HEVC_DEPRECATED\fP, \fBAV_CODEC_ID_FIC\fP, \fBAV_CODEC_ID_BRENDER_PIX\fP = MKBETAG('B','P','I','X'), \fBAV_CODEC_ID_Y41P\fP = MKBETAG('Y','4','1','P'), \fBAV_CODEC_ID_ESCAPE130\fP = MKBETAG('E','1','3','0'), \fBAV_CODEC_ID_EXR\fP = MKBETAG('0','E','X','R'), \fBAV_CODEC_ID_AVRP\fP = MKBETAG('A','V','R','P'), \fBAV_CODEC_ID_012V\fP = MKBETAG('0','1','2','V'), \fBAV_CODEC_ID_G2M\fP = MKBETAG( 0 ,'G','2','M'), \fBAV_CODEC_ID_AVUI\fP = MKBETAG('A','V','U','I'), \fBAV_CODEC_ID_AYUV\fP = MKBETAG('A','Y','U','V'), \fBAV_CODEC_ID_TARGA_Y216\fP = MKBETAG('T','2','1','6'), \fBAV_CODEC_ID_V308\fP = MKBETAG('V','3','0','8'), \fBAV_CODEC_ID_V408\fP = MKBETAG('V','4','0','8'), \fBAV_CODEC_ID_YUV4\fP = MKBETAG('Y','U','V','4'), \fBAV_CODEC_ID_SANM\fP = MKBETAG('S','A','N','M'), \fBAV_CODEC_ID_PAF_VIDEO\fP = MKBETAG('P','A','F','V'), \fBAV_CODEC_ID_AVRN\fP = MKBETAG('A','V','R','n'), \fBAV_CODEC_ID_CPIA\fP = MKBETAG('C','P','I','A'), \fBAV_CODEC_ID_XFACE\fP = MKBETAG('X','F','A','C'), \fBAV_CODEC_ID_SGIRLE\fP = MKBETAG('S','G','I','R'), \fBAV_CODEC_ID_MVC1\fP = MKBETAG('M','V','C','1'), \fBAV_CODEC_ID_MVC2\fP = MKBETAG('M','V','C','2'), \fBAV_CODEC_ID_SNOW\fP = MKBETAG('S','N','O','W'), \fBAV_CODEC_ID_WEBP\fP = MKBETAG('W','E','B','P'), \fBAV_CODEC_ID_SMVJPEG\fP = MKBETAG('S','M','V','J'), \fBAV_CODEC_ID_HEVC\fP = MKBETAG('H','2','6','5'), \fBAV_CODEC_ID_FIRST_AUDIO\fP = 0x10000, \fBAV_CODEC_ID_PCM_S16LE\fP = 0x10000, \fBAV_CODEC_ID_PCM_S16BE\fP, \fBAV_CODEC_ID_PCM_U16LE\fP, \fBAV_CODEC_ID_PCM_U16BE\fP, \fBAV_CODEC_ID_PCM_S8\fP, \fBAV_CODEC_ID_PCM_U8\fP, \fBAV_CODEC_ID_PCM_MULAW\fP, \fBAV_CODEC_ID_PCM_ALAW\fP, \fBAV_CODEC_ID_PCM_S32LE\fP, \fBAV_CODEC_ID_PCM_S32BE\fP, \fBAV_CODEC_ID_PCM_U32LE\fP, \fBAV_CODEC_ID_PCM_U32BE\fP, \fBAV_CODEC_ID_PCM_S24LE\fP, \fBAV_CODEC_ID_PCM_S24BE\fP, \fBAV_CODEC_ID_PCM_U24LE\fP, \fBAV_CODEC_ID_PCM_U24BE\fP, \fBAV_CODEC_ID_PCM_S24DAUD\fP, \fBAV_CODEC_ID_PCM_ZORK\fP, \fBAV_CODEC_ID_PCM_S16LE_PLANAR\fP, \fBAV_CODEC_ID_PCM_DVD\fP, \fBAV_CODEC_ID_PCM_F32BE\fP, \fBAV_CODEC_ID_PCM_F32LE\fP, \fBAV_CODEC_ID_PCM_F64BE\fP, \fBAV_CODEC_ID_PCM_F64LE\fP, \fBAV_CODEC_ID_PCM_BLURAY\fP, \fBAV_CODEC_ID_PCM_LXF\fP, \fBAV_CODEC_ID_S302M\fP, \fBAV_CODEC_ID_PCM_S8_PLANAR\fP, \fBAV_CODEC_ID_PCM_S24LE_PLANAR_DEPRECATED\fP, \fBAV_CODEC_ID_PCM_S32LE_PLANAR_DEPRECATED\fP, \fBAV_CODEC_ID_PCM_S24LE_PLANAR\fP = MKBETAG(24,'P','S','P'), \fBAV_CODEC_ID_PCM_S32LE_PLANAR\fP = MKBETAG(32,'P','S','P'), \fBAV_CODEC_ID_PCM_S16BE_PLANAR\fP = MKBETAG('P','S','P',16), \fBAV_CODEC_ID_ADPCM_IMA_QT\fP = 0x11000, \fBAV_CODEC_ID_ADPCM_IMA_WAV\fP, \fBAV_CODEC_ID_ADPCM_IMA_DK3\fP, \fBAV_CODEC_ID_ADPCM_IMA_DK4\fP, \fBAV_CODEC_ID_ADPCM_IMA_WS\fP, \fBAV_CODEC_ID_ADPCM_IMA_SMJPEG\fP, \fBAV_CODEC_ID_ADPCM_MS\fP, \fBAV_CODEC_ID_ADPCM_4XM\fP, \fBAV_CODEC_ID_ADPCM_XA\fP, \fBAV_CODEC_ID_ADPCM_ADX\fP, \fBAV_CODEC_ID_ADPCM_EA\fP, \fBAV_CODEC_ID_ADPCM_G726\fP, \fBAV_CODEC_ID_ADPCM_CT\fP, \fBAV_CODEC_ID_ADPCM_SWF\fP, \fBAV_CODEC_ID_ADPCM_YAMAHA\fP, \fBAV_CODEC_ID_ADPCM_SBPRO_4\fP, \fBAV_CODEC_ID_ADPCM_SBPRO_3\fP, \fBAV_CODEC_ID_ADPCM_SBPRO_2\fP, \fBAV_CODEC_ID_ADPCM_THP\fP, \fBAV_CODEC_ID_ADPCM_IMA_AMV\fP, \fBAV_CODEC_ID_ADPCM_EA_R1\fP, \fBAV_CODEC_ID_ADPCM_EA_R3\fP, \fBAV_CODEC_ID_ADPCM_EA_R2\fP, \fBAV_CODEC_ID_ADPCM_IMA_EA_SEAD\fP, \fBAV_CODEC_ID_ADPCM_IMA_EA_EACS\fP, \fBAV_CODEC_ID_ADPCM_EA_XAS\fP, \fBAV_CODEC_ID_ADPCM_EA_MAXIS_XA\fP, \fBAV_CODEC_ID_ADPCM_IMA_ISS\fP, \fBAV_CODEC_ID_ADPCM_G722\fP, \fBAV_CODEC_ID_ADPCM_IMA_APC\fP, \fBAV_CODEC_ID_VIMA\fP = MKBETAG('V','I','M','A'), \fBAV_CODEC_ID_ADPCM_AFC\fP = MKBETAG('A','F','C',' '), \fBAV_CODEC_ID_ADPCM_IMA_OKI\fP = MKBETAG('O','K','I',' '), \fBAV_CODEC_ID_ADPCM_DTK\fP = MKBETAG('D','T','K',' '), \fBAV_CODEC_ID_ADPCM_IMA_RAD\fP = MKBETAG('R','A','D',' '), \fBAV_CODEC_ID_ADPCM_G726LE\fP = MKBETAG('6','2','7','G'), \fBAV_CODEC_ID_AMR_NB\fP = 0x12000, \fBAV_CODEC_ID_AMR_WB\fP, \fBAV_CODEC_ID_RA_144\fP = 0x13000, \fBAV_CODEC_ID_RA_288\fP, \fBAV_CODEC_ID_ROQ_DPCM\fP = 0x14000, \fBAV_CODEC_ID_INTERPLAY_DPCM\fP, \fBAV_CODEC_ID_XAN_DPCM\fP, \fBAV_CODEC_ID_SOL_DPCM\fP, \fBAV_CODEC_ID_MP2\fP = 0x15000, \fBAV_CODEC_ID_MP3\fP, \fBAV_CODEC_ID_AAC\fP, \fBAV_CODEC_ID_AC3\fP, \fBAV_CODEC_ID_DTS\fP, \fBAV_CODEC_ID_VORBIS\fP, \fBAV_CODEC_ID_DVAUDIO\fP, \fBAV_CODEC_ID_WMAV1\fP, \fBAV_CODEC_ID_WMAV2\fP, \fBAV_CODEC_ID_MACE3\fP, \fBAV_CODEC_ID_MACE6\fP, \fBAV_CODEC_ID_VMDAUDIO\fP, \fBAV_CODEC_ID_FLAC\fP, \fBAV_CODEC_ID_MP3ADU\fP, \fBAV_CODEC_ID_MP3ON4\fP, \fBAV_CODEC_ID_SHORTEN\fP, \fBAV_CODEC_ID_ALAC\fP, \fBAV_CODEC_ID_WESTWOOD_SND1\fP, \fBAV_CODEC_ID_GSM\fP, \fBAV_CODEC_ID_QDM2\fP, \fBAV_CODEC_ID_COOK\fP, \fBAV_CODEC_ID_TRUESPEECH\fP, \fBAV_CODEC_ID_TTA\fP, \fBAV_CODEC_ID_SMACKAUDIO\fP, \fBAV_CODEC_ID_QCELP\fP, \fBAV_CODEC_ID_WAVPACK\fP, \fBAV_CODEC_ID_DSICINAUDIO\fP, \fBAV_CODEC_ID_IMC\fP, \fBAV_CODEC_ID_MUSEPACK7\fP, \fBAV_CODEC_ID_MLP\fP, \fBAV_CODEC_ID_GSM_MS\fP, \fBAV_CODEC_ID_ATRAC3\fP, \fBAV_CODEC_ID_VOXWARE\fP, \fBAV_CODEC_ID_APE\fP, \fBAV_CODEC_ID_NELLYMOSER\fP, \fBAV_CODEC_ID_MUSEPACK8\fP, \fBAV_CODEC_ID_SPEEX\fP, \fBAV_CODEC_ID_WMAVOICE\fP, \fBAV_CODEC_ID_WMAPRO\fP, \fBAV_CODEC_ID_WMALOSSLESS\fP, \fBAV_CODEC_ID_ATRAC3P\fP, \fBAV_CODEC_ID_EAC3\fP, \fBAV_CODEC_ID_SIPR\fP, \fBAV_CODEC_ID_MP1\fP, \fBAV_CODEC_ID_TWINVQ\fP, \fBAV_CODEC_ID_TRUEHD\fP, \fBAV_CODEC_ID_MP4ALS\fP, \fBAV_CODEC_ID_ATRAC1\fP, \fBAV_CODEC_ID_BINKAUDIO_RDFT\fP, \fBAV_CODEC_ID_BINKAUDIO_DCT\fP, \fBAV_CODEC_ID_AAC_LATM\fP, \fBAV_CODEC_ID_QDMC\fP, \fBAV_CODEC_ID_CELT\fP, \fBAV_CODEC_ID_G723_1\fP, \fBAV_CODEC_ID_G729\fP, \fBAV_CODEC_ID_8SVX_EXP\fP, \fBAV_CODEC_ID_8SVX_FIB\fP, \fBAV_CODEC_ID_BMV_AUDIO\fP, \fBAV_CODEC_ID_RALF\fP, \fBAV_CODEC_ID_IAC\fP, \fBAV_CODEC_ID_ILBC\fP, \fBAV_CODEC_ID_OPUS_DEPRECATED\fP, \fBAV_CODEC_ID_COMFORT_NOISE\fP, \fBAV_CODEC_ID_TAK_DEPRECATED\fP, \fBAV_CODEC_ID_METASOUND\fP, \fBAV_CODEC_ID_FFWAVESYNTH\fP = MKBETAG('F','F','W','S'), \fBAV_CODEC_ID_SONIC\fP = MKBETAG('S','O','N','C'), \fBAV_CODEC_ID_SONIC_LS\fP = MKBETAG('S','O','N','L'), \fBAV_CODEC_ID_PAF_AUDIO\fP = MKBETAG('P','A','F','A'), \fBAV_CODEC_ID_OPUS\fP = MKBETAG('O','P','U','S'), \fBAV_CODEC_ID_TAK\fP = MKBETAG('t','B','a','K'), \fBAV_CODEC_ID_EVRC\fP = MKBETAG('s','e','v','c'), \fBAV_CODEC_ID_SMV\fP = MKBETAG('s','s','m','v'), \fBAV_CODEC_ID_FIRST_SUBTITLE\fP = 0x17000, \fBAV_CODEC_ID_DVD_SUBTITLE\fP = 0x17000, \fBAV_CODEC_ID_DVB_SUBTITLE\fP, \fBAV_CODEC_ID_TEXT\fP, \fBAV_CODEC_ID_XSUB\fP, \fBAV_CODEC_ID_SSA\fP, \fBAV_CODEC_ID_MOV_TEXT\fP, \fBAV_CODEC_ID_HDMV_PGS_SUBTITLE\fP, \fBAV_CODEC_ID_DVB_TELETEXT\fP, \fBAV_CODEC_ID_SRT\fP, \fBAV_CODEC_ID_MICRODVD\fP = MKBETAG('m','D','V','D'), \fBAV_CODEC_ID_EIA_608\fP = MKBETAG('c','6','0','8'), \fBAV_CODEC_ID_JACOSUB\fP = MKBETAG('J','S','U','B'), \fBAV_CODEC_ID_SAMI\fP = MKBETAG('S','A','M','I'), \fBAV_CODEC_ID_REALTEXT\fP = MKBETAG('R','T','X','T'), \fBAV_CODEC_ID_SUBVIEWER1\fP = MKBETAG('S','b','V','1'), \fBAV_CODEC_ID_SUBVIEWER\fP = MKBETAG('S','u','b','V'), \fBAV_CODEC_ID_SUBRIP\fP = MKBETAG('S','R','i','p'), \fBAV_CODEC_ID_WEBVTT\fP = MKBETAG('W','V','T','T'), \fBAV_CODEC_ID_MPL2\fP = MKBETAG('M','P','L','2'), \fBAV_CODEC_ID_VPLAYER\fP = MKBETAG('V','P','l','r'), \fBAV_CODEC_ID_PJS\fP = MKBETAG('P','h','J','S'), \fBAV_CODEC_ID_ASS\fP = MKBETAG('A','S','S',' '), \fBAV_CODEC_ID_FIRST_UNKNOWN\fP = 0x18000, \fBAV_CODEC_ID_TTF\fP = 0x18000, \fBAV_CODEC_ID_BINTEXT\fP = MKBETAG('B','T','X','T'), \fBAV_CODEC_ID_XBIN\fP = MKBETAG('X','B','I','N'), \fBAV_CODEC_ID_IDF\fP = MKBETAG( 0 ,'I','D','F'), \fBAV_CODEC_ID_OTF\fP = MKBETAG( 0 ,'O','T','F'), \fBAV_CODEC_ID_SMPTE_KLV\fP = MKBETAG('K','L','V','A'), \fBAV_CODEC_ID_DVD_NAV\fP = MKBETAG('D','N','A','V'), \fBAV_CODEC_ID_TIMED_ID3\fP = MKBETAG('T','I','D','3'), \fBAV_CODEC_ID_PROBE\fP = 0x19000, \fBAV_CODEC_ID_MPEG2TS\fP = 0x20000, \fBAV_CODEC_ID_MPEG4SYSTEMS\fP = 0x20001, \fBAV_CODEC_ID_FFMETADATA\fP = 0x21000, \fBCODEC_ID_NONE\fP = AV_CODEC_ID_NONE, \fBCODEC_ID_MPEG1VIDEO\fP, \fBCODEC_ID_MPEG2VIDEO\fP, \fBCODEC_ID_MPEG2VIDEO_XVMC\fP, \fBCODEC_ID_H261\fP, \fBCODEC_ID_H263\fP, \fBCODEC_ID_RV10\fP, \fBCODEC_ID_RV20\fP, \fBCODEC_ID_MJPEG\fP, \fBCODEC_ID_MJPEGB\fP, \fBCODEC_ID_LJPEG\fP, \fBCODEC_ID_SP5X\fP, \fBCODEC_ID_JPEGLS\fP, \fBCODEC_ID_MPEG4\fP, \fBCODEC_ID_RAWVIDEO\fP, \fBCODEC_ID_MSMPEG4V1\fP, \fBCODEC_ID_MSMPEG4V2\fP, \fBCODEC_ID_MSMPEG4V3\fP, \fBCODEC_ID_WMV1\fP, \fBCODEC_ID_WMV2\fP, \fBCODEC_ID_H263P\fP, \fBCODEC_ID_H263I\fP, \fBCODEC_ID_FLV1\fP, \fBCODEC_ID_SVQ1\fP, \fBCODEC_ID_SVQ3\fP, \fBCODEC_ID_DVVIDEO\fP, \fBCODEC_ID_HUFFYUV\fP, \fBCODEC_ID_CYUV\fP, \fBCODEC_ID_H264\fP, \fBCODEC_ID_INDEO3\fP, \fBCODEC_ID_VP3\fP, \fBCODEC_ID_THEORA\fP, \fBCODEC_ID_ASV1\fP, \fBCODEC_ID_ASV2\fP, \fBCODEC_ID_FFV1\fP, \fBCODEC_ID_4XM\fP, \fBCODEC_ID_VCR1\fP, \fBCODEC_ID_CLJR\fP, \fBCODEC_ID_MDEC\fP, \fBCODEC_ID_ROQ\fP, \fBCODEC_ID_INTERPLAY_VIDEO\fP, \fBCODEC_ID_XAN_WC3\fP, \fBCODEC_ID_XAN_WC4\fP, \fBCODEC_ID_RPZA\fP, \fBCODEC_ID_CINEPAK\fP, \fBCODEC_ID_WS_VQA\fP, \fBCODEC_ID_MSRLE\fP, \fBCODEC_ID_MSVIDEO1\fP, \fBCODEC_ID_IDCIN\fP, \fBCODEC_ID_8BPS\fP, \fBCODEC_ID_SMC\fP, \fBCODEC_ID_FLIC\fP, \fBCODEC_ID_TRUEMOTION1\fP, \fBCODEC_ID_VMDVIDEO\fP, \fBCODEC_ID_MSZH\fP, \fBCODEC_ID_ZLIB\fP, \fBCODEC_ID_QTRLE\fP, \fBCODEC_ID_TSCC\fP, \fBCODEC_ID_ULTI\fP, \fBCODEC_ID_QDRAW\fP, \fBCODEC_ID_VIXL\fP, \fBCODEC_ID_QPEG\fP, \fBCODEC_ID_PNG\fP, \fBCODEC_ID_PPM\fP, \fBCODEC_ID_PBM\fP, \fBCODEC_ID_PGM\fP, \fBCODEC_ID_PGMYUV\fP, \fBCODEC_ID_PAM\fP, \fBCODEC_ID_FFVHUFF\fP, \fBCODEC_ID_RV30\fP, \fBCODEC_ID_RV40\fP, \fBCODEC_ID_VC1\fP, \fBCODEC_ID_WMV3\fP, \fBCODEC_ID_LOCO\fP, \fBCODEC_ID_WNV1\fP, \fBCODEC_ID_AASC\fP, \fBCODEC_ID_INDEO2\fP, \fBCODEC_ID_FRAPS\fP, \fBCODEC_ID_TRUEMOTION2\fP, \fBCODEC_ID_BMP\fP, \fBCODEC_ID_CSCD\fP, \fBCODEC_ID_MMVIDEO\fP, \fBCODEC_ID_ZMBV\fP, \fBCODEC_ID_AVS\fP, \fBCODEC_ID_SMACKVIDEO\fP, \fBCODEC_ID_NUV\fP, \fBCODEC_ID_KMVC\fP, \fBCODEC_ID_FLASHSV\fP, \fBCODEC_ID_CAVS\fP, \fBCODEC_ID_JPEG2000\fP, \fBCODEC_ID_VMNC\fP, \fBCODEC_ID_VP5\fP, \fBCODEC_ID_VP6\fP, \fBCODEC_ID_VP6F\fP, \fBCODEC_ID_TARGA\fP, \fBCODEC_ID_DSICINVIDEO\fP, \fBCODEC_ID_TIERTEXSEQVIDEO\fP, \fBCODEC_ID_TIFF\fP, \fBCODEC_ID_GIF\fP, \fBCODEC_ID_DXA\fP, \fBCODEC_ID_DNXHD\fP, \fBCODEC_ID_THP\fP, \fBCODEC_ID_SGI\fP, \fBCODEC_ID_C93\fP, \fBCODEC_ID_BETHSOFTVID\fP, \fBCODEC_ID_PTX\fP, \fBCODEC_ID_TXD\fP, \fBCODEC_ID_VP6A\fP, \fBCODEC_ID_AMV\fP, \fBCODEC_ID_VB\fP, \fBCODEC_ID_PCX\fP, \fBCODEC_ID_SUNRAST\fP, \fBCODEC_ID_INDEO4\fP, \fBCODEC_ID_INDEO5\fP, \fBCODEC_ID_MIMIC\fP, \fBCODEC_ID_RL2\fP, \fBCODEC_ID_ESCAPE124\fP, \fBCODEC_ID_DIRAC\fP, \fBCODEC_ID_BFI\fP, \fBCODEC_ID_CMV\fP, \fBCODEC_ID_MOTIONPIXELS\fP, \fBCODEC_ID_TGV\fP, \fBCODEC_ID_TGQ\fP, \fBCODEC_ID_TQI\fP, \fBCODEC_ID_AURA\fP, \fBCODEC_ID_AURA2\fP, \fBCODEC_ID_V210X\fP, \fBCODEC_ID_TMV\fP, \fBCODEC_ID_V210\fP, \fBCODEC_ID_DPX\fP, \fBCODEC_ID_MAD\fP, \fBCODEC_ID_FRWU\fP, \fBCODEC_ID_FLASHSV2\fP, \fBCODEC_ID_CDGRAPHICS\fP, \fBCODEC_ID_R210\fP, \fBCODEC_ID_ANM\fP, \fBCODEC_ID_BINKVIDEO\fP, \fBCODEC_ID_IFF_ILBM\fP, \fBCODEC_ID_IFF_BYTERUN1\fP, \fBCODEC_ID_KGV1\fP, \fBCODEC_ID_YOP\fP, \fBCODEC_ID_VP8\fP, \fBCODEC_ID_PICTOR\fP, \fBCODEC_ID_ANSI\fP, \fBCODEC_ID_A64_MULTI\fP, \fBCODEC_ID_A64_MULTI5\fP, \fBCODEC_ID_R10K\fP, \fBCODEC_ID_MXPEG\fP, \fBCODEC_ID_LAGARITH\fP, \fBCODEC_ID_PRORES\fP, \fBCODEC_ID_JV\fP, \fBCODEC_ID_DFA\fP, \fBCODEC_ID_WMV3IMAGE\fP, \fBCODEC_ID_VC1IMAGE\fP, \fBCODEC_ID_UTVIDEO\fP, \fBCODEC_ID_BMV_VIDEO\fP, \fBCODEC_ID_VBLE\fP, \fBCODEC_ID_DXTORY\fP, \fBCODEC_ID_V410\fP, \fBCODEC_ID_XWD\fP, \fBCODEC_ID_CDXL\fP, \fBCODEC_ID_XBM\fP, \fBCODEC_ID_ZEROCODEC\fP, \fBCODEC_ID_MSS1\fP, \fBCODEC_ID_MSA1\fP, \fBCODEC_ID_TSCC2\fP, \fBCODEC_ID_MTS2\fP, \fBCODEC_ID_CLLC\fP, \fBCODEC_ID_Y41P\fP = MKBETAG('Y','4','1','P'), \fBCODEC_ID_ESCAPE130\fP = MKBETAG('E','1','3','0'), \fBCODEC_ID_EXR\fP = MKBETAG('0','E','X','R'), \fBCODEC_ID_AVRP\fP = MKBETAG('A','V','R','P'), \fBCODEC_ID_G2M\fP = MKBETAG( 0 ,'G','2','M'), \fBCODEC_ID_AVUI\fP = MKBETAG('A','V','U','I'), \fBCODEC_ID_AYUV\fP = MKBETAG('A','Y','U','V'), \fBCODEC_ID_V308\fP = MKBETAG('V','3','0','8'), \fBCODEC_ID_V408\fP = MKBETAG('V','4','0','8'), \fBCODEC_ID_YUV4\fP = MKBETAG('Y','U','V','4'), \fBCODEC_ID_SANM\fP = MKBETAG('S','A','N','M'), \fBCODEC_ID_PAF_VIDEO\fP = MKBETAG('P','A','F','V'), \fBCODEC_ID_SNOW\fP = AV_CODEC_ID_SNOW, \fBCODEC_ID_FIRST_AUDIO\fP = 0x10000, \fBCODEC_ID_PCM_S16LE\fP = 0x10000, \fBCODEC_ID_PCM_S16BE\fP, \fBCODEC_ID_PCM_U16LE\fP, \fBCODEC_ID_PCM_U16BE\fP, \fBCODEC_ID_PCM_S8\fP, \fBCODEC_ID_PCM_U8\fP, \fBCODEC_ID_PCM_MULAW\fP, \fBCODEC_ID_PCM_ALAW\fP, \fBCODEC_ID_PCM_S32LE\fP, \fBCODEC_ID_PCM_S32BE\fP, \fBCODEC_ID_PCM_U32LE\fP, \fBCODEC_ID_PCM_U32BE\fP, \fBCODEC_ID_PCM_S24LE\fP, \fBCODEC_ID_PCM_S24BE\fP, \fBCODEC_ID_PCM_U24LE\fP, \fBCODEC_ID_PCM_U24BE\fP, \fBCODEC_ID_PCM_S24DAUD\fP, \fBCODEC_ID_PCM_ZORK\fP, \fBCODEC_ID_PCM_S16LE_PLANAR\fP, \fBCODEC_ID_PCM_DVD\fP, \fBCODEC_ID_PCM_F32BE\fP, \fBCODEC_ID_PCM_F32LE\fP, \fBCODEC_ID_PCM_F64BE\fP, \fBCODEC_ID_PCM_F64LE\fP, \fBCODEC_ID_PCM_BLURAY\fP, \fBCODEC_ID_PCM_LXF\fP, \fBCODEC_ID_S302M\fP, \fBCODEC_ID_PCM_S8_PLANAR\fP, \fBCODEC_ID_ADPCM_IMA_QT\fP = 0x11000, \fBCODEC_ID_ADPCM_IMA_WAV\fP, \fBCODEC_ID_ADPCM_IMA_DK3\fP, \fBCODEC_ID_ADPCM_IMA_DK4\fP, \fBCODEC_ID_ADPCM_IMA_WS\fP, \fBCODEC_ID_ADPCM_IMA_SMJPEG\fP, \fBCODEC_ID_ADPCM_MS\fP, \fBCODEC_ID_ADPCM_4XM\fP, \fBCODEC_ID_ADPCM_XA\fP, \fBCODEC_ID_ADPCM_ADX\fP, \fBCODEC_ID_ADPCM_EA\fP, \fBCODEC_ID_ADPCM_G726\fP, \fBCODEC_ID_ADPCM_CT\fP, \fBCODEC_ID_ADPCM_SWF\fP, \fBCODEC_ID_ADPCM_YAMAHA\fP, \fBCODEC_ID_ADPCM_SBPRO_4\fP, \fBCODEC_ID_ADPCM_SBPRO_3\fP, \fBCODEC_ID_ADPCM_SBPRO_2\fP, \fBCODEC_ID_ADPCM_THP\fP, \fBCODEC_ID_ADPCM_IMA_AMV\fP, \fBCODEC_ID_ADPCM_EA_R1\fP, \fBCODEC_ID_ADPCM_EA_R3\fP, \fBCODEC_ID_ADPCM_EA_R2\fP, \fBCODEC_ID_ADPCM_IMA_EA_SEAD\fP, \fBCODEC_ID_ADPCM_IMA_EA_EACS\fP, \fBCODEC_ID_ADPCM_EA_XAS\fP, \fBCODEC_ID_ADPCM_EA_MAXIS_XA\fP, \fBCODEC_ID_ADPCM_IMA_ISS\fP, \fBCODEC_ID_ADPCM_G722\fP, \fBCODEC_ID_ADPCM_IMA_APC\fP, \fBCODEC_ID_VIMA\fP = MKBETAG('V','I','M','A'), \fBCODEC_ID_AMR_NB\fP = 0x12000, \fBCODEC_ID_AMR_WB\fP, \fBCODEC_ID_RA_144\fP = 0x13000, \fBCODEC_ID_RA_288\fP, \fBCODEC_ID_ROQ_DPCM\fP = 0x14000, \fBCODEC_ID_INTERPLAY_DPCM\fP, \fBCODEC_ID_XAN_DPCM\fP, \fBCODEC_ID_SOL_DPCM\fP, \fBCODEC_ID_MP2\fP = 0x15000, \fBCODEC_ID_MP3\fP, \fBCODEC_ID_AAC\fP, \fBCODEC_ID_AC3\fP, \fBCODEC_ID_DTS\fP, \fBCODEC_ID_VORBIS\fP, \fBCODEC_ID_DVAUDIO\fP, \fBCODEC_ID_WMAV1\fP, \fBCODEC_ID_WMAV2\fP, \fBCODEC_ID_MACE3\fP, \fBCODEC_ID_MACE6\fP, \fBCODEC_ID_VMDAUDIO\fP, \fBCODEC_ID_FLAC\fP, \fBCODEC_ID_MP3ADU\fP, \fBCODEC_ID_MP3ON4\fP, \fBCODEC_ID_SHORTEN\fP, \fBCODEC_ID_ALAC\fP, \fBCODEC_ID_WESTWOOD_SND1\fP, \fBCODEC_ID_GSM\fP, \fBCODEC_ID_QDM2\fP, \fBCODEC_ID_COOK\fP, \fBCODEC_ID_TRUESPEECH\fP, \fBCODEC_ID_TTA\fP, \fBCODEC_ID_SMACKAUDIO\fP, \fBCODEC_ID_QCELP\fP, \fBCODEC_ID_WAVPACK\fP, \fBCODEC_ID_DSICINAUDIO\fP, \fBCODEC_ID_IMC\fP, \fBCODEC_ID_MUSEPACK7\fP, \fBCODEC_ID_MLP\fP, \fBCODEC_ID_GSM_MS\fP, \fBCODEC_ID_ATRAC3\fP, \fBCODEC_ID_VOXWARE\fP, \fBCODEC_ID_APE\fP, \fBCODEC_ID_NELLYMOSER\fP, \fBCODEC_ID_MUSEPACK8\fP, \fBCODEC_ID_SPEEX\fP, \fBCODEC_ID_WMAVOICE\fP, \fBCODEC_ID_WMAPRO\fP, \fBCODEC_ID_WMALOSSLESS\fP, \fBCODEC_ID_ATRAC3P\fP, \fBCODEC_ID_EAC3\fP, \fBCODEC_ID_SIPR\fP, \fBCODEC_ID_MP1\fP, \fBCODEC_ID_TWINVQ\fP, \fBCODEC_ID_TRUEHD\fP, \fBCODEC_ID_MP4ALS\fP, \fBCODEC_ID_ATRAC1\fP, \fBCODEC_ID_BINKAUDIO_RDFT\fP, \fBCODEC_ID_BINKAUDIO_DCT\fP, \fBCODEC_ID_AAC_LATM\fP, \fBCODEC_ID_QDMC\fP, \fBCODEC_ID_CELT\fP, \fBCODEC_ID_G723_1\fP, \fBCODEC_ID_G729\fP, \fBCODEC_ID_8SVX_EXP\fP, \fBCODEC_ID_8SVX_FIB\fP, \fBCODEC_ID_BMV_AUDIO\fP, \fBCODEC_ID_RALF\fP, \fBCODEC_ID_IAC\fP, \fBCODEC_ID_ILBC\fP, \fBCODEC_ID_FFWAVESYNTH\fP = MKBETAG('F','F','W','S'), \fBCODEC_ID_SONIC\fP = MKBETAG('S','O','N','C'), \fBCODEC_ID_SONIC_LS\fP = MKBETAG('S','O','N','L'), \fBCODEC_ID_PAF_AUDIO\fP = MKBETAG('P','A','F','A'), \fBCODEC_ID_OPUS\fP = MKBETAG('O','P','U','S'), \fBCODEC_ID_FIRST_SUBTITLE\fP = 0x17000, \fBCODEC_ID_DVD_SUBTITLE\fP = 0x17000, \fBCODEC_ID_DVB_SUBTITLE\fP, \fBCODEC_ID_TEXT\fP, \fBCODEC_ID_XSUB\fP, \fBCODEC_ID_SSA\fP, \fBCODEC_ID_MOV_TEXT\fP, \fBCODEC_ID_HDMV_PGS_SUBTITLE\fP, \fBCODEC_ID_DVB_TELETEXT\fP, \fBCODEC_ID_SRT\fP, \fBCODEC_ID_MICRODVD\fP = MKBETAG('m','D','V','D'), \fBCODEC_ID_EIA_608\fP = MKBETAG('c','6','0','8'), \fBCODEC_ID_JACOSUB\fP = MKBETAG('J','S','U','B'), \fBCODEC_ID_SAMI\fP = MKBETAG('S','A','M','I'), \fBCODEC_ID_REALTEXT\fP = MKBETAG('R','T','X','T'), \fBCODEC_ID_SUBVIEWER\fP = MKBETAG('S','u','b','V'), \fBCODEC_ID_FIRST_UNKNOWN\fP = 0x18000, \fBCODEC_ID_TTF\fP = 0x18000, \fBCODEC_ID_BINTEXT\fP = MKBETAG('B','T','X','T'), \fBCODEC_ID_XBIN\fP = MKBETAG('X','B','I','N'), \fBCODEC_ID_IDF\fP = MKBETAG( 0 ,'I','D','F'), \fBCODEC_ID_OTF\fP = MKBETAG( 0 ,'O','T','F'), \fBCODEC_ID_PROBE\fP = 0x19000, \fBCODEC_ID_MPEG2TS\fP = 0x20000, \fBCODEC_ID_MPEG4SYSTEMS\fP = 0x20001, \fBCODEC_ID_FFMETADATA\fP = 0x21000 }"
+.br
+.ti -1c
+.RI "enum \fBAVColorPrimaries\fP { \fBAVCOL_PRI_BT709\fP = 1, \fBAVCOL_PRI_UNSPECIFIED\fP = 2, \fBAVCOL_PRI_BT470M\fP = 4, \fBAVCOL_PRI_BT470BG\fP = 5, \fBAVCOL_PRI_SMPTE170M\fP = 6, \fBAVCOL_PRI_SMPTE240M\fP = 7, \fBAVCOL_PRI_FILM\fP = 8, \fBAVCOL_PRI_BT2020\fP = 9, \fBAVCOL_PRI_NB\fP }"
+.br
+.ti -1c
+.RI "enum \fBAVColorTransferCharacteristic\fP { \fBAVCOL_TRC_BT709\fP = 1, \fBAVCOL_TRC_UNSPECIFIED\fP = 2, \fBAVCOL_TRC_GAMMA22\fP = 4, \fBAVCOL_TRC_GAMMA28\fP = 5, \fBAVCOL_TRC_SMPTE170M\fP = 6, \fBAVCOL_TRC_SMPTE240M\fP = 7, \fBAVCOL_TRC_LINEAR\fP = 8, \fBAVCOL_TRC_LOG\fP = 9, \fBAVCOL_TRC_LOG_SQRT\fP = 10, \fBAVCOL_TRC_IEC61966_2_4\fP = 11, \fBAVCOL_TRC_BT1361_ECG\fP = 12, \fBAVCOL_TRC_IEC61966_2_1\fP = 13, \fBAVCOL_TRC_BT2020_10\fP = 14, \fBAVCOL_TRC_BT2020_12\fP = 15, \fBAVCOL_TRC_NB\fP }"
+.br
+.ti -1c
+.RI "enum \fBAVChromaLocation\fP { \fBAVCHROMA_LOC_UNSPECIFIED\fP = 0, \fBAVCHROMA_LOC_LEFT\fP = 1, \fBAVCHROMA_LOC_CENTER\fP = 2, \fBAVCHROMA_LOC_TOPLEFT\fP = 3, \fBAVCHROMA_LOC_TOP\fP = 4, \fBAVCHROMA_LOC_BOTTOMLEFT\fP = 5, \fBAVCHROMA_LOC_BOTTOM\fP = 6, \fBAVCHROMA_LOC_NB\fP }"
+.br
+.ti -1c
+.RI "enum \fBAVAudioServiceType\fP { \fBAV_AUDIO_SERVICE_TYPE_MAIN\fP = 0, \fBAV_AUDIO_SERVICE_TYPE_EFFECTS\fP = 1, \fBAV_AUDIO_SERVICE_TYPE_VISUALLY_IMPAIRED\fP = 2, \fBAV_AUDIO_SERVICE_TYPE_HEARING_IMPAIRED\fP = 3, \fBAV_AUDIO_SERVICE_TYPE_DIALOGUE\fP = 4, \fBAV_AUDIO_SERVICE_TYPE_COMMENTARY\fP = 5, \fBAV_AUDIO_SERVICE_TYPE_EMERGENCY\fP = 6, \fBAV_AUDIO_SERVICE_TYPE_VOICE_OVER\fP = 7, \fBAV_AUDIO_SERVICE_TYPE_KARAOKE\fP = 8, \fBAV_AUDIO_SERVICE_TYPE_NB\fP }"
+.br
+.ti -1c
+.RI "enum \fBAVFieldOrder\fP { \fBAV_FIELD_UNKNOWN\fP, \fBAV_FIELD_PROGRESSIVE\fP, \fBAV_FIELD_TT\fP, \fBAV_FIELD_BB\fP, \fBAV_FIELD_TB\fP, \fBAV_FIELD_BT\fP }"
+.br
+.ti -1c
+.RI "enum \fBAVSubtitleType\fP { \fBSUBTITLE_NONE\fP, \fBSUBTITLE_BITMAP\fP, \fBSUBTITLE_TEXT\fP, \fBSUBTITLE_ASS\fP }"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBAVRational\fP \fBav_codec_get_pkt_timebase\fP (\fBconst\fP \fBAVCodecContext\fP *avctx)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBav_codec_set_pkt_timebase\fP (\fBAVCodecContext\fP *avctx, \fBAVRational\fP val)"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBAVCodecDescriptor\fP * \fBav_codec_get_codec_descriptor\fP (\fBconst\fP \fBAVCodecContext\fP *avctx)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBav_codec_set_codec_descriptor\fP (\fBAVCodecContext\fP *avctx, \fBconst\fP \fBAVCodecDescriptor\fP *\fBdesc\fP)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_codec_get_lowres\fP (\fBconst\fP \fBAVCodecContext\fP *avctx)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBav_codec_set_lowres\fP (\fBAVCodecContext\fP *avctx, \fBint\fP val)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_codec_get_seek_preroll\fP (\fBconst\fP \fBAVCodecContext\fP *avctx)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBav_codec_set_seek_preroll\fP (\fBAVCodecContext\fP *avctx, \fBint\fP val)"
+.br
+.ti -1c
+.RI "\fBuint16_t\fP * \fBav_codec_get_chroma_intra_matrix\fP (\fBconst\fP \fBAVCodecContext\fP *avctx)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBav_codec_set_chroma_intra_matrix\fP (\fBAVCodecContext\fP *avctx, \fBuint16_t\fP *val)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_codec_get_max_lowres\fP (\fBconst\fP \fBAVCodec\fP *codec)"
+.br
+.ti -1c
+.RI "\fBAVCodec\fP * \fBav_codec_next\fP (\fBconst\fP \fBAVCodec\fP *\fBc\fP)"
+.br
+.ti -1c
+.RI "unsigned \fBavcodec_version\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBconst\fP char * \fBavcodec_configuration\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBconst\fP char * \fBavcodec_license\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBavcodec_register\fP (\fBAVCodec\fP *codec)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBavcodec_register_all\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBAVCodecContext\fP * \fBavcodec_alloc_context3\fP (\fBconst\fP \fBAVCodec\fP *codec)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBavcodec_get_context_defaults3\fP (\fBAVCodecContext\fP *\fBs\fP, \fBconst\fP \fBAVCodec\fP *codec)"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBAVClass\fP * \fBavcodec_get_class\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBAVClass\fP * \fBavcodec_get_frame_class\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBAVClass\fP * \fBavcodec_get_subtitle_rect_class\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBavcodec_copy_context\fP (\fBAVCodecContext\fP *dest, \fBconst\fP \fBAVCodecContext\fP *src)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBavcodec_open2\fP (\fBAVCodecContext\fP *avctx, \fBconst\fP \fBAVCodec\fP *codec, \fBAVDictionary\fP **options)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBavcodec_close\fP (\fBAVCodecContext\fP *avctx)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBavsubtitle_free\fP (\fBAVSubtitle\fP *sub)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Basic definitions, functions for querying libavcodec capabilities, allocating core structures, etc\&. 
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define AV_CODEC_PROP_BITMAP_SUB   (1 << 16)"
+Subtitle codec is bitmap based Decoded \fBAVSubtitle\fP data can be read from the AVSubtitleRect->pict field\&. 
+.PP
+Definition at line 576 of file avcodec\&.h\&.
+.SS "#define AV_CODEC_PROP_INTRA_ONLY   (1 << 0)"
+Codec uses only intra compression\&. Video codecs only\&. 
+.PP
+Definition at line 561 of file avcodec\&.h\&.
+.SS "#define AV_CODEC_PROP_LOSSLESS   (1 << 2)"
+Codec supports lossless compression\&. Audio and video codecs only\&. 
+.PP
+Definition at line 571 of file avcodec\&.h\&.
+.SS "#define AV_CODEC_PROP_LOSSY   (1 << 1)"
+Codec supports lossy compression\&. Audio and video codecs only\&. 
+.PP
+\fBNote:\fP
+.RS 4
+a codec may support both lossy and lossless compression modes 
+.RE
+.PP
+
+.PP
+Definition at line 567 of file avcodec\&.h\&.
+.SS "#define AV_CODEC_PROP_TEXT_SUB   (1 << 17)"
+Subtitle codec is text based\&. Decoded \fBAVSubtitle\fP data can be read from the AVSubtitleRect->ass field\&. 
+.PP
+Definition at line 581 of file avcodec\&.h\&.
+.SS "#define AV_GET_BUFFER_FLAG_REF   (1 << 0)"
+The decoder will keep a reference to the frame and may reuse it later\&. 
+.PP
+Definition at line 955 of file avcodec\&.h\&.
+.SS "#define AV_SUBTITLE_FLAG_FORCED   0x00000001"
+
+.PP
+Definition at line 3271 of file avcodec\&.h\&.
+.SS "#define CODEC_CAP_AUTO_THREADS   0x8000"
+Codec supports avctx->thread_count == 0 (auto)\&. 
+.PP
+Definition at line 864 of file avcodec\&.h\&.
+.SS "#define CODEC_CAP_CHANNEL_CONF   0x0400"
+Codec should fill in channel configuration and samplerate instead of container 
+.PP
+Definition at line 842 of file avcodec\&.h\&.
+.SS "#define CODEC_CAP_DELAY   0x0020"
+Encoder or decoder requires flushing with NULL input at the end in order to give the complete and correct output\&.
+.PP
+NOTE: If this flag is not set, the codec is guaranteed to never be fed with with NULL data\&. The user can still send NULL data to the public encode or decode function, but libavcodec will not pass it along to the codec unless this flag is set\&.
+.PP
+Decoders: The decoder has a non-zero delay and needs to be fed with avpkt->data=NULL, avpkt->size=0 at the end to get the delayed data until the decoder no longer returns frames\&.
+.PP
+Encoders: The encoder needs to be fed with NULL data at the end of encoding until the encoder no longer returns data\&.
+.PP
+NOTE: For encoders implementing the \fBAVCodec\&.encode2()\fP function, setting this flag also means that the encoder must set the pts and duration for each output packet\&. If this flag is not set, the pts and duration will be determined by libavcodec from the input frame\&. 
+.PP
+Definition at line 810 of file avcodec\&.h\&.
+.SS "#define CODEC_CAP_DR1   0x0002"
+Codec uses get_buffer() for allocating buffers and supports custom allocators\&. If not set, it might not use get_buffer() at all or use operations that assume the buffer was allocated by avcodec_default_get_buffer\&. 
+.PP
+Definition at line 775 of file avcodec\&.h\&.
+.SS "#define CODEC_CAP_DRAW_HORIZ_BAND   0x0001"
+
+.PP
+\fBDecoder\fP can use draw_horiz_band callback\&. 
+.PP
+Definition at line 769 of file avcodec\&.h\&.
+.SS "#define CODEC_CAP_EXPERIMENTAL   0x0200"
+Codec is experimental and is thus avoided in favor of non experimental encoders 
+.PP
+Definition at line 838 of file avcodec\&.h\&.
+.SS "#define CODEC_CAP_FRAME_THREADS   0x1000"
+Codec supports frame-level multithreading\&. 
+.PP
+Definition at line 852 of file avcodec\&.h\&.
+.SS "#define CODEC_CAP_HWACCEL   0x0010"
+
+.PP
+Definition at line 785 of file avcodec\&.h\&.
+.SS "#define CODEC_CAP_HWACCEL_VDPAU   0x0080"
+Codec can export data for HW decoding (VDPAU)\&. 
+.PP
+Definition at line 820 of file avcodec\&.h\&.
+.SS "#define CODEC_CAP_INTRA_ONLY   0x40000000"
+Codec is intra only\&. 
+.PP
+Definition at line 872 of file avcodec\&.h\&.
+.SS "#define CODEC_CAP_LOSSLESS   0x80000000"
+Codec is lossless\&. 
+.PP
+Definition at line 876 of file avcodec\&.h\&.
+.SS "#define CODEC_CAP_NEG_LINESIZES   0x0800"
+
+.PP
+\fBDeprecated\fP
+.RS 4
+no codecs use this capability 
+.RE
+.PP
+
+.PP
+Definition at line 847 of file avcodec\&.h\&.
+.SS "#define CODEC_CAP_PARAM_CHANGE   0x4000"
+Codec supports changed parameters at any point\&. 
+.PP
+Definition at line 860 of file avcodec\&.h\&.
+.SS "#define CODEC_CAP_SLICE_THREADS   0x2000"
+Codec supports slice-based (or partition-based) multithreading\&. 
+.PP
+Definition at line 856 of file avcodec\&.h\&.
+.SS "#define CODEC_CAP_SMALL_LAST_FRAME   0x0040"
+Codec can be fed a final frame with a smaller size\&. This can be used to prevent truncation of the last audio samples\&. 
+.PP
+Definition at line 815 of file avcodec\&.h\&.
+.SS "#define CODEC_CAP_SUBFRAMES   0x0100"
+Codec can output multiple frames per \fBAVPacket\fP Normally demuxers return one frame at a time, demuxers which do not do are connected to a parser to split what they return into proper frames\&. This flag is reserved to the very rare category of codecs which have a bitstream that cannot be split into frames without timeconsuming operations like full decoding\&. Demuxers carring such bitstreams thus may return multiple frames in a packet\&. This has many disadvantages like prohibiting stream copy in many cases thus it should only be considered as a last resort\&. 
+.PP
+Definition at line 833 of file avcodec\&.h\&.
+.SS "#define CODEC_CAP_TRUNCATED   0x0008"
+
+.PP
+Definition at line 776 of file avcodec\&.h\&.
+.SS "#define CODEC_CAP_VARIABLE_FRAME_SIZE   0x10000"
+Audio encoder supports receiving a different number of samples in each call\&. 
+.PP
+Definition at line 868 of file avcodec\&.h\&.
+.SS "#define CODEC_FLAG2_CHUNKS   0x00008000"
+
+.PP
+Input bitstream might be truncated at a packet boundaries instead of only at frame boundaries\&. 
+.PP
+Definition at line 759 of file avcodec\&.h\&.
+.SS "#define CODEC_FLAG2_DROP_FRAME_TIMECODE   0x00002000"
+
+.PP
+timecode is in drop frame format\&. DEPRECATED!!!! 
+.PP
+Definition at line 756 of file avcodec\&.h\&.
+.SS "#define CODEC_FLAG2_FAST   0x00000001"
+
+.PP
+Allow non spec compliant speedup tricks\&. 
+.PP
+Definition at line 753 of file avcodec\&.h\&.
+.SS "#define CODEC_FLAG2_IGNORE_CROP   0x00010000"
+
+.PP
+Discard cropping information from SPS\&. 
+.PP
+Definition at line 757 of file avcodec\&.h\&.
+.SS "#define CODEC_FLAG2_LOCAL_HEADER   0x00000008"
+
+.PP
+Place global headers at every keyframe instead of in extradata\&. 
+.PP
+Definition at line 755 of file avcodec\&.h\&.
+.SS "#define CODEC_FLAG2_NO_OUTPUT   0x00000004"
+
+.PP
+Skip bitstream encoding\&. 
+.PP
+Definition at line 754 of file avcodec\&.h\&.
+.SS "#define CODEC_FLAG2_SHOW_ALL   0x00400000"
+
+.PP
+Show all frames before the first keyframe\&. 
+.PP
+Definition at line 760 of file avcodec\&.h\&.
+.SS "#define CODEC_FLAG_4MV   0x0004"
+
+.PP
+4 MV per MB allowed / advanced prediction for H\&.263\&. 
+.PP
+Definition at line 719 of file avcodec\&.h\&.
+.SS "#define CODEC_FLAG_AC_PRED   0x01000000"
+
+.PP
+H\&.263 advanced intra coding / MPEG-4 AC prediction\&. 
+.PP
+Definition at line 749 of file avcodec\&.h\&.
+.SS "#define CODEC_FLAG_BITEXACT   0x00800000"
+
+.PP
+Use only bitexact stuff (except (I)DCT)\&. 
+.PP
+Definition at line 747 of file avcodec\&.h\&.
+.SS "#define CODEC_FLAG_CLOSED_GOP   0x80000000"
+
+.PP
+Definition at line 752 of file avcodec\&.h\&.
+.SS "#define CODEC_FLAG_EMU_EDGE   0x4000"
+
+.PP
+\fBDeprecated\fP
+.RS 4
+edges are not used/required anymore\&. I\&.e\&. this flag is now always set\&. 
+.RE
+.PP
+
+.PP
+Definition at line 738 of file avcodec\&.h\&.
+.SS "#define CODEC_FLAG_GLOBAL_HEADER   0x00400000"
+
+.PP
+Place global headers in extradata instead of every keyframe\&. 
+.PP
+Definition at line 746 of file avcodec\&.h\&.
+.SS "#define CODEC_FLAG_GMC   0x0020"
+
+.PP
+Use GMC\&. 
+.PP
+Definition at line 722 of file avcodec\&.h\&.
+.SS "#define CODEC_FLAG_GRAY   0x2000"
+
+.PP
+Only decode/encode grayscale\&. 
+.PP
+Definition at line 732 of file avcodec\&.h\&.
+.SS "#define CODEC_FLAG_INPUT_PRESERVED   0x0100"
+The parent program guarantees that the input for B-frames containing streams is not written to for at least s->max_b_frames+1 frames, if this is not set the input will be copied\&. 
+.PP
+Definition at line 729 of file avcodec\&.h\&.
+.SS "#define CODEC_FLAG_INTERLACED_DCT   0x00040000"
+
+.PP
+Use interlaced DCT\&. 
+.PP
+Definition at line 744 of file avcodec\&.h\&.
+.SS "#define CODEC_FLAG_INTERLACED_ME   0x20000000"
+
+.PP
+interlaced motion estimation 
+.PP
+Definition at line 751 of file avcodec\&.h\&.
+.SS "#define CODEC_FLAG_LOOP_FILTER   0x00000800"
+
+.PP
+loop filter 
+.PP
+Definition at line 750 of file avcodec\&.h\&.
+.SS "#define CODEC_FLAG_LOW_DELAY   0x00080000"
+
+.PP
+Force low delay\&. 
+.PP
+Definition at line 745 of file avcodec\&.h\&.
+.SS "#define CODEC_FLAG_MV0   0x0040"
+
+.PP
+Always try a MB with MV=<0,0>\&. 
+.PP
+Definition at line 723 of file avcodec\&.h\&.
+.SS "#define CODEC_FLAG_NORMALIZE_AQP   0x00020000"
+
+.PP
+Normalize adaptive quantization\&. 
+.PP
+Definition at line 743 of file avcodec\&.h\&.
+.SS "#define CODEC_FLAG_OUTPUT_CORRUPT   0x0008"
+
+.PP
+Output even those frames that might be corrupted\&. 
+.PP
+Definition at line 720 of file avcodec\&.h\&.
+.SS "#define CODEC_FLAG_PASS1   0x0200"
+
+.PP
+Use internal 2pass ratecontrol in first pass mode\&. 
+.PP
+Definition at line 730 of file avcodec\&.h\&.
+.SS "#define CODEC_FLAG_PASS2   0x0400"
+
+.PP
+Use internal 2pass ratecontrol in second pass mode\&. 
+.PP
+Definition at line 731 of file avcodec\&.h\&.
+.SS "#define CODEC_FLAG_PSNR   0x8000"
+
+.PP
+error[?] variables will be set during encoding\&. 
+.PP
+Definition at line 740 of file avcodec\&.h\&.
+.SS "#define CODEC_FLAG_QPEL   0x0010"
+
+.PP
+Use qpel MC\&. 
+.PP
+Definition at line 721 of file avcodec\&.h\&.
+.SS "#define CODEC_FLAG_QSCALE   0x0002"
+
+.PP
+Use fixed qscale\&. 
+.PP
+Definition at line 718 of file avcodec\&.h\&.
+.SS "#define CODEC_FLAG_TRUNCATED"
+\fBValue:\fP
+.PP
+.nf
+0x00010000 
+.fi
+.PP
+Definition at line 741 of file avcodec\&.h\&.
+.SS "#define CODEC_FLAG_UNALIGNED   0x0001"
+Allow decoders to produce frames with data planes that are not aligned to CPU requirements (e\&.g\&. due to cropping)\&. 
+.PP
+Definition at line 717 of file avcodec\&.h\&.
+.SS "#define FF_BUFFER_HINTS_PRESERVE   0x04"
+
+.PP
+Definition at line 948 of file avcodec\&.h\&.
+.SS "#define FF_BUFFER_HINTS_READABLE   0x02"
+
+.PP
+Definition at line 947 of file avcodec\&.h\&.
+.SS "#define FF_BUFFER_HINTS_REUSABLE   0x08"
+
+.PP
+Definition at line 949 of file avcodec\&.h\&.
+.SS "#define FF_BUFFER_HINTS_VALID   0x01"
+
+.PP
+Definition at line 946 of file avcodec\&.h\&.
+.SS "#define FF_BUFFER_TYPE_COPY   8"
+
+.PP
+Just a (modified) copy of some other buffer, don't deallocate anything\&. 
+.PP
+Definition at line 944 of file avcodec\&.h\&.
+.SS "#define FF_BUFFER_TYPE_INTERNAL   1"
+
+.PP
+Definition at line 941 of file avcodec\&.h\&.
+.SS "#define FF_BUFFER_TYPE_SHARED   4"
+
+.PP
+Buffer from somewhere else; don't deallocate image (data/base), all other tables are not shared\&. 
+.PP
+Definition at line 943 of file avcodec\&.h\&.
+.SS "#define FF_BUFFER_TYPE_USER   2"
+
+.PP
+direct rendering buffers (image is (de)allocated by user) 
+.PP
+Definition at line 942 of file avcodec\&.h\&.
+.SS "#define FF_MAX_B_FRAMES   16"
+
+.PP
+\fBDeprecated\fP
+.RS 4
+there is no libavcodec-wide limit on the number of B-frames 
+.RE
+.PP
+
+.PP
+Definition at line 705 of file avcodec\&.h\&.
+.SS "#define FF_QSCALE_TYPE_H264   2"
+
+.PP
+Definition at line 936 of file avcodec\&.h\&.
+.SS "#define FF_QSCALE_TYPE_MPEG1   0"
+
+.PP
+Definition at line 934 of file avcodec\&.h\&.
+.SS "#define FF_QSCALE_TYPE_MPEG2   1"
+
+.PP
+Definition at line 935 of file avcodec\&.h\&.
+.SS "#define FF_QSCALE_TYPE_VP56   3"
+
+.PP
+Definition at line 937 of file avcodec\&.h\&.
+.SS "#define MB_TYPE_16x16   0x0008"
+
+.PP
+Definition at line 883 of file avcodec\&.h\&.
+.SS "#define MB_TYPE_16x8   0x0010"
+
+.PP
+Definition at line 884 of file avcodec\&.h\&.
+.SS "#define MB_TYPE_8x16   0x0020"
+
+.PP
+Definition at line 885 of file avcodec\&.h\&.
+.SS "#define MB_TYPE_8x8   0x0040"
+
+.PP
+Definition at line 886 of file avcodec\&.h\&.
+.SS "#define MB_TYPE_ACPRED   0x0200"
+
+.PP
+Definition at line 889 of file avcodec\&.h\&.
+.SS "#define MB_TYPE_CBP   0x00020000"
+
+.PP
+Definition at line 900 of file avcodec\&.h\&.
+.SS "#define MB_TYPE_DIRECT2   0x0100"
+
+.PP
+Definition at line 888 of file avcodec\&.h\&.
+.SS "#define MB_TYPE_GMC   0x0400"
+
+.PP
+Definition at line 890 of file avcodec\&.h\&.
+.SS "#define MB_TYPE_INTERLACED   0x0080"
+
+.PP
+Definition at line 887 of file avcodec\&.h\&.
+.SS "#define MB_TYPE_INTRA16x16   0x0002"
+
+.PP
+Definition at line 881 of file avcodec\&.h\&.
+.SS "#define MB_TYPE_INTRA4x4   0x0001"
+
+.PP
+Definition at line 880 of file avcodec\&.h\&.
+.SS "#define MB_TYPE_INTRA_PCM   0x0004"
+
+.PP
+Definition at line 882 of file avcodec\&.h\&.
+.SS "#define MB_TYPE_L0   (\fBMB_TYPE_P0L0\fP | \fBMB_TYPE_P1L0\fP)"
+
+.PP
+Definition at line 896 of file avcodec\&.h\&.
+.SS "#define MB_TYPE_L0L1   (\fBMB_TYPE_L0\fP   | \fBMB_TYPE_L1\fP)"
+
+.PP
+Definition at line 898 of file avcodec\&.h\&.
+.SS "#define MB_TYPE_L1   (\fBMB_TYPE_P0L1\fP | \fBMB_TYPE_P1L1\fP)"
+
+.PP
+Definition at line 897 of file avcodec\&.h\&.
+.SS "#define MB_TYPE_P0L0   0x1000"
+
+.PP
+Definition at line 892 of file avcodec\&.h\&.
+.SS "#define MB_TYPE_P0L1   0x4000"
+
+.PP
+Definition at line 894 of file avcodec\&.h\&.
+.SS "#define MB_TYPE_P1L0   0x2000"
+
+.PP
+Definition at line 893 of file avcodec\&.h\&.
+.SS "#define MB_TYPE_P1L1   0x8000"
+
+.PP
+Definition at line 895 of file avcodec\&.h\&.
+.SS "#define MB_TYPE_QUANT   0x00010000"
+
+.PP
+Definition at line 899 of file avcodec\&.h\&.
+.SS "#define MB_TYPE_SKIP   0x0800"
+
+.PP
+Definition at line 891 of file avcodec\&.h\&.
+.SH "Typedef Documentation"
+.PP 
+.SS "typedef struct \fBAVCodec\fP  \fBAVCodec\fP"
+\fBAVCodec\fP\&. 
+.SS "typedef struct \fBAVCodecContext\fP  \fBAVCodecContext\fP"
+main external API structure\&. New fields can be added to the end with minor version bumps\&. Removal, reordering and changes to existing fields require a major version bump\&. Please use AVOptions (av_opt* / av_set/get*()) to access these fields from user applications\&. sizeof(AVCodecContext) must not be used outside libav*\&. 
+.SS "typedef struct \fBAVCodecDefault\fP \fBAVCodecDefault\fP"
+
+.PP
+Definition at line 3024 of file avcodec\&.h\&.
+.SS "typedef struct \fBAVCodecDescriptor\fP  \fBAVCodecDescriptor\fP"
+This struct describes the properties of a single codec described by an AVCodecID\&. 
+.PP
+\fBSee also:\fP
+.RS 4
+avcodec_get_descriptor() 
+.RE
+.PP
+
+.SS "typedef struct \fBAVHWAccel\fP  \fBAVHWAccel\fP"
+\fBAVHWAccel\fP\&. 
+.SS "typedef struct \fBAVPanScan\fP \fBAVPanScan\fP"
+Pan Scan area\&. This specifies the area which should be displayed\&. Note there may be multiple such areas for one frame\&. 
+.SS "typedef struct \fBAVProfile\fP  \fBAVProfile\fP"
+\fBAVProfile\fP\&. 
+.SS "typedef struct \fBAVSubtitle\fP  \fBAVSubtitle\fP"
+
+.SS "typedef struct \fBAVSubtitleRect\fP  \fBAVSubtitleRect\fP"
+
+.SH "Enumeration Type Documentation"
+.PP 
+.SS "enum \fBAVAudioServiceType\fP"
+
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fIAV_AUDIO_SERVICE_TYPE_MAIN \fP\fP
+.TP
+\fB\fIAV_AUDIO_SERVICE_TYPE_EFFECTS \fP\fP
+.TP
+\fB\fIAV_AUDIO_SERVICE_TYPE_VISUALLY_IMPAIRED \fP\fP
+.TP
+\fB\fIAV_AUDIO_SERVICE_TYPE_HEARING_IMPAIRED \fP\fP
+.TP
+\fB\fIAV_AUDIO_SERVICE_TYPE_DIALOGUE \fP\fP
+.TP
+\fB\fIAV_AUDIO_SERVICE_TYPE_COMMENTARY \fP\fP
+.TP
+\fB\fIAV_AUDIO_SERVICE_TYPE_EMERGENCY \fP\fP
+.TP
+\fB\fIAV_AUDIO_SERVICE_TYPE_VOICE_OVER \fP\fP
+.TP
+\fB\fIAV_AUDIO_SERVICE_TYPE_KARAOKE \fP\fP
+.TP
+\fB\fIAV_AUDIO_SERVICE_TYPE_NB \fP\fP
+Not part of ABI\&. 
+.PP
+Definition at line 678 of file avcodec\&.h\&.
+.SS "enum \fBAVChromaLocation\fP"
+X X 3 4 X X are luma samples, 1 2 1-6 are possible chroma positions X X 5 6 X 0 is undefined/unknown position 
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fIAVCHROMA_LOC_UNSPECIFIED \fP\fP
+.TP
+\fB\fIAVCHROMA_LOC_LEFT \fP\fP
+mpeg2/4, h264 default 
+.TP
+\fB\fIAVCHROMA_LOC_CENTER \fP\fP
+mpeg1, jpeg, h263 
+.TP
+\fB\fIAVCHROMA_LOC_TOPLEFT \fP\fP
+DV\&. 
+.TP
+\fB\fIAVCHROMA_LOC_TOP \fP\fP
+.TP
+\fB\fIAVCHROMA_LOC_BOTTOMLEFT \fP\fP
+.TP
+\fB\fIAVCHROMA_LOC_BOTTOM \fP\fP
+.TP
+\fB\fIAVCHROMA_LOC_NB \fP\fP
+Not part of ABI\&. 
+.PP
+Definition at line 667 of file avcodec\&.h\&.
+.SS "enum \fBAVCodecID\fP"
+Identify the syntax and semantics of the bitstream\&. The principle is roughly: Two decoders with the same ID can decode the same streams\&. Two encoders with the same ID can encode compatible streams\&. There may be slight deviations from the principle due to implementation details\&.
+.PP
+If you add a codec ID to this list, add it so that
+.IP "1." 4
+no value of a existing codec ID changes (that would break ABI),
+.IP "2." 4
+Give it a value which when taken as ASCII is recognized uniquely by a human as this specific codec\&. This ensures that 2 forks can independently add AVCodecIDs without producing conflicts\&.
+.PP
+.PP
+After adding new codec IDs, do not forget to add an entry to the codec descriptor list and bump libavcodec minor version\&. 
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fIAV_CODEC_ID_NONE \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_MPEG1VIDEO \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_MPEG2VIDEO \fP\fP
+preferred ID for MPEG-1/2 video decoding 
+.TP
+\fB\fIAV_CODEC_ID_MPEG2VIDEO_XVMC \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_H261 \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_H263 \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_RV10 \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_RV20 \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_MJPEG \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_MJPEGB \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_LJPEG \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_SP5X \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_JPEGLS \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_MPEG4 \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_RAWVIDEO \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_MSMPEG4V1 \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_MSMPEG4V2 \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_MSMPEG4V3 \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_WMV1 \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_WMV2 \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_H263P \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_H263I \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_FLV1 \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_SVQ1 \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_SVQ3 \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_DVVIDEO \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_HUFFYUV \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_CYUV \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_H264 \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_INDEO3 \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_VP3 \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_THEORA \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_ASV1 \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_ASV2 \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_FFV1 \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_4XM \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_VCR1 \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_CLJR \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_MDEC \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_ROQ \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_INTERPLAY_VIDEO \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_XAN_WC3 \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_XAN_WC4 \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_RPZA \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_CINEPAK \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_WS_VQA \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_MSRLE \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_MSVIDEO1 \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_IDCIN \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_8BPS \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_SMC \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_FLIC \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_TRUEMOTION1 \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_VMDVIDEO \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_MSZH \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_ZLIB \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_QTRLE \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_TSCC \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_ULTI \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_QDRAW \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_VIXL \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_QPEG \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_PNG \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_PPM \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_PBM \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_PGM \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_PGMYUV \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_PAM \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_FFVHUFF \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_RV30 \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_RV40 \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_VC1 \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_WMV3 \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_LOCO \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_WNV1 \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_AASC \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_INDEO2 \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_FRAPS \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_TRUEMOTION2 \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_BMP \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_CSCD \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_MMVIDEO \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_ZMBV \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_AVS \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_SMACKVIDEO \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_NUV \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_KMVC \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_FLASHSV \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_CAVS \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_JPEG2000 \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_VMNC \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_VP5 \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_VP6 \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_VP6F \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_TARGA \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_DSICINVIDEO \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_TIERTEXSEQVIDEO \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_TIFF \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_GIF \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_DXA \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_DNXHD \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_THP \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_SGI \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_C93 \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_BETHSOFTVID \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_PTX \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_TXD \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_VP6A \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_AMV \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_VB \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_PCX \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_SUNRAST \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_INDEO4 \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_INDEO5 \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_MIMIC \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_RL2 \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_ESCAPE124 \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_DIRAC \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_BFI \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_CMV \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_MOTIONPIXELS \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_TGV \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_TGQ \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_TQI \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_AURA \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_AURA2 \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_V210X \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_TMV \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_V210 \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_DPX \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_MAD \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_FRWU \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_FLASHSV2 \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_CDGRAPHICS \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_R210 \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_ANM \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_BINKVIDEO \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_IFF_ILBM \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_IFF_BYTERUN1 \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_KGV1 \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_YOP \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_VP8 \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_PICTOR \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_ANSI \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_A64_MULTI \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_A64_MULTI5 \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_R10K \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_MXPEG \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_LAGARITH \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_PRORES \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_JV \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_DFA \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_WMV3IMAGE \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_VC1IMAGE \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_UTVIDEO \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_BMV_VIDEO \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_VBLE \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_DXTORY \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_V410 \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_XWD \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_CDXL \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_XBM \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_ZEROCODEC \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_MSS1 \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_MSA1 \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_TSCC2 \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_MTS2 \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_CLLC \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_MSS2 \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_VP9 \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_AIC \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_ESCAPE130_DEPRECATED \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_G2M_DEPRECATED \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_WEBP_DEPRECATED \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_HNM4_VIDEO \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_HEVC_DEPRECATED \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_FIC \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_BRENDER_PIX \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_Y41P \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_ESCAPE130 \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_EXR \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_AVRP \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_012V \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_G2M \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_AVUI \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_AYUV \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_TARGA_Y216 \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_V308 \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_V408 \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_YUV4 \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_SANM \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_PAF_VIDEO \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_AVRN \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_CPIA \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_XFACE \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_SGIRLE \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_MVC1 \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_MVC2 \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_SNOW \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_WEBP \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_SMVJPEG \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_HEVC \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_FIRST_AUDIO \fP\fP
+A dummy id pointing at the start of audio codecs\&. 
+.TP
+\fB\fIAV_CODEC_ID_PCM_S16LE \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_PCM_S16BE \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_PCM_U16LE \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_PCM_U16BE \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_PCM_S8 \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_PCM_U8 \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_PCM_MULAW \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_PCM_ALAW \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_PCM_S32LE \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_PCM_S32BE \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_PCM_U32LE \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_PCM_U32BE \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_PCM_S24LE \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_PCM_S24BE \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_PCM_U24LE \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_PCM_U24BE \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_PCM_S24DAUD \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_PCM_ZORK \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_PCM_S16LE_PLANAR \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_PCM_DVD \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_PCM_F32BE \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_PCM_F32LE \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_PCM_F64BE \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_PCM_F64LE \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_PCM_BLURAY \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_PCM_LXF \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_S302M \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_PCM_S8_PLANAR \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_PCM_S24LE_PLANAR_DEPRECATED \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_PCM_S32LE_PLANAR_DEPRECATED \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_PCM_S24LE_PLANAR \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_PCM_S32LE_PLANAR \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_PCM_S16BE_PLANAR \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_ADPCM_IMA_QT \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_ADPCM_IMA_WAV \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_ADPCM_IMA_DK3 \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_ADPCM_IMA_DK4 \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_ADPCM_IMA_WS \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_ADPCM_IMA_SMJPEG \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_ADPCM_MS \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_ADPCM_4XM \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_ADPCM_XA \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_ADPCM_ADX \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_ADPCM_EA \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_ADPCM_G726 \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_ADPCM_CT \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_ADPCM_SWF \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_ADPCM_YAMAHA \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_ADPCM_SBPRO_4 \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_ADPCM_SBPRO_3 \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_ADPCM_SBPRO_2 \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_ADPCM_THP \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_ADPCM_IMA_AMV \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_ADPCM_EA_R1 \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_ADPCM_EA_R3 \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_ADPCM_EA_R2 \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_ADPCM_IMA_EA_SEAD \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_ADPCM_IMA_EA_EACS \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_ADPCM_EA_XAS \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_ADPCM_EA_MAXIS_XA \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_ADPCM_IMA_ISS \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_ADPCM_G722 \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_ADPCM_IMA_APC \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_VIMA \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_ADPCM_AFC \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_ADPCM_IMA_OKI \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_ADPCM_DTK \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_ADPCM_IMA_RAD \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_ADPCM_G726LE \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_AMR_NB \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_AMR_WB \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_RA_144 \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_RA_288 \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_ROQ_DPCM \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_INTERPLAY_DPCM \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_XAN_DPCM \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_SOL_DPCM \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_MP2 \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_MP3 \fP\fP
+preferred ID for decoding MPEG audio layer 1, 2 or 3 
+.TP
+\fB\fIAV_CODEC_ID_AAC \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_AC3 \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_DTS \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_VORBIS \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_DVAUDIO \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_WMAV1 \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_WMAV2 \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_MACE3 \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_MACE6 \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_VMDAUDIO \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_FLAC \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_MP3ADU \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_MP3ON4 \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_SHORTEN \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_ALAC \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_WESTWOOD_SND1 \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_GSM \fP\fP
+as in Berlin toast format 
+.TP
+\fB\fIAV_CODEC_ID_QDM2 \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_COOK \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_TRUESPEECH \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_TTA \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_SMACKAUDIO \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_QCELP \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_WAVPACK \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_DSICINAUDIO \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_IMC \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_MUSEPACK7 \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_MLP \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_GSM_MS \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_ATRAC3 \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_VOXWARE \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_APE \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_NELLYMOSER \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_MUSEPACK8 \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_SPEEX \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_WMAVOICE \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_WMAPRO \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_WMALOSSLESS \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_ATRAC3P \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_EAC3 \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_SIPR \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_MP1 \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_TWINVQ \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_TRUEHD \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_MP4ALS \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_ATRAC1 \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_BINKAUDIO_RDFT \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_BINKAUDIO_DCT \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_AAC_LATM \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_QDMC \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_CELT \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_G723_1 \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_G729 \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_8SVX_EXP \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_8SVX_FIB \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_BMV_AUDIO \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_RALF \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_IAC \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_ILBC \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_OPUS_DEPRECATED \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_COMFORT_NOISE \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_TAK_DEPRECATED \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_METASOUND \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_FFWAVESYNTH \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_SONIC \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_SONIC_LS \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_PAF_AUDIO \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_OPUS \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_TAK \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_EVRC \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_SMV \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_FIRST_SUBTITLE \fP\fP
+A dummy ID pointing at the start of subtitle codecs\&. 
+.TP
+\fB\fIAV_CODEC_ID_DVD_SUBTITLE \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_DVB_SUBTITLE \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_TEXT \fP\fP
+raw UTF-8 text 
+.TP
+\fB\fIAV_CODEC_ID_XSUB \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_SSA \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_MOV_TEXT \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_HDMV_PGS_SUBTITLE \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_DVB_TELETEXT \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_SRT \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_MICRODVD \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_EIA_608 \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_JACOSUB \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_SAMI \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_REALTEXT \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_SUBVIEWER1 \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_SUBVIEWER \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_SUBRIP \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_WEBVTT \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_MPL2 \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_VPLAYER \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_PJS \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_ASS \fP\fP
+ASS as defined in Matroska\&. 
+.TP
+\fB\fIAV_CODEC_ID_FIRST_UNKNOWN \fP\fP
+A dummy ID pointing at the start of various fake codecs\&. 
+.TP
+\fB\fIAV_CODEC_ID_TTF \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_BINTEXT \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_XBIN \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_IDF \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_OTF \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_SMPTE_KLV \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_DVD_NAV \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_TIMED_ID3 \fP\fP
+.TP
+\fB\fIAV_CODEC_ID_PROBE \fP\fP
+codec_id is not known (like AV_CODEC_ID_NONE) but lavf should attempt to identify it 
+.TP
+\fB\fIAV_CODEC_ID_MPEG2TS \fP\fP
+\fIFAKE\fP codec to indicate a raw MPEG-2 TS stream (only used by libavformat) 
+.TP
+\fB\fIAV_CODEC_ID_MPEG4SYSTEMS \fP\fP
+\fIFAKE\fP codec to indicate a MPEG-4 Systems stream (only used by libavformat) 
+.TP
+\fB\fIAV_CODEC_ID_FFMETADATA \fP\fP
+Dummy codec for streams containing only metadata information\&. 
+.TP
+\fB\fICODEC_ID_NONE \fP\fP
+.TP
+\fB\fICODEC_ID_MPEG1VIDEO \fP\fP
+.TP
+\fB\fICODEC_ID_MPEG2VIDEO \fP\fP
+preferred ID for MPEG-1/2 video decoding 
+.TP
+\fB\fICODEC_ID_MPEG2VIDEO_XVMC \fP\fP
+.TP
+\fB\fICODEC_ID_H261 \fP\fP
+.TP
+\fB\fICODEC_ID_H263 \fP\fP
+.TP
+\fB\fICODEC_ID_RV10 \fP\fP
+.TP
+\fB\fICODEC_ID_RV20 \fP\fP
+.TP
+\fB\fICODEC_ID_MJPEG \fP\fP
+.TP
+\fB\fICODEC_ID_MJPEGB \fP\fP
+.TP
+\fB\fICODEC_ID_LJPEG \fP\fP
+.TP
+\fB\fICODEC_ID_SP5X \fP\fP
+.TP
+\fB\fICODEC_ID_JPEGLS \fP\fP
+.TP
+\fB\fICODEC_ID_MPEG4 \fP\fP
+.TP
+\fB\fICODEC_ID_RAWVIDEO \fP\fP
+.TP
+\fB\fICODEC_ID_MSMPEG4V1 \fP\fP
+.TP
+\fB\fICODEC_ID_MSMPEG4V2 \fP\fP
+.TP
+\fB\fICODEC_ID_MSMPEG4V3 \fP\fP
+.TP
+\fB\fICODEC_ID_WMV1 \fP\fP
+.TP
+\fB\fICODEC_ID_WMV2 \fP\fP
+.TP
+\fB\fICODEC_ID_H263P \fP\fP
+.TP
+\fB\fICODEC_ID_H263I \fP\fP
+.TP
+\fB\fICODEC_ID_FLV1 \fP\fP
+.TP
+\fB\fICODEC_ID_SVQ1 \fP\fP
+.TP
+\fB\fICODEC_ID_SVQ3 \fP\fP
+.TP
+\fB\fICODEC_ID_DVVIDEO \fP\fP
+.TP
+\fB\fICODEC_ID_HUFFYUV \fP\fP
+.TP
+\fB\fICODEC_ID_CYUV \fP\fP
+.TP
+\fB\fICODEC_ID_H264 \fP\fP
+.TP
+\fB\fICODEC_ID_INDEO3 \fP\fP
+.TP
+\fB\fICODEC_ID_VP3 \fP\fP
+.TP
+\fB\fICODEC_ID_THEORA \fP\fP
+.TP
+\fB\fICODEC_ID_ASV1 \fP\fP
+.TP
+\fB\fICODEC_ID_ASV2 \fP\fP
+.TP
+\fB\fICODEC_ID_FFV1 \fP\fP
+.TP
+\fB\fICODEC_ID_4XM \fP\fP
+.TP
+\fB\fICODEC_ID_VCR1 \fP\fP
+.TP
+\fB\fICODEC_ID_CLJR \fP\fP
+.TP
+\fB\fICODEC_ID_MDEC \fP\fP
+.TP
+\fB\fICODEC_ID_ROQ \fP\fP
+.TP
+\fB\fICODEC_ID_INTERPLAY_VIDEO \fP\fP
+.TP
+\fB\fICODEC_ID_XAN_WC3 \fP\fP
+.TP
+\fB\fICODEC_ID_XAN_WC4 \fP\fP
+.TP
+\fB\fICODEC_ID_RPZA \fP\fP
+.TP
+\fB\fICODEC_ID_CINEPAK \fP\fP
+.TP
+\fB\fICODEC_ID_WS_VQA \fP\fP
+.TP
+\fB\fICODEC_ID_MSRLE \fP\fP
+.TP
+\fB\fICODEC_ID_MSVIDEO1 \fP\fP
+.TP
+\fB\fICODEC_ID_IDCIN \fP\fP
+.TP
+\fB\fICODEC_ID_8BPS \fP\fP
+.TP
+\fB\fICODEC_ID_SMC \fP\fP
+.TP
+\fB\fICODEC_ID_FLIC \fP\fP
+.TP
+\fB\fICODEC_ID_TRUEMOTION1 \fP\fP
+.TP
+\fB\fICODEC_ID_VMDVIDEO \fP\fP
+.TP
+\fB\fICODEC_ID_MSZH \fP\fP
+.TP
+\fB\fICODEC_ID_ZLIB \fP\fP
+.TP
+\fB\fICODEC_ID_QTRLE \fP\fP
+.TP
+\fB\fICODEC_ID_TSCC \fP\fP
+.TP
+\fB\fICODEC_ID_ULTI \fP\fP
+.TP
+\fB\fICODEC_ID_QDRAW \fP\fP
+.TP
+\fB\fICODEC_ID_VIXL \fP\fP
+.TP
+\fB\fICODEC_ID_QPEG \fP\fP
+.TP
+\fB\fICODEC_ID_PNG \fP\fP
+.TP
+\fB\fICODEC_ID_PPM \fP\fP
+.TP
+\fB\fICODEC_ID_PBM \fP\fP
+.TP
+\fB\fICODEC_ID_PGM \fP\fP
+.TP
+\fB\fICODEC_ID_PGMYUV \fP\fP
+.TP
+\fB\fICODEC_ID_PAM \fP\fP
+.TP
+\fB\fICODEC_ID_FFVHUFF \fP\fP
+.TP
+\fB\fICODEC_ID_RV30 \fP\fP
+.TP
+\fB\fICODEC_ID_RV40 \fP\fP
+.TP
+\fB\fICODEC_ID_VC1 \fP\fP
+.TP
+\fB\fICODEC_ID_WMV3 \fP\fP
+.TP
+\fB\fICODEC_ID_LOCO \fP\fP
+.TP
+\fB\fICODEC_ID_WNV1 \fP\fP
+.TP
+\fB\fICODEC_ID_AASC \fP\fP
+.TP
+\fB\fICODEC_ID_INDEO2 \fP\fP
+.TP
+\fB\fICODEC_ID_FRAPS \fP\fP
+.TP
+\fB\fICODEC_ID_TRUEMOTION2 \fP\fP
+.TP
+\fB\fICODEC_ID_BMP \fP\fP
+.TP
+\fB\fICODEC_ID_CSCD \fP\fP
+.TP
+\fB\fICODEC_ID_MMVIDEO \fP\fP
+.TP
+\fB\fICODEC_ID_ZMBV \fP\fP
+.TP
+\fB\fICODEC_ID_AVS \fP\fP
+.TP
+\fB\fICODEC_ID_SMACKVIDEO \fP\fP
+.TP
+\fB\fICODEC_ID_NUV \fP\fP
+.TP
+\fB\fICODEC_ID_KMVC \fP\fP
+.TP
+\fB\fICODEC_ID_FLASHSV \fP\fP
+.TP
+\fB\fICODEC_ID_CAVS \fP\fP
+.TP
+\fB\fICODEC_ID_JPEG2000 \fP\fP
+.TP
+\fB\fICODEC_ID_VMNC \fP\fP
+.TP
+\fB\fICODEC_ID_VP5 \fP\fP
+.TP
+\fB\fICODEC_ID_VP6 \fP\fP
+.TP
+\fB\fICODEC_ID_VP6F \fP\fP
+.TP
+\fB\fICODEC_ID_TARGA \fP\fP
+.TP
+\fB\fICODEC_ID_DSICINVIDEO \fP\fP
+.TP
+\fB\fICODEC_ID_TIERTEXSEQVIDEO \fP\fP
+.TP
+\fB\fICODEC_ID_TIFF \fP\fP
+.TP
+\fB\fICODEC_ID_GIF \fP\fP
+.TP
+\fB\fICODEC_ID_DXA \fP\fP
+.TP
+\fB\fICODEC_ID_DNXHD \fP\fP
+.TP
+\fB\fICODEC_ID_THP \fP\fP
+.TP
+\fB\fICODEC_ID_SGI \fP\fP
+.TP
+\fB\fICODEC_ID_C93 \fP\fP
+.TP
+\fB\fICODEC_ID_BETHSOFTVID \fP\fP
+.TP
+\fB\fICODEC_ID_PTX \fP\fP
+.TP
+\fB\fICODEC_ID_TXD \fP\fP
+.TP
+\fB\fICODEC_ID_VP6A \fP\fP
+.TP
+\fB\fICODEC_ID_AMV \fP\fP
+.TP
+\fB\fICODEC_ID_VB \fP\fP
+.TP
+\fB\fICODEC_ID_PCX \fP\fP
+.TP
+\fB\fICODEC_ID_SUNRAST \fP\fP
+.TP
+\fB\fICODEC_ID_INDEO4 \fP\fP
+.TP
+\fB\fICODEC_ID_INDEO5 \fP\fP
+.TP
+\fB\fICODEC_ID_MIMIC \fP\fP
+.TP
+\fB\fICODEC_ID_RL2 \fP\fP
+.TP
+\fB\fICODEC_ID_ESCAPE124 \fP\fP
+.TP
+\fB\fICODEC_ID_DIRAC \fP\fP
+.TP
+\fB\fICODEC_ID_BFI \fP\fP
+.TP
+\fB\fICODEC_ID_CMV \fP\fP
+.TP
+\fB\fICODEC_ID_MOTIONPIXELS \fP\fP
+.TP
+\fB\fICODEC_ID_TGV \fP\fP
+.TP
+\fB\fICODEC_ID_TGQ \fP\fP
+.TP
+\fB\fICODEC_ID_TQI \fP\fP
+.TP
+\fB\fICODEC_ID_AURA \fP\fP
+.TP
+\fB\fICODEC_ID_AURA2 \fP\fP
+.TP
+\fB\fICODEC_ID_V210X \fP\fP
+.TP
+\fB\fICODEC_ID_TMV \fP\fP
+.TP
+\fB\fICODEC_ID_V210 \fP\fP
+.TP
+\fB\fICODEC_ID_DPX \fP\fP
+.TP
+\fB\fICODEC_ID_MAD \fP\fP
+.TP
+\fB\fICODEC_ID_FRWU \fP\fP
+.TP
+\fB\fICODEC_ID_FLASHSV2 \fP\fP
+.TP
+\fB\fICODEC_ID_CDGRAPHICS \fP\fP
+.TP
+\fB\fICODEC_ID_R210 \fP\fP
+.TP
+\fB\fICODEC_ID_ANM \fP\fP
+.TP
+\fB\fICODEC_ID_BINKVIDEO \fP\fP
+.TP
+\fB\fICODEC_ID_IFF_ILBM \fP\fP
+.TP
+\fB\fICODEC_ID_IFF_BYTERUN1 \fP\fP
+.TP
+\fB\fICODEC_ID_KGV1 \fP\fP
+.TP
+\fB\fICODEC_ID_YOP \fP\fP
+.TP
+\fB\fICODEC_ID_VP8 \fP\fP
+.TP
+\fB\fICODEC_ID_PICTOR \fP\fP
+.TP
+\fB\fICODEC_ID_ANSI \fP\fP
+.TP
+\fB\fICODEC_ID_A64_MULTI \fP\fP
+.TP
+\fB\fICODEC_ID_A64_MULTI5 \fP\fP
+.TP
+\fB\fICODEC_ID_R10K \fP\fP
+.TP
+\fB\fICODEC_ID_MXPEG \fP\fP
+.TP
+\fB\fICODEC_ID_LAGARITH \fP\fP
+.TP
+\fB\fICODEC_ID_PRORES \fP\fP
+.TP
+\fB\fICODEC_ID_JV \fP\fP
+.TP
+\fB\fICODEC_ID_DFA \fP\fP
+.TP
+\fB\fICODEC_ID_WMV3IMAGE \fP\fP
+.TP
+\fB\fICODEC_ID_VC1IMAGE \fP\fP
+.TP
+\fB\fICODEC_ID_UTVIDEO \fP\fP
+.TP
+\fB\fICODEC_ID_BMV_VIDEO \fP\fP
+.TP
+\fB\fICODEC_ID_VBLE \fP\fP
+.TP
+\fB\fICODEC_ID_DXTORY \fP\fP
+.TP
+\fB\fICODEC_ID_V410 \fP\fP
+.TP
+\fB\fICODEC_ID_XWD \fP\fP
+.TP
+\fB\fICODEC_ID_CDXL \fP\fP
+.TP
+\fB\fICODEC_ID_XBM \fP\fP
+.TP
+\fB\fICODEC_ID_ZEROCODEC \fP\fP
+.TP
+\fB\fICODEC_ID_MSS1 \fP\fP
+.TP
+\fB\fICODEC_ID_MSA1 \fP\fP
+.TP
+\fB\fICODEC_ID_TSCC2 \fP\fP
+.TP
+\fB\fICODEC_ID_MTS2 \fP\fP
+.TP
+\fB\fICODEC_ID_CLLC \fP\fP
+.TP
+\fB\fICODEC_ID_Y41P \fP\fP
+.TP
+\fB\fICODEC_ID_ESCAPE130 \fP\fP
+.TP
+\fB\fICODEC_ID_EXR \fP\fP
+.TP
+\fB\fICODEC_ID_AVRP \fP\fP
+.TP
+\fB\fICODEC_ID_G2M \fP\fP
+.TP
+\fB\fICODEC_ID_AVUI \fP\fP
+.TP
+\fB\fICODEC_ID_AYUV \fP\fP
+.TP
+\fB\fICODEC_ID_V308 \fP\fP
+.TP
+\fB\fICODEC_ID_V408 \fP\fP
+.TP
+\fB\fICODEC_ID_YUV4 \fP\fP
+.TP
+\fB\fICODEC_ID_SANM \fP\fP
+.TP
+\fB\fICODEC_ID_PAF_VIDEO \fP\fP
+.TP
+\fB\fICODEC_ID_SNOW \fP\fP
+.TP
+\fB\fICODEC_ID_FIRST_AUDIO \fP\fP
+A dummy id pointing at the start of audio codecs\&. 
+.TP
+\fB\fICODEC_ID_PCM_S16LE \fP\fP
+.TP
+\fB\fICODEC_ID_PCM_S16BE \fP\fP
+.TP
+\fB\fICODEC_ID_PCM_U16LE \fP\fP
+.TP
+\fB\fICODEC_ID_PCM_U16BE \fP\fP
+.TP
+\fB\fICODEC_ID_PCM_S8 \fP\fP
+.TP
+\fB\fICODEC_ID_PCM_U8 \fP\fP
+.TP
+\fB\fICODEC_ID_PCM_MULAW \fP\fP
+.TP
+\fB\fICODEC_ID_PCM_ALAW \fP\fP
+.TP
+\fB\fICODEC_ID_PCM_S32LE \fP\fP
+.TP
+\fB\fICODEC_ID_PCM_S32BE \fP\fP
+.TP
+\fB\fICODEC_ID_PCM_U32LE \fP\fP
+.TP
+\fB\fICODEC_ID_PCM_U32BE \fP\fP
+.TP
+\fB\fICODEC_ID_PCM_S24LE \fP\fP
+.TP
+\fB\fICODEC_ID_PCM_S24BE \fP\fP
+.TP
+\fB\fICODEC_ID_PCM_U24LE \fP\fP
+.TP
+\fB\fICODEC_ID_PCM_U24BE \fP\fP
+.TP
+\fB\fICODEC_ID_PCM_S24DAUD \fP\fP
+.TP
+\fB\fICODEC_ID_PCM_ZORK \fP\fP
+.TP
+\fB\fICODEC_ID_PCM_S16LE_PLANAR \fP\fP
+.TP
+\fB\fICODEC_ID_PCM_DVD \fP\fP
+.TP
+\fB\fICODEC_ID_PCM_F32BE \fP\fP
+.TP
+\fB\fICODEC_ID_PCM_F32LE \fP\fP
+.TP
+\fB\fICODEC_ID_PCM_F64BE \fP\fP
+.TP
+\fB\fICODEC_ID_PCM_F64LE \fP\fP
+.TP
+\fB\fICODEC_ID_PCM_BLURAY \fP\fP
+.TP
+\fB\fICODEC_ID_PCM_LXF \fP\fP
+.TP
+\fB\fICODEC_ID_S302M \fP\fP
+.TP
+\fB\fICODEC_ID_PCM_S8_PLANAR \fP\fP
+.TP
+\fB\fICODEC_ID_ADPCM_IMA_QT \fP\fP
+.TP
+\fB\fICODEC_ID_ADPCM_IMA_WAV \fP\fP
+.TP
+\fB\fICODEC_ID_ADPCM_IMA_DK3 \fP\fP
+.TP
+\fB\fICODEC_ID_ADPCM_IMA_DK4 \fP\fP
+.TP
+\fB\fICODEC_ID_ADPCM_IMA_WS \fP\fP
+.TP
+\fB\fICODEC_ID_ADPCM_IMA_SMJPEG \fP\fP
+.TP
+\fB\fICODEC_ID_ADPCM_MS \fP\fP
+.TP
+\fB\fICODEC_ID_ADPCM_4XM \fP\fP
+.TP
+\fB\fICODEC_ID_ADPCM_XA \fP\fP
+.TP
+\fB\fICODEC_ID_ADPCM_ADX \fP\fP
+.TP
+\fB\fICODEC_ID_ADPCM_EA \fP\fP
+.TP
+\fB\fICODEC_ID_ADPCM_G726 \fP\fP
+.TP
+\fB\fICODEC_ID_ADPCM_CT \fP\fP
+.TP
+\fB\fICODEC_ID_ADPCM_SWF \fP\fP
+.TP
+\fB\fICODEC_ID_ADPCM_YAMAHA \fP\fP
+.TP
+\fB\fICODEC_ID_ADPCM_SBPRO_4 \fP\fP
+.TP
+\fB\fICODEC_ID_ADPCM_SBPRO_3 \fP\fP
+.TP
+\fB\fICODEC_ID_ADPCM_SBPRO_2 \fP\fP
+.TP
+\fB\fICODEC_ID_ADPCM_THP \fP\fP
+.TP
+\fB\fICODEC_ID_ADPCM_IMA_AMV \fP\fP
+.TP
+\fB\fICODEC_ID_ADPCM_EA_R1 \fP\fP
+.TP
+\fB\fICODEC_ID_ADPCM_EA_R3 \fP\fP
+.TP
+\fB\fICODEC_ID_ADPCM_EA_R2 \fP\fP
+.TP
+\fB\fICODEC_ID_ADPCM_IMA_EA_SEAD \fP\fP
+.TP
+\fB\fICODEC_ID_ADPCM_IMA_EA_EACS \fP\fP
+.TP
+\fB\fICODEC_ID_ADPCM_EA_XAS \fP\fP
+.TP
+\fB\fICODEC_ID_ADPCM_EA_MAXIS_XA \fP\fP
+.TP
+\fB\fICODEC_ID_ADPCM_IMA_ISS \fP\fP
+.TP
+\fB\fICODEC_ID_ADPCM_G722 \fP\fP
+.TP
+\fB\fICODEC_ID_ADPCM_IMA_APC \fP\fP
+.TP
+\fB\fICODEC_ID_VIMA \fP\fP
+.TP
+\fB\fICODEC_ID_AMR_NB \fP\fP
+.TP
+\fB\fICODEC_ID_AMR_WB \fP\fP
+.TP
+\fB\fICODEC_ID_RA_144 \fP\fP
+.TP
+\fB\fICODEC_ID_RA_288 \fP\fP
+.TP
+\fB\fICODEC_ID_ROQ_DPCM \fP\fP
+.TP
+\fB\fICODEC_ID_INTERPLAY_DPCM \fP\fP
+.TP
+\fB\fICODEC_ID_XAN_DPCM \fP\fP
+.TP
+\fB\fICODEC_ID_SOL_DPCM \fP\fP
+.TP
+\fB\fICODEC_ID_MP2 \fP\fP
+.TP
+\fB\fICODEC_ID_MP3 \fP\fP
+preferred ID for decoding MPEG audio layer 1, 2 or 3 
+.TP
+\fB\fICODEC_ID_AAC \fP\fP
+.TP
+\fB\fICODEC_ID_AC3 \fP\fP
+.TP
+\fB\fICODEC_ID_DTS \fP\fP
+.TP
+\fB\fICODEC_ID_VORBIS \fP\fP
+.TP
+\fB\fICODEC_ID_DVAUDIO \fP\fP
+.TP
+\fB\fICODEC_ID_WMAV1 \fP\fP
+.TP
+\fB\fICODEC_ID_WMAV2 \fP\fP
+.TP
+\fB\fICODEC_ID_MACE3 \fP\fP
+.TP
+\fB\fICODEC_ID_MACE6 \fP\fP
+.TP
+\fB\fICODEC_ID_VMDAUDIO \fP\fP
+.TP
+\fB\fICODEC_ID_FLAC \fP\fP
+.TP
+\fB\fICODEC_ID_MP3ADU \fP\fP
+.TP
+\fB\fICODEC_ID_MP3ON4 \fP\fP
+.TP
+\fB\fICODEC_ID_SHORTEN \fP\fP
+.TP
+\fB\fICODEC_ID_ALAC \fP\fP
+.TP
+\fB\fICODEC_ID_WESTWOOD_SND1 \fP\fP
+.TP
+\fB\fICODEC_ID_GSM \fP\fP
+as in Berlin toast format 
+.TP
+\fB\fICODEC_ID_QDM2 \fP\fP
+.TP
+\fB\fICODEC_ID_COOK \fP\fP
+.TP
+\fB\fICODEC_ID_TRUESPEECH \fP\fP
+.TP
+\fB\fICODEC_ID_TTA \fP\fP
+.TP
+\fB\fICODEC_ID_SMACKAUDIO \fP\fP
+.TP
+\fB\fICODEC_ID_QCELP \fP\fP
+.TP
+\fB\fICODEC_ID_WAVPACK \fP\fP
+.TP
+\fB\fICODEC_ID_DSICINAUDIO \fP\fP
+.TP
+\fB\fICODEC_ID_IMC \fP\fP
+.TP
+\fB\fICODEC_ID_MUSEPACK7 \fP\fP
+.TP
+\fB\fICODEC_ID_MLP \fP\fP
+.TP
+\fB\fICODEC_ID_GSM_MS \fP\fP
+.TP
+\fB\fICODEC_ID_ATRAC3 \fP\fP
+.TP
+\fB\fICODEC_ID_VOXWARE \fP\fP
+.TP
+\fB\fICODEC_ID_APE \fP\fP
+.TP
+\fB\fICODEC_ID_NELLYMOSER \fP\fP
+.TP
+\fB\fICODEC_ID_MUSEPACK8 \fP\fP
+.TP
+\fB\fICODEC_ID_SPEEX \fP\fP
+.TP
+\fB\fICODEC_ID_WMAVOICE \fP\fP
+.TP
+\fB\fICODEC_ID_WMAPRO \fP\fP
+.TP
+\fB\fICODEC_ID_WMALOSSLESS \fP\fP
+.TP
+\fB\fICODEC_ID_ATRAC3P \fP\fP
+.TP
+\fB\fICODEC_ID_EAC3 \fP\fP
+.TP
+\fB\fICODEC_ID_SIPR \fP\fP
+.TP
+\fB\fICODEC_ID_MP1 \fP\fP
+.TP
+\fB\fICODEC_ID_TWINVQ \fP\fP
+.TP
+\fB\fICODEC_ID_TRUEHD \fP\fP
+.TP
+\fB\fICODEC_ID_MP4ALS \fP\fP
+.TP
+\fB\fICODEC_ID_ATRAC1 \fP\fP
+.TP
+\fB\fICODEC_ID_BINKAUDIO_RDFT \fP\fP
+.TP
+\fB\fICODEC_ID_BINKAUDIO_DCT \fP\fP
+.TP
+\fB\fICODEC_ID_AAC_LATM \fP\fP
+.TP
+\fB\fICODEC_ID_QDMC \fP\fP
+.TP
+\fB\fICODEC_ID_CELT \fP\fP
+.TP
+\fB\fICODEC_ID_G723_1 \fP\fP
+.TP
+\fB\fICODEC_ID_G729 \fP\fP
+.TP
+\fB\fICODEC_ID_8SVX_EXP \fP\fP
+.TP
+\fB\fICODEC_ID_8SVX_FIB \fP\fP
+.TP
+\fB\fICODEC_ID_BMV_AUDIO \fP\fP
+.TP
+\fB\fICODEC_ID_RALF \fP\fP
+.TP
+\fB\fICODEC_ID_IAC \fP\fP
+.TP
+\fB\fICODEC_ID_ILBC \fP\fP
+.TP
+\fB\fICODEC_ID_FFWAVESYNTH \fP\fP
+.TP
+\fB\fICODEC_ID_SONIC \fP\fP
+.TP
+\fB\fICODEC_ID_SONIC_LS \fP\fP
+.TP
+\fB\fICODEC_ID_PAF_AUDIO \fP\fP
+.TP
+\fB\fICODEC_ID_OPUS \fP\fP
+.TP
+\fB\fICODEC_ID_FIRST_SUBTITLE \fP\fP
+A dummy ID pointing at the start of subtitle codecs\&. 
+.TP
+\fB\fICODEC_ID_DVD_SUBTITLE \fP\fP
+.TP
+\fB\fICODEC_ID_DVB_SUBTITLE \fP\fP
+.TP
+\fB\fICODEC_ID_TEXT \fP\fP
+raw UTF-8 text 
+.TP
+\fB\fICODEC_ID_XSUB \fP\fP
+.TP
+\fB\fICODEC_ID_SSA \fP\fP
+.TP
+\fB\fICODEC_ID_MOV_TEXT \fP\fP
+.TP
+\fB\fICODEC_ID_HDMV_PGS_SUBTITLE \fP\fP
+.TP
+\fB\fICODEC_ID_DVB_TELETEXT \fP\fP
+.TP
+\fB\fICODEC_ID_SRT \fP\fP
+.TP
+\fB\fICODEC_ID_MICRODVD \fP\fP
+.TP
+\fB\fICODEC_ID_EIA_608 \fP\fP
+.TP
+\fB\fICODEC_ID_JACOSUB \fP\fP
+.TP
+\fB\fICODEC_ID_SAMI \fP\fP
+.TP
+\fB\fICODEC_ID_REALTEXT \fP\fP
+.TP
+\fB\fICODEC_ID_SUBVIEWER \fP\fP
+.TP
+\fB\fICODEC_ID_FIRST_UNKNOWN \fP\fP
+A dummy ID pointing at the start of various fake codecs\&. 
+.TP
+\fB\fICODEC_ID_TTF \fP\fP
+.TP
+\fB\fICODEC_ID_BINTEXT \fP\fP
+.TP
+\fB\fICODEC_ID_XBIN \fP\fP
+.TP
+\fB\fICODEC_ID_IDF \fP\fP
+.TP
+\fB\fICODEC_ID_OTF \fP\fP
+.TP
+\fB\fICODEC_ID_PROBE \fP\fP
+codec_id is not known (like CODEC_ID_NONE) but lavf should attempt to identify it 
+.TP
+\fB\fICODEC_ID_MPEG2TS \fP\fP
+\fIFAKE\fP codec to indicate a raw MPEG-2 TS stream (only used by libavformat) 
+.TP
+\fB\fICODEC_ID_MPEG4SYSTEMS \fP\fP
+\fIFAKE\fP codec to indicate a MPEG-4 Systems stream (only used by libavformat) 
+.TP
+\fB\fICODEC_ID_FFMETADATA \fP\fP
+Dummy codec for streams containing only metadata information\&. 
+.PP
+Definition at line 107 of file avcodec\&.h\&.
+.SS "enum \fBAVColorPrimaries\fP"
+
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fIAVCOL_PRI_BT709 \fP\fP
+also ITU-R BT1361 / IEC 61966-2-4 / SMPTE RP177 Annex B 
+.TP
+\fB\fIAVCOL_PRI_UNSPECIFIED \fP\fP
+.TP
+\fB\fIAVCOL_PRI_BT470M \fP\fP
+.TP
+\fB\fIAVCOL_PRI_BT470BG \fP\fP
+also ITU-R BT601-6 625 / ITU-R BT1358 625 / ITU-R BT1700 625 PAL & SECAM 
+.TP
+\fB\fIAVCOL_PRI_SMPTE170M \fP\fP
+also ITU-R BT601-6 525 / ITU-R BT1358 525 / ITU-R BT1700 NTSC 
+.TP
+\fB\fIAVCOL_PRI_SMPTE240M \fP\fP
+functionally identical to above 
+.TP
+\fB\fIAVCOL_PRI_FILM \fP\fP
+.TP
+\fB\fIAVCOL_PRI_BT2020 \fP\fP
+ITU-R BT2020\&. 
+.TP
+\fB\fIAVCOL_PRI_NB \fP\fP
+Not part of ABI\&. 
+.PP
+Definition at line 632 of file avcodec\&.h\&.
+.SS "enum \fBAVColorTransferCharacteristic\fP"
+
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fIAVCOL_TRC_BT709 \fP\fP
+also ITU-R BT1361 
+.TP
+\fB\fIAVCOL_TRC_UNSPECIFIED \fP\fP
+.TP
+\fB\fIAVCOL_TRC_GAMMA22 \fP\fP
+also ITU-R BT470M / ITU-R BT1700 625 PAL & SECAM 
+.TP
+\fB\fIAVCOL_TRC_GAMMA28 \fP\fP
+also ITU-R BT470BG 
+.TP
+\fB\fIAVCOL_TRC_SMPTE170M \fP\fP
+also ITU-R BT601-6 525 or 625 / ITU-R BT1358 525 or 625 / ITU-R BT1700 NTSC 
+.TP
+\fB\fIAVCOL_TRC_SMPTE240M \fP\fP
+.TP
+\fB\fIAVCOL_TRC_LINEAR \fP\fP
+'Linear transfer characteristics' 
+.TP
+\fB\fIAVCOL_TRC_LOG \fP\fP
+'Logarithmic transfer characteristic (100:1 range)' 
+.TP
+\fB\fIAVCOL_TRC_LOG_SQRT \fP\fP
+'Logarithmic transfer characteristic (100 * Sqrt( 10 ) : 1 range)' 
+.TP
+\fB\fIAVCOL_TRC_IEC61966_2_4 \fP\fP
+IEC 61966-2-4\&. 
+.TP
+\fB\fIAVCOL_TRC_BT1361_ECG \fP\fP
+ITU-R BT1361 Extended Colour Gamut\&. 
+.TP
+\fB\fIAVCOL_TRC_IEC61966_2_1 \fP\fP
+IEC 61966-2-1 (sRGB or sYCC) 
+.TP
+\fB\fIAVCOL_TRC_BT2020_10 \fP\fP
+ITU-R BT2020 for 10 bit system\&. 
+.TP
+\fB\fIAVCOL_TRC_BT2020_12 \fP\fP
+ITU-R BT2020 for 12 bit system\&. 
+.TP
+\fB\fIAVCOL_TRC_NB \fP\fP
+Not part of ABI\&. 
+.PP
+Definition at line 644 of file avcodec\&.h\&.
+.SS "enum \fBAVFieldOrder\fP"
+
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fIAV_FIELD_UNKNOWN \fP\fP
+.TP
+\fB\fIAV_FIELD_PROGRESSIVE \fP\fP
+.TP
+\fB\fIAV_FIELD_TT \fP\fP
+.TP
+\fB\fIAV_FIELD_BB \fP\fP
+.TP
+\fB\fIAV_FIELD_TB \fP\fP
+.TP
+\fB\fIAV_FIELD_BT \fP\fP
+.PP
+Definition at line 1180 of file avcodec\&.h\&.
+.SS "enum \fBAVSubtitleType\fP"
+
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fISUBTITLE_NONE \fP\fP
+.TP
+\fB\fISUBTITLE_BITMAP \fP\fP
+A bitmap, pict will be set\&. 
+.TP
+\fB\fISUBTITLE_TEXT \fP\fP
+Plain text, the text field must be set by the decoder and is authoritative\&. ass and pict fields may contain approximations\&. 
+.TP
+\fB\fISUBTITLE_ASS \fP\fP
+Formatted text, the ass field must be set by the decoder and is authoritative\&. pict and text fields may contain approximations\&. 
+.PP
+Definition at line 3253 of file avcodec\&.h\&.
+.SH "Function Documentation"
+.PP 
+.SS "\fBuint16_t\fP* av_codec_get_chroma_intra_matrix (\fBconst\fP \fBAVCodecContext\fP * avctx)"
+
+.SS "\fBconst\fP \fBAVCodecDescriptor\fP* av_codec_get_codec_descriptor (\fBconst\fP \fBAVCodecContext\fP * avctx)"
+
+.SS "\fBint\fP av_codec_get_lowres (\fBconst\fP \fBAVCodecContext\fP * avctx)"
+
+.SS "\fBint\fP av_codec_get_max_lowres (\fBconst\fP \fBAVCodec\fP * codec)"
+
+.SS "\fBAVRational\fP av_codec_get_pkt_timebase (\fBconst\fP \fBAVCodecContext\fP * avctx)"
+
+.SS "\fBint\fP av_codec_get_seek_preroll (\fBconst\fP \fBAVCodecContext\fP * avctx)"
+
+.SS "\fBAVCodec\fP* av_codec_next (\fBconst\fP \fBAVCodec\fP * c)"
+If c is NULL, returns the first registered codec, if c is non-NULL, returns the next registered codec after c, or NULL if c is the last one\&. 
+.SS "\fBvoid\fP av_codec_set_chroma_intra_matrix (\fBAVCodecContext\fP * avctx, \fBuint16_t\fP * val)"
+
+.SS "\fBvoid\fP av_codec_set_codec_descriptor (\fBAVCodecContext\fP * avctx, \fBconst\fP \fBAVCodecDescriptor\fP * desc)"
+
+.SS "\fBvoid\fP av_codec_set_lowres (\fBAVCodecContext\fP * avctx, \fBint\fP val)"
+
+.SS "\fBvoid\fP av_codec_set_pkt_timebase (\fBAVCodecContext\fP * avctx, \fBAVRational\fP val)"
+
+.SS "\fBvoid\fP av_codec_set_seek_preroll (\fBAVCodecContext\fP * avctx, \fBint\fP val)"
+
+.SS "\fBAVCodecContext\fP* avcodec_alloc_context3 (\fBconst\fP \fBAVCodec\fP * codec)"
+Allocate an \fBAVCodecContext\fP and set its fields to default values\&. The resulting struct can be deallocated by calling \fBavcodec_close()\fP on it followed by \fBav_free()\fP\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcodec\fP if non-NULL, allocate private data and initialize defaults for the given codec\&. It is illegal to then call \fBavcodec_open2()\fP with a different codec\&. If NULL, then the codec-specific defaults won't be initialized, which may result in suboptimal default settings (this is important mainly for encoders, e\&.g\&. libx264)\&.
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+An \fBAVCodecContext\fP filled with default values or NULL on failure\&. 
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+avcodec_get_context_defaults 
+.RE
+.PP
+
+.SS "\fBint\fP avcodec_close (\fBAVCodecContext\fP * avctx)"
+Close a given \fBAVCodecContext\fP and free all the data associated with it (but not the \fBAVCodecContext\fP itself)\&.
+.PP
+Calling this function on an \fBAVCodecContext\fP that hasn't been opened will free the codec-specific data allocated in \fBavcodec_alloc_context3()\fP / \fBavcodec_get_context_defaults3()\fP with a non-NULL codec\&. Subsequent calls will do nothing\&. 
+.SS "\fBconst\fP char* avcodec_configuration (\fBvoid\fP)"
+Return the libavcodec build-time configuration\&. 
+.SS "\fBint\fP avcodec_copy_context (\fBAVCodecContext\fP * dest, \fBconst\fP \fBAVCodecContext\fP * src)"
+Copy the settings of the source \fBAVCodecContext\fP into the destination \fBAVCodecContext\fP\&. The resulting destination codec context will be unopened, i\&.e\&. you are required to call \fBavcodec_open2()\fP before you can use this \fBAVCodecContext\fP to decode/encode video/audio data\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdest\fP target codec context, should be initialized with avcodec_alloc_context3(NULL), but otherwise uninitialized 
+.br
+\fIsrc\fP source codec context 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBAVERROR()\fP on error (e\&.g\&. memory allocation error), 0 on success 
+.RE
+.PP
+
+.SS "\fBconst\fP \fBAVClass\fP* avcodec_get_class (\fBvoid\fP)"
+Get the \fBAVClass\fP for \fBAVCodecContext\fP\&. It can be used in combination with AV_OPT_SEARCH_FAKE_OBJ for examining options\&.
+.PP
+\fBSee also:\fP
+.RS 4
+\fBav_opt_find()\fP\&. 
+.RE
+.PP
+
+.SS "\fBint\fP avcodec_get_context_defaults3 (\fBAVCodecContext\fP * s, \fBconst\fP \fBAVCodec\fP * codec)"
+Set the fields of the given \fBAVCodecContext\fP to default values corresponding to the given codec (defaults may be codec-dependent)\&.
+.PP
+Do not call this function if a non-NULL codec has been passed to \fBavcodec_alloc_context3()\fP that allocated this \fBAVCodecContext\fP\&. If codec is non-NULL, it is illegal to call \fBavcodec_open2()\fP with a different codec on this \fBAVCodecContext\fP\&. 
+.SS "\fBconst\fP \fBAVClass\fP* avcodec_get_frame_class (\fBvoid\fP)"
+Get the \fBAVClass\fP for \fBAVFrame\fP\&. It can be used in combination with AV_OPT_SEARCH_FAKE_OBJ for examining options\&.
+.PP
+\fBSee also:\fP
+.RS 4
+\fBav_opt_find()\fP\&. 
+.RE
+.PP
+
+.SS "\fBconst\fP \fBAVClass\fP* avcodec_get_subtitle_rect_class (\fBvoid\fP)"
+Get the \fBAVClass\fP for \fBAVSubtitleRect\fP\&. It can be used in combination with AV_OPT_SEARCH_FAKE_OBJ for examining options\&.
+.PP
+\fBSee also:\fP
+.RS 4
+\fBav_opt_find()\fP\&. 
+.RE
+.PP
+
+.SS "\fBconst\fP char* avcodec_license (\fBvoid\fP)"
+Return the libavcodec license\&. 
+.SS "\fBint\fP avcodec_open2 (\fBAVCodecContext\fP * avctx, \fBconst\fP \fBAVCodec\fP * codec, \fBAVDictionary\fP ** options)"
+Initialize the \fBAVCodecContext\fP to use the given \fBAVCodec\fP\&. Prior to using this function the context has to be allocated with \fBavcodec_alloc_context3()\fP\&.
+.PP
+The functions \fBavcodec_find_decoder_by_name()\fP, \fBavcodec_find_encoder_by_name()\fP, \fBavcodec_find_decoder()\fP and \fBavcodec_find_encoder()\fP provide an easy way for retrieving a codec\&.
+.PP
+\fBWarning:\fP
+.RS 4
+This function is not thread safe!
+.RE
+.PP
+.PP
+.nf
+1 avcodec_register_all();
+2 av_dict_set(&opts, "b", "2\&.5M", 0);
+3 codec = avcodec_find_decoder(AV_CODEC_ID_H264);
+4 if (!codec)
+5     exit(1);
+6 
+7 context = avcodec_alloc_context3(codec);
+8 
+9 if (avcodec_open2(context, codec, opts) < 0)
+10     exit(1);
+.fi
+.PP
+.PP
+\fBParameters:\fP
+.RS 4
+\fIavctx\fP The context to initialize\&. 
+.br
+\fIcodec\fP The codec to open this context for\&. If a non-NULL codec has been previously passed to \fBavcodec_alloc_context3()\fP or \fBavcodec_get_context_defaults3()\fP for this context, then this parameter MUST be either NULL or equal to the previously passed codec\&. 
+.br
+\fIoptions\fP A dictionary filled with \fBAVCodecContext\fP and codec-private options\&. On return this object will be filled with options that were not found\&.
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+zero on success, a negative value on error 
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBavcodec_alloc_context3()\fP, \fBavcodec_find_decoder()\fP, \fBavcodec_find_encoder()\fP, \fBav_dict_set()\fP, \fBav_opt_find()\fP\&. 
+.RE
+.PP
+
+.SS "\fBvoid\fP avcodec_register (\fBAVCodec\fP * codec)"
+Register the codec codec and initialize libavcodec\&.
+.PP
+\fBWarning:\fP
+.RS 4
+either this function or \fBavcodec_register_all()\fP must be called before any other libavcodec functions\&.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBavcodec_register_all()\fP 
+.RE
+.PP
+
+.SS "\fBvoid\fP avcodec_register_all (\fBvoid\fP)"
+Register all the codecs, parsers and bitstream filters which were enabled at configuration time\&. If you do not call this function you can select exactly which formats you want to support, by using the individual registration functions\&.
+.PP
+\fBSee also:\fP
+.RS 4
+\fBavcodec_register\fP 
+.PP
+\fBav_register_codec_parser\fP 
+.PP
+\fBav_register_bitstream_filter\fP 
+.RE
+.PP
+
+.SS "unsigned avcodec_version (\fBvoid\fP)"
+Return the LIBAVCODEC_VERSION_INT constant\&. 
+.SS "\fBvoid\fP avsubtitle_free (\fBAVSubtitle\fP * sub)"
+Free all allocated data in the given subtitle struct\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIsub\fP \fBAVSubtitle\fP to free\&. 
+.RE
+.PP
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

@@ -1,0 +1,394 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/lib-src/lv2/sord/src/sord.c" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/lib-src/lv2/sord/src/sord.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <assert\&.h>\fP
+.br
+\fC#include <errno\&.h>\fP
+.br
+\fC#include <stdint\&.h>\fP
+.br
+\fC#include <stdio\&.h>\fP
+.br
+\fC#include <stdlib\&.h>\fP
+.br
+\fC#include <string\&.h>\fP
+.br
+\fC#include 'zix/digest\&.c'\fP
+.br
+\fC#include 'zix/hash\&.c'\fP
+.br
+\fC#include 'zix/tree\&.c'\fP
+.br
+\fC#include 'sord_config\&.h'\fP
+.br
+\fC#include 'sord_internal\&.h'\fP
+.br
+
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "struct \fBSordWorldImpl\fP"
+.br
+.ti -1c
+.RI "struct \fBSordModelImpl\fP"
+.br
+.ti -1c
+.RI "struct \fBSordIterImpl\fP"
+.br
+.in -1c
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBZIX_INLINE\fP"
+.br
+.ti -1c
+.RI "#define \fBSORD_LOG\fP(\fBprefix\fP, \&.\&.\&.)   fprintf(stderr, '[Sord::' prefix '] ' __VA_ARGS__)"
+.br
+.ti -1c
+.RI "#define \fBSORD_ITER_LOG\fP(\&.\&.\&.)"
+.br
+.ti -1c
+.RI "#define \fBSORD_FIND_LOG\fP(\&.\&.\&.)"
+.br
+.ti -1c
+.RI "#define \fBSORD_WRITE_LOG\fP(\&.\&.\&.)"
+.br
+.ti -1c
+.RI "#define \fBNUM_ORDERS\fP   12"
+.br
+.ti -1c
+.RI "#define \fBSTATEMENT_LEN\fP   3"
+.br
+.ti -1c
+.RI "#define \fBTUP_LEN\fP   \fBSTATEMENT_LEN\fP + 1"
+.br
+.ti -1c
+.RI "#define \fBDEFAULT_ORDER\fP   \fBSPO\fP"
+.br
+.ti -1c
+.RI "#define \fBDEFAULT_GRAPH_ORDER\fP   \fBGSPO\fP"
+.br
+.ti -1c
+.RI "#define \fBTUP_FMT\fP   '(%s %\fBs\fP %\fBs\fP %\fBs\fP)'"
+.br
+.ti -1c
+.RI "#define \fBTUP_FMT_ELEM\fP(e)   ((e) ? \fBsord_node_get_string\fP(e) : (\fBconst\fP \fBuint8_t\fP*)'*')"
+.br
+.ti -1c
+.RI "#define \fBTUP_FMT_ARGS\fP(\fBt\fP)"
+.br
+.ti -1c
+.RI "#define \fBTUP_S\fP   0"
+.br
+.ti -1c
+.RI "#define \fBTUP_P\fP   1"
+.br
+.ti -1c
+.RI "#define \fBTUP_O\fP   2"
+.br
+.ti -1c
+.RI "#define \fBTUP_G\fP   3"
+.br
+.ti -1c
+.RI "#define \fBPAT_CASE\fP(sig,  \fBm\fP,  g0,  g1,  np)"
+.br
+.in -1c
+.SS "Enumerations"
+
+.in +1c
+.ti -1c
+.RI "enum \fBSordOrder\fP { \fBSPO\fP, \fBSOP\fP, \fBOPS\fP, \fBOSP\fP, \fBPSO\fP, \fBPOS\fP, \fBGSPO\fP, \fBGSOP\fP, \fBGOPS\fP, \fBGOSP\fP, \fBGPSO\fP, \fBGPOS\fP }"
+.br
+.ti -1c
+.RI "enum \fBSearchMode\fP { \fBALL\fP, \fBSINGLE\fP, \fBRANGE\fP, \fBFILTER_RANGE\fP, \fBFILTER_ALL\fP }"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBSordWorld\fP * \fBsord_world_new\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBsord_world_free\fP (\fBSordWorld\fP *world)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBsord_world_set_error_sink\fP (\fBSordWorld\fP *world, \fBSerdErrorSink\fP error_sink, \fBvoid\fP *handle)"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBsord_node_equals\fP (\fBconst\fP \fBSordNode\fP *\fBa\fP, \fBconst\fP \fBSordNode\fP *\fBb\fP)"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBsord_quad_match\fP (\fBconst\fP \fBSordQuad\fP x, \fBconst\fP \fBSordQuad\fP y)"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBSordModel\fP * \fBsord_iter_get_model\fP (\fBSordIter\fP *iter)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBsord_iter_get\fP (\fBconst\fP \fBSordIter\fP *iter, \fBSordQuad\fP id)"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBSordNode\fP * \fBsord_iter_get_node\fP (\fBconst\fP \fBSordIter\fP *iter, \fBSordQuadIndex\fP index)"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBsord_iter_next\fP (\fBSordIter\fP *iter)"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBsord_iter_end\fP (\fBconst\fP \fBSordIter\fP *iter)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBsord_iter_free\fP (\fBSordIter\fP *iter)"
+.br
+.ti -1c
+.RI "\fBSordModel\fP * \fBsord_new\fP (\fBSordWorld\fP *world, unsigned indices, \fBbool\fP graphs)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBsord_free\fP (\fBSordModel\fP *sord)"
+.br
+.ti -1c
+.RI "\fBSordWorld\fP * \fBsord_get_world\fP (\fBSordModel\fP *sord)"
+.br
+.ti -1c
+.RI "size_t \fBsord_num_quads\fP (\fBconst\fP \fBSordModel\fP *sord)"
+.br
+.ti -1c
+.RI "size_t \fBsord_num_nodes\fP (\fBconst\fP \fBSordWorld\fP *world)"
+.br
+.ti -1c
+.RI "\fBSordIter\fP * \fBsord_begin\fP (\fBconst\fP \fBSordModel\fP *sord)"
+.br
+.ti -1c
+.RI "\fBSordIter\fP * \fBsord_find\fP (\fBSordModel\fP *sord, \fBconst\fP \fBSordQuad\fP pat)"
+.br
+.ti -1c
+.RI "\fBSordIter\fP * \fBsord_search\fP (\fBSordModel\fP *\fBmodel\fP, \fBconst\fP \fBSordNode\fP *\fBs\fP, \fBconst\fP \fBSordNode\fP *\fBp\fP, \fBconst\fP \fBSordNode\fP *o, \fBconst\fP \fBSordNode\fP *g)"
+.br
+.ti -1c
+.RI "\fBSordNode\fP * \fBsord_get\fP (\fBSordModel\fP *\fBmodel\fP, \fBconst\fP \fBSordNode\fP *\fBs\fP, \fBconst\fP \fBSordNode\fP *\fBp\fP, \fBconst\fP \fBSordNode\fP *o, \fBconst\fP \fBSordNode\fP *g)"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBsord_ask\fP (\fBSordModel\fP *\fBmodel\fP, \fBconst\fP \fBSordNode\fP *\fBs\fP, \fBconst\fP \fBSordNode\fP *\fBp\fP, \fBconst\fP \fBSordNode\fP *o, \fBconst\fP \fBSordNode\fP *g)"
+.br
+.ti -1c
+.RI "\fBuint64_t\fP \fBsord_count\fP (\fBSordModel\fP *\fBmodel\fP, \fBconst\fP \fBSordNode\fP *\fBs\fP, \fBconst\fP \fBSordNode\fP *\fBp\fP, \fBconst\fP \fBSordNode\fP *o, \fBconst\fP \fBSordNode\fP *g)"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBsord_contains\fP (\fBSordModel\fP *sord, \fBconst\fP \fBSordQuad\fP pat)"
+.br
+.ti -1c
+.RI "\fBSordNodeType\fP \fBsord_node_get_type\fP (\fBconst\fP \fBSordNode\fP *\fBnode\fP)"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBuint8_t\fP * \fBsord_node_get_string\fP (\fBconst\fP \fBSordNode\fP *\fBnode\fP)"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBuint8_t\fP * \fBsord_node_get_string_counted\fP (\fBconst\fP \fBSordNode\fP *\fBnode\fP, size_t *\fBlen\fP)"
+.br
+.ti -1c
+.RI "\fBconst\fP char * \fBsord_node_get_language\fP (\fBconst\fP \fBSordNode\fP *\fBnode\fP)"
+.br
+.ti -1c
+.RI "\fBSordNode\fP * \fBsord_node_get_datatype\fP (\fBconst\fP \fBSordNode\fP *\fBnode\fP)"
+.br
+.ti -1c
+.RI "\fBSerdNodeFlags\fP \fBsord_node_get_flags\fP (\fBconst\fP \fBSordNode\fP *\fBnode\fP)"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBsord_node_is_inline_object\fP (\fBconst\fP \fBSordNode\fP *\fBnode\fP)"
+.br
+.ti -1c
+.RI "\fBSordNode\fP * \fBsord_new_uri\fP (\fBSordWorld\fP *world, \fBconst\fP \fBuint8_t\fP *\fBstr\fP)"
+.br
+.ti -1c
+.RI "\fBSordNode\fP * \fBsord_new_relative_uri\fP (\fBSordWorld\fP *world, \fBconst\fP \fBuint8_t\fP *\fBstr\fP, \fBconst\fP \fBuint8_t\fP *base_str)"
+.br
+.ti -1c
+.RI "\fBSordNode\fP * \fBsord_new_blank\fP (\fBSordWorld\fP *world, \fBconst\fP \fBuint8_t\fP *\fBstr\fP)"
+.br
+.ti -1c
+.RI "\fBSordNode\fP * \fBsord_new_literal\fP (\fBSordWorld\fP *world, \fBSordNode\fP *datatype, \fBconst\fP \fBuint8_t\fP *\fBstr\fP, \fBconst\fP char *lang)"
+.br
+.ti -1c
+.RI "\fBSordNode\fP * \fBsord_node_from_serd_node\fP (\fBSordWorld\fP *world, \fBSerdEnv\fP *env, \fBconst\fP \fBSerdNode\fP *sn, \fBconst\fP \fBSerdNode\fP *datatype, \fBconst\fP \fBSerdNode\fP *lang)"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBSerdNode\fP * \fBsord_node_to_serd_node\fP (\fBconst\fP \fBSordNode\fP *\fBnode\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBsord_node_free\fP (\fBSordWorld\fP *world, \fBSordNode\fP *\fBnode\fP)"
+.br
+.ti -1c
+.RI "\fBSordNode\fP * \fBsord_node_copy\fP (\fBconst\fP \fBSordNode\fP *\fBnode\fP)"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBsord_add\fP (\fBSordModel\fP *sord, \fBconst\fP \fBSordQuad\fP tup)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBsord_remove\fP (\fBSordModel\fP *sord, \fBconst\fP \fBSordQuad\fP tup)"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define DEFAULT_GRAPH_ORDER   \fBGSPO\fP"
+
+.PP
+Definition at line 55 of file sord\&.c\&.
+.SS "#define DEFAULT_ORDER   \fBSPO\fP"
+
+.PP
+Definition at line 54 of file sord\&.c\&.
+.SS "#define NUM_ORDERS   12"
+
+.PP
+Definition at line 51 of file sord\&.c\&.
+.SS "#define PAT_CASE(sig, \fBm\fP, g0, g1, np)"
+\fBValue:\fP
+.PP
+.nf
+case sig: \
+        *mode     = m; \\
+		good[0]   = g0; \\
+		good[1]   = g1; \
+        *n_prefix = np; \
+        break
+.fi
+.SS "#define SORD_FIND_LOG( \&.\&.\&.)"
+
+.PP
+Definition at line 43 of file sord\&.c\&.
+.SS "#define SORD_ITER_LOG( \&.\&.\&.)"
+
+.PP
+Definition at line 38 of file sord\&.c\&.
+.SS "#define SORD_LOG(\fBprefix\fP,  \&.\&.\&.)   fprintf(stderr, '[Sord::' prefix '] ' __VA_ARGS__)"
+
+.PP
+Definition at line 33 of file sord\&.c\&.
+.SS "#define SORD_WRITE_LOG( \&.\&.\&.)"
+
+.PP
+Definition at line 48 of file sord\&.c\&.
+.SS "#define STATEMENT_LEN   3"
+
+.PP
+Definition at line 52 of file sord\&.c\&.
+.SS "#define TUP_FMT   '(%s %\fBs\fP %\fBs\fP %\fBs\fP)'"
+
+.PP
+Definition at line 57 of file sord\&.c\&.
+.SS "#define TUP_FMT_ARGS(\fBt\fP)"
+\fBValue:\fP
+.PP
+.nf
+TUP_FMT_ELEM((t)[0]), \\
+	TUP_FMT_ELEM((t)[1]), \\
+	TUP_FMT_ELEM((t)[2]), \\
+	TUP_FMT_ELEM((t)[3])
+.fi
+.PP
+Definition at line 59 of file sord\&.c\&.
+.SS "#define TUP_FMT_ELEM(e)   ((e) ? \fBsord_node_get_string\fP(e) : (\fBconst\fP \fBuint8_t\fP*)'*')"
+
+.PP
+Definition at line 58 of file sord\&.c\&.
+.SS "#define TUP_G   3"
+
+.PP
+Definition at line 68 of file sord\&.c\&.
+.SS "#define TUP_LEN   \fBSTATEMENT_LEN\fP + 1"
+
+.PP
+Definition at line 53 of file sord\&.c\&.
+.SS "#define TUP_O   2"
+
+.PP
+Definition at line 67 of file sord\&.c\&.
+.SS "#define TUP_P   1"
+
+.PP
+Definition at line 66 of file sord\&.c\&.
+.SS "#define TUP_S   0"
+
+.PP
+Definition at line 65 of file sord\&.c\&.
+.SS "#define ZIX_INLINE"
+
+.PP
+Definition at line 25 of file sord\&.c\&.
+.SH "Enumeration Type Documentation"
+.PP 
+.SS "enum \fBSearchMode\fP"
+Mode for searching or iteration 
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fIALL \fP\fP
+Iterate over entire store\&. 
+.TP
+\fB\fISINGLE \fP\fP
+Iteration over a single element (exact search) 
+.TP
+\fB\fIRANGE \fP\fP
+Iterate over range with equal prefix\&. 
+.TP
+\fB\fIFILTER_RANGE \fP\fP
+Iterate over range with equal prefix, filtering\&. 
+.TP
+\fB\fIFILTER_ALL \fP\fP
+Iterate to end of store, filtering\&. 
+.PP
+Definition at line 125 of file sord\&.c\&.
+.SS "enum \fBSordOrder\fP"
+Triple ordering 
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fISPO \fP\fP
+Subject, Predicate, Object\&. 
+.TP
+\fB\fISOP \fP\fP
+Subject, Object, Predicate\&. 
+.TP
+\fB\fIOPS \fP\fP
+Object, Predicate, Subject\&. 
+.TP
+\fB\fIOSP \fP\fP
+Object, Subject, Predicate\&. 
+.TP
+\fB\fIPSO \fP\fP
+Predicate, Subject, Object\&. 
+.TP
+\fB\fIPOS \fP\fP
+Predicate, Object, Subject\&. 
+.TP
+\fB\fIGSPO \fP\fP
+Graph, Subject, Predicate, Object\&. 
+.TP
+\fB\fIGSOP \fP\fP
+Graph, Subject, Object, Predicate\&. 
+.TP
+\fB\fIGOPS \fP\fP
+Graph, Object, Predicate, Subject\&. 
+.TP
+\fB\fIGOSP \fP\fP
+Graph, Object, Subject, Predicate\&. 
+.TP
+\fB\fIGPSO \fP\fP
+Graph, Predicate, Subject, Object\&. 
+.TP
+\fB\fIGPOS \fP\fP
+Graph, Predicate, Object, Subject\&. 
+.PP
+Definition at line 71 of file sord\&.c\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

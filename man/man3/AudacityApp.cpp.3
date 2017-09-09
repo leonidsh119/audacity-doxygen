@@ -1,0 +1,278 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/src/AudacityApp.cpp" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/src/AudacityApp.cpp \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include 'Audacity\&.h'\fP
+.br
+\fC#include 'AudacityApp\&.h'\fP
+.br
+\fC#include 'TranslatableStringArray\&.h'\fP
+.br
+\fC#include <wx/defs\&.h>\fP
+.br
+\fC#include <wx/app\&.h>\fP
+.br
+\fC#include <wx/bitmap\&.h>\fP
+.br
+\fC#include <wx/docview\&.h>\fP
+.br
+\fC#include <wx/event\&.h>\fP
+.br
+\fC#include <wx/ipc\&.h>\fP
+.br
+\fC#include <wx/log\&.h>\fP
+.br
+\fC#include <wx/window\&.h>\fP
+.br
+\fC#include <wx/intl\&.h>\fP
+.br
+\fC#include <wx/menu\&.h>\fP
+.br
+\fC#include <wx/msgdlg\&.h>\fP
+.br
+\fC#include <wx/snglinst\&.h>\fP
+.br
+\fC#include <wx/splash\&.h>\fP
+.br
+\fC#include <wx/stdpaths\&.h>\fP
+.br
+\fC#include <wx/sysopt\&.h>\fP
+.br
+\fC#include <wx/fontmap\&.h>\fP
+.br
+\fC#include <wx/fs_zip\&.h>\fP
+.br
+\fC#include <wx/image\&.h>\fP
+.br
+\fC#include <wx/dir\&.h>\fP
+.br
+\fC#include <wx/file\&.h>\fP
+.br
+\fC#include <wx/filename\&.h>\fP
+.br
+\fC#include 'AudacityLogger\&.h'\fP
+.br
+\fC#include 'AboutDialog\&.h'\fP
+.br
+\fC#include 'AColor\&.h'\fP
+.br
+\fC#include 'AudioIO\&.h'\fP
+.br
+\fC#include 'Benchmark\&.h'\fP
+.br
+\fC#include 'DirManager\&.h'\fP
+.br
+\fC#include 'commands/CommandHandler\&.h'\fP
+.br
+\fC#include 'commands/AppCommandEvent\&.h'\fP
+.br
+\fC#include 'effects/Contrast\&.h'\fP
+.br
+\fC#include 'widgets/ASlider\&.h'\fP
+.br
+\fC#include 'FFmpeg\&.h'\fP
+.br
+\fC#include 'Internat\&.h'\fP
+.br
+\fC#include 'LangChoice\&.h'\fP
+.br
+\fC#include 'Languages\&.h'\fP
+.br
+\fC#include 'PluginManager\&.h'\fP
+.br
+\fC#include 'Prefs\&.h'\fP
+.br
+\fC#include 'Project\&.h'\fP
+.br
+\fC#include 'Screenshot\&.h'\fP
+.br
+\fC#include 'Sequence\&.h'\fP
+.br
+\fC#include 'WaveTrack\&.h'\fP
+.br
+\fC#include 'prefs/PrefsDialog\&.h'\fP
+.br
+\fC#include 'Theme\&.h'\fP
+.br
+\fC#include 'PlatformCompatibility\&.h'\fP
+.br
+\fC#include 'FileNames\&.h'\fP
+.br
+\fC#include 'AutoRecovery\&.h'\fP
+.br
+\fC#include 'SplashDialog\&.h'\fP
+.br
+\fC#include 'FFT\&.h'\fP
+.br
+\fC#include 'BlockFile\&.h'\fP
+.br
+\fC#include 'ondemand/ODManager\&.h'\fP
+.br
+\fC#include 'commands/Keyboard\&.h'\fP
+.br
+\fC#include 'widgets/ErrorDialog\&.h'\fP
+.br
+\fC#include 'prefs/DirectoriesPrefs\&.h'\fP
+.br
+\fC#include 'ModuleManager\&.h'\fP
+.br
+\fC#include 'import/Import\&.h'\fP
+.br
+\fC#include 'Experimental\&.h'\fP
+.br
+\fC#include '\&.\&./images/AudacityLogoWithName\&.xpm'\fP
+.br
+
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "class \fBIPCConn\fP"
+.br
+.ti -1c
+.RI "class \fBIPCServ\fP"
+.br
+.in -1c
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBIPC_APPL\fP   wxT('audacity')"
+.br
+.ti -1c
+.RI "#define \fBIPC_TOPIC\fP   wxT('System')"
+.br
+.ti -1c
+.RI "#define \fBID_RECENT_CLEAR\fP   6100"
+.br
+.ti -1c
+.RI "#define \fBID_RECENT_FIRST\fP   6101"
+.br
+.ti -1c
+.RI "#define \fBID_RECENT_LAST\fP   6112"
+.br
+.ti -1c
+.RI "#define \fBID_IPC_SERVER\fP   6200"
+.br
+.ti -1c
+.RI "#define \fBID_IPC_SOCKET\fP   6201"
+.br
+.ti -1c
+.RI "#define \fBkAudacityAppTimerID\fP   0"
+.br
+.ti -1c
+.RI "#define \fBWL\fP(lang,  sublang)"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBDEFINE_EVENT_TYPE\fP (EVT_OPEN_AUDIO_FILE)"
+.br
+.RI "\fICustom events\&. \fP"
+.ti -1c
+.RI "\fBDEFINE_EVENT_TYPE\fP (EVT_LANGUAGE_CHANGE)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBQuitAudacity\fP (\fBbool\fP bForce)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBQuitAudacity\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBSaveWindowSize\fP ()"
+.br
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "\fBbool\fP \fBgIsQuitting\fP = \fBfalse\fP"
+.br
+.ti -1c
+.RI "wxLanguageInfo \fBuserLangs\fP []"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define ID_IPC_SERVER   6200"
+
+.PP
+Definition at line 739 of file AudacityApp\&.cpp\&.
+.SS "#define ID_IPC_SOCKET   6201"
+
+.PP
+Definition at line 740 of file AudacityApp\&.cpp\&.
+.SS "#define ID_RECENT_CLEAR   6100"
+
+.PP
+Definition at line 734 of file AudacityApp\&.cpp\&.
+.SS "#define ID_RECENT_FIRST   6101"
+
+.PP
+Definition at line 735 of file AudacityApp\&.cpp\&.
+.SS "#define ID_RECENT_LAST   6112"
+
+.PP
+Definition at line 736 of file AudacityApp\&.cpp\&.
+.SS "#define IPC_APPL   wxT('audacity')"
+
+.PP
+Definition at line 598 of file AudacityApp\&.cpp\&.
+.SS "#define IPC_TOPIC   wxT('System')"
+
+.PP
+Definition at line 599 of file AudacityApp\&.cpp\&.
+.SS "#define kAudacityAppTimerID   0"
+
+.PP
+Definition at line 743 of file AudacityApp\&.cpp\&.
+.SS "#define WL(lang, sublang)"
+
+.PP
+Definition at line 980 of file AudacityApp\&.cpp\&.
+.SH "Function Documentation"
+.PP 
+.SS "DEFINE_EVENT_TYPE (EVT_OPEN_AUDIO_FILE)"
+
+.PP
+Custom events\&. 
+.SS "DEFINE_EVENT_TYPE (EVT_LANGUAGE_CHANGE)"
+
+.SS "\fBvoid\fP QuitAudacity (\fBbool\fP bForce)"
+
+.PP
+Definition at line 261 of file AudacityApp\&.cpp\&.
+.SS "\fBvoid\fP QuitAudacity ()"
+
+.PP
+Definition at line 330 of file AudacityApp\&.cpp\&.
+.SS "\fBvoid\fP SaveWindowSize ()"
+
+.PP
+Definition at line 335 of file AudacityApp\&.cpp\&.
+.SH "Variable Documentation"
+.PP 
+.SS "\fBbool\fP gIsQuitting = \fBfalse\fP"
+
+.PP
+Definition at line 259 of file AudacityApp\&.cpp\&.
+.SS "wxLanguageInfo userLangs[]"
+\fBInitial value:\fP
+.PP
+.nf
+=
+{
+   { wxLANGUAGE_USER_DEFINED, wxT("bs"), WL(0, SUBLANG_DEFAULT) wxT("Bosnian"), wxLayout_LeftToRight }
+}
+.fi
+.PP
+Definition at line 984 of file AudacityApp\&.cpp\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

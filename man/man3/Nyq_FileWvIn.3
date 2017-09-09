@@ -1,0 +1,270 @@
+.TH "Nyq::FileWvIn" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Nyq::FileWvIn \- 
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <FileWvIn\&.h>\fP
+.PP
+Inherits \fBNyq::WvIn\fP\&.
+.PP
+Inherited by \fBNyq::WaveLoop\fP\&.
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBFileWvIn\fP (unsigned long chunkThreshold=1000000, unsigned long chunkSize=1024)"
+.br
+.RI "\fIDefault constructor\&. \fP"
+.ti -1c
+.RI "\fBFileWvIn\fP (\fBstd::string\fP fileName, \fBbool\fP raw=\fBfalse\fP, \fBbool\fP doNormalize=\fBtrue\fP, unsigned long chunkThreshold=1000000, unsigned long chunkSize=1024)"
+.br
+.RI "\fIOverloaded constructor for file input\&. \fP"
+.ti -1c
+.RI "virtual \fB~FileWvIn\fP ()"
+.br
+.RI "\fIClass destructor\&. \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBopenFile\fP (\fBstd::string\fP fileName, \fBbool\fP raw=\fBfalse\fP, \fBbool\fP doNormalize=\fBtrue\fP)"
+.br
+.RI "\fIOpen the specified file and load its data\&. \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBcloseFile\fP (\fBvoid\fP)"
+.br
+.RI "\fIClose a file if one is open\&. \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBreset\fP (\fBvoid\fP)"
+.br
+.RI "\fIClear outputs and reset time (file) pointer to zero\&. \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBnormalize\fP (\fBvoid\fP)"
+.br
+.RI "\fINormalize data to a maximum of +-1\&.0\&. \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBnormalize\fP (\fBStkFloat\fP peak)"
+.br
+.RI "\fINormalize data to a maximum of \fI+-peak\fP\&. \fP"
+.ti -1c
+.RI "unsigned long \fBgetSize\fP (\fBvoid\fP) \fBconst\fP "
+.br
+.RI "\fIReturn the file size in sample frames\&. \fP"
+.ti -1c
+.RI "\fBStkFloat\fP \fBgetFileRate\fP (\fBvoid\fP) \fBconst\fP "
+.br
+.RI "\fIReturn the input file sample rate in Hz (not the data read rate)\&. \fP"
+.ti -1c
+.RI "\fBbool\fP \fBisFinished\fP (\fBvoid\fP) \fBconst\fP "
+.br
+.RI "\fIQuery whether reading is complete\&. \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBsetRate\fP (\fBStkFloat\fP \fBrate\fP)"
+.br
+.RI "\fISet the data read rate in samples\&. The rate can be negative\&. \fP"
+.ti -1c
+.RI "virtual \fBvoid\fP \fBaddTime\fP (\fBStkFloat\fP time)"
+.br
+.RI "\fIIncrement the read pointer by \fItime\fP samples\&. \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBsetInterpolate\fP (\fBbool\fP doInterpolate)"
+.br
+.RI "\fITurn linear interpolation on/off\&. \fP"
+.ti -1c
+.RI "\fBStkFloat\fP \fBlastOut\fP (\fBvoid\fP) \fBconst\fP "
+.br
+.in -1c
+.SS "Protected Member Functions"
+
+.in +1c
+.ti -1c
+.RI "virtual \fBvoid\fP \fBcomputeFrame\fP (\fBvoid\fP)"
+.br
+.in -1c
+.SS "Protected Attributes"
+
+.in +1c
+.ti -1c
+.RI "\fBFileRead\fP \fBfile_\fP"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBfinished_\fP"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBinterpolate_\fP"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBnormalizing_\fP"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBchunking_\fP"
+.br
+.ti -1c
+.RI "\fBStkFloat\fP \fBtime_\fP"
+.br
+.ti -1c
+.RI "\fBStkFloat\fP \fBrate_\fP"
+.br
+.ti -1c
+.RI "unsigned long \fBchunkThreshold_\fP"
+.br
+.ti -1c
+.RI "unsigned long \fBchunkSize_\fP"
+.br
+.ti -1c
+.RI "long \fBchunkPointer_\fP"
+.br
+.in -1c
+.SS "Additional Inherited Members"
+.SH "Detailed Description"
+.PP 
+Definition at line 43 of file FileWvIn\&.h\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "FileWvIn::FileWvIn (unsigned long chunkThreshold = \fC1000000\fP, unsigned long chunkSize = \fC1024\fP)"
+
+.PP
+Default constructor\&. 
+.PP
+Definition at line 38 of file FileWvIn\&.cpp\&.
+.SS "FileWvIn::FileWvIn (\fBstd::string\fP fileName, \fBbool\fP raw = \fC\fBfalse\fP\fP, \fBbool\fP doNormalize = \fC\fBtrue\fP\fP, unsigned long chunkThreshold = \fC1000000\fP, unsigned long chunkSize = \fC1024\fP)"
+
+.PP
+Overloaded constructor for file input\&. An \fBStkError\fP will be thrown if the file is not found, its format is unknown, or a read error occurs\&. 
+.PP
+Definition at line 44 of file FileWvIn\&.cpp\&.
+.SS "FileWvIn::~FileWvIn ()\fC [virtual]\fP"
+
+.PP
+Class destructor\&. 
+.PP
+Definition at line 52 of file FileWvIn\&.cpp\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "\fBvoid\fP FileWvIn::addTime (\fBStkFloat\fP time)\fC [virtual]\fP"
+
+.PP
+Increment the read pointer by \fItime\fP samples\&. Note that this function will not modify the interpolation flag status\&. 
+.PP
+Reimplemented in \fBNyq::WaveLoop\fP\&.
+.PP
+Definition at line 145 of file FileWvIn\&.cpp\&.
+.SS "\fBvoid\fP FileWvIn::closeFile (\fBvoid\fP)"
+
+.PP
+Close a file if one is open\&. 
+.PP
+Definition at line 57 of file FileWvIn\&.cpp\&.
+.SS "\fBvoid\fP FileWvIn::computeFrame (\fBvoid\fP)\fC [protected]\fP, \fC [virtual]\fP"
+
+.PP
+Implements \fBNyq::WvIn\fP\&.
+.PP
+Reimplemented in \fBNyq::WaveLoop\fP\&.
+.PP
+Definition at line 165 of file FileWvIn\&.cpp\&.
+.SS "\fBStkFloat\fP Nyq::FileWvIn::getFileRate (\fBvoid\fP) const\fC [inline]\fP"
+
+.PP
+Return the input file sample rate in Hz (not the data read rate)\&. WAV, SND, and AIF formatted files specify a sample rate in their headers\&. STK RAW files have a sample rate of 22050 Hz by definition\&. MAT-files are assumed to have a rate of 44100 Hz\&. 
+.PP
+Definition at line 101 of file FileWvIn\&.h\&.
+.SS "unsigned long Nyq::FileWvIn::getSize (\fBvoid\fP) const\fC [inline]\fP"
+
+.PP
+Return the file size in sample frames\&. 
+.PP
+Definition at line 93 of file FileWvIn\&.h\&.
+.SS "\fBbool\fP Nyq::FileWvIn::isFinished (\fBvoid\fP) const\fC [inline]\fP"
+
+.PP
+Query whether reading is complete\&. 
+.PP
+Definition at line 104 of file FileWvIn\&.h\&.
+.SS "\fBStkFloat\fP FileWvIn::lastOut (\fBvoid\fP) const"
+
+.PP
+Definition at line 159 of file FileWvIn\&.cpp\&.
+.SS "\fBvoid\fP FileWvIn::normalize (\fBvoid\fP)"
+
+.PP
+Normalize data to a maximum of +-1\&.0\&. This function has no effect when data is incrementally loaded from disk\&. 
+.PP
+Definition at line 106 of file FileWvIn\&.cpp\&.
+.SS "\fBvoid\fP FileWvIn::normalize (\fBStkFloat\fP peak)"
+
+.PP
+Normalize data to a maximum of \fI+-peak\fP\&. This function has no effect when data is incrementally loaded from disk\&. 
+.PP
+Definition at line 112 of file FileWvIn\&.cpp\&.
+.SS "\fBvoid\fP FileWvIn::openFile (\fBstd::string\fP fileName, \fBbool\fP raw = \fC\fBfalse\fP\fP, \fBbool\fP doNormalize = \fC\fBtrue\fP\fP)"
+
+.PP
+Open the specified file and load its data\&. Data from a previously opened file will be overwritten by this function\&. An \fBStkError\fP will be thrown if the file is not found, its format is unknown, or a read error occurs\&. If the file data is to be loaded incrementally from disk and normalization is specified, a scaling will be applied with respect to fixed-point limits\&. If the data format is floating-point, no scaling is performed\&. 
+.PP
+Definition at line 63 of file FileWvIn\&.cpp\&.
+.SS "\fBvoid\fP FileWvIn::reset (\fBvoid\fP)"
+
+.PP
+Clear outputs and reset time (file) pointer to zero\&. 
+.PP
+Definition at line 98 of file FileWvIn\&.cpp\&.
+.SS "\fBvoid\fP Nyq::FileWvIn::setInterpolate (\fBbool\fP doInterpolate)\fC [inline]\fP"
+
+.PP
+Turn linear interpolation on/off\&. Interpolation is automatically off when the read rate is an integer value\&. If interpolation is turned off for a fractional rate, the time index is truncated to an integer value\&. 
+.PP
+Definition at line 125 of file FileWvIn\&.h\&.
+.SS "\fBvoid\fP FileWvIn::setRate (\fBStkFloat\fP rate)"
+
+.PP
+Set the data read rate in samples\&. The rate can be negative\&. If the rate value is negative, the data is read in reverse order\&. 
+.PP
+Definition at line 133 of file FileWvIn\&.cpp\&.
+.SH "Member Data Documentation"
+.PP 
+.SS "\fBbool\fP Nyq::FileWvIn::chunking_\fC [protected]\fP"
+
+.PP
+Definition at line 137 of file FileWvIn\&.h\&.
+.SS "long Nyq::FileWvIn::chunkPointer_\fC [protected]\fP"
+
+.PP
+Definition at line 142 of file FileWvIn\&.h\&.
+.SS "unsigned long Nyq::FileWvIn::chunkSize_\fC [protected]\fP"
+
+.PP
+Definition at line 141 of file FileWvIn\&.h\&.
+.SS "unsigned long Nyq::FileWvIn::chunkThreshold_\fC [protected]\fP"
+
+.PP
+Definition at line 140 of file FileWvIn\&.h\&.
+.SS "\fBFileRead\fP Nyq::FileWvIn::file_\fC [protected]\fP"
+
+.PP
+Definition at line 133 of file FileWvIn\&.h\&.
+.SS "\fBbool\fP Nyq::FileWvIn::finished_\fC [protected]\fP"
+
+.PP
+Definition at line 134 of file FileWvIn\&.h\&.
+.SS "\fBbool\fP Nyq::FileWvIn::interpolate_\fC [protected]\fP"
+
+.PP
+Definition at line 135 of file FileWvIn\&.h\&.
+.SS "\fBbool\fP Nyq::FileWvIn::normalizing_\fC [protected]\fP"
+
+.PP
+Definition at line 136 of file FileWvIn\&.h\&.
+.SS "\fBStkFloat\fP Nyq::FileWvIn::rate_\fC [protected]\fP"
+
+.PP
+Definition at line 139 of file FileWvIn\&.h\&.
+.SS "\fBStkFloat\fP Nyq::FileWvIn::time_\fC [protected]\fP"
+
+.PP
+Definition at line 138 of file FileWvIn\&.h\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

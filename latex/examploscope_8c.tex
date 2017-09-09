@@ -1,0 +1,122 @@
+\hypertarget{examploscope_8c}{}\section{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/lv2/lv2/plugins/eg-\/scope.lv2/examploscope.c File Reference}
+\label{examploscope_8c}\index{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/lv2/lv2/plugins/eg-\/scope.\+lv2/examploscope.\+c@{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/lv2/lv2/plugins/eg-\/scope.\+lv2/examploscope.\+c}}
+{\ttfamily \#include $<$stdio.\+h$>$}\\*
+{\ttfamily \#include $<$stdlib.\+h$>$}\\*
+{\ttfamily \#include $<$stdint.\+h$>$}\\*
+{\ttfamily \#include \char`\"{}lv2/lv2plug.\+in/ns/ext/log/log.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}lv2/lv2plug.\+in/ns/ext/log/logger.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}lv2/lv2plug.\+in/ns/ext/state/state.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}lv2/lv2plug.\+in/ns/lv2core/lv2.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}./uris.\+h\char`\"{}}\\*
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{struct_eg_scope}{Eg\+Scope}
+\end{DoxyCompactItemize}
+\subsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \hyperlink{examploscope_8c_a41301420b6a2483a529413860721007a}{Port\+Index} \{ \\*
+\hyperlink{bindings__test__plugin_8c_a41301420b6a2483a529413860721007aa7664bda8214c1b178249882fb87dde68}{T\+E\+S\+T\+\_\+\+C\+O\+N\+T\+R\+O\+L\+\_\+\+IN} = 0, 
+\hyperlink{bindings__test__plugin_8c_a41301420b6a2483a529413860721007aaca283236c3ff512846cc0876ce81451b}{T\+E\+S\+T\+\_\+\+C\+O\+N\+T\+R\+O\+L\+\_\+\+O\+UT} = 1, 
+\hyperlink{bindings__test__plugin_8c_a41301420b6a2483a529413860721007aaf1d6359d2ba18efeb0bdf69a27532bc8}{T\+E\+S\+T\+\_\+\+A\+U\+D\+I\+O\+\_\+\+IN} = 2, 
+\hyperlink{bindings__test__plugin_8c_a41301420b6a2483a529413860721007aa875ff739e5a5d33692daca96435324b1}{T\+E\+S\+T\+\_\+\+A\+U\+D\+I\+O\+\_\+\+O\+UT} = 3, 
+\\*
+\hyperlink{amp_8c_a41301420b6a2483a529413860721007aa7204086dfc06b741fded0b0370c6578b}{A\+M\+P\+\_\+\+G\+A\+IN} = 0, 
+\hyperlink{amp_8c_a41301420b6a2483a529413860721007aaea75572fc580f72e841ae523c9c73250}{A\+M\+P\+\_\+\+I\+N\+P\+UT} = 1, 
+\hyperlink{amp_8c_a41301420b6a2483a529413860721007aa3e9aec45024c82e25283fa24a6fe4df7}{A\+M\+P\+\_\+\+O\+U\+T\+P\+UT} = 2, 
+\hyperlink{midigate_8c_a41301420b6a2483a529413860721007aa338f6b172a143343e8cd61504de57a44}{M\+I\+D\+I\+G\+A\+T\+E\+\_\+\+C\+O\+N\+T\+R\+OL} = 0, 
+\\*
+\hyperlink{midigate_8c_a41301420b6a2483a529413860721007aa69bd4015ba520d5ef468c89f50981973}{M\+I\+D\+I\+G\+A\+T\+E\+\_\+\+IN} = 1, 
+\hyperlink{midigate_8c_a41301420b6a2483a529413860721007aaa554ccc902d121f56142557f625b6b73}{M\+I\+D\+I\+G\+A\+T\+E\+\_\+\+O\+UT} = 2, 
+\hyperlink{examploscope_8c_a41301420b6a2483a529413860721007aa677684cd64ac285fc546d8571920dfe2}{S\+C\+O\+\_\+\+C\+O\+N\+T\+R\+OL} = 0, 
+\hyperlink{examploscope_8c_a41301420b6a2483a529413860721007aaa12a027971221dc3dab43a6828f0d87e}{S\+C\+O\+\_\+\+N\+O\+T\+I\+FY} = 1, 
+\\*
+\hyperlink{examploscope_8c_a41301420b6a2483a529413860721007aa5cf16d4700246896e04fac373e1eb841}{S\+C\+O\+\_\+\+I\+N\+P\+U\+T0} = 2, 
+\hyperlink{examploscope_8c_a41301420b6a2483a529413860721007aab040f6fc7feb2c18047fdbbd4bf329d5}{S\+C\+O\+\_\+\+O\+U\+T\+P\+U\+T0} = 3, 
+\hyperlink{examploscope_8c_a41301420b6a2483a529413860721007aa2602843536a3f50e139c2b19ece86463}{S\+C\+O\+\_\+\+I\+N\+P\+U\+T1} = 4, 
+\hyperlink{examploscope_8c_a41301420b6a2483a529413860721007aa58bc341e0e0cb247a5acc22e5296a208}{S\+C\+O\+\_\+\+O\+U\+T\+P\+U\+T1} = 5
+ \}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{lv2_8h_a05eb2f14429fd6ae501265b5e5af8309}{L\+V2\+\_\+\+S\+Y\+M\+B\+O\+L\+\_\+\+E\+X\+P\+O\+RT} \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{lv2_8h_ac9db79f137f126ef10ef707b6de85a78}{L\+V2\+\_\+\+Descriptor} $\ast$ \hyperlink{examploscope_8c_affedc7aabe2715522365f21a9c1ff65d}{lv2\+\_\+descriptor} (\hyperlink{lib-src_2ffmpeg_2win32_2stdint_8h_a6eb1e68cc391dd753bc8ce896dbb8315}{uint32\+\_\+t} index)
+\end{DoxyCompactItemize}
+
+
+\subsection{Enumeration Type Documentation}
+\index{examploscope.\+c@{examploscope.\+c}!Port\+Index@{Port\+Index}}
+\index{Port\+Index@{Port\+Index}!examploscope.\+c@{examploscope.\+c}}
+\subsubsection[{\texorpdfstring{Port\+Index}{PortIndex}}]{\setlength{\rightskip}{0pt plus 5cm}enum {\bf Port\+Index}}\hypertarget{examploscope_8c_a41301420b6a2483a529413860721007a}{}\label{examploscope_8c_a41301420b6a2483a529413860721007a}
+==== Port Indices ==== \begin{Desc}
+\item[Enumerator]\par
+\begin{description}
+\index{T\+E\+S\+T\+\_\+\+C\+O\+N\+T\+R\+O\+L\+\_\+\+IN@{T\+E\+S\+T\+\_\+\+C\+O\+N\+T\+R\+O\+L\+\_\+\+IN}!examploscope.\+c@{examploscope.\+c}}\index{examploscope.\+c@{examploscope.\+c}!T\+E\+S\+T\+\_\+\+C\+O\+N\+T\+R\+O\+L\+\_\+\+IN@{T\+E\+S\+T\+\_\+\+C\+O\+N\+T\+R\+O\+L\+\_\+\+IN}}\item[{\em 
+T\+E\+S\+T\+\_\+\+C\+O\+N\+T\+R\+O\+L\+\_\+\+IN\hypertarget{examploscope_8c_a41301420b6a2483a529413860721007aa7664bda8214c1b178249882fb87dde68}{}\label{examploscope_8c_a41301420b6a2483a529413860721007aa7664bda8214c1b178249882fb87dde68}
+}]\index{T\+E\+S\+T\+\_\+\+C\+O\+N\+T\+R\+O\+L\+\_\+\+O\+UT@{T\+E\+S\+T\+\_\+\+C\+O\+N\+T\+R\+O\+L\+\_\+\+O\+UT}!examploscope.\+c@{examploscope.\+c}}\index{examploscope.\+c@{examploscope.\+c}!T\+E\+S\+T\+\_\+\+C\+O\+N\+T\+R\+O\+L\+\_\+\+O\+UT@{T\+E\+S\+T\+\_\+\+C\+O\+N\+T\+R\+O\+L\+\_\+\+O\+UT}}\item[{\em 
+T\+E\+S\+T\+\_\+\+C\+O\+N\+T\+R\+O\+L\+\_\+\+O\+UT\hypertarget{examploscope_8c_a41301420b6a2483a529413860721007aaca283236c3ff512846cc0876ce81451b}{}\label{examploscope_8c_a41301420b6a2483a529413860721007aaca283236c3ff512846cc0876ce81451b}
+}]\index{T\+E\+S\+T\+\_\+\+A\+U\+D\+I\+O\+\_\+\+IN@{T\+E\+S\+T\+\_\+\+A\+U\+D\+I\+O\+\_\+\+IN}!examploscope.\+c@{examploscope.\+c}}\index{examploscope.\+c@{examploscope.\+c}!T\+E\+S\+T\+\_\+\+A\+U\+D\+I\+O\+\_\+\+IN@{T\+E\+S\+T\+\_\+\+A\+U\+D\+I\+O\+\_\+\+IN}}\item[{\em 
+T\+E\+S\+T\+\_\+\+A\+U\+D\+I\+O\+\_\+\+IN\hypertarget{examploscope_8c_a41301420b6a2483a529413860721007aaf1d6359d2ba18efeb0bdf69a27532bc8}{}\label{examploscope_8c_a41301420b6a2483a529413860721007aaf1d6359d2ba18efeb0bdf69a27532bc8}
+}]\index{T\+E\+S\+T\+\_\+\+A\+U\+D\+I\+O\+\_\+\+O\+UT@{T\+E\+S\+T\+\_\+\+A\+U\+D\+I\+O\+\_\+\+O\+UT}!examploscope.\+c@{examploscope.\+c}}\index{examploscope.\+c@{examploscope.\+c}!T\+E\+S\+T\+\_\+\+A\+U\+D\+I\+O\+\_\+\+O\+UT@{T\+E\+S\+T\+\_\+\+A\+U\+D\+I\+O\+\_\+\+O\+UT}}\item[{\em 
+T\+E\+S\+T\+\_\+\+A\+U\+D\+I\+O\+\_\+\+O\+UT\hypertarget{examploscope_8c_a41301420b6a2483a529413860721007aa875ff739e5a5d33692daca96435324b1}{}\label{examploscope_8c_a41301420b6a2483a529413860721007aa875ff739e5a5d33692daca96435324b1}
+}]\index{A\+M\+P\+\_\+\+G\+A\+IN@{A\+M\+P\+\_\+\+G\+A\+IN}!examploscope.\+c@{examploscope.\+c}}\index{examploscope.\+c@{examploscope.\+c}!A\+M\+P\+\_\+\+G\+A\+IN@{A\+M\+P\+\_\+\+G\+A\+IN}}\item[{\em 
+A\+M\+P\+\_\+\+G\+A\+IN\hypertarget{examploscope_8c_a41301420b6a2483a529413860721007aa7204086dfc06b741fded0b0370c6578b}{}\label{examploscope_8c_a41301420b6a2483a529413860721007aa7204086dfc06b741fded0b0370c6578b}
+}]\index{A\+M\+P\+\_\+\+I\+N\+P\+UT@{A\+M\+P\+\_\+\+I\+N\+P\+UT}!examploscope.\+c@{examploscope.\+c}}\index{examploscope.\+c@{examploscope.\+c}!A\+M\+P\+\_\+\+I\+N\+P\+UT@{A\+M\+P\+\_\+\+I\+N\+P\+UT}}\item[{\em 
+A\+M\+P\+\_\+\+I\+N\+P\+UT\hypertarget{examploscope_8c_a41301420b6a2483a529413860721007aaea75572fc580f72e841ae523c9c73250}{}\label{examploscope_8c_a41301420b6a2483a529413860721007aaea75572fc580f72e841ae523c9c73250}
+}]\index{A\+M\+P\+\_\+\+O\+U\+T\+P\+UT@{A\+M\+P\+\_\+\+O\+U\+T\+P\+UT}!examploscope.\+c@{examploscope.\+c}}\index{examploscope.\+c@{examploscope.\+c}!A\+M\+P\+\_\+\+O\+U\+T\+P\+UT@{A\+M\+P\+\_\+\+O\+U\+T\+P\+UT}}\item[{\em 
+A\+M\+P\+\_\+\+O\+U\+T\+P\+UT\hypertarget{examploscope_8c_a41301420b6a2483a529413860721007aa3e9aec45024c82e25283fa24a6fe4df7}{}\label{examploscope_8c_a41301420b6a2483a529413860721007aa3e9aec45024c82e25283fa24a6fe4df7}
+}]\index{M\+I\+D\+I\+G\+A\+T\+E\+\_\+\+C\+O\+N\+T\+R\+OL@{M\+I\+D\+I\+G\+A\+T\+E\+\_\+\+C\+O\+N\+T\+R\+OL}!examploscope.\+c@{examploscope.\+c}}\index{examploscope.\+c@{examploscope.\+c}!M\+I\+D\+I\+G\+A\+T\+E\+\_\+\+C\+O\+N\+T\+R\+OL@{M\+I\+D\+I\+G\+A\+T\+E\+\_\+\+C\+O\+N\+T\+R\+OL}}\item[{\em 
+M\+I\+D\+I\+G\+A\+T\+E\+\_\+\+C\+O\+N\+T\+R\+OL\hypertarget{examploscope_8c_a41301420b6a2483a529413860721007aa338f6b172a143343e8cd61504de57a44}{}\label{examploscope_8c_a41301420b6a2483a529413860721007aa338f6b172a143343e8cd61504de57a44}
+}]\index{M\+I\+D\+I\+G\+A\+T\+E\+\_\+\+IN@{M\+I\+D\+I\+G\+A\+T\+E\+\_\+\+IN}!examploscope.\+c@{examploscope.\+c}}\index{examploscope.\+c@{examploscope.\+c}!M\+I\+D\+I\+G\+A\+T\+E\+\_\+\+IN@{M\+I\+D\+I\+G\+A\+T\+E\+\_\+\+IN}}\item[{\em 
+M\+I\+D\+I\+G\+A\+T\+E\+\_\+\+IN\hypertarget{examploscope_8c_a41301420b6a2483a529413860721007aa69bd4015ba520d5ef468c89f50981973}{}\label{examploscope_8c_a41301420b6a2483a529413860721007aa69bd4015ba520d5ef468c89f50981973}
+}]\index{M\+I\+D\+I\+G\+A\+T\+E\+\_\+\+O\+UT@{M\+I\+D\+I\+G\+A\+T\+E\+\_\+\+O\+UT}!examploscope.\+c@{examploscope.\+c}}\index{examploscope.\+c@{examploscope.\+c}!M\+I\+D\+I\+G\+A\+T\+E\+\_\+\+O\+UT@{M\+I\+D\+I\+G\+A\+T\+E\+\_\+\+O\+UT}}\item[{\em 
+M\+I\+D\+I\+G\+A\+T\+E\+\_\+\+O\+UT\hypertarget{examploscope_8c_a41301420b6a2483a529413860721007aaa554ccc902d121f56142557f625b6b73}{}\label{examploscope_8c_a41301420b6a2483a529413860721007aaa554ccc902d121f56142557f625b6b73}
+}]\index{S\+C\+O\+\_\+\+C\+O\+N\+T\+R\+OL@{S\+C\+O\+\_\+\+C\+O\+N\+T\+R\+OL}!examploscope.\+c@{examploscope.\+c}}\index{examploscope.\+c@{examploscope.\+c}!S\+C\+O\+\_\+\+C\+O\+N\+T\+R\+OL@{S\+C\+O\+\_\+\+C\+O\+N\+T\+R\+OL}}\item[{\em 
+S\+C\+O\+\_\+\+C\+O\+N\+T\+R\+OL\hypertarget{examploscope_8c_a41301420b6a2483a529413860721007aa677684cd64ac285fc546d8571920dfe2}{}\label{examploscope_8c_a41301420b6a2483a529413860721007aa677684cd64ac285fc546d8571920dfe2}
+}]\index{S\+C\+O\+\_\+\+N\+O\+T\+I\+FY@{S\+C\+O\+\_\+\+N\+O\+T\+I\+FY}!examploscope.\+c@{examploscope.\+c}}\index{examploscope.\+c@{examploscope.\+c}!S\+C\+O\+\_\+\+N\+O\+T\+I\+FY@{S\+C\+O\+\_\+\+N\+O\+T\+I\+FY}}\item[{\em 
+S\+C\+O\+\_\+\+N\+O\+T\+I\+FY\hypertarget{examploscope_8c_a41301420b6a2483a529413860721007aaa12a027971221dc3dab43a6828f0d87e}{}\label{examploscope_8c_a41301420b6a2483a529413860721007aaa12a027971221dc3dab43a6828f0d87e}
+}]\index{S\+C\+O\+\_\+\+I\+N\+P\+U\+T0@{S\+C\+O\+\_\+\+I\+N\+P\+U\+T0}!examploscope.\+c@{examploscope.\+c}}\index{examploscope.\+c@{examploscope.\+c}!S\+C\+O\+\_\+\+I\+N\+P\+U\+T0@{S\+C\+O\+\_\+\+I\+N\+P\+U\+T0}}\item[{\em 
+S\+C\+O\+\_\+\+I\+N\+P\+U\+T0\hypertarget{examploscope_8c_a41301420b6a2483a529413860721007aa5cf16d4700246896e04fac373e1eb841}{}\label{examploscope_8c_a41301420b6a2483a529413860721007aa5cf16d4700246896e04fac373e1eb841}
+}]\index{S\+C\+O\+\_\+\+O\+U\+T\+P\+U\+T0@{S\+C\+O\+\_\+\+O\+U\+T\+P\+U\+T0}!examploscope.\+c@{examploscope.\+c}}\index{examploscope.\+c@{examploscope.\+c}!S\+C\+O\+\_\+\+O\+U\+T\+P\+U\+T0@{S\+C\+O\+\_\+\+O\+U\+T\+P\+U\+T0}}\item[{\em 
+S\+C\+O\+\_\+\+O\+U\+T\+P\+U\+T0\hypertarget{examploscope_8c_a41301420b6a2483a529413860721007aab040f6fc7feb2c18047fdbbd4bf329d5}{}\label{examploscope_8c_a41301420b6a2483a529413860721007aab040f6fc7feb2c18047fdbbd4bf329d5}
+}]\index{S\+C\+O\+\_\+\+I\+N\+P\+U\+T1@{S\+C\+O\+\_\+\+I\+N\+P\+U\+T1}!examploscope.\+c@{examploscope.\+c}}\index{examploscope.\+c@{examploscope.\+c}!S\+C\+O\+\_\+\+I\+N\+P\+U\+T1@{S\+C\+O\+\_\+\+I\+N\+P\+U\+T1}}\item[{\em 
+S\+C\+O\+\_\+\+I\+N\+P\+U\+T1\hypertarget{examploscope_8c_a41301420b6a2483a529413860721007aa2602843536a3f50e139c2b19ece86463}{}\label{examploscope_8c_a41301420b6a2483a529413860721007aa2602843536a3f50e139c2b19ece86463}
+}]\index{S\+C\+O\+\_\+\+O\+U\+T\+P\+U\+T1@{S\+C\+O\+\_\+\+O\+U\+T\+P\+U\+T1}!examploscope.\+c@{examploscope.\+c}}\index{examploscope.\+c@{examploscope.\+c}!S\+C\+O\+\_\+\+O\+U\+T\+P\+U\+T1@{S\+C\+O\+\_\+\+O\+U\+T\+P\+U\+T1}}\item[{\em 
+S\+C\+O\+\_\+\+O\+U\+T\+P\+U\+T1\hypertarget{examploscope_8c_a41301420b6a2483a529413860721007aa58bc341e0e0cb247a5acc22e5296a208}{}\label{examploscope_8c_a41301420b6a2483a529413860721007aa58bc341e0e0cb247a5acc22e5296a208}
+}]\end{description}
+\end{Desc}
+
+
+Definition at line 65 of file examploscope.\+c.
+
+
+
+\subsection{Function Documentation}
+\index{examploscope.\+c@{examploscope.\+c}!lv2\+\_\+descriptor@{lv2\+\_\+descriptor}}
+\index{lv2\+\_\+descriptor@{lv2\+\_\+descriptor}!examploscope.\+c@{examploscope.\+c}}
+\subsubsection[{\texorpdfstring{lv2\+\_\+descriptor(uint32\+\_\+t index)}{lv2_descriptor(uint32_t index)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf L\+V2\+\_\+\+S\+Y\+M\+B\+O\+L\+\_\+\+E\+X\+P\+O\+RT} {\bf const} {\bf L\+V2\+\_\+\+Descriptor}$\ast$ lv2\+\_\+descriptor (
+\begin{DoxyParamCaption}
+\item[{{\bf uint32\+\_\+t}}]{index}
+\end{DoxyParamCaption}
+)}\hypertarget{examploscope_8c_affedc7aabe2715522365f21a9c1ff65d}{}\label{examploscope_8c_affedc7aabe2715522365f21a9c1ff65d}
+Prototype for plugin accessor function.
+
+Plugins are discovered by hosts using R\+DF data (not by loading libraries). See \href{http://lv2plug.in}{\tt http\+://lv2plug.\+in} for details on the discovery process, though most hosts should use an existing library to implement this functionality.
+
+This is the simple plugin discovery A\+PI, suitable for most statically defined plugins. Advanced plugins that need access to their bundle during discovery can use \hyperlink{lv2_8h_a9eb5804c670849d3faafed9f9cd65f23}{lv2\+\_\+lib\+\_\+descriptor()} instead. Plugin libraries M\+U\+ST include a function called \char`\"{}lv2\+\_\+descriptor\char`\"{} or \char`\"{}lv2\+\_\+lib\+\_\+descriptor\char`\"{} with C-\/style linkage, but S\+H\+O\+U\+LD provide \char`\"{}lv2\+\_\+descriptor\char`\"{} wherever possible.
+
+When it is time to load a plugin (designated by its U\+RI), the host loads the plugin\textquotesingle{}s library, gets the \hyperlink{amp_8c_affedc7aabe2715522365f21a9c1ff65d}{lv2\+\_\+descriptor()} function from it, and uses this function to find the L\+V2\+\_\+\+Descriptor for the desired plugin. Plugins are accessed by index using values from 0 upwards. This function M\+U\+ST return N\+U\+LL for out of range indices, so the host can enumerate plugins by increasing {\ttfamily index} until N\+U\+LL is returned.
+
+Note that {\ttfamily index} has no meaning, hosts M\+U\+ST N\+OT depend on it remaining consistent between loads of the plugin library.
+
+The \hyperlink{amp_8c_affedc7aabe2715522365f21a9c1ff65d}{lv2\+\_\+descriptor()} function is the entry point to the plugin library. The host will load the library and call this function repeatedly with increasing indices to find all the plugins defined in the library. The index is not an indentifier, the U\+RI of the returned descriptor is used to determine the identify of the plugin.
+
+This method is in the ``discovery\textquotesingle{}\textquotesingle{} threading class, so no other functions or methods in this plugin library will be called concurrently with it.
+
+The {\ttfamily \hyperlink{amp_8c_affedc7aabe2715522365f21a9c1ff65d}{lv2\+\_\+descriptor()}} function is the entry point to the plugin library. The host will load the library and call this function repeatedly with increasing indices to find all the plugins defined in the library. The index is not an indentifier, the U\+RI of the returned descriptor is used to determine the identify of the plugin.
+
+This method is in the ``discovery\textquotesingle{}\textquotesingle{} threading class, so no other functions or methods in this plugin library will be called concurrently with it. 
+
+Definition at line 413 of file examploscope.\+c.
+

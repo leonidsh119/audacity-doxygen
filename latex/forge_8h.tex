@@ -1,0 +1,91 @@
+\hypertarget{forge_8h}{}\section{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/lv2/lv2/lv2/lv2plug.in/ns/ext/atom/forge.h File Reference}
+\label{forge_8h}\index{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/lv2/lv2/lv2/lv2plug.\+in/ns/ext/atom/forge.\+h@{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/lv2/lv2/lv2/lv2plug.\+in/ns/ext/atom/forge.\+h}}
+{\ttfamily \#include $<$assert.\+h$>$}\\*
+{\ttfamily \#include \char`\"{}lv2/lv2plug.\+in/ns/ext/atom/atom.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}lv2/lv2plug.\+in/ns/ext/atom/util.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}lv2/lv2plug.\+in/ns/ext/urid/urid.\+h\char`\"{}}\\*
+{\ttfamily \#include $<$stdbool.\+h$>$}\\*
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{struct___l_v2___atom___forge___frame}{\+\_\+\+L\+V2\+\_\+\+Atom\+\_\+\+Forge\+\_\+\+Frame}
+\item 
+struct \hyperlink{struct_l_v2___atom___forge}{L\+V2\+\_\+\+Atom\+\_\+\+Forge}
+\end{DoxyCompactItemize}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{forge_8h_a976bd670260944af923aaf658758a2a2}{L\+V2\+\_\+\+A\+T\+O\+M\+\_\+\+F\+O\+R\+G\+E\+\_\+\+D\+E\+P\+R\+E\+C\+A\+T\+ED}
+\end{DoxyCompactItemize}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef \hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} $\ast$ \hyperlink{forge_8h_a19874fcf063508aa5069ee22fd494676}{L\+V2\+\_\+\+Atom\+\_\+\+Forge\+\_\+\+Sink\+\_\+\+Handle}
+\item 
+typedef \hyperlink{lib-src_2ffmpeg_2win32_2stdint_8h_a0fbe4a4f8dd857ee04923a901f27465f}{intptr\+\_\+t} \hyperlink{forge_8h_a272218ba2d84c66ec458cf7069933ea9}{L\+V2\+\_\+\+Atom\+\_\+\+Forge\+\_\+\+Ref}
+\item 
+typedef \hyperlink{forge_8h_a272218ba2d84c66ec458cf7069933ea9}{L\+V2\+\_\+\+Atom\+\_\+\+Forge\+\_\+\+Ref}($\ast$ \hyperlink{forge_8h_a613887c9f1f3d5ebd94b49eaf7cc6f94}{L\+V2\+\_\+\+Atom\+\_\+\+Forge\+\_\+\+Sink}) (\hyperlink{forge_8h_a19874fcf063508aa5069ee22fd494676}{L\+V2\+\_\+\+Atom\+\_\+\+Forge\+\_\+\+Sink\+\_\+\+Handle} handle, \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} $\ast$\hyperlink{xlstr_8c_a781718f5b53a876fe91c424c4607fa8f}{buf}, \hyperlink{lib-src_2ffmpeg_2win32_2stdint_8h_a6eb1e68cc391dd753bc8ce896dbb8315}{uint32\+\_\+t} \hyperlink{group__lavu__mem_ga854352f53b148adc24983a58a1866d66}{size})
+\item 
+typedef \hyperlink{struct_l_v2___atom}{L\+V2\+\_\+\+Atom} $\ast$($\ast$ \hyperlink{forge_8h_ac5c410365728df8fbb2dbf0c15421b1a}{L\+V2\+\_\+\+Atom\+\_\+\+Forge\+\_\+\+Deref\+\_\+\+Func}) (\hyperlink{forge_8h_a19874fcf063508aa5069ee22fd494676}{L\+V2\+\_\+\+Atom\+\_\+\+Forge\+\_\+\+Sink\+\_\+\+Handle} handle, \hyperlink{forge_8h_a272218ba2d84c66ec458cf7069933ea9}{L\+V2\+\_\+\+Atom\+\_\+\+Forge\+\_\+\+Ref} ref)
+\item 
+typedef struct \hyperlink{struct___l_v2___atom___forge___frame}{\+\_\+\+L\+V2\+\_\+\+Atom\+\_\+\+Forge\+\_\+\+Frame} \hyperlink{forge_8h_a17754ac32fadfa54b73978e8a535065b}{L\+V2\+\_\+\+Atom\+\_\+\+Forge\+\_\+\+Frame}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+An A\+PI for constructing L\+V2 atoms.
+
+This file provides an A\+PI for constructing Atoms which makes it relatively simple to build nested atoms of arbitrary complexity without requiring dynamic memory allocation.
+
+The A\+PI is based on successively appending the appropriate pieces to build a complete Atom. The size of containers is automatically updated. Functions that begin a container return (via their frame argument) a stack frame which must be popped when the container is finished.
+
+All output is written to a user-\/provided buffer or sink function. This makes it popssible to create create atoms on the stack, on the heap, in L\+V2 port buffers, in a ringbuffer, or elsewhere, all using the same A\+PI.
+
+This entire A\+PI is realtime safe if used with a buffer or a realtime safe sink, except lv2\+\_\+atom\+\_\+forge\+\_\+init() which is only realtime safe if the U\+RI map function is.
+
+Note these functions are all static inline, do not take their address.
+
+This header is non-\/normative, it is provided for convenience. 
+
+\subsection{Macro Definition Documentation}
+\index{forge.\+h@{forge.\+h}!L\+V2\+\_\+\+A\+T\+O\+M\+\_\+\+F\+O\+R\+G\+E\+\_\+\+D\+E\+P\+R\+E\+C\+A\+T\+ED@{L\+V2\+\_\+\+A\+T\+O\+M\+\_\+\+F\+O\+R\+G\+E\+\_\+\+D\+E\+P\+R\+E\+C\+A\+T\+ED}}
+\index{L\+V2\+\_\+\+A\+T\+O\+M\+\_\+\+F\+O\+R\+G\+E\+\_\+\+D\+E\+P\+R\+E\+C\+A\+T\+ED@{L\+V2\+\_\+\+A\+T\+O\+M\+\_\+\+F\+O\+R\+G\+E\+\_\+\+D\+E\+P\+R\+E\+C\+A\+T\+ED}!forge.\+h@{forge.\+h}}
+\subsubsection[{\texorpdfstring{L\+V2\+\_\+\+A\+T\+O\+M\+\_\+\+F\+O\+R\+G\+E\+\_\+\+D\+E\+P\+R\+E\+C\+A\+T\+ED}{LV2_ATOM_FORGE_DEPRECATED}}]{\setlength{\rightskip}{0pt plus 5cm}\#define L\+V2\+\_\+\+A\+T\+O\+M\+\_\+\+F\+O\+R\+G\+E\+\_\+\+D\+E\+P\+R\+E\+C\+A\+T\+ED}\hypertarget{forge_8h_a976bd670260944af923aaf658758a2a2}{}\label{forge_8h_a976bd670260944af923aaf658758a2a2}
+
+
+Definition at line 54 of file forge.\+h.
+
+
+
+\subsection{Typedef Documentation}
+\index{forge.\+h@{forge.\+h}!L\+V2\+\_\+\+Atom\+\_\+\+Forge\+\_\+\+Deref\+\_\+\+Func@{L\+V2\+\_\+\+Atom\+\_\+\+Forge\+\_\+\+Deref\+\_\+\+Func}}
+\index{L\+V2\+\_\+\+Atom\+\_\+\+Forge\+\_\+\+Deref\+\_\+\+Func@{L\+V2\+\_\+\+Atom\+\_\+\+Forge\+\_\+\+Deref\+\_\+\+Func}!forge.\+h@{forge.\+h}}
+\subsubsection[{\texorpdfstring{L\+V2\+\_\+\+Atom\+\_\+\+Forge\+\_\+\+Deref\+\_\+\+Func}{LV2_Atom_Forge_Deref_Func}}]{\setlength{\rightskip}{0pt plus 5cm}typedef {\bf L\+V2\+\_\+\+Atom}$\ast$($\ast$ L\+V2\+\_\+\+Atom\+\_\+\+Forge\+\_\+\+Deref\+\_\+\+Func) ({\bf L\+V2\+\_\+\+Atom\+\_\+\+Forge\+\_\+\+Sink\+\_\+\+Handle} handle, {\bf L\+V2\+\_\+\+Atom\+\_\+\+Forge\+\_\+\+Ref} ref)}\hypertarget{forge_8h_ac5c410365728df8fbb2dbf0c15421b1a}{}\label{forge_8h_ac5c410365728df8fbb2dbf0c15421b1a}
+\hyperlink{class_function}{Function} for resolving a reference. See lv2\+\_\+atom\+\_\+forge\+\_\+set\+\_\+sink(). 
+
+Definition at line 86 of file forge.\+h.
+
+\index{forge.\+h@{forge.\+h}!L\+V2\+\_\+\+Atom\+\_\+\+Forge\+\_\+\+Frame@{L\+V2\+\_\+\+Atom\+\_\+\+Forge\+\_\+\+Frame}}
+\index{L\+V2\+\_\+\+Atom\+\_\+\+Forge\+\_\+\+Frame@{L\+V2\+\_\+\+Atom\+\_\+\+Forge\+\_\+\+Frame}!forge.\+h@{forge.\+h}}
+\subsubsection[{\texorpdfstring{L\+V2\+\_\+\+Atom\+\_\+\+Forge\+\_\+\+Frame}{LV2_Atom_Forge_Frame}}]{\setlength{\rightskip}{0pt plus 5cm}typedef struct {\bf \+\_\+\+L\+V2\+\_\+\+Atom\+\_\+\+Forge\+\_\+\+Frame}  {\bf L\+V2\+\_\+\+Atom\+\_\+\+Forge\+\_\+\+Frame}}\hypertarget{forge_8h_a17754ac32fadfa54b73978e8a535065b}{}\label{forge_8h_a17754ac32fadfa54b73978e8a535065b}
+A stack frame used for keeping track of nested Atom containers. \index{forge.\+h@{forge.\+h}!L\+V2\+\_\+\+Atom\+\_\+\+Forge\+\_\+\+Ref@{L\+V2\+\_\+\+Atom\+\_\+\+Forge\+\_\+\+Ref}}
+\index{L\+V2\+\_\+\+Atom\+\_\+\+Forge\+\_\+\+Ref@{L\+V2\+\_\+\+Atom\+\_\+\+Forge\+\_\+\+Ref}!forge.\+h@{forge.\+h}}
+\subsubsection[{\texorpdfstring{L\+V2\+\_\+\+Atom\+\_\+\+Forge\+\_\+\+Ref}{LV2_Atom_Forge_Ref}}]{\setlength{\rightskip}{0pt plus 5cm}typedef {\bf intptr\+\_\+t} {\bf L\+V2\+\_\+\+Atom\+\_\+\+Forge\+\_\+\+Ref}}\hypertarget{forge_8h_a272218ba2d84c66ec458cf7069933ea9}{}\label{forge_8h_a272218ba2d84c66ec458cf7069933ea9}
+A reference to a chunk of written output. 
+
+Definition at line 76 of file forge.\+h.
+
+\index{forge.\+h@{forge.\+h}!L\+V2\+\_\+\+Atom\+\_\+\+Forge\+\_\+\+Sink@{L\+V2\+\_\+\+Atom\+\_\+\+Forge\+\_\+\+Sink}}
+\index{L\+V2\+\_\+\+Atom\+\_\+\+Forge\+\_\+\+Sink@{L\+V2\+\_\+\+Atom\+\_\+\+Forge\+\_\+\+Sink}!forge.\+h@{forge.\+h}}
+\subsubsection[{\texorpdfstring{L\+V2\+\_\+\+Atom\+\_\+\+Forge\+\_\+\+Sink}{LV2_Atom_Forge_Sink}}]{\setlength{\rightskip}{0pt plus 5cm}typedef {\bf L\+V2\+\_\+\+Atom\+\_\+\+Forge\+\_\+\+Ref}($\ast$ L\+V2\+\_\+\+Atom\+\_\+\+Forge\+\_\+\+Sink) ({\bf L\+V2\+\_\+\+Atom\+\_\+\+Forge\+\_\+\+Sink\+\_\+\+Handle} handle, {\bf const} {\bf void} $\ast${\bf buf}, {\bf uint32\+\_\+t} {\bf size})}\hypertarget{forge_8h_a613887c9f1f3d5ebd94b49eaf7cc6f94}{}\label{forge_8h_a613887c9f1f3d5ebd94b49eaf7cc6f94}
+Sink function for writing output. See lv2\+\_\+atom\+\_\+forge\+\_\+set\+\_\+sink(). 
+
+Definition at line 80 of file forge.\+h.
+
+\index{forge.\+h@{forge.\+h}!L\+V2\+\_\+\+Atom\+\_\+\+Forge\+\_\+\+Sink\+\_\+\+Handle@{L\+V2\+\_\+\+Atom\+\_\+\+Forge\+\_\+\+Sink\+\_\+\+Handle}}
+\index{L\+V2\+\_\+\+Atom\+\_\+\+Forge\+\_\+\+Sink\+\_\+\+Handle@{L\+V2\+\_\+\+Atom\+\_\+\+Forge\+\_\+\+Sink\+\_\+\+Handle}!forge.\+h@{forge.\+h}}
+\subsubsection[{\texorpdfstring{L\+V2\+\_\+\+Atom\+\_\+\+Forge\+\_\+\+Sink\+\_\+\+Handle}{LV2_Atom_Forge_Sink_Handle}}]{\setlength{\rightskip}{0pt plus 5cm}typedef {\bf void}$\ast$ {\bf L\+V2\+\_\+\+Atom\+\_\+\+Forge\+\_\+\+Sink\+\_\+\+Handle}}\hypertarget{forge_8h_a19874fcf063508aa5069ee22fd494676}{}\label{forge_8h_a19874fcf063508aa5069ee22fd494676}
+Handle for L\+V2\+\_\+\+Atom\+\_\+\+Forge\+\_\+\+Sink. 
+
+Definition at line 73 of file forge.\+h.
+

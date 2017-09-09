@@ -1,0 +1,1270 @@
+\hypertarget{seqread_8c}{}\section{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/libnyquist/nyquist/cmt/seqread.c File Reference}
+\label{seqread_8c}\index{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/libnyquist/nyquist/cmt/seqread.\+c@{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/libnyquist/nyquist/cmt/seqread.\+c}}
+{\ttfamily \#include \char`\"{}switches.\+h\char`\"{}}\\*
+{\ttfamily \#include $<$stdio.\+h$>$}\\*
+{\ttfamily \#include $<$string.\+h$>$}\\*
+{\ttfamily \#include \char`\"{}cext.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}cmdline.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}midifns.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}timebase.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}moxc.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}seq.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}seqread.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}userio.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}ctype.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}cmtcmd.\+h\char`\"{}}\\*
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structdurt}{durt}
+\item 
+struct \hyperlink{structloudt}{loudt}
+\end{DoxyCompactItemize}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{seqread_8c_adda03014c30b02d7b496fce96f37951b}{toupper}(\hyperlink{rfft2d_test_m_l_8m_ae0323a9039add2978bf5b49550572c7c}{c})~((\hyperlink{rfft2d_test_m_l_8m_ae0323a9039add2978bf5b49550572c7c}{c})-\/\textquotesingle{}\hyperlink{rfft2d_test_m_l_8m_a4124bc0a9335c27f086f24ba207a4912}{a}\textquotesingle{}+\textquotesingle{}\hyperlink{libnyquist_2nyquist_2nyqsrc_2add_8c_a955f504eccf76b4eb2489c0adab03121}{A}\textquotesingle{})
+\item 
+\#define \hyperlink{seqread_8c_a82842ca8b9ae373ed5a1a8729c0baa70}{precise}(x)~(((\hyperlink{midifns_8h_a3f787491db5dbc75c21b27d54e9ebae6}{time\+\_\+type}) x) $<$$<$ 8)
+\item 
+\#define \hyperlink{seqread_8c_a90661bb610976700b3251cc7bb68f6b3}{seqround}(x)~((((\hyperlink{midifns_8h_a3f787491db5dbc75c21b27d54e9ebae6}{time\+\_\+type}) x) + 128) $>$$>$ 8)
+\item 
+\#define \hyperlink{seqread_8c_a1bf4c48c09dda9ec4a0b1b4aa8cd8920}{trunc}(x)~(((\hyperlink{midifns_8h_a3f787491db5dbc75c21b27d54e9ebae6}{time\+\_\+type}) x) $>$$>$ 8)
+\item 
+\#define \hyperlink{seqread_8c_a787dc9e2021f62d206074584e238d4e7}{nullstring}(\hyperlink{lib_2expat_8h_a755339d27872b13735c2cab829e47157}{s})~(\hyperlink{lib_2expat_8h_a755339d27872b13735c2cab829e47157}{s}\mbox{[}0\mbox{]} == \hyperlink{cppext_8h_aadbbc7b02d94a4c18646813ac8d7dec1}{E\+OS})
+\item 
+\#define \hyperlink{seqread_8c_aa3f113ac401bdb0e70444d9cf55675cc}{durtable\+\_\+len}~7
+\item 
+\#define \hyperlink{seqread_8c_a7c10163675ee88485ff723f2e42cce41}{sym\+\_\+tempo}~0
+\item 
+\#define \hyperlink{seqread_8c_a56b4ad0cd98b0ff49be8ff0a3b486332}{sym\+\_\+rate}~1
+\item 
+\#define \hyperlink{seqread_8c_a9a47cb451084191495dfe4cb17d294dc}{sym\+\_\+csec}~2
+\item 
+\#define \hyperlink{seqread_8c_a6b3a70d584293762c7140ad2eff68343}{sym\+\_\+msec}~3
+\item 
+\#define \hyperlink{seqread_8c_a237c62d41bc7f1a11608773d76d73d16}{sym\+\_\+seti}~4
+\item 
+\#define \hyperlink{seqread_8c_a298593931e4e09fcf525ea7981b5ebab}{sym\+\_\+setv}~5
+\item 
+\#define \hyperlink{seqread_8c_a9e93327a29fa1445d9e99f4130cedb8c}{sym\+\_\+call}~6
+\item 
+\#define \hyperlink{seqread_8c_a015a8895379d6bfd1de45d5962075cf4}{sym\+\_\+ramp}~7
+\item 
+\#define \hyperlink{seqread_8c_aa5e16a23098366506f7eea0229ce58f3}{sym\+\_\+clock}~8
+\item 
+\#define \hyperlink{seqread_8c_a14869c29d9b6028a163b830362d20d17}{sym\+\_\+def}~9
+\item 
+\#define \hyperlink{seqread_8c_a9a50e9b37a7c3cc5889ed392aa85702b}{sym\+\_\+end}~10
+\item 
+\#define \hyperlink{seqread_8c_a5eba9610c1662e53af05f4b4c99c0f43}{sym\+\_\+n}~11
+\item 
+\#define \hyperlink{seqread_8c_ac76f9a4564597bb6cf09bb24f60d4e7d}{linesize}~100
+\item 
+\#define \hyperlink{seqread_8c_a013a2145e9bcf600b61ae8ab56f5af02}{nctrl}~8
+\item 
+\#define \hyperlink{seqread_8c_a67672f2541fdfcb503ddfa57e760b556}{nmacroctrl}~10
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{mm_8c_a6a1d6e1a12975a4e9a0b5b952e79eaad}{private} \hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{seqread_8c_a728243f2ae7b22577222398ee0156e7d}{do\+\_\+a\+\_\+rest} ()
+\item 
+\hyperlink{mm_8c_a6a1d6e1a12975a4e9a0b5b952e79eaad}{private} \hyperlink{midifns_8h_a3f787491db5dbc75c21b27d54e9ebae6}{time\+\_\+type} \hyperlink{seqread_8c_ae0d681750b2299cbaaf0b5cfdb84e68e}{doabsdur} ()
+\item 
+\hyperlink{mm_8c_a6a1d6e1a12975a4e9a0b5b952e79eaad}{private} \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{seqread_8c_aadea1050b3f3c85e260e109d56ace6a7}{doabspitch} ()
+\item 
+\hyperlink{mm_8c_a6a1d6e1a12975a4e9a0b5b952e79eaad}{private} \hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{seqread_8c_afcb011e150ba31219d48adc29af2a8e6}{doclock} ()
+\item 
+\hyperlink{mm_8c_a6a1d6e1a12975a4e9a0b5b952e79eaad}{private} \hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{seqread_8c_a20c0f770b00e396345a89dbf5546a7b6}{docomment} ()
+\item 
+\hyperlink{mm_8c_a6a1d6e1a12975a4e9a0b5b952e79eaad}{private} \hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{seqread_8c_acbf099f22a53113d5e1d5d65b646f263}{doctrl} ()
+\item 
+\hyperlink{mm_8c_a6a1d6e1a12975a4e9a0b5b952e79eaad}{private} \hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{seqread_8c_ad0e25821e221335124b4c20fd84e6ccd}{dodef} ()
+\item 
+\hyperlink{mm_8c_a6a1d6e1a12975a4e9a0b5b952e79eaad}{private} \hyperlink{midifns_8h_a3f787491db5dbc75c21b27d54e9ebae6}{time\+\_\+type} \hyperlink{seqread_8c_a71ae41af3b90291cbf6d0e36da58dbfe}{dodur} ()
+\item 
+\hyperlink{mm_8c_a6a1d6e1a12975a4e9a0b5b952e79eaad}{private} \hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{seqread_8c_a479b8f57b591392aef1e56fc5ab2f3a5}{doerror} ()
+\item 
+\hyperlink{mm_8c_a6a1d6e1a12975a4e9a0b5b952e79eaad}{private} \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{seqread_8c_a38c136684363c0b6a151c388e32fe451}{doloud} ()
+\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{seqread_8c_a927720da13b49c444689b6057c9f5a15}{domacro} ()
+\item 
+\hyperlink{mm_8c_a6a1d6e1a12975a4e9a0b5b952e79eaad}{private} \hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{seqread_8c_a8a6f77d9e7e8b298379df3c6d71d3c5c}{donextdur} ()
+\item 
+\hyperlink{mm_8c_a6a1d6e1a12975a4e9a0b5b952e79eaad}{private} \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{seqread_8c_a2ec709d92b05c89cb4f1630574e00d29}{dopitch} ()
+\item 
+\hyperlink{mm_8c_a6a1d6e1a12975a4e9a0b5b952e79eaad}{private} \hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{seqread_8c_a1925b8671bb01854ae49fb614a7a179a}{doprogram} ()
+\item 
+\hyperlink{mm_8c_a6a1d6e1a12975a4e9a0b5b952e79eaad}{private} \hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{seqread_8c_a27a59e77fba3d51ac0fe3a4ecd4052e9}{dorate} ()
+\item 
+\hyperlink{mm_8c_a6a1d6e1a12975a4e9a0b5b952e79eaad}{private} \hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{seqread_8c_a2a1932105b3bab0e2bba5a3d95671c8f}{doset} ()
+\item 
+\hyperlink{mm_8c_a6a1d6e1a12975a4e9a0b5b952e79eaad}{private} \hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{seqread_8c_a6f31de5d7c1575c54f47ee84080e70a0}{dospecial} ()
+\item 
+\hyperlink{mm_8c_a6a1d6e1a12975a4e9a0b5b952e79eaad}{private} \hyperlink{midifns_8h_a3f787491db5dbc75c21b27d54e9ebae6}{time\+\_\+type} \hyperlink{seqread_8c_a5ae680db4f73cc1a30e242fe035debac}{dosymdur} ()
+\item 
+\hyperlink{mm_8c_a6a1d6e1a12975a4e9a0b5b952e79eaad}{private} \hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{seqread_8c_a0322ccfc5596f5686df7cc5c8ed75338}{dotempo} ()
+\item 
+\hyperlink{mm_8c_a6a1d6e1a12975a4e9a0b5b952e79eaad}{private} \hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{seqread_8c_a524b2c581eb6f45a6a8a5ce37faf3374}{dotime} ()
+\item 
+\hyperlink{mm_8c_a6a1d6e1a12975a4e9a0b5b952e79eaad}{private} \hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{seqread_8c_ae548e4afa686eba516af60572f73b7e1}{dovoice} ()
+\item 
+\hyperlink{mm_8c_a6a1d6e1a12975a4e9a0b5b952e79eaad}{private} \hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{seqread_8c_a028e62bc9ef9e2053804b4bd607b8ce0}{fferror} ()
+\item 
+\hyperlink{mm_8c_a6a1d6e1a12975a4e9a0b5b952e79eaad}{private} \hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{seqread_8c_aa21af39fe271e7a7e1f388c5627e7fc1}{init} ()
+\item 
+\hyperlink{mm_8c_a6a1d6e1a12975a4e9a0b5b952e79eaad}{private} \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{seqread_8c_a2e897641f693a7ca2d65dd42c23ce853}{issymbol} ()
+\item 
+\hyperlink{mm_8c_a6a1d6e1a12975a4e9a0b5b952e79eaad}{private} \hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{seqread_8c_a928a650a623c3d0d3c2ea4b9b2c01160}{marker} ()
+\item 
+\hyperlink{mm_8c_a6a1d6e1a12975a4e9a0b5b952e79eaad}{private} \hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{seqread_8c_a2bdaa7124ef63e10db133230d3ec8996}{parseend} ()
+\item 
+\hyperlink{mm_8c_a6a1d6e1a12975a4e9a0b5b952e79eaad}{private} \hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{seqread_8c_a3718aebd592cd0275935dabe573fa90c}{parsefield} ()
+\item 
+\hyperlink{mm_8c_a6a1d6e1a12975a4e9a0b5b952e79eaad}{private} \hyperlink{cext_8h_a7670a4e8a07d9ebb00411948b0bbf86d}{boolean} \hyperlink{seqread_8c_a4727dfa1cb80b1272d4e541f7da37ab6}{parsenote} ()
+\item 
+\hyperlink{mm_8c_a6a1d6e1a12975a4e9a0b5b952e79eaad}{private} \hyperlink{cext_8h_a7670a4e8a07d9ebb00411948b0bbf86d}{boolean} \hyperlink{seqread_8c_a5e70fa495da329f9fa4b41a7fe0f9538}{parseparm} ()
+\item 
+\hyperlink{mm_8c_a6a1d6e1a12975a4e9a0b5b952e79eaad}{private} \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{seqread_8c_abbf056a5fc06531cfc2da9d8e8330393}{scan} ()
+\item 
+\hyperlink{mm_8c_a6a1d6e1a12975a4e9a0b5b952e79eaad}{private} \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{seqread_8c_a81a6224ba140f3604fe52bec3c2e5f4d}{scan1} ()
+\item 
+\hyperlink{mm_8c_a6a1d6e1a12975a4e9a0b5b952e79eaad}{private} long \hyperlink{seqread_8c_aecdcfeed3bdfb6a24107571f4dbf71f6}{scanint} ()
+\item 
+\hyperlink{mm_8c_a6a1d6e1a12975a4e9a0b5b952e79eaad}{private} \hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{seqread_8c_a0758c48c4716c19895ec9e41d76581c0}{scansymb} ()
+\item 
+\hyperlink{mm_8c_a6a1d6e1a12975a4e9a0b5b952e79eaad}{private} long \hyperlink{seqread_8c_a29d26e257d963aa45af594a22ffe2e14}{scansgnint} ()
+\item 
+\hyperlink{cext_8h_a7670a4e8a07d9ebb00411948b0bbf86d}{boolean} \hyperlink{seqread_8c_ae33538df5d3aa60cfc369433cb66beb9}{def\+\_\+append} (def, \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} nparms, \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{lib_2expat_8h_ac39e72a1de1cb50dbdc54b08d0432a24}{data})
+\item 
+\hyperlink{seq_8h_ad79cae95b060411f66c9ac96cb3237a4}{def\+\_\+type} \hyperlink{seqread_8c_ac0ea56d67565943e17848ba8cdc4cf30}{def\+\_\+lookup} (char $\ast$symbol)
+\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{seqread_8c_ab31a9f3cd9e65c77aa48aba5cf46e869}{def\+\_\+parm} (def, \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} nparms, \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} code)
+\item 
+\hyperlink{mm_8c_a6a1d6e1a12975a4e9a0b5b952e79eaad}{private} \hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{seqread_8c_ab166a08a77428b3fbfe9f328c80d32fa}{doartic} ()
+\item 
+\hyperlink{mm_8c_a6a1d6e1a12975a4e9a0b5b952e79eaad}{private} \hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{seqread_8c_ad52ce345aa4c5d0e3f04bfb93a82895a}{docall} ()
+\item 
+\hyperlink{mm_8c_a6a1d6e1a12975a4e9a0b5b952e79eaad}{private} \hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{seqread_8c_aa7d05ce1b3263a3696f106fb6787403e}{doctrl} (\hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} n)
+\item 
+\hyperlink{mm_8c_a6a1d6e1a12975a4e9a0b5b952e79eaad}{private} \hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{seqread_8c_afbf37671ef463d9d24f301a1761a500b}{doramp} ()
+\item 
+\hyperlink{mm_8c_a6a1d6e1a12975a4e9a0b5b952e79eaad}{private} \hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{seqread_8c_acc59a4548de29c1b3218546b3a500f33}{doset} (\hyperlink{cext_8h_a7670a4e8a07d9ebb00411948b0bbf86d}{boolean} vec\+\_\+flag)
+\item 
+\hyperlink{mm_8c_a6a1d6e1a12975a4e9a0b5b952e79eaad}{private} \hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{seqread_8c_a0e6b52b3884bfdf518d0b8a2ba868909}{fferror} (char $\ast$\hyperlink{lib_2expat_8h_a755339d27872b13735c2cab829e47157}{s})
+\item 
+\hyperlink{mm_8c_a6a1d6e1a12975a4e9a0b5b952e79eaad}{private} \hyperlink{cext_8h_a7670a4e8a07d9ebb00411948b0bbf86d}{boolean} \hyperlink{seqread_8c_adde27303653113c7d3ade3c7509c3d2a}{ins\+\_\+a\+\_\+note} ()
+\item 
+\hyperlink{mm_8c_a6a1d6e1a12975a4e9a0b5b952e79eaad}{private} \hyperlink{cext_8h_a7670a4e8a07d9ebb00411948b0bbf86d}{boolean} \hyperlink{seqread_8c_a6b6b7a4fcae3357a2f8892fb83290dce}{ins\+\_\+ctrls} ()
+\item 
+\hyperlink{mm_8c_a6a1d6e1a12975a4e9a0b5b952e79eaad}{private} \hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{seqread_8c_a6532fd7d6286d1f11013786c82ffdb84}{marker} (\hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{metrics_8c_afea6e77db19a2f8c91419904fe665a3a}{count})
+\item 
+\hyperlink{mm_8c_a6a1d6e1a12975a4e9a0b5b952e79eaad}{private} \hyperlink{cext_8h_a7670a4e8a07d9ebb00411948b0bbf86d}{boolean} \hyperlink{seqread_8c_a65eb29d521e13c5d451ca3c4bb552192}{parseparm} (long $\ast$valptr)
+\item 
+\hyperlink{cext_8h_a9b06159f783a7975eccfa27e90dff1c2}{public} \hyperlink{midifns_8h_a3f787491db5dbc75c21b27d54e9ebae6}{time\+\_\+type} \hyperlink{seqread_8c_aa2a8c6fbe5ed24f9523eb4e01368e4bc}{scale} (\hyperlink{_s_t_types_8h_a718b4eb2652c286f4d42dc18a8e71a1a}{ulong} x, \hyperlink{_s_t_types_8h_a718b4eb2652c286f4d42dc18a8e71a1a}{ulong} n, \hyperlink{_s_t_types_8h_a718b4eb2652c286f4d42dc18a8e71a1a}{ulong} \hyperlink{poly-fir_8h_a2530554172d8629149ec56816eeaa947}{d})
+\item 
+\hyperlink{mm_8c_a6a1d6e1a12975a4e9a0b5b952e79eaad}{private} \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{seqread_8c_a72ad5efed7b2cfb2b4285f0b8386e334}{scan1} (char $\ast$\hyperlink{seqread_8c_ac503262ae470564980711da4f78b1181}{start})
+\item 
+\hyperlink{mm_8c_a6a1d6e1a12975a4e9a0b5b952e79eaad}{private} \hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{seqread_8c_a26aee3ea53685409afcbbe50a8084c0f}{scansymb} (char $\ast$\hyperlink{sndfile__save_8m_a4b99ff73a8a869319570237b5c57ab03}{str})
+\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{seqread_8c_aade7398869e62bd2ed0ca7853cde060f}{seq\+\_\+read} (\hyperlink{seq_8h_a6ee3fb417f66f6b4cfcc515eef1f5d4a}{seq\+\_\+type} seq, F\+I\+LE $\ast$fp)
+\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+long \hyperlink{seqread_8c_ae6c1d96e9c6d7954b35631501f31d241}{space}
+\item 
+\hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{seqread_8c_af7e5e4672bfeaa2a9b89ce260eccdbce}{abort\+\_\+flag}
+\item 
+struct \hyperlink{structdurt}{durt} \hyperlink{seqread_8c_ae8bb3790ad179c430a5818ec7105cf25}{durtable} \mbox{[}\hyperlink{seqread_8c_aa3f113ac401bdb0e70444d9cf55675cc}{durtable\+\_\+len}\mbox{]}
+\item 
+struct \hyperlink{structloudt}{loudt} \hyperlink{seqread_8c_ae43670f7a1a998f737e15cb92fa98535}{loudtable} \mbox{[}$\,$\mbox{]}
+\item 
+char \hyperlink{seqread_8c_a4001d4fc179ec6178cdb05d2fcb2d9cb}{too\+\_\+many\+\_\+error} \mbox{[}$\,$\mbox{]} = \char`\"{}Too many parameters\char`\"{}
+\item 
+\hyperlink{mm_8c_a6a1d6e1a12975a4e9a0b5b952e79eaad}{private} char $\ast$ \hyperlink{seqread_8c_af31ee5311bb0ea26218f865c6cd76b92}{ssymbols} \mbox{[}$\,$\mbox{]}
+\item 
+\hyperlink{mm_8c_a6a1d6e1a12975a4e9a0b5b952e79eaad}{private} char \hyperlink{seqread_8c_aad9ebcdde542d8b2075615388ff15a9c}{line} \mbox{[}\hyperlink{seqread_8c_ac76f9a4564597bb6cf09bb24f60d4e7d}{linesize}\mbox{]}
+\item 
+\hyperlink{mm_8c_a6a1d6e1a12975a4e9a0b5b952e79eaad}{private} char \hyperlink{seqread_8c_a472e2484c39e6e56a4c486a7d779841d}{token} \mbox{[}\hyperlink{seqread_8c_ac76f9a4564597bb6cf09bb24f60d4e7d}{linesize}\mbox{]}
+\item 
+\hyperlink{mm_8c_a6a1d6e1a12975a4e9a0b5b952e79eaad}{private} \hyperlink{cext_8h_a7670a4e8a07d9ebb00411948b0bbf86d}{boolean} \hyperlink{seqread_8c_aa308107edae4f1b4860994d135f027f6}{pitch\+\_\+flag}
+\item 
+\hyperlink{mm_8c_a6a1d6e1a12975a4e9a0b5b952e79eaad}{private} \hyperlink{cext_8h_a7670a4e8a07d9ebb00411948b0bbf86d}{boolean} \hyperlink{seqread_8c_af4dce7acc264b8118972482f3cdbdae8}{rest\+\_\+flag}
+\item 
+\hyperlink{mm_8c_a6a1d6e1a12975a4e9a0b5b952e79eaad}{private} \hyperlink{cext_8h_a7670a4e8a07d9ebb00411948b0bbf86d}{boolean} \hyperlink{seqread_8c_ab0899404da306d6c564d9b7e7d26cab6}{symbolic\+\_\+dur\+\_\+flag}
+\item 
+\hyperlink{mm_8c_a6a1d6e1a12975a4e9a0b5b952e79eaad}{private} \hyperlink{cext_8h_a7670a4e8a07d9ebb00411948b0bbf86d}{boolean} \hyperlink{seqread_8c_a2a14e38cbf8814b9ffb4f8473c94768d}{ctrlflag} \mbox{[}\hyperlink{seqread_8c_a013a2145e9bcf600b61ae8ab56f5af02}{nctrl}\mbox{]}
+\item 
+\hyperlink{mm_8c_a6a1d6e1a12975a4e9a0b5b952e79eaad}{private} \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{seqread_8c_a6ed4dd5c8e264d24297df1d2f8b71bd0}{ctrlval} \mbox{[}\hyperlink{seqread_8c_a013a2145e9bcf600b61ae8ab56f5af02}{nctrl}\mbox{]}
+\item 
+short \hyperlink{seqread_8c_ae056bb306b2955120738ba6a0428f075}{macctrlx}
+\item 
+short \hyperlink{seqread_8c_afa84fc51a8f459ab8e2cd65dc98e214e}{macctrlnum} \mbox{[}\hyperlink{seqread_8c_a67672f2541fdfcb503ddfa57e760b556}{nmacroctrl}\mbox{]}
+\item 
+short \hyperlink{seqread_8c_a5fb19df811b4f9df39e07481b24d4e21}{macctrlparmx} \mbox{[}\hyperlink{seqread_8c_a67672f2541fdfcb503ddfa57e760b556}{nmacroctrl}\mbox{]}
+\item 
+short \hyperlink{seqread_8c_a32b860b89f756879a9bad6476188ab0f}{macctrlparms} \mbox{[}\hyperlink{seqread_8c_a67672f2541fdfcb503ddfa57e760b556}{nmacroctrl} $\ast$\hyperlink{seq_8h_a7418f9520fdd7e58676d5b51a24a6bab}{nmacroparms}\mbox{]}
+\item 
+short \hyperlink{seqread_8c_ac6f5dfb61ef57f76e20cfa08031cc4bd}{macctrlnextparm}
+\item 
+\hyperlink{seq_8h_ad79cae95b060411f66c9ac96cb3237a4}{def\+\_\+type} \hyperlink{seqread_8c_a2e4e7f1e7ce8da19151643441b4bdf5c}{macctrldef} \mbox{[}\hyperlink{seqread_8c_a67672f2541fdfcb503ddfa57e760b556}{nmacroctrl}\mbox{]}
+\item 
+\hyperlink{mm_8c_a6a1d6e1a12975a4e9a0b5b952e79eaad}{private} \hyperlink{midifns_8h_a3f787491db5dbc75c21b27d54e9ebae6}{time\+\_\+type} \hyperlink{seqread_8c_ad27c08c030329671496caa5bf480e708}{time\+\_\+scale}
+\item 
+\hyperlink{mm_8c_a6a1d6e1a12975a4e9a0b5b952e79eaad}{private} \hyperlink{cext_8h_a7670a4e8a07d9ebb00411948b0bbf86d}{boolean} \hyperlink{seqread_8c_a44d042cee7230f7239f9c217e030378d}{end\+\_\+flag} = \hyperlink{twolame_8h_aa93f0eb578d23995850d61f7d61c55c1}{F\+A\+L\+SE}
+\item 
+\hyperlink{mm_8c_a6a1d6e1a12975a4e9a0b5b952e79eaad}{private} \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{seqread_8c_a44c470726accfa8e4891f4ffb2b30095}{linex}
+\item 
+\hyperlink{mm_8c_a6a1d6e1a12975a4e9a0b5b952e79eaad}{private} \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{seqread_8c_a33da238465b6abf419d74a21401282f7}{lineno}
+\item 
+\hyperlink{mm_8c_a6a1d6e1a12975a4e9a0b5b952e79eaad}{private} \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{seqread_8c_a81838c8c5017b7f4a6a5aed6b3f8782e}{fieldx}
+\item 
+\hyperlink{mm_8c_a6a1d6e1a12975a4e9a0b5b952e79eaad}{private} \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{seqread_8c_a7f083f7b76ea4d09b2820211a2b0d04e}{pitch}
+\item 
+\hyperlink{mm_8c_a6a1d6e1a12975a4e9a0b5b952e79eaad}{private} \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{seqread_8c_a5a5d60bf3f2b4f8782cb5515f887dfc9}{loud}
+\item 
+\hyperlink{mm_8c_a6a1d6e1a12975a4e9a0b5b952e79eaad}{private} \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{seqread_8c_adc9c046fb3ac286b5dc54bb302aedecc}{voice}
+\item 
+\hyperlink{mm_8c_a6a1d6e1a12975a4e9a0b5b952e79eaad}{private} \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{seqread_8c_a2921353a5cab6da87d83e34b627e584b}{artic}
+\item 
+\hyperlink{mm_8c_a6a1d6e1a12975a4e9a0b5b952e79eaad}{private} \hyperlink{cext_8h_a7670a4e8a07d9ebb00411948b0bbf86d}{boolean} \hyperlink{seqread_8c_a1ec98b2a9503447b9a12dbf53c129644}{ndurp}
+\item 
+\hyperlink{mm_8c_a6a1d6e1a12975a4e9a0b5b952e79eaad}{private} \hyperlink{midifns_8h_a3f787491db5dbc75c21b27d54e9ebae6}{time\+\_\+type} \hyperlink{seqread_8c_ae58006c4381324fb31b7a2ecbde2889e}{thetime}
+\item 
+\hyperlink{mm_8c_a6a1d6e1a12975a4e9a0b5b952e79eaad}{private} \hyperlink{midifns_8h_a3f787491db5dbc75c21b27d54e9ebae6}{time\+\_\+type} \hyperlink{seqread_8c_ad89d3fac2deab7a9cf6cfc8d15341b85}{rate}
+\item 
+\hyperlink{mm_8c_a6a1d6e1a12975a4e9a0b5b952e79eaad}{private} \hyperlink{midifns_8h_a3f787491db5dbc75c21b27d54e9ebae6}{time\+\_\+type} \hyperlink{seqread_8c_af9524d550a6312f348c84d2e5e190cf3}{ntime}
+\item 
+\hyperlink{mm_8c_a6a1d6e1a12975a4e9a0b5b952e79eaad}{private} \hyperlink{midifns_8h_a3f787491db5dbc75c21b27d54e9ebae6}{time\+\_\+type} \hyperlink{seqread_8c_a3c79b5a9ee81c3835b8de9b0d900d2de}{dur}
+\item 
+\hyperlink{mm_8c_a6a1d6e1a12975a4e9a0b5b952e79eaad}{private} \hyperlink{midifns_8h_a3f787491db5dbc75c21b27d54e9ebae6}{time\+\_\+type} \hyperlink{seqread_8c_ab60065e3a97916e09b76879be6be733f}{tempo}
+\item 
+\hyperlink{mm_8c_a6a1d6e1a12975a4e9a0b5b952e79eaad}{private} \hyperlink{midifns_8h_a3f787491db5dbc75c21b27d54e9ebae6}{time\+\_\+type} \hyperlink{seqread_8c_ac503262ae470564980711da4f78b1181}{start}
+\item 
+\hyperlink{mm_8c_a6a1d6e1a12975a4e9a0b5b952e79eaad}{private} \hyperlink{midifns_8h_a3f787491db5dbc75c21b27d54e9ebae6}{time\+\_\+type} \hyperlink{seqread_8c_a754fb6368b766f220effbc6a2fc563e6}{ticksize}
+\item 
+\hyperlink{mm_8c_a6a1d6e1a12975a4e9a0b5b952e79eaad}{private} \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{seqread_8c_a3d0cc8e3725e79a5cfb59dce7acb0144}{pitchtable} \mbox{[}7\mbox{]}
+\item 
+char \hyperlink{seqread_8c_aca35169fe2ac389f865fa88534a40da3}{score\+\_\+na} \mbox{[}\hyperlink{seqread_8h_a0729f8debde87c64e676e9120c626e3c}{name\+\_\+length}\mbox{]}
+\item 
+\hyperlink{mm_8c_a6a1d6e1a12975a4e9a0b5b952e79eaad}{private} \hyperlink{seq_8h_a6ee3fb417f66f6b4cfcc515eef1f5d4a}{seq\+\_\+type} \hyperlink{seqread_8c_a64f9a3ec69a05b5e21216967cf665952}{the\+\_\+score}
+\end{DoxyCompactItemize}
+
+
+\subsection{Macro Definition Documentation}
+\index{seqread.\+c@{seqread.\+c}!durtable\+\_\+len@{durtable\+\_\+len}}
+\index{durtable\+\_\+len@{durtable\+\_\+len}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{durtable\+\_\+len}{durtable_len}}]{\setlength{\rightskip}{0pt plus 5cm}\#define durtable\+\_\+len~7}\hypertarget{seqread_8c_aa3f113ac401bdb0e70444d9cf55675cc}{}\label{seqread_8c_aa3f113ac401bdb0e70444d9cf55675cc}
+
+
+Definition at line 163 of file seqread.\+c.
+
+\index{seqread.\+c@{seqread.\+c}!linesize@{linesize}}
+\index{linesize@{linesize}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{linesize}{linesize}}]{\setlength{\rightskip}{0pt plus 5cm}\#define linesize~100}\hypertarget{seqread_8c_ac76f9a4564597bb6cf09bb24f60d4e7d}{}\label{seqread_8c_ac76f9a4564597bb6cf09bb24f60d4e7d}
+
+
+Definition at line 211 of file seqread.\+c.
+
+\index{seqread.\+c@{seqread.\+c}!nctrl@{nctrl}}
+\index{nctrl@{nctrl}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{nctrl}{nctrl}}]{\setlength{\rightskip}{0pt plus 5cm}\#define nctrl~8}\hypertarget{seqread_8c_a013a2145e9bcf600b61ae8ab56f5af02}{}\label{seqread_8c_a013a2145e9bcf600b61ae8ab56f5af02}
+
+
+Definition at line 229 of file seqread.\+c.
+
+\index{seqread.\+c@{seqread.\+c}!nmacroctrl@{nmacroctrl}}
+\index{nmacroctrl@{nmacroctrl}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{nmacroctrl}{nmacroctrl}}]{\setlength{\rightskip}{0pt plus 5cm}\#define nmacroctrl~10}\hypertarget{seqread_8c_a67672f2541fdfcb503ddfa57e760b556}{}\label{seqread_8c_a67672f2541fdfcb503ddfa57e760b556}
+
+
+Definition at line 238 of file seqread.\+c.
+
+\index{seqread.\+c@{seqread.\+c}!nullstring@{nullstring}}
+\index{nullstring@{nullstring}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{nullstring}{nullstring}}]{\setlength{\rightskip}{0pt plus 5cm}\#define nullstring(
+\begin{DoxyParamCaption}
+\item[{}]{{\bf s}}
+\end{DoxyParamCaption}
+)~({\bf s}\mbox{[}0\mbox{]} == {\bf E\+OS})}\hypertarget{seqread_8c_a787dc9e2021f62d206074584e238d4e7}{}\label{seqread_8c_a787dc9e2021f62d206074584e238d4e7}
+
+
+Definition at line 113 of file seqread.\+c.
+
+\index{seqread.\+c@{seqread.\+c}!precise@{precise}}
+\index{precise@{precise}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{precise}{precise}}]{\setlength{\rightskip}{0pt plus 5cm}\#define precise(
+\begin{DoxyParamCaption}
+\item[{}]{x}
+\end{DoxyParamCaption}
+)~((({\bf time\+\_\+type}) x) $<$$<$ 8)}\hypertarget{seqread_8c_a82842ca8b9ae373ed5a1a8729c0baa70}{}\label{seqread_8c_a82842ca8b9ae373ed5a1a8729c0baa70}
+
+
+Definition at line 109 of file seqread.\+c.
+
+\index{seqread.\+c@{seqread.\+c}!seqround@{seqround}}
+\index{seqround@{seqround}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{seqround}{seqround}}]{\setlength{\rightskip}{0pt plus 5cm}\#define seqround(
+\begin{DoxyParamCaption}
+\item[{}]{x}
+\end{DoxyParamCaption}
+)~(((({\bf time\+\_\+type}) x) + 128) $>$$>$ 8)}\hypertarget{seqread_8c_a90661bb610976700b3251cc7bb68f6b3}{}\label{seqread_8c_a90661bb610976700b3251cc7bb68f6b3}
+
+
+Definition at line 110 of file seqread.\+c.
+
+\index{seqread.\+c@{seqread.\+c}!sym\+\_\+call@{sym\+\_\+call}}
+\index{sym\+\_\+call@{sym\+\_\+call}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{sym\+\_\+call}{sym_call}}]{\setlength{\rightskip}{0pt plus 5cm}\#define sym\+\_\+call~6}\hypertarget{seqread_8c_a9e93327a29fa1445d9e99f4130cedb8c}{}\label{seqread_8c_a9e93327a29fa1445d9e99f4130cedb8c}
+
+
+Definition at line 202 of file seqread.\+c.
+
+\index{seqread.\+c@{seqread.\+c}!sym\+\_\+clock@{sym\+\_\+clock}}
+\index{sym\+\_\+clock@{sym\+\_\+clock}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{sym\+\_\+clock}{sym_clock}}]{\setlength{\rightskip}{0pt plus 5cm}\#define sym\+\_\+clock~8}\hypertarget{seqread_8c_aa5e16a23098366506f7eea0229ce58f3}{}\label{seqread_8c_aa5e16a23098366506f7eea0229ce58f3}
+
+
+Definition at line 204 of file seqread.\+c.
+
+\index{seqread.\+c@{seqread.\+c}!sym\+\_\+csec@{sym\+\_\+csec}}
+\index{sym\+\_\+csec@{sym\+\_\+csec}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{sym\+\_\+csec}{sym_csec}}]{\setlength{\rightskip}{0pt plus 5cm}\#define sym\+\_\+csec~2}\hypertarget{seqread_8c_a9a47cb451084191495dfe4cb17d294dc}{}\label{seqread_8c_a9a47cb451084191495dfe4cb17d294dc}
+
+
+Definition at line 198 of file seqread.\+c.
+
+\index{seqread.\+c@{seqread.\+c}!sym\+\_\+def@{sym\+\_\+def}}
+\index{sym\+\_\+def@{sym\+\_\+def}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{sym\+\_\+def}{sym_def}}]{\setlength{\rightskip}{0pt plus 5cm}\#define sym\+\_\+def~9}\hypertarget{seqread_8c_a14869c29d9b6028a163b830362d20d17}{}\label{seqread_8c_a14869c29d9b6028a163b830362d20d17}
+
+
+Definition at line 205 of file seqread.\+c.
+
+\index{seqread.\+c@{seqread.\+c}!sym\+\_\+end@{sym\+\_\+end}}
+\index{sym\+\_\+end@{sym\+\_\+end}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{sym\+\_\+end}{sym_end}}]{\setlength{\rightskip}{0pt plus 5cm}\#define sym\+\_\+end~10}\hypertarget{seqread_8c_a9a50e9b37a7c3cc5889ed392aa85702b}{}\label{seqread_8c_a9a50e9b37a7c3cc5889ed392aa85702b}
+
+
+Definition at line 206 of file seqread.\+c.
+
+\index{seqread.\+c@{seqread.\+c}!sym\+\_\+msec@{sym\+\_\+msec}}
+\index{sym\+\_\+msec@{sym\+\_\+msec}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{sym\+\_\+msec}{sym_msec}}]{\setlength{\rightskip}{0pt plus 5cm}\#define sym\+\_\+msec~3}\hypertarget{seqread_8c_a6b3a70d584293762c7140ad2eff68343}{}\label{seqread_8c_a6b3a70d584293762c7140ad2eff68343}
+
+
+Definition at line 199 of file seqread.\+c.
+
+\index{seqread.\+c@{seqread.\+c}!sym\+\_\+n@{sym\+\_\+n}}
+\index{sym\+\_\+n@{sym\+\_\+n}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{sym\+\_\+n}{sym_n}}]{\setlength{\rightskip}{0pt plus 5cm}\#define sym\+\_\+n~11}\hypertarget{seqread_8c_a5eba9610c1662e53af05f4b4c99c0f43}{}\label{seqread_8c_a5eba9610c1662e53af05f4b4c99c0f43}
+
+
+Definition at line 209 of file seqread.\+c.
+
+\index{seqread.\+c@{seqread.\+c}!sym\+\_\+ramp@{sym\+\_\+ramp}}
+\index{sym\+\_\+ramp@{sym\+\_\+ramp}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{sym\+\_\+ramp}{sym_ramp}}]{\setlength{\rightskip}{0pt plus 5cm}\#define sym\+\_\+ramp~7}\hypertarget{seqread_8c_a015a8895379d6bfd1de45d5962075cf4}{}\label{seqread_8c_a015a8895379d6bfd1de45d5962075cf4}
+
+
+Definition at line 203 of file seqread.\+c.
+
+\index{seqread.\+c@{seqread.\+c}!sym\+\_\+rate@{sym\+\_\+rate}}
+\index{sym\+\_\+rate@{sym\+\_\+rate}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{sym\+\_\+rate}{sym_rate}}]{\setlength{\rightskip}{0pt plus 5cm}\#define sym\+\_\+rate~1}\hypertarget{seqread_8c_a56b4ad0cd98b0ff49be8ff0a3b486332}{}\label{seqread_8c_a56b4ad0cd98b0ff49be8ff0a3b486332}
+
+
+Definition at line 197 of file seqread.\+c.
+
+\index{seqread.\+c@{seqread.\+c}!sym\+\_\+seti@{sym\+\_\+seti}}
+\index{sym\+\_\+seti@{sym\+\_\+seti}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{sym\+\_\+seti}{sym_seti}}]{\setlength{\rightskip}{0pt plus 5cm}\#define sym\+\_\+seti~4}\hypertarget{seqread_8c_a237c62d41bc7f1a11608773d76d73d16}{}\label{seqread_8c_a237c62d41bc7f1a11608773d76d73d16}
+
+
+Definition at line 200 of file seqread.\+c.
+
+\index{seqread.\+c@{seqread.\+c}!sym\+\_\+setv@{sym\+\_\+setv}}
+\index{sym\+\_\+setv@{sym\+\_\+setv}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{sym\+\_\+setv}{sym_setv}}]{\setlength{\rightskip}{0pt plus 5cm}\#define sym\+\_\+setv~5}\hypertarget{seqread_8c_a298593931e4e09fcf525ea7981b5ebab}{}\label{seqread_8c_a298593931e4e09fcf525ea7981b5ebab}
+
+
+Definition at line 201 of file seqread.\+c.
+
+\index{seqread.\+c@{seqread.\+c}!sym\+\_\+tempo@{sym\+\_\+tempo}}
+\index{sym\+\_\+tempo@{sym\+\_\+tempo}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{sym\+\_\+tempo}{sym_tempo}}]{\setlength{\rightskip}{0pt plus 5cm}\#define sym\+\_\+tempo~0}\hypertarget{seqread_8c_a7c10163675ee88485ff723f2e42cce41}{}\label{seqread_8c_a7c10163675ee88485ff723f2e42cce41}
+
+
+Definition at line 196 of file seqread.\+c.
+
+\index{seqread.\+c@{seqread.\+c}!toupper@{toupper}}
+\index{toupper@{toupper}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{toupper}{toupper}}]{\setlength{\rightskip}{0pt plus 5cm}\#define toupper(
+\begin{DoxyParamCaption}
+\item[{}]{{\bf c}}
+\end{DoxyParamCaption}
+)~(({\bf c})-\/\textquotesingle{}{\bf a}\textquotesingle{}+\textquotesingle{}{\bf A}\textquotesingle{})}\hypertarget{seqread_8c_adda03014c30b02d7b496fce96f37951b}{}\label{seqread_8c_adda03014c30b02d7b496fce96f37951b}
+
+
+Definition at line 85 of file seqread.\+c.
+
+\index{seqread.\+c@{seqread.\+c}!trunc@{trunc}}
+\index{trunc@{trunc}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{trunc}{trunc}}]{\setlength{\rightskip}{0pt plus 5cm}\#define trunc(
+\begin{DoxyParamCaption}
+\item[{}]{x}
+\end{DoxyParamCaption}
+)~((({\bf time\+\_\+type}) x) $>$$>$ 8)}\hypertarget{seqread_8c_a1bf4c48c09dda9ec4a0b1b4aa8cd8920}{}\label{seqread_8c_a1bf4c48c09dda9ec4a0b1b4aa8cd8920}
+
+
+Definition at line 111 of file seqread.\+c.
+
+
+
+\subsection{Function Documentation}
+\index{seqread.\+c@{seqread.\+c}!def\+\_\+append@{def\+\_\+append}}
+\index{def\+\_\+append@{def\+\_\+append}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{def\+\_\+append(def, int nparms, int data)}{def_append(def, int nparms, int data)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf boolean} def\+\_\+append (
+\begin{DoxyParamCaption}
+\item[{def}]{, }
+\item[{{\bf int}}]{nparms, }
+\item[{{\bf int}}]{data}
+\end{DoxyParamCaption}
+)}\hypertarget{seqread_8c_ae33538df5d3aa60cfc369433cb66beb9}{}\label{seqread_8c_ae33538df5d3aa60cfc369433cb66beb9}
+
+
+Definition at line 316 of file seqread.\+c.
+
+\index{seqread.\+c@{seqread.\+c}!def\+\_\+lookup@{def\+\_\+lookup}}
+\index{def\+\_\+lookup@{def\+\_\+lookup}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{def\+\_\+lookup(char $\ast$symbol)}{def_lookup(char *symbol)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf def\+\_\+type} def\+\_\+lookup (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{symbol}
+\end{DoxyParamCaption}
+)}\hypertarget{seqread_8c_ac0ea56d67565943e17848ba8cdc4cf30}{}\label{seqread_8c_ac0ea56d67565943e17848ba8cdc4cf30}
+
+
+Definition at line 332 of file seqread.\+c.
+
+\index{seqread.\+c@{seqread.\+c}!def\+\_\+parm@{def\+\_\+parm}}
+\index{def\+\_\+parm@{def\+\_\+parm}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{def\+\_\+parm(def, int nparms, int code)}{def_parm(def, int nparms, int code)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} def\+\_\+parm (
+\begin{DoxyParamCaption}
+\item[{def}]{, }
+\item[{{\bf int}}]{nparms, }
+\item[{{\bf int}}]{code}
+\end{DoxyParamCaption}
+)}\hypertarget{seqread_8c_ab31a9f3cd9e65c77aa48aba5cf46e869}{}\label{seqread_8c_ab31a9f3cd9e65c77aa48aba5cf46e869}
+
+
+Definition at line 346 of file seqread.\+c.
+
+\index{seqread.\+c@{seqread.\+c}!do\+\_\+a\+\_\+rest@{do\+\_\+a\+\_\+rest}}
+\index{do\+\_\+a\+\_\+rest@{do\+\_\+a\+\_\+rest}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{do\+\_\+a\+\_\+rest()}{do_a_rest()}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf private} {\bf void} do\+\_\+a\+\_\+rest (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{seqread_8c_a728243f2ae7b22577222398ee0156e7d}{}\label{seqread_8c_a728243f2ae7b22577222398ee0156e7d}
+
+
+Definition at line 376 of file seqread.\+c.
+
+\index{seqread.\+c@{seqread.\+c}!doabsdur@{doabsdur}}
+\index{doabsdur@{doabsdur}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{doabsdur()}{doabsdur()}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf private} {\bf time\+\_\+type} doabsdur (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{seqread_8c_ae0d681750b2299cbaaf0b5cfdb84e68e}{}\label{seqread_8c_ae0d681750b2299cbaaf0b5cfdb84e68e}
+
+
+Definition at line 388 of file seqread.\+c.
+
+\index{seqread.\+c@{seqread.\+c}!doabspitch@{doabspitch}}
+\index{doabspitch@{doabspitch}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{doabspitch()}{doabspitch()}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf private} {\bf int} doabspitch (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{seqread_8c_aadea1050b3f3c85e260e109d56ace6a7}{}\label{seqread_8c_aadea1050b3f3c85e260e109d56ace6a7}
+
+
+Definition at line 408 of file seqread.\+c.
+
+\index{seqread.\+c@{seqread.\+c}!doartic@{doartic}}
+\index{doartic@{doartic}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{doartic()}{doartic()}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf private} {\bf void} doartic (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{seqread_8c_ab166a08a77428b3fbfe9f328c80d32fa}{}\label{seqread_8c_ab166a08a77428b3fbfe9f328c80d32fa}
+
+
+Definition at line 444 of file seqread.\+c.
+
+\index{seqread.\+c@{seqread.\+c}!docall@{docall}}
+\index{docall@{docall}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{docall()}{docall()}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf private} {\bf void} docall (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{seqread_8c_ad52ce345aa4c5d0e3f04bfb93a82895a}{}\label{seqread_8c_ad52ce345aa4c5d0e3f04bfb93a82895a}
+
+
+Definition at line 456 of file seqread.\+c.
+
+\index{seqread.\+c@{seqread.\+c}!doclock@{doclock}}
+\index{doclock@{doclock}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{doclock()}{doclock()}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf private} {\bf void} doclock (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{seqread_8c_afcb011e150ba31219d48adc29af2a8e6}{}\label{seqread_8c_afcb011e150ba31219d48adc29af2a8e6}
+
+
+Definition at line 541 of file seqread.\+c.
+
+\index{seqread.\+c@{seqread.\+c}!docomment@{docomment}}
+\index{docomment@{docomment}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{docomment()}{docomment()}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf private} {\bf void} docomment (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{seqread_8c_a20c0f770b00e396345a89dbf5546a7b6}{}\label{seqread_8c_a20c0f770b00e396345a89dbf5546a7b6}
+
+
+Definition at line 555 of file seqread.\+c.
+
+\index{seqread.\+c@{seqread.\+c}!doctrl@{doctrl}}
+\index{doctrl@{doctrl}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{doctrl()}{doctrl()}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf private} {\bf void} doctrl (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{seqread_8c_acbf099f22a53113d5e1d5d65b646f263}{}\label{seqread_8c_acbf099f22a53113d5e1d5d65b646f263}
+\index{seqread.\+c@{seqread.\+c}!doctrl@{doctrl}}
+\index{doctrl@{doctrl}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{doctrl(int n)}{doctrl(int n)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf private} {\bf void} doctrl (
+\begin{DoxyParamCaption}
+\item[{{\bf int}}]{n}
+\end{DoxyParamCaption}
+)}\hypertarget{seqread_8c_aa7d05ce1b3263a3696f106fb6787403e}{}\label{seqread_8c_aa7d05ce1b3263a3696f106fb6787403e}
+
+
+Definition at line 568 of file seqread.\+c.
+
+\index{seqread.\+c@{seqread.\+c}!dodef@{dodef}}
+\index{dodef@{dodef}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{dodef()}{dodef()}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf private} {\bf void} dodef (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{seqread_8c_ad0e25821e221335124b4c20fd84e6ccd}{}\label{seqread_8c_ad0e25821e221335124b4c20fd84e6ccd}
+
+
+Definition at line 581 of file seqread.\+c.
+
+\index{seqread.\+c@{seqread.\+c}!dodur@{dodur}}
+\index{dodur@{dodur}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{dodur()}{dodur()}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf private} {\bf time\+\_\+type} dodur (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{seqread_8c_a71ae41af3b90291cbf6d0e36da58dbfe}{}\label{seqread_8c_a71ae41af3b90291cbf6d0e36da58dbfe}
+
+
+Definition at line 670 of file seqread.\+c.
+
+\index{seqread.\+c@{seqread.\+c}!doerror@{doerror}}
+\index{doerror@{doerror}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{doerror()}{doerror()}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf private} {\bf void} doerror (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{seqread_8c_a479b8f57b591392aef1e56fc5ab2f3a5}{}\label{seqread_8c_a479b8f57b591392aef1e56fc5ab2f3a5}
+
+
+Definition at line 692 of file seqread.\+c.
+
+\index{seqread.\+c@{seqread.\+c}!doloud@{doloud}}
+\index{doloud@{doloud}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{doloud()}{doloud()}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf private} {\bf int} doloud (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{seqread_8c_a38c136684363c0b6a151c388e32fe451}{}\label{seqread_8c_a38c136684363c0b6a151c388e32fe451}
+
+
+Definition at line 703 of file seqread.\+c.
+
+\index{seqread.\+c@{seqread.\+c}!domacro@{domacro}}
+\index{domacro@{domacro}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{domacro()}{domacro()}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} domacro (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{seqread_8c_a927720da13b49c444689b6057c9f5a15}{}\label{seqread_8c_a927720da13b49c444689b6057c9f5a15}
+
+
+Definition at line 759 of file seqread.\+c.
+
+\index{seqread.\+c@{seqread.\+c}!donextdur@{donextdur}}
+\index{donextdur@{donextdur}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{donextdur()}{donextdur()}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf private} {\bf void} donextdur (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{seqread_8c_a8a6f77d9e7e8b298379df3c6d71d3c5c}{}\label{seqread_8c_a8a6f77d9e7e8b298379df3c6d71d3c5c}
+
+
+Definition at line 830 of file seqread.\+c.
+
+\index{seqread.\+c@{seqread.\+c}!dopitch@{dopitch}}
+\index{dopitch@{dopitch}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{dopitch()}{dopitch()}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf private} {\bf int} dopitch (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{seqread_8c_a2ec709d92b05c89cb4f1630574e00d29}{}\label{seqread_8c_a2ec709d92b05c89cb4f1630574e00d29}
+
+
+Definition at line 849 of file seqread.\+c.
+
+\index{seqread.\+c@{seqread.\+c}!doprogram@{doprogram}}
+\index{doprogram@{doprogram}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{doprogram()}{doprogram()}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf private} {\bf void} doprogram (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{seqread_8c_a1925b8671bb01854ae49fb614a7a179a}{}\label{seqread_8c_a1925b8671bb01854ae49fb614a7a179a}
+
+
+Definition at line 896 of file seqread.\+c.
+
+\index{seqread.\+c@{seqread.\+c}!doramp@{doramp}}
+\index{doramp@{doramp}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{doramp()}{doramp()}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf private} {\bf void} doramp (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{seqread_8c_afbf37671ef463d9d24f301a1761a500b}{}\label{seqread_8c_afbf37671ef463d9d24f301a1761a500b}
+
+
+Definition at line 915 of file seqread.\+c.
+
+\index{seqread.\+c@{seqread.\+c}!dorate@{dorate}}
+\index{dorate@{dorate}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{dorate()}{dorate()}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf private} {\bf void} dorate (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{seqread_8c_a27a59e77fba3d51ac0fe3a4ecd4052e9}{}\label{seqread_8c_a27a59e77fba3d51ac0fe3a4ecd4052e9}
+
+
+Definition at line 1011 of file seqread.\+c.
+
+\index{seqread.\+c@{seqread.\+c}!doset@{doset}}
+\index{doset@{doset}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{doset()}{doset()}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf private} {\bf void} doset (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{seqread_8c_a2a1932105b3bab0e2bba5a3d95671c8f}{}\label{seqread_8c_a2a1932105b3bab0e2bba5a3d95671c8f}
+\index{seqread.\+c@{seqread.\+c}!doset@{doset}}
+\index{doset@{doset}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{doset(boolean vec\+\_\+flag)}{doset(boolean vec_flag)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf private} {\bf void} doset (
+\begin{DoxyParamCaption}
+\item[{{\bf boolean}}]{vec\+\_\+flag}
+\end{DoxyParamCaption}
+)}\hypertarget{seqread_8c_acc59a4548de29c1b3218546b3a500f33}{}\label{seqread_8c_acc59a4548de29c1b3218546b3a500f33}
+
+
+Definition at line 1034 of file seqread.\+c.
+
+\index{seqread.\+c@{seqread.\+c}!dospecial@{dospecial}}
+\index{dospecial@{dospecial}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{dospecial()}{dospecial()}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf private} {\bf void} dospecial (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{seqread_8c_a6f31de5d7c1575c54f47ee84080e70a0}{}\label{seqread_8c_a6f31de5d7c1575c54f47ee84080e70a0}
+
+
+Definition at line 1113 of file seqread.\+c.
+
+\index{seqread.\+c@{seqread.\+c}!dosymdur@{dosymdur}}
+\index{dosymdur@{dosymdur}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{dosymdur()}{dosymdur()}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf private} {\bf time\+\_\+type} dosymdur (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{seqread_8c_a5ae680db4f73cc1a30e242fe035debac}{}\label{seqread_8c_a5ae680db4f73cc1a30e242fe035debac}
+
+
+Definition at line 1163 of file seqread.\+c.
+
+\index{seqread.\+c@{seqread.\+c}!dotempo@{dotempo}}
+\index{dotempo@{dotempo}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{dotempo()}{dotempo()}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf private} {\bf void} dotempo (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{seqread_8c_a0322ccfc5596f5686df7cc5c8ed75338}{}\label{seqread_8c_a0322ccfc5596f5686df7cc5c8ed75338}
+
+
+Definition at line 1216 of file seqread.\+c.
+
+\index{seqread.\+c@{seqread.\+c}!dotime@{dotime}}
+\index{dotime@{dotime}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{dotime()}{dotime()}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf private} {\bf void} dotime (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{seqread_8c_a524b2c581eb6f45a6a8a5ce37faf3374}{}\label{seqread_8c_a524b2c581eb6f45a6a8a5ce37faf3374}
+
+
+Definition at line 1246 of file seqread.\+c.
+
+\index{seqread.\+c@{seqread.\+c}!dovoice@{dovoice}}
+\index{dovoice@{dovoice}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{dovoice()}{dovoice()}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf private} {\bf void} dovoice (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{seqread_8c_ae548e4afa686eba516af60572f73b7e1}{}\label{seqread_8c_ae548e4afa686eba516af60572f73b7e1}
+
+
+Definition at line 1265 of file seqread.\+c.
+
+\index{seqread.\+c@{seqread.\+c}!fferror@{fferror}}
+\index{fferror@{fferror}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{fferror()}{fferror()}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf private} {\bf void} fferror (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{seqread_8c_a028e62bc9ef9e2053804b4bd607b8ce0}{}\label{seqread_8c_a028e62bc9ef9e2053804b4bd607b8ce0}
+\index{seqread.\+c@{seqread.\+c}!fferror@{fferror}}
+\index{fferror@{fferror}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{fferror(char $\ast$s)}{fferror(char *s)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf private} {\bf void} fferror (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{s}
+\end{DoxyParamCaption}
+)}\hypertarget{seqread_8c_a0e6b52b3884bfdf518d0b8a2ba868909}{}\label{seqread_8c_a0e6b52b3884bfdf518d0b8a2ba868909}
+
+
+Definition at line 1299 of file seqread.\+c.
+
+\index{seqread.\+c@{seqread.\+c}!init@{init}}
+\index{init@{init}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{init()}{init()}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf private} {\bf void} init (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{seqread_8c_aa21af39fe271e7a7e1f388c5627e7fc1}{}\label{seqread_8c_aa21af39fe271e7a7e1f388c5627e7fc1}
+
+
+Definition at line 1313 of file seqread.\+c.
+
+\index{seqread.\+c@{seqread.\+c}!ins\+\_\+a\+\_\+note@{ins\+\_\+a\+\_\+note}}
+\index{ins\+\_\+a\+\_\+note@{ins\+\_\+a\+\_\+note}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{ins\+\_\+a\+\_\+note()}{ins_a_note()}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf private} {\bf boolean} ins\+\_\+a\+\_\+note (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{seqread_8c_adde27303653113c7d3ade3c7509c3d2a}{}\label{seqread_8c_adde27303653113c7d3ade3c7509c3d2a}
+
+
+Definition at line 1357 of file seqread.\+c.
+
+\index{seqread.\+c@{seqread.\+c}!ins\+\_\+ctrls@{ins\+\_\+ctrls}}
+\index{ins\+\_\+ctrls@{ins\+\_\+ctrls}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{ins\+\_\+ctrls()}{ins_ctrls()}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf private} {\bf boolean} ins\+\_\+ctrls (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{seqread_8c_a6b6b7a4fcae3357a2f8892fb83290dce}{}\label{seqread_8c_a6b6b7a4fcae3357a2f8892fb83290dce}
+
+
+Definition at line 1380 of file seqread.\+c.
+
+\index{seqread.\+c@{seqread.\+c}!issymbol@{issymbol}}
+\index{issymbol@{issymbol}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{issymbol()}{issymbol()}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf private} {\bf int} issymbol (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{seqread_8c_a2e897641f693a7ca2d65dd42c23ce853}{}\label{seqread_8c_a2e897641f693a7ca2d65dd42c23ce853}
+
+
+Definition at line 1403 of file seqread.\+c.
+
+\index{seqread.\+c@{seqread.\+c}!marker@{marker}}
+\index{marker@{marker}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{marker()}{marker()}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf private} {\bf void} marker (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{seqread_8c_a928a650a623c3d0d3c2ea4b9b2c01160}{}\label{seqread_8c_a928a650a623c3d0d3c2ea4b9b2c01160}
+\index{seqread.\+c@{seqread.\+c}!marker@{marker}}
+\index{marker@{marker}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{marker(int count)}{marker(int count)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf private} {\bf void} marker (
+\begin{DoxyParamCaption}
+\item[{{\bf int}}]{count}
+\end{DoxyParamCaption}
+)}\hypertarget{seqread_8c_a6532fd7d6286d1f11013786c82ffdb84}{}\label{seqread_8c_a6532fd7d6286d1f11013786c82ffdb84}
+
+
+Definition at line 1429 of file seqread.\+c.
+
+\index{seqread.\+c@{seqread.\+c}!parseend@{parseend}}
+\index{parseend@{parseend}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{parseend()}{parseend()}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf private} {\bf void} parseend (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{seqread_8c_a2bdaa7124ef63e10db133230d3ec8996}{}\label{seqread_8c_a2bdaa7124ef63e10db133230d3ec8996}
+
+
+Definition at line 1447 of file seqread.\+c.
+
+\index{seqread.\+c@{seqread.\+c}!parsefield@{parsefield}}
+\index{parsefield@{parsefield}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{parsefield()}{parsefield()}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf private} {\bf void} parsefield (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{seqread_8c_a3718aebd592cd0275935dabe573fa90c}{}\label{seqread_8c_a3718aebd592cd0275935dabe573fa90c}
+
+
+Definition at line 1480 of file seqread.\+c.
+
+\index{seqread.\+c@{seqread.\+c}!parsenote@{parsenote}}
+\index{parsenote@{parsenote}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{parsenote()}{parsenote()}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf private} {\bf boolean} parsenote (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{seqread_8c_a4727dfa1cb80b1272d4e541f7da37ab6}{}\label{seqread_8c_a4727dfa1cb80b1272d4e541f7da37ab6}
+
+
+Definition at line 1569 of file seqread.\+c.
+
+\index{seqread.\+c@{seqread.\+c}!parseparm@{parseparm}}
+\index{parseparm@{parseparm}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{parseparm()}{parseparm()}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf private} {\bf boolean} parseparm (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{seqread_8c_a5e70fa495da329f9fa4b41a7fe0f9538}{}\label{seqread_8c_a5e70fa495da329f9fa4b41a7fe0f9538}
+\index{seqread.\+c@{seqread.\+c}!parseparm@{parseparm}}
+\index{parseparm@{parseparm}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{parseparm(long $\ast$valptr)}{parseparm(long *valptr)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf private} {\bf boolean} parseparm (
+\begin{DoxyParamCaption}
+\item[{long $\ast$}]{valptr}
+\end{DoxyParamCaption}
+)}\hypertarget{seqread_8c_a65eb29d521e13c5d451ca3c4bb552192}{}\label{seqread_8c_a65eb29d521e13c5d451ca3c4bb552192}
+
+
+Definition at line 1632 of file seqread.\+c.
+
+\index{seqread.\+c@{seqread.\+c}!scale@{scale}}
+\index{scale@{scale}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{scale(ulong x, ulong n, ulong d)}{scale(ulong x, ulong n, ulong d)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf public} {\bf time\+\_\+type} scale (
+\begin{DoxyParamCaption}
+\item[{{\bf ulong}}]{x, }
+\item[{{\bf ulong}}]{n, }
+\item[{{\bf ulong}}]{d}
+\end{DoxyParamCaption}
+)}\hypertarget{seqread_8c_aa2a8c6fbe5ed24f9523eb4e01368e4bc}{}\label{seqread_8c_aa2a8c6fbe5ed24f9523eb4e01368e4bc}
+
+
+Definition at line 1697 of file seqread.\+c.
+
+\index{seqread.\+c@{seqread.\+c}!scan@{scan}}
+\index{scan@{scan}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{scan()}{scan()}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf private} {\bf int} scan (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{seqread_8c_abbf056a5fc06531cfc2da9d8e8330393}{}\label{seqread_8c_abbf056a5fc06531cfc2da9d8e8330393}
+
+
+Definition at line 1720 of file seqread.\+c.
+
+\index{seqread.\+c@{seqread.\+c}!scan1@{scan1}}
+\index{scan1@{scan1}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{scan1()}{scan1()}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf private} {\bf int} scan1 (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{seqread_8c_a81a6224ba140f3604fe52bec3c2e5f4d}{}\label{seqread_8c_a81a6224ba140f3604fe52bec3c2e5f4d}
+\index{seqread.\+c@{seqread.\+c}!scan1@{scan1}}
+\index{scan1@{scan1}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{scan1(char $\ast$start)}{scan1(char *start)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf private} {\bf int} scan1 (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{start}
+\end{DoxyParamCaption}
+)}\hypertarget{seqread_8c_a72ad5efed7b2cfb2b4285f0b8386e334}{}\label{seqread_8c_a72ad5efed7b2cfb2b4285f0b8386e334}
+
+
+Definition at line 1758 of file seqread.\+c.
+
+\index{seqread.\+c@{seqread.\+c}!scanint@{scanint}}
+\index{scanint@{scanint}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{scanint()}{scanint()}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf private} long scanint (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{seqread_8c_aecdcfeed3bdfb6a24107571f4dbf71f6}{}\label{seqread_8c_aecdcfeed3bdfb6a24107571f4dbf71f6}
+
+
+Definition at line 1783 of file seqread.\+c.
+
+\index{seqread.\+c@{seqread.\+c}!scansgnint@{scansgnint}}
+\index{scansgnint@{scansgnint}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{scansgnint()}{scansgnint()}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf private} long scansgnint (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{seqread_8c_a29d26e257d963aa45af594a22ffe2e14}{}\label{seqread_8c_a29d26e257d963aa45af594a22ffe2e14}
+
+
+Definition at line 1796 of file seqread.\+c.
+
+\index{seqread.\+c@{seqread.\+c}!scansymb@{scansymb}}
+\index{scansymb@{scansymb}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{scansymb()}{scansymb()}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf private} {\bf void} scansymb (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{seqread_8c_a0758c48c4716c19895ec9e41d76581c0}{}\label{seqread_8c_a0758c48c4716c19895ec9e41d76581c0}
+\index{seqread.\+c@{seqread.\+c}!scansymb@{scansymb}}
+\index{scansymb@{scansymb}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{scansymb(char $\ast$str)}{scansymb(char *str)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf private} {\bf void} scansymb (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{str}
+\end{DoxyParamCaption}
+)}\hypertarget{seqread_8c_a26aee3ea53685409afcbbe50a8084c0f}{}\label{seqread_8c_a26aee3ea53685409afcbbe50a8084c0f}
+
+
+Definition at line 1812 of file seqread.\+c.
+
+\index{seqread.\+c@{seqread.\+c}!seq\+\_\+read@{seq\+\_\+read}}
+\index{seq\+\_\+read@{seq\+\_\+read}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{seq\+\_\+read(seq\+\_\+type seq, F\+I\+L\+E $\ast$fp)}{seq_read(seq_type seq, FILE *fp)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} seq\+\_\+read (
+\begin{DoxyParamCaption}
+\item[{{\bf seq\+\_\+type}}]{seq, }
+\item[{F\+I\+LE $\ast$}]{fp}
+\end{DoxyParamCaption}
+)}\hypertarget{seqread_8c_aade7398869e62bd2ed0ca7853cde060f}{}\label{seqread_8c_aade7398869e62bd2ed0ca7853cde060f}
+
+
+Definition at line 1836 of file seqread.\+c.
+
+
+
+\subsection{Variable Documentation}
+\index{seqread.\+c@{seqread.\+c}!abort\+\_\+flag@{abort\+\_\+flag}}
+\index{abort\+\_\+flag@{abort\+\_\+flag}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{abort\+\_\+flag}{abort_flag}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf int} abort\+\_\+flag}\hypertarget{seqread_8c_af7e5e4672bfeaa2a9b89ce260eccdbce}{}\label{seqread_8c_af7e5e4672bfeaa2a9b89ce260eccdbce}
+
+
+Definition at line 187 of file userio.\+c.
+
+\index{seqread.\+c@{seqread.\+c}!artic@{artic}}
+\index{artic@{artic}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{artic}{artic}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf private} {\bf int} artic}\hypertarget{seqread_8c_a2921353a5cab6da87d83e34b627e584b}{}\label{seqread_8c_a2921353a5cab6da87d83e34b627e584b}
+
+
+Definition at line 274 of file seqread.\+c.
+
+\index{seqread.\+c@{seqread.\+c}!ctrlflag@{ctrlflag}}
+\index{ctrlflag@{ctrlflag}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{ctrlflag}{ctrlflag}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf private} {\bf boolean} ctrlflag\mbox{[}{\bf nctrl}\mbox{]}}\hypertarget{seqread_8c_a2a14e38cbf8814b9ffb4f8473c94768d}{}\label{seqread_8c_a2a14e38cbf8814b9ffb4f8473c94768d}
+
+
+Definition at line 231 of file seqread.\+c.
+
+\index{seqread.\+c@{seqread.\+c}!ctrlval@{ctrlval}}
+\index{ctrlval@{ctrlval}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{ctrlval}{ctrlval}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf private} {\bf int} ctrlval\mbox{[}{\bf nctrl}\mbox{]}}\hypertarget{seqread_8c_a6ed4dd5c8e264d24297df1d2f8b71bd0}{}\label{seqread_8c_a6ed4dd5c8e264d24297df1d2f8b71bd0}
+
+
+Definition at line 236 of file seqread.\+c.
+
+\index{seqread.\+c@{seqread.\+c}!dur@{dur}}
+\index{dur@{dur}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{dur}{dur}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf private} {\bf time\+\_\+type} dur}\hypertarget{seqread_8c_a3c79b5a9ee81c3835b8de9b0d900d2de}{}\label{seqread_8c_a3c79b5a9ee81c3835b8de9b0d900d2de}
+
+
+Definition at line 289 of file seqread.\+c.
+
+\index{seqread.\+c@{seqread.\+c}!durtable@{durtable}}
+\index{durtable@{durtable}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{durtable}{durtable}}]{\setlength{\rightskip}{0pt plus 5cm}struct {\bf durt} durtable\mbox{[}{\bf durtable\+\_\+len}\mbox{]}}\hypertarget{seqread_8c_ae8bb3790ad179c430a5818ec7105cf25}{}\label{seqread_8c_ae8bb3790ad179c430a5818ec7105cf25}
+{\bfseries Initial value\+:}
+\begin{DoxyCode}
+= \{
+    \{\textcolor{charliteral}{'W'}, 4800L\},
+    \{\textcolor{charliteral}{'H'}, 2400L\},
+    \{\textcolor{charliteral}{'Q'}, 1200L\},
+    \{\textcolor{charliteral}{'I'}, 600L\},
+    \{\textcolor{charliteral}{'S'}, 300L\},
+    \{\textcolor{charliteral}{'%'}, 150L\},
+    \{\textcolor{charliteral}{'^'}, 75L\}
+\}
+\end{DoxyCode}
+
+
+Definition at line 164 of file seqread.\+c.
+
+\index{seqread.\+c@{seqread.\+c}!end\+\_\+flag@{end\+\_\+flag}}
+\index{end\+\_\+flag@{end\+\_\+flag}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{end\+\_\+flag}{end_flag}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf private} {\bf boolean} end\+\_\+flag = {\bf F\+A\+L\+SE}}\hypertarget{seqread_8c_a44d042cee7230f7239f9c217e030378d}{}\label{seqread_8c_a44d042cee7230f7239f9c217e030378d}
+
+
+Definition at line 259 of file seqread.\+c.
+
+\index{seqread.\+c@{seqread.\+c}!fieldx@{fieldx}}
+\index{fieldx@{fieldx}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{fieldx}{fieldx}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf private} {\bf int} fieldx}\hypertarget{seqread_8c_a81838c8c5017b7f4a6a5aed6b3f8782e}{}\label{seqread_8c_a81838c8c5017b7f4a6a5aed6b3f8782e}
+
+
+Definition at line 274 of file seqread.\+c.
+
+\index{seqread.\+c@{seqread.\+c}!line@{line}}
+\index{line@{line}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{line}{line}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf private} char line\mbox{[}{\bf linesize}\mbox{]}}\hypertarget{seqread_8c_aad9ebcdde542d8b2075615388ff15a9c}{}\label{seqread_8c_aad9ebcdde542d8b2075615388ff15a9c}
+
+
+Definition at line 212 of file seqread.\+c.
+
+\index{seqread.\+c@{seqread.\+c}!lineno@{lineno}}
+\index{lineno@{lineno}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{lineno}{lineno}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf private} {\bf int} lineno}\hypertarget{seqread_8c_a33da238465b6abf419d74a21401282f7}{}\label{seqread_8c_a33da238465b6abf419d74a21401282f7}
+
+
+Definition at line 274 of file seqread.\+c.
+
+\index{seqread.\+c@{seqread.\+c}!linex@{linex}}
+\index{linex@{linex}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{linex}{linex}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf private} {\bf int} linex}\hypertarget{seqread_8c_a44c470726accfa8e4891f4ffb2b30095}{}\label{seqread_8c_a44c470726accfa8e4891f4ffb2b30095}
+
+
+Definition at line 274 of file seqread.\+c.
+
+\index{seqread.\+c@{seqread.\+c}!loud@{loud}}
+\index{loud@{loud}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{loud}{loud}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf private} {\bf int} loud}\hypertarget{seqread_8c_a5a5d60bf3f2b4f8782cb5515f887dfc9}{}\label{seqread_8c_a5a5d60bf3f2b4f8782cb5515f887dfc9}
+
+
+Definition at line 274 of file seqread.\+c.
+
+\index{seqread.\+c@{seqread.\+c}!loudtable@{loudtable}}
+\index{loudtable@{loudtable}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{loudtable}{loudtable}}]{\setlength{\rightskip}{0pt plus 5cm}struct {\bf loudt} loudtable\mbox{[}$\,$\mbox{]}}\hypertarget{seqread_8c_ae43670f7a1a998f737e15cb92fa98535}{}\label{seqread_8c_ae43670f7a1a998f737e15cb92fa98535}
+{\bfseries Initial value\+:}
+\begin{DoxyCode}
+= \{
+    \{\textcolor{stringliteral}{"PPP"}, 20\},
+    \{\textcolor{stringliteral}{"PP\(\backslash\)0"}, 26\},
+    \{\textcolor{stringliteral}{"P\(\backslash\)0\(\backslash\)0"}, 34\},
+    \{\textcolor{stringliteral}{"MP\(\backslash\)0"}, 44\},
+    \{\textcolor{stringliteral}{"MF\(\backslash\)0"}, 58\},
+    \{\textcolor{stringliteral}{"F\(\backslash\)0\(\backslash\)0"}, 75\},
+    \{\textcolor{stringliteral}{"FF\(\backslash\)0"}, 98\},
+    \{\textcolor{stringliteral}{"FFF"}, 127\}
+\}
+\end{DoxyCode}
+
+
+Definition at line 179 of file seqread.\+c.
+
+\index{seqread.\+c@{seqread.\+c}!macctrldef@{macctrldef}}
+\index{macctrldef@{macctrldef}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{macctrldef}{macctrldef}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf def\+\_\+type} macctrldef\mbox{[}{\bf nmacroctrl}\mbox{]}}\hypertarget{seqread_8c_a2e4e7f1e7ce8da19151643441b4bdf5c}{}\label{seqread_8c_a2e4e7f1e7ce8da19151643441b4bdf5c}
+
+
+Definition at line 246 of file seqread.\+c.
+
+\index{seqread.\+c@{seqread.\+c}!macctrlnextparm@{macctrlnextparm}}
+\index{macctrlnextparm@{macctrlnextparm}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{macctrlnextparm}{macctrlnextparm}}]{\setlength{\rightskip}{0pt plus 5cm}short macctrlnextparm}\hypertarget{seqread_8c_ac6f5dfb61ef57f76e20cfa08031cc4bd}{}\label{seqread_8c_ac6f5dfb61ef57f76e20cfa08031cc4bd}
+
+
+Definition at line 245 of file seqread.\+c.
+
+\index{seqread.\+c@{seqread.\+c}!macctrlnum@{macctrlnum}}
+\index{macctrlnum@{macctrlnum}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{macctrlnum}{macctrlnum}}]{\setlength{\rightskip}{0pt plus 5cm}short macctrlnum\mbox{[}{\bf nmacroctrl}\mbox{]}}\hypertarget{seqread_8c_afa84fc51a8f459ab8e2cd65dc98e214e}{}\label{seqread_8c_afa84fc51a8f459ab8e2cd65dc98e214e}
+
+
+Definition at line 240 of file seqread.\+c.
+
+\index{seqread.\+c@{seqread.\+c}!macctrlparms@{macctrlparms}}
+\index{macctrlparms@{macctrlparms}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{macctrlparms}{macctrlparms}}]{\setlength{\rightskip}{0pt plus 5cm}short macctrlparms\mbox{[}{\bf nmacroctrl} $\ast${\bf nmacroparms}\mbox{]}}\hypertarget{seqread_8c_a32b860b89f756879a9bad6476188ab0f}{}\label{seqread_8c_a32b860b89f756879a9bad6476188ab0f}
+
+
+Definition at line 244 of file seqread.\+c.
+
+\index{seqread.\+c@{seqread.\+c}!macctrlparmx@{macctrlparmx}}
+\index{macctrlparmx@{macctrlparmx}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{macctrlparmx}{macctrlparmx}}]{\setlength{\rightskip}{0pt plus 5cm}short macctrlparmx\mbox{[}{\bf nmacroctrl}\mbox{]}}\hypertarget{seqread_8c_a5fb19df811b4f9df39e07481b24d4e21}{}\label{seqread_8c_a5fb19df811b4f9df39e07481b24d4e21}
+
+
+Definition at line 242 of file seqread.\+c.
+
+\index{seqread.\+c@{seqread.\+c}!macctrlx@{macctrlx}}
+\index{macctrlx@{macctrlx}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{macctrlx}{macctrlx}}]{\setlength{\rightskip}{0pt plus 5cm}short macctrlx}\hypertarget{seqread_8c_ae056bb306b2955120738ba6a0428f075}{}\label{seqread_8c_ae056bb306b2955120738ba6a0428f075}
+
+
+Definition at line 239 of file seqread.\+c.
+
+\index{seqread.\+c@{seqread.\+c}!ndurp@{ndurp}}
+\index{ndurp@{ndurp}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{ndurp}{ndurp}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf private} {\bf boolean} ndurp}\hypertarget{seqread_8c_a1ec98b2a9503447b9a12dbf53c129644}{}\label{seqread_8c_a1ec98b2a9503447b9a12dbf53c129644}
+
+
+Definition at line 282 of file seqread.\+c.
+
+\index{seqread.\+c@{seqread.\+c}!ntime@{ntime}}
+\index{ntime@{ntime}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{ntime}{ntime}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf private} {\bf time\+\_\+type} ntime}\hypertarget{seqread_8c_af9524d550a6312f348c84d2e5e190cf3}{}\label{seqread_8c_af9524d550a6312f348c84d2e5e190cf3}
+
+
+Definition at line 289 of file seqread.\+c.
+
+\index{seqread.\+c@{seqread.\+c}!pitch@{pitch}}
+\index{pitch@{pitch}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{pitch}{pitch}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf private} {\bf int} pitch}\hypertarget{seqread_8c_a7f083f7b76ea4d09b2820211a2b0d04e}{}\label{seqread_8c_a7f083f7b76ea4d09b2820211a2b0d04e}
+
+
+Definition at line 274 of file seqread.\+c.
+
+\index{seqread.\+c@{seqread.\+c}!pitch\+\_\+flag@{pitch\+\_\+flag}}
+\index{pitch\+\_\+flag@{pitch\+\_\+flag}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{pitch\+\_\+flag}{pitch_flag}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf private} {\bf boolean} pitch\+\_\+flag}\hypertarget{seqread_8c_aa308107edae4f1b4860994d135f027f6}{}\label{seqread_8c_aa308107edae4f1b4860994d135f027f6}
+
+
+Definition at line 215 of file seqread.\+c.
+
+\index{seqread.\+c@{seqread.\+c}!pitchtable@{pitchtable}}
+\index{pitchtable@{pitchtable}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{pitchtable}{pitchtable}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf private} {\bf int} pitchtable\mbox{[}7\mbox{]}}\hypertarget{seqread_8c_a3d0cc8e3725e79a5cfb59dce7acb0144}{}\label{seqread_8c_a3d0cc8e3725e79a5cfb59dce7acb0144}
+{\bfseries Initial value\+:}
+\begin{DoxyCode}
+= \{ 
+    69, 71, 60, 62, 64, 65, 67 \}
+\end{DoxyCode}
+
+
+Definition at line 297 of file seqread.\+c.
+
+\index{seqread.\+c@{seqread.\+c}!rate@{rate}}
+\index{rate@{rate}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{rate}{rate}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf private} {\bf time\+\_\+type} rate}\hypertarget{seqread_8c_ad89d3fac2deab7a9cf6cfc8d15341b85}{}\label{seqread_8c_ad89d3fac2deab7a9cf6cfc8d15341b85}
+
+
+Definition at line 289 of file seqread.\+c.
+
+\index{seqread.\+c@{seqread.\+c}!rest\+\_\+flag@{rest\+\_\+flag}}
+\index{rest\+\_\+flag@{rest\+\_\+flag}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{rest\+\_\+flag}{rest_flag}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf private} {\bf boolean} rest\+\_\+flag}\hypertarget{seqread_8c_af4dce7acc264b8118972482f3cdbdae8}{}\label{seqread_8c_af4dce7acc264b8118972482f3cdbdae8}
+
+
+Definition at line 219 of file seqread.\+c.
+
+\index{seqread.\+c@{seqread.\+c}!score\+\_\+na@{score\+\_\+na}}
+\index{score\+\_\+na@{score\+\_\+na}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{score\+\_\+na}{score_na}}]{\setlength{\rightskip}{0pt plus 5cm}char score\+\_\+na\mbox{[}{\bf name\+\_\+length}\mbox{]}}\hypertarget{seqread_8c_aca35169fe2ac389f865fa88534a40da3}{}\label{seqread_8c_aca35169fe2ac389f865fa88534a40da3}
+\index{seqread.\+c@{seqread.\+c}!space@{space}}
+\index{space@{space}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{space}{space}}]{\setlength{\rightskip}{0pt plus 5cm}long space}\hypertarget{seqread_8c_ae6c1d96e9c6d7954b35631501f31d241}{}\label{seqread_8c_ae6c1d96e9c6d7954b35631501f31d241}
+\index{seqread.\+c@{seqread.\+c}!ssymbols@{ssymbols}}
+\index{ssymbols@{ssymbols}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{ssymbols}{ssymbols}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf private} char$\ast$ ssymbols\mbox{[}$\,$\mbox{]}}\hypertarget{seqread_8c_af31ee5311bb0ea26218f865c6cd76b92}{}\label{seqread_8c_af31ee5311bb0ea26218f865c6cd76b92}
+{\bfseries Initial value\+:}
+\begin{DoxyCode}
+= \{\textcolor{stringliteral}{"TEMPO"}, \textcolor{stringliteral}{"RATE"}, \textcolor{stringliteral}{"CSEC"}, \textcolor{stringliteral}{"MSEC"}, 
+                            \textcolor{stringliteral}{"SETI"}, \textcolor{stringliteral}{"SETV"}, \textcolor{stringliteral}{"CALL"}, \textcolor{stringliteral}{"RAMP"},
+                            \textcolor{stringliteral}{"CLOCK"}, \textcolor{stringliteral}{"DEF"}, \textcolor{stringliteral}{"END"}\}
+\end{DoxyCode}
+
+
+Definition at line 192 of file seqread.\+c.
+
+\index{seqread.\+c@{seqread.\+c}!start@{start}}
+\index{start@{start}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{start}{start}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf private} {\bf time\+\_\+type} start}\hypertarget{seqread_8c_ac503262ae470564980711da4f78b1181}{}\label{seqread_8c_ac503262ae470564980711da4f78b1181}
+
+
+Definition at line 289 of file seqread.\+c.
+
+\index{seqread.\+c@{seqread.\+c}!symbolic\+\_\+dur\+\_\+flag@{symbolic\+\_\+dur\+\_\+flag}}
+\index{symbolic\+\_\+dur\+\_\+flag@{symbolic\+\_\+dur\+\_\+flag}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{symbolic\+\_\+dur\+\_\+flag}{symbolic_dur_flag}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf private} {\bf boolean} symbolic\+\_\+dur\+\_\+flag}\hypertarget{seqread_8c_ab0899404da306d6c564d9b7e7d26cab6}{}\label{seqread_8c_ab0899404da306d6c564d9b7e7d26cab6}
+
+
+Definition at line 222 of file seqread.\+c.
+
+\index{seqread.\+c@{seqread.\+c}!tempo@{tempo}}
+\index{tempo@{tempo}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{tempo}{tempo}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf private} {\bf time\+\_\+type} tempo}\hypertarget{seqread_8c_ab60065e3a97916e09b76879be6be733f}{}\label{seqread_8c_ab60065e3a97916e09b76879be6be733f}
+
+
+Definition at line 289 of file seqread.\+c.
+
+\index{seqread.\+c@{seqread.\+c}!the\+\_\+score@{the\+\_\+score}}
+\index{the\+\_\+score@{the\+\_\+score}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{the\+\_\+score}{the_score}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf private} {\bf seq\+\_\+type} the\+\_\+score}\hypertarget{seqread_8c_a64f9a3ec69a05b5e21216967cf665952}{}\label{seqread_8c_a64f9a3ec69a05b5e21216967cf665952}
+
+
+Definition at line 302 of file seqread.\+c.
+
+\index{seqread.\+c@{seqread.\+c}!thetime@{thetime}}
+\index{thetime@{thetime}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{thetime}{thetime}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf private} {\bf time\+\_\+type} thetime}\hypertarget{seqread_8c_ae58006c4381324fb31b7a2ecbde2889e}{}\label{seqread_8c_ae58006c4381324fb31b7a2ecbde2889e}
+
+
+Definition at line 289 of file seqread.\+c.
+
+\index{seqread.\+c@{seqread.\+c}!ticksize@{ticksize}}
+\index{ticksize@{ticksize}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{ticksize}{ticksize}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf private} {\bf time\+\_\+type} ticksize}\hypertarget{seqread_8c_a754fb6368b766f220effbc6a2fc563e6}{}\label{seqread_8c_a754fb6368b766f220effbc6a2fc563e6}
+
+
+Definition at line 289 of file seqread.\+c.
+
+\index{seqread.\+c@{seqread.\+c}!time\+\_\+scale@{time\+\_\+scale}}
+\index{time\+\_\+scale@{time\+\_\+scale}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{time\+\_\+scale}{time_scale}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf private} {\bf time\+\_\+type} time\+\_\+scale}\hypertarget{seqread_8c_ad27c08c030329671496caa5bf480e708}{}\label{seqread_8c_ad27c08c030329671496caa5bf480e708}
+
+
+Definition at line 248 of file seqread.\+c.
+
+\index{seqread.\+c@{seqread.\+c}!token@{token}}
+\index{token@{token}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{token}{token}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf private} char token\mbox{[}{\bf linesize}\mbox{]}}\hypertarget{seqread_8c_a472e2484c39e6e56a4c486a7d779841d}{}\label{seqread_8c_a472e2484c39e6e56a4c486a7d779841d}
+
+
+Definition at line 213 of file seqread.\+c.
+
+\index{seqread.\+c@{seqread.\+c}!too\+\_\+many\+\_\+error@{too\+\_\+many\+\_\+error}}
+\index{too\+\_\+many\+\_\+error@{too\+\_\+many\+\_\+error}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{too\+\_\+many\+\_\+error}{too_many_error}}]{\setlength{\rightskip}{0pt plus 5cm}char too\+\_\+many\+\_\+error\mbox{[}$\,$\mbox{]} = \char`\"{}Too many parameters\char`\"{}}\hypertarget{seqread_8c_a4001d4fc179ec6178cdb05d2fcb2d9cb}{}\label{seqread_8c_a4001d4fc179ec6178cdb05d2fcb2d9cb}
+
+
+Definition at line 190 of file seqread.\+c.
+
+\index{seqread.\+c@{seqread.\+c}!voice@{voice}}
+\index{voice@{voice}!seqread.\+c@{seqread.\+c}}
+\subsubsection[{\texorpdfstring{voice}{voice}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf private} {\bf int} voice}\hypertarget{seqread_8c_adc9c046fb3ac286b5dc54bb302aedecc}{}\label{seqread_8c_adc9c046fb3ac286b5dc54bb302aedecc}
+
+
+Definition at line 274 of file seqread.\+c.
+

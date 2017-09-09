@@ -1,0 +1,423 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/lib-src/libnyquist/nyquist/cmt/seq.c" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/lib-src/libnyquist/nyquist/cmt/seq.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include 'stdio\&.h'\fP
+.br
+\fC#include 'cext\&.h'\fP
+.br
+\fC#include 'userio\&.h'\fP
+.br
+\fC#include 'midicode\&.h'\fP
+.br
+\fC#include 'midifns\&.h'\fP
+.br
+\fC#include 'timebase\&.h'\fP
+.br
+\fC#include 'moxc\&.h'\fP
+.br
+\fC#include 'seq\&.h'\fP
+.br
+\fC#include 'string\&.h'\fP
+.br
+
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBprivate\fP \fBvoid\fP \fBinsert_event\fP (\fBseq_type\fP, register \fBevent_type\fP)"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBvoid\fP \fBprocess_event\fP (\fBseq_type\fP)"
+.br
+.ti -1c
+.RI "\fBprivate\fP char * \fBchunk_alloc\fP (\fBseq_type\fP seq, \fBint\fP \fBsize\fP)"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBvoid\fP \fBclock_tick\fP (\fBseq_type\fP seq, \fBtime_type\fP \fBfraction\fP)"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBvoid\fP \fBramp_event\fP (\fBseq_type\fP seq, \fBevent_type\fP event, unsigned \fBint\fP \fBvalue\fP, unsigned \fBint\fP to_value, \fBint\fP increment, \fBtime_type\fP step, \fBint\fP n)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBsend_macro\fP (register unsigned char *ptr, \fBint\fP \fBvoice\fP, short parameter[], \fBint\fP parm_num, \fBint\fP \fBvalue\fP, \fBint\fP nline)"
+.br
+.ti -1c
+.RI "\fBchunk_type\fP \fBchunk_create\fP (\fBboolean\fP first_flag)"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBvoid\fP \fBcycle\fP (\fBseq_type\fP seq)"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBevent_type\fP \fBevent_create\fP (\fBseq_type\fP seq, \fBint\fP \fBsize\fP, \fBtime_type\fP etime, \fBint\fP eline)"
+.br
+.ti -1c
+.RI "\fBevent_type\fP \fBinsert_call\fP (\fBseq_type\fP seq, \fBtime_type\fP ctime, \fBint\fP cline, \fBint\fP \fBvoice\fP, \fBint\fP(*addr)(), \fBvalue\fP, \fBint\fP n)"
+.br
+.ti -1c
+.RI "\fBevent_type\fP \fBinsert_clock\fP (\fBseq_type\fP seq, \fBtime_type\fP ctime, \fBint\fP cline, \fBtime_type\fP \fBticksize\fP)"
+.br
+.ti -1c
+.RI "\fBevent_type\fP \fBinsert_ctrl\fP (\fBseq_type\fP seq, \fBtime_type\fP ctime, \fBint\fP cline, \fBint\fP ctrl, \fBint\fP \fBvoice\fP, \fBint\fP \fBvalue\fP)"
+.br
+.ti -1c
+.RI "\fBevent_type\fP \fBinsert_ctrlramp\fP (\fBseq_type\fP seq, \fBtime_type\fP rtime, \fBint\fP rline, \fBint\fP \fBvoice\fP, \fBtime_type\fP step, \fBtime_type\fP \fBdur\fP, \fBint\fP ctrl, \fBint\fP v1, \fBint\fP v2)"
+.br
+.ti -1c
+.RI "\fBdef_type\fP \fBinsert_def\fP (\fBseq_type\fP seq, char *symbol, unsigned char *definition, \fBint\fP deflen)"
+.br
+.ti -1c
+.RI "\fBevent_type\fP \fBinsert_deframp\fP (\fBseq_type\fP seq, \fBtime_type\fP rtime, \fBint\fP rline, \fBint\fP \fBvoice\fP, \fBtime_type\fP step, \fBtime_type\fP \fBdur\fP, \fBdef_type\fP def, \fBint\fP nparms, parms, \fBint\fP parm_num, \fBint\fP to_value)"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBvoid\fP \fBinsert_event\fP (\fBseq_type\fP seq, \fBevent_type\fP event)"
+.br
+.ti -1c
+.RI "\fBevent_type\fP \fBinsert_macctrl\fP (\fBseq_type\fP seq, \fBtime_type\fP ctime, \fBint\fP cline, \fBint\fP ctrl, \fBint\fP \fBvoice\fP, \fBint\fP \fBvalue\fP)"
+.br
+.ti -1c
+.RI "\fBevent_type\fP \fBinsert_macro\fP (\fBseq_type\fP seq, \fBtime_type\fP ctime, \fBint\fP cline, \fBdef_type\fP def, \fBint\fP \fBvoice\fP, \fBint\fP nparms, short *parms)"
+.br
+.ti -1c
+.RI "\fBevent_type\fP \fBinsert_note\fP (\fBseq_type\fP seq, \fBtime_type\fP \fBntime\fP, \fBint\fP nline, \fBint\fP \fBvoice\fP, \fBint\fP \fBpitch\fP, \fBtime_type\fP \fBdur\fP, \fBint\fP \fBloud\fP)"
+.br
+.ti -1c
+.RI "\fBevent_type\fP \fBinsert_seti\fP (\fBseq_type\fP seq, \fBtime_type\fP stime, \fBint\fP sline, \fBint\fP \fBvoice\fP, \fBint\fP *addr, \fBint\fP \fBvalue\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBnoop\fP (\fBseq_type\fP seq)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBreport_enabled_channels\fP (\fBseq_type\fP seq)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBsend_macro\fP (unsigned char *ptr, \fBint\fP \fBvoice\fP, parameter, \fBint\fP parm_num, \fBint\fP \fBvalue\fP, \fBint\fP nline)"
+.br
+.ti -1c
+.RI "\fBseq_type\fP \fBseq_alloc\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBseq_at_end\fP (\fBseq_type\fP seq, \fBvoid\fP(*\fBfn\fP)(\fBseq_type\fP))"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBseq_cause_noteoff_meth\fP (\fBseq_type\fP seq, \fBtime_type\fP delay, \fBint\fP \fBvoice\fP, \fBint\fP \fBpitch\fP)"
+.br
+.ti -1c
+.RI "\fBseq_type\fP \fBseq_copy\fP (\fBseq_type\fP from_seq)"
+.br
+.ti -1c
+.RI "\fBseq_type\fP \fBseq_create\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBseq_cycle\fP (\fBseq_type\fP seq, \fBboolean\fP flag, \fBtime_type\fP \fBdur\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBseq_end_event\fP (\fBseq_type\fP seq)"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBvoid\fP \fBseq_free_meth\fP (\fBseq_type\fP seq)"
+.br
+.ti -1c
+.RI "\fBpublic\fP \fBvoid\fP \fBseq_free_chunks\fP (\fBseq_type\fP seq)"
+.br
+.ti -1c
+.RI "\fBseq_type\fP \fBseq_init\fP (\fBseq_type\fP seq, \fBint\fP create_chunk)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBseq_midi_bend_meth\fP (\fBseq_type\fP seq, \fBint\fP \fBvoice\fP, \fBint\fP \fBvalue\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBseq_midi_ctrl_meth\fP (\fBseq_type\fP seq, \fBint\fP \fBvoice\fP, \fBint\fP ctrl, \fBint\fP \fBvalue\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBseq_midi_program_meth\fP (\fBseq_type\fP seq, \fBint\fP \fBvoice\fP, \fBint\fP \fBprog\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBseq_midi_touch_meth\fP (\fBseq_type\fP seq, \fBint\fP \fBvoice\fP, \fBint\fP \fBvalue\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBseq_noteoff_meth\fP (\fBseq_type\fP seq, \fBint\fP \fBvoice\fP, \fBint\fP \fBpitch\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBseq_noteon_meth\fP (\fBseq_type\fP seq, \fBint\fP chan, \fBint\fP \fBpitch\fP, \fBint\fP vel)"
+.br
+.ti -1c
+.RI "\fBtime_type\fP \fBseq_pause\fP (\fBseq_type\fP seq, \fBboolean\fP flag)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBseq_play\fP (\fBseq_type\fP seq)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBseq_reset_meth\fP (\fBseq_type\fP seq)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBseq_set_loudness\fP (\fBseq_type\fP seq, \fBint\fP \fBloud\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBseq_set_rate\fP (\fBseq_type\fP seq, \fBtime_type\fP \fBrate\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBseq_set_transpose\fP (\fBseq_type\fP seq, \fBint\fP trans)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBseq_start_time\fP (\fBseq_type\fP seq, \fBtime_type\fP \fBstart_time\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBseq_stop\fP (\fBseq_type\fP seq)"
+.br
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "\fBint\fP \fBmoxcdebug\fP"
+.br
+.ti -1c
+.RI "\fBtimebase_type\fP \fBdefault_base\fP"
+.br
+.ti -1c
+.RI "\fBboolean\fP \fBseq_print\fP = \fBFALSE\fP"
+.br
+.ti -1c
+.RI "\fBseq_type\fP \fBsequence\fP"
+.br
+.ti -1c
+.RI "\fBtime_type\fP \fBclock_ticksize\fP"
+.br
+.ti -1c
+.RI "\fBboolean\fP \fBclock_running\fP = \fBFALSE\fP"
+.br
+.ti -1c
+.RI "\fBboolean\fP \fBexternal_midi_clock\fP = \fBFALSE\fP"
+.br
+.ti -1c
+.RI "\fBboolean\fP \fBsuppress_midi_clock\fP = \fBFALSE\fP"
+.br
+.in -1c
+.SH "Function Documentation"
+.PP 
+.SS "\fBprivate\fP char * chunk_alloc (\fBseq_type\fP seq, \fBint\fP size)"
+
+.PP
+Definition at line 55 of file seq\&.c\&.
+.SS "\fBchunk_type\fP chunk_create (\fBboolean\fP first_flag)"
+
+.PP
+Definition at line 82 of file seq\&.c\&.
+.SS "\fBprivate\fP \fBvoid\fP clock_tick (\fBseq_type\fP seq, \fBtime_type\fP fraction)"
+
+.PP
+Definition at line 107 of file seq\&.c\&.
+.SS "\fBprivate\fP \fBvoid\fP cycle (\fBseq_type\fP seq)"
+
+.PP
+Definition at line 123 of file seq\&.c\&.
+.SS "\fBprivate\fP \fBevent_type\fP event_create (\fBseq_type\fP seq, \fBint\fP size, \fBtime_type\fP etime, \fBint\fP eline)"
+
+.PP
+Definition at line 150 of file seq\&.c\&.
+.SS "\fBevent_type\fP insert_call (\fBseq_type\fP seq, \fBtime_type\fP ctime, \fBint\fP cline, \fBint\fP voice, \fBint\fP (*)() addr, \fBvalue\fP, \fBint\fP n)"
+
+.PP
+Definition at line 170 of file seq\&.c\&.
+.SS "\fBevent_type\fP insert_clock (\fBseq_type\fP seq, \fBtime_type\fP ctime, \fBint\fP cline, \fBtime_type\fP ticksize)"
+
+.PP
+Definition at line 203 of file seq\&.c\&.
+.SS "\fBevent_type\fP insert_ctrl (\fBseq_type\fP seq, \fBtime_type\fP ctime, \fBint\fP cline, \fBint\fP ctrl, \fBint\fP voice, \fBint\fP value)"
+
+.PP
+Definition at line 226 of file seq\&.c\&.
+.SS "\fBevent_type\fP insert_ctrlramp (\fBseq_type\fP seq, \fBtime_type\fP rtime, \fBint\fP rline, \fBint\fP voice, \fBtime_type\fP step, \fBtime_type\fP dur, \fBint\fP ctrl, \fBint\fP v1, \fBint\fP v2)"
+
+.PP
+Definition at line 252 of file seq\&.c\&.
+.SS "\fBdef_type\fP insert_def (\fBseq_type\fP seq, char * symbol, unsigned char * definition, \fBint\fP deflen)"
+
+.PP
+Definition at line 290 of file seq\&.c\&.
+.SS "\fBevent_type\fP insert_deframp (\fBseq_type\fP seq, \fBtime_type\fP rtime, \fBint\fP rline, \fBint\fP voice, \fBtime_type\fP step, \fBtime_type\fP dur, \fBdef_type\fP def, \fBint\fP nparms, parms, \fBint\fP parm_num, \fBint\fP to_value)"
+
+.PP
+Definition at line 317 of file seq\&.c\&.
+.SS "\fBprivate\fP \fBvoid\fP insert_event (\fBseq_type\fP, register event_type)"
+
+.SS "\fBprivate\fP \fBvoid\fP insert_event (\fBseq_type\fP seq, \fBevent_type\fP event)"
+
+.PP
+Definition at line 386 of file seq\&.c\&.
+.SS "\fBevent_type\fP insert_macctrl (\fBseq_type\fP seq, \fBtime_type\fP ctime, \fBint\fP cline, \fBint\fP ctrl, \fBint\fP voice, \fBint\fP value)"
+
+.PP
+Definition at line 435 of file seq\&.c\&.
+.SS "\fBevent_type\fP insert_macro (\fBseq_type\fP seq, \fBtime_type\fP ctime, \fBint\fP cline, \fBdef_type\fP def, \fBint\fP voice, \fBint\fP nparms, short * parms)"
+
+.PP
+Definition at line 463 of file seq\&.c\&.
+.SS "\fBevent_type\fP insert_note (\fBseq_type\fP seq, \fBtime_type\fP ntime, \fBint\fP nline, \fBint\fP voice, \fBint\fP pitch, \fBtime_type\fP dur, \fBint\fP loud)"
+
+.PP
+Definition at line 497 of file seq\&.c\&.
+.SS "\fBevent_type\fP insert_seti (\fBseq_type\fP seq, \fBtime_type\fP stime, \fBint\fP sline, \fBint\fP voice, \fBint\fP * addr, \fBint\fP value)"
+
+.PP
+Definition at line 528 of file seq\&.c\&.
+.SS "\fBvoid\fP noop (\fBseq_type\fP seq)"
+
+.PP
+Definition at line 555 of file seq\&.c\&.
+.SS "\fBprivate\fP \fBvoid\fP process_event (\fBseq_type\fP seq)"
+
+.PP
+Definition at line 558 of file seq\&.c\&.
+.SS "\fBprivate\fP \fBvoid\fP ramp_event (\fBseq_type\fP seq, \fBevent_type\fP event, unsigned \fBint\fP value, unsigned \fBint\fP to_value, \fBint\fP increment, \fBtime_type\fP step, \fBint\fP n)"
+
+.PP
+Definition at line 696 of file seq\&.c\&.
+.SS "\fBvoid\fP report_enabled_channels (\fBseq_type\fP seq)"
+
+.PP
+Definition at line 735 of file seq\&.c\&.
+.SS "\fBvoid\fP send_macro (register unsigned char * ptr, \fBint\fP voice, short parameter[], \fBint\fP parm_num, \fBint\fP value, \fBint\fP nline)"
+
+.SS "\fBvoid\fP send_macro (unsigned char * ptr, \fBint\fP voice, parameter, \fBint\fP parm_num, \fBint\fP value, \fBint\fP nline)"
+
+.PP
+Definition at line 763 of file seq\&.c\&.
+.SS "\fBseq_type\fP seq_alloc (\fBvoid\fP)"
+
+.PP
+Definition at line 808 of file seq\&.c\&.
+.SS "\fBvoid\fP seq_at_end (\fBseq_type\fP seq, \fBvoid\fP (*)(\fBseq_type\fP) fn)"
+
+.PP
+Definition at line 818 of file seq\&.c\&.
+.SS "\fBvoid\fP seq_cause_noteoff_meth (\fBseq_type\fP seq, \fBtime_type\fP delay, \fBint\fP voice, \fBint\fP pitch)"
+
+.PP
+Definition at line 829 of file seq\&.c\&.
+.SS "\fBseq_type\fP seq_copy (\fBseq_type\fP from_seq)"
+
+.PP
+Definition at line 843 of file seq\&.c\&.
+.SS "\fBseq_type\fP seq_create (\fBvoid\fP)"
+
+.PP
+Definition at line 862 of file seq\&.c\&.
+.SS "\fBvoid\fP seq_cycle (\fBseq_type\fP seq, \fBboolean\fP flag, \fBtime_type\fP dur)"
+
+.PP
+Definition at line 870 of file seq\&.c\&.
+.SS "\fBvoid\fP seq_end_event (\fBseq_type\fP seq)"
+
+.PP
+Definition at line 881 of file seq\&.c\&.
+.SS "\fBpublic\fP \fBvoid\fP seq_free_chunks (\fBseq_type\fP seq)"
+
+.PP
+Definition at line 927 of file seq\&.c\&.
+.SS "\fBprivate\fP \fBvoid\fP seq_free_meth (\fBseq_type\fP seq)"
+
+.PP
+Definition at line 906 of file seq\&.c\&.
+.SS "\fBseq_type\fP seq_init (\fBseq_type\fP seq, \fBint\fP create_chunk)"
+
+.PP
+Definition at line 945 of file seq\&.c\&.
+.SS "\fBvoid\fP seq_midi_bend_meth (\fBseq_type\fP seq, \fBint\fP voice, \fBint\fP value)"
+
+.PP
+Definition at line 986 of file seq\&.c\&.
+.SS "\fBvoid\fP seq_midi_ctrl_meth (\fBseq_type\fP seq, \fBint\fP voice, \fBint\fP ctrl, \fBint\fP value)"
+
+.PP
+Definition at line 994 of file seq\&.c\&.
+.SS "\fBvoid\fP seq_midi_program_meth (\fBseq_type\fP seq, \fBint\fP voice, \fBint\fP prog)"
+
+.PP
+Definition at line 1002 of file seq\&.c\&.
+.SS "\fBvoid\fP seq_midi_touch_meth (\fBseq_type\fP seq, \fBint\fP voice, \fBint\fP value)"
+
+.PP
+Definition at line 1010 of file seq\&.c\&.
+.SS "\fBvoid\fP seq_noteoff_meth (\fBseq_type\fP seq, \fBint\fP voice, \fBint\fP pitch)"
+
+.PP
+Definition at line 1018 of file seq\&.c\&.
+.SS "\fBvoid\fP seq_noteon_meth (\fBseq_type\fP seq, \fBint\fP chan, \fBint\fP pitch, \fBint\fP vel)"
+
+.PP
+Definition at line 1028 of file seq\&.c\&.
+.SS "\fBtime_type\fP seq_pause (\fBseq_type\fP seq, \fBboolean\fP flag)"
+
+.PP
+Definition at line 1046 of file seq\&.c\&.
+.SS "\fBvoid\fP seq_play (\fBseq_type\fP seq)"
+
+.PP
+Definition at line 1061 of file seq\&.c\&.
+.SS "\fBvoid\fP seq_reset_meth (\fBseq_type\fP seq)"
+
+.PP
+Definition at line 1092 of file seq\&.c\&.
+.SS "\fBvoid\fP seq_set_loudness (\fBseq_type\fP seq, \fBint\fP loud)"
+
+.PP
+Definition at line 1127 of file seq\&.c\&.
+.SS "\fBvoid\fP seq_set_rate (\fBseq_type\fP seq, \fBtime_type\fP rate)"
+
+.PP
+Definition at line 1136 of file seq\&.c\&.
+.SS "\fBvoid\fP seq_set_transpose (\fBseq_type\fP seq, \fBint\fP trans)"
+
+.PP
+Definition at line 1147 of file seq\&.c\&.
+.SS "\fBvoid\fP seq_start_time (\fBseq_type\fP seq, \fBtime_type\fP start_time)"
+
+.PP
+Definition at line 1157 of file seq\&.c\&.
+.SS "\fBvoid\fP seq_stop (\fBseq_type\fP seq)"
+
+.PP
+Definition at line 1183 of file seq\&.c\&.
+.SH "Variable Documentation"
+.PP 
+.SS "\fBboolean\fP clock_running = \fBFALSE\fP"
+
+.PP
+Definition at line 34 of file seq\&.c\&.
+.SS "\fBtime_type\fP clock_ticksize"
+
+.PP
+Definition at line 33 of file seq\&.c\&.
+.SS "\fBtimebase_type\fP default_base"
+
+.PP
+Definition at line 94 of file moxc\&.c\&.
+.SS "\fBboolean\fP external_midi_clock = \fBFALSE\fP"
+
+.PP
+Definition at line 35 of file seq\&.c\&.
+.SS "\fBint\fP moxcdebug"
+
+.PP
+Definition at line 92 of file moxc\&.c\&.
+.SS "\fBboolean\fP seq_print = \fBFALSE\fP"
+
+.PP
+Definition at line 27 of file seq\&.c\&.
+.SS "\fBseq_type\fP sequence"
+
+.PP
+Definition at line 29 of file seq\&.c\&.
+.SS "\fBboolean\fP suppress_midi_clock = \fBFALSE\fP"
+
+.PP
+Definition at line 36 of file seq\&.c\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

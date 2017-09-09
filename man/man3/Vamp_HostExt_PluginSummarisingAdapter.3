@@ -1,0 +1,215 @@
+.TH "Vamp::HostExt::PluginSummarisingAdapter" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Vamp::HostExt::PluginSummarisingAdapter \- 
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <vamp\-hostsdk/PluginSummarisingAdapter\&.h>\fP
+.PP
+Inherits \fBVamp::HostExt::PluginWrapper\fP\&.
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "class \fBImpl\fP"
+.br
+.in -1c
+.SS "Public Types"
+
+.in +1c
+.ti -1c
+.RI "enum \fBSummaryType\fP { \fBMinimum\fP = 0, \fBMaximum\fP = 1, \fBMean\fP = 2, \fBMedian\fP = 3, \fBMode\fP = 4, \fBSum\fP = 5, \fBVariance\fP = 6, \fBStandardDeviation\fP = 7, \fBCount\fP = 8, \fBUnknownSummaryType\fP = 999 }"
+.br
+.ti -1c
+.RI "enum \fBAveragingMethod\fP { \fBSampleAverage\fP = 0, \fBContinuousTimeAverage\fP = 1 }"
+.br
+.ti -1c
+.RI "typedef std::set< \fBRealTime\fP > \fBSegmentBoundaries\fP"
+.br
+.in -1c
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBPluginSummarisingAdapter\fP (\fBPlugin\fP *plugin)"
+.br
+.ti -1c
+.RI "virtual \fB~PluginSummarisingAdapter\fP ()"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBinitialise\fP (size_t channels, size_t stepSize, size_t blockSize)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBreset\fP ()"
+.br
+.ti -1c
+.RI "\fBFeatureSet\fP \fBprocess\fP (\fBconst\fP float *\fBconst\fP *inputBuffers, \fBRealTime\fP timestamp)"
+.br
+.ti -1c
+.RI "\fBFeatureSet\fP \fBgetRemainingFeatures\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBsetSummarySegmentBoundaries\fP (\fBconst\fP \fBSegmentBoundaries\fP &)"
+.br
+.ti -1c
+.RI "\fBFeatureList\fP \fBgetSummaryForOutput\fP (\fBint\fP \fBoutput\fP, \fBSummaryType\fP type, \fBAveragingMethod\fP method=\fBSampleAverage\fP)"
+.br
+.ti -1c
+.RI "\fBFeatureSet\fP \fBgetSummaryForAllOutputs\fP (\fBSummaryType\fP type, \fBAveragingMethod\fP method=\fBSampleAverage\fP)"
+.br
+.in -1c
+.SS "Protected Attributes"
+
+.in +1c
+.ti -1c
+.RI "\fBImpl\fP * \fBm_impl\fP"
+.br
+.in -1c
+.SS "Additional Inherited Members"
+.SH "Detailed Description"
+.PP 
+\fBPluginSummarisingAdapter\fP is a \fBVamp\fP plugin adapter that provides summarisation methods such as mean and median averages of output features, for use in any context where an available plugin produces individual values but the result that is actually needed is some sort of aggregate\&.
+.PP
+To make use of \fBPluginSummarisingAdapter\fP, the host should configure, initialise and run the plugin through the adapter interface just as normal\&. Then, after the process and getRemainingFeatures methods have been properly called and processing is complete, the host may call getSummaryForOutput or getSummaryForAllOutputs to obtain summarised features: averages, maximum values, etc, depending on the SummaryType passed to the function\&.
+.PP
+By default \fBPluginSummarisingAdapter\fP calculates a single summary of each output's feature across the whole duration of processed audio\&. A host needing summaries of sub-segments of the whole audio may call setSummarySegmentBoundaries before retrieving the summaries, providing a list of times such that one summary will be provided for each segment between two consecutive times\&.
+.PP
+\fBPluginSummarisingAdapter\fP is straightforward rather than fast\&. It calculates all of the summary types for all outputs always, and then returns only the ones that are requested\&. It is designed on the basis that, for most features, summarising and storing summarised results is far cheaper than calculating the results in the first place\&. If this is not true for your particular feature, \fBPluginSummarisingAdapter\fP may not be the best approach for you\&.
+.PP
+\fBNote:\fP
+.RS 4
+This class was introduced in version 2\&.0 of the \fBVamp\fP plugin SDK\&. 
+.RE
+.PP
+
+.PP
+Definition at line 86 of file PluginSummarisingAdapter\&.h\&.
+.SH "Member Typedef Documentation"
+.PP 
+.SS "typedef std::set<\fBRealTime\fP> \fBVamp::HostExt::PluginSummarisingAdapter::SegmentBoundaries\fP"
+
+.PP
+Definition at line 104 of file PluginSummarisingAdapter\&.h\&.
+.SH "Member Enumeration Documentation"
+.PP 
+.SS "enum \fBVamp::HostExt::PluginSummarisingAdapter::AveragingMethod\fP"
+AveragingMethod indicates how the adapter should handle average-based summaries of features whose results are not equally spaced in time\&.
+.PP
+If SampleAverage is specified, summary types based on averages will be calculated by treating each result individually without regard to its time: for example, the mean will be the sum of all values divided by the number of values\&.
+.PP
+If ContinuousTimeAverage is specified, each feature will be considered to have a duration, either as specified in the feature's duration field, or until the following feature: thus, for example, the mean will be the sum of the products of values and durations, divided by the total duration\&.
+.PP
+Although SampleAverage is useful for many types of feature, ContinuousTimeAverage is essential for some situations, for example finding the result that spans the largest proportion of the input given a feature that emits a new result only when the value changes (the modal value integrated over time)\&. 
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fISampleAverage \fP\fP
+.TP
+\fB\fIContinuousTimeAverage \fP\fP
+.PP
+Definition at line 157 of file PluginSummarisingAdapter\&.h\&.
+.SS "enum \fBVamp::HostExt::PluginSummarisingAdapter::SummaryType\fP"
+
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fIMinimum \fP\fP
+.TP
+\fB\fIMaximum \fP\fP
+.TP
+\fB\fIMean \fP\fP
+.TP
+\fB\fIMedian \fP\fP
+.TP
+\fB\fIMode \fP\fP
+.TP
+\fB\fISum \fP\fP
+.TP
+\fB\fIVariance \fP\fP
+.TP
+\fB\fIStandardDeviation \fP\fP
+.TP
+\fB\fICount \fP\fP
+.TP
+\fB\fIUnknownSummaryType \fP\fP
+.PP
+Definition at line 121 of file PluginSummarisingAdapter\&.h\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "Vamp::HostExt::PluginSummarisingAdapter::PluginSummarisingAdapter (\fBPlugin\fP * plugin)"
+Construct a \fBPluginSummarisingAdapter\fP wrapping the given plugin\&. The adapter takes ownership of the plugin, which will be deleted when the adapter is deleted\&. 
+.PP
+Definition at line 152 of file PluginSummarisingAdapter\&.cpp\&.
+.SS "Vamp::HostExt::PluginSummarisingAdapter::~PluginSummarisingAdapter ()\fC [virtual]\fP"
+
+.PP
+Definition at line 158 of file PluginSummarisingAdapter\&.cpp\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "\fBPlugin::FeatureSet\fP Vamp::HostExt::PluginSummarisingAdapter::getRemainingFeatures ()\fC [virtual]\fP"
+After all blocks have been processed, calculate and return any remaining features derived from the complete input\&. 
+.PP
+Implements \fBVamp::Plugin\fP\&.
+.PP
+Definition at line 185 of file PluginSummarisingAdapter\&.cpp\&.
+.SS "\fBPlugin::FeatureSet\fP Vamp::HostExt::PluginSummarisingAdapter::getSummaryForAllOutputs (\fBSummaryType\fP type, \fBAveragingMethod\fP method = \fC\fBSampleAverage\fP\fP)"
+Return summaries of the features that were returned on all of the plugin's outputs, using the given SummaryType and AveragingMethod\&.
+.PP
+The plugin must have been fully run (\fBprocess()\fP and \fBgetRemainingFeatures()\fP calls all made as appropriate) before this function is called\&. 
+.PP
+Definition at line 205 of file PluginSummarisingAdapter\&.cpp\&.
+.SS "\fBPlugin::FeatureList\fP Vamp::HostExt::PluginSummarisingAdapter::getSummaryForOutput (\fBint\fP output, \fBSummaryType\fP type, \fBAveragingMethod\fP method = \fC\fBSampleAverage\fP\fP)"
+Return summaries of the features that were returned on the given output, using the given SummaryType and AveragingMethod\&.
+.PP
+The plugin must have been fully run (\fBprocess()\fP and \fBgetRemainingFeatures()\fP calls all made as appropriate) before this function is called\&. 
+.PP
+Definition at line 197 of file PluginSummarisingAdapter\&.cpp\&.
+.SS "\fBbool\fP Vamp::HostExt::PluginSummarisingAdapter::initialise (size_t inputChannels, size_t stepSize, size_t blockSize)\fC [virtual]\fP"
+Initialise a plugin to prepare it for use with the given number of input channels, step size (window increment, in sample frames) and block size (window size, in sample frames)\&.
+.PP
+The input sample rate should have been already specified at construction time\&.
+.PP
+Return true for successful initialisation, false if the number of input channels, step size and/or block size cannot be supported\&. 
+.PP
+Implements \fBVamp::Plugin\fP\&.
+.PP
+Definition at line 164 of file PluginSummarisingAdapter\&.cpp\&.
+.SS "\fBPlugin::FeatureSet\fP Vamp::HostExt::PluginSummarisingAdapter::process (\fBconst\fP float *\fBconst\fP * inputBuffers, \fBRealTime\fP timestamp)\fC [virtual]\fP"
+Process a single block of input data\&.
+.PP
+If the plugin's inputDomain is TimeDomain, inputBuffers will point to one array of floats per input channel, and each of these arrays will contain blockSize consecutive audio samples (the host will zero-pad as necessary)\&. The timestamp in this case will be the real time in seconds of the start of the supplied block of samples\&.
+.PP
+If the plugin's inputDomain is FrequencyDomain, inputBuffers will point to one array of floats per input channel, and each of these arrays will contain blockSize/2+1 consecutive pairs of real and imaginary component floats corresponding to bins 0\&.\&.(blockSize/2) of the \fBFFT\fP output\&. That is, bin 0 (the first pair of floats) contains the DC output, up to bin blockSize/2 which contains the Nyquist-frequency output\&. There will therefore be blockSize+2 floats per channel in total\&. The timestamp will be the real time in seconds of the centre of the \fBFFT\fP input window (i\&.e\&. the very first block passed to process might contain the \fBFFT\fP of half a block of zero samples and the first half-block of the actual data, with a timestamp of zero)\&.
+.PP
+Return any features that have become available after this process call\&. (These do not necessarily have to fall within the process block, except for OneSamplePerStep outputs\&.) 
+.PP
+Implements \fBVamp::Plugin\fP\&.
+.PP
+Definition at line 179 of file PluginSummarisingAdapter\&.cpp\&.
+.SS "\fBvoid\fP Vamp::HostExt::PluginSummarisingAdapter::reset ()\fC [virtual]\fP"
+Reset the plugin after use, to prepare it for another clean run\&. Not called for the first initialisation (i\&.e\&. initialise must also do a reset)\&. 
+.PP
+Implements \fBVamp::Plugin\fP\&.
+.PP
+Definition at line 173 of file PluginSummarisingAdapter\&.cpp\&.
+.SS "\fBvoid\fP Vamp::HostExt::PluginSummarisingAdapter::setSummarySegmentBoundaries (\fBconst\fP \fBSegmentBoundaries\fP & b)"
+Specify a series of segment boundaries, such that one summary will be returned for each of the contiguous intra-boundary segments\&. This function must be called before getSummaryForOutput or getSummaryForAllOutputs\&.
+.PP
+Note that you cannot retrieve results with multiple different segmentations by repeatedly calling this function followed by one of the getSummary functions\&. The summaries are all calculated at the first call to any getSummary function, and once the summaries have been calculated, they remain calculated\&. 
+.PP
+Definition at line 191 of file PluginSummarisingAdapter\&.cpp\&.
+.SH "Member Data Documentation"
+.PP 
+.SS "\fBImpl\fP* Vamp::HostExt::PluginSummarisingAdapter::m_impl\fC [protected]\fP"
+
+.PP
+Definition at line 187 of file PluginSummarisingAdapter\&.h\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

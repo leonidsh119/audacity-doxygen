@@ -1,0 +1,323 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/lib-src/libvorbis/lib/vorbisenc.c" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/lib-src/libvorbis/lib/vorbisenc.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <stdlib\&.h>\fP
+.br
+\fC#include <string\&.h>\fP
+.br
+\fC#include <math\&.h>\fP
+.br
+\fC#include 'vorbis/codec\&.h'\fP
+.br
+\fC#include 'vorbis/vorbisenc\&.h'\fP
+.br
+\fC#include 'codec_internal\&.h'\fP
+.br
+\fC#include 'os\&.h'\fP
+.br
+\fC#include 'misc\&.h'\fP
+.br
+\fC#include 'modes/setup_44\&.h'\fP
+.br
+\fC#include 'modes/setup_44u\&.h'\fP
+.br
+\fC#include 'modes/setup_44p51\&.h'\fP
+.br
+\fC#include 'modes/setup_32\&.h'\fP
+.br
+\fC#include 'modes/setup_8\&.h'\fP
+.br
+\fC#include 'modes/setup_11\&.h'\fP
+.br
+\fC#include 'modes/setup_16\&.h'\fP
+.br
+\fC#include 'modes/setup_22\&.h'\fP
+.br
+\fC#include 'modes/setup_X\&.h'\fP
+.br
+
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "struct \fBstatic_bookblock\fP"
+.br
+.ti -1c
+.RI "struct \fBvorbis_residue_template\fP"
+.br
+.ti -1c
+.RI "struct \fBvorbis_mapping_template\fP"
+.br
+.ti -1c
+.RI "struct \fBvp_adjblock\fP"
+.br
+.ti -1c
+.RI "struct \fBcompandblock\fP"
+.br
+.ti -1c
+.RI "struct \fBatt3\fP"
+.br
+.ti -1c
+.RI "struct \fBadj3\fP"
+.br
+.ti -1c
+.RI "struct \fBadj_stereo\fP"
+.br
+.ti -1c
+.RI "struct \fBnoiseguard\fP"
+.br
+.ti -1c
+.RI "struct \fBnoise3\fP"
+.br
+.ti -1c
+.RI "struct \fBve_setup_data_template\fP"
+.br
+.in -1c
+.SS "Typedefs"
+
+.in +1c
+.ti -1c
+.RI "typedef struct \fBvp_adjblock\fP \fBvp_adjblock\fP"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBint\fP \fBvorbis_encode_setup_init\fP (\fBvorbis_info\fP *vi)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBvorbis_encode_setup_vbr\fP (\fBvorbis_info\fP *vi, long channels, long \fBrate\fP, float quality)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBvorbis_encode_init_vbr\fP (\fBvorbis_info\fP *vi, long channels, long \fBrate\fP, float base_quality)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBvorbis_encode_setup_managed\fP (\fBvorbis_info\fP *vi, long channels, long \fBrate\fP, long max_bitrate, long nominal_bitrate, long min_bitrate)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBvorbis_encode_init\fP (\fBvorbis_info\fP *vi, long channels, long \fBrate\fP, long max_bitrate, long nominal_bitrate, long min_bitrate)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBvorbis_encode_ctl\fP (\fBvorbis_info\fP *vi, \fBint\fP number, \fBvoid\fP *arg)"
+.br
+.in -1c
+.SH "Typedef Documentation"
+.PP 
+.SS "typedef struct \fBvp_adjblock\fP  \fBvp_adjblock\fP"
+
+.SH "Function Documentation"
+.PP 
+.SS "\fBint\fP vorbis_encode_ctl (\fBvorbis_info\fP * vi, \fBint\fP number, \fBvoid\fP * arg)"
+This function implements a generic interface to miscellaneous encoder settings similar to the classic UNIX 'ioctl()' system call\&. Applications may use \fBvorbis_encode_ctl()\fP to query or set bitrate management or quality mode details by using one of several \fIrequest\fP arguments detailed below\&. \fBvorbis_encode_ctl()\fP must be called after one of \fBvorbis_encode_setup_managed()\fP or \fBvorbis_encode_setup_vbr()\fP\&. When used to modify settings, \fBvorbis_encode_ctl()\fP must be called before \fBvorbis_encode_setup_init()\fP\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIvi\fP Pointer to an initialized \fBvorbis_info\fP struct\&.
+.br
+\fInumber\fP Specifies the desired action; See \fBthe list\fPof available requests"\&.
+.br
+\fIarg\fP void * pointing to a data structure matching the request argument\&.
+.RE
+.PP
+\fBReturn values:\fP
+.RS 4
+\fI0\fP Success\&. Any further return information (such as the result of a query) is placed into the storage pointed to by *arg\&.
+.br
+\fIOV_EINVAL\fP Invalid argument, or an attempt to modify a setting after calling \fBvorbis_encode_setup_init()\fP\&.
+.br
+\fIOV_EIMPL\fP Unimplemented or unknown request 
+.RE
+.PP
+
+.PP
+Definition at line 1013 of file vorbisenc\&.c\&.
+.SS "\fBint\fP vorbis_encode_init (\fBvorbis_info\fP * vi, long channels, long rate, long max_bitrate, long nominal_bitrate, long min_bitrate)"
+This is the primary function within libvorbisenc for setting up managed bitrate modes\&.
+.PP
+Before this function is called, the \fBvorbis_info\fP struct should be initialized by using \fBvorbis_info_init()\fP from the libvorbis API\&. After encoding, \fBvorbis_info_clear()\fP should be called\&.
+.PP
+The max_bitrate, nominal_bitrate, and min_bitrate settings are used to set constraints for the encoded file\&. This function uses these settings to select the appropriate encoding mode and set it up\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIvi\fP Pointer to an initialized \fBvorbis_info\fP struct\&. 
+.br
+\fIchannels\fP The number of channels to be encoded\&. 
+.br
+\fIrate\fP The sampling rate of the source audio\&. 
+.br
+\fImax_bitrate\fP Desired maximum bitrate (limit)\&. -1 indicates unset\&. 
+.br
+\fInominal_bitrate\fP Desired average, or central, bitrate\&. -1 indicates unset\&. 
+.br
+\fImin_bitrate\fP Desired minimum bitrate\&. -1 indicates unset\&.
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+Zero for success, and negative values for failure\&.
+.RE
+.PP
+\fBReturn values:\fP
+.RS 4
+\fI0\fP Success\&. 
+.br
+\fIOV_EFAULT\fP Internal logic fault; indicates a bug or heap/stack corruption\&. 
+.br
+\fIOV_EINVAL\fP Invalid setup request, eg, out of range argument\&. 
+.br
+\fIOV_EIMPL\fP Unimplemented mode; unable to comply with bitrate request\&. 
+.RE
+.PP
+
+.PP
+Definition at line 990 of file vorbisenc\&.c\&.
+.SS "\fBint\fP vorbis_encode_init_vbr (\fBvorbis_info\fP * vi, long channels, long rate, float base_quality)"
+This is the primary function within libvorbisenc for setting up variable bitrate ('quality' based) modes\&.
+.PP
+Before this function is called, the \fBvorbis_info\fP struct should be initialized by using \fBvorbis_info_init()\fP from the libvorbis API\&. After encoding, \fBvorbis_info_clear()\fP should be called\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIvi\fP Pointer to an initialized \fBvorbis_info\fP struct\&. 
+.br
+\fIchannels\fP The number of channels to be encoded\&. 
+.br
+\fIrate\fP The sampling rate of the source audio\&. 
+.br
+\fIbase_quality\fP Desired quality level, currently from -0\&.1 to 1\&.0 (lo to hi)\&.
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+Zero for success, or a negative number for failure\&.
+.RE
+.PP
+\fBReturn values:\fP
+.RS 4
+\fI0\fP Success 
+.br
+\fIOV_EFAULT\fP Internal logic fault; indicates a bug or heap/stack corruption\&. 
+.br
+\fIOV_EINVAL\fP Invalid setup request, eg, out of range argument\&. 
+.br
+\fIOV_EIMPL\fP Unimplemented mode; unable to comply with quality level request\&. 
+.RE
+.PP
+
+.PP
+Definition at line 923 of file vorbisenc\&.c\&.
+.SS "\fBint\fP vorbis_encode_setup_init (\fBvorbis_info\fP * vi)"
+This function performs the last stage of three-step encoding setup, as described in the API overview under managed bitrate modes\&.
+.PP
+Before this function is called, the \fBvorbis_info\fP struct should be initialized by using \fBvorbis_info_init()\fP from the libvorbis API, one of \fBvorbis_encode_setup_managed()\fP or \fBvorbis_encode_setup_vbr()\fP called to initialize the high-level encoding setup, and \fBvorbis_encode_ctl()\fP called if necessary to make encoding setup changes\&. \fBvorbis_encode_setup_init()\fP finalizes the highlevel encoding structure into a complete encoding setup after which the application may make no further setup changes\&.
+.PP
+After encoding, \fBvorbis_info_clear()\fP should be called\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIvi\fP Pointer to an initialized \fBvorbis_info\fP struct\&.
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+Zero for success, and negative values for failure\&.
+.RE
+.PP
+\fBReturn values:\fP
+.RS 4
+\fI0\fP Success\&. 
+.br
+\fIOV_EFAULT\fP Internal logic fault; indicates a bug or heap/stack corruption\&.
+.br
+\fIOV_EINVAL\fP Attempt to use \fBvorbis_encode_setup_init()\fP without first calling one of \fBvorbis_encode_setup_managed()\fP or \fBvorbis_encode_setup_vbr()\fP to initialize the high-level encoding setup 
+.RE
+.PP
+
+.PP
+Definition at line 681 of file vorbisenc\&.c\&.
+.SS "\fBint\fP vorbis_encode_setup_managed (\fBvorbis_info\fP * vi, long channels, long rate, long max_bitrate, long nominal_bitrate, long min_bitrate)"
+This function performs step-one of a three-step bitrate-managed encode setup\&. It functions similarly to the one-step setup performed by \fBvorbis_encode_init\fP but allows an application to make further encode setup tweaks using \fBvorbis_encode_ctl\fP before finally calling \fBvorbis_encode_setup_init\fP to complete the setup process\&.
+.PP
+Before this function is called, the \fBvorbis_info\fP struct should be initialized by using \fBvorbis_info_init()\fP from the libvorbis API\&. After encoding, \fBvorbis_info_clear()\fP should be called\&.
+.PP
+The max_bitrate, nominal_bitrate, and min_bitrate settings are used to set constraints for the encoded file\&. This function uses these settings to select the appropriate encoding mode and set it up\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIvi\fP Pointer to an initialized \fBvorbis_info\fP struct\&. 
+.br
+\fIchannels\fP The number of channels to be encoded\&. 
+.br
+\fIrate\fP The sampling rate of the source audio\&. 
+.br
+\fImax_bitrate\fP Desired maximum bitrate (limit)\&. -1 indicates unset\&. 
+.br
+\fInominal_bitrate\fP Desired average, or central, bitrate\&. -1 indicates unset\&. 
+.br
+\fImin_bitrate\fP Desired minimum bitrate\&. -1 indicates unset\&.
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+Zero for success, and negative for failure\&.
+.RE
+.PP
+\fBReturn values:\fP
+.RS 4
+\fI0\fP Success 
+.br
+\fIOV_EFAULT\fP Internal logic fault; indicates a bug or heap/stack corruption\&. 
+.br
+\fIOV_EINVAL\fP Invalid setup request, eg, out of range argument\&. 
+.br
+\fIOV_EIMPL\fP Unimplemented mode; unable to comply with bitrate request\&. 
+.RE
+.PP
+
+.PP
+Definition at line 943 of file vorbisenc\&.c\&.
+.SS "\fBint\fP vorbis_encode_setup_vbr (\fBvorbis_info\fP * vi, long channels, long rate, float quality)"
+This function performs step-one of a three-step variable bitrate (quality-based) encode setup\&. It functions similarly to the one-step setup performed by \fBvorbis_encode_init_vbr()\fP but allows an application to make further encode setup tweaks using \fBvorbis_encode_ctl()\fP before finally calling \fBvorbis_encode_setup_init\fP to complete the setup process\&.
+.PP
+Before this function is called, the \fBvorbis_info\fP struct should be initialized by using \fBvorbis_info_init()\fP from the libvorbis API\&. After encoding, \fBvorbis_info_clear()\fP should be called\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIvi\fP Pointer to an initialized \fBvorbis_info\fP struct\&. 
+.br
+\fIchannels\fP The number of channels to be encoded\&. 
+.br
+\fIrate\fP The sampling rate of the source audio\&. 
+.br
+\fIquality\fP Desired quality level, currently from -0\&.1 to 1\&.0 (lo to hi)\&.
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+Zero for success, and negative values for failure\&.
+.RE
+.PP
+\fBReturn values:\fP
+.RS 4
+\fI0\fP Success 
+.br
+\fIOV_EFAULT\fP Internal logic fault; indicates a bug or heap/stack corruption\&. 
+.br
+\fIOV_EINVAL\fP Invalid setup request, eg, out of range argument\&. 
+.br
+\fIOV_EIMPL\fP Unimplemented mode; unable to comply with quality level request\&. 
+.RE
+.PP
+
+.PP
+Definition at line 902 of file vorbisenc\&.c\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

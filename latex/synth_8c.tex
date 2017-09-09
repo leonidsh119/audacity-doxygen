@@ -1,0 +1,336 @@
+\hypertarget{synth_8c}{}\section{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/libmad/synth.c File Reference}
+\label{synth_8c}\index{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/libmad/synth.\+c@{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/libmad/synth.\+c}}
+{\ttfamily \#include \char`\"{}global.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}fixed.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}frame.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}synth.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}D.\+dat\char`\"{}}\\*
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{synth_8c_ae3c620451e19e01f02c7ee71a045e8e8}{S\+H\+I\+FT}(x)~(x)
+\item 
+\#define \hyperlink{synth_8c_a3181b6978c9b47c96208263c73c8c4a7}{M\+UL}(x,  y)~\hyperlink{mac_2config_2i386_2lib-src_2libmad_2mad_8h_ac424f0a810aae505036e63103f4a25af}{mad\+\_\+f\+\_\+mul}((x), (y))
+\item 
+\#define \hyperlink{synth_8c_a96cb8d61a91b5585dfe7a03602633d8e}{costab1}~\hyperlink{mac_2config_2i386_2lib-src_2libmad_2mad_8h_a15f8a99ff8c6449921db3c15e8b80ed5}{M\+A\+D\+\_\+F}(0x0ffb10f2)  /$\ast$ 0.\+998795456 $\ast$/
+\item 
+\#define \hyperlink{synth_8c_a5b39da94cd274e749304d5c6e0b69c37}{costab2}~\hyperlink{mac_2config_2i386_2lib-src_2libmad_2mad_8h_a15f8a99ff8c6449921db3c15e8b80ed5}{M\+A\+D\+\_\+F}(0x0fec46d2)  /$\ast$ 0.\+995184727 $\ast$/
+\item 
+\#define \hyperlink{synth_8c_ad7524b77d03c60662e5c7a7e4ee92d5f}{costab3}~\hyperlink{mac_2config_2i386_2lib-src_2libmad_2mad_8h_a15f8a99ff8c6449921db3c15e8b80ed5}{M\+A\+D\+\_\+F}(0x0fd3aac0)  /$\ast$ 0.\+989176510 $\ast$/
+\item 
+\#define \hyperlink{synth_8c_a1a8c3613c26509d5776b9b23d3e72640}{costab4}~\hyperlink{mac_2config_2i386_2lib-src_2libmad_2mad_8h_a15f8a99ff8c6449921db3c15e8b80ed5}{M\+A\+D\+\_\+F}(0x0fb14be8)  /$\ast$ 0.\+980785280 $\ast$/
+\item 
+\#define \hyperlink{synth_8c_aa9b4bd0ff7ab38663f4bec0cea080668}{costab5}~\hyperlink{mac_2config_2i386_2lib-src_2libmad_2mad_8h_a15f8a99ff8c6449921db3c15e8b80ed5}{M\+A\+D\+\_\+F}(0x0f853f7e)  /$\ast$ 0.\+970031253 $\ast$/
+\item 
+\#define \hyperlink{synth_8c_af43f1f82f2aefbd9f6bbf965b64a468c}{costab6}~\hyperlink{mac_2config_2i386_2lib-src_2libmad_2mad_8h_a15f8a99ff8c6449921db3c15e8b80ed5}{M\+A\+D\+\_\+F}(0x0f4fa0ab)  /$\ast$ 0.\+956940336 $\ast$/
+\item 
+\#define \hyperlink{synth_8c_a0074b54c065dcd0ea3cb753d9680c809}{costab7}~\hyperlink{mac_2config_2i386_2lib-src_2libmad_2mad_8h_a15f8a99ff8c6449921db3c15e8b80ed5}{M\+A\+D\+\_\+F}(0x0f109082)  /$\ast$ 0.\+941544065 $\ast$/
+\item 
+\#define \hyperlink{synth_8c_a2ddd324a764fcdcfcb475e98a1c54e20}{costab8}~\hyperlink{mac_2config_2i386_2lib-src_2libmad_2mad_8h_a15f8a99ff8c6449921db3c15e8b80ed5}{M\+A\+D\+\_\+F}(0x0ec835e8)  /$\ast$ 0.\+923879533 $\ast$/
+\item 
+\#define \hyperlink{synth_8c_a0bd9cc7a918479043e80b65d06d49c73}{costab9}~\hyperlink{mac_2config_2i386_2lib-src_2libmad_2mad_8h_a15f8a99ff8c6449921db3c15e8b80ed5}{M\+A\+D\+\_\+F}(0x0e76bd7a)  /$\ast$ 0.\+903989293 $\ast$/
+\item 
+\#define \hyperlink{synth_8c_a82b7636e839865c21b8f92b5372c046f}{costab10}~\hyperlink{mac_2config_2i386_2lib-src_2libmad_2mad_8h_a15f8a99ff8c6449921db3c15e8b80ed5}{M\+A\+D\+\_\+F}(0x0e1c5979)  /$\ast$ 0.\+881921264 $\ast$/
+\item 
+\#define \hyperlink{synth_8c_a9b3b84682a53df72f55d19f179963e38}{costab11}~\hyperlink{mac_2config_2i386_2lib-src_2libmad_2mad_8h_a15f8a99ff8c6449921db3c15e8b80ed5}{M\+A\+D\+\_\+F}(0x0db941a3)  /$\ast$ 0.\+857728610 $\ast$/
+\item 
+\#define \hyperlink{synth_8c_a81bff4664b10a6f2d8511a9531662c19}{costab12}~\hyperlink{mac_2config_2i386_2lib-src_2libmad_2mad_8h_a15f8a99ff8c6449921db3c15e8b80ed5}{M\+A\+D\+\_\+F}(0x0d4db315)  /$\ast$ 0.\+831469612 $\ast$/
+\item 
+\#define \hyperlink{synth_8c_a9a100e52172204a67492ea08ebc0dbf3}{costab13}~\hyperlink{mac_2config_2i386_2lib-src_2libmad_2mad_8h_a15f8a99ff8c6449921db3c15e8b80ed5}{M\+A\+D\+\_\+F}(0x0cd9f024)  /$\ast$ 0.\+803207531 $\ast$/
+\item 
+\#define \hyperlink{synth_8c_a7fb1edefff93d1bf95a2bbd63fb59665}{costab14}~\hyperlink{mac_2config_2i386_2lib-src_2libmad_2mad_8h_a15f8a99ff8c6449921db3c15e8b80ed5}{M\+A\+D\+\_\+F}(0x0c5e4036)  /$\ast$ 0.\+773010453 $\ast$/
+\item 
+\#define \hyperlink{synth_8c_ae58180105039ba13cd334ec4df4f282a}{costab15}~\hyperlink{mac_2config_2i386_2lib-src_2libmad_2mad_8h_a15f8a99ff8c6449921db3c15e8b80ed5}{M\+A\+D\+\_\+F}(0x0bdaef91)  /$\ast$ 0.\+740951125 $\ast$/
+\item 
+\#define \hyperlink{synth_8c_a576180a39481d215c3ea6cdbef0d225e}{costab16}~\hyperlink{mac_2config_2i386_2lib-src_2libmad_2mad_8h_a15f8a99ff8c6449921db3c15e8b80ed5}{M\+A\+D\+\_\+F}(0x0b504f33)  /$\ast$ 0.\+707106781 $\ast$/
+\item 
+\#define \hyperlink{synth_8c_a13042519698fa963eb066b772704ca89}{costab17}~\hyperlink{mac_2config_2i386_2lib-src_2libmad_2mad_8h_a15f8a99ff8c6449921db3c15e8b80ed5}{M\+A\+D\+\_\+F}(0x0abeb49a)  /$\ast$ 0.\+671558955 $\ast$/
+\item 
+\#define \hyperlink{synth_8c_a307df3ffc70a877dbb8898e6ec092ecc}{costab18}~\hyperlink{mac_2config_2i386_2lib-src_2libmad_2mad_8h_a15f8a99ff8c6449921db3c15e8b80ed5}{M\+A\+D\+\_\+F}(0x0a267993)  /$\ast$ 0.\+634393284 $\ast$/
+\item 
+\#define \hyperlink{synth_8c_ae2068be96d043a96255233feb391f5cf}{costab19}~\hyperlink{mac_2config_2i386_2lib-src_2libmad_2mad_8h_a15f8a99ff8c6449921db3c15e8b80ed5}{M\+A\+D\+\_\+F}(0x0987fbfe)  /$\ast$ 0.\+595699304 $\ast$/
+\item 
+\#define \hyperlink{synth_8c_af06af5316c7103b565142d872c8695a1}{costab20}~\hyperlink{mac_2config_2i386_2lib-src_2libmad_2mad_8h_a15f8a99ff8c6449921db3c15e8b80ed5}{M\+A\+D\+\_\+F}(0x08e39d9d)  /$\ast$ 0.\+555570233 $\ast$/
+\item 
+\#define \hyperlink{synth_8c_a7a592b89efea38ac3c27df87ea654a56}{costab21}~\hyperlink{mac_2config_2i386_2lib-src_2libmad_2mad_8h_a15f8a99ff8c6449921db3c15e8b80ed5}{M\+A\+D\+\_\+F}(0x0839c3cd)  /$\ast$ 0.\+514102744 $\ast$/
+\item 
+\#define \hyperlink{synth_8c_ae3624677da6798b7410874f74073d9e8}{costab22}~\hyperlink{mac_2config_2i386_2lib-src_2libmad_2mad_8h_a15f8a99ff8c6449921db3c15e8b80ed5}{M\+A\+D\+\_\+F}(0x078ad74e)  /$\ast$ 0.\+471396737 $\ast$/
+\item 
+\#define \hyperlink{synth_8c_a828fdd68846634b78d1f66fce8b93d79}{costab23}~\hyperlink{mac_2config_2i386_2lib-src_2libmad_2mad_8h_a15f8a99ff8c6449921db3c15e8b80ed5}{M\+A\+D\+\_\+F}(0x06d74402)  /$\ast$ 0.\+427555093 $\ast$/
+\item 
+\#define \hyperlink{synth_8c_a1c780ebfa80b685cd4d777c1f2d34b51}{costab24}~\hyperlink{mac_2config_2i386_2lib-src_2libmad_2mad_8h_a15f8a99ff8c6449921db3c15e8b80ed5}{M\+A\+D\+\_\+F}(0x061f78aa)  /$\ast$ 0.\+382683432 $\ast$/
+\item 
+\#define \hyperlink{synth_8c_a413fbd5de7dcda70f1764f2edc130b85}{costab25}~\hyperlink{mac_2config_2i386_2lib-src_2libmad_2mad_8h_a15f8a99ff8c6449921db3c15e8b80ed5}{M\+A\+D\+\_\+F}(0x0563e69d)  /$\ast$ 0.\+336889853 $\ast$/
+\item 
+\#define \hyperlink{synth_8c_a236cd0b8ed61997372efa291729968bc}{costab26}~\hyperlink{mac_2config_2i386_2lib-src_2libmad_2mad_8h_a15f8a99ff8c6449921db3c15e8b80ed5}{M\+A\+D\+\_\+F}(0x04a5018c)  /$\ast$ 0.\+290284677 $\ast$/
+\item 
+\#define \hyperlink{synth_8c_a248e6cbeb221cc45709b4cd50f9fb001}{costab27}~\hyperlink{mac_2config_2i386_2lib-src_2libmad_2mad_8h_a15f8a99ff8c6449921db3c15e8b80ed5}{M\+A\+D\+\_\+F}(0x03e33f2f)  /$\ast$ 0.\+242980180 $\ast$/
+\item 
+\#define \hyperlink{synth_8c_ad09b0d25092f134d74f9f32c375ebe83}{costab28}~\hyperlink{mac_2config_2i386_2lib-src_2libmad_2mad_8h_a15f8a99ff8c6449921db3c15e8b80ed5}{M\+A\+D\+\_\+F}(0x031f1708)  /$\ast$ 0.\+195090322 $\ast$/
+\item 
+\#define \hyperlink{synth_8c_ad8fa0789d777a0f8ee24d87c858986b9}{costab29}~\hyperlink{mac_2config_2i386_2lib-src_2libmad_2mad_8h_a15f8a99ff8c6449921db3c15e8b80ed5}{M\+A\+D\+\_\+F}(0x0259020e)  /$\ast$ 0.\+146730474 $\ast$/
+\item 
+\#define \hyperlink{synth_8c_af37a40306f4ff2693d685d404f3222b0}{costab30}~\hyperlink{mac_2config_2i386_2lib-src_2libmad_2mad_8h_a15f8a99ff8c6449921db3c15e8b80ed5}{M\+A\+D\+\_\+F}(0x01917a6c)  /$\ast$ 0.\+098017140 $\ast$/
+\item 
+\#define \hyperlink{synth_8c_a8f340c93f6090372509e5d6b2fe93fc4}{costab31}~\hyperlink{mac_2config_2i386_2lib-src_2libmad_2mad_8h_a15f8a99ff8c6449921db3c15e8b80ed5}{M\+A\+D\+\_\+F}(0x00c8fb30)  /$\ast$ 0.\+049067674 $\ast$/
+\item 
+\#define \hyperlink{synth_8c_ac09d81e135e7ce41eeb3f400cf4099d1}{M\+L0}(hi,  lo,  x,  y)~\hyperlink{mac_2config_2i386_2lib-src_2libmad_2mad_8h_ad700e5599dd11accc3128356e2d975e8}{M\+A\+D\+\_\+\+F\+\_\+\+M\+L0}((hi), (lo), (x), (y))
+\item 
+\#define \hyperlink{synth_8c_ac6585ffc32901837b8a64c0e8de29bbf}{M\+LA}(hi,  lo,  x,  y)~\hyperlink{mac_2config_2i386_2lib-src_2libmad_2mad_8h_a770cce15186c32f6214d9dfcf6b79908}{M\+A\+D\+\_\+\+F\+\_\+\+M\+LA}((hi), (lo), (x), (y))
+\item 
+\#define \hyperlink{synth_8c_ad52d5d560abbcdd8236ec567d266f4f5}{M\+LN}(hi,  lo)~\hyperlink{mac_2config_2i386_2lib-src_2libmad_2mad_8h_a1ba57ecda7d303598c01041d47e5ddcb}{M\+A\+D\+\_\+\+F\+\_\+\+M\+LN}((hi), (lo))
+\item 
+\#define \hyperlink{synth_8c_a2f0648d09a4e551bafc647576b857968}{M\+LZ}(hi,  lo)~\hyperlink{mac_2config_2i386_2lib-src_2libmad_2mad_8h_a53482b2abc4dd4c38e03713e6ca100fd}{M\+A\+D\+\_\+\+F\+\_\+\+M\+LZ}((hi), (lo))
+\item 
+\#define \hyperlink{synth_8c_ae3c620451e19e01f02c7ee71a045e8e8}{S\+H\+I\+FT}(x)~(x)
+\item 
+\#define \hyperlink{synth_8c_aa0356c356ceced040bed036d0b4a2b2e}{M\+A\+D\+\_\+\+F\+\_\+\+S\+C\+A\+L\+E\+B\+I\+TS}~(\hyperlink{mac_2config_2i386_2lib-src_2libmad_2mad_8h_afe9f395501b4973ab536c13fb8235944}{M\+A\+D\+\_\+\+F\+\_\+\+F\+R\+A\+C\+B\+I\+TS} -\/ 12)
+\item 
+\#define \hyperlink{synth_8c_a1a4f6c4e00aec66668d03cf1ca4641d0}{P\+R\+E\+S\+H\+I\+FT}(x)~(\hyperlink{mac_2config_2i386_2lib-src_2libmad_2mad_8h_a15f8a99ff8c6449921db3c15e8b80ed5}{M\+A\+D\+\_\+F}(x) $>$$>$ 12)
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{synth_8c_aa4b0826d9e13fe5017d20d7a70140102}{mad\+\_\+synth\+\_\+init} (struct \hyperlink{structmad__synth}{mad\+\_\+synth} $\ast$synth)
+\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{synth_8c_a2be86ef7252bde316624a935c3e0980e}{mad\+\_\+synth\+\_\+mute} (struct \hyperlink{structmad__synth}{mad\+\_\+synth} $\ast$synth)
+\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{synth_8c_ae97489625b8c34de43c8e59dece92260}{mad\+\_\+synth\+\_\+frame} (struct \hyperlink{structmad__synth}{mad\+\_\+synth} $\ast$synth, struct \hyperlink{structmad__frame}{mad\+\_\+frame} \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} $\ast$frame)
+\end{DoxyCompactItemize}
+
+
+\subsection{Macro Definition Documentation}
+\index{synth.\+c@{synth.\+c}!costab1@{costab1}}
+\index{costab1@{costab1}!synth.\+c@{synth.\+c}}
+\subsubsection[{\texorpdfstring{costab1}{costab1}}]{\setlength{\rightskip}{0pt plus 5cm}\#define costab1~{\bf M\+A\+D\+\_\+F}(0x0ffb10f2)  /$\ast$ 0.\+998795456 $\ast$/}\hypertarget{synth_8c_a96cb8d61a91b5585dfe7a03602633d8e}{}\label{synth_8c_a96cb8d61a91b5585dfe7a03602633d8e}
+\index{synth.\+c@{synth.\+c}!costab10@{costab10}}
+\index{costab10@{costab10}!synth.\+c@{synth.\+c}}
+\subsubsection[{\texorpdfstring{costab10}{costab10}}]{\setlength{\rightskip}{0pt plus 5cm}\#define costab10~{\bf M\+A\+D\+\_\+F}(0x0e1c5979)  /$\ast$ 0.\+881921264 $\ast$/}\hypertarget{synth_8c_a82b7636e839865c21b8f92b5372c046f}{}\label{synth_8c_a82b7636e839865c21b8f92b5372c046f}
+\index{synth.\+c@{synth.\+c}!costab11@{costab11}}
+\index{costab11@{costab11}!synth.\+c@{synth.\+c}}
+\subsubsection[{\texorpdfstring{costab11}{costab11}}]{\setlength{\rightskip}{0pt plus 5cm}\#define costab11~{\bf M\+A\+D\+\_\+F}(0x0db941a3)  /$\ast$ 0.\+857728610 $\ast$/}\hypertarget{synth_8c_a9b3b84682a53df72f55d19f179963e38}{}\label{synth_8c_a9b3b84682a53df72f55d19f179963e38}
+\index{synth.\+c@{synth.\+c}!costab12@{costab12}}
+\index{costab12@{costab12}!synth.\+c@{synth.\+c}}
+\subsubsection[{\texorpdfstring{costab12}{costab12}}]{\setlength{\rightskip}{0pt plus 5cm}\#define costab12~{\bf M\+A\+D\+\_\+F}(0x0d4db315)  /$\ast$ 0.\+831469612 $\ast$/}\hypertarget{synth_8c_a81bff4664b10a6f2d8511a9531662c19}{}\label{synth_8c_a81bff4664b10a6f2d8511a9531662c19}
+\index{synth.\+c@{synth.\+c}!costab13@{costab13}}
+\index{costab13@{costab13}!synth.\+c@{synth.\+c}}
+\subsubsection[{\texorpdfstring{costab13}{costab13}}]{\setlength{\rightskip}{0pt plus 5cm}\#define costab13~{\bf M\+A\+D\+\_\+F}(0x0cd9f024)  /$\ast$ 0.\+803207531 $\ast$/}\hypertarget{synth_8c_a9a100e52172204a67492ea08ebc0dbf3}{}\label{synth_8c_a9a100e52172204a67492ea08ebc0dbf3}
+\index{synth.\+c@{synth.\+c}!costab14@{costab14}}
+\index{costab14@{costab14}!synth.\+c@{synth.\+c}}
+\subsubsection[{\texorpdfstring{costab14}{costab14}}]{\setlength{\rightskip}{0pt plus 5cm}\#define costab14~{\bf M\+A\+D\+\_\+F}(0x0c5e4036)  /$\ast$ 0.\+773010453 $\ast$/}\hypertarget{synth_8c_a7fb1edefff93d1bf95a2bbd63fb59665}{}\label{synth_8c_a7fb1edefff93d1bf95a2bbd63fb59665}
+\index{synth.\+c@{synth.\+c}!costab15@{costab15}}
+\index{costab15@{costab15}!synth.\+c@{synth.\+c}}
+\subsubsection[{\texorpdfstring{costab15}{costab15}}]{\setlength{\rightskip}{0pt plus 5cm}\#define costab15~{\bf M\+A\+D\+\_\+F}(0x0bdaef91)  /$\ast$ 0.\+740951125 $\ast$/}\hypertarget{synth_8c_ae58180105039ba13cd334ec4df4f282a}{}\label{synth_8c_ae58180105039ba13cd334ec4df4f282a}
+\index{synth.\+c@{synth.\+c}!costab16@{costab16}}
+\index{costab16@{costab16}!synth.\+c@{synth.\+c}}
+\subsubsection[{\texorpdfstring{costab16}{costab16}}]{\setlength{\rightskip}{0pt plus 5cm}\#define costab16~{\bf M\+A\+D\+\_\+F}(0x0b504f33)  /$\ast$ 0.\+707106781 $\ast$/}\hypertarget{synth_8c_a576180a39481d215c3ea6cdbef0d225e}{}\label{synth_8c_a576180a39481d215c3ea6cdbef0d225e}
+\index{synth.\+c@{synth.\+c}!costab17@{costab17}}
+\index{costab17@{costab17}!synth.\+c@{synth.\+c}}
+\subsubsection[{\texorpdfstring{costab17}{costab17}}]{\setlength{\rightskip}{0pt plus 5cm}\#define costab17~{\bf M\+A\+D\+\_\+F}(0x0abeb49a)  /$\ast$ 0.\+671558955 $\ast$/}\hypertarget{synth_8c_a13042519698fa963eb066b772704ca89}{}\label{synth_8c_a13042519698fa963eb066b772704ca89}
+\index{synth.\+c@{synth.\+c}!costab18@{costab18}}
+\index{costab18@{costab18}!synth.\+c@{synth.\+c}}
+\subsubsection[{\texorpdfstring{costab18}{costab18}}]{\setlength{\rightskip}{0pt plus 5cm}\#define costab18~{\bf M\+A\+D\+\_\+F}(0x0a267993)  /$\ast$ 0.\+634393284 $\ast$/}\hypertarget{synth_8c_a307df3ffc70a877dbb8898e6ec092ecc}{}\label{synth_8c_a307df3ffc70a877dbb8898e6ec092ecc}
+\index{synth.\+c@{synth.\+c}!costab19@{costab19}}
+\index{costab19@{costab19}!synth.\+c@{synth.\+c}}
+\subsubsection[{\texorpdfstring{costab19}{costab19}}]{\setlength{\rightskip}{0pt plus 5cm}\#define costab19~{\bf M\+A\+D\+\_\+F}(0x0987fbfe)  /$\ast$ 0.\+595699304 $\ast$/}\hypertarget{synth_8c_ae2068be96d043a96255233feb391f5cf}{}\label{synth_8c_ae2068be96d043a96255233feb391f5cf}
+\index{synth.\+c@{synth.\+c}!costab2@{costab2}}
+\index{costab2@{costab2}!synth.\+c@{synth.\+c}}
+\subsubsection[{\texorpdfstring{costab2}{costab2}}]{\setlength{\rightskip}{0pt plus 5cm}\#define costab2~{\bf M\+A\+D\+\_\+F}(0x0fec46d2)  /$\ast$ 0.\+995184727 $\ast$/}\hypertarget{synth_8c_a5b39da94cd274e749304d5c6e0b69c37}{}\label{synth_8c_a5b39da94cd274e749304d5c6e0b69c37}
+\index{synth.\+c@{synth.\+c}!costab20@{costab20}}
+\index{costab20@{costab20}!synth.\+c@{synth.\+c}}
+\subsubsection[{\texorpdfstring{costab20}{costab20}}]{\setlength{\rightskip}{0pt plus 5cm}\#define costab20~{\bf M\+A\+D\+\_\+F}(0x08e39d9d)  /$\ast$ 0.\+555570233 $\ast$/}\hypertarget{synth_8c_af06af5316c7103b565142d872c8695a1}{}\label{synth_8c_af06af5316c7103b565142d872c8695a1}
+\index{synth.\+c@{synth.\+c}!costab21@{costab21}}
+\index{costab21@{costab21}!synth.\+c@{synth.\+c}}
+\subsubsection[{\texorpdfstring{costab21}{costab21}}]{\setlength{\rightskip}{0pt plus 5cm}\#define costab21~{\bf M\+A\+D\+\_\+F}(0x0839c3cd)  /$\ast$ 0.\+514102744 $\ast$/}\hypertarget{synth_8c_a7a592b89efea38ac3c27df87ea654a56}{}\label{synth_8c_a7a592b89efea38ac3c27df87ea654a56}
+\index{synth.\+c@{synth.\+c}!costab22@{costab22}}
+\index{costab22@{costab22}!synth.\+c@{synth.\+c}}
+\subsubsection[{\texorpdfstring{costab22}{costab22}}]{\setlength{\rightskip}{0pt plus 5cm}\#define costab22~{\bf M\+A\+D\+\_\+F}(0x078ad74e)  /$\ast$ 0.\+471396737 $\ast$/}\hypertarget{synth_8c_ae3624677da6798b7410874f74073d9e8}{}\label{synth_8c_ae3624677da6798b7410874f74073d9e8}
+\index{synth.\+c@{synth.\+c}!costab23@{costab23}}
+\index{costab23@{costab23}!synth.\+c@{synth.\+c}}
+\subsubsection[{\texorpdfstring{costab23}{costab23}}]{\setlength{\rightskip}{0pt plus 5cm}\#define costab23~{\bf M\+A\+D\+\_\+F}(0x06d74402)  /$\ast$ 0.\+427555093 $\ast$/}\hypertarget{synth_8c_a828fdd68846634b78d1f66fce8b93d79}{}\label{synth_8c_a828fdd68846634b78d1f66fce8b93d79}
+\index{synth.\+c@{synth.\+c}!costab24@{costab24}}
+\index{costab24@{costab24}!synth.\+c@{synth.\+c}}
+\subsubsection[{\texorpdfstring{costab24}{costab24}}]{\setlength{\rightskip}{0pt plus 5cm}\#define costab24~{\bf M\+A\+D\+\_\+F}(0x061f78aa)  /$\ast$ 0.\+382683432 $\ast$/}\hypertarget{synth_8c_a1c780ebfa80b685cd4d777c1f2d34b51}{}\label{synth_8c_a1c780ebfa80b685cd4d777c1f2d34b51}
+\index{synth.\+c@{synth.\+c}!costab25@{costab25}}
+\index{costab25@{costab25}!synth.\+c@{synth.\+c}}
+\subsubsection[{\texorpdfstring{costab25}{costab25}}]{\setlength{\rightskip}{0pt plus 5cm}\#define costab25~{\bf M\+A\+D\+\_\+F}(0x0563e69d)  /$\ast$ 0.\+336889853 $\ast$/}\hypertarget{synth_8c_a413fbd5de7dcda70f1764f2edc130b85}{}\label{synth_8c_a413fbd5de7dcda70f1764f2edc130b85}
+\index{synth.\+c@{synth.\+c}!costab26@{costab26}}
+\index{costab26@{costab26}!synth.\+c@{synth.\+c}}
+\subsubsection[{\texorpdfstring{costab26}{costab26}}]{\setlength{\rightskip}{0pt plus 5cm}\#define costab26~{\bf M\+A\+D\+\_\+F}(0x04a5018c)  /$\ast$ 0.\+290284677 $\ast$/}\hypertarget{synth_8c_a236cd0b8ed61997372efa291729968bc}{}\label{synth_8c_a236cd0b8ed61997372efa291729968bc}
+\index{synth.\+c@{synth.\+c}!costab27@{costab27}}
+\index{costab27@{costab27}!synth.\+c@{synth.\+c}}
+\subsubsection[{\texorpdfstring{costab27}{costab27}}]{\setlength{\rightskip}{0pt plus 5cm}\#define costab27~{\bf M\+A\+D\+\_\+F}(0x03e33f2f)  /$\ast$ 0.\+242980180 $\ast$/}\hypertarget{synth_8c_a248e6cbeb221cc45709b4cd50f9fb001}{}\label{synth_8c_a248e6cbeb221cc45709b4cd50f9fb001}
+\index{synth.\+c@{synth.\+c}!costab28@{costab28}}
+\index{costab28@{costab28}!synth.\+c@{synth.\+c}}
+\subsubsection[{\texorpdfstring{costab28}{costab28}}]{\setlength{\rightskip}{0pt plus 5cm}\#define costab28~{\bf M\+A\+D\+\_\+F}(0x031f1708)  /$\ast$ 0.\+195090322 $\ast$/}\hypertarget{synth_8c_ad09b0d25092f134d74f9f32c375ebe83}{}\label{synth_8c_ad09b0d25092f134d74f9f32c375ebe83}
+\index{synth.\+c@{synth.\+c}!costab29@{costab29}}
+\index{costab29@{costab29}!synth.\+c@{synth.\+c}}
+\subsubsection[{\texorpdfstring{costab29}{costab29}}]{\setlength{\rightskip}{0pt plus 5cm}\#define costab29~{\bf M\+A\+D\+\_\+F}(0x0259020e)  /$\ast$ 0.\+146730474 $\ast$/}\hypertarget{synth_8c_ad8fa0789d777a0f8ee24d87c858986b9}{}\label{synth_8c_ad8fa0789d777a0f8ee24d87c858986b9}
+\index{synth.\+c@{synth.\+c}!costab3@{costab3}}
+\index{costab3@{costab3}!synth.\+c@{synth.\+c}}
+\subsubsection[{\texorpdfstring{costab3}{costab3}}]{\setlength{\rightskip}{0pt plus 5cm}\#define costab3~{\bf M\+A\+D\+\_\+F}(0x0fd3aac0)  /$\ast$ 0.\+989176510 $\ast$/}\hypertarget{synth_8c_ad7524b77d03c60662e5c7a7e4ee92d5f}{}\label{synth_8c_ad7524b77d03c60662e5c7a7e4ee92d5f}
+\index{synth.\+c@{synth.\+c}!costab30@{costab30}}
+\index{costab30@{costab30}!synth.\+c@{synth.\+c}}
+\subsubsection[{\texorpdfstring{costab30}{costab30}}]{\setlength{\rightskip}{0pt plus 5cm}\#define costab30~{\bf M\+A\+D\+\_\+F}(0x01917a6c)  /$\ast$ 0.\+098017140 $\ast$/}\hypertarget{synth_8c_af37a40306f4ff2693d685d404f3222b0}{}\label{synth_8c_af37a40306f4ff2693d685d404f3222b0}
+\index{synth.\+c@{synth.\+c}!costab31@{costab31}}
+\index{costab31@{costab31}!synth.\+c@{synth.\+c}}
+\subsubsection[{\texorpdfstring{costab31}{costab31}}]{\setlength{\rightskip}{0pt plus 5cm}\#define costab31~{\bf M\+A\+D\+\_\+F}(0x00c8fb30)  /$\ast$ 0.\+049067674 $\ast$/}\hypertarget{synth_8c_a8f340c93f6090372509e5d6b2fe93fc4}{}\label{synth_8c_a8f340c93f6090372509e5d6b2fe93fc4}
+\index{synth.\+c@{synth.\+c}!costab4@{costab4}}
+\index{costab4@{costab4}!synth.\+c@{synth.\+c}}
+\subsubsection[{\texorpdfstring{costab4}{costab4}}]{\setlength{\rightskip}{0pt plus 5cm}\#define costab4~{\bf M\+A\+D\+\_\+F}(0x0fb14be8)  /$\ast$ 0.\+980785280 $\ast$/}\hypertarget{synth_8c_a1a8c3613c26509d5776b9b23d3e72640}{}\label{synth_8c_a1a8c3613c26509d5776b9b23d3e72640}
+\index{synth.\+c@{synth.\+c}!costab5@{costab5}}
+\index{costab5@{costab5}!synth.\+c@{synth.\+c}}
+\subsubsection[{\texorpdfstring{costab5}{costab5}}]{\setlength{\rightskip}{0pt plus 5cm}\#define costab5~{\bf M\+A\+D\+\_\+F}(0x0f853f7e)  /$\ast$ 0.\+970031253 $\ast$/}\hypertarget{synth_8c_aa9b4bd0ff7ab38663f4bec0cea080668}{}\label{synth_8c_aa9b4bd0ff7ab38663f4bec0cea080668}
+\index{synth.\+c@{synth.\+c}!costab6@{costab6}}
+\index{costab6@{costab6}!synth.\+c@{synth.\+c}}
+\subsubsection[{\texorpdfstring{costab6}{costab6}}]{\setlength{\rightskip}{0pt plus 5cm}\#define costab6~{\bf M\+A\+D\+\_\+F}(0x0f4fa0ab)  /$\ast$ 0.\+956940336 $\ast$/}\hypertarget{synth_8c_af43f1f82f2aefbd9f6bbf965b64a468c}{}\label{synth_8c_af43f1f82f2aefbd9f6bbf965b64a468c}
+\index{synth.\+c@{synth.\+c}!costab7@{costab7}}
+\index{costab7@{costab7}!synth.\+c@{synth.\+c}}
+\subsubsection[{\texorpdfstring{costab7}{costab7}}]{\setlength{\rightskip}{0pt plus 5cm}\#define costab7~{\bf M\+A\+D\+\_\+F}(0x0f109082)  /$\ast$ 0.\+941544065 $\ast$/}\hypertarget{synth_8c_a0074b54c065dcd0ea3cb753d9680c809}{}\label{synth_8c_a0074b54c065dcd0ea3cb753d9680c809}
+\index{synth.\+c@{synth.\+c}!costab8@{costab8}}
+\index{costab8@{costab8}!synth.\+c@{synth.\+c}}
+\subsubsection[{\texorpdfstring{costab8}{costab8}}]{\setlength{\rightskip}{0pt plus 5cm}\#define costab8~{\bf M\+A\+D\+\_\+F}(0x0ec835e8)  /$\ast$ 0.\+923879533 $\ast$/}\hypertarget{synth_8c_a2ddd324a764fcdcfcb475e98a1c54e20}{}\label{synth_8c_a2ddd324a764fcdcfcb475e98a1c54e20}
+\index{synth.\+c@{synth.\+c}!costab9@{costab9}}
+\index{costab9@{costab9}!synth.\+c@{synth.\+c}}
+\subsubsection[{\texorpdfstring{costab9}{costab9}}]{\setlength{\rightskip}{0pt plus 5cm}\#define costab9~{\bf M\+A\+D\+\_\+F}(0x0e76bd7a)  /$\ast$ 0.\+903989293 $\ast$/}\hypertarget{synth_8c_a0bd9cc7a918479043e80b65d06d49c73}{}\label{synth_8c_a0bd9cc7a918479043e80b65d06d49c73}
+\index{synth.\+c@{synth.\+c}!M\+A\+D\+\_\+\+F\+\_\+\+S\+C\+A\+L\+E\+B\+I\+TS@{M\+A\+D\+\_\+\+F\+\_\+\+S\+C\+A\+L\+E\+B\+I\+TS}}
+\index{M\+A\+D\+\_\+\+F\+\_\+\+S\+C\+A\+L\+E\+B\+I\+TS@{M\+A\+D\+\_\+\+F\+\_\+\+S\+C\+A\+L\+E\+B\+I\+TS}!synth.\+c@{synth.\+c}}
+\subsubsection[{\texorpdfstring{M\+A\+D\+\_\+\+F\+\_\+\+S\+C\+A\+L\+E\+B\+I\+TS}{MAD_F_SCALEBITS}}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+A\+D\+\_\+\+F\+\_\+\+S\+C\+A\+L\+E\+B\+I\+TS~({\bf M\+A\+D\+\_\+\+F\+\_\+\+F\+R\+A\+C\+B\+I\+TS} -\/ 12)}\hypertarget{synth_8c_aa0356c356ceced040bed036d0b4a2b2e}{}\label{synth_8c_aa0356c356ceced040bed036d0b4a2b2e}
+
+
+Definition at line 537 of file synth.\+c.
+
+\index{synth.\+c@{synth.\+c}!M\+L0@{M\+L0}}
+\index{M\+L0@{M\+L0}!synth.\+c@{synth.\+c}}
+\subsubsection[{\texorpdfstring{M\+L0}{ML0}}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+L0(
+\begin{DoxyParamCaption}
+\item[{}]{hi, }
+\item[{}]{lo, }
+\item[{}]{x, }
+\item[{}]{y}
+\end{DoxyParamCaption}
+)~{\bf M\+A\+D\+\_\+\+F\+\_\+\+M\+L0}((hi), (lo), (x), (y))}\hypertarget{synth_8c_ac09d81e135e7ce41eeb3f400cf4099d1}{}\label{synth_8c_ac09d81e135e7ce41eeb3f400cf4099d1}
+
+
+Definition at line 530 of file synth.\+c.
+
+\index{synth.\+c@{synth.\+c}!M\+LA@{M\+LA}}
+\index{M\+LA@{M\+LA}!synth.\+c@{synth.\+c}}
+\subsubsection[{\texorpdfstring{M\+LA}{MLA}}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+LA(
+\begin{DoxyParamCaption}
+\item[{}]{hi, }
+\item[{}]{lo, }
+\item[{}]{x, }
+\item[{}]{y}
+\end{DoxyParamCaption}
+)~{\bf M\+A\+D\+\_\+\+F\+\_\+\+M\+LA}((hi), (lo), (x), (y))}\hypertarget{synth_8c_ac6585ffc32901837b8a64c0e8de29bbf}{}\label{synth_8c_ac6585ffc32901837b8a64c0e8de29bbf}
+
+
+Definition at line 531 of file synth.\+c.
+
+\index{synth.\+c@{synth.\+c}!M\+LN@{M\+LN}}
+\index{M\+LN@{M\+LN}!synth.\+c@{synth.\+c}}
+\subsubsection[{\texorpdfstring{M\+LN}{MLN}}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+LN(
+\begin{DoxyParamCaption}
+\item[{}]{hi, }
+\item[{}]{lo}
+\end{DoxyParamCaption}
+)~{\bf M\+A\+D\+\_\+\+F\+\_\+\+M\+LN}((hi), (lo))}\hypertarget{synth_8c_ad52d5d560abbcdd8236ec567d266f4f5}{}\label{synth_8c_ad52d5d560abbcdd8236ec567d266f4f5}
+
+
+Definition at line 532 of file synth.\+c.
+
+\index{synth.\+c@{synth.\+c}!M\+LZ@{M\+LZ}}
+\index{M\+LZ@{M\+LZ}!synth.\+c@{synth.\+c}}
+\subsubsection[{\texorpdfstring{M\+LZ}{MLZ}}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+LZ(
+\begin{DoxyParamCaption}
+\item[{}]{hi, }
+\item[{}]{lo}
+\end{DoxyParamCaption}
+)~{\bf M\+A\+D\+\_\+\+F\+\_\+\+M\+LZ}((hi), (lo))}\hypertarget{synth_8c_a2f0648d09a4e551bafc647576b857968}{}\label{synth_8c_a2f0648d09a4e551bafc647576b857968}
+
+
+Definition at line 533 of file synth.\+c.
+
+\index{synth.\+c@{synth.\+c}!M\+UL@{M\+UL}}
+\index{M\+UL@{M\+UL}!synth.\+c@{synth.\+c}}
+\subsubsection[{\texorpdfstring{M\+UL}{MUL}}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+UL(
+\begin{DoxyParamCaption}
+\item[{}]{x, }
+\item[{}]{y}
+\end{DoxyParamCaption}
+)~{\bf mad\+\_\+f\+\_\+mul}((x), (y))}\hypertarget{synth_8c_a3181b6978c9b47c96208263c73c8c4a7}{}\label{synth_8c_a3181b6978c9b47c96208263c73c8c4a7}
+
+
+Definition at line 115 of file synth.\+c.
+
+\index{synth.\+c@{synth.\+c}!P\+R\+E\+S\+H\+I\+FT@{P\+R\+E\+S\+H\+I\+FT}}
+\index{P\+R\+E\+S\+H\+I\+FT@{P\+R\+E\+S\+H\+I\+FT}!synth.\+c@{synth.\+c}}
+\subsubsection[{\texorpdfstring{P\+R\+E\+S\+H\+I\+FT}{PRESHIFT}}]{\setlength{\rightskip}{0pt plus 5cm}\#define P\+R\+E\+S\+H\+I\+FT(
+\begin{DoxyParamCaption}
+\item[{}]{x}
+\end{DoxyParamCaption}
+)~({\bf M\+A\+D\+\_\+F}(x) $>$$>$ 12)}\hypertarget{synth_8c_a1a4f6c4e00aec66668d03cf1ca4641d0}{}\label{synth_8c_a1a4f6c4e00aec66668d03cf1ca4641d0}
+
+
+Definition at line 538 of file synth.\+c.
+
+\index{synth.\+c@{synth.\+c}!S\+H\+I\+FT@{S\+H\+I\+FT}}
+\index{S\+H\+I\+FT@{S\+H\+I\+FT}!synth.\+c@{synth.\+c}}
+\subsubsection[{\texorpdfstring{S\+H\+I\+FT}{SHIFT}}]{\setlength{\rightskip}{0pt plus 5cm}\#define S\+H\+I\+FT(
+\begin{DoxyParamCaption}
+\item[{}]{x}
+\end{DoxyParamCaption}
+)~(x)}\hypertarget{synth_8c_ae3c620451e19e01f02c7ee71a045e8e8}{}\label{synth_8c_ae3c620451e19e01f02c7ee71a045e8e8}
+
+
+Definition at line 534 of file synth.\+c.
+
+\index{synth.\+c@{synth.\+c}!S\+H\+I\+FT@{S\+H\+I\+FT}}
+\index{S\+H\+I\+FT@{S\+H\+I\+FT}!synth.\+c@{synth.\+c}}
+\subsubsection[{\texorpdfstring{S\+H\+I\+FT}{SHIFT}}]{\setlength{\rightskip}{0pt plus 5cm}\#define S\+H\+I\+FT(
+\begin{DoxyParamCaption}
+\item[{}]{x}
+\end{DoxyParamCaption}
+)~(x)}\hypertarget{synth_8c_ae3c620451e19e01f02c7ee71a045e8e8}{}\label{synth_8c_ae3c620451e19e01f02c7ee71a045e8e8}
+
+
+Definition at line 534 of file synth.\+c.
+
+
+
+\subsection{Function Documentation}
+\index{synth.\+c@{synth.\+c}!mad\+\_\+synth\+\_\+frame@{mad\+\_\+synth\+\_\+frame}}
+\index{mad\+\_\+synth\+\_\+frame@{mad\+\_\+synth\+\_\+frame}!synth.\+c@{synth.\+c}}
+\subsubsection[{\texorpdfstring{mad\+\_\+synth\+\_\+frame(struct mad\+\_\+synth $\ast$synth, struct mad\+\_\+frame const $\ast$frame)}{mad_synth_frame(struct mad_synth *synth, struct mad_frame const *frame)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} mad\+\_\+synth\+\_\+frame (
+\begin{DoxyParamCaption}
+\item[{struct {\bf mad\+\_\+synth} $\ast$}]{synth, }
+\item[{struct {\bf mad\+\_\+frame} {\bf const} $\ast$}]{frame}
+\end{DoxyParamCaption}
+)}\hypertarget{synth_8c_ae97489625b8c34de43c8e59dece92260}{}\label{synth_8c_ae97489625b8c34de43c8e59dece92260}
+
+
+Definition at line 832 of file synth.\+c.
+
+\index{synth.\+c@{synth.\+c}!mad\+\_\+synth\+\_\+init@{mad\+\_\+synth\+\_\+init}}
+\index{mad\+\_\+synth\+\_\+init@{mad\+\_\+synth\+\_\+init}!synth.\+c@{synth.\+c}}
+\subsubsection[{\texorpdfstring{mad\+\_\+synth\+\_\+init(struct mad\+\_\+synth $\ast$synth)}{mad_synth_init(struct mad_synth *synth)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} mad\+\_\+synth\+\_\+init (
+\begin{DoxyParamCaption}
+\item[{struct {\bf mad\+\_\+synth} $\ast$}]{synth}
+\end{DoxyParamCaption}
+)}\hypertarget{synth_8c_aa4b0826d9e13fe5017d20d7a70140102}{}\label{synth_8c_aa4b0826d9e13fe5017d20d7a70140102}
+
+
+Definition at line 36 of file synth.\+c.
+
+\index{synth.\+c@{synth.\+c}!mad\+\_\+synth\+\_\+mute@{mad\+\_\+synth\+\_\+mute}}
+\index{mad\+\_\+synth\+\_\+mute@{mad\+\_\+synth\+\_\+mute}!synth.\+c@{synth.\+c}}
+\subsubsection[{\texorpdfstring{mad\+\_\+synth\+\_\+mute(struct mad\+\_\+synth $\ast$synth)}{mad_synth_mute(struct mad_synth *synth)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} mad\+\_\+synth\+\_\+mute (
+\begin{DoxyParamCaption}
+\item[{struct {\bf mad\+\_\+synth} $\ast$}]{synth}
+\end{DoxyParamCaption}
+)}\hypertarget{synth_8c_a2be86ef7252bde316624a935c3e0980e}{}\label{synth_8c_a2be86ef7252bde316624a935c3e0980e}
+
+
+Definition at line 51 of file synth.\+c.
+

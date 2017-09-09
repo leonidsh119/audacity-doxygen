@@ -1,0 +1,149 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/lib-src/lv2/lv2/lv2/lv2plug.in/ns/ext/dynmanifest/dynmanifest.h" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/lib-src/lv2/lv2/lv2/lv2plug.in/ns/ext/dynmanifest/dynmanifest.h \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <stdio\&.h>\fP
+.br
+\fC#include 'lv2/lv2plug\&.in/ns/lv2core/lv2\&.h'\fP
+.br
+
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBLV2_DYN_MANIFEST_URI\fP   'http://\fBlv2plug\&.in\fP/\fBns\fP/ext/dynmanifest'"
+.br
+.in -1c
+.SS "Typedefs"
+
+.in +1c
+.ti -1c
+.RI "typedef \fBvoid\fP * \fBLV2_Dyn_Manifest_Handle\fP"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBint\fP \fBlv2_dyn_manifest_open\fP (\fBLV2_Dyn_Manifest_Handle\fP *handle, \fBconst\fP \fBLV2_Feature\fP *\fBconst\fP *features)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBlv2_dyn_manifest_get_subjects\fP (\fBLV2_Dyn_Manifest_Handle\fP handle, FILE *fp)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBlv2_dyn_manifest_get_data\fP (\fBLV2_Dyn_Manifest_Handle\fP handle, FILE *fp, \fBconst\fP char *\fBuri\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBlv2_dyn_manifest_close\fP (\fBLV2_Dyn_Manifest_Handle\fP handle)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+C header for the LV2 Dynamic Manifest extension http://lv2plug.in/ns/ext/dynmanifest\&. Revision: 1\&.2 
+.PP
+Definition in file \fBdynmanifest\&.h\fP\&.
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define LV2_DYN_MANIFEST_URI   'http://\fBlv2plug\&.in\fP/\fBns\fP/ext/dynmanifest'"
+
+.PP
+Definition at line 32 of file dynmanifest\&.h\&.
+.SH "Typedef Documentation"
+.PP 
+.SS "typedef \fBvoid\fP* \fBLV2_Dyn_Manifest_Handle\fP"
+Dynamic manifest generator handle\&.
+.PP
+This handle indicates a particular status of a dynamic manifest generator\&. The host MUST NOT attempt to interpret it and, unlikely LV2_Handle, it is NOT even valid to compare this to NULL\&. The dynamic manifest generator MAY use it to reference internal data\&. 
+.PP
+Definition at line 46 of file dynmanifest\&.h\&.
+.SH "Function Documentation"
+.PP 
+.SS "\fBvoid\fP lv2_dyn_manifest_close (\fBLV2_Dyn_Manifest_Handle\fP handle)"
+\fBFunction\fP that ends the operations on the dynamic manifest generator\&.
+.PP
+This function SHOULD be used by the dynamic manifest generator to perform cleanup operations, etc\&.
+.PP
+Once this function is called, referring to handle will cause undefined behavior\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIhandle\fP Dynamic manifest generator handle\&. 
+.RE
+.PP
+
+.SS "\fBint\fP lv2_dyn_manifest_get_data (\fBLV2_Dyn_Manifest_Handle\fP handle, FILE * fp, \fBconst\fP char * uri)"
+\fBFunction\fP that fetches data related to a specific URI\&.
+.PP
+The dynamic manifest generator has to fill the resource with data related to object represented by the given URI\&. For example, if the library exposes a regular LV2 plugin whose URI, as retrieved by the host using \fBlv2_dyn_manifest_get_subjects()\fP is http://www.example.com/plugin/uri, it should output something like:
+.PP
+.PP
+.nf
+
+http://www.example.com/plugin/uri
+    a lv2:Plugin ;
+    doap:name 'My Plugin' ;
+    lv2:binary <mylib\&.so> ;
+    etc:etc '\&.\&.\&.' \&.
+.fi
+.PP
+.PP
+\fBParameters:\fP
+.RS 4
+\fIhandle\fP Dynamic manifest generator handle\&.
+.br
+\fIfp\fP FILE * identifying the resource the host has to set up for the dynamic manifest generator\&. The host MUST pass a writable resource to this function, and the dynamic manifest generator MUST ONLY perform write operations on it at the current position of the stream (e\&.g\&. using only fprintf(), fwrite() and similar)\&.
+.br
+\fIuri\fP URI to get data about (in the 'plain' form, i\&.e\&., absolute URI without Turtle prefixes)\&.
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+0 on success, otherwise a non-zero error code\&. 
+.RE
+.PP
+
+.SS "\fBint\fP lv2_dyn_manifest_get_subjects (\fBLV2_Dyn_Manifest_Handle\fP handle, FILE * fp)"
+Fetch a 'list' of subject \fBURIs\fP described in the dynamic manifest\&.
+.PP
+The dynamic manifest generator has to fill the resource only with the needed triples to make the host aware of the 'objects' it wants to expose\&. For example, if the plugin library exposes a regular LV2 plugin, it should output only a triple like the following:
+.PP
+http://www.example.com/plugin/uri a lv2:Plugin \&.
+.PP
+The objects that are elegible for exposure are those that would need to be represented by a subject node in a static manifest\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIhandle\fP Dynamic manifest generator handle\&.
+.br
+\fIfp\fP FILE * identifying the resource the host has to set up for the dynamic manifest generator\&. The host MUST pass a writable, empty resource to this function, and the dynamic manifest generator MUST ONLY perform write operations on it at the end of the stream (e\&.g\&., using only fprintf(), fwrite() and similar)\&.
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+0 on success, otherwise a non-zero error code\&. 
+.RE
+.PP
+
+.SS "\fBint\fP lv2_dyn_manifest_open (\fBLV2_Dyn_Manifest_Handle\fP * handle, \fBconst\fP \fBLV2_Feature\fP *\fBconst\fP * features)"
+Generate the dynamic manifest\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIhandle\fP Pointer to an uninitialized dynamic manifest generator handle\&.
+.br
+\fIfeatures\fP NULL terminated array of LV2_Feature structs which represent the features the host supports\&. The dynamic manifest generator may refuse to (re)generate the dynamic manifest if required features are not found here (however hosts SHOULD NOT use this as a discovery mechanism, instead of reading the static manifest file)\&. This array must always exist; if a host has no features, it MUST pass a single element array containing NULL\&.
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+0 on success, otherwise a non-zero error code\&. The host SHOULD evaluate the result of the operation by examining the returned value and MUST NOT try to interpret the value of handle\&. 
+.RE
+.PP
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

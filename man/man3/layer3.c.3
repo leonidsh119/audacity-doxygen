@@ -1,0 +1,199 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/lib-src/libmad/layer3.c" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/lib-src/libmad/layer3.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include 'global\&.h'\fP
+.br
+\fC#include <stdlib\&.h>\fP
+.br
+\fC#include <string\&.h>\fP
+.br
+\fC#include 'fixed\&.h'\fP
+.br
+\fC#include 'bit\&.h'\fP
+.br
+\fC#include 'stream\&.h'\fP
+.br
+\fC#include 'frame\&.h'\fP
+.br
+\fC#include 'huffman\&.h'\fP
+.br
+\fC#include 'layer3\&.h'\fP
+.br
+\fC#include 'rq_table\&.dat'\fP
+.br
+\fC#include 'imdct_s\&.dat'\fP
+.br
+
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "struct \fBsideinfo\fP"
+.br
+.ti -1c
+.RI "struct \fBsideinfo::granule\fP"
+.br
+.ti -1c
+.RI "struct \fBsideinfo::granule::channel\fP"
+.br
+.ti -1c
+.RI "struct \fBfixedfloat\fP"
+.br
+.in -1c
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBCHAR_BIT\fP   8"
+.br
+.ti -1c
+.RI "#define \fBsfb_16000_long\fP   sfb_22050_long"
+.br
+.ti -1c
+.RI "#define \fBsfb_12000_long\fP   \fBsfb_16000_long\fP"
+.br
+.ti -1c
+.RI "#define \fBsfb_11025_long\fP   \fBsfb_12000_long\fP"
+.br
+.ti -1c
+.RI "#define \fBsfb_12000_short\fP   sfb_16000_short"
+.br
+.ti -1c
+.RI "#define \fBsfb_11025_short\fP   \fBsfb_12000_short\fP"
+.br
+.ti -1c
+.RI "#define \fBsfb_12000_mixed\fP   sfb_16000_mixed"
+.br
+.ti -1c
+.RI "#define \fBsfb_11025_mixed\fP   \fBsfb_12000_mixed\fP"
+.br
+.ti -1c
+.RI "#define \fBMASK\fP(cache,  sz,  \fBbits\fP)   (((cache) >> ((sz) \- (\fBbits\fP))) & ((1 << (\fBbits\fP)) \- 1))"
+.br
+.ti -1c
+.RI "#define \fBMASK1BIT\fP(cache,  sz)   ((cache) & (1 << ((sz) \- 1)))"
+.br
+.in -1c
+.SS "Enumerations"
+
+.in +1c
+.ti -1c
+.RI "enum { \fBcount1table_select\fP = 0x01, \fBscalefac_scale\fP = 0x02, \fBpreflag\fP = 0x04, \fBmixed_block_flag\fP = 0x08 }"
+.br
+.ti -1c
+.RI "enum { \fBI_STEREO\fP = 0x1, \fBMS_STEREO\fP = 0x2 }"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBint\fP \fBmad_layer_III\fP (struct \fBmad_stream\fP *stream, struct \fBmad_frame\fP *frame)"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define CHAR_BIT   8"
+
+.PP
+Definition at line 38 of file layer3\&.c\&.
+.SS "#define MASK(cache, sz, \fBbits\fP)   (((cache) >> ((sz) \- (\fBbits\fP))) & ((1 << (\fBbits\fP)) \- 1))"
+
+.PP
+Definition at line 923 of file layer3\&.c\&.
+.SS "#define MASK1BIT(cache, sz)   ((cache) & (1 << ((sz) \- 1)))"
+
+.PP
+Definition at line 925 of file layer3\&.c\&.
+.SS "#define sfb_11025_long   \fBsfb_12000_long\fP"
+
+.PP
+Definition at line 270 of file layer3\&.c\&.
+.SS "#define sfb_11025_mixed   \fBsfb_12000_mixed\fP"
+
+.PP
+Definition at line 289 of file layer3\&.c\&.
+.SS "#define sfb_11025_short   \fBsfb_12000_short\fP"
+
+.PP
+Definition at line 279 of file layer3\&.c\&.
+.SS "#define sfb_12000_long   \fBsfb_16000_long\fP"
+
+.PP
+Definition at line 269 of file layer3\&.c\&.
+.SS "#define sfb_12000_mixed   sfb_16000_mixed"
+
+.PP
+Definition at line 288 of file layer3\&.c\&.
+.SS "#define sfb_12000_short   sfb_16000_short"
+
+.PP
+Definition at line 278 of file layer3\&.c\&.
+.SS "#define sfb_16000_long   sfb_22050_long"
+
+.PP
+Definition at line 218 of file layer3\&.c\&.
+.SH "Enumeration Type Documentation"
+.PP 
+.SS "anonymous enum"
+
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fIcount1table_select \fP\fP
+.TP
+\fB\fIscalefac_scale \fP\fP
+.TP
+\fB\fIpreflag \fP\fP
+.TP
+\fB\fImixed_block_flag \fP\fP
+.PP
+Definition at line 50 of file layer3\&.c\&.
+.SS "anonymous enum"
+
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fII_STEREO \fP\fP
+.TP
+\fB\fIMS_STEREO \fP\fP
+.PP
+Definition at line 57 of file layer3\&.c\&.
+.SH "Function Documentation"
+.PP 
+.SS "\fBint\fP mad_layer_III (struct \fBmad_stream\fP * stream, struct \fBmad_frame\fP * frame)"
+
+.PP
+Definition at line 2516 of file layer3\&.c\&.
+.SH "Variable Documentation"
+.PP 
+.SS "unsigned char \fBconst\fP* l"
+
+.PP
+Definition at line 303 of file layer3\&.c\&.
+.SS "unsigned char \fBconst\fP* m"
+
+.PP
+Definition at line 305 of file layer3\&.c\&.
+.SS "unsigned char \fBconst\fP* \fBs\fP"
+
+.PP
+Definition at line 304 of file layer3\&.c\&.
+.SS "unsigned char slen1"
+
+.PP
+Definition at line 95 of file layer3\&.c\&.
+.SS "unsigned char slen2"
+
+.PP
+Definition at line 96 of file layer3\&.c\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

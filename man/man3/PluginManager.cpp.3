@@ -1,0 +1,387 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/src/PluginManager.cpp" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/src/PluginManager.cpp \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <algorithm>\fP
+.br
+\fC#include 'Audacity\&.h'\fP
+.br
+\fC#include <wx/defs\&.h>\fP
+.br
+\fC#include <wx/dialog\&.h>\fP
+.br
+\fC#include <wx/dir\&.h>\fP
+.br
+\fC#include <wx/dynarray\&.h>\fP
+.br
+\fC#include <wx/dynlib\&.h>\fP
+.br
+\fC#include <wx/hashmap\&.h>\fP
+.br
+\fC#include <wx/filename\&.h>\fP
+.br
+\fC#include <wx/list\&.h>\fP
+.br
+\fC#include <wx/listctrl\&.h>\fP
+.br
+\fC#include <wx/log\&.h>\fP
+.br
+\fC#include <wx/radiobut\&.h>\fP
+.br
+\fC#include <wx/string\&.h>\fP
+.br
+\fC#include <wx/tokenzr\&.h>\fP
+.br
+\fC#include <wx/wfstream\&.h>\fP
+.br
+\fC#include <wx/utils\&.h>\fP
+.br
+\fC#include 'audacity/EffectInterface\&.h'\fP
+.br
+\fC#include 'AudacityApp\&.h'\fP
+.br
+\fC#include 'FileNames\&.h'\fP
+.br
+\fC#include 'ModuleManager\&.h'\fP
+.br
+\fC#include 'PlatformCompatibility\&.h'\fP
+.br
+\fC#include 'Prefs\&.h'\fP
+.br
+\fC#include 'ShuttleGui\&.h'\fP
+.br
+\fC#include 'effects/EffectManager\&.h'\fP
+.br
+\fC#include 'widgets/ProgressDialog\&.h'\fP
+.br
+\fC#include 'PluginManager\&.h'\fP
+.br
+\fC#include <wx/arrimpl\&.cpp>\fP
+.br
+\fC#include 'Experimental\&.h'\fP
+.br
+
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "struct \fBItemData\fP"
+.br
+.ti -1c
+.RI "class \fBPluginRegistrationDialog\fP"
+.br
+.in -1c
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBREGVERKEY\fP   wxString(wxT('/pluginregistryversion'))"
+.br
+.ti -1c
+.RI "#define \fBREGVERCUR\fP   wxString(wxT('1\&.0'))"
+.br
+.ti -1c
+.RI "#define \fBREGROOT\fP   wxString(wxT('/pluginregistry/'))"
+.br
+.ti -1c
+.RI "#define \fBSETVERKEY\fP   wxString(wxT('/pluginsettingsversion'))"
+.br
+.ti -1c
+.RI "#define \fBSETVERCUR\fP   wxString(wxT('1\&.0'))"
+.br
+.ti -1c
+.RI "#define \fBSETROOT\fP   wxString(wxT('/pluginsettings/'))"
+.br
+.ti -1c
+.RI "#define \fBKEY_ID\fP   wxT('ID')"
+.br
+.ti -1c
+.RI "#define \fBKEY_PATH\fP   wxT('Path')"
+.br
+.ti -1c
+.RI "#define \fBKEY_SYMBOL\fP   wxT('Symbol')"
+.br
+.ti -1c
+.RI "#define \fBKEY_NAME\fP   wxT('Name')"
+.br
+.ti -1c
+.RI "#define \fBKEY_VENDOR\fP   wxT('Vendor')"
+.br
+.ti -1c
+.RI "#define \fBKEY_VERSION\fP   wxT('Version')"
+.br
+.ti -1c
+.RI "#define \fBKEY_DESCRIPTION\fP   wxT('Description')"
+.br
+.ti -1c
+.RI "#define \fBKEY_LASTUPDATED\fP   wxT('LastUpdated')"
+.br
+.ti -1c
+.RI "#define \fBKEY_ENABLED\fP   wxT('Enabled')"
+.br
+.ti -1c
+.RI "#define \fBKEY_VALID\fP   wxT('Valid')"
+.br
+.ti -1c
+.RI "#define \fBKEY_PROVIDERID\fP   wxT('ProviderID')"
+.br
+.ti -1c
+.RI "#define \fBKEY_EFFECTTYPE\fP   wxT('EffectType')"
+.br
+.ti -1c
+.RI "#define \fBKEY_EFFECTFAMILY\fP   wxT('EffectFamily')"
+.br
+.ti -1c
+.RI "#define \fBKEY_EFFECTDEFAULT\fP   wxT('EffectDefault')"
+.br
+.ti -1c
+.RI "#define \fBKEY_EFFECTINTERACTIVE\fP   wxT('EffectInteractive')"
+.br
+.ti -1c
+.RI "#define \fBKEY_EFFECTREALTIME\fP   wxT('EffectRealtime')"
+.br
+.ti -1c
+.RI "#define \fBKEY_EFFECTAUTOMATABLE\fP   wxT('EffectAutomatable')"
+.br
+.ti -1c
+.RI "#define \fBKEY_EFFECTTYPE_NONE\fP   wxT('None')"
+.br
+.ti -1c
+.RI "#define \fBKEY_EFFECTTYPE_ANALYZE\fP   wxT('Analyze')"
+.br
+.ti -1c
+.RI "#define \fBKEY_EFFECTTYPE_GENERATE\fP   wxT('Generate')"
+.br
+.ti -1c
+.RI "#define \fBKEY_EFFECTTYPE_PROCESS\fP   wxT('Process')"
+.br
+.ti -1c
+.RI "#define \fBKEY_IMPORTERIDENT\fP   wxT('ImporterIdent')"
+.br
+.ti -1c
+.RI "#define \fBKEY_IMPORTERFILTER\fP   wxT('ImporterFilter')"
+.br
+.ti -1c
+.RI "#define \fBKEY_IMPORTEREXTENSIONS\fP   wxT('ImporterExtensions')"
+.br
+.in -1c
+.SS "Enumerations"
+
+.in +1c
+.ti -1c
+.RI "enum { \fBSTATE_Enabled\fP, \fBSTATE_Disabled\fP, \fBSTATE_New\fP, \fBSTATE_COUNT\fP }"
+.br
+.ti -1c
+.RI "enum { \fBID_ShowAll\fP = 10000, \fBID_ShowEnabled\fP, \fBID_ShowDisabled\fP, \fBID_ShowNew\fP, \fBID_List\fP, \fBID_ClearAll\fP, \fBID_SelectAll\fP, \fBID_Enable\fP, \fBID_Disable\fP }"
+.br
+.ti -1c
+.RI "enum { \fBCOL_Name\fP, \fBCOL_State\fP, \fBCOL_Path\fP, \fBCOL_COUNT\fP }"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBWX_DECLARE_STRING_HASH_MAP\fP (wxArrayString, ProviderMap)"
+.br
+.ti -1c
+.RI "\fBWX_DEFINE_ARRAY\fP (\fBPluginDescriptor\fP *, DescriptorArray)"
+.br
+.ti -1c
+.RI "\fBWX_DECLARE_STRING_HASH_MAP\fP (\fBItemData\fP, ItemDataMap)"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define KEY_DESCRIPTION   wxT('Description')"
+
+.PP
+Definition at line 1333 of file PluginManager\&.cpp\&.
+.SS "#define KEY_EFFECTAUTOMATABLE   wxT('EffectAutomatable')"
+
+.PP
+Definition at line 1343 of file PluginManager\&.cpp\&.
+.SS "#define KEY_EFFECTDEFAULT   wxT('EffectDefault')"
+
+.PP
+Definition at line 1340 of file PluginManager\&.cpp\&.
+.SS "#define KEY_EFFECTFAMILY   wxT('EffectFamily')"
+
+.PP
+Definition at line 1339 of file PluginManager\&.cpp\&.
+.SS "#define KEY_EFFECTINTERACTIVE   wxT('EffectInteractive')"
+
+.PP
+Definition at line 1341 of file PluginManager\&.cpp\&.
+.SS "#define KEY_EFFECTREALTIME   wxT('EffectRealtime')"
+
+.PP
+Definition at line 1342 of file PluginManager\&.cpp\&.
+.SS "#define KEY_EFFECTTYPE   wxT('EffectType')"
+
+.PP
+Definition at line 1338 of file PluginManager\&.cpp\&.
+.SS "#define KEY_EFFECTTYPE_ANALYZE   wxT('Analyze')"
+
+.PP
+Definition at line 1345 of file PluginManager\&.cpp\&.
+.SS "#define KEY_EFFECTTYPE_GENERATE   wxT('Generate')"
+
+.PP
+Definition at line 1346 of file PluginManager\&.cpp\&.
+.SS "#define KEY_EFFECTTYPE_NONE   wxT('None')"
+
+.PP
+Definition at line 1344 of file PluginManager\&.cpp\&.
+.SS "#define KEY_EFFECTTYPE_PROCESS   wxT('Process')"
+
+.PP
+Definition at line 1347 of file PluginManager\&.cpp\&.
+.SS "#define KEY_ENABLED   wxT('Enabled')"
+
+.PP
+Definition at line 1335 of file PluginManager\&.cpp\&.
+.SS "#define KEY_ID   wxT('ID')"
+
+.PP
+Definition at line 1327 of file PluginManager\&.cpp\&.
+.SS "#define KEY_IMPORTEREXTENSIONS   wxT('ImporterExtensions')"
+
+.PP
+Definition at line 1350 of file PluginManager\&.cpp\&.
+.SS "#define KEY_IMPORTERFILTER   wxT('ImporterFilter')"
+
+.PP
+Definition at line 1349 of file PluginManager\&.cpp\&.
+.SS "#define KEY_IMPORTERIDENT   wxT('ImporterIdent')"
+
+.PP
+Definition at line 1348 of file PluginManager\&.cpp\&.
+.SS "#define KEY_LASTUPDATED   wxT('LastUpdated')"
+
+.PP
+Definition at line 1334 of file PluginManager\&.cpp\&.
+.SS "#define KEY_NAME   wxT('Name')"
+
+.PP
+Definition at line 1330 of file PluginManager\&.cpp\&.
+.SS "#define KEY_PATH   wxT('Path')"
+
+.PP
+Definition at line 1328 of file PluginManager\&.cpp\&.
+.SS "#define KEY_PROVIDERID   wxT('ProviderID')"
+
+.PP
+Definition at line 1337 of file PluginManager\&.cpp\&.
+.SS "#define KEY_SYMBOL   wxT('Symbol')"
+
+.PP
+Definition at line 1329 of file PluginManager\&.cpp\&.
+.SS "#define KEY_VALID   wxT('Valid')"
+
+.PP
+Definition at line 1336 of file PluginManager\&.cpp\&.
+.SS "#define KEY_VENDOR   wxT('Vendor')"
+
+.PP
+Definition at line 1331 of file PluginManager\&.cpp\&.
+.SS "#define KEY_VERSION   wxT('Version')"
+
+.PP
+Definition at line 1332 of file PluginManager\&.cpp\&.
+.SS "#define REGROOT   wxString(wxT('/pluginregistry/'))"
+
+.PP
+Definition at line 1321 of file PluginManager\&.cpp\&.
+.SS "#define REGVERCUR   wxString(wxT('1\&.0'))"
+
+.PP
+Definition at line 1320 of file PluginManager\&.cpp\&.
+.SS "#define REGVERKEY   wxString(wxT('/pluginregistryversion'))"
+
+.PP
+Definition at line 1319 of file PluginManager\&.cpp\&.
+.SS "#define SETROOT   wxString(wxT('/pluginsettings/'))"
+
+.PP
+Definition at line 1325 of file PluginManager\&.cpp\&.
+.SS "#define SETVERCUR   wxString(wxT('1\&.0'))"
+
+.PP
+Definition at line 1324 of file PluginManager\&.cpp\&.
+.SS "#define SETVERKEY   wxString(wxT('/pluginsettingsversion'))"
+
+.PP
+Definition at line 1323 of file PluginManager\&.cpp\&.
+.SH "Enumeration Type Documentation"
+.PP 
+.SS "anonymous enum"
+
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fISTATE_Enabled \fP\fP
+.TP
+\fB\fISTATE_Disabled \fP\fP
+.TP
+\fB\fISTATE_New \fP\fP
+.TP
+\fB\fISTATE_COUNT \fP\fP
+.PP
+Definition at line 370 of file PluginManager\&.cpp\&.
+.SS "anonymous enum"
+
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fIID_ShowAll \fP\fP
+.TP
+\fB\fIID_ShowEnabled \fP\fP
+.TP
+\fB\fIID_ShowDisabled \fP\fP
+.TP
+\fB\fIID_ShowNew \fP\fP
+.TP
+\fB\fIID_List \fP\fP
+.TP
+\fB\fIID_ClearAll \fP\fP
+.TP
+\fB\fIID_SelectAll \fP\fP
+.TP
+\fB\fIID_Enable \fP\fP
+.TP
+\fB\fIID_Disable \fP\fP
+.PP
+Definition at line 395 of file PluginManager\&.cpp\&.
+.SS "anonymous enum"
+
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fICOL_Name \fP\fP
+.TP
+\fB\fICOL_State \fP\fP
+.TP
+\fB\fICOL_Path \fP\fP
+.TP
+\fB\fICOL_COUNT \fP\fP
+.PP
+Definition at line 408 of file PluginManager\&.cpp\&.
+.SH "Function Documentation"
+.PP 
+.SS "WX_DECLARE_STRING_HASH_MAP (wxArrayString, ProviderMap)"
+
+.SS "WX_DECLARE_STRING_HASH_MAP (\fBItemData\fP, ItemDataMap)"
+
+.SS "WX_DEFINE_ARRAY (\fBPluginDescriptor\fP *, DescriptorArray)"
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

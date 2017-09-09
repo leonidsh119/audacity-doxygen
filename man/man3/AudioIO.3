@@ -1,0 +1,667 @@
+.TH "AudioIO" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+AudioIO \- \fBAudioIO\fP uses the PortAudio library to play and record sound\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <AudioIO\&.h>\fP
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "struct \fBScrubQueue\fP"
+.br
+.in -1c
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBAudioIO\fP ()"
+.br
+.ti -1c
+.RI "\fB~AudioIO\fP ()"
+.br
+.ti -1c
+.RI "\fBAudioIOListener\fP * \fBGetListener\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBSetListener\fP (\fBAudioIOListener\fP *listener)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBStartMonitoring\fP (double sampleRate)"
+.br
+.RI "\fIStart up Portaudio for capture and recording as needed for input monitoring and software playthrough only\&. \fP"
+.ti -1c
+.RI "\fBint\fP \fBStartStream\fP (\fBWaveTrackArray\fP playbackTracks, \fBWaveTrackArray\fP captureTracks, double sampleRate, double t0, double t1, \fBconst\fP \fBAudioIOStartStreamOptions\fP &options=\fBAudioIOStartStreamOptions\fP())"
+.br
+.RI "\fIStart recording or playing back audio\&. \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBStopStream\fP ()"
+.br
+.RI "\fIStop recording, playback or input monitoring\&. \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBSeekStream\fP (double seconds)"
+.br
+.RI "\fIMove the playback / recording position of the current stream by the specified amount from where it is now\&. \fP"
+.ti -1c
+.RI "\fBbool\fP \fBIsScrubbing\fP ()"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBEnqueueScrubByPosition\fP (double endTime, double maxSpeed, \fBbool\fP maySkip)"
+.br
+.RI "\fIenqueue a NEW end time, using the last end as the new start, to be played over the same duration, as between this and the last enqueuing (or the starting of the stream)\&. Except, we do not exceed maximum scrub speed, so may need to adjust either the start or the end\&. If maySkip is true, then when mouse movement exceeds maximum scrub speed, adjust the beginning of the scrub interval rather than the end, so that the scrub skips or 'stutters' to stay near the cursor\&. But if the 'stutter' is too short for the minimum, then there is no effect on the work queue\&. Return true if some work was really enqueued\&. \fP"
+.ti -1c
+.RI "\fBbool\fP \fBEnqueueScrubBySignedSpeed\fP (double speed, double maxSpeed, \fBbool\fP maySkip)"
+.br
+.RI "\fIenqueue a NEW positive or negative scrubbing speed, using the last end as the NEW start, to be played over the same duration, as between this and the last enqueueing (or the starting of the stream)\&. Except, we do not exceed maximum scrub speed, so may need to adjust either the start or the end\&. If maySkip is true, then when mouse movement exceeds maximum scrub speed, adjust the beginning of the scrub interval rather than the end, so that the scrub skips or 'stutters' to stay near the cursor\&. But if the 'stutter' is too short for the minimum, then there is no effect on the work queue\&. Return true if some work was really enqueued\&. \fP"
+.ti -1c
+.RI "\fBbool\fP \fBIsBusy\fP ()"
+.br
+.RI "\fIReturns true if audio i/o is busy starting, stopping, playing, or recording\&. \fP"
+.ti -1c
+.RI "\fBbool\fP \fBIsStreamActive\fP ()"
+.br
+.RI "\fIReturns true if the audio i/o is running at all, but not during cleanup\&. \fP"
+.ti -1c
+.RI "\fBbool\fP \fBIsStreamActive\fP (\fBint\fP \fBtoken\fP)"
+.br
+.ti -1c
+.RI "wxLongLong \fBGetLastPlaybackTime\fP () \fBconst\fP "
+.br
+.ti -1c
+.RI "\fBbool\fP \fBIsAudioTokenActive\fP (\fBint\fP \fBtoken\fP)"
+.br
+.RI "\fIReturns true if the stream is active, or even if audio I/O is busy cleaning up its data or writing to disk\&. \fP"
+.ti -1c
+.RI "\fBbool\fP \fBIsMonitoring\fP ()"
+.br
+.RI "\fIReturns true if we're monitoring input (but not recording or playing actual audio) \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBSetPaused\fP (\fBbool\fP state)"
+.br
+.RI "\fIPause and un-pause playback and recording\&. \fP"
+.ti -1c
+.RI "\fBbool\fP \fBIsPaused\fP ()"
+.br
+.RI "\fIFind out if playback / recording is currently paused\&. \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBSetMixer\fP (\fBint\fP inputSource)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBSetMixer\fP (\fBint\fP inputSource, float inputVolume, float playbackVolume)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBGetMixer\fP (\fBint\fP *inputSource, float *inputVolume, float *playbackVolume)"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBInputMixerWorks\fP ()"
+.br
+.RI "\fIFind out if the input hardware level control is available\&. \fP"
+.ti -1c
+.RI "\fBbool\fP \fBOutputMixerEmulated\fP ()"
+.br
+.RI "\fIFind out if the output level control is being emulated via software attenuation\&. \fP"
+.ti -1c
+.RI "wxArrayString \fBGetInputSourceNames\fP ()"
+.br
+.RI "\fIGet the list of inputs to the current mixer device\&. \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBHandleDeviceChange\fP ()"
+.br
+.RI "\fIupdate state after changing what audio devices are selected \fP"
+.ti -1c
+.RI "double \fBGetStreamTime\fP ()"
+.br
+.RI "\fIDuring playback, the (unwarped) track time most recently played\&. \fP"
+.ti -1c
+.RI "\fBsampleFormat\fP \fBGetCaptureFormat\fP ()"
+.br
+.ti -1c
+.RI "\fBint\fP \fBGetNumCaptureChannels\fP ()"
+.br
+.ti -1c
+.RI "wxString \fBGetDeviceInfo\fP ()"
+.br
+.RI "\fIGet diagnostic information on all the available audio I/O devices\&. \fP"
+.ti -1c
+.RI "\fBbool\fP \fBIsAvailable\fP (\fBAudacityProject\fP *projecT)"
+.br
+.RI "\fI\fBFunction\fP to automatically set an acceptable volume\&. \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBSetCaptureMeter\fP (\fBAudacityProject\fP *project, \fBMeter\fP *meter)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBSetPlaybackMeter\fP (\fBAudacityProject\fP *project, \fBMeter\fP *meter)"
+.br
+.in -1c
+.SS "Static Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "static double \fBGetMaxScrubSpeed\fP ()"
+.br
+.ti -1c
+.RI "static double \fBGetMinScrubSpeed\fP ()"
+.br
+.ti -1c
+.RI "static wxArrayLong \fBGetSupportedPlaybackRates\fP (\fBint\fP DevIndex=\-1, double \fBrate\fP=0\&.0)"
+.br
+.RI "\fIGet a list of sample rates the output (playback) device supports\&. \fP"
+.ti -1c
+.RI "static wxArrayLong \fBGetSupportedCaptureRates\fP (\fBint\fP devIndex=\-1, double \fBrate\fP=0\&.0)"
+.br
+.RI "\fIGet a list of sample rates the input (recording) device supports\&. \fP"
+.ti -1c
+.RI "static wxArrayLong \fBGetSupportedSampleRates\fP (\fBint\fP playDevice=\-1, \fBint\fP recDevice=\-1, double \fBrate\fP=0\&.0)"
+.br
+.RI "\fIGet a list of sample rates the current input/output device combination supports\&. \fP"
+.ti -1c
+.RI "static \fBint\fP \fBGetOptimalSupportedSampleRate\fP ()"
+.br
+.RI "\fIGet a supported sample rate which can be used a an optimal default\&. \fP"
+.ti -1c
+.RI "static \fBbool\fP \fBValidateDeviceNames\fP (\fBconst\fP wxString &play, \fBconst\fP wxString &rec)"
+.br
+.RI "\fIEnsure selected device names are valid\&. \fP"
+.in -1c
+.SS "Static Public Attributes"
+
+.in +1c
+.ti -1c
+.RI "static \fBconst\fP \fBint\fP \fBStandardRates\fP []"
+.br
+.RI "\fIArray of common audio sample rates\&. \fP"
+.ti -1c
+.RI "static \fBconst\fP \fBint\fP \fBNumStandardRates\fP"
+.br
+.RI "\fIHow many standard sample rates there are\&. \fP"
+.in -1c
+.SS "Friends"
+
+.in +1c
+.ti -1c
+.RI "class \fBAudioThread\fP"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBInitAudioIO\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBDeinitAudioIO\fP ()"
+.br
+.ti -1c
+.RI "\fBint\fP \fBaudacityAudioCallback\fP (\fBconst\fP \fBvoid\fP *inputBuffer, \fBvoid\fP *outputBuffer, unsigned long framesPerBuffer, \fBconst\fP \fBPaStreamCallbackTimeInfo\fP *timeInfo, \fBPaStreamCallbackFlags\fP statusFlags, \fBvoid\fP *\fBuserData\fP)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+\fBAudioIO\fP uses the PortAudio library to play and record sound\&. 
+
+Great care and attention to detail are necessary for understanding and modifying this system\&. The code in this file is run from three different thread contexts: the UI thread, the disk thread (which this file creates and maintains; in the code, this is called the Audio Thread), and the PortAudio callback thread\&. To highlight this deliniation, the file is divided into three parts based on what thread context each function is intended to run in\&.
+.PP
+\fBEXPERIMENTAL_MIDI_PLAYBACK\fP
+.RS 4
+If EXPERIMENTAL_MIDI_PLAYBACK is defined, this class also manages MIDI playback\&. The reason for putting MIDI here rather than in, say, class MidiIO, is that there is no high-level synchronization and transport architecture, so Audio and MIDI must be coupled in order to start/stop/pause and synchronize them\&.
+.RE
+.PP
+\fBMIDI With Audio\fP
+.RS 4
+When Audio and MIDI play simultaneously, MIDI synchronizes to Audio\&. This is necessary because the Audio sample clock is not the same hardware as the system time used to schedule MIDI messages\&. MIDI is synchronized to Audio because it is simple to pause or rush the dispatch of MIDI messages, but generally impossible to pause or rush synchronous audio samples (without distortion)\&.
+.RE
+.PP
+\fB\fP
+.RS 4
+MIDI output is driven by yet another thread\&. In principle, we could output timestamped MIDI data at the same time we fill audio buffers from disk, but audio buffers are filled far in advance of playback time, and there is a lower latency thread (PortAudio's callback) that actually sends samples to the output device\&. The relatively low latency to the output device allows Audacity to stop audio output quickly\&. We want the same behavior for MIDI, but there is not periodic callback from PortMidi (because MIDI is asynchronous), so this function is performed by the MidiThread class\&.
+.RE
+.PP
+\fB\fP
+.RS 4
+When Audio is running, MIDI is synchronized to Audio\&. Globals are set in the Audio callback (audacityAudioCallback) for use by a time function that reports milliseconds to PortMidi\&. (Details below\&.)
+.RE
+.PP
+\fBMIDI Without Audio\fP
+.RS 4
+When Audio is not running, PortMidi uses its own millisecond timer since there is no audio to synchronize to\&. (Details below\&.)
+.RE
+.PP
+\fBImplementation Notes and Details for MIDI\fP
+.RS 4
+When opening devices, successAudio and successMidi indicate errors if false, so normally both are true\&. Use playbackChannels, captureChannels and mMidiPlaybackTracks\&.IsEmpty() to determine if Audio or MIDI is actually in use\&.
+.RE
+.PP
+\fBAudio Time\fP
+.RS 4
+Normally, the current time during playback is given by the variable mTime\&. mTime normally advances by frames / samplerate each time an audio buffer is output by the audio callback\&. However, Audacity has a speed control that can perform continuously variable time stretching on audio\&. This is achieved in two places: the playback 'mixer' that generates the samples for output processes the audio according to the speed control\&. In a separate algorithm, the audio callback updates mTime by (frames / samplerate) * factor, where factor reflects the speed at mTime\&. This effectively integrates speed to get position\&. Negative speeds are allowed too, for instance in scrubbing\&.
+.RE
+.PP
+\fBMidi Time\fP
+.RS 4
+MIDI is not warped according to the speed control\&. This might be something that should be changed\&. (Editorial note: Wouldn't it make more sense to display audio at the correct time and allow users to stretch audio the way they can stretch MIDI?) For now, MIDI plays at 1 second per second, so it requires an unwarped clock\&. In fact, MIDI time synchronization requires a millisecond clock that does not pause\&. Note that mTime will stop progress when the Pause button is pressed, even though audio samples (zeros) continue to be output\&.
+.RE
+.PP
+\fB\fP
+.RS 4
+Therefore, we define the following interface for MIDI timing: 
+.PD 0
+
+.IP "\(bu" 2
+\fCAudioTime()\fP is the time based on all samples written so far, including zeros output during pauses\&. AudioTime() is based on the start location mT0, not zero\&. 
+.IP "\(bu" 2
+\fCPauseTime()\fP is the amount of time spent paused, based on a count of zero samples output\&. 
+.IP "\(bu" 2
+\fCMidiTime()\fP is an estimate in milliseconds of the current audio output time + 1s\&. In other words, what audacity track time corresponds to the audio (including pause insertions) at the output?
+.PP
+.RE
+.PP
+\fBAudioTime() and PauseTime() computation\fP
+.RS 4
+AudioTime() is simply mT0 + mNumFrames / mRate\&. mNumFrames is incremented in each audio callback\&. Similarly, PauseTime() is mNumPauseFrames / mRate\&. mNumPauseFrames is also incremented in each audio callback when a pause is in effect\&.
+.RE
+.PP
+\fBMidiTime() computation\fP
+.RS 4
+MidiTime() is computed based on information from PortAudio's callback, which estimates the system time at which the current audio buffer will be output\&. Consider the (unimplemented) function RealToTrack() that maps real time to track time\&. If outputTime is PortAudio's time estimate for the most recent output buffer, then 
+.br
+ RealToTrack(outputTime) = AudioTime() - PauseTime() - bufferDuration 
+.br
+ We want to know RealToTrack of the current time, so we use this approximation for small d: 
+.br
+ RealToTrack(t + d) = RealToTrack(t) + d 
+.br
+ Letting t = outputTime and d = (systemTime - outputTime), we can substitute to get:
+.br
+ RealToTrack(systemTime) = AudioTime() - PauseTime() - bufferduration + (systemTime - outputTime) 
+.br
+ MidiTime() should include pause time, so add PauseTime() to both sides of the equation\&. Also MidiTime() is offset by 1 second to avoid negative time at startup, so add 1 to both sides: MidiTime() in seconds = RealToTrack(systemTime) + PauseTime() + 1 = 
+.br
+ AudioTime() - bufferduration + (systemTime - outputTime) + 1
+.RE
+.PP
+\fB\fP
+.RS 4
+The difference AudioTime() - PauseTime() is the time 'cursor' for MIDI\&. When the speed control is used, MIDI and Audio will become unsynchronized\&. In particular, MIDI will not be synchronized with the visual cursor, which moves with scaled time reported in mTime\&.
+.RE
+.PP
+\fBMidi Synchronization\fP
+.RS 4
+The goal of MIDI playback is to deliver MIDI messages synchronized to audio (assuming no speed variation for now)\&. If a midi event has time tmidi, then the timestamp for that message should be 
+.br
+ timestamp (in seconds) = tmidi + PauseTime() + 1\&.0 - latency\&.
+.br
+ (This is actually off by 1ms; see 'PortMidi Latency Parameter' below for more detail\&.) Notice the extra 1\&.0, added because MidiTime() is offset by 1s to avoid starting at a negative value\&. Also notice that we subtract latency\&. The user must set device latency using preferences\&. Some software synthesizers have very high latency (on the order of 100ms), so unless we lower timestamps and send messages early, the final output will not be synchronized\&. This timestamp is interpreted by PortMidi relative to MidiTime(), which is synchronized to audio output\&. So the only thing we need to do is output Midi messages shortly before they will be played with the correct timestamp\&. We will take 'shortly before' to mean 'at about the same time
+  as corresponding audio'\&. Based on this, output the event when AudioTime() - PauseTime() > mtime - latency, adjusting the event time by adding PauseTime() + 1 - latency\&. This gives at least mAudioOutputLatency for the MIDI output to be generated (we want to generate MIDI output before the actual output time because events generated early are accurately timed according to their timestamp)\&. However, the MIDI thread sleeps for MIDI_SLEEP in its polling loop, so the worst case is really mAudioOutputLatency + MIDI_SLEEP\&. In case the audio output latency is very low, we will output events when AudioTime() + MIDI_SLEEP - PauseTime() > mtime - latency\&.
+.RE
+.PP
+\fBInteraction between MIDI, Audio, and Pause\fP
+.RS 4
+When Pause is used, PauseTime() will increase at the same rate as AudioTime(), and no more events will be output\&. Because of the time advance of mAudioOutputLatency + MIDI_SLEEP + latency and the fact that AudioTime() advances stepwise by mAudioBufferDuration, some extra MIDI might be output, but the same is true of audio: something like mAudioOutputLatency audio samples will be in the output buffer (with up to mAudioBufferDuration additional samples, depending on when the Pause takes effect)\&. When playback is resumed, there will be a slight delay corresponding to the extra data previously sent\&. Again, the same is true of audio\&. Audio and MIDI will not pause and resume at exactly the same times, but their pause and resume times will be within the low tens of milliseconds, and the streams will be synchronized in any case\&. I\&.e\&. if audio pauses 10ms earlier than MIDI, it will resume 10ms earlier as well\&.
+.RE
+.PP
+\fBPortMidi Latency Parameter\fP
+.RS 4
+PortMidi has a 'latency' parameter that is added to all timestamps\&. This value must be greater than zero to enable timestamp-based timing, but serves no other function, so we will set it to 1\&. All timestamps must then be adjusted down by 1 before messages are sent\&. This adjustment is on top of all the calculations described above\&. It just seem too complicated to describe everything in complete detail in one place\&.
+.RE
+.PP
+\fBMidi While Recording Only\fP
+.RS 4
+All of the midi-to-audio synchronization is of course meaningless when audio is not playing\&. If only recording, there is the problem that synchronization is based on output time, but without audio output, there is no output time\&. This does not seem like a critical feature, so MIDI is not synchronized to audio without audio playback\&. The user can always play a track of silence while recording to synchronize\&.
+.RE
+.PP
+\fBMidi Without Audio Playback\fP
+.RS 4
+When there is no audio playback, MIDI runs according to its own clock\&. The midi timestamp clock starts at approximately the same time as audio recording (if any)\&. A timestamp of 0 corresponds to mT0, the starting time in the Midi track(s)\&. Thus the timestamp for an event at time tmidi should be: 
+.br
+ timestamp = tmidi - mT0 + PauseTime() - latency - 0\&.001
+.br
+ Where latency is the synthesizer latency, and the extra 0\&.001 is the latency (1ms) that PortMidi adds to timestamps automatically\&.
+.RE
+.PP
+\fBMidi Output Without Audio Playback\fP
+.RS 4
+Midi events should be written before their timestamp expires\&. Since the loop that checks for events to write pauses for MIDI_SLEEP, the events should be written at least MIDI_SLEEP early, and due to other delays and computation, we want some extra time, so let's allow 2*MIDI_SLEEP\&. Therefore, the write time should be when:
+.br
+ tmidi - mT0 + PauseTime() - latency - 0\&.001 - 2 * MIDI_SLEEP < \fBPt_Time()\fP
+.br
+, which can be rearranged to:
+.br
+ tmidi < mT0 + \fBPt_Time()\fP + MIDI_SLEEP + (MIDI_SLEEP + latency) - PauseTime
+.br
+ which matches the code in AudioIO::FillMidiBuffers() after converting ms to s appropriately\&. (Note also that the 0\&.001 is dropped here -- it's not really important)\&.
+.RE
+.PP
+\fBThe code for Midi Without Audio was developed by simply trying\fP
+.RS 4
+to play Midi alone and fixing everything that did not work\&. The 'normal' \fBAudioIO\fP execution was full of assumptions about audio, so there is no systematic design for running without audio, merely a number of 'patches' to make it work\&. The expression 'mNumPlaybackChannels > 0' is used to detect whether audio playback is active, and 'mNumFrames > 0' is used to indicate that playback of either Midi or Audio has actually started\&. (mNumFrames is normally incremented by the audio callback, but if there is no audio playback or recording, it is set to 1 at the end of initialization\&.
+.RE
+.PP
+\fBNoteTrack PlayLooped\fP
+.RS 4
+When mPlayLooped is true, output is supposed to loop from mT0 to mT1\&. For NoteTracks, we interpret this to mean that any note-on or control change in the range mT0 <= t < mT1 is sent (notes that start before mT0 are not played even if they extend beyond mT0)\&. Then, all notes are turned off\&. Events in the range mT0 <= t < mT1 are then repeated, offset by (mT1 - mT0), etc\&. We do NOT go back to the beginning and play all control changes (update events) up to mT0, nor do we 'undo' any state changes between mT0 and mT1\&.
+.RE
+.PP
+\fBNoteTrack PlayLooped Implementation\fP
+.RS 4
+The mIterator object (an \fBAlg_iterator\fP) returns NULL when there are no more events scheduled before mT1\&. At mT1, we want to output all notes off messages, but the FillMidiBuffers() loop will exit if mNextEvent is NULL, so we create a 'fake' mNextEvent for this special 'event' of sending all notes off\&. After that, we destroy the iterator and use PrepareMidiIterator() to set up a NEW one\&. At each iteration, time must advance by (mT1 - mT0), so the accumulated time is held in mMidiLoopOffset\&.
+.RE
+.PP
+\fBTodo\fP
+.RS 4
+run through all functions called from audio and portaudio threads to verify they are thread-safe\&. Note that synchronization of the style: 'A sets flag to signal B, B clears flag to acknowledge completion' is not thread safe in a general multiple-CPU context\&. For example, B can write to a buffer and set a completion flag\&. The flag write can occur before the buffer write due to out-of-order execution\&. Then A can see the flag and read the buffer before buffer writes complete\&.
+.RE
+.PP
+
+.PP
+Definition at line 130 of file AudioIO\&.h\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "AudioIO::AudioIO ()"
+
+.PP
+Definition at line 856 of file AudioIO\&.cpp\&.
+.SS "AudioIO::~AudioIO ()"
+
+.PP
+Definition at line 960 of file AudioIO\&.cpp\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "\fBbool\fP AudioIO::EnqueueScrubByPosition (double endTime, double maxSpeed, \fBbool\fP maySkip)"
+
+.PP
+enqueue a NEW end time, using the last end as the new start, to be played over the same duration, as between this and the last enqueuing (or the starting of the stream)\&. Except, we do not exceed maximum scrub speed, so may need to adjust either the start or the end\&. If maySkip is true, then when mouse movement exceeds maximum scrub speed, adjust the beginning of the scrub interval rather than the end, so that the scrub skips or 'stutters' to stay near the cursor\&. But if the 'stutter' is too short for the minimum, then there is no effect on the work queue\&. Return true if some work was really enqueued\&. 
+.PP
+Definition at line 2412 of file AudioIO\&.cpp\&.
+.SS "\fBbool\fP AudioIO::EnqueueScrubBySignedSpeed (double speed, double maxSpeed, \fBbool\fP maySkip)"
+
+.PP
+enqueue a NEW positive or negative scrubbing speed, using the last end as the NEW start, to be played over the same duration, as between this and the last enqueueing (or the starting of the stream)\&. Except, we do not exceed maximum scrub speed, so may need to adjust either the start or the end\&. If maySkip is true, then when mouse movement exceeds maximum scrub speed, adjust the beginning of the scrub interval rather than the end, so that the scrub skips or 'stutters' to stay near the cursor\&. But if the 'stutter' is too short for the minimum, then there is no effect on the work queue\&. Return true if some work was really enqueued\&. 
+.PP
+Definition at line 2420 of file AudioIO\&.cpp\&.
+.SS "\fBsampleFormat\fP AudioIO::GetCaptureFormat ()\fC [inline]\fP"
+
+.PP
+Definition at line 372 of file AudioIO\&.h\&.
+.SS "wxString AudioIO::GetDeviceInfo ()"
+
+.PP
+Get diagnostic information on all the available audio I/O devices\&. 
+.PP
+Definition at line 3027 of file AudioIO\&.cpp\&.
+.SS "wxArrayString AudioIO::GetInputSourceNames ()"
+
+.PP
+Get the list of inputs to the current mixer device\&. Returns an array of strings giving the names of the inputs to the soundcard mixer (driven by PortMixer) 
+.PP
+Definition at line 1072 of file AudioIO\&.cpp\&.
+.SS "wxLongLong AudioIO::GetLastPlaybackTime () const\fC [inline]\fP"
+
+.PP
+Definition at line 221 of file AudioIO\&.h\&.
+.SS "\fBAudioIOListener\fP* AudioIO::GetListener ()\fC [inline]\fP"
+
+.PP
+Definition at line 136 of file AudioIO\&.h\&.
+.SS "static double AudioIO::GetMaxScrubSpeed ()\fC [inline]\fP, \fC [static]\fP"
+
+.PP
+Definition at line 176 of file AudioIO\&.h\&.
+.SS "static double AudioIO::GetMinScrubSpeed ()\fC [inline]\fP, \fC [static]\fP"
+
+.PP
+Definition at line 177 of file AudioIO\&.h\&.
+.SS "\fBvoid\fP AudioIO::GetMixer (\fBint\fP * inputSource, float * inputVolume, float * playbackVolume)"
+
+.PP
+Definition at line 1031 of file AudioIO\&.cpp\&.
+.SS "\fBint\fP AudioIO::GetNumCaptureChannels ()\fC [inline]\fP"
+
+.PP
+Definition at line 373 of file AudioIO\&.h\&.
+.SS "\fBint\fP AudioIO::GetOptimalSupportedSampleRate ()\fC [static]\fP"
+
+.PP
+Get a supported sample rate which can be used a an optimal default\&. Currently, this uses the first supported rate in the list [44100, 48000, highest sample rate]\&. Used in Project as a default value for project rates if one cannot be retrieved from the preferences\&. So all in all not that useful or important really
+.PP
+\fBTodo\fP
+.RS 4
+: should this take into account PortAudio's value for \fBPaDeviceInfo::defaultSampleRate\fP? In principal this should let us work out which rates are 'real' and which resampled in the drivers, and so prefer the real rates\&. 
+.RE
+.PP
+
+.PP
+Definition at line 2686 of file AudioIO\&.cpp\&.
+.SS "double AudioIO::GetStreamTime ()"
+
+.PP
+During playback, the (unwarped) track time most recently played\&. When playing looped, this will start from t0 again, too\&. So the returned time should be always between t0 and t1 
+.PP
+Definition at line 2506 of file AudioIO\&.cpp\&.
+.SS "wxArrayLong AudioIO::GetSupportedCaptureRates (\fBint\fP devIndex = \fC\-1\fP, double rate = \fC0\&.0\fP)\fC [static]\fP"
+
+.PP
+Get a list of sample rates the input (recording) device supports\&. If no information about available sample rates can be fetched, an empty list is returned\&.
+.PP
+You can explicitely give the index of the device\&. If you don't give it, the currently selected device from the preferences will be used\&.
+.PP
+You may also specify a rate for which to check in addition to the standard rates\&. 
+.PP
+Definition at line 2576 of file AudioIO\&.cpp\&.
+.SS "wxArrayLong AudioIO::GetSupportedPlaybackRates (\fBint\fP DevIndex = \fC\-1\fP, double rate = \fC0\&.0\fP)\fC [static]\fP"
+
+.PP
+Get a list of sample rates the output (playback) device supports\&. If no information about available sample rates can be fetched, an empty list is returned\&.
+.PP
+You can explicitely give the index of the device\&. If you don't give it, the currently selected device from the preferences will be used\&.
+.PP
+You may also specify a rate for which to check in addition to the standard rates\&. 
+.PP
+Definition at line 2515 of file AudioIO\&.cpp\&.
+.SS "wxArrayLong AudioIO::GetSupportedSampleRates (\fBint\fP playDevice = \fC\-1\fP, \fBint\fP recDevice = \fC\-1\fP, double rate = \fC0\&.0\fP)\fC [static]\fP"
+
+.PP
+Get a list of sample rates the current input/output device combination supports\&. Since there is no concept (yet) for different input/output sample rates, this currently returns only sample rates that are supported on both the output and input device\&. If no information about available sample rates can be fetched, it returns a default list\&. You can explicitely give the indexes of the playDevice/recDevice\&. If you don't give them, the selected devices from the preferences will be used\&. You may also specify a rate for which to check in addition to the standard rates\&. 
+.PP
+Definition at line 2642 of file AudioIO\&.cpp\&.
+.SS "\fBvoid\fP AudioIO::HandleDeviceChange ()"
+
+.PP
+update state after changing what audio devices are selected Called when the devices stored in the preferences are changed to update the audio mixer capabilities
+.PP
+\fBTodo\fP
+.RS 4
+: Make this do a sample rate query and store the result in the \fBAudioIO\fP object to avoid doing it later? Would simplify the GetSupported*Rate functions considerably 
+.RE
+.PP
+
+.PP
+Definition at line 1100 of file AudioIO\&.cpp\&.
+.SS "\fBbool\fP AudioIO::InputMixerWorks ()"
+
+.PP
+Find out if the input hardware level control is available\&. Checks the mInputMixerWorks variable, which is set up in \fBAudioIO::HandleDeviceChange()\fP\&. External people care, because we want to disable the UI if it doesn't work\&. 
+.PP
+Definition at line 1062 of file AudioIO\&.cpp\&.
+.SS "\fBbool\fP AudioIO::IsAudioTokenActive (\fBint\fP token)"
+
+.PP
+Returns true if the stream is active, or even if audio I/O is busy cleaning up its data or writing to disk\&. This is used by \fBTrackPanel\fP to determine when a track has been completely recorded, and it's safe to flush to disk\&. 
+.PP
+Definition at line 2455 of file AudioIO\&.cpp\&.
+.SS "\fBbool\fP AudioIO::IsAvailable (\fBAudacityProject\fP * projecT)"
+
+.PP
+\fBFunction\fP to automatically set an acceptable volume\&. 
+.PP
+Definition at line 2067 of file AudioIO\&.cpp\&.
+.SS "\fBbool\fP AudioIO::IsBusy ()"
+
+.PP
+Returns true if audio i/o is busy starting, stopping, playing, or recording\&. When this is false, it's safe to start playing or recording 
+.PP
+Definition at line 2429 of file AudioIO\&.cpp\&.
+.SS "\fBbool\fP AudioIO::IsMonitoring ()"
+
+.PP
+Returns true if we're monitoring input (but not recording or playing actual audio) 
+.PP
+Definition at line 2460 of file AudioIO\&.cpp\&.
+.SS "\fBbool\fP AudioIO::IsPaused ()"
+
+.PP
+Find out if playback / recording is currently paused\&. 
+.PP
+Definition at line 2406 of file AudioIO\&.cpp\&.
+.SS "\fBbool\fP AudioIO::IsScrubbing ()\fC [inline]\fP"
+
+.PP
+Definition at line 174 of file AudioIO\&.h\&.
+.SS "\fBbool\fP AudioIO::IsStreamActive ()"
+
+.PP
+Returns true if the audio i/o is running at all, but not during cleanup\&. Doesn't return true if the device has been closed but some disk i/o or cleanup is still going on\&. If you want to know if it's safe to start a NEW stream, use \fBIsBusy()\fP 
+.PP
+Definition at line 2437 of file AudioIO\&.cpp\&.
+.SS "\fBbool\fP AudioIO::IsStreamActive (\fBint\fP token)"
+
+.PP
+Definition at line 2450 of file AudioIO\&.cpp\&.
+.SS "\fBbool\fP AudioIO::OutputMixerEmulated ()"
+
+.PP
+Find out if the output level control is being emulated via software attenuation\&. Checks the mEmulateMixerOutputVol variable, which is set up in \fBAudioIO::HandleDeviceChange()\fP\&. External classes care, because we want to modify the UI if it doesn't work\&. 
+.PP
+Definition at line 1067 of file AudioIO\&.cpp\&.
+.SS "\fBvoid\fP AudioIO::SeekStream (double seconds)\fC [inline]\fP"
+
+.PP
+Move the playback / recording position of the current stream by the specified amount from where it is now\&. 
+.PP
+Definition at line 171 of file AudioIO\&.h\&.
+.SS "\fBvoid\fP AudioIO::SetCaptureMeter (\fBAudacityProject\fP * project, \fBMeter\fP * meter)"
+
+.PP
+Definition at line 2072 of file AudioIO\&.cpp\&.
+.SS "\fBvoid\fP AudioIO::SetListener (\fBAudioIOListener\fP * listener)"
+
+.PP
+Definition at line 3491 of file AudioIO\&.cpp\&.
+.SS "\fBvoid\fP AudioIO::SetMixer (\fBint\fP inputSource)"
+
+.PP
+Definition at line 999 of file AudioIO\&.cpp\&.
+.SS "\fBvoid\fP AudioIO::SetMixer (\fBint\fP inputSource, float inputVolume, float playbackVolume)"
+
+.PP
+Definition at line 1007 of file AudioIO\&.cpp\&.
+.SS "\fBvoid\fP AudioIO::SetPaused (\fBbool\fP state)"
+
+.PP
+Pause and un-pause playback and recording\&. 
+.PP
+Definition at line 2389 of file AudioIO\&.cpp\&.
+.SS "\fBvoid\fP AudioIO::SetPlaybackMeter (\fBAudacityProject\fP * project, \fBMeter\fP * meter)"
+
+.PP
+Definition at line 2084 of file AudioIO\&.cpp\&.
+.SS "\fBvoid\fP AudioIO::StartMonitoring (double sampleRate)"
+
+.PP
+Start up Portaudio for capture and recording as needed for input monitoring and software playthrough only\&. This uses the Default project sample format, current sample rate, and selected number of input channels to open the recording device and start reading input data\&. If software playthrough is enabled, it also opens the output device in stereo to play the data through 
+.PP
+Definition at line 1459 of file AudioIO\&.cpp\&.
+.SS "\fBint\fP AudioIO::StartStream (\fBWaveTrackArray\fP playbackTracks, \fBWaveTrackArray\fP captureTracks, double sampleRate, double t0, double t1, \fBconst\fP \fBAudioIOStartStreamOptions\fP & options = \fC\fBAudioIOStartStreamOptions\fP()\fP)"
+
+.PP
+Start recording or playing back audio\&. Allocates buffers for recording and playback, gets the Audio thread to fill them, and sets the stream rolling\&. If successful, returns a token identifying this particular stream instance\&. For use with \fBIsStreamActive()\fP below 
+.PP
+Definition at line 1490 of file AudioIO\&.cpp\&.
+.SS "\fBvoid\fP AudioIO::StopStream ()"
+
+.PP
+Stop recording, playback or input monitoring\&. Does quite a bit of housekeeping, including switching off monitoring, flushing recording buffers out to wave tracks, and applies latency correction to recorded tracks if necessary 
+.PP
+Definition at line 2111 of file AudioIO\&.cpp\&.
+.SS "\fBbool\fP AudioIO::ValidateDeviceNames (\fBconst\fP wxString & play, \fBconst\fP wxString & rec)\fC [static]\fP"
+
+.PP
+Ensure selected device names are valid\&. 
+.PP
+Definition at line 844 of file AudioIO\&.cpp\&.
+.SH "Friends And Related Function Documentation"
+.PP 
+.SS "\fBint\fP audacityAudioCallback (\fBconst\fP \fBvoid\fP * inputBuffer, \fBvoid\fP * outputBuffer, unsigned long framesPerBuffer, \fBconst\fP \fBPaStreamCallbackTimeInfo\fP * timeInfo, \fBPaStreamCallbackFlags\fP statusFlags, \fBvoid\fP * userData)\fC [friend]\fP"
+brief The function which is called from PortAudio's callback thread context to collect and deliver audio for / from the sound device\&.
+.PP
+This covers recording, playback, and doing both simultaneously\&. It is also invoked to do monitoring and software playthrough\&. Note that dealing with the two buffers needs some care to ensure that the right things happen for all possible cases\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIinputBuffer\fP Buffer of length framesPerBuffer containing samples from the sound card, or null if not capturing audio\&. Note that the data type will depend on the format of audio data that was chosen when the stream was created (so could be floats or various integers) 
+.br
+\fIoutputBuffer\fP Uninitialised buffer of length framesPerBuffer which will be sent to the sound card after the callback, or null if not playing audio back\&. 
+.br
+\fIframesPerBuffer\fP The length of the playback and recording buffers 
+.br
+\fI\fBPaStreamCallbackTimeInfo\fP\fP Pointer to PortAudio time information structure, which tells us how long we have been playing / recording 
+.br
+\fIstatusFlags\fP PortAudio stream status flags 
+.br
+\fIuserData\fP pointer to user-defined data structure\&. Provided for flexibility by PortAudio, but not used by Audacity - the data is stored in the \fBAudioIO\fP class instead\&. 
+.RE
+.PP
+
+.SS "friend class \fBAudioThread\fP\fC [friend]\fP"
+
+.PP
+Definition at line 655 of file AudioIO\&.h\&.
+.SS "\fBvoid\fP DeinitAudioIO ()\fC [friend]\fP"
+
+.PP
+Definition at line 825 of file AudioIO\&.cpp\&.
+.SS "\fBvoid\fP InitAudioIO ()\fC [friend]\fP"
+
+.PP
+Definition at line 795 of file AudioIO\&.cpp\&.
+.SH "Member Data Documentation"
+.PP 
+.SS "\fBconst\fP \fBint\fP AudioIO::NumStandardRates\fC [static]\fP"
+\fBInitial value:\fP
+.PP
+.nf
+= sizeof(AudioIO::StandardRates) /
+                                      sizeof(AudioIO::StandardRates[0])
+.fi
+.PP
+How many standard sample rates there are\&. 
+.PP
+Definition at line 381 of file AudioIO\&.h\&.
+.SS "\fBconst\fP \fBint\fP AudioIO::StandardRates\fC [static]\fP"
+\fBInitial value:\fP
+.PP
+.nf
+= {
+   8000,
+   11025,
+   16000,
+   22050,
+   32000,
+   44100,
+   48000,
+   88200,
+   96000,
+   176400,
+   192000,
+   352800,
+   384000
+}
+.fi
+.PP
+Array of common audio sample rates\&. These are the rates we will always support, regardless of hardware support for them (by resampling in audacity if needed) 
+.PP
+Definition at line 379 of file AudioIO\&.h\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

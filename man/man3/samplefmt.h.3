@@ -1,0 +1,372 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/lib-src/ffmpeg/libavutil/samplefmt.h" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/lib-src/ffmpeg/libavutil/samplefmt.h \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <stdint\&.h>\fP
+.br
+\fC#include 'avutil\&.h'\fP
+.br
+\fC#include 'attributes\&.h'\fP
+.br
+
+.SS "Enumerations"
+
+.in +1c
+.ti -1c
+.RI "enum \fBAVSampleFormat\fP { \fBAV_SAMPLE_FMT_NONE\fP = -1, \fBAV_SAMPLE_FMT_U8\fP, \fBAV_SAMPLE_FMT_S16\fP, \fBAV_SAMPLE_FMT_S32\fP, \fBAV_SAMPLE_FMT_FLT\fP, \fBAV_SAMPLE_FMT_DBL\fP, \fBAV_SAMPLE_FMT_U8P\fP, \fBAV_SAMPLE_FMT_S16P\fP, \fBAV_SAMPLE_FMT_S32P\fP, \fBAV_SAMPLE_FMT_FLTP\fP, \fBAV_SAMPLE_FMT_DBLP\fP, \fBAV_SAMPLE_FMT_NB\fP }"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBconst\fP char * \fBav_get_sample_fmt_name\fP (enum \fBAVSampleFormat\fP sample_fmt)"
+.br
+.ti -1c
+.RI "enum \fBAVSampleFormat\fP \fBav_get_sample_fmt\fP (\fBconst\fP char *\fBname\fP)"
+.br
+.ti -1c
+.RI "enum \fBAVSampleFormat\fP \fBav_get_alt_sample_fmt\fP (enum \fBAVSampleFormat\fP sample_fmt, \fBint\fP planar)"
+.br
+.ti -1c
+.RI "enum \fBAVSampleFormat\fP \fBav_get_packed_sample_fmt\fP (enum \fBAVSampleFormat\fP sample_fmt)"
+.br
+.ti -1c
+.RI "enum \fBAVSampleFormat\fP \fBav_get_planar_sample_fmt\fP (enum \fBAVSampleFormat\fP sample_fmt)"
+.br
+.ti -1c
+.RI "char * \fBav_get_sample_fmt_string\fP (char *\fBbuf\fP, \fBint\fP buf_size, enum \fBAVSampleFormat\fP sample_fmt)"
+.br
+.ti -1c
+.RI "\fBattribute_deprecated\fP \fBint\fP \fBav_get_bits_per_sample_fmt\fP (enum \fBAVSampleFormat\fP sample_fmt)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_get_bytes_per_sample\fP (enum \fBAVSampleFormat\fP sample_fmt)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_sample_fmt_is_planar\fP (enum \fBAVSampleFormat\fP sample_fmt)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_samples_get_buffer_size\fP (\fBint\fP *\fBlinesize\fP, \fBint\fP nb_channels, \fBint\fP nb_samples, enum \fBAVSampleFormat\fP sample_fmt, \fBint\fP align)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_samples_fill_arrays\fP (\fBuint8_t\fP **audio_data, \fBint\fP *\fBlinesize\fP, \fBconst\fP \fBuint8_t\fP *\fBbuf\fP, \fBint\fP nb_channels, \fBint\fP nb_samples, enum \fBAVSampleFormat\fP sample_fmt, \fBint\fP align)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_samples_alloc\fP (\fBuint8_t\fP **audio_data, \fBint\fP *\fBlinesize\fP, \fBint\fP nb_channels, \fBint\fP nb_samples, enum \fBAVSampleFormat\fP sample_fmt, \fBint\fP align)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_samples_alloc_array_and_samples\fP (\fBuint8_t\fP ***audio_data, \fBint\fP *\fBlinesize\fP, \fBint\fP nb_channels, \fBint\fP nb_samples, enum \fBAVSampleFormat\fP sample_fmt, \fBint\fP align)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_samples_copy\fP (\fBuint8_t\fP **dst, \fBuint8_t\fP *\fBconst\fP *src, \fBint\fP dst_offset, \fBint\fP src_offset, \fBint\fP nb_samples, \fBint\fP nb_channels, enum \fBAVSampleFormat\fP sample_fmt)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_samples_set_silence\fP (\fBuint8_t\fP **audio_data, \fBint\fP \fBoffset\fP, \fBint\fP nb_samples, \fBint\fP nb_channels, enum \fBAVSampleFormat\fP sample_fmt)"
+.br
+.in -1c
+.SH "Enumeration Type Documentation"
+.PP 
+.SS "enum \fBAVSampleFormat\fP"
+Audio \fBSample\fP Formats
+.PP
+\fB\fP
+.RS 4
+The data described by the sample format is always in native-endian order\&. \fBSample\fP values can be expressed by native C types, hence the lack of a signed 24-bit sample format even though it is a common raw audio data format\&.
+.RE
+.PP
+\fB\fP
+.RS 4
+The floating-point formats are based on full volume being in the range [-1\&.0, 1\&.0]\&. Any values outside this range are beyond full volume level\&.
+.RE
+.PP
+\fB\fP
+.RS 4
+The data layout as used in \fBav_samples_fill_arrays()\fP and elsewhere in FFmpeg (such as \fBAVFrame\fP in libavcodec) is as follows:
+.RE
+.PP
+For planar sample formats, each audio channel is in a separate data plane, and linesize is the buffer size, in bytes, for a single plane\&. All data planes must be the same size\&. For packed sample formats, only the first data plane is used, and samples for each channel are interleaved\&. In this case, linesize is the buffer size, in bytes, for the 1 plane\&. 
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fIAV_SAMPLE_FMT_NONE \fP\fP
+.TP
+\fB\fIAV_SAMPLE_FMT_U8 \fP\fP
+unsigned 8 bits 
+.TP
+\fB\fIAV_SAMPLE_FMT_S16 \fP\fP
+signed 16 bits 
+.TP
+\fB\fIAV_SAMPLE_FMT_S32 \fP\fP
+signed 32 bits 
+.TP
+\fB\fIAV_SAMPLE_FMT_FLT \fP\fP
+float 
+.TP
+\fB\fIAV_SAMPLE_FMT_DBL \fP\fP
+double 
+.TP
+\fB\fIAV_SAMPLE_FMT_U8P \fP\fP
+unsigned 8 bits, planar 
+.TP
+\fB\fIAV_SAMPLE_FMT_S16P \fP\fP
+signed 16 bits, planar 
+.TP
+\fB\fIAV_SAMPLE_FMT_S32P \fP\fP
+signed 32 bits, planar 
+.TP
+\fB\fIAV_SAMPLE_FMT_FLTP \fP\fP
+float, planar 
+.TP
+\fB\fIAV_SAMPLE_FMT_DBLP \fP\fP
+double, planar 
+.TP
+\fB\fIAV_SAMPLE_FMT_NB \fP\fP
+Number of sample formats\&. DO NOT USE if linking dynamically\&. 
+.PP
+Definition at line 49 of file samplefmt\&.h\&.
+.SH "Function Documentation"
+.PP 
+.SS "enum \fBAVSampleFormat\fP av_get_alt_sample_fmt (enum \fBAVSampleFormat\fP sample_fmt, \fBint\fP planar)"
+Return the planar<->packed alternative form of the given sample format, or AV_SAMPLE_FMT_NONE on error\&. If the passed sample_fmt is already in the requested planar/packed format, the format returned is the same as the input\&. 
+.SS "\fBattribute_deprecated\fP \fBint\fP av_get_bits_per_sample_fmt (enum \fBAVSampleFormat\fP sample_fmt)"
+
+.PP
+\fBDeprecated\fP
+.RS 4
+Use \fBav_get_bytes_per_sample()\fP instead\&. 
+.RE
+.PP
+
+.SS "\fBint\fP av_get_bytes_per_sample (enum \fBAVSampleFormat\fP sample_fmt)"
+Return number of bytes per sample\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIsample_fmt\fP the sample format 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+number of bytes per sample or zero if unknown for the given sample format 
+.RE
+.PP
+
+.SS "enum \fBAVSampleFormat\fP av_get_packed_sample_fmt (enum \fBAVSampleFormat\fP sample_fmt)"
+Get the packed alternative form of the given sample format\&.
+.PP
+If the passed sample_fmt is already in packed format, the format returned is the same as the input\&.
+.PP
+\fBReturns:\fP
+.RS 4
+the packed alternative form of the given sample format or AV_SAMPLE_FMT_NONE on error\&. 
+.RE
+.PP
+
+.SS "enum \fBAVSampleFormat\fP av_get_planar_sample_fmt (enum \fBAVSampleFormat\fP sample_fmt)"
+Get the planar alternative form of the given sample format\&.
+.PP
+If the passed sample_fmt is already in planar format, the format returned is the same as the input\&.
+.PP
+\fBReturns:\fP
+.RS 4
+the planar alternative form of the given sample format or AV_SAMPLE_FMT_NONE on error\&. 
+.RE
+.PP
+
+.SS "enum \fBAVSampleFormat\fP av_get_sample_fmt (\fBconst\fP char * name)"
+Return a sample format corresponding to name, or AV_SAMPLE_FMT_NONE on error\&. 
+.SS "\fBconst\fP char* av_get_sample_fmt_name (enum \fBAVSampleFormat\fP sample_fmt)"
+Return the name of sample_fmt, or NULL if sample_fmt is not recognized\&. 
+.SS "char* av_get_sample_fmt_string (char * buf, \fBint\fP buf_size, enum \fBAVSampleFormat\fP sample_fmt)"
+Generate a string corresponding to the sample format with sample_fmt, or a header if sample_fmt is negative\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIbuf\fP the buffer where to write the string 
+.br
+\fIbuf_size\fP the size of buf 
+.br
+\fIsample_fmt\fP the number of the sample format to print the corresponding info string, or a negative value to print the corresponding header\&. 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the pointer to the filled buffer or NULL if sample_fmt is unknown or in case of other errors 
+.RE
+.PP
+
+.SS "\fBint\fP av_sample_fmt_is_planar (enum \fBAVSampleFormat\fP sample_fmt)"
+Check if the sample format is planar\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIsample_fmt\fP the sample format to inspect 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+1 if the sample format is planar, 0 if it is interleaved 
+.RE
+.PP
+
+.SS "\fBint\fP av_samples_alloc (\fBuint8_t\fP ** audio_data, \fBint\fP * linesize, \fBint\fP nb_channels, \fBint\fP nb_samples, enum \fBAVSampleFormat\fP sample_fmt, \fBint\fP align)"
+Allocate a samples buffer for nb_samples samples, and fill data pointers and linesize accordingly\&. The allocated samples buffer can be freed by using av_freep(&audio_data[0]) Allocated data will be initialized to silence\&.
+.PP
+\fBSee also:\fP
+.RS 4
+enum \fBAVSampleFormat\fP The documentation \fBfor\fP \fBAVSampleFormat\fP describes \fBthe\fP \fBdata\fP layout\&.
+.RE
+.PP
+\fBParameters:\fP
+.RS 4
+\fIaudio_data\fP array to be filled with the pointer for each channel 
+.br
+\fIlinesize\fP aligned size for audio \fBbuffer(s)\fP, may be NULL 
+.br
+\fInb_channels\fP number of audio channels 
+.br
+\fInb_samples\fP number of samples per channel 
+.br
+\fIalign\fP buffer size alignment (0 = default, 1 = no alignment) 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+>=0 on success or a negative error code on failure 
+.RE
+.PP
+\fBTodo\fP
+.RS 4
+return the size of the allocated buffer in case of success at the next bump 
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBav_samples_fill_arrays()\fP 
+.PP
+\fBav_samples_alloc_array_and_samples()\fP 
+.RE
+.PP
+
+.SS "\fBint\fP av_samples_alloc_array_and_samples (\fBuint8_t\fP *** audio_data, \fBint\fP * linesize, \fBint\fP nb_channels, \fBint\fP nb_samples, enum \fBAVSampleFormat\fP sample_fmt, \fBint\fP align)"
+Allocate a data pointers array, samples buffer for nb_samples samples, and fill data pointers and linesize accordingly\&.
+.PP
+This is the same as \fBav_samples_alloc()\fP, but also allocates the data pointers array\&.
+.PP
+\fBSee also:\fP
+.RS 4
+\fBav_samples_alloc()\fP 
+.RE
+.PP
+
+.SS "\fBint\fP av_samples_copy (\fBuint8_t\fP ** dst, \fBuint8_t\fP *\fBconst\fP * src, \fBint\fP dst_offset, \fBint\fP src_offset, \fBint\fP nb_samples, \fBint\fP nb_channels, enum \fBAVSampleFormat\fP sample_fmt)"
+Copy samples from src to dst\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdst\fP destination array of pointers to data planes 
+.br
+\fIsrc\fP source array of pointers to data planes 
+.br
+\fIdst_offset\fP offset in samples at which the data will be written to dst 
+.br
+\fIsrc_offset\fP offset in samples at which the data will be read from src 
+.br
+\fInb_samples\fP number of samples to be copied 
+.br
+\fInb_channels\fP number of audio channels 
+.br
+\fIsample_fmt\fP audio sample format 
+.RE
+.PP
+
+.SS "\fBint\fP av_samples_fill_arrays (\fBuint8_t\fP ** audio_data, \fBint\fP * linesize, \fBconst\fP \fBuint8_t\fP * buf, \fBint\fP nb_channels, \fBint\fP nb_samples, enum \fBAVSampleFormat\fP sample_fmt, \fBint\fP align)"
+Fill plane data pointers and linesize for samples with sample format sample_fmt\&.
+.PP
+The audio_data array is filled with the pointers to the samples data planes: for planar, set the start point of each channel's data within the buffer, for packed, set the start point of the entire buffer only\&.
+.PP
+The value pointed to by linesize is set to the aligned size of each channel's data buffer for planar layout, or to the aligned size of the buffer for all channels for packed layout\&.
+.PP
+The buffer in buf must be big enough to contain all the samples (use \fBav_samples_get_buffer_size()\fP to compute its minimum size), otherwise the audio_data pointers will point to invalid data\&.
+.PP
+\fBSee also:\fP
+.RS 4
+enum \fBAVSampleFormat\fP The documentation \fBfor\fP \fBAVSampleFormat\fP describes \fBthe\fP \fBdata\fP layout\&.
+.RE
+.PP
+\fBParameters:\fP
+.RS 4
+\fIaudio_data\fP array to be filled with the pointer for each channel 
+.br
+\fIlinesize\fP calculated linesize, may be NULL 
+.br
+\fIbuf\fP the pointer to a buffer containing the samples 
+.br
+\fInb_channels\fP the number of channels 
+.br
+\fInb_samples\fP the number of samples in a single channel 
+.br
+\fIsample_fmt\fP the sample format 
+.br
+\fIalign\fP buffer size alignment (0 = default, 1 = no alignment) 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+>=0 on success or a negative error code on failure 
+.RE
+.PP
+\fBTodo\fP
+.RS 4
+return minimum size in bytes required for the buffer in case of success at the next bump 
+.RE
+.PP
+
+.SS "\fBint\fP av_samples_get_buffer_size (\fBint\fP * linesize, \fBint\fP nb_channels, \fBint\fP nb_samples, enum \fBAVSampleFormat\fP sample_fmt, \fBint\fP align)"
+Get the required buffer size for the given audio parameters\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIlinesize\fP calculated linesize, may be NULL 
+.br
+\fInb_channels\fP the number of channels 
+.br
+\fInb_samples\fP the number of samples in a single channel 
+.br
+\fIsample_fmt\fP the sample format 
+.br
+\fIalign\fP buffer size alignment (0 = default, 1 = no alignment) 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+required buffer size, or negative error code on failure 
+.RE
+.PP
+
+.SS "\fBint\fP av_samples_set_silence (\fBuint8_t\fP ** audio_data, \fBint\fP offset, \fBint\fP nb_samples, \fBint\fP nb_channels, enum \fBAVSampleFormat\fP sample_fmt)"
+Fill an audio buffer with silence\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIaudio_data\fP array of pointers to data planes 
+.br
+\fIoffset\fP offset in samples at which to start filling 
+.br
+\fInb_samples\fP number of samples to fill 
+.br
+\fInb_channels\fP number of audio channels 
+.br
+\fIsample_fmt\fP audio sample format 
+.RE
+.PP
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

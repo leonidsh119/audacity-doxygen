@@ -1,0 +1,405 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/lib-src/libnyquist/nyquist/xlisp/xlread.c" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/lib-src/libnyquist/nyquist/xlisp/xlread.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include 'stdlib\&.h'\fP
+.br
+\fC#include 'string\&.h'\fP
+.br
+\fC#include 'switches\&.h'\fP
+.br
+\fC#include 'xlisp\&.h'\fP
+.br
+
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBDONE\fP   0"
+.br
+.ti -1c
+.RI "#define \fBNORMAL\fP   1"
+.br
+.ti -1c
+.RI "#define \fBESCAPE\fP   2"
+.br
+.ti -1c
+.RI "#define \fBWSPACE\fP   '\\t \\f\\r\\n'"
+.br
+.ti -1c
+.RI "#define \fBCONST1\fP   '!$%&*+\-\&./0123456789:<=>?@[]^_{}~'"
+.br
+.ti -1c
+.RI "#define \fBCONST2\fP   'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "FILE * \fBosaopen\fP ()"
+.br
+.ti -1c
+.RI "double \fBatof\fP ()"
+.br
+.ti -1c
+.RI "\fBFORWARD\fP \fBLVAL\fP \fBcallmacro\fP (\fBLVAL\fP fptr, \fBint\fP ch)"
+.br
+.ti -1c
+.RI "\fBFORWARD\fP \fBLOCAL\fP \fBLVAL\fP \fBpsymbol\fP (\fBLVAL\fP fptr)"
+.br
+.ti -1c
+.RI "\fBFORWARD\fP \fBLOCAL\fP \fBLVAL\fP \fBpunintern\fP (\fBLVAL\fP fptr)"
+.br
+.ti -1c
+.RI "\fBFORWARD\fP \fBLOCAL\fP \fBLVAL\fP \fBpnumber\fP (\fBLVAL\fP fptr, \fBint\fP radix)"
+.br
+.ti -1c
+.RI "\fBFORWARD\fP \fBLOCAL\fP \fBLVAL\fP \fBpquote\fP (\fBLVAL\fP fptr, \fBLVAL\fP sym)"
+.br
+.ti -1c
+.RI "\fBFORWARD\fP \fBLOCAL\fP \fBLVAL\fP \fBplist\fP (\fBLVAL\fP fptr)"
+.br
+.ti -1c
+.RI "\fBFORWARD\fP \fBLOCAL\fP \fBLVAL\fP \fBpvector\fP (\fBLVAL\fP fptr)"
+.br
+.ti -1c
+.RI "\fBFORWARD\fP \fBLOCAL\fP \fBvoid\fP \fBupcase\fP (char *\fBstr\fP)"
+.br
+.ti -1c
+.RI "\fBFORWARD\fP \fBLOCAL\fP \fBint\fP \fBpname\fP (\fBLVAL\fP fptr, \fBint\fP *pescflag)"
+.br
+.ti -1c
+.RI "\fBFORWARD\fP \fBLOCAL\fP \fBvoid\fP \fBpcomment\fP (\fBLVAL\fP fptr)"
+.br
+.ti -1c
+.RI "\fBFORWARD\fP \fBLOCAL\fP \fBint\fP \fBcheckeof\fP (\fBLVAL\fP fptr)"
+.br
+.ti -1c
+.RI "\fBFORWARD\fP \fBLOCAL\fP \fBint\fP \fBnextch\fP (\fBLVAL\fP fptr)"
+.br
+.ti -1c
+.RI "\fBFORWARD\fP \fBLOCAL\fP \fBvoid\fP \fBbadeof\fP (\fBLVAL\fP fptr)"
+.br
+.ti -1c
+.RI "\fBFORWARD\fP \fBLOCAL\fP \fBint\fP \fBstorech\fP (char *\fBbuf\fP, \fBint\fP \fBi\fP, \fBint\fP ch)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBxlload\fP (\fBconst\fP char *fname, \fBint\fP vflag, \fBint\fP pflag)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBxlread\fP (\fBLVAL\fP fptr, \fBLVAL\fP *pval, \fBint\fP rflag)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBreadone\fP (\fBLVAL\fP fptr, \fBLVAL\fP *pval)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBrmhash\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBrmquote\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBrmdquote\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBrmbquote\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBrmcomma\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBrmlpar\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBrmrpar\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBrmsemi\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBtentry\fP (\fBint\fP ch)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBxlisnumber\fP (char *\fBstr\fP, \fBLVAL\fP *pval)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBdefmacro\fP (\fBint\fP ch, \fBLVAL\fP type, \fBint\fP \fBoffset\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBxlrinit\fP (\fBvoid\fP)"
+.br
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "\fBLVAL\fP \fBs_stdout\fP"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBs_true\fP"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBs_dot\fP"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBs_quote\fP"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBs_function\fP"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBs_bquote\fP"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBs_comma\fP"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBs_comat\fP"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBs_rtable\fP"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBk_wspace\fP"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBk_const\fP"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBk_nmacro\fP"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBk_tmacro\fP"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBk_sescape\fP"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBk_mescape\fP"
+.br
+.ti -1c
+.RI "char \fBbuf\fP []"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define CONST1   '!$%&*+\-\&./0123456789:<=>?@[]^_{}~'"
+
+.PP
+Definition at line 52 of file xlread\&.c\&.
+.SS "#define CONST2   'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'"
+
+.PP
+Definition at line 53 of file xlread\&.c\&.
+.SS "#define DONE   0"
+
+.PP
+Definition at line 28 of file xlread\&.c\&.
+.SS "#define ESCAPE   2"
+
+.PP
+Definition at line 30 of file xlread\&.c\&.
+.SS "#define NORMAL   1"
+
+.PP
+Definition at line 29 of file xlread\&.c\&.
+.SS "#define WSPACE   '\\t \\f\\r\\n'"
+
+.PP
+Definition at line 51 of file xlread\&.c\&.
+.SH "Function Documentation"
+.PP 
+.SS "double atof ()"
+
+.SS "\fBLOCAL\fP \fBvoid\fP badeof (\fBLVAL\fP fptr)"
+
+.PP
+Definition at line 869 of file xlread\&.c\&.
+.SS "\fBFORWARD\fP \fBLVAL\fP callmacro (\fBLVAL\fP fptr, \fBint\fP ch)"
+
+.PP
+Definition at line 935 of file xlread\&.c\&.
+.SS "\fBLOCAL\fP \fBint\fP checkeof (\fBLVAL\fP fptr)"
+
+.PP
+Definition at line 859 of file xlread\&.c\&.
+.SS "\fBvoid\fP defmacro (\fBint\fP ch, \fBLVAL\fP type, \fBint\fP offset)"
+
+.PP
+Definition at line 926 of file xlread\&.c\&.
+.SS "\fBLOCAL\fP \fBint\fP nextch (\fBLVAL\fP fptr)"
+
+.PP
+Definition at line 847 of file xlread\&.c\&.
+.SS "FILE* osaopen ()"
+
+.SS "\fBLOCAL\fP \fBvoid\fP pcomment (\fBLVAL\fP fptr)"
+
+.PP
+Definition at line 593 of file xlread\&.c\&.
+.SS "\fBLOCAL\fP \fBLVAL\fP plist (\fBLVAL\fP fptr)"
+
+.PP
+Definition at line 626 of file xlread\&.c\&.
+.SS "\fBLOCAL\fP \fBint\fP pname (\fBLVAL\fP fptr, \fBint\fP * pescflag)"
+
+.PP
+Definition at line 775 of file xlread\&.c\&.
+.SS "\fBLOCAL\fP \fBLVAL\fP pnumber (\fBLVAL\fP fptr, \fBint\fP radix)"
+
+.PP
+Definition at line 608 of file xlread\&.c\&.
+.SS "\fBLOCAL\fP \fBLVAL\fP pquote (\fBLVAL\fP fptr, \fBLVAL\fP sym)"
+
+.PP
+Definition at line 734 of file xlread\&.c\&.
+.SS "\fBLOCAL\fP \fBLVAL\fP psymbol (\fBLVAL\fP fptr)"
+
+.PP
+Definition at line 758 of file xlread\&.c\&.
+.SS "\fBLOCAL\fP \fBLVAL\fP punintern (\fBLVAL\fP fptr)"
+
+.PP
+Definition at line 767 of file xlread\&.c\&.
+.SS "\fBLOCAL\fP \fBLVAL\fP pvector (\fBLVAL\fP fptr)"
+
+.PP
+Definition at line 683 of file xlread\&.c\&.
+.SS "\fBint\fP readone (\fBLVAL\fP fptr, \fBLVAL\fP * pval)"
+
+.PP
+Definition at line 292 of file xlread\&.c\&.
+.SS "\fBLVAL\fP rmbquote (\fBvoid\fP)"
+
+.PP
+Definition at line 512 of file xlread\&.c\&.
+.SS "\fBLVAL\fP rmcomma (\fBvoid\fP)"
+
+.PP
+Definition at line 526 of file xlread\&.c\&.
+.SS "\fBLVAL\fP rmdquote (\fBvoid\fP)"
+
+.PP
+Definition at line 432 of file xlread\&.c\&.
+.SS "\fBLVAL\fP rmhash (\fBvoid\fP)"
+
+.PP
+Definition at line 346 of file xlread\&.c\&.
+.SS "\fBLVAL\fP rmlpar (\fBvoid\fP)"
+
+.PP
+Definition at line 549 of file xlread\&.c\&.
+.SS "\fBLVAL\fP rmquote (\fBvoid\fP)"
+
+.PP
+Definition at line 418 of file xlread\&.c\&.
+.SS "\fBLVAL\fP rmrpar (\fBvoid\fP)"
+
+.PP
+Definition at line 567 of file xlread\&.c\&.
+.SS "\fBLVAL\fP rmsemi (\fBvoid\fP)"
+
+.PP
+Definition at line 574 of file xlread\&.c\&.
+.SS "\fBLOCAL\fP \fBint\fP storech (char * buf, \fBint\fP i, \fBint\fP ch)"
+
+.PP
+Definition at line 829 of file xlread\&.c\&.
+.SS "\fBLVAL\fP tentry (\fBint\fP ch)"
+
+.PP
+Definition at line 837 of file xlread\&.c\&.
+.SS "\fBLOCAL\fP \fBvoid\fP upcase (char * str)"
+
+.PP
+Definition at line 951 of file xlread\&.c\&.
+.SS "\fBint\fP xlisnumber (char * str, \fBLVAL\fP * pval)"
+
+.PP
+Definition at line 876 of file xlread\&.c\&.
+.SS "\fBint\fP xlload (\fBconst\fP char * fname, \fBint\fP vflag, \fBint\fP pflag)"
+
+.PP
+Definition at line 82 of file xlread\&.c\&.
+.SS "\fBint\fP xlread (\fBLVAL\fP fptr, \fBLVAL\fP * pval, \fBint\fP rflag)"
+
+.PP
+Definition at line 273 of file xlread\&.c\&.
+.SS "\fBvoid\fP xlrinit (\fBvoid\fP)"
+
+.PP
+Definition at line 959 of file xlread\&.c\&.
+.SH "Variable Documentation"
+.PP 
+.SS "char buf[]"
+
+.PP
+Definition at line 93 of file xlglob\&.c\&.
+.SS "\fBLVAL\fP k_const"
+
+.PP
+Definition at line 42 of file xlglob\&.c\&.
+.SS "\fBLVAL\fP k_mescape"
+
+.PP
+Definition at line 43 of file xlglob\&.c\&.
+.SS "\fBLVAL\fP k_nmacro"
+
+.PP
+Definition at line 42 of file xlglob\&.c\&.
+.SS "\fBLVAL\fP k_sescape"
+
+.PP
+Definition at line 43 of file xlglob\&.c\&.
+.SS "\fBLVAL\fP k_tmacro"
+
+.PP
+Definition at line 42 of file xlglob\&.c\&.
+.SS "\fBLVAL\fP k_wspace"
+
+.PP
+Definition at line 42 of file xlglob\&.c\&.
+.SS "\fBLVAL\fP s_bquote"
+
+.PP
+Definition at line 23 of file xlglob\&.c\&.
+.SS "\fBLVAL\fP s_comat"
+
+.PP
+Definition at line 23 of file xlglob\&.c\&.
+.SS "\fBLVAL\fP s_comma"
+
+.PP
+Definition at line 23 of file xlglob\&.c\&.
+.SS "\fBLVAL\fP s_dot"
+
+.PP
+Definition at line 21 of file xlglob\&.c\&.
+.SS "\fBLVAL\fP s_function"
+
+.PP
+Definition at line 22 of file xlglob\&.c\&.
+.SS "\fBLVAL\fP s_quote"
+
+.PP
+Definition at line 22 of file xlglob\&.c\&.
+.SS "\fBLVAL\fP s_rtable"
+
+.PP
+Definition at line 27 of file xlglob\&.c\&.
+.SS "\fBLVAL\fP s_stdout"
+
+.PP
+Definition at line 26 of file xlglob\&.c\&.
+.SS "\fBLVAL\fP s_true"
+
+.PP
+Definition at line 20 of file xlglob\&.c\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

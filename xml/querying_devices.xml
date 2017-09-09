@@ -1,0 +1,86 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="querying_devices" kind="page">
+    <compoundname>querying_devices</compoundname>
+    <title>Enumerating and Querying PortAudio Devices</title>
+    <detaileddescription>
+<sect1 id="querying_devices_1tut_query1">
+<title>Querying Devices</title>
+<para>It is often fine to use the default device as we did previously in this tutorial, but there are times when you&apos;ll want to explicitly choose the device from a list of available devices on the system. To see a working example of this, check out pa_devs.c in the tests/ directory of the PortAudio source code. To do so, you&apos;ll need to first initialize PortAudio and Query for the number of Devices:</para><para><programlisting><codeline><highlight class="normal">int<sp/>numDevices;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">numDevices<sp/>=<sp/>Pa_GetDeviceCount();</highlight></codeline>
+<codeline><highlight class="normal">if(<sp/>numDevices<sp/>&lt;<sp/>0<sp/>)</highlight></codeline>
+<codeline><highlight class="normal">{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>printf(<sp/>&quot;ERROR:<sp/>Pa_CountDevices<sp/>returned<sp/>0x%x\n&quot;,<sp/>numDevices<sp/>);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>err<sp/>=<sp/>numDevices;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>goto<sp/>error;</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+</programlisting></para><para>If you want to get information about each device, simply loop through as follows:</para><para><programlisting><codeline><highlight class="normal">const<sp/><sp/><sp/>PaDeviceInfo<sp/>*deviceInfo;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">for(<sp/>i=0;<sp/>i&lt;numDevices;<sp/>i++<sp/>)</highlight></codeline>
+<codeline><highlight class="normal">{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>deviceInfo<sp/>=<sp/>Pa_GetDeviceInfo(<sp/>i<sp/>);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>...</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+</programlisting></para><para>The Pa_DeviceInfo structure contains a wealth of information such as the name of the devices, the default latency associated with the devices and more. The structure has the following fields:</para><para><programlisting><codeline><highlight class="normal">int<sp/><sp/><sp/><sp/><sp/>structVersion</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>char<sp/>*<sp/><sp/><sp/><sp/>name</highlight></codeline>
+<codeline><highlight class="normal">PaHostApiIndex<sp/><sp/>hostApi</highlight></codeline>
+<codeline><highlight class="normal">int<sp/><sp/><sp/><sp/><sp/>maxInputChannels</highlight></codeline>
+<codeline><highlight class="normal">int<sp/><sp/><sp/><sp/><sp/>maxOutputChannels</highlight></codeline>
+<codeline><highlight class="normal">PaTime<sp/><sp/>defaultLowInputLatency</highlight></codeline>
+<codeline><highlight class="normal">PaTime<sp/><sp/>defaultLowOutputLatency</highlight></codeline>
+<codeline><highlight class="normal">PaTime<sp/><sp/>defaultHighInputLatency</highlight></codeline>
+<codeline><highlight class="normal">PaTime<sp/><sp/>defaultHighOutputLatency</highlight></codeline>
+<codeline><highlight class="normal">double<sp/><sp/>defaultSampleRate</highlight></codeline>
+</programlisting></para><para>You may notice that you can&apos;t determine, from this information alone, whether or not a particular sample rate is supported. This is because some devices support ranges of sample rates, others support, a list of sample rates, and still others support some sample rates and number of channels combinations but not others. To get around this, PortAudio offers a function for testing a particular device with a given format:</para><para><programlisting><codeline><highlight class="normal">const<sp/>PaStreamParameters<sp/>*inputParameters;</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>PaStreamParameters<sp/>*outputParameters;</highlight></codeline>
+<codeline><highlight class="normal">double<sp/>desiredSampleRate;</highlight></codeline>
+<codeline><highlight class="normal">...</highlight></codeline>
+<codeline><highlight class="normal">PaError<sp/>err;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">err<sp/>=<sp/>Pa_IsFormatSupported(<sp/>inputParameters,<sp/>outputParameters,<sp/>desiredSampleRate<sp/>);</highlight></codeline>
+<codeline><highlight class="normal">if(<sp/>err<sp/>==<sp/>paFormatIsSupported<sp/>)</highlight></codeline>
+<codeline><highlight class="normal">{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/>printf(<sp/>&quot;Hooray!\n&quot;);</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline><highlight class="normal">else</highlight></codeline>
+<codeline><highlight class="normal">{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/>printf(&quot;Too<sp/>Bad.\n&quot;);</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+</programlisting></para><para>Filling in the inputParameters and outputParameters fields is shown in a moment.</para><para>Once you&apos;ve found a configuration you like, or one you&apos;d like to go ahead and try, you can open the stream by filling in the <ref refid="struct_pa_stream_parameters" kindref="compound">PaStreamParameters</ref> structures, and calling Pa_OpenStream:</para><para><programlisting><codeline><highlight class="normal">double<sp/>srate<sp/>=<sp/>...<sp/>;</highlight></codeline>
+<codeline><highlight class="normal">PaStream<sp/>*stream;</highlight></codeline>
+<codeline><highlight class="normal">unsigned<sp/>long<sp/>framesPerBuffer<sp/>=<sp/>...<sp/>;<sp/>//could<sp/>be<sp/>paFramesPerBufferUnspecified,<sp/>in<sp/>which<sp/>case<sp/>PortAudio<sp/>will<sp/>do<sp/>its<sp/>best<sp/>to<sp/>manage<sp/>it<sp/>for<sp/>you,<sp/>but,<sp/>on<sp/>some<sp/>platforms,<sp/>the<sp/>framesPerBuffer<sp/>will<sp/>change<sp/>in<sp/>each<sp/>call<sp/>to<sp/>the<sp/>callback</highlight></codeline>
+<codeline><highlight class="normal">PaStreamParameters<sp/>outputParameters;</highlight></codeline>
+<codeline><highlight class="normal">PaStreamParameters<sp/>inputParameters;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">bzero(<sp/>&amp;inputParameters,<sp/>sizeof(<sp/>inputParameters<sp/>)<sp/>);<sp/>//not<sp/>necessary<sp/>if<sp/>you<sp/>are<sp/>filling<sp/>in<sp/>all<sp/>the<sp/>fields</highlight></codeline>
+<codeline><highlight class="normal">inputParameters.channelCount<sp/>=<sp/>inChan;</highlight></codeline>
+<codeline><highlight class="normal">inputParameters.device<sp/>=<sp/>inDevNum;</highlight></codeline>
+<codeline><highlight class="normal">inputParameters.hostApiSpecificStreamInfo<sp/>=<sp/>NULL;</highlight></codeline>
+<codeline><highlight class="normal">inputParameters.sampleFormat<sp/>=<sp/>paFloat32;</highlight></codeline>
+<codeline><highlight class="normal">inputParameters.suggestedLatency<sp/>=<sp/>Pa_GetDeviceInfo(inDevNum)-&gt;defaultLowInputLatency<sp/>;</highlight></codeline>
+<codeline><highlight class="normal">inputParameters.hostApiSpecificStreamInfo<sp/>=<sp/>NULL;<sp/>//See<sp/>you<sp/>specific<sp/>host&apos;s<sp/>API<sp/>docs<sp/>for<sp/>info<sp/>on<sp/>using<sp/>this<sp/>field</highlight></codeline>
+<codeline></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">bzero(<sp/>&amp;outputParameters,<sp/>sizeof(<sp/>outputParameters<sp/>)<sp/>);<sp/>//not<sp/>necessary<sp/>if<sp/>you<sp/>are<sp/>filling<sp/>in<sp/>all<sp/>the<sp/>fields</highlight></codeline>
+<codeline><highlight class="normal">outputParameters.channelCount<sp/>=<sp/>outChan;</highlight></codeline>
+<codeline><highlight class="normal">outputParameters.device<sp/>=<sp/>outDevNum;</highlight></codeline>
+<codeline><highlight class="normal">outputParameters.hostApiSpecificStreamInfo<sp/>=<sp/>NULL;</highlight></codeline>
+<codeline><highlight class="normal">outputParameters.sampleFormat<sp/>=<sp/>paFloat32;</highlight></codeline>
+<codeline><highlight class="normal">outputParameters.suggestedLatency<sp/>=<sp/>Pa_GetDeviceInfo(outDevNum)-&gt;defaultLowOutputLatency<sp/>;</highlight></codeline>
+<codeline><highlight class="normal">outputParameters.hostApiSpecificStreamInfo<sp/>=<sp/>NULL;<sp/>//See<sp/>you<sp/>specific<sp/>host&apos;s<sp/>API<sp/>docs<sp/>for<sp/>info<sp/>on<sp/>using<sp/>this<sp/>field</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">err<sp/>=<sp/>Pa_OpenStream(</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&amp;stream,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&amp;inputParameters,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&amp;outputParameters,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>srate,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>framesPerBuffer,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>paNoFlag,<sp/>//flags<sp/>that<sp/>can<sp/>be<sp/>used<sp/>to<sp/>define<sp/>dither,<sp/>clip<sp/>settings<sp/>and<sp/>more</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>portAudioCallback,<sp/>//your<sp/>callback<sp/>function</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>(void<sp/>*)this<sp/>);<sp/>//data<sp/>to<sp/>be<sp/>passed<sp/>to<sp/>callback.<sp/>In<sp/>C++,<sp/>it<sp/>is<sp/>frequently<sp/>(void<sp/>*)this</highlight></codeline>
+<codeline><highlight class="normal">//don&apos;t<sp/>forget<sp/>to<sp/>check<sp/>errors!</highlight></codeline>
+</programlisting></para><para>Previous: <ref refid="utility_functions" kindref="compound">Utility Functions</ref> | Next: <ref refid="blocking_read_write" kindref="compound">Blocking Read/Write Functions</ref> </para></sect1>
+    </detaileddescription>
+  </compounddef>
+</doxygen>

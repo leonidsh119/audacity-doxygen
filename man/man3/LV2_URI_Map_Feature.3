@@ -1,0 +1,56 @@
+.TH "LV2_URI_Map_Feature" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+LV2_URI_Map_Feature \- 
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <uri\-map\&.h>\fP
+.SS "Public Attributes"
+
+.in +1c
+.ti -1c
+.RI "\fBLV2_URI_Map_Callback_Data\fP \fBcallback_data\fP"
+.br
+.ti -1c
+.RI "\fBuint32_t\fP(* \fBuri_to_id\fP )(\fBLV2_URI_Map_Callback_Data\fP \fBcallback_data\fP, \fBconst\fP char *\fBmap\fP, \fBconst\fP char *\fBuri\fP)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+URI Map Feature\&.
+.PP
+To support this feature the host must pass an LV2_Feature struct to the plugin's instantiate method with URI 'http://lv2plug\&.in/ns/ext/uri-map' and data pointed to an instance of this struct\&. 
+.PP
+Definition at line 53 of file uri\-map\&.h\&.
+.SH "Member Data Documentation"
+.PP 
+.SS "\fBLV2_URI_Map_Callback_Data\fP LV2_URI_Map_Feature::callback_data"
+Opaque pointer to host data\&.
+.PP
+The plugin MUST pass this to any call to functions in this struct\&. Otherwise, it must not be interpreted in any way\&. 
+.PP
+Definition at line 60 of file uri\-map\&.h\&.
+.SS "\fBuint32_t\fP(* LV2_URI_Map_Feature::uri_to_id) (\fBLV2_URI_Map_Callback_Data\fP \fBcallback_data\fP, \fBconst\fP char *\fBmap\fP, \fBconst\fP char *\fBuri\fP)"
+Get the numeric ID of a URI from the host\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcallback_data\fP Must be the callback_data member of this struct\&. 
+.br
+\fImap\fP The 'context' of this URI\&. Certain extensions may define a URI that must be passed here with certain restrictions on the return value (e\&.g\&. limited range)\&. This value may be NULL if the plugin needs an ID for a URI in general\&. Extensions SHOULD NOT define a context unless there is a specific need to do so, e\&.g\&. to restrict the range of the returned value\&. 
+.br
+\fIuri\fP The URI to be mapped to an integer ID\&.
+.RE
+.PP
+This function is referentially transparent; any number of calls with the same arguments is guaranteed to return the same value over the life of a plugin instance (though the same URI may return different values with a different map parameter)\&. However, this function is not necessarily very fast: plugins SHOULD cache any IDs they might need in performance critical situations\&.
+.PP
+The return value 0 is reserved and indicates that an ID for that URI could not be created for whatever reason\&. Extensions MAY define more precisely what this means in a certain context, but in general plugins SHOULD handle this situation as gracefully as possible\&. However, hosts SHOULD NOT return 0 from this function in non-exceptional circumstances (e\&.g\&. the URI map SHOULD be dynamic)\&. Hosts that statically support only a fixed set of \fBURIs\fP should not expect plugins to function correctly\&. 
+.PP
+Definition at line 89 of file uri\-map\&.h\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

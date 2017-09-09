@@ -1,0 +1,207 @@
+.TH "lavu_log" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+lavu_log \- Logging Facility
+.SS "Modules"
+
+.in +1c
+.ti -1c
+.RI "\fBLogging Constants\fP"
+.br
+.in -1c
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBav_dlog\fP(pctx, \&.\&.\&.)   do { \fBif\fP (0) \fBav_log\fP(pctx, \fBAV_LOG_DEBUG\fP, __VA_ARGS__); } while (0)"
+.br
+.ti -1c
+.RI "#define \fBAV_LOG_SKIP_REPEATED\fP   1"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBvoid\fP \fBav_log\fP (\fBvoid\fP *avcl, \fBint\fP level, \fBconst\fP char *fmt,\&.\&.\&.) \fBav_printf_format\fP(3"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBvoid\fP \fBav_vlog\fP (\fBvoid\fP *avcl, \fBint\fP level, \fBconst\fP char *fmt, va_list vl)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_log_get_level\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBav_log_set_level\fP (\fBint\fP level)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBav_log_set_callback\fP (\fBvoid\fP(*callback)(\fBvoid\fP *, \fBint\fP, \fBconst\fP char *, va_list))"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBav_log_default_callback\fP (\fBvoid\fP *avcl, \fBint\fP level, \fBconst\fP char *fmt, va_list vl)"
+.br
+.ti -1c
+.RI "\fBconst\fP char * \fBav_default_item_name\fP (\fBvoid\fP *ctx)"
+.br
+.ti -1c
+.RI "\fBAVClassCategory\fP \fBav_default_get_category\fP (\fBvoid\fP *ptr)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBav_log_format_line\fP (\fBvoid\fP *ptr, \fBint\fP level, \fBconst\fP char *fmt, va_list vl, char *\fBline\fP, \fBint\fP line_size, \fBint\fP *print_prefix)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBav_log_set_flags\fP (\fBint\fP arg)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define av_dlog(pctx,  \&.\&.\&.)   do { \fBif\fP (0) \fBav_log\fP(pctx, \fBAV_LOG_DEBUG\fP, __VA_ARGS__); } while (0)"
+av_dlog macros Useful to print debug messages that shouldn't get compiled in normally\&. 
+.PP
+Definition at line 296 of file log\&.h\&.
+.SS "#define AV_LOG_SKIP_REPEATED   1"
+Skip repeated messages, this requires the user app to use \fBav_log()\fP instead of (f)printf as the 2 would otherwise interfere and lead to 'Last message repeated x times' messages below (f)printf messages with some bad luck\&. Also to receive the last, 'last repeated' line if any, the user app must call av_log(NULL, AV_LOG_QUIET, '%s', ''); at the end 
+.PP
+Definition at line 307 of file log\&.h\&.
+.SH "Function Documentation"
+.PP 
+.SS "\fBAVClassCategory\fP av_default_get_category (\fBvoid\fP * ptr)"
+
+.SS "\fBconst\fP char* av_default_item_name (\fBvoid\fP * ctx)"
+Return the context name
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP The \fBAVClass\fP context
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+The \fBAVClass\fP class_name 
+.RE
+.PP
+
+.SS "\fBvoid\fP av_log (\fBvoid\fP * avcl, \fBint\fP level, \fBconst\fP char * fmt,  \&.\&.\&.)"
+Send the specified message to the log if the level is less than or equal to the current av_log_level\&. By default, all logging messages are sent to stderr\&. This behavior can be altered by setting a different logging callback function\&. 
+.PP
+\fBSee also:\fP
+.RS 4
+\fBav_log_set_callback\fP
+.RE
+.PP
+\fBParameters:\fP
+.RS 4
+\fIavcl\fP A pointer to an arbitrary struct of which the first field is a pointer to an \fBAVClass\fP struct\&. 
+.br
+\fIlevel\fP The importance level of the message expressed using a \fBLogging Constant\fP\&. 
+.br
+\fIfmt\fP The format string (printf-compatible) that specifies how subsequent arguments are converted to output\&. 
+.RE
+.PP
+
+.SS "\fBvoid\fP av_log_default_callback (\fBvoid\fP * avcl, \fBint\fP level, \fBconst\fP char * fmt, va_list vl)"
+Default logging callback
+.PP
+It prints the message to stderr, optionally colorizing it\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIavcl\fP A pointer to an arbitrary struct of which the first field is a pointer to an \fBAVClass\fP struct\&. 
+.br
+\fIlevel\fP The importance level of the message expressed using a \fBLogging Constant\fP\&. 
+.br
+\fIfmt\fP The format string (printf-compatible) that specifies how subsequent arguments are converted to output\&. 
+.br
+\fIvl\fP The arguments referenced by the format string\&. 
+.RE
+.PP
+
+.SS "\fBvoid\fP av_log_format_line (\fBvoid\fP * ptr, \fBint\fP level, \fBconst\fP char * fmt, va_list vl, char * line, \fBint\fP line_size, \fBint\fP * print_prefix)"
+\fBFormat\fP a line of log the same way as the default callback\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIline\fP buffer to receive the formated line 
+.br
+\fIline_size\fP size of the buffer 
+.br
+\fIprint_prefix\fP used to store whether the prefix must be printed; must point to a persistent integer initially set to 1 
+.RE
+.PP
+
+.SS "\fBint\fP av_log_get_level (\fBvoid\fP)"
+Get the current log level
+.PP
+\fBSee also:\fP
+.RS 4
+\fBLogging Constants\fP
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+Current log level 
+.RE
+.PP
+
+.SS "\fBvoid\fP av_log_set_callback (\fBvoid\fP(*)(\fBvoid\fP *, \fBint\fP, \fBconst\fP char *, va_list) callback)"
+Set the logging callback
+.PP
+\fBNote:\fP
+.RS 4
+The callback must be thread safe, even if the application does not use threads itself as some codecs are multithreaded\&.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBav_log_default_callback\fP
+.RE
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcallback\fP A logging function with a compatible signature\&. 
+.RE
+.PP
+
+.SS "\fBvoid\fP av_log_set_flags (\fBint\fP arg)"
+
+.SS "\fBvoid\fP av_log_set_level (\fBint\fP level)"
+Set the log level
+.PP
+\fBSee also:\fP
+.RS 4
+\fBLogging Constants\fP
+.RE
+.PP
+\fBParameters:\fP
+.RS 4
+\fIlevel\fP Logging level 
+.RE
+.PP
+
+.SS "\fBvoid\fP \fBvoid\fP av_vlog (\fBvoid\fP * avcl, \fBint\fP level, \fBconst\fP char * fmt, va_list vl)"
+Send the specified message to the log if the level is less than or equal to the current av_log_level\&. By default, all logging messages are sent to stderr\&. This behavior can be altered by setting a different logging callback function\&. 
+.PP
+\fBSee also:\fP
+.RS 4
+\fBav_log_set_callback\fP
+.RE
+.PP
+\fBParameters:\fP
+.RS 4
+\fIavcl\fP A pointer to an arbitrary struct of which the first field is a pointer to an \fBAVClass\fP struct\&. 
+.br
+\fIlevel\fP The importance level of the message expressed using a \fBLogging Constant\fP\&. 
+.br
+\fIfmt\fP The format string (printf-compatible) that specifies how subsequent arguments are converted to output\&. 
+.br
+\fIvl\fP The arguments referenced by the format string\&. 
+.RE
+.PP
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

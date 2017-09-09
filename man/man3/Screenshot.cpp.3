@@ -1,0 +1,181 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/src/Screenshot.cpp" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/src/Screenshot.cpp \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include 'Screenshot\&.h'\fP
+.br
+\fC#include 'commands/ScreenshotCommand\&.h'\fP
+.br
+\fC#include 'commands/CommandTargets\&.h'\fP
+.br
+\fC#include 'commands/CommandDirectory\&.h'\fP
+.br
+\fC#include <wx/defs\&.h>\fP
+.br
+\fC#include <wx/event\&.h>\fP
+.br
+\fC#include <wx/frame\&.h>\fP
+.br
+\fC#include 'ShuttleGui\&.h'\fP
+.br
+\fC#include <wx/button\&.h>\fP
+.br
+\fC#include <wx/checkbox\&.h>\fP
+.br
+\fC#include <wx/dirdlg\&.h>\fP
+.br
+\fC#include <wx/image\&.h>\fP
+.br
+\fC#include <wx/intl\&.h>\fP
+.br
+\fC#include <wx/panel\&.h>\fP
+.br
+\fC#include <wx/statusbr\&.h>\fP
+.br
+\fC#include <wx/textctrl\&.h>\fP
+.br
+\fC#include <wx/timer\&.h>\fP
+.br
+\fC#include <wx/tglbtn\&.h>\fP
+.br
+\fC#include <wx/window\&.h>\fP
+.br
+\fC#include 'AudacityApp\&.h'\fP
+.br
+\fC#include 'Project\&.h'\fP
+.br
+\fC#include 'Prefs\&.h'\fP
+.br
+\fC#include 'toolbars/ToolManager\&.h'\fP
+.br
+\fC#include 'Track\&.h'\fP
+.br
+
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "class \fBScreenFrame\fP"
+.br
+.ti -1c
+.RI "class \fBScreenFrameTimer\fP"
+.br
+.in -1c
+.SS "Enumerations"
+
+.in +1c
+.ti -1c
+.RI "enum { \fBIdMainWindowSmall\fP = 19200, \fBIdMainWindowLarge\fP, \fBIdDirectory\fP, \fBIdDirChoose\fP, \fBIdOneSec\fP, \fBIdTenSec\fP, \fBIdOneMin\fP, \fBIdFiveMin\fP, \fBIdOneHour\fP, \fBIdShortTracks\fP, \fBIdMedTracks\fP, \fBIdTallTracks\fP, \fBIdDelayCheckBox\fP, \fBIdCaptureToolbars\fP, \fBIdCaptureSelectionBar\fP, \fBIdCaptureTools\fP, \fBIdCaptureTransport\fP, \fBIdCaptureMixer\fP, \fBIdCaptureMeter\fP, \fBIdCaptureEdit\fP, \fBIdCaptureDevice\fP, \fBIdCaptureTranscription\fP, \fBIdCaptureTrackPanel\fP, \fBIdCaptureRuler\fP, \fBIdCaptureTracks\fP, \fBIdCaptureFirstTrack\fP, \fBIdCaptureSecondTrack\fP, \fBIdToggleBackgroundBlue\fP, \fBIdToggleBackgroundWhite\fP, \fBIdAllDelayedEvents\fP, \fBIdCaptureWindowContents\fP, \fBIdCaptureFullWindow\fP, \fBIdCaptureWindowPlus\fP, \fBIdCaptureFullScreen\fP, \fBIdLastDelayedEvent\fP }"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBvoid\fP \fBOpenScreenshotTools\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBCloseScreenshotTools\fP ()"
+.br
+.ti -1c
+.RI "\fBEND_EVENT_TABLE\fP ()"
+.br
+.in -1c
+.SH "Enumeration Type Documentation"
+.PP 
+.SS "anonymous enum"
+
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fIIdMainWindowSmall \fP\fP
+.TP
+\fB\fIIdMainWindowLarge \fP\fP
+.TP
+\fB\fIIdDirectory \fP\fP
+.TP
+\fB\fIIdDirChoose \fP\fP
+.TP
+\fB\fIIdOneSec \fP\fP
+.TP
+\fB\fIIdTenSec \fP\fP
+.TP
+\fB\fIIdOneMin \fP\fP
+.TP
+\fB\fIIdFiveMin \fP\fP
+.TP
+\fB\fIIdOneHour \fP\fP
+.TP
+\fB\fIIdShortTracks \fP\fP
+.TP
+\fB\fIIdMedTracks \fP\fP
+.TP
+\fB\fIIdTallTracks \fP\fP
+.TP
+\fB\fIIdDelayCheckBox \fP\fP
+.TP
+\fB\fIIdCaptureToolbars \fP\fP
+.TP
+\fB\fIIdCaptureSelectionBar \fP\fP
+.TP
+\fB\fIIdCaptureTools \fP\fP
+.TP
+\fB\fIIdCaptureTransport \fP\fP
+.TP
+\fB\fIIdCaptureMixer \fP\fP
+.TP
+\fB\fIIdCaptureMeter \fP\fP
+.TP
+\fB\fIIdCaptureEdit \fP\fP
+.TP
+\fB\fIIdCaptureDevice \fP\fP
+.TP
+\fB\fIIdCaptureTranscription \fP\fP
+.TP
+\fB\fIIdCaptureTrackPanel \fP\fP
+.TP
+\fB\fIIdCaptureRuler \fP\fP
+.TP
+\fB\fIIdCaptureTracks \fP\fP
+.TP
+\fB\fIIdCaptureFirstTrack \fP\fP
+.TP
+\fB\fIIdCaptureSecondTrack \fP\fP
+.TP
+\fB\fIIdToggleBackgroundBlue \fP\fP
+.TP
+\fB\fIIdToggleBackgroundWhite \fP\fP
+.TP
+\fB\fIIdAllDelayedEvents \fP\fP
+.TP
+\fB\fIIdCaptureWindowContents \fP\fP
+.TP
+\fB\fIIdCaptureFullWindow \fP\fP
+.TP
+\fB\fIIdCaptureWindowPlus \fP\fP
+.TP
+\fB\fIIdCaptureFullScreen \fP\fP
+.TP
+\fB\fIIdLastDelayedEvent \fP\fP
+.PP
+Definition at line 161 of file Screenshot\&.cpp\&.
+.SH "Function Documentation"
+.PP 
+.SS "\fBvoid\fP CloseScreenshotTools ()"
+
+.PP
+Definition at line 126 of file Screenshot\&.cpp\&.
+.SS "END_EVENT_TABLE ()"
+
+.SS "\fBvoid\fP OpenScreenshotTools ()"
+
+.PP
+Definition at line 117 of file Screenshot\&.cpp\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

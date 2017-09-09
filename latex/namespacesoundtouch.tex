@@ -1,0 +1,117 @@
+\hypertarget{namespacesoundtouch}{}\section{soundtouch Namespace Reference}
+\label{namespacesoundtouch}\index{soundtouch@{soundtouch}}
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \hyperlink{classsoundtouch_1_1_a_a_filter}{A\+A\+Filter}
+\item 
+class \hyperlink{classsoundtouch_1_1_b_p_m_detect}{B\+P\+M\+Detect}
+\begin{DoxyCompactList}\small\item\em Class for calculating B\+PM rate for audio data. \end{DoxyCompactList}\item 
+class \hyperlink{classsoundtouch_1_1_f_i_f_o_processor}{F\+I\+F\+O\+Processor}
+\item 
+class \hyperlink{classsoundtouch_1_1_f_i_f_o_sample_buffer}{F\+I\+F\+O\+Sample\+Buffer}
+\item 
+class \hyperlink{classsoundtouch_1_1_f_i_f_o_sample_pipe}{F\+I\+F\+O\+Sample\+Pipe}
+\begin{DoxyCompactList}\small\item\em Abstract base class for F\+I\+FO (first-\/in-\/first-\/out) sample processing classes. \end{DoxyCompactList}\item 
+class \hyperlink{classsoundtouch_1_1_f_i_r_filter}{F\+I\+R\+Filter}
+\item 
+class \hyperlink{classsoundtouch_1_1_peak_finder}{Peak\+Finder}
+\item 
+class \hyperlink{classsoundtouch_1_1_rate_transposer}{Rate\+Transposer}
+\item 
+class \hyperlink{classsoundtouch_1_1_sound_touch}{Sound\+Touch}
+\item 
+class \hyperlink{classsoundtouch_1_1_t_d_stretch}{T\+D\+Stretch}
+\end{DoxyCompactItemize}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef float \hyperlink{namespacesoundtouch_a97cfd29a7abb4d4b2a72f803d5b5850c}{S\+A\+M\+P\+L\+E\+T\+Y\+PE}
+\item 
+typedef double \hyperlink{namespacesoundtouch_a6d7c3b986241334e59ba402af1bbc127}{L\+O\+N\+G\+\_\+\+S\+A\+M\+P\+L\+E\+T\+Y\+PE}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Beats-\/per-\/minute (B\+PM) detection routine.
+
+The beat detection algorithm works as follows\+:
+\begin{DoxyItemize}
+\item Use function \textquotesingle{}input\+Samples\textquotesingle{} to input a chunks of samples to the class for analysis. It\textquotesingle{}s a good idea to enter a large sound file or stream in smallish chunks of around few kilosamples in order not to extinguish too much R\+AM memory.
+\item Input sound data is decimated to approx 500 Hz to reduce calculation burden, which is basically ok as low (bass) frequencies mostly determine the beat rate. Simple averaging is used for anti-\/alias filtering because the resulting signal quality isn\textquotesingle{}t of that high importance.
+\item Decimated sound data is enveloped, i.\+e. the amplitude shape is detected by taking absolute value that\textquotesingle{}s smoothed by sliding average. Signal levels that are below a couple of times the general R\+MS amplitude level are cut away to leave only notable peaks there.
+\item Repeating sound patterns (e.\+g. beats) are detected by calculating short-\/term autocorrelation function of the enveloped signal.
+\item After whole sound data file has been analyzed as above, the bpm level is detected by function \textquotesingle{}get\+Bpm\textquotesingle{} that finds the highest peak of the autocorrelation function, calculates it\textquotesingle{}s precise location and converts this reading to bpm\textquotesingle{}s.
+\end{DoxyItemize}
+
+Author \+: Copyright (c) Olli Parviainen Author e-\/mail \+: oparviai \textquotesingle{}at\textquotesingle{} iki.\+fi \hyperlink{classsoundtouch_1_1_sound_touch}{Sound\+Touch} W\+WW\+: \href{http://www.surina.net/soundtouch}{\tt http\+://www.\+surina.\+net/soundtouch}
+
+A buffer class for temporarily storaging sound samples, operates as a first-\/in-\/first-\/out pipe.
+
+Samples are added to the end of the sample buffer with the \textquotesingle{}put\+Samples\textquotesingle{} function, and are received from the beginning of the buffer by calling the \textquotesingle{}receive\+Samples\textquotesingle{} function. The class automatically removes the output samples from the buffer as well as grows the storage size whenever necessary.
+
+Author \+: Copyright (c) Olli Parviainen Author e-\/mail \+: oparviai \textquotesingle{}at\textquotesingle{} iki.\+fi \hyperlink{classsoundtouch_1_1_sound_touch}{Sound\+Touch} W\+WW\+: \href{http://www.surina.net/soundtouch}{\tt http\+://www.\+surina.\+net/soundtouch}
+
+\textquotesingle{}\hyperlink{classsoundtouch_1_1_f_i_f_o_sample_pipe}{F\+I\+F\+O\+Sample\+Pipe}\textquotesingle{} \+: An abstract base class for classes that manipulate sound samples by operating like a first-\/in-\/first-\/out pipe\+: New samples are fed into one end of the pipe with the \textquotesingle{}put\+Samples\textquotesingle{} function, and the processed samples are received from the other end with the \textquotesingle{}receive\+Samples\textquotesingle{} function.
+
+\textquotesingle{}\hyperlink{classsoundtouch_1_1_f_i_f_o_processor}{F\+I\+F\+O\+Processor}\textquotesingle{} \+: A base class for classes the do signal processing with the samples while operating like a first-\/in-\/first-\/out pipe. When samples are input with the \textquotesingle{}put\+Samples\textquotesingle{} function, the class processes them and moves the processed samples to the given \textquotesingle{}output\textquotesingle{} pipe object, which may be either another processing stage, or a fifo sample buffer object.
+
+Author \+: Copyright (c) Olli Parviainen Author e-\/mail \+: oparviai \textquotesingle{}at\textquotesingle{} iki.\+fi \hyperlink{classsoundtouch_1_1_sound_touch}{Sound\+Touch} W\+WW\+: \href{http://www.surina.net/soundtouch}{\tt http\+://www.\+surina.\+net/soundtouch}
+
+\hyperlink{classsoundtouch_1_1_sound_touch}{Sound\+Touch} -\/ main class for tempo/pitch/rate adjusting routines.
+
+Notes\+:
+\begin{DoxyItemize}
+\item Initialize the \hyperlink{classsoundtouch_1_1_sound_touch}{Sound\+Touch} object instance by setting up the sound stream parameters with functions \textquotesingle{}set\+Sample\+Rate\textquotesingle{} and \textquotesingle{}set\+Channels\textquotesingle{}, then set desired tempo/pitch/rate settings with the corresponding functions.
+\item The \hyperlink{classsoundtouch_1_1_sound_touch}{Sound\+Touch} class behaves like a first-\/in-\/first-\/out pipeline\+: The samples that are to be processed are fed into one of the pipe by calling function \textquotesingle{}put\+Samples\textquotesingle{}, while the ready processed samples can be read from the other end of the pipeline with function \textquotesingle{}receive\+Samples\textquotesingle{}.
+\item The \hyperlink{classsoundtouch_1_1_sound_touch}{Sound\+Touch} processing classes require certain sized \textquotesingle{}batches\textquotesingle{} of samples in order to process the sound. For this reason the classes buffer incoming samples until there are enough of samples available for processing, then they carry out the processing step and consequently make the processed samples available for outputting.
+\item For the above reason, the processing routines introduce a certain \textquotesingle{}latency\textquotesingle{} between the input and output, so that the samples input to \hyperlink{classsoundtouch_1_1_sound_touch}{Sound\+Touch} may not be immediately available in the output, and neither the amount of outputtable samples may not immediately be in direct relationship with the amount of previously input samples.
+\item The tempo/pitch/rate control parameters can be altered during processing. Please notice though that they aren\textquotesingle{}t currently protected by semaphores, so in multi-\/thread application external semaphore protection may be required.
+\item This class utilizes classes \textquotesingle{}\hyperlink{classsoundtouch_1_1_t_d_stretch}{T\+D\+Stretch}\textquotesingle{} for tempo change (without modifying pitch) and \textquotesingle{}\hyperlink{classsoundtouch_1_1_rate_transposer}{Rate\+Transposer}\textquotesingle{} for changing the playback rate (that is, both tempo and pitch in the same ratio) of the sound. The third available control \textquotesingle{}pitch\textquotesingle{} (change pitch but maintain tempo) is produced by a combination of combining the two other controls.
+\end{DoxyItemize}
+
+Author \+: Copyright (c) Olli Parviainen Author e-\/mail \+: oparviai \textquotesingle{}at\textquotesingle{} iki.\+fi \hyperlink{classsoundtouch_1_1_sound_touch}{Sound\+Touch} W\+WW\+: \href{http://www.surina.net/soundtouch}{\tt http\+://www.\+surina.\+net/soundtouch}
+
+Sampled sound tempo changer/time stretch algorithm. Changes the sound tempo while maintaining the original pitch by using a time domain W\+S\+O\+L\+A-\/like method with several performance-\/increasing tweaks.
+
+Anti-\/alias filter is used to prevent folding of high frequencies when transposing the sample rate with interpolation.
+
+Author \+: Copyright (c) Olli Parviainen Author e-\/mail \+: oparviai \textquotesingle{}at\textquotesingle{} iki.\+fi \hyperlink{classsoundtouch_1_1_sound_touch}{Sound\+Touch} W\+WW\+: \href{http://www.surina.net/soundtouch}{\tt http\+://www.\+surina.\+net/soundtouch}
+
+General F\+IR digital filter routines with M\+MX optimization.
+
+Note \+: M\+MX optimized functions reside in a separate, platform-\/specific file, e.\+g. \textquotesingle{}mmx\+\_\+win.\+cpp\textquotesingle{} or \textquotesingle{}mmx\+\_\+gcc.\+cpp\textquotesingle{}
+
+Author \+: Copyright (c) Olli Parviainen Author e-\/mail \+: oparviai \textquotesingle{}at\textquotesingle{} iki.\+fi \hyperlink{classsoundtouch_1_1_sound_touch}{Sound\+Touch} W\+WW\+: \href{http://www.surina.net/soundtouch}{\tt http\+://www.\+surina.\+net/soundtouch}
+
+The routine detects highest value on an array of values and calculates the precise peak location as a mass-\/center of the \textquotesingle{}hump\textquotesingle{} around the peak value.
+
+Author \+: Copyright (c) Olli Parviainen Author e-\/mail \+: oparviai \textquotesingle{}at\textquotesingle{} iki.\+fi \hyperlink{classsoundtouch_1_1_sound_touch}{Sound\+Touch} W\+WW\+: \href{http://www.surina.net/soundtouch}{\tt http\+://www.\+surina.\+net/soundtouch}
+
+\hyperlink{struct_sample}{Sample} rate transposer. Changes sample rate by using linear interpolation together with anti-\/alias filtering (first order interpolation with anti-\/ alias filtering should be quite adequate for this application).
+
+Use either of the derived classes of \textquotesingle{}\hyperlink{class_rate_transposer_integer}{Rate\+Transposer\+Integer}\textquotesingle{} or \textquotesingle{}\hyperlink{class_rate_transposer_float}{Rate\+Transposer\+Float}\textquotesingle{} for corresponding integer/floating point tranposing algorithm implementation.
+
+Author \+: Copyright (c) Olli Parviainen Author e-\/mail \+: oparviai \textquotesingle{}at\textquotesingle{} iki.\+fi \hyperlink{classsoundtouch_1_1_sound_touch}{Sound\+Touch} W\+WW\+: \href{http://www.surina.net/soundtouch}{\tt http\+://www.\+surina.\+net/soundtouch}
+
+Sampled sound tempo changer/time stretch algorithm. Changes the sound tempo while maintaining the original pitch by using a time domain W\+S\+O\+L\+A-\/like method with several performance-\/increasing tweaks.
+
+Note \+: M\+M\+X/\+S\+SE optimized functions reside in separate, platform-\/specific files \textquotesingle{}\hyperlink{mmx__optimized_8cpp}{mmx\+\_\+optimized.\+cpp}\textquotesingle{} and \textquotesingle{}\hyperlink{sse__optimized_8cpp}{sse\+\_\+optimized.\+cpp}\textquotesingle{}
+
+Author \+: Copyright (c) Olli Parviainen Author e-\/mail \+: oparviai \textquotesingle{}at\textquotesingle{} iki.\+fi \hyperlink{classsoundtouch_1_1_sound_touch}{Sound\+Touch} W\+WW\+: \href{http://www.surina.net/soundtouch}{\tt http\+://www.\+surina.\+net/soundtouch} 
+
+\subsection{Typedef Documentation}
+\index{soundtouch@{soundtouch}!L\+O\+N\+G\+\_\+\+S\+A\+M\+P\+L\+E\+T\+Y\+PE@{L\+O\+N\+G\+\_\+\+S\+A\+M\+P\+L\+E\+T\+Y\+PE}}
+\index{L\+O\+N\+G\+\_\+\+S\+A\+M\+P\+L\+E\+T\+Y\+PE@{L\+O\+N\+G\+\_\+\+S\+A\+M\+P\+L\+E\+T\+Y\+PE}!soundtouch@{soundtouch}}
+\subsubsection[{\texorpdfstring{L\+O\+N\+G\+\_\+\+S\+A\+M\+P\+L\+E\+T\+Y\+PE}{LONG_SAMPLETYPE}}]{\setlength{\rightskip}{0pt plus 5cm}typedef double {\bf soundtouch\+::\+L\+O\+N\+G\+\_\+\+S\+A\+M\+P\+L\+E\+T\+Y\+PE}}\hypertarget{namespacesoundtouch_a6d7c3b986241334e59ba402af1bbc127}{}\label{namespacesoundtouch_a6d7c3b986241334e59ba402af1bbc127}
+
+
+Definition at line 158 of file S\+T\+Types.\+h.
+
+\index{soundtouch@{soundtouch}!S\+A\+M\+P\+L\+E\+T\+Y\+PE@{S\+A\+M\+P\+L\+E\+T\+Y\+PE}}
+\index{S\+A\+M\+P\+L\+E\+T\+Y\+PE@{S\+A\+M\+P\+L\+E\+T\+Y\+PE}!soundtouch@{soundtouch}}
+\subsubsection[{\texorpdfstring{S\+A\+M\+P\+L\+E\+T\+Y\+PE}{SAMPLETYPE}}]{\setlength{\rightskip}{0pt plus 5cm}typedef float {\bf soundtouch\+::\+S\+A\+M\+P\+L\+E\+T\+Y\+PE}}\hypertarget{namespacesoundtouch_a97cfd29a7abb4d4b2a72f803d5b5850c}{}\label{namespacesoundtouch_a97cfd29a7abb4d4b2a72f803d5b5850c}
+
+
+Definition at line 156 of file S\+T\+Types.\+h.
+

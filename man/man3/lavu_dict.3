@@ -1,0 +1,229 @@
+.TH "lavu_dict" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+lavu_dict \- AVDictionary
+.PP
+Simple key:value store\&.  
+
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "struct \fBAVDictionaryEntry\fP"
+.br
+.in -1c
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBAV_DICT_MATCH_CASE\fP   1"
+.br
+.ti -1c
+.RI "#define \fBAV_DICT_IGNORE_SUFFIX\fP   2"
+.br
+.ti -1c
+.RI "#define \fBAV_DICT_DONT_STRDUP_KEY\fP   4"
+.br
+.ti -1c
+.RI "#define \fBAV_DICT_DONT_STRDUP_VAL\fP   8"
+.br
+.ti -1c
+.RI "#define \fBAV_DICT_DONT_OVERWRITE\fP   16"
+.br
+.RI "\fIDon't overwrite existing entries\&. \fP"
+.ti -1c
+.RI "#define \fBAV_DICT_APPEND\fP   32"
+.br
+.in -1c
+.SS "Typedefs"
+
+.in +1c
+.ti -1c
+.RI "typedef struct \fBAVDictionaryEntry\fP \fBAVDictionaryEntry\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBAVDictionary\fP \fBAVDictionary\fP"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBAVDictionaryEntry\fP * \fBav_dict_get\fP (\fBAVDictionary\fP *\fBm\fP, \fBconst\fP char *key, \fBconst\fP \fBAVDictionaryEntry\fP *prev, \fBint\fP flags)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_dict_count\fP (\fBconst\fP \fBAVDictionary\fP *\fBm\fP)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_dict_set\fP (\fBAVDictionary\fP **pm, \fBconst\fP char *key, \fBconst\fP char *\fBvalue\fP, \fBint\fP flags)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_dict_parse_string\fP (\fBAVDictionary\fP **pm, \fBconst\fP char *\fBstr\fP, \fBconst\fP char *key_val_sep, \fBconst\fP char *pairs_sep, \fBint\fP flags)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBav_dict_copy\fP (\fBAVDictionary\fP **dst, \fBAVDictionary\fP *src, \fBint\fP flags)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBav_dict_free\fP (\fBAVDictionary\fP **\fBm\fP)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Simple key:value store\&. 
+
+Dictionaries are used for storing key:value pairs\&. To create an AVDictionary, simply pass an address of a NULL pointer to \fBav_dict_set()\fP\&. NULL can be used as an empty dictionary wherever a pointer to an AVDictionary is required\&. Use \fBav_dict_get()\fP to retrieve an entry or iterate over all entries and finally \fBav_dict_free()\fP to free the dictionary and all its contents\&.
+.PP
+.PP
+.nf
+AVDictionary *d = NULL;           // "create" an empty dictionary
+AVDictionaryEntry *t = NULL;
+
+av_dict_set(&d, "foo", "bar", 0); // add an entry
+
+char *k = av_strdup("key");       // if your strings are already allocated,
+char *v = av_strdup("value");     // you can avoid copying them like this
+av_dict_set(&d, k, v, AV_DICT_DONT_STRDUP_KEY | AV_DICT_DONT_STRDUP_VAL);
+
+while (t = av_dict_get(d, "", t, AV_DICT_IGNORE_SUFFIX)) {
+    <\&.\&.\&.\&.>                             // iterate over all entries in d
+}
+av_dict_free(&d);
+.fi
+.PP
+ 
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define AV_DICT_APPEND   32"
+If the entry already exists, append to it\&. Note that no delimiter is added, the strings are simply concatenated\&. 
+.PP
+Definition at line 78 of file dict\&.h\&.
+.SS "#define AV_DICT_DONT_OVERWRITE   16"
+
+.PP
+Don't overwrite existing entries\&. 
+.PP
+Definition at line 77 of file dict\&.h\&.
+.SS "#define AV_DICT_DONT_STRDUP_KEY   4"
+Take ownership of a key that's been allocated with \fBav_malloc()\fP or another memory allocation function\&. 
+.PP
+Definition at line 71 of file dict\&.h\&.
+.SS "#define AV_DICT_DONT_STRDUP_VAL   8"
+Take ownership of a value that's been allocated with \fBav_malloc()\fP or another memory allocation function\&. 
+.PP
+Definition at line 74 of file dict\&.h\&.
+.SS "#define AV_DICT_IGNORE_SUFFIX   2"
+Return first entry in a dictionary whose first part corresponds to the search key, ignoring the suffix of the found key string\&. Only relevant in \fBav_dict_get()\fP\&. 
+.PP
+Definition at line 68 of file dict\&.h\&.
+.SS "#define AV_DICT_MATCH_CASE   1"
+Only get an entry with exact-case key match\&. Only relevant in \fBav_dict_get()\fP\&. 
+.PP
+Definition at line 67 of file dict\&.h\&.
+.SH "Typedef Documentation"
+.PP 
+.SS "typedef struct \fBAVDictionary\fP \fBAVDictionary\fP"
+
+.PP
+Definition at line 87 of file dict\&.h\&.
+.SS "typedef struct \fBAVDictionaryEntry\fP  \fBAVDictionaryEntry\fP"
+
+.SH "Function Documentation"
+.PP 
+.SS "\fBvoid\fP av_dict_copy (\fBAVDictionary\fP ** dst, \fBAVDictionary\fP * src, \fBint\fP flags)"
+Copy entries from one AVDictionary struct into another\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdst\fP pointer to a pointer to a AVDictionary struct\&. If *dst is NULL, this function will allocate a struct for you and put it in *dst 
+.br
+\fIsrc\fP pointer to source AVDictionary struct 
+.br
+\fIflags\fP flags to use when setting entries in *dst 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+metadata is read using the AV_DICT_IGNORE_SUFFIX flag 
+.RE
+.PP
+
+.SS "\fBint\fP av_dict_count (\fBconst\fP \fBAVDictionary\fP * m)"
+Get number of entries in dictionary\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIm\fP dictionary 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+number of entries in dictionary 
+.RE
+.PP
+
+.SS "\fBvoid\fP av_dict_free (\fBAVDictionary\fP ** m)"
+Free all the memory allocated for an AVDictionary struct and all keys and values\&. 
+.SS "\fBAVDictionaryEntry\fP* av_dict_get (\fBAVDictionary\fP * m, \fBconst\fP char * key, \fBconst\fP \fBAVDictionaryEntry\fP * prev, \fBint\fP flags)"
+Get a dictionary entry with matching key\&.
+.PP
+The returned entry key or value must not be changed, or it will cause undefined behavior\&.
+.PP
+To iterate through all the dictionary entries, you can set the matching key to the null string '' and set the AV_DICT_IGNORE_SUFFIX flag\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIprev\fP Set to the previous matching element to find the next\&. If set to NULL the first matching element is returned\&. 
+.br
+\fIkey\fP matching key 
+.br
+\fIflags\fP a collection of AV_DICT_* flags controlling how the entry is retrieved 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+found entry or NULL in case no matching entry was found in the dictionary 
+.RE
+.PP
+
+.SS "\fBint\fP av_dict_parse_string (\fBAVDictionary\fP ** pm, \fBconst\fP char * str, \fBconst\fP char * key_val_sep, \fBconst\fP char * pairs_sep, \fBint\fP flags)"
+Parse the key/value pairs list and add the parsed entries to a dictionary\&.
+.PP
+In case of failure, all the successfully set entries are stored in *pm\&. You may need to manually free the created dictionary\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIkey_val_sep\fP a 0-terminated list of characters used to separate key from value 
+.br
+\fIpairs_sep\fP a 0-terminated list of characters used to separate two pairs from each other 
+.br
+\fIflags\fP flags to use when adding to dictionary\&. AV_DICT_DONT_STRDUP_KEY and AV_DICT_DONT_STRDUP_VAL are ignored since the key/value tokens will always be duplicated\&. 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+0 on success, negative AVERROR code on failure 
+.RE
+.PP
+
+.SS "\fBint\fP av_dict_set (\fBAVDictionary\fP ** pm, \fBconst\fP char * key, \fBconst\fP char * value, \fBint\fP flags)"
+Set the given entry in *pm, overwriting an existing entry\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIpm\fP pointer to a pointer to a dictionary struct\&. If *pm is NULL a dictionary struct is allocated and put in *pm\&. 
+.br
+\fIkey\fP entry key to add to *pm (will be av_strduped depending on flags) 
+.br
+\fIvalue\fP entry value to add to *pm (will be av_strduped depending on flags)\&. Passing a NULL value will cause an existing entry to be deleted\&. 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+>= 0 on success otherwise an error code <0 
+.RE
+.PP
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

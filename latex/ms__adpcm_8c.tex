@@ -1,0 +1,119 @@
+\hypertarget{ms__adpcm_8c}{}\section{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/libsndfile/src/ms\+\_\+adpcm.c File Reference}
+\label{ms__adpcm_8c}\index{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/libsndfile/src/ms\+\_\+adpcm.\+c@{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/libsndfile/src/ms\+\_\+adpcm.\+c}}
+{\ttfamily \#include \char`\"{}sfconfig.\+h\char`\"{}}\\*
+{\ttfamily \#include $<$stdio.\+h$>$}\\*
+{\ttfamily \#include $<$stdlib.\+h$>$}\\*
+{\ttfamily \#include $<$string.\+h$>$}\\*
+{\ttfamily \#include $<$math.\+h$>$}\\*
+{\ttfamily \#include \char`\"{}sndfile.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}sfendian.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}common.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}wav\+\_\+w64.\+h\char`\"{}}\\*
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{struct_m_s_a_d_p_c_m___p_r_i_v_a_t_e}{M\+S\+A\+D\+P\+C\+M\+\_\+\+P\+R\+I\+V\+A\+TE}
+\end{DoxyCompactItemize}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{ms__adpcm_8c_a229ae828e7fddc0e1f6f8fd98ccc4bdd}{R\+I\+F\+F\+\_\+\+M\+A\+R\+K\+ER}~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}R\textquotesingle{}, \textquotesingle{}I\textquotesingle{}, \textquotesingle{}\hyperlink{xlftab_8c_a42257a545daf5b7933d6e8f96adc74f2}{F}\textquotesingle{}, \textquotesingle{}\hyperlink{xlftab_8c_a42257a545daf5b7933d6e8f96adc74f2}{F}\textquotesingle{}))
+\item 
+\#define \hyperlink{ms__adpcm_8c_a59ce8748ba0cf096e4e7a05525ab9f7d}{W\+A\+V\+E\+\_\+\+M\+A\+R\+K\+ER}~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}W\textquotesingle{}, \textquotesingle{}\hyperlink{libnyquist_2nyquist_2nyqsrc_2add_8c_a955f504eccf76b4eb2489c0adab03121}{A}\textquotesingle{}, \textquotesingle{}\hyperlink{hillclimb_8cpp_af40a326b23c68a27cebe60f16634a2cb}{V}\textquotesingle{}, \textquotesingle{}\hyperlink{twolame_2libtwolame_2common_8h_a07484107e6d9fdf38b53edf631d6511d}{E}\textquotesingle{}))
+\item 
+\#define \hyperlink{ms__adpcm_8c_ab9b132b578e91e206240cfb2536799a3}{fmt\+\_\+\+M\+A\+R\+K\+ER}~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}\hyperlink{checksum_8c_ae747d72a1a803f5ff4a4b2602857d93b}{f}\textquotesingle{}, \textquotesingle{}\hyperlink{layer3_8c_a4b8bfe70f28d6faddcb10d6ecf8c1989}{m}\textquotesingle{}, \textquotesingle{}\hyperlink{octave__test_8m_aaccc9105df5383111407fd5b41255e23}{t}\textquotesingle{}, \textquotesingle{} \textquotesingle{}))
+\item 
+\#define \hyperlink{ms__adpcm_8c_a67d5ce7d648d598f89e253cb8c1f148d}{fact\+\_\+\+M\+A\+R\+K\+ER}~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}\hyperlink{checksum_8c_ae747d72a1a803f5ff4a4b2602857d93b}{f}\textquotesingle{}, \textquotesingle{}\hyperlink{rfft2d_test_m_l_8m_a4124bc0a9335c27f086f24ba207a4912}{a}\textquotesingle{}, \textquotesingle{}\hyperlink{rfft2d_test_m_l_8m_ae0323a9039add2978bf5b49550572c7c}{c}\textquotesingle{}, \textquotesingle{}\hyperlink{octave__test_8m_aaccc9105df5383111407fd5b41255e23}{t}\textquotesingle{}))
+\item 
+\#define \hyperlink{ms__adpcm_8c_a30afad1e5714feb02e0720b0d285a749}{data\+\_\+\+M\+A\+R\+K\+ER}~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}\hyperlink{poly-fir_8h_a2530554172d8629149ec56816eeaa947}{d}\textquotesingle{}, \textquotesingle{}\hyperlink{rfft2d_test_m_l_8m_a4124bc0a9335c27f086f24ba207a4912}{a}\textquotesingle{}, \textquotesingle{}\hyperlink{octave__test_8m_aaccc9105df5383111407fd5b41255e23}{t}\textquotesingle{}, \textquotesingle{}\hyperlink{rfft2d_test_m_l_8m_a4124bc0a9335c27f086f24ba207a4912}{a}\textquotesingle{}))
+\item 
+\#define \hyperlink{ms__adpcm_8c_ab22c8450e8b4330cede92819f821a4fe}{W\+A\+V\+E\+\_\+\+F\+O\+R\+M\+A\+T\+\_\+\+M\+S\+\_\+\+A\+D\+P\+CM}~0x0002
+\item 
+\#define \hyperlink{ms__adpcm_8c_ab0061106f0e9bf24f557dd5a1694d019}{I\+D\+E\+L\+T\+A\+\_\+\+C\+O\+U\+NT}~3
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{ms__adpcm_8c_a1762ef143621cfbf19b4996a15de8fa0}{wav\+\_\+w64\+\_\+msadpcm\+\_\+init} (\hyperlink{libsndfile_2src_2common_8h_ab5debd339ecaf40f50a223e218900c24}{S\+F\+\_\+\+P\+R\+I\+V\+A\+TE} $\ast$psf, \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} blockalign, \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} samplesperblock)
+\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{ms__adpcm_8c_a134dab0f1d9aeab7a555bb8c99193296}{msadpcm\+\_\+write\+\_\+adapt\+\_\+coeffs} (\hyperlink{libsndfile_2src_2common_8h_ab5debd339ecaf40f50a223e218900c24}{S\+F\+\_\+\+P\+R\+I\+V\+A\+TE} $\ast$psf)
+\end{DoxyCompactItemize}
+
+
+\subsection{Macro Definition Documentation}
+\index{ms\+\_\+adpcm.\+c@{ms\+\_\+adpcm.\+c}!data\+\_\+\+M\+A\+R\+K\+ER@{data\+\_\+\+M\+A\+R\+K\+ER}}
+\index{data\+\_\+\+M\+A\+R\+K\+ER@{data\+\_\+\+M\+A\+R\+K\+ER}!ms\+\_\+adpcm.\+c@{ms\+\_\+adpcm.\+c}}
+\subsubsection[{\texorpdfstring{data\+\_\+\+M\+A\+R\+K\+ER}{data_MARKER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define data\+\_\+\+M\+A\+R\+K\+ER~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}{\bf d}\textquotesingle{}, \textquotesingle{}{\bf a}\textquotesingle{}, \textquotesingle{}{\bf t}\textquotesingle{}, \textquotesingle{}{\bf a}\textquotesingle{}))}\hypertarget{ms__adpcm_8c_a30afad1e5714feb02e0720b0d285a749}{}\label{ms__adpcm_8c_a30afad1e5714feb02e0720b0d285a749}
+
+
+Definition at line 37 of file ms\+\_\+adpcm.\+c.
+
+\index{ms\+\_\+adpcm.\+c@{ms\+\_\+adpcm.\+c}!fact\+\_\+\+M\+A\+R\+K\+ER@{fact\+\_\+\+M\+A\+R\+K\+ER}}
+\index{fact\+\_\+\+M\+A\+R\+K\+ER@{fact\+\_\+\+M\+A\+R\+K\+ER}!ms\+\_\+adpcm.\+c@{ms\+\_\+adpcm.\+c}}
+\subsubsection[{\texorpdfstring{fact\+\_\+\+M\+A\+R\+K\+ER}{fact_MARKER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define fact\+\_\+\+M\+A\+R\+K\+ER~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}{\bf f}\textquotesingle{}, \textquotesingle{}{\bf a}\textquotesingle{}, \textquotesingle{}{\bf c}\textquotesingle{}, \textquotesingle{}{\bf t}\textquotesingle{}))}\hypertarget{ms__adpcm_8c_a67d5ce7d648d598f89e253cb8c1f148d}{}\label{ms__adpcm_8c_a67d5ce7d648d598f89e253cb8c1f148d}
+
+
+Definition at line 36 of file ms\+\_\+adpcm.\+c.
+
+\index{ms\+\_\+adpcm.\+c@{ms\+\_\+adpcm.\+c}!fmt\+\_\+\+M\+A\+R\+K\+ER@{fmt\+\_\+\+M\+A\+R\+K\+ER}}
+\index{fmt\+\_\+\+M\+A\+R\+K\+ER@{fmt\+\_\+\+M\+A\+R\+K\+ER}!ms\+\_\+adpcm.\+c@{ms\+\_\+adpcm.\+c}}
+\subsubsection[{\texorpdfstring{fmt\+\_\+\+M\+A\+R\+K\+ER}{fmt_MARKER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define fmt\+\_\+\+M\+A\+R\+K\+ER~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}{\bf f}\textquotesingle{}, \textquotesingle{}{\bf m}\textquotesingle{}, \textquotesingle{}{\bf t}\textquotesingle{}, \textquotesingle{} \textquotesingle{}))}\hypertarget{ms__adpcm_8c_ab9b132b578e91e206240cfb2536799a3}{}\label{ms__adpcm_8c_ab9b132b578e91e206240cfb2536799a3}
+
+
+Definition at line 35 of file ms\+\_\+adpcm.\+c.
+
+\index{ms\+\_\+adpcm.\+c@{ms\+\_\+adpcm.\+c}!I\+D\+E\+L\+T\+A\+\_\+\+C\+O\+U\+NT@{I\+D\+E\+L\+T\+A\+\_\+\+C\+O\+U\+NT}}
+\index{I\+D\+E\+L\+T\+A\+\_\+\+C\+O\+U\+NT@{I\+D\+E\+L\+T\+A\+\_\+\+C\+O\+U\+NT}!ms\+\_\+adpcm.\+c@{ms\+\_\+adpcm.\+c}}
+\subsubsection[{\texorpdfstring{I\+D\+E\+L\+T\+A\+\_\+\+C\+O\+U\+NT}{IDELTA_COUNT}}]{\setlength{\rightskip}{0pt plus 5cm}\#define I\+D\+E\+L\+T\+A\+\_\+\+C\+O\+U\+NT~3}\hypertarget{ms__adpcm_8c_ab0061106f0e9bf24f557dd5a1694d019}{}\label{ms__adpcm_8c_ab0061106f0e9bf24f557dd5a1694d019}
+
+
+Definition at line 799 of file ms\+\_\+adpcm.\+c.
+
+\index{ms\+\_\+adpcm.\+c@{ms\+\_\+adpcm.\+c}!R\+I\+F\+F\+\_\+\+M\+A\+R\+K\+ER@{R\+I\+F\+F\+\_\+\+M\+A\+R\+K\+ER}}
+\index{R\+I\+F\+F\+\_\+\+M\+A\+R\+K\+ER@{R\+I\+F\+F\+\_\+\+M\+A\+R\+K\+ER}!ms\+\_\+adpcm.\+c@{ms\+\_\+adpcm.\+c}}
+\subsubsection[{\texorpdfstring{R\+I\+F\+F\+\_\+\+M\+A\+R\+K\+ER}{RIFF_MARKER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define R\+I\+F\+F\+\_\+\+M\+A\+R\+K\+ER~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}R\textquotesingle{}, \textquotesingle{}I\textquotesingle{}, \textquotesingle{}{\bf F}\textquotesingle{}, \textquotesingle{}{\bf F}\textquotesingle{}))}\hypertarget{ms__adpcm_8c_a229ae828e7fddc0e1f6f8fd98ccc4bdd}{}\label{ms__adpcm_8c_a229ae828e7fddc0e1f6f8fd98ccc4bdd}
+
+
+Definition at line 33 of file ms\+\_\+adpcm.\+c.
+
+\index{ms\+\_\+adpcm.\+c@{ms\+\_\+adpcm.\+c}!W\+A\+V\+E\+\_\+\+F\+O\+R\+M\+A\+T\+\_\+\+M\+S\+\_\+\+A\+D\+P\+CM@{W\+A\+V\+E\+\_\+\+F\+O\+R\+M\+A\+T\+\_\+\+M\+S\+\_\+\+A\+D\+P\+CM}}
+\index{W\+A\+V\+E\+\_\+\+F\+O\+R\+M\+A\+T\+\_\+\+M\+S\+\_\+\+A\+D\+P\+CM@{W\+A\+V\+E\+\_\+\+F\+O\+R\+M\+A\+T\+\_\+\+M\+S\+\_\+\+A\+D\+P\+CM}!ms\+\_\+adpcm.\+c@{ms\+\_\+adpcm.\+c}}
+\subsubsection[{\texorpdfstring{W\+A\+V\+E\+\_\+\+F\+O\+R\+M\+A\+T\+\_\+\+M\+S\+\_\+\+A\+D\+P\+CM}{WAVE_FORMAT_MS_ADPCM}}]{\setlength{\rightskip}{0pt plus 5cm}\#define W\+A\+V\+E\+\_\+\+F\+O\+R\+M\+A\+T\+\_\+\+M\+S\+\_\+\+A\+D\+P\+CM~0x0002}\hypertarget{ms__adpcm_8c_ab22c8450e8b4330cede92819f821a4fe}{}\label{ms__adpcm_8c_ab22c8450e8b4330cede92819f821a4fe}
+
+
+Definition at line 39 of file ms\+\_\+adpcm.\+c.
+
+\index{ms\+\_\+adpcm.\+c@{ms\+\_\+adpcm.\+c}!W\+A\+V\+E\+\_\+\+M\+A\+R\+K\+ER@{W\+A\+V\+E\+\_\+\+M\+A\+R\+K\+ER}}
+\index{W\+A\+V\+E\+\_\+\+M\+A\+R\+K\+ER@{W\+A\+V\+E\+\_\+\+M\+A\+R\+K\+ER}!ms\+\_\+adpcm.\+c@{ms\+\_\+adpcm.\+c}}
+\subsubsection[{\texorpdfstring{W\+A\+V\+E\+\_\+\+M\+A\+R\+K\+ER}{WAVE_MARKER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define W\+A\+V\+E\+\_\+\+M\+A\+R\+K\+ER~(M\+A\+K\+E\+\_\+\+M\+A\+R\+K\+ER (\textquotesingle{}W\textquotesingle{}, \textquotesingle{}{\bf A}\textquotesingle{}, \textquotesingle{}{\bf V}\textquotesingle{}, \textquotesingle{}{\bf E}\textquotesingle{}))}\hypertarget{ms__adpcm_8c_a59ce8748ba0cf096e4e7a05525ab9f7d}{}\label{ms__adpcm_8c_a59ce8748ba0cf096e4e7a05525ab9f7d}
+
+
+Definition at line 34 of file ms\+\_\+adpcm.\+c.
+
+
+
+\subsection{Function Documentation}
+\index{ms\+\_\+adpcm.\+c@{ms\+\_\+adpcm.\+c}!msadpcm\+\_\+write\+\_\+adapt\+\_\+coeffs@{msadpcm\+\_\+write\+\_\+adapt\+\_\+coeffs}}
+\index{msadpcm\+\_\+write\+\_\+adapt\+\_\+coeffs@{msadpcm\+\_\+write\+\_\+adapt\+\_\+coeffs}!ms\+\_\+adpcm.\+c@{ms\+\_\+adpcm.\+c}}
+\subsubsection[{\texorpdfstring{msadpcm\+\_\+write\+\_\+adapt\+\_\+coeffs(\+S\+F\+\_\+\+P\+R\+I\+V\+A\+T\+E $\ast$psf)}{msadpcm_write_adapt_coeffs(SF_PRIVATE *psf)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} msadpcm\+\_\+write\+\_\+adapt\+\_\+coeffs (
+\begin{DoxyParamCaption}
+\item[{{\bf S\+F\+\_\+\+P\+R\+I\+V\+A\+TE} $\ast$}]{psf}
+\end{DoxyParamCaption}
+)}\hypertarget{ms__adpcm_8c_a134dab0f1d9aeab7a555bb8c99193296}{}\label{ms__adpcm_8c_a134dab0f1d9aeab7a555bb8c99193296}
+
+
+Definition at line 497 of file ms\+\_\+adpcm.\+c.
+
+\index{ms\+\_\+adpcm.\+c@{ms\+\_\+adpcm.\+c}!wav\+\_\+w64\+\_\+msadpcm\+\_\+init@{wav\+\_\+w64\+\_\+msadpcm\+\_\+init}}
+\index{wav\+\_\+w64\+\_\+msadpcm\+\_\+init@{wav\+\_\+w64\+\_\+msadpcm\+\_\+init}!ms\+\_\+adpcm.\+c@{ms\+\_\+adpcm.\+c}}
+\subsubsection[{\texorpdfstring{wav\+\_\+w64\+\_\+msadpcm\+\_\+init(\+S\+F\+\_\+\+P\+R\+I\+V\+A\+T\+E $\ast$psf, int blockalign, int samplesperblock)}{wav_w64_msadpcm_init(SF_PRIVATE *psf, int blockalign, int samplesperblock)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf int} wav\+\_\+w64\+\_\+msadpcm\+\_\+init (
+\begin{DoxyParamCaption}
+\item[{{\bf S\+F\+\_\+\+P\+R\+I\+V\+A\+TE} $\ast$}]{psf, }
+\item[{{\bf int}}]{blockalign, }
+\item[{{\bf int}}]{samplesperblock}
+\end{DoxyParamCaption}
+)}\hypertarget{ms__adpcm_8c_a1762ef143621cfbf19b4996a15de8fa0}{}\label{ms__adpcm_8c_a1762ef143621cfbf19b4996a15de8fa0}
+
+
+Definition at line 130 of file ms\+\_\+adpcm.\+c.
+

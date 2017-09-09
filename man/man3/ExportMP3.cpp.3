@@ -1,0 +1,486 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/src/export/ExportMP3.cpp" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/src/export/ExportMP3.cpp \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include '\&.\&./Audacity\&.h'\fP
+.br
+\fC#include 'ExportMP3\&.h'\fP
+.br
+\fC#include <wx/defs\&.h>\fP
+.br
+\fC#include <wx/choice\&.h>\fP
+.br
+\fC#include <wx/dynlib\&.h>\fP
+.br
+\fC#include <wx/ffile\&.h>\fP
+.br
+\fC#include <wx/intl\&.h>\fP
+.br
+\fC#include <wx/log\&.h>\fP
+.br
+\fC#include <wx/mimetype\&.h>\fP
+.br
+\fC#include <wx/msgdlg\&.h>\fP
+.br
+\fC#include <wx/radiobut\&.h>\fP
+.br
+\fC#include <wx/stattext\&.h>\fP
+.br
+\fC#include <wx/textctrl\&.h>\fP
+.br
+\fC#include <wx/timer\&.h>\fP
+.br
+\fC#include <wx/utils\&.h>\fP
+.br
+\fC#include <wx/window\&.h>\fP
+.br
+\fC#include '\&.\&./FileNames\&.h'\fP
+.br
+\fC#include '\&.\&./float_cast\&.h'\fP
+.br
+\fC#include '\&.\&./Internat\&.h'\fP
+.br
+\fC#include '\&.\&./Mix\&.h'\fP
+.br
+\fC#include '\&.\&./Prefs\&.h'\fP
+.br
+\fC#include '\&.\&./Project\&.h'\fP
+.br
+\fC#include '\&.\&./ShuttleGui\&.h'\fP
+.br
+\fC#include '\&.\&./Tags\&.h'\fP
+.br
+\fC#include '\&.\&./Track\&.h'\fP
+.br
+\fC#include '\&.\&./widgets/LinkingHtmlWindow\&.h'\fP
+.br
+\fC#include 'FileDialog\&.h'\fP
+.br
+\fC#include 'Export\&.h'\fP
+.br
+\fC#include <lame/lame\&.h>\fP
+.br
+
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "struct \fBCHOICES\fP"
+.br
+.ti -1c
+.RI "class \fBExportMP3Options\fP"
+.br
+.ti -1c
+.RI "class \fBFindDialog\fP"
+.br
+.ti -1c
+.RI "class \fBMP3Exporter\fP"
+.br
+.RI "\fIClass used to export MP3 files\&. \fP"
+.ti -1c
+.RI "class \fBExportMP3\fP"
+.br
+.in -1c
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBMODE_SET\fP   0"
+.br
+.ti -1c
+.RI "#define \fBMODE_VBR\fP   1"
+.br
+.ti -1c
+.RI "#define \fBMODE_ABR\fP   2"
+.br
+.ti -1c
+.RI "#define \fBMODE_CBR\fP   3"
+.br
+.ti -1c
+.RI "#define \fBCHANNEL_JOINT\fP   0"
+.br
+.ti -1c
+.RI "#define \fBCHANNEL_STEREO\fP   1"
+.br
+.ti -1c
+.RI "#define \fBQUALITY_0\fP   0"
+.br
+.ti -1c
+.RI "#define \fBQUALITY_1\fP   1"
+.br
+.ti -1c
+.RI "#define \fBQUALITY_2\fP   2"
+.br
+.ti -1c
+.RI "#define \fBQUALITY_3\fP   3"
+.br
+.ti -1c
+.RI "#define \fBQUALITY_4\fP   4"
+.br
+.ti -1c
+.RI "#define \fBQUALITY_5\fP   5"
+.br
+.ti -1c
+.RI "#define \fBQUALITY_6\fP   6"
+.br
+.ti -1c
+.RI "#define \fBQUALITY_7\fP   7"
+.br
+.ti -1c
+.RI "#define \fBQUALITY_8\fP   8"
+.br
+.ti -1c
+.RI "#define \fBQUALITY_9\fP   9"
+.br
+.ti -1c
+.RI "#define \fBROUTINE_FAST\fP   0"
+.br
+.ti -1c
+.RI "#define \fBROUTINE_STANDARD\fP   1"
+.br
+.ti -1c
+.RI "#define \fBPRESET_INSANE\fP   0"
+.br
+.ti -1c
+.RI "#define \fBPRESET_EXTREME\fP   1"
+.br
+.ti -1c
+.RI "#define \fBPRESET_STANDARD\fP   2"
+.br
+.ti -1c
+.RI "#define \fBPRESET_MEDIUM\fP   3"
+.br
+.ti -1c
+.RI "#define \fBID_SET\fP   7000"
+.br
+.ti -1c
+.RI "#define \fBID_VBR\fP   7001"
+.br
+.ti -1c
+.RI "#define \fBID_ABR\fP   7002"
+.br
+.ti -1c
+.RI "#define \fBID_CBR\fP   7003"
+.br
+.ti -1c
+.RI "#define \fBID_QUALITY\fP   7004"
+.br
+.ti -1c
+.RI "#define \fBID_BROWSE\fP   5000"
+.br
+.ti -1c
+.RI "#define \fBID_DLOAD\fP   5001"
+.br
+.in -1c
+.SS "Typedefs"
+
+.in +1c
+.ti -1c
+.RI "typedef \fBlame_global_flags\fP * \fBlame_init_t\fP(\fBvoid\fP)"
+.br
+.ti -1c
+.RI "typedef \fBint\fP \fBlame_init_params_t\fP(\fBlame_global_flags\fP *)"
+.br
+.ti -1c
+.RI "typedef \fBconst\fP char * \fBget_lame_version_t\fP(\fBvoid\fP)"
+.br
+.ti -1c
+.RI "typedef \fBint\fP \fBlame_encode_buffer_t\fP(\fBlame_global_flags\fP *gf, \fBconst\fP short \fBint\fP buffer_l[], \fBconst\fP short \fBint\fP buffer_r[], \fBconst\fP \fBint\fP nsamples, unsigned char *mp3buf, \fBconst\fP \fBint\fP mp3buf_size)"
+.br
+.ti -1c
+.RI "typedef \fBint\fP \fBlame_encode_buffer_interleaved_t\fP(\fBlame_global_flags\fP *gf, short \fBint\fP pcm[], \fBint\fP num_samples, unsigned char *mp3buf, \fBint\fP mp3buf_size)"
+.br
+.ti -1c
+.RI "typedef \fBint\fP \fBlame_encode_flush_t\fP(\fBlame_global_flags\fP *gf, unsigned char *mp3buf, \fBint\fP \fBsize\fP)"
+.br
+.ti -1c
+.RI "typedef \fBint\fP \fBlame_close_t\fP(\fBlame_global_flags\fP *)"
+.br
+.ti -1c
+.RI "typedef \fBint\fP \fBlame_set_in_samplerate_t\fP(\fBlame_global_flags\fP *, \fBint\fP)"
+.br
+.ti -1c
+.RI "typedef \fBint\fP \fBlame_set_out_samplerate_t\fP(\fBlame_global_flags\fP *, \fBint\fP)"
+.br
+.ti -1c
+.RI "typedef \fBint\fP \fBlame_set_num_channels_t\fP(\fBlame_global_flags\fP *, \fBint\fP)"
+.br
+.ti -1c
+.RI "typedef \fBint\fP \fBlame_set_quality_t\fP(\fBlame_global_flags\fP *, \fBint\fP)"
+.br
+.ti -1c
+.RI "typedef \fBint\fP \fBlame_set_brate_t\fP(\fBlame_global_flags\fP *, \fBint\fP)"
+.br
+.ti -1c
+.RI "typedef \fBint\fP \fBlame_set_VBR_t\fP(\fBlame_global_flags\fP *, \fBvbr_mode\fP)"
+.br
+.ti -1c
+.RI "typedef \fBint\fP \fBlame_set_VBR_q_t\fP(\fBlame_global_flags\fP *, \fBint\fP)"
+.br
+.ti -1c
+.RI "typedef \fBint\fP \fBlame_set_VBR_min_bitrate_kbps_t\fP(\fBlame_global_flags\fP *, \fBint\fP)"
+.br
+.ti -1c
+.RI "typedef \fBint\fP \fBlame_set_mode_t\fP(\fBlame_global_flags\fP *, \fBMPEG_mode\fP)"
+.br
+.ti -1c
+.RI "typedef \fBint\fP \fBlame_set_preset_t\fP(\fBlame_global_flags\fP *, \fBint\fP)"
+.br
+.ti -1c
+.RI "typedef \fBint\fP \fBlame_set_error_protection_t\fP(\fBlame_global_flags\fP *, \fBint\fP)"
+.br
+.ti -1c
+.RI "typedef \fBint\fP \fBlame_set_disable_reservoir_t\fP(\fBlame_global_flags\fP *, \fBint\fP)"
+.br
+.ti -1c
+.RI "typedef \fBint\fP \fBlame_set_padding_type_t\fP(\fBlame_global_flags\fP *, \fBPadding_type\fP)"
+.br
+.ti -1c
+.RI "typedef \fBint\fP \fBlame_set_bWriteVbrTag_t\fP(\fBlame_global_flags\fP *, \fBint\fP)"
+.br
+.ti -1c
+.RI "typedef size_t \fBlame_get_lametag_frame_t\fP(\fBconst\fP \fBlame_global_flags\fP *, unsigned char *\fBbuffer\fP, size_t \fBsize\fP)"
+.br
+.ti -1c
+.RI "typedef \fBvoid\fP \fBlame_mp3_tags_fid_t\fP(\fBlame_global_flags\fP *, FILE *)"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBExportPlugin\fP * \fBNew_ExportMP3\fP ()"
+.br
+.ti -1c
+.RI "wxString \fBGetMP3Version\fP (wxWindow *parent, \fBbool\fP prompt)"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define CHANNEL_JOINT   0"
+
+.PP
+Definition at line 111 of file ExportMP3\&.cpp\&.
+.SS "#define CHANNEL_STEREO   1"
+
+.PP
+Definition at line 112 of file ExportMP3\&.cpp\&.
+.SS "#define ID_ABR   7002"
+
+.PP
+Definition at line 211 of file ExportMP3\&.cpp\&.
+.SS "#define ID_BROWSE   5000"
+
+.PP
+Definition at line 556 of file ExportMP3\&.cpp\&.
+.SS "#define ID_CBR   7003"
+
+.PP
+Definition at line 212 of file ExportMP3\&.cpp\&.
+.SS "#define ID_DLOAD   5001"
+
+.PP
+Definition at line 557 of file ExportMP3\&.cpp\&.
+.SS "#define ID_QUALITY   7004"
+
+.PP
+Definition at line 213 of file ExportMP3\&.cpp\&.
+.SS "#define ID_SET   7000"
+
+.PP
+Definition at line 209 of file ExportMP3\&.cpp\&.
+.SS "#define ID_VBR   7001"
+
+.PP
+Definition at line 210 of file ExportMP3\&.cpp\&.
+.SS "#define MODE_ABR   2"
+
+.PP
+Definition at line 108 of file ExportMP3\&.cpp\&.
+.SS "#define MODE_CBR   3"
+
+.PP
+Definition at line 109 of file ExportMP3\&.cpp\&.
+.SS "#define MODE_SET   0"
+
+.PP
+Definition at line 106 of file ExportMP3\&.cpp\&.
+.SS "#define MODE_VBR   1"
+
+.PP
+Definition at line 107 of file ExportMP3\&.cpp\&.
+.SS "#define PRESET_EXTREME   1"
+
+.PP
+Definition at line 129 of file ExportMP3\&.cpp\&.
+.SS "#define PRESET_INSANE   0"
+
+.PP
+Definition at line 128 of file ExportMP3\&.cpp\&.
+.SS "#define PRESET_MEDIUM   3"
+
+.PP
+Definition at line 131 of file ExportMP3\&.cpp\&.
+.SS "#define PRESET_STANDARD   2"
+
+.PP
+Definition at line 130 of file ExportMP3\&.cpp\&.
+.SS "#define QUALITY_0   0"
+
+.PP
+Definition at line 114 of file ExportMP3\&.cpp\&.
+.SS "#define QUALITY_1   1"
+
+.PP
+Definition at line 115 of file ExportMP3\&.cpp\&.
+.SS "#define QUALITY_2   2"
+
+.PP
+Definition at line 116 of file ExportMP3\&.cpp\&.
+.SS "#define QUALITY_3   3"
+
+.PP
+Definition at line 117 of file ExportMP3\&.cpp\&.
+.SS "#define QUALITY_4   4"
+
+.PP
+Definition at line 118 of file ExportMP3\&.cpp\&.
+.SS "#define QUALITY_5   5"
+
+.PP
+Definition at line 119 of file ExportMP3\&.cpp\&.
+.SS "#define QUALITY_6   6"
+
+.PP
+Definition at line 120 of file ExportMP3\&.cpp\&.
+.SS "#define QUALITY_7   7"
+
+.PP
+Definition at line 121 of file ExportMP3\&.cpp\&.
+.SS "#define QUALITY_8   8"
+
+.PP
+Definition at line 122 of file ExportMP3\&.cpp\&.
+.SS "#define QUALITY_9   9"
+
+.PP
+Definition at line 123 of file ExportMP3\&.cpp\&.
+.SS "#define ROUTINE_FAST   0"
+
+.PP
+Definition at line 125 of file ExportMP3\&.cpp\&.
+.SS "#define ROUTINE_STANDARD   1"
+
+.PP
+Definition at line 126 of file ExportMP3\&.cpp\&.
+.SH "Typedef Documentation"
+.PP 
+.SS "typedef \fBconst\fP char* get_lame_version_t(\fBvoid\fP)"
+
+.PP
+Definition at line 695 of file ExportMP3\&.cpp\&.
+.SS "typedef \fBint\fP lame_close_t(\fBlame_global_flags\fP *)"
+
+.PP
+Definition at line 717 of file ExportMP3\&.cpp\&.
+.SS "typedef \fBint\fP lame_encode_buffer_interleaved_t(\fBlame_global_flags\fP *gf, short \fBint\fP pcm[], \fBint\fP num_samples, unsigned char *mp3buf, \fBint\fP mp3buf_size)"
+
+.PP
+Definition at line 705 of file ExportMP3\&.cpp\&.
+.SS "typedef \fBint\fP lame_encode_buffer_t(\fBlame_global_flags\fP *gf, \fBconst\fP short \fBint\fP buffer_l[], \fBconst\fP short \fBint\fP buffer_r[], \fBconst\fP \fBint\fP nsamples, unsigned char *mp3buf, \fBconst\fP \fBint\fP mp3buf_size)"
+
+.PP
+Definition at line 697 of file ExportMP3\&.cpp\&.
+.SS "typedef \fBint\fP lame_encode_flush_t(\fBlame_global_flags\fP *gf, unsigned char *mp3buf, \fBint\fP \fBsize\fP)"
+
+.PP
+Definition at line 712 of file ExportMP3\&.cpp\&.
+.SS "typedef size_t lame_get_lametag_frame_t(\fBconst\fP \fBlame_global_flags\fP *, unsigned char *\fBbuffer\fP, size_t \fBsize\fP)"
+
+.PP
+Definition at line 733 of file ExportMP3\&.cpp\&.
+.SS "typedef \fBint\fP lame_init_params_t(\fBlame_global_flags\fP *)"
+
+.PP
+Definition at line 694 of file ExportMP3\&.cpp\&.
+.SS "typedef \fBlame_global_flags\fP* lame_init_t(\fBvoid\fP)"
+
+.PP
+Definition at line 693 of file ExportMP3\&.cpp\&.
+.SS "typedef \fBvoid\fP lame_mp3_tags_fid_t(\fBlame_global_flags\fP *, FILE *)"
+
+.PP
+Definition at line 734 of file ExportMP3\&.cpp\&.
+.SS "typedef \fBint\fP lame_set_brate_t(\fBlame_global_flags\fP *, \fBint\fP)"
+
+.PP
+Definition at line 723 of file ExportMP3\&.cpp\&.
+.SS "typedef \fBint\fP lame_set_bWriteVbrTag_t(\fBlame_global_flags\fP *, \fBint\fP)"
+
+.PP
+Definition at line 732 of file ExportMP3\&.cpp\&.
+.SS "typedef \fBint\fP lame_set_disable_reservoir_t(\fBlame_global_flags\fP *, \fBint\fP)"
+
+.PP
+Definition at line 730 of file ExportMP3\&.cpp\&.
+.SS "typedef \fBint\fP lame_set_error_protection_t(\fBlame_global_flags\fP *, \fBint\fP)"
+
+.PP
+Definition at line 729 of file ExportMP3\&.cpp\&.
+.SS "typedef \fBint\fP lame_set_in_samplerate_t(\fBlame_global_flags\fP *, \fBint\fP)"
+
+.PP
+Definition at line 719 of file ExportMP3\&.cpp\&.
+.SS "typedef \fBint\fP lame_set_mode_t(\fBlame_global_flags\fP *, \fBMPEG_mode\fP)"
+
+.PP
+Definition at line 727 of file ExportMP3\&.cpp\&.
+.SS "typedef \fBint\fP lame_set_num_channels_t(\fBlame_global_flags\fP *, \fBint\fP)"
+
+.PP
+Definition at line 721 of file ExportMP3\&.cpp\&.
+.SS "typedef \fBint\fP lame_set_out_samplerate_t(\fBlame_global_flags\fP *, \fBint\fP)"
+
+.PP
+Definition at line 720 of file ExportMP3\&.cpp\&.
+.SS "typedef \fBint\fP lame_set_padding_type_t(\fBlame_global_flags\fP *, \fBPadding_type\fP)"
+
+.PP
+Definition at line 731 of file ExportMP3\&.cpp\&.
+.SS "typedef \fBint\fP lame_set_preset_t(\fBlame_global_flags\fP *, \fBint\fP)"
+
+.PP
+Definition at line 728 of file ExportMP3\&.cpp\&.
+.SS "typedef \fBint\fP lame_set_quality_t(\fBlame_global_flags\fP *, \fBint\fP)"
+
+.PP
+Definition at line 722 of file ExportMP3\&.cpp\&.
+.SS "typedef \fBint\fP lame_set_VBR_min_bitrate_kbps_t(\fBlame_global_flags\fP *, \fBint\fP)"
+
+.PP
+Definition at line 726 of file ExportMP3\&.cpp\&.
+.SS "typedef \fBint\fP lame_set_VBR_q_t(\fBlame_global_flags\fP *, \fBint\fP)"
+
+.PP
+Definition at line 725 of file ExportMP3\&.cpp\&.
+.SS "typedef \fBint\fP lame_set_VBR_t(\fBlame_global_flags\fP *, \fBvbr_mode\fP)"
+
+.PP
+Definition at line 724 of file ExportMP3\&.cpp\&.
+.SH "Function Documentation"
+.PP 
+.SS "wxString GetMP3Version (wxWindow * parent, \fBbool\fP prompt)"
+
+.PP
+Definition at line 2085 of file ExportMP3\&.cpp\&.
+.SS "\fBExportPlugin\fP* New_ExportMP3 ()"
+Factory method \fBNew_ExportMP3()\fP which creates a NEW \fBExportMP3\fP object and returns a pointer to it\&. The rest of the class declaration is in \fBExportMP3\&.cpp\fP 
+.PP
+Definition at line 2076 of file ExportMP3\&.cpp\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

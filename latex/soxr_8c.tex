@@ -1,0 +1,505 @@
+\hypertarget{soxr_8c}{}\section{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/libsoxr/src/soxr.c File Reference}
+\label{soxr_8c}\index{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/libsoxr/src/soxr.\+c@{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/libsoxr/src/soxr.\+c}}
+{\ttfamily \#include $<$math.\+h$>$}\\*
+{\ttfamily \#include $<$stdlib.\+h$>$}\\*
+{\ttfamily \#include $<$string.\+h$>$}\\*
+{\ttfamily \#include $<$time.\+h$>$}\\*
+{\ttfamily \#include \char`\"{}soxr.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}data-\/io.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}internal.\+h\char`\"{}}\\*
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structsoxr}{soxr}
+\end{DoxyCompactItemize}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{soxr_8c_afa5cac6ba29701a454642a51a238c9da}{resampler\+\_\+input}~($\ast$(\hyperlink{soxr_8c_aeef50d4abead1cb3eef063fda4b721c0}{sample\+\_\+t} $\ast$ ($\ast$)(\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} $\ast$, \hyperlink{soxr_8c_aeef50d4abead1cb3eef063fda4b721c0}{sample\+\_\+t} $\ast$ \hyperlink{test__w__saw8_8c_a54185623a5a093f671a73e5fba6197a1}{samples}, size\+\_\+t   n))\hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p}-\/$>$control\+\_\+block\mbox{[}0\mbox{]})
+\item 
+\#define \hyperlink{soxr_8c_a632e91ff7c6f16d543b57a95b40d9380}{resampler\+\_\+process}~($\ast$(\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} ($\ast$)(\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} $\ast$, size\+\_\+t))\hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p}-\/$>$control\+\_\+block\mbox{[}1\mbox{]})
+\item 
+\#define \hyperlink{soxr_8c_ad4dbd71b22b73f0827ece52413dd8c73}{resampler\+\_\+output}~($\ast$(\hyperlink{soxr_8c_aeef50d4abead1cb3eef063fda4b721c0}{sample\+\_\+t} \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} $\ast$ ($\ast$)(\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} $\ast$, \hyperlink{soxr_8c_aeef50d4abead1cb3eef063fda4b721c0}{sample\+\_\+t} $\ast$ \hyperlink{test__w__saw8_8c_a54185623a5a093f671a73e5fba6197a1}{samples}, size\+\_\+t $\ast$ n))\hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p}-\/$>$control\+\_\+block\mbox{[}2\mbox{]})
+\item 
+\#define \hyperlink{soxr_8c_a824d53a54a6a4ee420451a75472bafd9}{resampler\+\_\+flush}~($\ast$(\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} ($\ast$)(\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} $\ast$))\hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p}-\/$>$control\+\_\+block\mbox{[}3\mbox{]})
+\item 
+\#define \hyperlink{soxr_8c_a0c05d68e7b68abdc988b222ed96e7d33}{resampler\+\_\+close}~($\ast$(\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} ($\ast$)(\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} $\ast$))\hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p}-\/$>$control\+\_\+block\mbox{[}4\mbox{]})
+\item 
+\#define \hyperlink{soxr_8c_a514599a3dcaa2655d59ca36871481bab}{resampler\+\_\+delay}~($\ast$(double ($\ast$)(\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} $\ast$))\hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p}-\/$>$control\+\_\+block\mbox{[}5\mbox{]})
+\item 
+\#define \hyperlink{soxr_8c_a4ef16efe1f2a6506f2ea87e4007711fb}{resampler\+\_\+sizes}~($\ast$(\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} ($\ast$)(size\+\_\+t $\ast$ shared, size\+\_\+t $\ast$ channel))\hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p}-\/$>$control\+\_\+block\mbox{[}6\mbox{]})
+\item 
+\#define \hyperlink{soxr_8c_a55fc3f7436507650d75a8e043f1b90b8}{resampler\+\_\+create}~($\ast$(char \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} $\ast$ ($\ast$)(\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} $\ast$ channel, \hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} $\ast$ shared, double io\+\_\+ratio, \hyperlink{soxr_8h_afe5d91d1e46d7d7f9aff9a87f62e6665}{soxr\+\_\+quality\+\_\+spec\+\_\+t} $\ast$ q\+\_\+spec, \hyperlink{soxr_8h_afcbbf76969491ce9a1f5e26f2ae54231}{soxr\+\_\+runtime\+\_\+spec\+\_\+t} $\ast$ r\+\_\+spec, double \hyperlink{seqread_8h_a26a42c039941e1d6aa8616c6d7b32541}{scale}))\hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p}-\/$>$control\+\_\+block\mbox{[}7\mbox{]})
+\item 
+\#define \hyperlink{soxr_8c_a5150a43e6a46a92a5802f6c2649ade85}{resampler\+\_\+set\+\_\+io\+\_\+ratio}~($\ast$(\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} ($\ast$)(\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} $\ast$, double io\+\_\+ratio, size\+\_\+t \hyperlink{lib_2expat_8h_af86d325fecfc8f47b61fbf5a5146f582}{len}))\hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p}-\/$>$control\+\_\+block\mbox{[}8\mbox{]})
+\item 
+\#define \hyperlink{soxr_8c_a014948fba02133dd843740455a1d1d4d}{resampler\+\_\+id}~($\ast$(char \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} $\ast$ ($\ast$)(\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void}))\hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p}-\/$>$control\+\_\+block\mbox{[}9\mbox{]})
+\item 
+\#define \hyperlink{soxr_8c_aee1b99901113e8fbc4866fc090301a35}{T\+O\+\_\+3dB}(\hyperlink{rfft2d_test_m_l_8m_a4124bc0a9335c27f086f24ba207a4912}{a})          ~((1.\+6e-\/6$\ast$a-\/7.\+5e-\/4)$\ast$a+.\+646)
+\item 
+\#define \hyperlink{soxr_8c_a94d12e404c90386f2df999c65b73e447}{L\+O\+W\+\_\+\+Q\+\_\+\+B\+W0}~(1385 / 2048.) /$\ast$ 0.\+67625 rounded to be \hyperlink{rfft2d_test_m_l_8m_a4124bc0a9335c27f086f24ba207a4912}{a} FP exact. $\ast$/
+\end{DoxyCompactItemize}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef \hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{soxr_8c_aeef50d4abead1cb3eef063fda4b721c0}{sample\+\_\+t}
+\item 
+typedef \hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void}($\ast$ \hyperlink{soxr_8c_afc8fa388a84372fc7153206dfbf24374}{fn\+\_\+t}) (\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void})
+\item 
+typedef \hyperlink{vr32_8c_afc8fa388a84372fc7153206dfbf24374}{fn\+\_\+t} \hyperlink{soxr_8c_a6346f09fcfe44916a78c94321ed37c5d}{control\+\_\+block\+\_\+t}\mbox{[}10\mbox{]}
+\item 
+typedef \hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} $\ast$ \hyperlink{soxr_8c_a335a7d30bcecb11f27d6406c643ee21e}{resampler\+\_\+t}
+\item 
+typedef \hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} $\ast$ \hyperlink{soxr_8c_a0a9be7db2b8063b74a6ef2366ccccbdb}{resampler\+\_\+shared\+\_\+t}
+\item 
+typedef \hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void}($\ast$ \hyperlink{soxr_8c_ae38d1593aaf4055ec74e7908e15f941a}{deinterleave\+\_\+t}) (\hyperlink{soxr_8c_aeef50d4abead1cb3eef063fda4b721c0}{sample\+\_\+t} $\ast$$\ast$dest, \hyperlink{soxr_8h_ac648d3d2dd7b1988e631d6205e73f66d}{soxr\+\_\+datatype\+\_\+t} data\+\_\+type, \hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} $\ast$$\ast$src0, size\+\_\+t n, unsigned ch)
+\item 
+typedef size\+\_\+t($\ast$ \hyperlink{soxr_8c_a5a5f4f8a0be6b57c9c9d4104728499e4}{interleave\+\_\+t}) (\hyperlink{soxr_8h_ac648d3d2dd7b1988e631d6205e73f66d}{soxr\+\_\+datatype\+\_\+t} data\+\_\+type, \hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} $\ast$$\ast$dest, \hyperlink{soxr_8c_aeef50d4abead1cb3eef063fda4b721c0}{sample\+\_\+t} \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} $\ast$\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} $\ast$src, size\+\_\+t, unsigned, unsigned long $\ast$)
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+char \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} $\ast$ \hyperlink{soxr_8c_a720fb029d3c0845c3a3aba9bcf2b16e4}{soxr\+\_\+version} (\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void})
+\item 
+\hyperlink{soxr_8h_afe5d91d1e46d7d7f9aff9a87f62e6665}{soxr\+\_\+quality\+\_\+spec\+\_\+t} \hyperlink{soxr_8c_a8bc34e71491e5ab698dcccdfc06c7ad8}{soxr\+\_\+quality\+\_\+spec} (unsigned long recipe, unsigned long flags)
+\item 
+char \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} $\ast$ \hyperlink{soxr_8c_a5ac330f45c7b1f4a5d327227455bd961}{soxr\+\_\+engine} (\hyperlink{soxr_8h_a44df675bac08abcd8abba9ac40758929}{soxr\+\_\+t} \hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p})
+\item 
+size\+\_\+t $\ast$ \hyperlink{soxr_8c_ab2ae956aeb86e03efb5c068a6bb52955}{soxr\+\_\+num\+\_\+clips} (\hyperlink{soxr_8h_a44df675bac08abcd8abba9ac40758929}{soxr\+\_\+t} \hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p})
+\item 
+\hyperlink{soxr_8h_a9c0f6f8249a04c1ccb71881e2b0b6937}{soxr\+\_\+error\+\_\+t} \hyperlink{soxr_8c_a51a9c751bbd6d122e55f7aad7b31ccea}{soxr\+\_\+error} (\hyperlink{soxr_8h_a44df675bac08abcd8abba9ac40758929}{soxr\+\_\+t} \hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p})
+\item 
+\hyperlink{soxr_8h_afcbbf76969491ce9a1f5e26f2ae54231}{soxr\+\_\+runtime\+\_\+spec\+\_\+t} \hyperlink{soxr_8c_adef2594d0bbe957075423c9450477fc2}{soxr\+\_\+runtime\+\_\+spec} (unsigned num\+\_\+threads)
+\item 
+\hyperlink{soxr_8h_a9a3982afc7db355cc4b40b4ff31ffb30}{soxr\+\_\+io\+\_\+spec\+\_\+t} \hyperlink{soxr_8c_a6003249f89c7705eef58d69f0afae011}{soxr\+\_\+io\+\_\+spec} (\hyperlink{soxr_8h_ac648d3d2dd7b1988e631d6205e73f66d}{soxr\+\_\+datatype\+\_\+t} itype, \hyperlink{soxr_8h_ac648d3d2dd7b1988e631d6205e73f66d}{soxr\+\_\+datatype\+\_\+t} otype)
+\item 
+\hyperlink{soxr_8h_a44df675bac08abcd8abba9ac40758929}{soxr\+\_\+t} \hyperlink{soxr_8c_a763983e4a1f00869383ba22421b768e5}{soxr\+\_\+create} (double input\+\_\+rate, double output\+\_\+rate, unsigned num\+\_\+channels, \hyperlink{soxr_8h_a9c0f6f8249a04c1ccb71881e2b0b6937}{soxr\+\_\+error\+\_\+t} $\ast$error0, \hyperlink{soxr_8h_a9a3982afc7db355cc4b40b4ff31ffb30}{soxr\+\_\+io\+\_\+spec\+\_\+t} \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} $\ast$io\+\_\+spec, \hyperlink{soxr_8h_afe5d91d1e46d7d7f9aff9a87f62e6665}{soxr\+\_\+quality\+\_\+spec\+\_\+t} \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} $\ast$q\+\_\+spec, \hyperlink{soxr_8h_afcbbf76969491ce9a1f5e26f2ae54231}{soxr\+\_\+runtime\+\_\+spec\+\_\+t} \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} $\ast$runtime\+\_\+spec)
+\item 
+\hyperlink{soxr_8h_a9c0f6f8249a04c1ccb71881e2b0b6937}{soxr\+\_\+error\+\_\+t} \hyperlink{soxr_8c_a5ef8012f6d313a2887c135359af035f6}{soxr\+\_\+set\+\_\+input\+\_\+fn} (\hyperlink{soxr_8h_a44df675bac08abcd8abba9ac40758929}{soxr\+\_\+t} \hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p}, \hyperlink{soxr_8h_a75de274660354270e1e92a4b66a6e915}{soxr\+\_\+input\+\_\+fn\+\_\+t} input\+\_\+fn, \hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} $\ast$input\+\_\+fn\+\_\+state, size\+\_\+t max\+\_\+ilen)
+\item 
+double \hyperlink{soxr_8c_a96f18f5a39a878e97b127f2913b5eb13}{soxr\+\_\+delay} (\hyperlink{soxr_8h_a44df675bac08abcd8abba9ac40758929}{soxr\+\_\+t} \hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p})
+\item 
+\hyperlink{soxr_8h_a9c0f6f8249a04c1ccb71881e2b0b6937}{soxr\+\_\+error\+\_\+t} \hyperlink{soxr_8c_a68673f0a61b55e749aa7c6fcef3638f2}{soxr\+\_\+set\+\_\+num\+\_\+channels} (\hyperlink{soxr_8h_a44df675bac08abcd8abba9ac40758929}{soxr\+\_\+t} \hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p}, unsigned num\+\_\+channels)
+\item 
+\hyperlink{soxr_8h_a9c0f6f8249a04c1ccb71881e2b0b6937}{soxr\+\_\+error\+\_\+t} \hyperlink{soxr_8c_ab9cd1051c49c8a0fa8cc8957d1a7186e}{soxr\+\_\+set\+\_\+io\+\_\+ratio} (\hyperlink{soxr_8h_a44df675bac08abcd8abba9ac40758929}{soxr\+\_\+t} \hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p}, double io\+\_\+ratio, size\+\_\+t slew\+\_\+len)
+\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{soxr_8c_af3bff5e9b256197fd02730fea110a5ea}{soxr\+\_\+delete} (\hyperlink{soxr_8h_a44df675bac08abcd8abba9ac40758929}{soxr\+\_\+t} \hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p})
+\item 
+\hyperlink{soxr_8h_a9c0f6f8249a04c1ccb71881e2b0b6937}{soxr\+\_\+error\+\_\+t} \hyperlink{soxr_8c_afecae2e5d944a6e4ba9eccd18f5584e2}{soxr\+\_\+clear} (\hyperlink{soxr_8h_a44df675bac08abcd8abba9ac40758929}{soxr\+\_\+t} \hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p})
+\item 
+size\+\_\+t \hyperlink{soxr_8c_ae01b0184f5952309aa868d2d3dbd92d7}{soxr\+\_\+output} (\hyperlink{soxr_8h_a44df675bac08abcd8abba9ac40758929}{soxr\+\_\+t} \hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p}, \hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} $\ast$\hyperlink{latency_8c_a71fd1c281affec034757279e4f91c50b}{out}, size\+\_\+t len0)
+\item 
+\hyperlink{soxr_8h_a9c0f6f8249a04c1ccb71881e2b0b6937}{soxr\+\_\+error\+\_\+t} \hyperlink{soxr_8c_a853769187cb96f9e89aadcfe8a0deb10}{soxr\+\_\+process} (\hyperlink{soxr_8h_a44df675bac08abcd8abba9ac40758929}{soxr\+\_\+t} \hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p}, \hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} $\ast$\hyperlink{latency_8c_a7d946209d777cb95fe30364b8d321207}{in}, size\+\_\+t ilen0, size\+\_\+t $\ast$idone0, \hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} $\ast$\hyperlink{latency_8c_a71fd1c281affec034757279e4f91c50b}{out}, size\+\_\+t olen, size\+\_\+t $\ast$odone0)
+\item 
+\hyperlink{soxr_8h_a9c0f6f8249a04c1ccb71881e2b0b6937}{soxr\+\_\+error\+\_\+t} \hyperlink{soxr_8c_aca5d92f0da0d2dab566516564ab69e28}{soxr\+\_\+oneshot} (double irate, double orate, unsigned num\+\_\+channels, \hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} $\ast$\hyperlink{latency_8c_a7d946209d777cb95fe30364b8d321207}{in}, size\+\_\+t ilen, size\+\_\+t $\ast$idone, \hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} $\ast$\hyperlink{latency_8c_a71fd1c281affec034757279e4f91c50b}{out}, size\+\_\+t olen, size\+\_\+t $\ast$odone, \hyperlink{soxr_8h_a9a3982afc7db355cc4b40b4ff31ffb30}{soxr\+\_\+io\+\_\+spec\+\_\+t} \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} $\ast$io\+\_\+spec, \hyperlink{soxr_8h_afe5d91d1e46d7d7f9aff9a87f62e6665}{soxr\+\_\+quality\+\_\+spec\+\_\+t} \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} $\ast$q\+\_\+spec, \hyperlink{soxr_8h_afcbbf76969491ce9a1f5e26f2ae54231}{soxr\+\_\+runtime\+\_\+spec\+\_\+t} \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} $\ast$runtime\+\_\+spec)
+\item 
+\hyperlink{soxr_8h_a9c0f6f8249a04c1ccb71881e2b0b6937}{soxr\+\_\+error\+\_\+t} \hyperlink{soxr_8c_a02c27ecbb519f99e44db7e61800db57c}{soxr\+\_\+set\+\_\+error} (\hyperlink{soxr_8h_a44df675bac08abcd8abba9ac40758929}{soxr\+\_\+t} \hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p}, \hyperlink{soxr_8h_a9c0f6f8249a04c1ccb71881e2b0b6937}{soxr\+\_\+error\+\_\+t} \hyperlink{sndfile__save_8m_ada4b423bc19e6ff5c5b514e55f518a82}{error})
+\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{soxr_8c_a6346f09fcfe44916a78c94321ed37c5d}{control\+\_\+block\+\_\+t} \hyperlink{soxr_8c_a7ba90cccbefe4a1695fa104e0d17c7c5}{\+\_\+soxr\+\_\+rate32s\+\_\+cb}
+\item 
+\hyperlink{soxr_8c_a6346f09fcfe44916a78c94321ed37c5d}{control\+\_\+block\+\_\+t} \hyperlink{soxr_8c_a07bb449874c0e728be4787affb67079c}{\+\_\+soxr\+\_\+rate32\+\_\+cb}
+\item 
+\hyperlink{soxr_8c_a6346f09fcfe44916a78c94321ed37c5d}{control\+\_\+block\+\_\+t} \hyperlink{soxr_8c_a717ce91cf6d0933c0e429d1fa5ae5c9a}{\+\_\+soxr\+\_\+rate64\+\_\+cb}
+\item 
+\hyperlink{soxr_8c_a6346f09fcfe44916a78c94321ed37c5d}{control\+\_\+block\+\_\+t} \hyperlink{soxr_8c_a93c4b9a07d5c5658da02b2eda7721a6e}{\+\_\+soxr\+\_\+vr32\+\_\+cb}
+\end{DoxyCompactItemize}
+
+
+\subsection{Macro Definition Documentation}
+\index{soxr.\+c@{soxr.\+c}!L\+O\+W\+\_\+\+Q\+\_\+\+B\+W0@{L\+O\+W\+\_\+\+Q\+\_\+\+B\+W0}}
+\index{L\+O\+W\+\_\+\+Q\+\_\+\+B\+W0@{L\+O\+W\+\_\+\+Q\+\_\+\+B\+W0}!soxr.\+c@{soxr.\+c}}
+\subsubsection[{\texorpdfstring{L\+O\+W\+\_\+\+Q\+\_\+\+B\+W0}{LOW_Q_BW0}}]{\setlength{\rightskip}{0pt plus 5cm}\#define L\+O\+W\+\_\+\+Q\+\_\+\+B\+W0~(1385 / 2048.) /$\ast$ 0.\+67625 rounded to be {\bf a} FP exact. $\ast$/}\hypertarget{soxr_8c_a94d12e404c90386f2df999c65b73e447}{}\label{soxr_8c_a94d12e404c90386f2df999c65b73e447}
+
+
+Definition at line 72 of file soxr.\+c.
+
+\index{soxr.\+c@{soxr.\+c}!resampler\+\_\+close@{resampler\+\_\+close}}
+\index{resampler\+\_\+close@{resampler\+\_\+close}!soxr.\+c@{soxr.\+c}}
+\subsubsection[{\texorpdfstring{resampler\+\_\+close}{resampler_close}}]{\setlength{\rightskip}{0pt plus 5cm}\#define resampler\+\_\+close~($\ast$({\bf void} ($\ast$)({\bf void} $\ast$)){\bf p}-\/$>$control\+\_\+block\mbox{[}4\mbox{]})}\hypertarget{soxr_8c_a0c05d68e7b68abdc988b222ed96e7d33}{}\label{soxr_8c_a0c05d68e7b68abdc988b222ed96e7d33}
+
+
+Definition at line 30 of file soxr.\+c.
+
+\index{soxr.\+c@{soxr.\+c}!resampler\+\_\+create@{resampler\+\_\+create}}
+\index{resampler\+\_\+create@{resampler\+\_\+create}!soxr.\+c@{soxr.\+c}}
+\subsubsection[{\texorpdfstring{resampler\+\_\+create}{resampler_create}}]{\setlength{\rightskip}{0pt plus 5cm}\#define resampler\+\_\+create~($\ast$(char {\bf const} $\ast$ ($\ast$)({\bf void} $\ast$ channel, {\bf void} $\ast$ shared, double io\+\_\+ratio, {\bf soxr\+\_\+quality\+\_\+spec\+\_\+t} $\ast$ q\+\_\+spec, {\bf soxr\+\_\+runtime\+\_\+spec\+\_\+t} $\ast$ r\+\_\+spec, double {\bf scale})){\bf p}-\/$>$control\+\_\+block\mbox{[}7\mbox{]})}\hypertarget{soxr_8c_a55fc3f7436507650d75a8e043f1b90b8}{}\label{soxr_8c_a55fc3f7436507650d75a8e043f1b90b8}
+
+
+Definition at line 33 of file soxr.\+c.
+
+\index{soxr.\+c@{soxr.\+c}!resampler\+\_\+delay@{resampler\+\_\+delay}}
+\index{resampler\+\_\+delay@{resampler\+\_\+delay}!soxr.\+c@{soxr.\+c}}
+\subsubsection[{\texorpdfstring{resampler\+\_\+delay}{resampler_delay}}]{\setlength{\rightskip}{0pt plus 5cm}\#define resampler\+\_\+delay~($\ast$(double ($\ast$)({\bf void} $\ast$)){\bf p}-\/$>$control\+\_\+block\mbox{[}5\mbox{]})}\hypertarget{soxr_8c_a514599a3dcaa2655d59ca36871481bab}{}\label{soxr_8c_a514599a3dcaa2655d59ca36871481bab}
+
+
+Definition at line 31 of file soxr.\+c.
+
+\index{soxr.\+c@{soxr.\+c}!resampler\+\_\+flush@{resampler\+\_\+flush}}
+\index{resampler\+\_\+flush@{resampler\+\_\+flush}!soxr.\+c@{soxr.\+c}}
+\subsubsection[{\texorpdfstring{resampler\+\_\+flush}{resampler_flush}}]{\setlength{\rightskip}{0pt plus 5cm}\#define resampler\+\_\+flush~($\ast$({\bf void} ($\ast$)({\bf void} $\ast$)){\bf p}-\/$>$control\+\_\+block\mbox{[}3\mbox{]})}\hypertarget{soxr_8c_a824d53a54a6a4ee420451a75472bafd9}{}\label{soxr_8c_a824d53a54a6a4ee420451a75472bafd9}
+
+
+Definition at line 29 of file soxr.\+c.
+
+\index{soxr.\+c@{soxr.\+c}!resampler\+\_\+id@{resampler\+\_\+id}}
+\index{resampler\+\_\+id@{resampler\+\_\+id}!soxr.\+c@{soxr.\+c}}
+\subsubsection[{\texorpdfstring{resampler\+\_\+id}{resampler_id}}]{\setlength{\rightskip}{0pt plus 5cm}\#define resampler\+\_\+id~($\ast$(char {\bf const} $\ast$ ($\ast$)({\bf void})){\bf p}-\/$>$control\+\_\+block\mbox{[}9\mbox{]})}\hypertarget{soxr_8c_a014948fba02133dd843740455a1d1d4d}{}\label{soxr_8c_a014948fba02133dd843740455a1d1d4d}
+
+
+Definition at line 35 of file soxr.\+c.
+
+\index{soxr.\+c@{soxr.\+c}!resampler\+\_\+input@{resampler\+\_\+input}}
+\index{resampler\+\_\+input@{resampler\+\_\+input}!soxr.\+c@{soxr.\+c}}
+\subsubsection[{\texorpdfstring{resampler\+\_\+input}{resampler_input}}]{\setlength{\rightskip}{0pt plus 5cm}\#define resampler\+\_\+input~($\ast$({\bf sample\+\_\+t} $\ast$ ($\ast$)({\bf void} $\ast$, {\bf sample\+\_\+t} $\ast$ {\bf samples}, size\+\_\+t   n)){\bf p}-\/$>$control\+\_\+block\mbox{[}0\mbox{]})}\hypertarget{soxr_8c_afa5cac6ba29701a454642a51a238c9da}{}\label{soxr_8c_afa5cac6ba29701a454642a51a238c9da}
+
+
+Definition at line 26 of file soxr.\+c.
+
+\index{soxr.\+c@{soxr.\+c}!resampler\+\_\+output@{resampler\+\_\+output}}
+\index{resampler\+\_\+output@{resampler\+\_\+output}!soxr.\+c@{soxr.\+c}}
+\subsubsection[{\texorpdfstring{resampler\+\_\+output}{resampler_output}}]{\setlength{\rightskip}{0pt plus 5cm}\#define resampler\+\_\+output~($\ast$({\bf sample\+\_\+t} {\bf const} $\ast$ ($\ast$)({\bf void} $\ast$, {\bf sample\+\_\+t} $\ast$ {\bf samples}, size\+\_\+t $\ast$ n)){\bf p}-\/$>$control\+\_\+block\mbox{[}2\mbox{]})}\hypertarget{soxr_8c_ad4dbd71b22b73f0827ece52413dd8c73}{}\label{soxr_8c_ad4dbd71b22b73f0827ece52413dd8c73}
+
+
+Definition at line 28 of file soxr.\+c.
+
+\index{soxr.\+c@{soxr.\+c}!resampler\+\_\+process@{resampler\+\_\+process}}
+\index{resampler\+\_\+process@{resampler\+\_\+process}!soxr.\+c@{soxr.\+c}}
+\subsubsection[{\texorpdfstring{resampler\+\_\+process}{resampler_process}}]{\setlength{\rightskip}{0pt plus 5cm}\#define resampler\+\_\+process~($\ast$({\bf void} ($\ast$)({\bf void} $\ast$, size\+\_\+t)){\bf p}-\/$>$control\+\_\+block\mbox{[}1\mbox{]})}\hypertarget{soxr_8c_a632e91ff7c6f16d543b57a95b40d9380}{}\label{soxr_8c_a632e91ff7c6f16d543b57a95b40d9380}
+
+
+Definition at line 27 of file soxr.\+c.
+
+\index{soxr.\+c@{soxr.\+c}!resampler\+\_\+set\+\_\+io\+\_\+ratio@{resampler\+\_\+set\+\_\+io\+\_\+ratio}}
+\index{resampler\+\_\+set\+\_\+io\+\_\+ratio@{resampler\+\_\+set\+\_\+io\+\_\+ratio}!soxr.\+c@{soxr.\+c}}
+\subsubsection[{\texorpdfstring{resampler\+\_\+set\+\_\+io\+\_\+ratio}{resampler_set_io_ratio}}]{\setlength{\rightskip}{0pt plus 5cm}\#define resampler\+\_\+set\+\_\+io\+\_\+ratio~($\ast$({\bf void} ($\ast$)({\bf void} $\ast$, double io\+\_\+ratio, size\+\_\+t {\bf len})){\bf p}-\/$>$control\+\_\+block\mbox{[}8\mbox{]})}\hypertarget{soxr_8c_a5150a43e6a46a92a5802f6c2649ade85}{}\label{soxr_8c_a5150a43e6a46a92a5802f6c2649ade85}
+
+
+Definition at line 34 of file soxr.\+c.
+
+\index{soxr.\+c@{soxr.\+c}!resampler\+\_\+sizes@{resampler\+\_\+sizes}}
+\index{resampler\+\_\+sizes@{resampler\+\_\+sizes}!soxr.\+c@{soxr.\+c}}
+\subsubsection[{\texorpdfstring{resampler\+\_\+sizes}{resampler_sizes}}]{\setlength{\rightskip}{0pt plus 5cm}\#define resampler\+\_\+sizes~($\ast$({\bf void} ($\ast$)(size\+\_\+t $\ast$ shared, size\+\_\+t $\ast$ channel)){\bf p}-\/$>$control\+\_\+block\mbox{[}6\mbox{]})}\hypertarget{soxr_8c_a4ef16efe1f2a6506f2ea87e4007711fb}{}\label{soxr_8c_a4ef16efe1f2a6506f2ea87e4007711fb}
+
+
+Definition at line 32 of file soxr.\+c.
+
+\index{soxr.\+c@{soxr.\+c}!T\+O\+\_\+3dB@{T\+O\+\_\+3dB}}
+\index{T\+O\+\_\+3dB@{T\+O\+\_\+3dB}!soxr.\+c@{soxr.\+c}}
+\subsubsection[{\texorpdfstring{T\+O\+\_\+3dB}{TO_3dB}}]{\setlength{\rightskip}{0pt plus 5cm}\#define T\+O\+\_\+3dB(
+\begin{DoxyParamCaption}
+\item[{}]{{\bf a}}
+\end{DoxyParamCaption}
+)~((1.\+6e-\/6$\ast$a-\/7.\+5e-\/4)$\ast$a+.\+646)}\hypertarget{soxr_8c_aee1b99901113e8fbc4866fc090301a35}{}\label{soxr_8c_aee1b99901113e8fbc4866fc090301a35}
+
+
+Definition at line 71 of file soxr.\+c.
+
+
+
+\subsection{Typedef Documentation}
+\index{soxr.\+c@{soxr.\+c}!control\+\_\+block\+\_\+t@{control\+\_\+block\+\_\+t}}
+\index{control\+\_\+block\+\_\+t@{control\+\_\+block\+\_\+t}!soxr.\+c@{soxr.\+c}}
+\subsubsection[{\texorpdfstring{control\+\_\+block\+\_\+t}{control_block_t}}]{\setlength{\rightskip}{0pt plus 5cm}typedef {\bf fn\+\_\+t} control\+\_\+block\+\_\+t\mbox{[}10\mbox{]}}\hypertarget{soxr_8c_a6346f09fcfe44916a78c94321ed37c5d}{}\label{soxr_8c_a6346f09fcfe44916a78c94321ed37c5d}
+
+
+Definition at line 24 of file soxr.\+c.
+
+\index{soxr.\+c@{soxr.\+c}!deinterleave\+\_\+t@{deinterleave\+\_\+t}}
+\index{deinterleave\+\_\+t@{deinterleave\+\_\+t}!soxr.\+c@{soxr.\+c}}
+\subsubsection[{\texorpdfstring{deinterleave\+\_\+t}{deinterleave_t}}]{\setlength{\rightskip}{0pt plus 5cm}typedef {\bf void}($\ast$  deinterleave\+\_\+t) ({\bf sample\+\_\+t} $\ast$$\ast$dest, {\bf soxr\+\_\+datatype\+\_\+t} data\+\_\+type, {\bf void} {\bf const} $\ast$$\ast$src0, size\+\_\+t n, unsigned ch)}\hypertarget{soxr_8c_ae38d1593aaf4055ec74e7908e15f941a}{}\label{soxr_8c_ae38d1593aaf4055ec74e7908e15f941a}
+
+
+Definition at line 39 of file soxr.\+c.
+
+\index{soxr.\+c@{soxr.\+c}!fn\+\_\+t@{fn\+\_\+t}}
+\index{fn\+\_\+t@{fn\+\_\+t}!soxr.\+c@{soxr.\+c}}
+\subsubsection[{\texorpdfstring{fn\+\_\+t}{fn_t}}]{\setlength{\rightskip}{0pt plus 5cm}typedef {\bf void}($\ast$  fn\+\_\+t) ({\bf void})}\hypertarget{soxr_8c_afc8fa388a84372fc7153206dfbf24374}{}\label{soxr_8c_afc8fa388a84372fc7153206dfbf24374}
+
+
+Definition at line 23 of file soxr.\+c.
+
+\index{soxr.\+c@{soxr.\+c}!interleave\+\_\+t@{interleave\+\_\+t}}
+\index{interleave\+\_\+t@{interleave\+\_\+t}!soxr.\+c@{soxr.\+c}}
+\subsubsection[{\texorpdfstring{interleave\+\_\+t}{interleave_t}}]{\setlength{\rightskip}{0pt plus 5cm}typedef size\+\_\+t($\ast$  interleave\+\_\+t) ({\bf soxr\+\_\+datatype\+\_\+t} data\+\_\+type, {\bf void} $\ast$$\ast$dest, {\bf sample\+\_\+t} {\bf const} $\ast${\bf const} $\ast$src, size\+\_\+t, unsigned, unsigned long $\ast$)}\hypertarget{soxr_8c_a5a5f4f8a0be6b57c9c9d4104728499e4}{}\label{soxr_8c_a5a5f4f8a0be6b57c9c9d4104728499e4}
+
+
+Definition at line 41 of file soxr.\+c.
+
+\index{soxr.\+c@{soxr.\+c}!resampler\+\_\+shared\+\_\+t@{resampler\+\_\+shared\+\_\+t}}
+\index{resampler\+\_\+shared\+\_\+t@{resampler\+\_\+shared\+\_\+t}!soxr.\+c@{soxr.\+c}}
+\subsubsection[{\texorpdfstring{resampler\+\_\+shared\+\_\+t}{resampler_shared_t}}]{\setlength{\rightskip}{0pt plus 5cm}typedef {\bf void}$\ast$ {\bf resampler\+\_\+shared\+\_\+t}}\hypertarget{soxr_8c_a0a9be7db2b8063b74a6ef2366ccccbdb}{}\label{soxr_8c_a0a9be7db2b8063b74a6ef2366ccccbdb}
+
+
+Definition at line 38 of file soxr.\+c.
+
+\index{soxr.\+c@{soxr.\+c}!resampler\+\_\+t@{resampler\+\_\+t}}
+\index{resampler\+\_\+t@{resampler\+\_\+t}!soxr.\+c@{soxr.\+c}}
+\subsubsection[{\texorpdfstring{resampler\+\_\+t}{resampler_t}}]{\setlength{\rightskip}{0pt plus 5cm}typedef {\bf void}$\ast$ {\bf resampler\+\_\+t}}\hypertarget{soxr_8c_a335a7d30bcecb11f27d6406c643ee21e}{}\label{soxr_8c_a335a7d30bcecb11f27d6406c643ee21e}
+
+
+Definition at line 37 of file soxr.\+c.
+
+\index{soxr.\+c@{soxr.\+c}!sample\+\_\+t@{sample\+\_\+t}}
+\index{sample\+\_\+t@{sample\+\_\+t}!soxr.\+c@{soxr.\+c}}
+\subsubsection[{\texorpdfstring{sample\+\_\+t}{sample_t}}]{\setlength{\rightskip}{0pt plus 5cm}typedef {\bf void} {\bf sample\+\_\+t}}\hypertarget{soxr_8c_aeef50d4abead1cb3eef063fda4b721c0}{}\label{soxr_8c_aeef50d4abead1cb3eef063fda4b721c0}
+
+
+Definition at line 22 of file soxr.\+c.
+
+
+
+\subsection{Function Documentation}
+\index{soxr.\+c@{soxr.\+c}!soxr\+\_\+clear@{soxr\+\_\+clear}}
+\index{soxr\+\_\+clear@{soxr\+\_\+clear}!soxr.\+c@{soxr.\+c}}
+\subsubsection[{\texorpdfstring{soxr\+\_\+clear(soxr\+\_\+t p)}{soxr_clear(soxr_t p)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf soxr\+\_\+error\+\_\+t} soxr\+\_\+clear (
+\begin{DoxyParamCaption}
+\item[{{\bf soxr\+\_\+t}}]{p}
+\end{DoxyParamCaption}
+)}\hypertarget{soxr_8c_afecae2e5d944a6e4ba9eccd18f5584e2}{}\label{soxr_8c_afecae2e5d944a6e4ba9eccd18f5584e2}
+
+
+Definition at line 394 of file soxr.\+c.
+
+\index{soxr.\+c@{soxr.\+c}!soxr\+\_\+create@{soxr\+\_\+create}}
+\index{soxr\+\_\+create@{soxr\+\_\+create}!soxr.\+c@{soxr.\+c}}
+\subsubsection[{\texorpdfstring{soxr\+\_\+create(double input\+\_\+rate, double output\+\_\+rate, unsigned num\+\_\+channels, soxr\+\_\+error\+\_\+t $\ast$error0, soxr\+\_\+io\+\_\+spec\+\_\+t const $\ast$io\+\_\+spec, soxr\+\_\+quality\+\_\+spec\+\_\+t const $\ast$q\+\_\+spec, soxr\+\_\+runtime\+\_\+spec\+\_\+t const $\ast$runtime\+\_\+spec)}{soxr_create(double input_rate, double output_rate, unsigned num_channels, soxr_error_t *error0, soxr_io_spec_t const *io_spec, soxr_quality_spec_t const *q_spec, soxr_runtime_spec_t const *runtime_spec)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf soxr\+\_\+t} soxr\+\_\+create (
+\begin{DoxyParamCaption}
+\item[{double}]{input\+\_\+rate, }
+\item[{double}]{output\+\_\+rate, }
+\item[{unsigned}]{num\+\_\+channels, }
+\item[{{\bf soxr\+\_\+error\+\_\+t} $\ast$}]{error0, }
+\item[{{\bf soxr\+\_\+io\+\_\+spec\+\_\+t} {\bf const} $\ast$}]{io\+\_\+spec, }
+\item[{{\bf soxr\+\_\+quality\+\_\+spec\+\_\+t} {\bf const} $\ast$}]{q\+\_\+spec, }
+\item[{{\bf soxr\+\_\+runtime\+\_\+spec\+\_\+t} {\bf const} $\ast$}]{runtime\+\_\+spec}
+\end{DoxyParamCaption}
+)}\hypertarget{soxr_8c_a763983e4a1f00869383ba22421b768e5}{}\label{soxr_8c_a763983e4a1f00869383ba22421b768e5}
+
+
+Definition at line 199 of file soxr.\+c.
+
+\index{soxr.\+c@{soxr.\+c}!soxr\+\_\+delay@{soxr\+\_\+delay}}
+\index{soxr\+\_\+delay@{soxr\+\_\+delay}!soxr.\+c@{soxr.\+c}}
+\subsubsection[{\texorpdfstring{soxr\+\_\+delay(soxr\+\_\+t p)}{soxr_delay(soxr_t p)}}]{\setlength{\rightskip}{0pt plus 5cm}double soxr\+\_\+delay (
+\begin{DoxyParamCaption}
+\item[{{\bf soxr\+\_\+t}}]{p}
+\end{DoxyParamCaption}
+)}\hypertarget{soxr_8c_a96f18f5a39a878e97b127f2913b5eb13}{}\label{soxr_8c_a96f18f5a39a878e97b127f2913b5eb13}
+
+
+Definition at line 305 of file soxr.\+c.
+
+\index{soxr.\+c@{soxr.\+c}!soxr\+\_\+delete@{soxr\+\_\+delete}}
+\index{soxr\+\_\+delete@{soxr\+\_\+delete}!soxr.\+c@{soxr.\+c}}
+\subsubsection[{\texorpdfstring{soxr\+\_\+delete(soxr\+\_\+t p)}{soxr_delete(soxr_t p)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf void} soxr\+\_\+delete (
+\begin{DoxyParamCaption}
+\item[{{\bf soxr\+\_\+t}}]{p}
+\end{DoxyParamCaption}
+)}\hypertarget{soxr_8c_af3bff5e9b256197fd02730fea110a5ea}{}\label{soxr_8c_af3bff5e9b256197fd02730fea110a5ea}
+
+
+Definition at line 386 of file soxr.\+c.
+
+\index{soxr.\+c@{soxr.\+c}!soxr\+\_\+engine@{soxr\+\_\+engine}}
+\index{soxr\+\_\+engine@{soxr\+\_\+engine}!soxr.\+c@{soxr.\+c}}
+\subsubsection[{\texorpdfstring{soxr\+\_\+engine(soxr\+\_\+t p)}{soxr_engine(soxr_t p)}}]{\setlength{\rightskip}{0pt plus 5cm}char {\bf const}$\ast$ soxr\+\_\+engine (
+\begin{DoxyParamCaption}
+\item[{{\bf soxr\+\_\+t}}]{p}
+\end{DoxyParamCaption}
+)}\hypertarget{soxr_8c_a5ac330f45c7b1f4a5d327227455bd961}{}\label{soxr_8c_a5ac330f45c7b1f4a5d327227455bd961}
+
+
+Definition at line 111 of file soxr.\+c.
+
+\index{soxr.\+c@{soxr.\+c}!soxr\+\_\+error@{soxr\+\_\+error}}
+\index{soxr\+\_\+error@{soxr\+\_\+error}!soxr.\+c@{soxr.\+c}}
+\subsubsection[{\texorpdfstring{soxr\+\_\+error(soxr\+\_\+t p)}{soxr_error(soxr_t p)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf soxr\+\_\+error\+\_\+t} soxr\+\_\+error (
+\begin{DoxyParamCaption}
+\item[{{\bf soxr\+\_\+t}}]{p}
+\end{DoxyParamCaption}
+)}\hypertarget{soxr_8c_a51a9c751bbd6d122e55f7aad7b31ccea}{}\label{soxr_8c_a51a9c751bbd6d122e55f7aad7b31ccea}
+
+
+Definition at line 125 of file soxr.\+c.
+
+\index{soxr.\+c@{soxr.\+c}!soxr\+\_\+io\+\_\+spec@{soxr\+\_\+io\+\_\+spec}}
+\index{soxr\+\_\+io\+\_\+spec@{soxr\+\_\+io\+\_\+spec}!soxr.\+c@{soxr.\+c}}
+\subsubsection[{\texorpdfstring{soxr\+\_\+io\+\_\+spec(soxr\+\_\+datatype\+\_\+t itype, soxr\+\_\+datatype\+\_\+t otype)}{soxr_io_spec(soxr_datatype_t itype, soxr_datatype_t otype)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf soxr\+\_\+io\+\_\+spec\+\_\+t} {\bf soxr\+\_\+io\+\_\+spec} (
+\begin{DoxyParamCaption}
+\item[{{\bf soxr\+\_\+datatype\+\_\+t}}]{itype, }
+\item[{{\bf soxr\+\_\+datatype\+\_\+t}}]{otype}
+\end{DoxyParamCaption}
+)}\hypertarget{soxr_8c_a6003249f89c7705eef58d69f0afae011}{}\label{soxr_8c_a6003249f89c7705eef58d69f0afae011}
+
+
+Definition at line 145 of file soxr.\+c.
+
+\index{soxr.\+c@{soxr.\+c}!soxr\+\_\+num\+\_\+clips@{soxr\+\_\+num\+\_\+clips}}
+\index{soxr\+\_\+num\+\_\+clips@{soxr\+\_\+num\+\_\+clips}!soxr.\+c@{soxr.\+c}}
+\subsubsection[{\texorpdfstring{soxr\+\_\+num\+\_\+clips(soxr\+\_\+t p)}{soxr_num_clips(soxr_t p)}}]{\setlength{\rightskip}{0pt plus 5cm}size\+\_\+t$\ast$ soxr\+\_\+num\+\_\+clips (
+\begin{DoxyParamCaption}
+\item[{{\bf soxr\+\_\+t}}]{p}
+\end{DoxyParamCaption}
+)}\hypertarget{soxr_8c_ab2ae956aeb86e03efb5c068a6bb52955}{}\label{soxr_8c_ab2ae956aeb86e03efb5c068a6bb52955}
+
+
+Definition at line 118 of file soxr.\+c.
+
+\index{soxr.\+c@{soxr.\+c}!soxr\+\_\+oneshot@{soxr\+\_\+oneshot}}
+\index{soxr\+\_\+oneshot@{soxr\+\_\+oneshot}!soxr.\+c@{soxr.\+c}}
+\subsubsection[{\texorpdfstring{soxr\+\_\+oneshot(double irate, double orate, unsigned num\+\_\+channels, void const $\ast$in, size\+\_\+t ilen, size\+\_\+t $\ast$idone, void $\ast$out, size\+\_\+t olen, size\+\_\+t $\ast$odone, soxr\+\_\+io\+\_\+spec\+\_\+t const $\ast$io\+\_\+spec, soxr\+\_\+quality\+\_\+spec\+\_\+t const $\ast$q\+\_\+spec, soxr\+\_\+runtime\+\_\+spec\+\_\+t const $\ast$runtime\+\_\+spec)}{soxr_oneshot(double irate, double orate, unsigned num_channels, void const *in, size_t ilen, size_t *idone, void *out, size_t olen, size_t *odone, soxr_io_spec_t const *io_spec, soxr_quality_spec_t const *q_spec, soxr_runtime_spec_t const *runtime_spec)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf soxr\+\_\+error\+\_\+t} soxr\+\_\+oneshot (
+\begin{DoxyParamCaption}
+\item[{double}]{irate, }
+\item[{double}]{orate, }
+\item[{unsigned}]{num\+\_\+channels, }
+\item[{{\bf void} {\bf const} $\ast$}]{in, }
+\item[{size\+\_\+t}]{ilen, }
+\item[{size\+\_\+t $\ast$}]{idone, }
+\item[{{\bf void} $\ast$}]{out, }
+\item[{size\+\_\+t}]{olen, }
+\item[{size\+\_\+t $\ast$}]{odone, }
+\item[{{\bf soxr\+\_\+io\+\_\+spec\+\_\+t} {\bf const} $\ast$}]{io\+\_\+spec, }
+\item[{{\bf soxr\+\_\+quality\+\_\+spec\+\_\+t} {\bf const} $\ast$}]{q\+\_\+spec, }
+\item[{{\bf soxr\+\_\+runtime\+\_\+spec\+\_\+t} {\bf const} $\ast$}]{runtime\+\_\+spec}
+\end{DoxyParamCaption}
+)}\hypertarget{soxr_8c_aca5d92f0da0d2dab566516564ab69e28}{}\label{soxr_8c_aca5d92f0da0d2dab566516564ab69e28}
+
+
+Definition at line 601 of file soxr.\+c.
+
+\index{soxr.\+c@{soxr.\+c}!soxr\+\_\+output@{soxr\+\_\+output}}
+\index{soxr\+\_\+output@{soxr\+\_\+output}!soxr.\+c@{soxr.\+c}}
+\subsubsection[{\texorpdfstring{soxr\+\_\+output(soxr\+\_\+t p, void $\ast$out, size\+\_\+t len0)}{soxr_output(soxr_t p, void *out, size_t len0)}}]{\setlength{\rightskip}{0pt plus 5cm}size\+\_\+t soxr\+\_\+output (
+\begin{DoxyParamCaption}
+\item[{{\bf soxr\+\_\+t}}]{p, }
+\item[{{\bf void} $\ast$}]{out, }
+\item[{size\+\_\+t}]{len0}
+\end{DoxyParamCaption}
+)}\hypertarget{soxr_8c_ae01b0184f5952309aa868d2d3dbd92d7}{}\label{soxr_8c_ae01b0184f5952309aa868d2d3dbd92d7}
+
+
+Definition at line 491 of file soxr.\+c.
+
+\index{soxr.\+c@{soxr.\+c}!soxr\+\_\+process@{soxr\+\_\+process}}
+\index{soxr\+\_\+process@{soxr\+\_\+process}!soxr.\+c@{soxr.\+c}}
+\subsubsection[{\texorpdfstring{soxr\+\_\+process(soxr\+\_\+t p, void const $\ast$in, size\+\_\+t ilen0, size\+\_\+t $\ast$idone0, void $\ast$out, size\+\_\+t olen, size\+\_\+t $\ast$odone0)}{soxr_process(soxr_t p, void const *in, size_t ilen0, size_t *idone0, void *out, size_t olen, size_t *odone0)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf soxr\+\_\+error\+\_\+t} soxr\+\_\+process (
+\begin{DoxyParamCaption}
+\item[{{\bf soxr\+\_\+t}}]{p, }
+\item[{{\bf void} {\bf const} $\ast$}]{in, }
+\item[{size\+\_\+t}]{ilen0, }
+\item[{size\+\_\+t $\ast$}]{idone0, }
+\item[{{\bf void} $\ast$}]{out, }
+\item[{size\+\_\+t}]{olen, }
+\item[{size\+\_\+t $\ast$}]{odone0}
+\end{DoxyParamCaption}
+)}\hypertarget{soxr_8c_a853769187cb96f9e89aadcfe8a0deb10}{}\label{soxr_8c_a853769187cb96f9e89aadcfe8a0deb10}
+
+
+Definition at line 545 of file soxr.\+c.
+
+\index{soxr.\+c@{soxr.\+c}!soxr\+\_\+quality\+\_\+spec@{soxr\+\_\+quality\+\_\+spec}}
+\index{soxr\+\_\+quality\+\_\+spec@{soxr\+\_\+quality\+\_\+spec}!soxr.\+c@{soxr.\+c}}
+\subsubsection[{\texorpdfstring{soxr\+\_\+quality\+\_\+spec(unsigned long recipe, unsigned long flags)}{soxr_quality_spec(unsigned long recipe, unsigned long flags)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf soxr\+\_\+quality\+\_\+spec\+\_\+t} {\bf soxr\+\_\+quality\+\_\+spec} (
+\begin{DoxyParamCaption}
+\item[{unsigned long}]{recipe, }
+\item[{unsigned long}]{flags}
+\end{DoxyParamCaption}
+)}\hypertarget{soxr_8c_a8bc34e71491e5ab698dcccdfc06c7ad8}{}\label{soxr_8c_a8bc34e71491e5ab698dcccdfc06c7ad8}
+
+
+Definition at line 74 of file soxr.\+c.
+
+\index{soxr.\+c@{soxr.\+c}!soxr\+\_\+runtime\+\_\+spec@{soxr\+\_\+runtime\+\_\+spec}}
+\index{soxr\+\_\+runtime\+\_\+spec@{soxr\+\_\+runtime\+\_\+spec}!soxr.\+c@{soxr.\+c}}
+\subsubsection[{\texorpdfstring{soxr\+\_\+runtime\+\_\+spec(unsigned num\+\_\+threads)}{soxr_runtime_spec(unsigned num_threads)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf soxr\+\_\+runtime\+\_\+spec\+\_\+t} {\bf soxr\+\_\+runtime\+\_\+spec} (
+\begin{DoxyParamCaption}
+\item[{unsigned}]{num\+\_\+threads}
+\end{DoxyParamCaption}
+)}\hypertarget{soxr_8c_adef2594d0bbe957075423c9450477fc2}{}\label{soxr_8c_adef2594d0bbe957075423c9450477fc2}
+
+
+Definition at line 132 of file soxr.\+c.
+
+\index{soxr.\+c@{soxr.\+c}!soxr\+\_\+set\+\_\+error@{soxr\+\_\+set\+\_\+error}}
+\index{soxr\+\_\+set\+\_\+error@{soxr\+\_\+set\+\_\+error}!soxr.\+c@{soxr.\+c}}
+\subsubsection[{\texorpdfstring{soxr\+\_\+set\+\_\+error(soxr\+\_\+t p, soxr\+\_\+error\+\_\+t error)}{soxr_set_error(soxr_t p, soxr_error_t error)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf soxr\+\_\+error\+\_\+t} soxr\+\_\+set\+\_\+error (
+\begin{DoxyParamCaption}
+\item[{{\bf soxr\+\_\+t}}]{p, }
+\item[{{\bf soxr\+\_\+error\+\_\+t}}]{error}
+\end{DoxyParamCaption}
+)}\hypertarget{soxr_8c_a02c27ecbb519f99e44db7e61800db57c}{}\label{soxr_8c_a02c27ecbb519f99e44db7e61800db57c}
+
+
+Definition at line 628 of file soxr.\+c.
+
+\index{soxr.\+c@{soxr.\+c}!soxr\+\_\+set\+\_\+input\+\_\+fn@{soxr\+\_\+set\+\_\+input\+\_\+fn}}
+\index{soxr\+\_\+set\+\_\+input\+\_\+fn@{soxr\+\_\+set\+\_\+input\+\_\+fn}!soxr.\+c@{soxr.\+c}}
+\subsubsection[{\texorpdfstring{soxr\+\_\+set\+\_\+input\+\_\+fn(soxr\+\_\+t p, soxr\+\_\+input\+\_\+fn\+\_\+t input\+\_\+fn, void $\ast$input\+\_\+fn\+\_\+state, size\+\_\+t max\+\_\+ilen)}{soxr_set_input_fn(soxr_t p, soxr_input_fn_t input_fn, void *input_fn_state, size_t max_ilen)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf soxr\+\_\+error\+\_\+t} soxr\+\_\+set\+\_\+input\+\_\+fn (
+\begin{DoxyParamCaption}
+\item[{{\bf soxr\+\_\+t}}]{p, }
+\item[{{\bf soxr\+\_\+input\+\_\+fn\+\_\+t}}]{input\+\_\+fn, }
+\item[{{\bf void} $\ast$}]{input\+\_\+fn\+\_\+state, }
+\item[{size\+\_\+t}]{max\+\_\+ilen}
+\end{DoxyParamCaption}
+)}\hypertarget{soxr_8c_a5ef8012f6d313a2887c135359af035f6}{}\label{soxr_8c_a5ef8012f6d313a2887c135359af035f6}
+
+
+Definition at line 276 of file soxr.\+c.
+
+\index{soxr.\+c@{soxr.\+c}!soxr\+\_\+set\+\_\+io\+\_\+ratio@{soxr\+\_\+set\+\_\+io\+\_\+ratio}}
+\index{soxr\+\_\+set\+\_\+io\+\_\+ratio@{soxr\+\_\+set\+\_\+io\+\_\+ratio}!soxr.\+c@{soxr.\+c}}
+\subsubsection[{\texorpdfstring{soxr\+\_\+set\+\_\+io\+\_\+ratio(soxr\+\_\+t p, double io\+\_\+ratio, size\+\_\+t slew\+\_\+len)}{soxr_set_io_ratio(soxr_t p, double io_ratio, size_t slew_len)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf soxr\+\_\+error\+\_\+t} soxr\+\_\+set\+\_\+io\+\_\+ratio (
+\begin{DoxyParamCaption}
+\item[{{\bf soxr\+\_\+t}}]{p, }
+\item[{double}]{io\+\_\+ratio, }
+\item[{size\+\_\+t}]{slew\+\_\+len}
+\end{DoxyParamCaption}
+)}\hypertarget{soxr_8c_ab9cd1051c49c8a0fa8cc8957d1a7186e}{}\label{soxr_8c_ab9cd1051c49c8a0fa8cc8957d1a7186e}
+
+
+Definition at line 363 of file soxr.\+c.
+
+\index{soxr.\+c@{soxr.\+c}!soxr\+\_\+set\+\_\+num\+\_\+channels@{soxr\+\_\+set\+\_\+num\+\_\+channels}}
+\index{soxr\+\_\+set\+\_\+num\+\_\+channels@{soxr\+\_\+set\+\_\+num\+\_\+channels}!soxr.\+c@{soxr.\+c}}
+\subsubsection[{\texorpdfstring{soxr\+\_\+set\+\_\+num\+\_\+channels(soxr\+\_\+t p, unsigned num\+\_\+channels)}{soxr_set_num_channels(soxr_t p, unsigned num_channels)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf soxr\+\_\+error\+\_\+t} soxr\+\_\+set\+\_\+num\+\_\+channels (
+\begin{DoxyParamCaption}
+\item[{{\bf soxr\+\_\+t}}]{p, }
+\item[{unsigned}]{num\+\_\+channels}
+\end{DoxyParamCaption}
+)}\hypertarget{soxr_8c_a68673f0a61b55e749aa7c6fcef3638f2}{}\label{soxr_8c_a68673f0a61b55e749aa7c6fcef3638f2}
+
+
+Definition at line 351 of file soxr.\+c.
+
+\index{soxr.\+c@{soxr.\+c}!soxr\+\_\+version@{soxr\+\_\+version}}
+\index{soxr\+\_\+version@{soxr\+\_\+version}!soxr.\+c@{soxr.\+c}}
+\subsubsection[{\texorpdfstring{soxr\+\_\+version(void)}{soxr_version(void)}}]{\setlength{\rightskip}{0pt plus 5cm}char {\bf const}$\ast$ soxr\+\_\+version (
+\begin{DoxyParamCaption}
+\item[{{\bf void}}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{soxr_8c_a720fb029d3c0845c3a3aba9bcf2b16e4}{}\label{soxr_8c_a720fb029d3c0845c3a3aba9bcf2b16e4}
+
+
+Definition at line 15 of file soxr.\+c.
+
+
+
+\subsection{Variable Documentation}
+\index{soxr.\+c@{soxr.\+c}!\+\_\+soxr\+\_\+rate32\+\_\+cb@{\+\_\+soxr\+\_\+rate32\+\_\+cb}}
+\index{\+\_\+soxr\+\_\+rate32\+\_\+cb@{\+\_\+soxr\+\_\+rate32\+\_\+cb}!soxr.\+c@{soxr.\+c}}
+\subsubsection[{\texorpdfstring{\+\_\+soxr\+\_\+rate32\+\_\+cb}{_soxr_rate32_cb}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf control\+\_\+block\+\_\+t} \+\_\+soxr\+\_\+rate32\+\_\+cb}\hypertarget{soxr_8c_a07bb449874c0e728be4787affb67079c}{}\label{soxr_8c_a07bb449874c0e728be4787affb67079c}
+\index{soxr.\+c@{soxr.\+c}!\+\_\+soxr\+\_\+rate32s\+\_\+cb@{\+\_\+soxr\+\_\+rate32s\+\_\+cb}}
+\index{\+\_\+soxr\+\_\+rate32s\+\_\+cb@{\+\_\+soxr\+\_\+rate32s\+\_\+cb}!soxr.\+c@{soxr.\+c}}
+\subsubsection[{\texorpdfstring{\+\_\+soxr\+\_\+rate32s\+\_\+cb}{_soxr_rate32s_cb}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf control\+\_\+block\+\_\+t} \+\_\+soxr\+\_\+rate32s\+\_\+cb}\hypertarget{soxr_8c_a7ba90cccbefe4a1695fa104e0d17c7c5}{}\label{soxr_8c_a7ba90cccbefe4a1695fa104e0d17c7c5}
+\index{soxr.\+c@{soxr.\+c}!\+\_\+soxr\+\_\+rate64\+\_\+cb@{\+\_\+soxr\+\_\+rate64\+\_\+cb}}
+\index{\+\_\+soxr\+\_\+rate64\+\_\+cb@{\+\_\+soxr\+\_\+rate64\+\_\+cb}!soxr.\+c@{soxr.\+c}}
+\subsubsection[{\texorpdfstring{\+\_\+soxr\+\_\+rate64\+\_\+cb}{_soxr_rate64_cb}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf control\+\_\+block\+\_\+t} \+\_\+soxr\+\_\+rate64\+\_\+cb}\hypertarget{soxr_8c_a717ce91cf6d0933c0e429d1fa5ae5c9a}{}\label{soxr_8c_a717ce91cf6d0933c0e429d1fa5ae5c9a}
+\index{soxr.\+c@{soxr.\+c}!\+\_\+soxr\+\_\+vr32\+\_\+cb@{\+\_\+soxr\+\_\+vr32\+\_\+cb}}
+\index{\+\_\+soxr\+\_\+vr32\+\_\+cb@{\+\_\+soxr\+\_\+vr32\+\_\+cb}!soxr.\+c@{soxr.\+c}}
+\subsubsection[{\texorpdfstring{\+\_\+soxr\+\_\+vr32\+\_\+cb}{_soxr_vr32_cb}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf control\+\_\+block\+\_\+t} \+\_\+soxr\+\_\+vr32\+\_\+cb}\hypertarget{soxr_8c_a93c4b9a07d5c5658da02b2eda7721a6e}{}\label{soxr_8c_a93c4b9a07d5c5658da02b2eda7721a6e}
+
+
+Definition at line 760 of file vr32.\+c.
+

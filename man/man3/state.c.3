@@ -1,0 +1,109 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/lib-src/lv2/lilv/src/state.c" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/lib-src/lv2/lilv/src/state.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <errno\&.h>\fP
+.br
+\fC#include <stdio\&.h>\fP
+.br
+\fC#include <string\&.h>\fP
+.br
+\fC#include 'lv2/lv2plug\&.in/ns/ext/atom/atom\&.h'\fP
+.br
+\fC#include 'lv2/lv2plug\&.in/ns/ext/atom/forge\&.h'\fP
+.br
+\fC#include 'lv2/lv2plug\&.in/ns/ext/presets/presets\&.h'\fP
+.br
+\fC#include 'lv2/lv2plug\&.in/ns/ext/state/state\&.h'\fP
+.br
+\fC#include 'lilv_config\&.h'\fP
+.br
+\fC#include 'lilv_internal\&.h'\fP
+.br
+\fC#include 'sratom/sratom\&.h'\fP
+.br
+
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "struct \fBProperty\fP"
+.br
+.ti -1c
+.RI "struct \fBPortValue\fP"
+.br
+.ti -1c
+.RI "struct \fBPathMap\fP"
+.br
+.ti -1c
+.RI "struct \fBLilvStateImpl\fP"
+.br
+.in -1c
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBUSTR\fP(\fBs\fP)   ((\fBconst\fP \fBuint8_t\fP*)(\fBs\fP))"
+.br
+.ti -1c
+.RI "#define \fBSET_PSET\fP(e,  \fBp\fP,  u)   \fBserd_env_set_prefix_from_strings\fP(e, \fBp\fP, u)"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBLILV_API\fP \fBLilvState\fP * \fBlilv_state_new_from_instance\fP (\fBconst\fP \fBLilvPlugin\fP *plugin, \fBLilvInstance\fP *instance, \fBLV2_URID_Map\fP *\fBmap\fP, \fBconst\fP char *file_dir, \fBconst\fP char *copy_dir, \fBconst\fP char *link_dir, \fBconst\fP char *save_dir, \fBLilvGetPortValueFunc\fP get_value, \fBvoid\fP *user_data, \fBuint32_t\fP flags, \fBconst\fP \fBLV2_Feature\fP *\fBconst\fP *features)"
+.br
+.ti -1c
+.RI "\fBLILV_API\fP \fBvoid\fP \fBlilv_state_restore\fP (\fBconst\fP \fBLilvState\fP *state, \fBLilvInstance\fP *instance, \fBLilvSetPortValueFunc\fP set_value, \fBvoid\fP *user_data, \fBuint32_t\fP flags, \fBconst\fP \fBLV2_Feature\fP *\fBconst\fP *features)"
+.br
+.ti -1c
+.RI "\fBLILV_API\fP \fBLilvState\fP * \fBlilv_state_new_from_world\fP (\fBLilvWorld\fP *world, \fBLV2_URID_Map\fP *\fBmap\fP, \fBconst\fP \fBLilvNode\fP *\fBnode\fP)"
+.br
+.ti -1c
+.RI "\fBLILV_API\fP \fBLilvState\fP * \fBlilv_state_new_from_file\fP (\fBLilvWorld\fP *world, \fBLV2_URID_Map\fP *\fBmap\fP, \fBconst\fP \fBLilvNode\fP *subject, \fBconst\fP char *path)"
+.br
+.ti -1c
+.RI "\fBLILV_API\fP \fBLilvState\fP * \fBlilv_state_new_from_string\fP (\fBLilvWorld\fP *world, \fBLV2_URID_Map\fP *\fBmap\fP, \fBconst\fP char *\fBstr\fP)"
+.br
+.ti -1c
+.RI "\fBLILV_API\fP \fBint\fP \fBlilv_state_save\fP (\fBLilvWorld\fP *world, \fBLV2_URID_Map\fP *\fBmap\fP, \fBLV2_URID_Unmap\fP *unmap, \fBconst\fP \fBLilvState\fP *state, \fBconst\fP char *\fBuri\fP, \fBconst\fP char *dir, \fBconst\fP char *\fBfilename\fP)"
+.br
+.ti -1c
+.RI "\fBLILV_API\fP char * \fBlilv_state_to_string\fP (\fBLilvWorld\fP *world, \fBLV2_URID_Map\fP *\fBmap\fP, \fBLV2_URID_Unmap\fP *unmap, \fBconst\fP \fBLilvState\fP *state, \fBconst\fP char *\fBuri\fP, \fBconst\fP char *base_uri)"
+.br
+.ti -1c
+.RI "\fBLILV_API\fP \fBvoid\fP \fBlilv_state_free\fP (\fBLilvState\fP *state)"
+.br
+.ti -1c
+.RI "\fBLILV_API\fP \fBbool\fP \fBlilv_state_equals\fP (\fBconst\fP \fBLilvState\fP *\fBa\fP, \fBconst\fP \fBLilvState\fP *\fBb\fP)"
+.br
+.ti -1c
+.RI "\fBLILV_API\fP unsigned \fBlilv_state_get_num_properties\fP (\fBconst\fP \fBLilvState\fP *state)"
+.br
+.ti -1c
+.RI "\fBLILV_API\fP \fBconst\fP \fBLilvNode\fP * \fBlilv_state_get_plugin_uri\fP (\fBconst\fP \fBLilvState\fP *state)"
+.br
+.ti -1c
+.RI "\fBLILV_API\fP \fBconst\fP char * \fBlilv_state_get_label\fP (\fBconst\fP \fBLilvState\fP *state)"
+.br
+.ti -1c
+.RI "\fBLILV_API\fP \fBvoid\fP \fBlilv_state_set_label\fP (\fBLilvState\fP *state, \fBconst\fP char *\fBlabel\fP)"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define SET_PSET(e, \fBp\fP, u)   \fBserd_env_set_prefix_from_strings\fP(e, \fBp\fP, u)"
+
+.SS "#define USTR(\fBs\fP)   ((\fBconst\fP \fBuint8_t\fP*)(\fBs\fP))"
+
+.PP
+Definition at line 30 of file state\&.c\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

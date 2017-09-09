@@ -1,0 +1,569 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/lib-src/libsoxr/src/soxr.h" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/lib-src/libsoxr/src/soxr.h \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <stddef\&.h>\fP
+.br
+
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "struct \fBsoxr_io_spec\fP"
+.br
+.ti -1c
+.RI "struct \fBsoxr_quality_spec\fP"
+.br
+.ti -1c
+.RI "struct \fBsoxr_runtime_spec\fP"
+.br
+.in -1c
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBSOXR\fP"
+.br
+.ti -1c
+.RI "#define \fBSOXR_VERSION\fP(x,  y,  z)         (((x)<<16)|((y)<<8)|(z))"
+.br
+.ti -1c
+.RI "#define \fBSOXR_THIS_VERSION\fP   \fBSOXR_VERSION\fP(0,1,1)"
+.br
+.ti -1c
+.RI "#define \fBSOXR_THIS_VERSION_STR\fP   '0\&.1\&.1'"
+.br
+.ti -1c
+.RI "#define \fBsoxr_strerror\fP(e)                          "
+.br
+.ti -1c
+.RI "#define \fBsoxr_datatype_size\fP(x)"
+.br
+.ti -1c
+.RI "#define \fBSOXR_TPDF\fP   0     /* Applicable only \fBif\fP otype is INT16\&. */"
+.br
+.ti -1c
+.RI "#define \fBSOXR_NO_DITHER\fP   8u    /* Disable the above\&. */"
+.br
+.ti -1c
+.RI "#define \fBSOXR_ROLLOFF_SMALL\fP   0u    /* <= 0\&.01 dB */"
+.br
+.ti -1c
+.RI "#define \fBSOXR_ROLLOFF_MEDIUM\fP   1u    /* <= 0\&.35 dB */"
+.br
+.ti -1c
+.RI "#define \fBSOXR_ROLLOFF_NONE\fP   2u    /* For Chebyshev bandwidth\&. */"
+.br
+.ti -1c
+.RI "#define \fBSOXR_MAINTAIN_3DB_PT\fP   4u  /* Reserved for internal use\&. */"
+.br
+.ti -1c
+.RI "#define \fBSOXR_HI_PREC_CLOCK\fP   8u  /* Increase `irrational' ratio accuracy\&. */"
+.br
+.ti -1c
+.RI "#define \fBSOXR_DOUBLE_PRECISION\fP   16u  /* Use D\&.P\&. calcs even if precision <= 20\&. */"
+.br
+.ti -1c
+.RI "#define \fBSOXR_VR\fP   32u  /* Experimental, variable\-rate resampling\&. */"
+.br
+.ti -1c
+.RI "#define \fBSOXR_COEF_INTERP_AUTO\fP   0u    /* Auto select coef\&. interpolation\&. */"
+.br
+.ti -1c
+.RI "#define \fBSOXR_COEF_INTERP_LOW\fP   1u    /* Man\&. select: less CPU, more memory\&. */"
+.br
+.ti -1c
+.RI "#define \fBSOXR_COEF_INTERP_HIGH\fP   2u    /* Man\&. select: more CPU, less memory\&. */"
+.br
+.ti -1c
+.RI "#define \fBSOXR_STRICT_BUFFERING\fP   4u  /* Reserved for future use\&. */"
+.br
+.ti -1c
+.RI "#define \fBSOXR_NOSMALLINTOPT\fP   8u  /* For test purposes only\&. */"
+.br
+.ti -1c
+.RI "#define \fBSOXR_QQ\fP   0   /* 'Quick' cubic interpolation\&. */"
+.br
+.ti -1c
+.RI "#define \fBSOXR_LQ\fP   1   /* 'Low' 16\-bit with larger rolloff\&. */"
+.br
+.ti -1c
+.RI "#define \fBSOXR_MQ\fP   2   /* 'Medium' 16\-bit with medium rolloff\&. */"
+.br
+.ti -1c
+.RI "#define \fBSOXR_HQ\fP   \fBSOXR_20_BITQ\fP /* 'High quality'\&. */"
+.br
+.ti -1c
+.RI "#define \fBSOXR_VHQ\fP   \fBSOXR_28_BITQ\fP /* 'Very high quality'\&. */"
+.br
+.ti -1c
+.RI "#define \fBSOXR_16_BITQ\fP   3"
+.br
+.ti -1c
+.RI "#define \fBSOXR_20_BITQ\fP   4"
+.br
+.ti -1c
+.RI "#define \fBSOXR_24_BITQ\fP   5"
+.br
+.ti -1c
+.RI "#define \fBSOXR_28_BITQ\fP   6"
+.br
+.ti -1c
+.RI "#define \fBSOXR_32_BITQ\fP   7"
+.br
+.ti -1c
+.RI "#define \fBSOXR_LSR0Q\fP   8     /* 'Best sinc'\&. */"
+.br
+.ti -1c
+.RI "#define \fBSOXR_LSR1Q\fP   9     /* 'Medium sinc'\&. */"
+.br
+.ti -1c
+.RI "#define \fBSOXR_LSR2Q\fP   10    /* 'Fast sinc'\&. */"
+.br
+.ti -1c
+.RI "#define \fBSOXR_LINEAR_PHASE\fP   0x00"
+.br
+.ti -1c
+.RI "#define \fBSOXR_INTERMEDIATE_PHASE\fP   0x10"
+.br
+.ti -1c
+.RI "#define \fBSOXR_MINIMUM_PHASE\fP   0x30"
+.br
+.ti -1c
+.RI "#define \fBSOXR_STEEP_FILTER\fP   0x40"
+.br
+.ti -1c
+.RI "#define \fBSOXR_ALLOW_ALIASING\fP   0x80  /* Reserved for future use\&. */"
+.br
+.in -1c
+.SS "Typedefs"
+
+.in +1c
+.ti -1c
+.RI "typedef struct \fBsoxr_io_spec\fP \fBsoxr_io_spec_t\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBsoxr_quality_spec\fP \fBsoxr_quality_spec_t\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBsoxr_runtime_spec\fP \fBsoxr_runtime_spec_t\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBsoxr\fP * \fBsoxr_t\fP"
+.br
+.ti -1c
+.RI "typedef char \fBconst\fP * \fBsoxr_error_t\fP"
+.br
+.ti -1c
+.RI "typedef \fBvoid\fP * \fBsoxr_buf_t\fP"
+.br
+.ti -1c
+.RI "typedef \fBvoid\fP \fBconst\fP * \fBsoxr_cbuf_t\fP"
+.br
+.ti -1c
+.RI "typedef \fBsoxr_buf_t\fP \fBconst\fP * \fBsoxr_bufs_t\fP"
+.br
+.ti -1c
+.RI "typedef \fBsoxr_cbuf_t\fP \fBconst\fP * \fBsoxr_cbufs_t\fP"
+.br
+.ti -1c
+.RI "typedef \fBvoid\fP \fBconst\fP * \fBsoxr_in_t\fP"
+.br
+.ti -1c
+.RI "typedef \fBvoid\fP * \fBsoxr_out_t\fP"
+.br
+.ti -1c
+.RI "typedef size_t(* \fBsoxr_input_fn_t\fP) (\fBvoid\fP *input_fn_state, \fBsoxr_in_t\fP *\fBdata\fP, size_t requested_len)"
+.br
+.in -1c
+.SS "Enumerations"
+
+.in +1c
+.ti -1c
+.RI "enum \fBsoxr_datatype_t\fP { \fBSOXR_FLOAT32\fP, \fBSOXR_FLOAT64\fP, \fBSOXR_INT32\fP, \fBSOXR_INT16\fP, \fBSOXR_SPLIT\fP = 4, \fBSOXR_FLOAT32_I\fP = SOXR_FLOAT32, \fBSOXR_FLOAT64_I\fP, \fBSOXR_INT32_I\fP, \fBSOXR_INT16_I\fP, \fBSOXR_FLOAT32_S\fP = SOXR_SPLIT, \fBSOXR_FLOAT64_S\fP, \fBSOXR_INT32_S\fP, \fBSOXR_INT16_S\fP }"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBSOXR\fP char \fBconst\fP * \fBsoxr_version\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBSOXR\fP \fBsoxr_t\fP \fBsoxr_create\fP (double input_rate, double output_rate, unsigned num_channels,   \fBsoxr_error_t\fP *, \fBsoxr_io_spec_t\fP \fBconst\fP *, \fBsoxr_quality_spec_t\fP \fBconst\fP *, \fBsoxr_runtime_spec_t\fP \fBconst\fP *)"
+.br
+.ti -1c
+.RI "\fBSOXR\fP \fBsoxr_error_t\fP \fBsoxr_process\fP (\fBsoxr_t\fP resampler,   \fBsoxr_in_t\fP \fBin\fP, size_t ilen, size_t *idone,   \fBsoxr_out_t\fP \fBout\fP, size_t olen, size_t *odone)"
+.br
+.ti -1c
+.RI "\fBSOXR\fP \fBsoxr_error_t\fP \fBsoxr_set_input_fn\fP (\fBsoxr_t\fP resampler, \fBsoxr_input_fn_t\fP, \fBvoid\fP *input_fn_state, size_t max_ilen)"
+.br
+.ti -1c
+.RI "\fBSOXR\fP size_t \fBsoxr_output\fP (\fBsoxr_t\fP resampler, \fBsoxr_out_t\fP \fBdata\fP, size_t olen)"
+.br
+.ti -1c
+.RI "\fBSOXR\fP \fBsoxr_error_t\fP \fBsoxr_error\fP (\fBsoxr_t\fP)"
+.br
+.ti -1c
+.RI "\fBSOXR\fP size_t * \fBsoxr_num_clips\fP (\fBsoxr_t\fP)"
+.br
+.ti -1c
+.RI "\fBSOXR\fP double \fBsoxr_delay\fP (\fBsoxr_t\fP)"
+.br
+.ti -1c
+.RI "\fBSOXR\fP char \fBconst\fP * \fBsoxr_engine\fP (\fBsoxr_t\fP \fBp\fP)"
+.br
+.ti -1c
+.RI "\fBSOXR\fP \fBsoxr_error_t\fP \fBsoxr_clear\fP (\fBsoxr_t\fP)"
+.br
+.ti -1c
+.RI "\fBSOXR\fP \fBvoid\fP \fBsoxr_delete\fP (\fBsoxr_t\fP)"
+.br
+.ti -1c
+.RI "\fBSOXR\fP \fBsoxr_error_t\fP \fBsoxr_oneshot\fP (double input_rate, double output_rate, unsigned num_channels, \fBsoxr_in_t\fP \fBin\fP, size_t ilen, size_t *idone, \fBsoxr_out_t\fP \fBout\fP, size_t olen, size_t *odone, \fBsoxr_io_spec_t\fP \fBconst\fP *, \fBsoxr_quality_spec_t\fP \fBconst\fP *, \fBsoxr_runtime_spec_t\fP \fBconst\fP *)"
+.br
+.ti -1c
+.RI "\fBSOXR\fP \fBsoxr_error_t\fP \fBsoxr_set_io_ratio\fP (\fBsoxr_t\fP, double io_ratio, size_t slew_len)"
+.br
+.ti -1c
+.RI "\fBSOXR\fP \fBsoxr_quality_spec_t\fP \fBsoxr_quality_spec\fP (unsigned long recipe, unsigned long flags)"
+.br
+.ti -1c
+.RI "\fBSOXR\fP \fBsoxr_runtime_spec_t\fP \fBsoxr_runtime_spec\fP (unsigned num_threads)"
+.br
+.ti -1c
+.RI "\fBSOXR\fP \fBsoxr_io_spec_t\fP \fBsoxr_io_spec\fP (\fBsoxr_datatype_t\fP itype, \fBsoxr_datatype_t\fP otype)"
+.br
+.ti -1c
+.RI "\fBSOXR\fP \fBsoxr_error_t\fP \fBsoxr_set_error\fP (\fBsoxr_t\fP, \fBsoxr_error_t\fP)"
+.br
+.ti -1c
+.RI "\fBSOXR\fP \fBsoxr_error_t\fP \fBsoxr_set_num_channels\fP (\fBsoxr_t\fP, unsigned)"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define SOXR"
+
+.PP
+Definition at line 42 of file soxr\&.h\&.
+.SS "#define SOXR_16_BITQ   3"
+
+.PP
+Definition at line 287 of file soxr\&.h\&.
+.SS "#define SOXR_20_BITQ   4"
+
+.PP
+Definition at line 288 of file soxr\&.h\&.
+.SS "#define SOXR_24_BITQ   5"
+
+.PP
+Definition at line 289 of file soxr\&.h\&.
+.SS "#define SOXR_28_BITQ   6"
+
+.PP
+Definition at line 290 of file soxr\&.h\&.
+.SS "#define SOXR_32_BITQ   7"
+
+.PP
+Definition at line 291 of file soxr\&.h\&.
+.SS "#define SOXR_ALLOW_ALIASING   0x80  /* Reserved for future use\&. */"
+
+.PP
+Definition at line 301 of file soxr\&.h\&.
+.SS "#define SOXR_COEF_INTERP_AUTO   0u    /* Auto select coef\&. interpolation\&. */"
+
+.PP
+Definition at line 261 of file soxr\&.h\&.
+.SS "#define SOXR_COEF_INTERP_HIGH   2u    /* Man\&. select: more CPU, less memory\&. */"
+
+.PP
+Definition at line 263 of file soxr\&.h\&.
+.SS "#define SOXR_COEF_INTERP_LOW   1u    /* Man\&. select: less CPU, more memory\&. */"
+
+.PP
+Definition at line 262 of file soxr\&.h\&.
+.SS "#define soxr_datatype_size(x)"
+\fBValue:\fP
+.PP
+.nf
+/* Returns `sizeof' a soxr_datatype_t sample\&. */\
+  ((unsigned char *)"\4\10\4\2")[(x)&3]
+.fi
+.PP
+Definition at line 214 of file soxr\&.h\&.
+.SS "#define SOXR_DOUBLE_PRECISION   16u  /* Use D\&.P\&. calcs even if precision <= 20\&. */"
+
+.PP
+Definition at line 247 of file soxr\&.h\&.
+.SS "#define SOXR_HI_PREC_CLOCK   8u  /* Increase `irrational' ratio accuracy\&. */"
+
+.PP
+Definition at line 246 of file soxr\&.h\&.
+.SS "#define SOXR_HQ   \fBSOXR_20_BITQ\fP /* 'High quality'\&. */"
+
+.PP
+Definition at line 284 of file soxr\&.h\&.
+.SS "#define SOXR_INTERMEDIATE_PHASE   0x10"
+
+.PP
+Definition at line 298 of file soxr\&.h\&.
+.SS "#define SOXR_LINEAR_PHASE   0x00"
+
+.PP
+Definition at line 297 of file soxr\&.h\&.
+.SS "#define SOXR_LQ   1   /* 'Low' 16\-bit with larger rolloff\&. */"
+
+.PP
+Definition at line 282 of file soxr\&.h\&.
+.SS "#define SOXR_LSR0Q   8     /* 'Best sinc'\&. */"
+
+.PP
+Definition at line 293 of file soxr\&.h\&.
+.SS "#define SOXR_LSR1Q   9     /* 'Medium sinc'\&. */"
+
+.PP
+Definition at line 294 of file soxr\&.h\&.
+.SS "#define SOXR_LSR2Q   10    /* 'Fast sinc'\&. */"
+
+.PP
+Definition at line 295 of file soxr\&.h\&.
+.SS "#define SOXR_MAINTAIN_3DB_PT   4u  /* Reserved for internal use\&. */"
+
+.PP
+Definition at line 245 of file soxr\&.h\&.
+.SS "#define SOXR_MINIMUM_PHASE   0x30"
+
+.PP
+Definition at line 299 of file soxr\&.h\&.
+.SS "#define SOXR_MQ   2   /* 'Medium' 16\-bit with medium rolloff\&. */"
+
+.PP
+Definition at line 283 of file soxr\&.h\&.
+.SS "#define SOXR_NO_DITHER   8u    /* Disable the above\&. */"
+
+.PP
+Definition at line 228 of file soxr\&.h\&.
+.SS "#define SOXR_NOSMALLINTOPT   8u  /* For test purposes only\&. */"
+
+.PP
+Definition at line 266 of file soxr\&.h\&.
+.SS "#define SOXR_QQ   0   /* 'Quick' cubic interpolation\&. */"
+
+.PP
+Definition at line 281 of file soxr\&.h\&.
+.SS "#define SOXR_ROLLOFF_MEDIUM   1u    /* <= 0\&.35 dB */"
+
+.PP
+Definition at line 242 of file soxr\&.h\&.
+.SS "#define SOXR_ROLLOFF_NONE   2u    /* For Chebyshev bandwidth\&. */"
+
+.PP
+Definition at line 243 of file soxr\&.h\&.
+.SS "#define SOXR_ROLLOFF_SMALL   0u    /* <= 0\&.01 dB */"
+
+.PP
+Definition at line 241 of file soxr\&.h\&.
+.SS "#define SOXR_STEEP_FILTER   0x40"
+
+.PP
+Definition at line 300 of file soxr\&.h\&.
+.SS "#define soxr_strerror(e)"
+\fBValue:\fP
+.PP
+.nf
+/* Soxr counterpart to strerror\&. */     \
+    ((e)?(e):"no error")
+.fi
+.PP
+Definition at line 94 of file soxr\&.h\&.
+.SS "#define SOXR_STRICT_BUFFERING   4u  /* Reserved for future use\&. */"
+
+.PP
+Definition at line 265 of file soxr\&.h\&.
+.SS "#define SOXR_THIS_VERSION   \fBSOXR_VERSION\fP(0,1,1)"
+
+.PP
+Definition at line 67 of file soxr\&.h\&.
+.SS "#define SOXR_THIS_VERSION_STR   '0\&.1\&.1'"
+
+.PP
+Definition at line 68 of file soxr\&.h\&.
+.SS "#define SOXR_TPDF   0     /* Applicable only \fBif\fP otype is INT16\&. */"
+
+.PP
+Definition at line 227 of file soxr\&.h\&.
+.SS "#define SOXR_VERSION(x, y, z)   (((x)<<16)|((y)<<8)|(z))"
+
+.PP
+Definition at line 66 of file soxr\&.h\&.
+.SS "#define SOXR_VHQ   \fBSOXR_28_BITQ\fP /* 'Very high quality'\&. */"
+
+.PP
+Definition at line 285 of file soxr\&.h\&.
+.SS "#define SOXR_VR   32u  /* Experimental, variable\-rate resampling\&. */"
+
+.PP
+Definition at line 248 of file soxr\&.h\&.
+.SH "Typedef Documentation"
+.PP 
+.SS "typedef \fBvoid\fP* \fBsoxr_buf_t\fP"
+
+.PP
+Definition at line 77 of file soxr\&.h\&.
+.SS "typedef \fBsoxr_buf_t\fP \fBconst\fP* \fBsoxr_bufs_t\fP"
+
+.PP
+Definition at line 80 of file soxr\&.h\&.
+.SS "typedef \fBvoid\fP \fBconst\fP* \fBsoxr_cbuf_t\fP"
+
+.PP
+Definition at line 78 of file soxr\&.h\&.
+.SS "typedef \fBsoxr_cbuf_t\fP \fBconst\fP* \fBsoxr_cbufs_t\fP"
+
+.PP
+Definition at line 81 of file soxr\&.h\&.
+.SS "typedef char \fBconst\fP* \fBsoxr_error_t\fP"
+
+.PP
+Definition at line 75 of file soxr\&.h\&.
+.SS "typedef \fBvoid\fP \fBconst\fP* \fBsoxr_in_t\fP"
+
+.PP
+Definition at line 83 of file soxr\&.h\&.
+.SS "typedef size_t(*  soxr_input_fn_t) ( \fBvoid\fP *input_fn_state, \fBsoxr_in_t\fP *\fBdata\fP, size_t requested_len)"
+
+.PP
+Definition at line 135 of file soxr\&.h\&.
+.SS "typedef struct \fBsoxr_io_spec\fP \fBsoxr_io_spec_t\fP"
+
+.PP
+Definition at line 45 of file soxr\&.h\&.
+.SS "typedef \fBvoid\fP* \fBsoxr_out_t\fP"
+
+.PP
+Definition at line 85 of file soxr\&.h\&.
+.SS "typedef struct \fBsoxr_quality_spec\fP \fBsoxr_quality_spec_t\fP"
+
+.PP
+Definition at line 46 of file soxr\&.h\&.
+.SS "typedef struct \fBsoxr_runtime_spec\fP \fBsoxr_runtime_spec_t\fP"
+
+.PP
+Definition at line 47 of file soxr\&.h\&.
+.SS "typedef struct \fBsoxr\fP* \fBsoxr_t\fP"
+
+.PP
+Definition at line 74 of file soxr\&.h\&.
+.SH "Enumeration Type Documentation"
+.PP 
+.SS "enum \fBsoxr_datatype_t\fP"
+
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fISOXR_FLOAT32 \fP\fP
+.TP
+\fB\fISOXR_FLOAT64 \fP\fP
+.TP
+\fB\fISOXR_INT32 \fP\fP
+.TP
+\fB\fISOXR_INT16 \fP\fP
+.TP
+\fB\fISOXR_SPLIT \fP\fP
+.TP
+\fB\fISOXR_FLOAT32_I \fP\fP
+.TP
+\fB\fISOXR_FLOAT64_I \fP\fP
+.TP
+\fB\fISOXR_INT32_I \fP\fP
+.TP
+\fB\fISOXR_INT16_I \fP\fP
+.TP
+\fB\fISOXR_FLOAT32_S \fP\fP
+.TP
+\fB\fISOXR_FLOAT64_S \fP\fP
+.TP
+\fB\fISOXR_INT32_S \fP\fP
+.TP
+\fB\fISOXR_INT16_S \fP\fP
+.PP
+Definition at line 202 of file soxr\&.h\&.
+.SH "Function Documentation"
+.PP 
+.SS "\fBSOXR\fP \fBsoxr_error_t\fP soxr_clear (\fBsoxr_t\fP)"
+
+.PP
+Definition at line 394 of file soxr\&.c\&.
+.SS "\fBSOXR\fP \fBsoxr_t\fP soxr_create (double input_rate, double output_rate, unsigned num_channels, \fBsoxr_error_t\fP *, \fBsoxr_io_spec_t\fP \fBconst\fP *, \fBsoxr_quality_spec_t\fP \fBconst\fP *, \fBsoxr_runtime_spec_t\fP \fBconst\fP *)"
+
+.PP
+Definition at line 199 of file soxr\&.c\&.
+.SS "\fBSOXR\fP double soxr_delay (\fBsoxr_t\fP)"
+
+.PP
+Definition at line 305 of file soxr\&.c\&.
+.SS "\fBSOXR\fP \fBvoid\fP soxr_delete (\fBsoxr_t\fP)"
+
+.PP
+Definition at line 386 of file soxr\&.c\&.
+.SS "\fBSOXR\fP char \fBconst\fP* soxr_engine (\fBsoxr_t\fP p)"
+
+.PP
+Definition at line 111 of file soxr\&.c\&.
+.SS "\fBSOXR\fP \fBsoxr_error_t\fP soxr_error (\fBsoxr_t\fP)"
+
+.PP
+Definition at line 125 of file soxr\&.c\&.
+.SS "\fBSOXR\fP \fBsoxr_io_spec_t\fP \fBsoxr_io_spec\fP (\fBsoxr_datatype_t\fP itype, \fBsoxr_datatype_t\fP otype)"
+
+.PP
+Definition at line 145 of file soxr\&.c\&.
+.SS "\fBSOXR\fP size_t* soxr_num_clips (\fBsoxr_t\fP)"
+
+.PP
+Definition at line 118 of file soxr\&.c\&.
+.SS "\fBSOXR\fP \fBsoxr_error_t\fP soxr_oneshot (double input_rate, double output_rate, unsigned num_channels, \fBsoxr_in_t\fP in, size_t ilen, size_t * idone, \fBsoxr_out_t\fP out, size_t olen, size_t * odone, \fBsoxr_io_spec_t\fP \fBconst\fP *, \fBsoxr_quality_spec_t\fP \fBconst\fP *, \fBsoxr_runtime_spec_t\fP \fBconst\fP *)"
+
+.SS "\fBSOXR\fP size_t soxr_output (\fBsoxr_t\fP resampler, \fBsoxr_out_t\fP data, size_t olen)"
+
+.PP
+Definition at line 491 of file soxr\&.c\&.
+.SS "\fBSOXR\fP \fBsoxr_error_t\fP soxr_process (\fBsoxr_t\fP resampler, \fBsoxr_in_t\fP in, size_t ilen, size_t * idone, \fBsoxr_out_t\fP out, size_t olen, size_t * odone)"
+
+.SS "\fBSOXR\fP \fBsoxr_quality_spec_t\fP \fBsoxr_quality_spec\fP (unsigned long recipe, unsigned long flags)"
+
+.PP
+Definition at line 74 of file soxr\&.c\&.
+.SS "\fBSOXR\fP \fBsoxr_runtime_spec_t\fP \fBsoxr_runtime_spec\fP (unsigned num_threads)"
+
+.PP
+Definition at line 132 of file soxr\&.c\&.
+.SS "\fBSOXR\fP \fBsoxr_error_t\fP soxr_set_error (\fBsoxr_t\fP, \fBsoxr_error_t\fP)"
+
+.PP
+Definition at line 628 of file soxr\&.c\&.
+.SS "\fBSOXR\fP \fBsoxr_error_t\fP soxr_set_input_fn (\fBsoxr_t\fP resampler, \fBsoxr_input_fn_t\fP, \fBvoid\fP * input_fn_state, size_t max_ilen)"
+
+.PP
+Definition at line 276 of file soxr\&.c\&.
+.SS "\fBSOXR\fP \fBsoxr_error_t\fP soxr_set_io_ratio (\fBsoxr_t\fP, double io_ratio, size_t slew_len)"
+
+.PP
+Definition at line 363 of file soxr\&.c\&.
+.SS "\fBSOXR\fP \fBsoxr_error_t\fP soxr_set_num_channels (\fBsoxr_t\fP, unsigned)"
+
+.PP
+Definition at line 351 of file soxr\&.c\&.
+.SS "\fBSOXR\fP char \fBconst\fP* soxr_version (\fBvoid\fP)"
+
+.PP
+Definition at line 15 of file soxr\&.c\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

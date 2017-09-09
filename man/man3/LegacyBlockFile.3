@@ -1,0 +1,188 @@
+.TH "LegacyBlockFile" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+LegacyBlockFile \- Audacity 1\&.1\&.0 block file format:  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <LegacyBlockFile\&.h>\fP
+.PP
+Inherits \fBBlockFile\fP\&.
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBLegacyBlockFile\fP (wxFileName existingFile, \fBsampleFormat\fP \fBformat\fP, \fBsampleCount\fP summaryLen, \fBsampleCount\fP \fBlen\fP, \fBbool\fP noRMS)"
+.br
+.RI "\fICreate the memory structure to refer to the given block file\&. \fP"
+.ti -1c
+.RI "virtual \fB~LegacyBlockFile\fP ()"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBReadSummary\fP (\fBvoid\fP *\fBdata\fP) override"
+.br
+.RI "\fIRead the summary section of the disk file\&. \fP"
+.ti -1c
+.RI "\fBint\fP \fBReadData\fP (\fBsamplePtr\fP \fBdata\fP, \fBsampleFormat\fP \fBformat\fP, \fBsampleCount\fP \fBstart\fP, \fBsampleCount\fP \fBlen\fP) override"
+.br
+.RI "\fIRead the data section of the disk file\&. \fP"
+.ti -1c
+.RI "\fBBlockFile\fP * \fBCopy\fP (wxFileName newFileName) override"
+.br
+.RI "\fICreate a NEW block file identical to this one\&. \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBSaveXML\fP (\fBXMLWriter\fP &xmlFile) override"
+.br
+.RI "\fIWrite an XML representation of this file\&. \fP"
+.ti -1c
+.RI "wxLongLong \fBGetSpaceUsage\fP () override"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBRecover\fP () override"
+.br
+.RI "\fIif the on-disk state disappeared, either recover it (if it was \fP"
+.in -1c
+.SS "Static Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "static \fBBlockFile\fP * \fBBuildFromXML\fP (\fBconst\fP wxString &dir, \fBconst\fP wxChar **attrs, \fBsampleCount\fP \fBlen\fP, \fBsampleFormat\fP \fBformat\fP)"
+.br
+.RI "\fIstatic \fP"
+.in -1c
+.SS "Protected Attributes"
+
+.in +1c
+.ti -1c
+.RI "\fBsampleFormat\fP \fBmFormat\fP"
+.br
+.in -1c
+.SS "Additional Inherited Members"
+.SH "Detailed Description"
+.PP 
+Audacity 1\&.1\&.0 block file format: 
+
+
+.IP "\(bu" 2
+Header tag: 20 bytes 'AudacityBlockFile110'
+.IP "\(bu" 2
+64K summaries (min, max, RMS, each a 4-byte float)
+.IP "\(bu" 2
+256 summaries (min, max, RMS, each a 4-byte float) 
+.PP
+
+.PP
+Definition at line 35 of file LegacyBlockFile\&.h\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "LegacyBlockFile::LegacyBlockFile (wxFileName existingFile, \fBsampleFormat\fP format, \fBsampleCount\fP summaryLen, \fBsampleCount\fP len, \fBbool\fP noRMS)"
+
+.PP
+Create the memory structure to refer to the given block file\&. Construct a \fBLegacyBlockFile\fP memory structure that will point to an existing block file\&. This file must exist and be a valid block file\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIexistingFile\fP The disk file this \fBLegacyBlockFile\fP should use\&. 
+.RE
+.PP
+
+.PP
+Definition at line 124 of file LegacyBlockFile\&.cpp\&.
+.SS "LegacyBlockFile::~LegacyBlockFile ()\fC [virtual]\fP"
+
+.PP
+Definition at line 146 of file LegacyBlockFile\&.cpp\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "\fBBlockFile\fP * LegacyBlockFile::BuildFromXML (\fBconst\fP wxString & dir, \fBconst\fP wxChar ** attrs, \fBsampleCount\fP len, \fBsampleFormat\fP format)\fC [static]\fP"
+
+.PP
+static 
+.PP
+Definition at line 292 of file LegacyBlockFile\&.cpp\&.
+.SS "\fBBlockFile\fP * LegacyBlockFile::Copy (wxFileName newFileName)\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Create a NEW block file identical to this one\&. Create a copy of this \fBBlockFile\fP, but using a different disk file\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fInewFileName\fP The name of the NEW file to use\&. 
+.RE
+.PP
+
+.PP
+Implements \fBBlockFile\fP\&.
+.PP
+Definition at line 332 of file LegacyBlockFile\&.cpp\&.
+.SS "wxLongLong LegacyBlockFile::GetSpaceUsage ()\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Implements \fBBlockFile\fP\&.
+.PP
+Definition at line 343 of file LegacyBlockFile\&.cpp\&.
+.SS "\fBint\fP LegacyBlockFile::ReadData (\fBsamplePtr\fP data, \fBsampleFormat\fP format, \fBsampleCount\fP start, \fBsampleCount\fP len)\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Read the data section of the disk file\&. Read the data portion of the block file using libsndfile\&. Convert it to the given format if it is not already\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdata\fP The buffer where the data will be stored 
+.br
+\fIformat\fP The format the data will be stored in 
+.br
+\fIstart\fP The offset in this block file 
+.br
+\fIlen\fP The number of samples to read 
+.RE
+.PP
+
+.PP
+Implements \fBBlockFile\fP\&.
+.PP
+Definition at line 186 of file LegacyBlockFile\&.cpp\&.
+.SS "\fBbool\fP LegacyBlockFile::ReadSummary (\fBvoid\fP * data)\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Read the summary section of the disk file\&. Read the summary section of the disk file\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fI*data\fP The buffer to write the data to\&. It must be at least mSummaryinfo\&.totalSummaryBytes long\&. 
+.RE
+.PP
+
+.PP
+Implements \fBBlockFile\fP\&.
+.PP
+Definition at line 154 of file LegacyBlockFile\&.cpp\&.
+.SS "\fBvoid\fP LegacyBlockFile::Recover ()\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+if the on-disk state disappeared, either recover it (if it was 
+.PP
+Implements \fBBlockFile\fP\&.
+.PP
+Definition at line 349 of file LegacyBlockFile\&.cpp\&.
+.SS "\fBvoid\fP LegacyBlockFile::SaveXML (\fBXMLWriter\fP & xmlFile)\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Write an XML representation of this file\&. 
+.PP
+Implements \fBBlockFile\fP\&.
+.PP
+Definition at line 275 of file LegacyBlockFile\&.cpp\&.
+.SH "Member Data Documentation"
+.PP 
+.SS "\fBsampleFormat\fP LegacyBlockFile::mFormat\fC [protected]\fP"
+
+.PP
+Definition at line 68 of file LegacyBlockFile\&.h\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

@@ -1,0 +1,353 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/src/Project.cpp" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/src/Project.cpp \- Implements \fBAudacityProject\fP, \fBDropTarget\fP, and FileObject\&.F Includes \fBMenus\&.cpp\fP\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+\fC#include 'Audacity\&.h'\fP
+.br
+\fC#include 'Project\&.h'\fP
+.br
+\fC#include <stdio\&.h>\fP
+.br
+\fC#include <iostream>\fP
+.br
+\fC#include <wx/wxprec\&.h>\fP
+.br
+\fC#include <wx/apptrait\&.h>\fP
+.br
+\fC#include <wx/defs\&.h>\fP
+.br
+\fC#include <wx/app\&.h>\fP
+.br
+\fC#include <wx/dc\&.h>\fP
+.br
+\fC#include <wx/dcmemory\&.h>\fP
+.br
+\fC#include <wx/dnd\&.h>\fP
+.br
+\fC#include <wx/docview\&.h>\fP
+.br
+\fC#include <wx/event\&.h>\fP
+.br
+\fC#include <wx/ffile\&.h>\fP
+.br
+\fC#include <wx/filedlg\&.h>\fP
+.br
+\fC#include <wx/filefn\&.h>\fP
+.br
+\fC#include <wx/filename\&.h>\fP
+.br
+\fC#include <wx/intl\&.h>\fP
+.br
+\fC#include <wx/log\&.h>\fP
+.br
+\fC#include <wx/menu\&.h>\fP
+.br
+\fC#include <wx/msgdlg\&.h>\fP
+.br
+\fC#include <wx/notebook\&.h>\fP
+.br
+\fC#include <wx/progdlg\&.h>\fP
+.br
+\fC#include <wx/scrolbar\&.h>\fP
+.br
+\fC#include <wx/sizer\&.h>\fP
+.br
+\fC#include <wx/statusbr\&.h>\fP
+.br
+\fC#include <wx/string\&.h>\fP
+.br
+\fC#include <wx/textfile\&.h>\fP
+.br
+\fC#include <wx/timer\&.h>\fP
+.br
+\fC#include <wx/display\&.h>\fP
+.br
+\fC#include <wx/arrimpl\&.cpp>\fP
+.br
+\fC#include 'FreqWindow\&.h'\fP
+.br
+\fC#include 'effects/Contrast\&.h'\fP
+.br
+\fC#include 'AutoRecovery\&.h'\fP
+.br
+\fC#include 'AudacityApp\&.h'\fP
+.br
+\fC#include 'AColor\&.h'\fP
+.br
+\fC#include 'AudioIO\&.h'\fP
+.br
+\fC#include 'Dependencies\&.h'\fP
+.br
+\fC#include 'Diags\&.h'\fP
+.br
+\fC#include 'HistoryWindow\&.h'\fP
+.br
+\fC#include 'Lyrics\&.h'\fP
+.br
+\fC#include 'LyricsWindow\&.h'\fP
+.br
+\fC#include 'MixerBoard\&.h'\fP
+.br
+\fC#include 'Internat\&.h'\fP
+.br
+\fC#include 'import/Import\&.h'\fP
+.br
+\fC#include 'LabelTrack\&.h'\fP
+.br
+\fC#include 'Legacy\&.h'\fP
+.br
+\fC#include 'Mix\&.h'\fP
+.br
+\fC#include 'NoteTrack\&.h'\fP
+.br
+\fC#include 'Prefs\&.h'\fP
+.br
+\fC#include 'Sequence\&.h'\fP
+.br
+\fC#include 'Snap\&.h'\fP
+.br
+\fC#include 'Tags\&.h'\fP
+.br
+\fC#include 'TimeTrack\&.h'\fP
+.br
+\fC#include 'TrackPanel\&.h'\fP
+.br
+\fC#include 'WaveTrack\&.h'\fP
+.br
+\fC#include 'DirManager\&.h'\fP
+.br
+\fC#include 'effects/Effect\&.h'\fP
+.br
+\fC#include 'prefs/PrefsDialog\&.h'\fP
+.br
+\fC#include 'widgets/LinkingHtmlWindow\&.h'\fP
+.br
+\fC#include 'widgets/ASlider\&.h'\fP
+.br
+\fC#include 'widgets/ErrorDialog\&.h'\fP
+.br
+\fC#include 'widgets/Ruler\&.h'\fP
+.br
+\fC#include 'widgets/Warning\&.h'\fP
+.br
+\fC#include 'xml/XMLFileReader\&.h'\fP
+.br
+\fC#include 'PlatformCompatibility\&.h'\fP
+.br
+\fC#include 'Experimental\&.h'\fP
+.br
+\fC#include 'export/Export\&.h'\fP
+.br
+\fC#include 'FileNames\&.h'\fP
+.br
+\fC#include 'BlockFile\&.h'\fP
+.br
+\fC#include 'ondemand/ODManager\&.h'\fP
+.br
+\fC#include 'ondemand/ODTask\&.h'\fP
+.br
+\fC#include 'ondemand/ODComputeSummaryTask\&.h'\fP
+.br
+\fC#include 'ModuleManager\&.h'\fP
+.br
+\fC#include 'Theme\&.h'\fP
+.br
+\fC#include 'AllThemeResources\&.h'\fP
+.br
+\fC#include 'FileDialog\&.h'\fP
+.br
+\fC#include 'UndoManager\&.h'\fP
+.br
+\fC#include 'toolbars/ToolManager\&.h'\fP
+.br
+\fC#include 'toolbars/ControlToolBar\&.h'\fP
+.br
+\fC#include 'toolbars/DeviceToolBar\&.h'\fP
+.br
+\fC#include 'toolbars/EditToolBar\&.h'\fP
+.br
+\fC#include 'toolbars/MeterToolBar\&.h'\fP
+.br
+\fC#include 'toolbars/MixerToolBar\&.h'\fP
+.br
+\fC#include 'toolbars/SelectionBar\&.h'\fP
+.br
+\fC#include 'toolbars/SpectralSelectionBar\&.h'\fP
+.br
+\fC#include 'toolbars/ToolsToolBar\&.h'\fP
+.br
+\fC#include 'toolbars/TranscriptionToolBar\&.h'\fP
+.br
+\fC#include 'commands/ScriptCommandRelay\&.h'\fP
+.br
+\fC#include 'commands/CommandDirectory\&.h'\fP
+.br
+\fC#include 'commands/CommandTargets\&.h'\fP
+.br
+\fC#include 'commands/Command\&.h'\fP
+.br
+\fC#include 'commands/CommandType\&.h'\fP
+.br
+\fC#include '\&.\&./images/AudacityLogoAlpha\&.xpm'\fP
+.br
+
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "class \fBVarSetter< T >\fP"
+.br
+.ti -1c
+.RI "class \fBScrollBar\fP"
+.br
+.in -1c
+.SS "Enumerations"
+
+.in +1c
+.ti -1c
+.RI "enum { \fBFirstID\fP = 1000, \fBHSBarID\fP, \fBVSBarID\fP, \fBTrackPanelID\fP }"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBDEFINE_EVENT_TYPE\fP (EVT_CAPTURE_KEY)"
+.br
+.RI "\fICustom events\&. \fP"
+.ti -1c
+.RI "AUDACITY_DLL_API \fBAudacityProject\fP * \fBGetActiveProject\fP ()"
+.br
+.ti -1c
+.RI "\fBAudacityProject\fP * \fBCreateNewAudacityProject\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBRedrawAllProjects\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBRefreshCursorForAllProjects\fP ()"
+.br
+.ti -1c
+.RI "AUDACITY_DLL_API \fBvoid\fP \fBCloseAllProjects\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBGetDefaultWindowRect\fP (wxRect *defRect)"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBIsWindowAccessible\fP (wxRect *requestedRect)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBGetNextWindowPlacement\fP (wxRect *nextRect, \fBbool\fP *pMaximized, \fBbool\fP *pIconized)"
+.br
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBsbarSpaceWidth\fP = 15"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBsbarControlWidth\fP = 15"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBsbarExtraLen\fP = 0"
+.br
+.ti -1c
+.RI "\fBconst\fP \fBint\fP \fBsbarHjump\fP = 30"
+.br
+.ti -1c
+.RI "AProjectArray \fBgAudacityProjects\fP"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Implements \fBAudacityProject\fP, \fBDropTarget\fP, and FileObject\&.F Includes \fBMenus\&.cpp\fP\&. 
+
+
+.PP
+Definition in file \fBProject\&.cpp\fP\&.
+.SH "Enumeration Type Documentation"
+.PP 
+.SS "anonymous enum"
+
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fIFirstID \fP\fP
+.TP
+\fB\fIHSBarID \fP\fP
+.TP
+\fB\fIVSBarID \fP\fP
+.TP
+\fB\fITrackPanelID \fP\fP
+.PP
+Definition at line 754 of file Project\&.cpp\&.
+.SH "Function Documentation"
+.PP 
+.SS "AUDACITY_DLL_API \fBvoid\fP CloseAllProjects ()"
+
+.PP
+Definition at line 544 of file Project\&.cpp\&.
+.SS "\fBAudacityProject\fP* CreateNewAudacityProject ()\fC [strong]\fP"
+
+.PP
+Definition at line 488 of file Project\&.cpp\&.
+.SS "DEFINE_EVENT_TYPE (EVT_CAPTURE_KEY)"
+
+.PP
+Custom events\&. 
+.SS "AUDACITY_DLL_API \fBAudacityProject\fP* GetActiveProject ()"
+
+.PP
+Definition at line 265 of file Project\&.cpp\&.
+.SS "\fBvoid\fP GetDefaultWindowRect (wxRect * defRect)"
+
+.PP
+Definition at line 556 of file Project\&.cpp\&.
+.SS "\fBvoid\fP GetNextWindowPlacement (wxRect * nextRect, \fBbool\fP * pMaximized, \fBbool\fP * pIconized)"
+
+.PP
+Definition at line 624 of file Project\&.cpp\&.
+.SS "\fBbool\fP IsWindowAccessible (wxRect * requestedRect)"
+
+.PP
+Definition at line 599 of file Project\&.cpp\&.
+.SS "\fBvoid\fP RedrawAllProjects ()"
+
+.PP
+Definition at line 530 of file Project\&.cpp\&.
+.SS "\fBvoid\fP RefreshCursorForAllProjects ()"
+
+.PP
+Definition at line 537 of file Project\&.cpp\&.
+.SH "Variable Documentation"
+.PP 
+.SS "AProjectArray gAudacityProjects"
+
+.PP
+Definition at line 260 of file Project\&.cpp\&.
+.SS "\fBconst\fP \fBint\fP sbarControlWidth = 15"
+
+.PP
+Definition at line 185 of file Project\&.cpp\&.
+.SS "\fBconst\fP \fBint\fP sbarExtraLen = 0"
+
+.PP
+Definition at line 186 of file Project\&.cpp\&.
+.SS "\fBconst\fP \fBint\fP sbarHjump = 30"
+
+.PP
+Definition at line 187 of file Project\&.cpp\&.
+.SS "\fBconst\fP \fBint\fP sbarSpaceWidth = 15"
+
+.PP
+Definition at line 184 of file Project\&.cpp\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

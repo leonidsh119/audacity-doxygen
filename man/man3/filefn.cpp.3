@@ -1,0 +1,276 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/win/wxWidgets_additions/wxWidgets-3.0.2/src/common/filefn.cpp" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/win/wxWidgets_additions/wxWidgets-3.0.2/src/common/filefn.cpp \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include 'wx/wxprec\&.h'\fP
+.br
+\fC#include 'wx/filefn\&.h'\fP
+.br
+\fC#include 'wx/intl\&.h'\fP
+.br
+\fC#include 'wx/log\&.h'\fP
+.br
+\fC#include 'wx/utils\&.h'\fP
+.br
+\fC#include 'wx/crt\&.h'\fP
+.br
+\fC#include 'wx/dynarray\&.h'\fP
+.br
+\fC#include 'wx/file\&.h'\fP
+.br
+\fC#include 'wx/filename\&.h'\fP
+.br
+\fC#include 'wx/dir\&.h'\fP
+.br
+\fC#include 'wx/tokenzr\&.h'\fP
+.br
+\fC#include <ctype\&.h>\fP
+.br
+\fC#include <stdio\&.h>\fP
+.br
+\fC#include <stdlib\&.h>\fP
+.br
+\fC#include <string\&.h>\fP
+.br
+\fC#include <errno\&.h>\fP
+.br
+
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fB_MAXPATHLEN\fP   1024"
+.br
+.ti -1c
+.RI "#define \fBcbuf\fP   \fBbuf\fP"
+.br
+.ti -1c
+.RI "#define \fBwxFILEKIND_STUB\fP"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBbool\fP \fBwxFileExists\fP (\fBconst\fP wxString &\fBfilename\fP)"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBwxIsAbsolutePath\fP (\fBconst\fP wxString &\fBfilename\fP)"
+.br
+.ti -1c
+.RI "wxChar * \fBwxFileNameFromPath\fP (wxChar *path)"
+.br
+.ti -1c
+.RI "wxString \fBwxFileNameFromPath\fP (\fBconst\fP wxString &path)"
+.br
+.ti -1c
+.RI "wxChar * \fBwxPathOnly\fP (wxChar *path)"
+.br
+.ti -1c
+.RI "wxString \fBwxPathOnly\fP (\fBconst\fP wxString &path)"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBwxConcatFiles\fP (\fBconst\fP wxString &file1, \fBconst\fP wxString &file2, \fBconst\fP wxString &file3)"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBwxCopyFile\fP (\fBconst\fP wxString &file1, \fBconst\fP wxString &file2, \fBbool\fP overwrite)"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBwxRenameFile\fP (\fBconst\fP wxString &file1, \fBconst\fP wxString &file2, \fBbool\fP overwrite)"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBwxRemoveFile\fP (\fBconst\fP wxString &file)"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBwxMkdir\fP (\fBconst\fP wxString &dir, \fBint\fP perm)"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBwxRmdir\fP (\fBconst\fP wxString &dir, \fBint\fP WXUNUSED(flags))"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBwxDirExists\fP (\fBconst\fP wxString &pathName)"
+.br
+.ti -1c
+.RI "wxString \fBwxFindFirstFile\fP (\fBconst\fP wxString &spec, \fBint\fP flags)"
+.br
+.ti -1c
+.RI "wxString \fBwxFindNextFile\fP ()"
+.br
+.ti -1c
+.RI "wxChar * \fBwxDoGetCwd\fP (wxChar *\fBbuf\fP, \fBint\fP sz)"
+.br
+.ti -1c
+.RI "wxString \fBwxGetCwd\fP ()"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBwxSetWorkingDirectory\fP (\fBconst\fP wxString &\fBd\fP)"
+.br
+.ti -1c
+.RI "wxString \fBwxGetOSDirectory\fP ()"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBwxEndsWithPathSeparator\fP (\fBconst\fP wxString &\fBfilename\fP)"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBwxFindFileInPath\fP (wxString *pStr, \fBconst\fP wxString &szPath, \fBconst\fP wxString &szFile)"
+.br
+.ti -1c
+.RI "\fBint\fP WXDLLIMPEXP_BASE \fBwxParseCommonDialogsFilter\fP (\fBconst\fP wxString &filterStr, wxArrayString &descriptions, wxArrayString &filters)"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBwxIsWritable\fP (\fBconst\fP wxString &path)"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBwxIsReadable\fP (\fBconst\fP wxString &path)"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBwxIsExecutable\fP (\fBconst\fP wxString &path)"
+.br
+.ti -1c
+.RI "wxFileKind \fBwxGetFileKind\fP (\fBint\fP fd)"
+.br
+.ti -1c
+.RI "wxFileKind \fBwxGetFileKind\fP (FILE *fp)"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBwxIsWild\fP (\fBconst\fP wxString &pattern)"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBwxMatchWild\fP (\fBconst\fP wxString &pat, \fBconst\fP wxString &text, \fBbool\fP dot_special)"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define _MAXPATHLEN   1024"
+
+.PP
+Definition at line 98 of file filefn\&.cpp\&.
+.SS "#define cbuf   \fBbuf\fP"
+
+.SS "#define wxFILEKIND_STUB"
+
+.SH "Function Documentation"
+.PP 
+.SS "\fBbool\fP wxConcatFiles (\fBconst\fP wxString & file1, \fBconst\fP wxString & file2, \fBconst\fP wxString & file3)"
+
+.PP
+Definition at line 967 of file filefn\&.cpp\&.
+.SS "\fBbool\fP wxCopyFile (\fBconst\fP wxString & file1, \fBconst\fP wxString & file2, \fBbool\fP overwrite)"
+
+.PP
+Definition at line 1049 of file filefn\&.cpp\&.
+.SS "\fBbool\fP wxDirExists (\fBconst\fP wxString & pathName)"
+
+.PP
+Definition at line 1293 of file filefn\&.cpp\&.
+.SS "wxChar* wxDoGetCwd (wxChar * buf, \fBint\fP sz)"
+
+.PP
+Definition at line 1394 of file filefn\&.cpp\&.
+.SS "\fBbool\fP wxEndsWithPathSeparator (\fBconst\fP wxString & filename)"
+
+.PP
+Definition at line 1608 of file filefn\&.cpp\&.
+.SS "\fBbool\fP wxFileExists (\fBconst\fP wxString & filename)"
+
+.PP
+Definition at line 308 of file filefn\&.cpp\&.
+.SS "wxChar* wxFileNameFromPath (wxChar * path)"
+
+.PP
+Definition at line 724 of file filefn\&.cpp\&.
+.SS "wxString wxFileNameFromPath (\fBconst\fP wxString & path)"
+
+.PP
+Definition at line 732 of file filefn\&.cpp\&.
+.SS "\fBbool\fP wxFindFileInPath (wxString * pStr, \fBconst\fP wxString & szPath, \fBconst\fP wxString & szFile)"
+
+.PP
+Definition at line 1614 of file filefn\&.cpp\&.
+.SS "wxString wxFindFirstFile (\fBconst\fP wxString & spec, \fBint\fP flags)"
+
+.PP
+Definition at line 1336 of file filefn\&.cpp\&.
+.SS "wxString wxFindNextFile ()"
+
+.PP
+Definition at line 1372 of file filefn\&.cpp\&.
+.SS "wxString wxGetCwd ()"
+
+.PP
+Definition at line 1526 of file filefn\&.cpp\&.
+.SS "wxFileKind wxGetFileKind (\fBint\fP fd)"
+
+.PP
+Definition at line 1882 of file filefn\&.cpp\&.
+.SS "wxFileKind wxGetFileKind (FILE * fp)"
+
+.PP
+Definition at line 1923 of file filefn\&.cpp\&.
+.SS "wxString wxGetOSDirectory ()"
+
+.PP
+Definition at line 1589 of file filefn\&.cpp\&.
+.SS "\fBbool\fP wxIsAbsolutePath (\fBconst\fP wxString & filename)"
+
+.PP
+Definition at line 314 of file filefn\&.cpp\&.
+.SS "\fBbool\fP wxIsExecutable (\fBconst\fP wxString & path)"
+
+.PP
+Definition at line 1850 of file filefn\&.cpp\&.
+.SS "\fBbool\fP wxIsReadable (\fBconst\fP wxString & path)"
+
+.PP
+Definition at line 1836 of file filefn\&.cpp\&.
+.SS "\fBbool\fP wxIsWild (\fBconst\fP wxString & pattern)"
+
+.PP
+Definition at line 1942 of file filefn\&.cpp\&.
+.SS "\fBbool\fP wxIsWritable (\fBconst\fP wxString & path)"
+
+.PP
+Definition at line 1822 of file filefn\&.cpp\&.
+.SS "\fBbool\fP wxMatchWild (\fBconst\fP wxString & pat, \fBconst\fP wxString & text, \fBbool\fP dot_special)"
+
+.PP
+Definition at line 1969 of file filefn\&.cpp\&.
+.SS "\fBbool\fP wxMkdir (\fBconst\fP wxString & dir, \fBint\fP perm)"
+
+.PP
+Definition at line 1225 of file filefn\&.cpp\&.
+.SS "\fBint\fP WXDLLIMPEXP_BASE wxParseCommonDialogsFilter (\fBconst\fP wxString & filterStr, wxArrayString & descriptions, wxArrayString & filters)"
+
+.PP
+Definition at line 1674 of file filefn\&.cpp\&.
+.SS "wxChar* wxPathOnly (wxChar * path)"
+
+.PP
+Definition at line 739 of file filefn\&.cpp\&.
+.SS "wxString wxPathOnly (\fBconst\fP wxString & path)"
+
+.PP
+Definition at line 787 of file filefn\&.cpp\&.
+.SS "\fBbool\fP wxRemoveFile (\fBconst\fP wxString & file)"
+
+.PP
+Definition at line 1205 of file filefn\&.cpp\&.
+.SS "\fBbool\fP wxRenameFile (\fBconst\fP wxString & file1, \fBconst\fP wxString & file2, \fBbool\fP overwrite)"
+
+.PP
+Definition at line 1162 of file filefn\&.cpp\&.
+.SS "\fBbool\fP wxRmdir (\fBconst\fP wxString & dir, \fBint\fP  WXUNUSEDflags)"
+
+.PP
+Definition at line 1271 of file filefn\&.cpp\&.
+.SS "\fBbool\fP wxSetWorkingDirectory (\fBconst\fP wxString & d)"
+
+.PP
+Definition at line 1533 of file filefn\&.cpp\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

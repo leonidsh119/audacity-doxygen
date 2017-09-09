@@ -1,0 +1,97 @@
+.TH "Dither" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Dither \- This class implements various functions for dithering and is derived from the dither code in the Ardour project, written by Steve Harris\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <Dither\&.h>\fP
+.SS "Public Types"
+
+.in +1c
+.ti -1c
+.RI "enum \fBDitherType\fP { \fBnone\fP = 0, \fBrectangle\fP = 1, \fBtriangle\fP = 2, \fBshaped\fP = 3 }
+.RI "\fIThese ditherers are currently available: \fP""
+.br
+.in -1c
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBDither\fP ()"
+.br
+.RI "\fIDefault constructor\&. \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBReset\fP ()"
+.br
+.RI "\fIReset state of the dither\&. \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBApply\fP (\fBDitherType\fP ditherType, \fBconst\fP \fBsamplePtr\fP source, \fBsampleFormat\fP sourceFormat, \fBsamplePtr\fP dest, \fBsampleFormat\fP destFormat, unsigned \fBint\fP \fBlen\fP, unsigned \fBint\fP sourceStride=1, unsigned \fBint\fP destStride=1)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+This class implements various functions for dithering and is derived from the dither code in the Ardour project, written by Steve Harris\&. 
+
+Dithering is only done if it really is necessary\&. Otherwise (e\&.g\&. when the source and destination format of the samples is the same), the samples are only copied or converted\&. However, copied samples are always checked for out-of-bounds values and possibly clipped accordingly\&.
+.PP
+These dither algorithms are currently implemented:
+.IP "\(bu" 2
+No dithering at all
+.IP "\(bu" 2
+Rectangle dithering
+.IP "\(bu" 2
+Triangle dithering
+.IP "\(bu" 2
+Noise-shaped dithering
+.PP
+.PP
+\fBDither\fP class\&. You must construct an instance because it keeps state\&. Call \fBDither::Apply()\fP to apply the dither\&. You can call \fBReset()\fP between subsequent dithers to reset the dither state and get deterministic behaviour\&. 
+.PP
+Definition at line 16 of file Dither\&.h\&.
+.SH "Member Enumeration Documentation"
+.PP 
+.SS "enum \fBDither::DitherType\fP"
+
+.PP
+These ditherers are currently available: 
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fInone \fP\fP
+.TP
+\fB\fIrectangle \fP\fP
+.TP
+\fB\fItriangle \fP\fP
+.TP
+\fB\fIshaped \fP\fP
+.PP
+Definition at line 23 of file Dither\&.h\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "Dither::Dither ()"
+
+.PP
+Default constructor\&. 
+.PP
+Definition at line 207 of file Dither\&.cpp\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "\fBvoid\fP Dither::Apply (\fBDitherType\fP ditherType, \fBconst\fP \fBsamplePtr\fP source, \fBsampleFormat\fP sourceFormat, \fBsamplePtr\fP dest, \fBsampleFormat\fP destFormat, unsigned \fBint\fP len, unsigned \fBint\fP sourceStride = \fC1\fP, unsigned \fBint\fP destStride = \fC1\fP)"
+Apply the actual dithering\&. Expects the source sample in the 'source' variable, the destination sample in the 'dest' variable, and hints to the formats of the samples\&. Even if the sample formats are the same, samples are clipped, if necessary\&. 
+.PP
+Definition at line 236 of file Dither\&.cpp\&.
+.SS "\fBvoid\fP Dither::Reset ()"
+
+.PP
+Reset state of the dither\&. 
+.PP
+Definition at line 213 of file Dither\&.cpp\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

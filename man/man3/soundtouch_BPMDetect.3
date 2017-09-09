@@ -1,0 +1,275 @@
+.TH "soundtouch::BPMDetect" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+soundtouch::BPMDetect \- Class for calculating BPM rate for audio data\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <BPMDetect\&.h>\fP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBBPMDetect\fP (\fBint\fP numChannels, \fBint\fP \fBsampleRate\fP)"
+.br
+.RI "\fIConstructor\&. \fP"
+.ti -1c
+.RI "virtual \fB~BPMDetect\fP ()"
+.br
+.RI "\fIDestructor\&. \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBinputSamples\fP (\fBconst\fP \fBsoundtouch::SAMPLETYPE\fP *\fBsamples\fP, \fBint\fP numSamples)"
+.br
+.ti -1c
+.RI "float \fBgetBpm\fP ()"
+.br
+.in -1c
+.SS "Protected Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBvoid\fP \fBupdateXCorr\fP (\fBint\fP process_samples)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBdecimate\fP (\fBsoundtouch::SAMPLETYPE\fP *dest, \fBconst\fP \fBsoundtouch::SAMPLETYPE\fP *src, \fBint\fP numsamples)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBcalcEnvelope\fP (\fBsoundtouch::SAMPLETYPE\fP *\fBsamples\fP, \fBint\fP numsamples)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBremoveBias\fP ()"
+.br
+.RI "\fIremove constant bias from xcorr data \fP"
+.in -1c
+.SS "Protected Attributes"
+
+.in +1c
+.ti -1c
+.RI "float * \fBxcorr\fP"
+.br
+.RI "\fIAuto-correlation accumulator bins\&. \fP"
+.ti -1c
+.RI "double \fBenvelopeAccu\fP"
+.br
+.RI "\fIAmplitude envelope sliding average approximation level accumulator\&. \fP"
+.ti -1c
+.RI "double \fBRMSVolumeAccu\fP"
+.br
+.RI "\fIRMS volume sliding average approximation level accumulator\&. \fP"
+.ti -1c
+.RI "\fBint\fP \fBdecimateCount\fP"
+.br
+.RI "\fI\fBSample\fP average counter\&. \fP"
+.ti -1c
+.RI "\fBsoundtouch::LONG_SAMPLETYPE\fP \fBdecimateSum\fP"
+.br
+.RI "\fI\fBSample\fP average accumulator for FIFO-like decimation\&. \fP"
+.ti -1c
+.RI "\fBint\fP \fBdecimateBy\fP"
+.br
+.RI "\fIDecimate sound by this coefficient to reach approx\&. 500 Hz\&. \fP"
+.ti -1c
+.RI "\fBint\fP \fBwindowLen\fP"
+.br
+.RI "\fIAuto-correlation window length\&. \fP"
+.ti -1c
+.RI "\fBint\fP \fBchannels\fP"
+.br
+.RI "\fINumber of channels (1 = mono, 2 = stereo) \fP"
+.ti -1c
+.RI "\fBint\fP \fBsampleRate\fP"
+.br
+.RI "\fIsample rate \fP"
+.ti -1c
+.RI "\fBint\fP \fBwindowStart\fP"
+.br
+.ti -1c
+.RI "\fBsoundtouch::FIFOSampleBuffer\fP * \fBbuffer\fP"
+.br
+.RI "\fIFIFO-buffer for decimated processing samples\&. \fP"
+.in -1c
+.SH "Detailed Description"
+.PP 
+Class for calculating BPM rate for audio data\&. 
+.PP
+Definition at line 74 of file BPMDetect\&.h\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "BPMDetect::BPMDetect (\fBint\fP numChannels, \fBint\fP sampleRate)"
+
+.PP
+Constructor\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fInumChannels\fP Number of channels in sample data\&. 
+.br
+\fIsampleRate\fP \fBSample\fP rate in Hz\&. 
+.RE
+.PP
+
+.PP
+Definition at line 110 of file BPMDetect\&.cpp\&.
+.SS "BPMDetect::~BPMDetect ()\fC [virtual]\fP"
+
+.PP
+Destructor\&. 
+.PP
+Definition at line 155 of file BPMDetect\&.cpp\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "\fBvoid\fP BPMDetect::calcEnvelope (\fBsoundtouch::SAMPLETYPE\fP * samples, \fBint\fP numsamples)\fC [protected]\fP"
+Calculates amplitude envelope for the buffer of samples\&. Result is output to 'samples'\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIsamples\fP Pointer to input/output data buffer 
+.br
+\fInumsamples\fP Number of samples in buffer 
+.RE
+.PP
+
+.PP
+Definition at line 251 of file BPMDetect\&.cpp\&.
+.SS "\fBint\fP BPMDetect::decimate (\fBsoundtouch::SAMPLETYPE\fP * dest, \fBconst\fP \fBsoundtouch::SAMPLETYPE\fP * src, \fBint\fP numsamples)\fC [protected]\fP"
+Decimates samples to approx\&. 500 Hz\&.
+.PP
+\fBReturns:\fP
+.RS 4
+Number of output samples\&.
+.RE
+.PP
+convert to mono, low-pass filter & decimate to about 500 Hz\&. return number of outputted samples\&.
+.PP
+Decimation is used to remove the unnecessary frequencies and thus to reduce the amount of data needed to be processed as calculating autocorrelation function is a very-very heavy operation\&.
+.PP
+Anti-alias filtering is done simply by averaging the samples\&. This is really a poor-man's anti-alias filtering, but it's not so critical in this kind of application (it'd also be difficult to design a high-quality filter with steep cut-off at very narrow band) 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdest\fP Destination buffer 
+.br
+\fIsrc\fP Source sample buffer 
+.br
+\fInumsamples\fP Number of source samples\&. 
+.RE
+.PP
+
+.PP
+Definition at line 174 of file BPMDetect\&.cpp\&.
+.SS "float BPMDetect::getBpm ()"
+Analyzes the results and returns the BPM rate\&. Use this function to read result after whole song data has been input to the class by consecutive calls of 'inputSamples' function\&.
+.PP
+\fBReturns:\fP
+.RS 4
+Beats-per-minute rate, or zero if detection failed\&. 
+.RE
+.PP
+
+.PP
+Definition at line 348 of file BPMDetect\&.cpp\&.
+.SS "\fBvoid\fP BPMDetect::inputSamples (\fBconst\fP \fBsoundtouch::SAMPLETYPE\fP * samples, \fBint\fP numSamples)"
+Inputs a block of samples for analyzing: Envelopes the samples and then updates the autocorrelation estimation\&. When whole song data has been input in smaller blocks using this function, read the resulting bpm with 'getBpm' function\&.
+.PP
+Notice that data in 'samples' array can be disrupted in processing\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIsamples\fP Pointer to input/working data buffer 
+.br
+\fInumSamples\fP Number of samples in buffer 
+.RE
+.PP
+
+.PP
+Definition at line 289 of file BPMDetect\&.cpp\&.
+.SS "\fBvoid\fP BPMDetect::removeBias ()\fC [protected]\fP"
+
+.PP
+remove constant bias from xcorr data 
+.PP
+Definition at line 328 of file BPMDetect\&.cpp\&.
+.SS "\fBvoid\fP BPMDetect::updateXCorr (\fBint\fP process_samples)\fC [protected]\fP"
+Updates auto-correlation function for given number of decimated samples that are read from the internal 'buffer' pipe (samples aren't removed from the pipe though)\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIprocess_samples\fP How many samples are processed\&. 
+.RE
+.PP
+
+.PP
+Definition at line 221 of file BPMDetect\&.cpp\&.
+.SH "Member Data Documentation"
+.PP 
+.SS "\fBsoundtouch::FIFOSampleBuffer\fP* soundtouch::BPMDetect::buffer\fC [protected]\fP"
+
+.PP
+FIFO-buffer for decimated processing samples\&. 
+.PP
+Definition at line 109 of file BPMDetect\&.h\&.
+.SS "\fBint\fP soundtouch::BPMDetect::channels\fC [protected]\fP"
+
+.PP
+Number of channels (1 = mono, 2 = stereo) 
+.PP
+Definition at line 99 of file BPMDetect\&.h\&.
+.SS "\fBint\fP soundtouch::BPMDetect::decimateBy\fC [protected]\fP"
+
+.PP
+Decimate sound by this coefficient to reach approx\&. 500 Hz\&. 
+.PP
+Definition at line 93 of file BPMDetect\&.h\&.
+.SS "\fBint\fP soundtouch::BPMDetect::decimateCount\fC [protected]\fP"
+
+.PP
+\fBSample\fP average counter\&. 
+.PP
+Definition at line 87 of file BPMDetect\&.h\&.
+.SS "\fBsoundtouch::LONG_SAMPLETYPE\fP soundtouch::BPMDetect::decimateSum\fC [protected]\fP"
+
+.PP
+\fBSample\fP average accumulator for FIFO-like decimation\&. 
+.PP
+Definition at line 90 of file BPMDetect\&.h\&.
+.SS "double soundtouch::BPMDetect::envelopeAccu\fC [protected]\fP"
+
+.PP
+Amplitude envelope sliding average approximation level accumulator\&. 
+.PP
+Definition at line 81 of file BPMDetect\&.h\&.
+.SS "double soundtouch::BPMDetect::RMSVolumeAccu\fC [protected]\fP"
+
+.PP
+RMS volume sliding average approximation level accumulator\&. 
+.PP
+Definition at line 84 of file BPMDetect\&.h\&.
+.SS "\fBint\fP soundtouch::BPMDetect::sampleRate\fC [protected]\fP"
+
+.PP
+sample rate 
+.PP
+Definition at line 102 of file BPMDetect\&.h\&.
+.SS "\fBint\fP soundtouch::BPMDetect::windowLen\fC [protected]\fP"
+
+.PP
+Auto-correlation window length\&. 
+.PP
+Definition at line 96 of file BPMDetect\&.h\&.
+.SS "\fBint\fP soundtouch::BPMDetect::windowStart\fC [protected]\fP"
+Beginning of auto-correlation window: Autocorrelation isn't being updated for the first these many correlation bins\&. 
+.PP
+Definition at line 106 of file BPMDetect\&.h\&.
+.SS "float* soundtouch::BPMDetect::xcorr\fC [protected]\fP"
+
+.PP
+Auto-correlation accumulator bins\&. 
+.PP
+Definition at line 78 of file BPMDetect\&.h\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

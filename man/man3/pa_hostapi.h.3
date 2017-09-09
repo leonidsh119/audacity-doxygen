@@ -1,0 +1,192 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/lib-src/portaudio-v19/src/common/pa_hostapi.h" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/lib-src/portaudio-v19/src/common/pa_hostapi.h \- Interfaces and representation structures used by pa_front\&.c to manage and communicate with host API implementations\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+\fC#include 'portaudio\&.h'\fP
+.br
+
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "struct \fBPaUtilPrivatePaFrontHostApiInfo\fP"
+.br
+.ti -1c
+.RI "struct \fBPaUtilHostApiSpecificStreamInfoHeader\fP"
+.br
+.ti -1c
+.RI "struct \fBPaUtilHostApiRepresentation\fP"
+.br
+.in -1c
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBPA_USE_SKELETON\fP   0"
+.br
+.ti -1c
+.RI "#define \fBPA_USE_ASIO\fP   0"
+.br
+.ti -1c
+.RI "#define \fBPA_USE_DS\fP   0"
+.br
+.ti -1c
+.RI "#define \fBPA_USE_WMME\fP   0"
+.br
+.ti -1c
+.RI "#define \fBPA_USE_WASAPI\fP   0"
+.br
+.ti -1c
+.RI "#define \fBPA_USE_WDMKS\fP   0"
+.br
+.ti -1c
+.RI "#define \fBPA_USE_OSS\fP   0"
+.br
+.ti -1c
+.RI "#define \fBPA_USE_ALSA\fP   0"
+.br
+.ti -1c
+.RI "#define \fBPA_USE_JACK\fP   0"
+.br
+.ti -1c
+.RI "#define \fBPA_USE_SGI\fP   0"
+.br
+.ti -1c
+.RI "#define \fBPA_USE_COREAUDIO\fP   0"
+.br
+.ti -1c
+.RI "#define \fBPA_USE_ASIHPI\fP   0"
+.br
+.in -1c
+.SS "Typedefs"
+
+.in +1c
+.ti -1c
+.RI "typedef struct \fBPaUtilPrivatePaFrontHostApiInfo\fP \fBPaUtilPrivatePaFrontHostApiInfo\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBPaUtilHostApiSpecificStreamInfoHeader\fP \fBPaUtilHostApiSpecificStreamInfoHeader\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBPaUtilHostApiRepresentation\fP \fBPaUtilHostApiRepresentation\fP"
+.br
+.ti -1c
+.RI "typedef \fBPaError\fP \fBPaUtilHostApiInitializer\fP(\fBPaUtilHostApiRepresentation\fP **, \fBPaHostApiIndex\fP)"
+.br
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "\fBPaUtilHostApiInitializer\fP * \fBpaHostApiInitializers\fP []"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Interfaces and representation structures used by pa_front\&.c to manage and communicate with host API implementations\&. 
+
+
+.PP
+Definition in file \fBpa_hostapi\&.h\fP\&.
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define PA_USE_ALSA   0"
+
+.PP
+Definition at line 122 of file pa_hostapi\&.h\&.
+.SS "#define PA_USE_ASIHPI   0"
+
+.PP
+Definition at line 150 of file pa_hostapi\&.h\&.
+.SS "#define PA_USE_ASIO   0"
+
+.PP
+Definition at line 75 of file pa_hostapi\&.h\&.
+.SS "#define PA_USE_COREAUDIO   0"
+
+.PP
+Definition at line 143 of file pa_hostapi\&.h\&.
+.SS "#define PA_USE_DS   0"
+
+.PP
+Definition at line 82 of file pa_hostapi\&.h\&.
+.SS "#define PA_USE_JACK   0"
+
+.PP
+Definition at line 129 of file pa_hostapi\&.h\&.
+.SS "#define PA_USE_OSS   0"
+
+.PP
+Definition at line 115 of file pa_hostapi\&.h\&.
+.SS "#define PA_USE_SGI   0"
+
+.PP
+Definition at line 136 of file pa_hostapi\&.h\&.
+.SS "#define PA_USE_SKELETON   0"
+The PA_NO_* host API macros are now deprecated in favor of PA_USE_* macros\&. PA_USE_* indicates whether a particular host API will be initialized by PortAudio\&. An undefined or 0 value indicates that the host API will not be used\&. A value of 1 indicates that the host API will be used\&. PA_USE_* macros should be left undefined or defined to either 0 or 1\&.
+.PP
+The code below ensures that PA_USE_* macros are always defined and have value 0 or 1\&. Undefined symbols are defaulted to 0\&. Symbols that are neither 0 nor 1 are defaulted to 1\&. 
+.PP
+Definition at line 64 of file pa_hostapi\&.h\&.
+.SS "#define PA_USE_WASAPI   0"
+
+.PP
+Definition at line 96 of file pa_hostapi\&.h\&.
+.SS "#define PA_USE_WDMKS   0"
+
+.PP
+Definition at line 103 of file pa_hostapi\&.h\&.
+.SS "#define PA_USE_WMME   0"
+
+.PP
+Definition at line 89 of file pa_hostapi\&.h\&.
+.SH "Typedef Documentation"
+.PP 
+.SS "typedef \fBPaError\fP PaUtilHostApiInitializer(\fBPaUtilHostApiRepresentation\fP **, \fBPaHostApiIndex\fP)"
+Prototype for the initialization function which must be implemented by every host API\&.
+.PP
+This function should only return an error other than paNoError if it encounters an unexpected and fatal error (memory allocation error for example)\&. In general, there may be conditions under which it returns a NULL interface pointer and also returns paNoError\&. For example, if the ASIO implementation detects that ASIO is not installed, it should return a NULL interface, and paNoError\&.
+.PP
+\fBSee also:\fP
+.RS 4
+\fBpaHostApiInitializers\fP 
+.RE
+.PP
+
+.PP
+Definition at line 339 of file pa_hostapi\&.h\&.
+.SS "typedef struct \fBPaUtilHostApiRepresentation\fP  \fBPaUtilHostApiRepresentation\fP"
+A structure representing the interface to a host API\&. Contains both concrete data and pointers to functions which implement the interface\&. 
+.SS "typedef struct \fBPaUtilHostApiSpecificStreamInfoHeader\fP  \fBPaUtilHostApiSpecificStreamInfoHeader\fP"
+The common header for all data structures whose pointers are passed through the hostApiSpecificStreamInfo field of the \fBPaStreamParameters\fP structure\&. Note that in order to keep the public PortAudio interface clean, this structure is not used explicitly when declaring hostApiSpecificStreamInfo data structures\&. However, some code in pa_front depends on the first 3 members being equivalent with this structure\&. 
+.PP
+\fBSee also:\fP
+.RS 4
+\fBPaStreamParameters\fP 
+.RE
+.PP
+
+.SS "typedef struct \fBPaUtilPrivatePaFrontHostApiInfo\fP \fBPaUtilPrivatePaFrontHostApiInfo\fP"
+\fBFOR THE USE OF pa_front\&.c ONLY\fP Do NOT use fields in this structure, they my change at any time\&. Use functions defined in \fBpa_util\&.h\fP if you think you need functionality which can be derived from here\&. 
+.SH "Variable Documentation"
+.PP 
+.SS "\fBPaUtilHostApiInitializer\fP* paHostApiInitializers[]"
+paHostApiInitializers is a NULL-terminated array of host API initialization functions\&. These functions are called by pa_front\&.c to initialize the host APIs when the client calls \fBPa_Initialize()\fP\&.
+.PP
+The initialization functions are invoked in order\&.
+.PP
+The first successfully initialized host API that has a default input \fIor\fP output device is used as the default PortAudio host API\&. This is based on the logic that there is only one default host API, and it must contain the default input and output devices (if defined)\&.
+.PP
+There is a platform specific file that defines paHostApiInitializers for that platform, pa_win/pa_win_hostapis\&.c contains the Win32 definitions for example\&.
+.PP
+Note that on Linux, ALSA is placed before OSS so that the former is preferred over the latter\&. 
+.PP
+Definition at line 58 of file pa_unix_hostapis\&.c\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

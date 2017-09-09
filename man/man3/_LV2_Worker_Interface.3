@@ -1,0 +1,80 @@
+.TH "_LV2_Worker_Interface" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+_LV2_Worker_Interface \- 
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <worker\&.h>\fP
+.SS "Public Attributes"
+
+.in +1c
+.ti -1c
+.RI "\fBLV2_Worker_Status\fP(* \fBwork\fP )(\fBLV2_Handle\fP instance, \fBLV2_Worker_Respond_Function\fP respond, \fBLV2_Worker_Respond_Handle\fP handle, \fBuint32_t\fP \fBsize\fP, \fBconst\fP \fBvoid\fP *\fBdata\fP)"
+.br
+.ti -1c
+.RI "\fBLV2_Worker_Status\fP(* \fBwork_response\fP )(\fBLV2_Handle\fP instance, \fBuint32_t\fP \fBsize\fP, \fBconst\fP \fBvoid\fP *body)"
+.br
+.ti -1c
+.RI "\fBLV2_Worker_Status\fP(* \fBend_run\fP )(\fBLV2_Handle\fP instance)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+LV2 Plugin Worker Interface\&.
+.PP
+This is the interface provided by the plugin to implement a worker method\&. The plugin's extension_data() method should return an LV2_Worker_Interface when called with LV2_WORKER__interface as its argument\&. 
+.PP
+Definition at line 69 of file worker\&.h\&.
+.SH "Member Data Documentation"
+.PP 
+.SS "\fBLV2_Worker_Status\fP(* _LV2_Worker_Interface::end_run) (\fBLV2_Handle\fP instance)"
+Called when all responses for this cycle have been delivered\&.
+.PP
+Since \fBwork_response()\fP may be called after \fBrun()\fP finished, this provides a hook for code that must run after the cycle is completed\&.
+.PP
+This field may be NULL if the plugin has no use for it\&. Otherwise, the host MUST call it after every \fBrun()\fP, regardless of whether or not any responses were sent that cycle\&. 
+.PP
+Definition at line 112 of file worker\&.h\&.
+.SS "\fBLV2_Worker_Status\fP(* _LV2_Worker_Interface::work) (\fBLV2_Handle\fP instance, \fBLV2_Worker_Respond_Function\fP respond, \fBLV2_Worker_Respond_Handle\fP handle, \fBuint32_t\fP \fBsize\fP, \fBconst\fP \fBvoid\fP *\fBdata\fP)"
+The worker method\&. This is called by the host in a non-realtime context as requested, possibly with an arbitrary message to handle\&.
+.PP
+A response can be sent to \fBrun()\fP using \fCrespond\fP\&. The plugin MUST NOT make any assumptions about which thread calls this method, other than the fact that there are no real-time requirements\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIinstance\fP The LV2 instance this is a method on\&. 
+.br
+\fIrespond\fP A function for sending a response to \fBrun()\fP\&. 
+.br
+\fIhandle\fP Must be passed to \fCrespond\fP if it is called\&. 
+.br
+\fIsize\fP The size of \fCdata\fP\&. 
+.br
+\fIdata\fP Data from \fBrun()\fP, or NULL\&. 
+.RE
+.PP
+
+.PP
+Definition at line 84 of file worker\&.h\&.
+.SS "\fBLV2_Worker_Status\fP(* _LV2_Worker_Interface::work_response) (\fBLV2_Handle\fP instance, \fBuint32_t\fP \fBsize\fP, \fBconst\fP \fBvoid\fP *body)"
+Handle a response from the worker\&. This is called by the host in the \fBrun()\fP context when a response from the worker is ready\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIinstance\fP The LV2 instance this is a method on\&. 
+.br
+\fIsize\fP The size of \fCbody\fP\&. 
+.br
+\fIbody\fP Message body, or NULL\&. 
+.RE
+.PP
+
+.PP
+Definition at line 98 of file worker\&.h\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

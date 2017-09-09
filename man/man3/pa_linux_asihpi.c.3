@@ -1,0 +1,360 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/lib-src/portaudio-v19/src/hostapi/asihpi/pa_linux_asihpi.c" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/lib-src/portaudio-v19/src/hostapi/asihpi/pa_linux_asihpi.c \- Host API implementation supporting AudioScience cards via the Linux HPI interface\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <unistd\&.h>\fP
+.br
+\fC#include <stdio\&.h>\fP
+.br
+\fC#include <stdlib\&.h>\fP
+.br
+\fC#include <string\&.h>\fP
+.br
+\fC#include <pthread\&.h>\fP
+.br
+\fC#include <assert\&.h>\fP
+.br
+\fC#include <math\&.h>\fP
+.br
+\fC#include <asihpi/hpi\&.h>\fP
+.br
+\fC#include 'portaudio\&.h'\fP
+.br
+\fC#include 'pa_util\&.h'\fP
+.br
+\fC#include 'pa_unix_util\&.h'\fP
+.br
+\fC#include 'pa_allocation\&.h'\fP
+.br
+\fC#include 'pa_hostapi\&.h'\fP
+.br
+\fC#include 'pa_stream\&.h'\fP
+.br
+\fC#include 'pa_cpuload\&.h'\fP
+.br
+\fC#include 'pa_process\&.h'\fP
+.br
+\fC#include 'pa_converters\&.h'\fP
+.br
+\fC#include 'pa_debugprint\&.h'\fP
+.br
+
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "struct \fBPaAsiHpiHostApiRepresentation\fP"
+.br
+.ti -1c
+.RI "struct \fBPaAsiHpiDeviceInfo\fP"
+.br
+.ti -1c
+.RI "struct \fBPaAsiHpiStreamComponent\fP"
+.br
+.ti -1c
+.RI "struct \fBPaAsiHpiStream\fP"
+.br
+.ti -1c
+.RI "struct \fBPaAsiHpiStreamInfo\fP"
+.br
+.in -1c
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBPA_ENSURE_\fP(expr)"
+.br
+.ti -1c
+.RI "#define \fBPA_UNLESS_\fP(expr,  paError)"
+.br
+.ti -1c
+.RI "#define \fBPA_ASIHPI_UNLESS_\fP(expr,  paError)"
+.br
+.ti -1c
+.RI "#define \fBPA_ASIHPI_REPORT_ERROR_\fP(hpiErrorCode)"
+.br
+.ti -1c
+.RI "#define \fBPA_ASIHPI_AVAILABLE_FORMATS_\fP   (\fBpaFloat32\fP | \fBpaInt32\fP | \fBpaInt24\fP | \fBpaInt16\fP | \fBpaUInt8\fP)"
+.br
+.ti -1c
+.RI "#define \fBPA_ASIHPI_USE_BBM_\fP   1"
+.br
+.ti -1c
+.RI "#define \fBPA_ASIHPI_MIN_FRAMES_\fP   1152"
+.br
+.ti -1c
+.RI "#define \fBPA_ASIHPI_MIN_POLLING_INTERVAL_\fP   10"
+.br
+.in -1c
+.SS "Typedefs"
+
+.in +1c
+.ti -1c
+.RI "typedef struct \fBPaAsiHpiHostApiRepresentation\fP \fBPaAsiHpiHostApiRepresentation\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBPaAsiHpiDeviceInfo\fP \fBPaAsiHpiDeviceInfo\fP"
+.br
+.ti -1c
+.RI "typedef enum \fBPaAsiHpiStreamState\fP \fBPaAsiHpiStreamState\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBPaAsiHpiStreamComponent\fP \fBPaAsiHpiStreamComponent\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBPaAsiHpiStream\fP \fBPaAsiHpiStream\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBPaAsiHpiStreamInfo\fP \fBPaAsiHpiStreamInfo\fP"
+.br
+.in -1c
+.SS "Enumerations"
+
+.in +1c
+.ti -1c
+.RI "enum \fBPaAsiHpiStreamState\fP { \fBpaAsiHpiStoppedState\fP =0, \fBpaAsiHpiActiveState\fP =1, \fBpaAsiHpiCallbackFinishedState\fP =2 }"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBPaError\fP \fBPaAsiHpi_Initialize\fP (\fBPaUtilHostApiRepresentation\fP **hostApi, \fBPaHostApiIndex\fP index)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Host API implementation supporting AudioScience cards via the Linux HPI interface\&. 
+
+
+.SS "Overview"
+.PP
+This is a PortAudio implementation for the AudioScience HPI Audio API on the Linux platform\&. AudioScience makes a range of audio adapters customised for the broadcasting industry, with support for both Windows and Linux\&. More information on their products can be found on their website: 
+.PP
+.nf
+http://www.audioscience.com
+
+.fi
+.PP
+.PP
+Documentation for the HPI API can be found at: 
+.PP
+.nf
+http://www.audioscience.com/internet/download/sdk/hpi_usermanual_html/html/index.html
+
+.fi
+.PP
+.PP
+The Linux HPI driver itself (a kernel module + library) can be downloaded from: 
+.PP
+.nf
+http://www.audioscience.com/internet/download/linux_drivers.htm
+
+.fi
+.PP
+.PP
+.SS "Implementation strategy"
+.PP
+Note* Ideally, AudioScience cards should be handled by the PortAudio ALSA implementation on Linux, as ALSA is the preferred Linux soundcard API\&. The existence of this host API implementation might therefore seem a bit flawed\&. Unfortunately, at the time of the creation of this implementation (June 2006), the PA ALSA implementation could not make use of the existing AudioScience ALSA driver\&. PA ALSA uses the 'memory-mapped' (mmap) ALSA access mode to interact with the ALSA library, while the AudioScience ALSA driver only supports the 'read-write' access mode\&. The appropriate solution to this problem is to add 'read-write' support to PortAudio ALSA, thereby extending the range of soundcards it supports (AudioScience cards are not the only ones with this problem)\&. Given the author's limited knowledge of ALSA and the simplicity of the HPI API, the second-best solution was born\&.\&.\&.
+.PP
+The following mapping between HPI and PA was followed: HPI subsystem => PortAudio host API HPI adapter => nothing specific HPI stream => PortAudio device
+.PP
+Each HPI stream is either input or output (not both), and can support different channel counts, sampling rates and sample formats\&. It is therefore a more natural fit to a PA device\&. A PA stream can therefore combine two HPI streams (one input and one output) into a 'full-duplex' stream\&. These HPI streams can even be on different physical adapters\&. The two streams ought to be sample-synchronised when they reside on the same adapter, as most AudioScience adapters derive their ADC and DAC clocks from one master clock\&. When combining two adapters into one full-duplex stream, however, the use of a word clock connection between the adapters is strongly recommended\&.
+.PP
+The HPI interface is inherently blocking, making use of read and write calls to transfer data between user buffers and driver buffers\&. The callback interface therefore requires a helper thread ('callback engine') which periodically transfers data (one thread per PA stream, in fact)\&. The current implementation explicitly sleeps via \fBPa_Sleep()\fP until enough samples can be transferred (select() or poll() would be better, but currently seems impossible\&.\&.\&.)\&. The thread implementation makes use of the Unix thread helper functions and some pthread calls here and there\&. If a unified PA thread exists, this host API implementation might also compile on Windows, as this is the only real Linux-specific part of the code\&.
+.PP
+There is no inherent fixed buffer size in the HPI interface, as in some other host APIs\&. The PortAudio implementation contains a buffer that is allocated during OpenStream and used to transfer data between the callback and the HPI driver buffer\&. The size of this buffer is quite flexible and is derived from latency suggestions and matched to the requested callback buffer size as far as possible\&. It can become quite huge, as the AudioScience cards are typically geared towards higher-latency applications and contain large hardware buffers\&.
+.PP
+The HPI interface natively supports most common sample formats and sample rates (some conversion is done on the adapter itself)\&.
+.PP
+Stream time is measured based on the number of processed frames, which is adjusted by the number of frames currently buffered by the HPI driver\&.
+.PP
+There is basic support for detecting overflow and underflow\&. The HPI interface does not explicitly indicate this, so thresholds on buffer levels are used in combination with stream state\&. Recovery from overflow and underflow is left to the PA client\&.
+.PP
+Blocking streams are also implemented\&. It makes use of the same polling routines that the callback interface uses, in order to prevent the allocation of variable-sized buffers during reading and writing\&. The framesPerBuffer parameter is therefore still relevant, and this can be increased in the blocking case to improve efficiency\&.
+.PP
+The implementation contains extensive reporting macros (slightly modified PA_ENSURE and PA_UNLESS versions) and a useful stream dump routine to provide debugging feedback\&.
+.PP
+Output buffer priming via the user callback (i\&.e\&. paPrimeOutputBuffersUsingStreamCallback and friends) is not implemented yet\&. All output is primed with silence\&. 
+.PP
+Definition in file \fBpa_linux_asihpi\&.c\fP\&.
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define PA_ASIHPI_AVAILABLE_FORMATS_   (\fBpaFloat32\fP | \fBpaInt32\fP | \fBpaInt24\fP | \fBpaInt16\fP | \fBpaUInt8\fP)"
+\fBSample\fP formats available natively on AudioScience hardware 
+.PP
+Definition at line 242 of file pa_linux_asihpi\&.c\&.
+.SS "#define PA_ASIHPI_MIN_FRAMES_   1152"
+Minimum number of frames in HPI buffer (for either data or available space)\&. If buffer contains less data/space, it indicates xrun or completion\&. 
+.PP
+Definition at line 247 of file pa_linux_asihpi\&.c\&.
+.SS "#define PA_ASIHPI_MIN_POLLING_INTERVAL_   10"
+Minimum polling interval in milliseconds, which determines minimum host buffer size 
+.PP
+Definition at line 249 of file pa_linux_asihpi\&.c\&.
+.SS "#define PA_ASIHPI_REPORT_ERROR_(hpiErrorCode)"
+\fBValue:\fP
+.PP
+.nf
+do { \
+        char szError[256]; \
+        HPI_GetErrorText( hpiError, szError ); \
+        PA_DEBUG(( "HPI error %d occurred: %s\n", hpiError, szError )); \
+        /* PaUtil_SetLastHostErrorInfo should only be used in the main thread */ \
+        if( pthread_equal( pthread_self(), paUnixMainThread ) ) \
+    { \
+        PaUtil_SetLastHostErrorInfo( paInDevelopment, (hpiErrorCode), szError ); \
+    } \
+    } while( 0 );
+.fi
+Report HPI error code and text 
+.PP
+Definition at line 227 of file pa_linux_asihpi\&.c\&.
+.SS "#define PA_ASIHPI_UNLESS_(expr, paError)"
+\fBValue:\fP
+.PP
+.nf
+do { \
+        hpi_err_t hpiError = (expr); \
+        /* If HPI error occurred */ \
+        if( UNLIKELY( hpiError ) ) \
+        { \
+        char szError[256]; \
+        HPI_GetErrorText( hpiError, szError ); \
+        PA_DEBUG(( "HPI error %d occurred: %s\n", hpiError, szError )); \
+        /* This message will always be displayed, even if debug info is disabled */ \
+            PA_DEBUG(( "Expression '" #expr "' failed in '" __FILE__ "', line: " STRINGIZE( __LINE__ ) "\n" )); \
+            if( (paError) == paUnanticipatedHostError ) \
+        { \
+            PA_DEBUG(( "Host error description: %s\n", szError )); \
+            /* PaUtil_SetLastHostErrorInfo should only be used in the main thread */ \
+            if( pthread_equal( pthread_self(), paUnixMainThread ) ) \
+                { \
+            PaUtil_SetLastHostErrorInfo( paInDevelopment, hpiError, szError ); \
+                } \
+        } \
+        /* If paNoError is specified, continue as usual */ \
+            /* (useful if you only want to print out the debug messages above) */ \
+        if( (paError) < 0 ) \
+        { \
+            result = (paError); \
+            goto error; \
+        } \
+        } \
+    } while( 0 );
+.fi
+Check return value of HPI function, and map it to PaError 
+.PP
+Definition at line 196 of file pa_linux_asihpi\&.c\&.
+.SS "#define PA_ASIHPI_USE_BBM_   1"
+Enable background bus mastering (BBM) for buffer transfers, if available (see HPI docs) 
+.PP
+Definition at line 244 of file pa_linux_asihpi\&.c\&.
+.SS "#define PA_ENSURE_(expr)"
+\fBValue:\fP
+.PP
+.nf
+do { \
+        PaError paError = (expr); \
+        if( UNLIKELY( paError < paNoError ) ) \
+        { \
+            PA_DEBUG(( "Expression '" #expr "' failed in '" __FILE__ "', line: " STRINGIZE( __LINE__ ) "\n" )); \
+            result = paError; \
+            goto error; \
+        } \
+    } while (0);
+.fi
+Evaluate expression, and return on any PortAudio errors 
+.PP
+Definition at line 173 of file pa_linux_asihpi\&.c\&.
+.SS "#define PA_UNLESS_(expr, paError)"
+\fBValue:\fP
+.PP
+.nf
+do { \
+        if( UNLIKELY( (expr) == 0 ) ) \
+        { \
+            PA_DEBUG(( "Expression '" #expr "' failed in '" __FILE__ "', line: " STRINGIZE( __LINE__ ) "\n" )); \
+            result = (paError); \
+            goto error; \
+        } \
+    } while( 0 );
+.fi
+Assert expression, else return the provided PaError 
+.PP
+Definition at line 185 of file pa_linux_asihpi\&.c\&.
+.SH "Typedef Documentation"
+.PP 
+.SS "typedef struct \fBPaAsiHpiDeviceInfo\fP
+ \fBPaAsiHpiDeviceInfo\fP"
+Device data 
+.SS "typedef struct \fBPaAsiHpiHostApiRepresentation\fP
+ \fBPaAsiHpiHostApiRepresentation\fP"
+Host API global data 
+.SS "typedef struct \fBPaAsiHpiStream\fP
+ \fBPaAsiHpiStream\fP"
+Stream data 
+.SS "typedef struct \fBPaAsiHpiStreamComponent\fP
+ \fBPaAsiHpiStreamComponent\fP"
+Stream component data (associated with one direction, i\&.e\&. either input or output) 
+.SS "typedef struct \fBPaAsiHpiStreamInfo\fP
+ \fBPaAsiHpiStreamInfo\fP"
+Stream state information, collected together for convenience 
+.SS "typedef enum \fBPaAsiHpiStreamState\fP
+ \fBPaAsiHpiStreamState\fP"
+Stream state as defined by PortAudio\&. It seems that the host API implementation has to keep track of the PortAudio stream state\&. Please note that this is NOT the same as the state of the underlying HPI stream\&. By separating these two concepts, a lot of flexibility is gained\&. There is a rough match between the two, of course, but forcing a precise match is difficult\&. For example, HPI_STATE_DRAINED can occur during the Active state of PortAudio (due to underruns) and also during CallBackFinished in the case of an output stream\&. Similarly, HPI_STATE_STOPPED mostly coincides with the Stopped PortAudio state, by may also occur in the CallbackFinished state when recording is finished\&.
+.PP
+Here is a rough match-up:
+.PP
+PortAudio state => HPI state 
+.PP
+ Active => HPI_STATE_RECORDING, HPI_STATE_PLAYING, (HPI_STATE_DRAINED) Stopped => HPI_STATE_STOPPED CallbackFinished => HPI_STATE_STOPPED, HPI_STATE_DRAINED 
+.SH "Enumeration Type Documentation"
+.PP 
+.SS "enum \fBPaAsiHpiStreamState\fP"
+Stream state as defined by PortAudio\&. It seems that the host API implementation has to keep track of the PortAudio stream state\&. Please note that this is NOT the same as the state of the underlying HPI stream\&. By separating these two concepts, a lot of flexibility is gained\&. There is a rough match between the two, of course, but forcing a precise match is difficult\&. For example, HPI_STATE_DRAINED can occur during the Active state of PortAudio (due to underruns) and also during CallBackFinished in the case of an output stream\&. Similarly, HPI_STATE_STOPPED mostly coincides with the Stopped PortAudio state, by may also occur in the CallbackFinished state when recording is finished\&.
+.PP
+Here is a rough match-up:
+.PP
+PortAudio state => HPI state 
+.PP
+ Active => HPI_STATE_RECORDING, HPI_STATE_PLAYING, (HPI_STATE_DRAINED) Stopped => HPI_STATE_STOPPED CallbackFinished => HPI_STATE_STOPPED, HPI_STATE_DRAINED 
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fIpaAsiHpiStoppedState \fP\fP
+.TP
+\fB\fIpaAsiHpiActiveState \fP\fP
+.TP
+\fB\fIpaAsiHpiCallbackFinishedState \fP\fP
+.PP
+Definition at line 315 of file pa_linux_asihpi\&.c\&.
+.SH "Function Documentation"
+.PP 
+.SS "\fBPaError\fP PaAsiHpi_Initialize (\fBPaUtilHostApiRepresentation\fP ** hostApi, \fBPaHostApiIndex\fP hostApiIndex)"
+Initialize host API implementation\&. This is the only function exported beyond this file\&. It is called by PortAudio to initialize the host API\&. It stores API info, finds and registers all devices, and sets up callback and blocking interfaces\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIhostApi\fP Pointer to host API struct
+.br
+\fIhostApiIndex\fP Index of current (HPI) host API
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+PortAudio error code 
+.RE
+.PP
+
+.PP
+Definition at line 727 of file pa_linux_asihpi\&.c\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

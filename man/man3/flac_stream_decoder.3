@@ -1,0 +1,1773 @@
+.TH "flac_stream_decoder" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+flac_stream_decoder \- FLAC/stream_decoder\&.h: stream decoder interface
+.PP
+This module contains the functions which implement the stream decoder\&.  
+
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "struct \fBFLAC__StreamDecoder\fP"
+.br
+.in -1c
+.SS "Typedefs"
+
+.in +1c
+.ti -1c
+.RI "typedef \fBFLAC__StreamDecoderReadStatus\fP(* \fBFLAC__StreamDecoderReadCallback\fP) (\fBconst\fP \fBFLAC__StreamDecoder\fP *decoder, \fBFLAC__byte\fP \fBbuffer\fP[], size_t *bytes, \fBvoid\fP *client_data)"
+.br
+.ti -1c
+.RI "typedef \fBFLAC__StreamDecoderSeekStatus\fP(* \fBFLAC__StreamDecoderSeekCallback\fP) (\fBconst\fP \fBFLAC__StreamDecoder\fP *decoder, \fBFLAC__uint64\fP absolute_byte_offset, \fBvoid\fP *client_data)"
+.br
+.ti -1c
+.RI "typedef \fBFLAC__StreamDecoderTellStatus\fP(* \fBFLAC__StreamDecoderTellCallback\fP) (\fBconst\fP \fBFLAC__StreamDecoder\fP *decoder, \fBFLAC__uint64\fP *absolute_byte_offset, \fBvoid\fP *client_data)"
+.br
+.ti -1c
+.RI "typedef \fBFLAC__StreamDecoderLengthStatus\fP(* \fBFLAC__StreamDecoderLengthCallback\fP) (\fBconst\fP \fBFLAC__StreamDecoder\fP *decoder, \fBFLAC__uint64\fP *stream_length, \fBvoid\fP *client_data)"
+.br
+.ti -1c
+.RI "typedef \fBFLAC__bool\fP(* \fBFLAC__StreamDecoderEofCallback\fP) (\fBconst\fP \fBFLAC__StreamDecoder\fP *decoder, \fBvoid\fP *client_data)"
+.br
+.ti -1c
+.RI "typedef \fBFLAC__StreamDecoderWriteStatus\fP(* \fBFLAC__StreamDecoderWriteCallback\fP) (\fBconst\fP \fBFLAC__StreamDecoder\fP *decoder, \fBconst\fP \fBFLAC__Frame\fP *frame, \fBconst\fP \fBFLAC__int32\fP *\fBconst\fP \fBbuffer\fP[], \fBvoid\fP *client_data)"
+.br
+.ti -1c
+.RI "typedef \fBvoid\fP(* \fBFLAC__StreamDecoderMetadataCallback\fP) (\fBconst\fP \fBFLAC__StreamDecoder\fP *decoder, \fBconst\fP \fBFLAC__StreamMetadata\fP *metadata, \fBvoid\fP *client_data)"
+.br
+.ti -1c
+.RI "typedef \fBvoid\fP(* \fBFLAC__StreamDecoderErrorCallback\fP) (\fBconst\fP \fBFLAC__StreamDecoder\fP *decoder, \fBFLAC__StreamDecoderErrorStatus\fP \fBstatus\fP, \fBvoid\fP *client_data)"
+.br
+.in -1c
+.SS "Enumerations"
+
+.in +1c
+.ti -1c
+.RI "enum \fBFLAC__StreamDecoderState\fP { \fBFLAC__STREAM_DECODER_SEARCH_FOR_METADATA\fP = 0, \fBFLAC__STREAM_DECODER_READ_METADATA\fP, \fBFLAC__STREAM_DECODER_SEARCH_FOR_FRAME_SYNC\fP, \fBFLAC__STREAM_DECODER_READ_FRAME\fP, \fBFLAC__STREAM_DECODER_END_OF_STREAM\fP, \fBFLAC__STREAM_DECODER_OGG_ERROR\fP, \fBFLAC__STREAM_DECODER_SEEK_ERROR\fP, \fBFLAC__STREAM_DECODER_ABORTED\fP, \fBFLAC__STREAM_DECODER_MEMORY_ALLOCATION_ERROR\fP, \fBFLAC__STREAM_DECODER_UNINITIALIZED\fP }"
+.br
+.ti -1c
+.RI "enum \fBFLAC__StreamDecoderInitStatus\fP { \fBFLAC__STREAM_DECODER_INIT_STATUS_OK\fP = 0, \fBFLAC__STREAM_DECODER_INIT_STATUS_UNSUPPORTED_CONTAINER\fP, \fBFLAC__STREAM_DECODER_INIT_STATUS_INVALID_CALLBACKS\fP, \fBFLAC__STREAM_DECODER_INIT_STATUS_MEMORY_ALLOCATION_ERROR\fP, \fBFLAC__STREAM_DECODER_INIT_STATUS_ERROR_OPENING_FILE\fP, \fBFLAC__STREAM_DECODER_INIT_STATUS_ALREADY_INITIALIZED\fP }"
+.br
+.ti -1c
+.RI "enum \fBFLAC__StreamDecoderReadStatus\fP { \fBFLAC__STREAM_DECODER_READ_STATUS_CONTINUE\fP, \fBFLAC__STREAM_DECODER_READ_STATUS_END_OF_STREAM\fP, \fBFLAC__STREAM_DECODER_READ_STATUS_ABORT\fP }"
+.br
+.ti -1c
+.RI "enum \fBFLAC__StreamDecoderSeekStatus\fP { \fBFLAC__STREAM_DECODER_SEEK_STATUS_OK\fP, \fBFLAC__STREAM_DECODER_SEEK_STATUS_ERROR\fP, \fBFLAC__STREAM_DECODER_SEEK_STATUS_UNSUPPORTED\fP }"
+.br
+.ti -1c
+.RI "enum \fBFLAC__StreamDecoderTellStatus\fP { \fBFLAC__STREAM_DECODER_TELL_STATUS_OK\fP, \fBFLAC__STREAM_DECODER_TELL_STATUS_ERROR\fP, \fBFLAC__STREAM_DECODER_TELL_STATUS_UNSUPPORTED\fP }"
+.br
+.ti -1c
+.RI "enum \fBFLAC__StreamDecoderLengthStatus\fP { \fBFLAC__STREAM_DECODER_LENGTH_STATUS_OK\fP, \fBFLAC__STREAM_DECODER_LENGTH_STATUS_ERROR\fP, \fBFLAC__STREAM_DECODER_LENGTH_STATUS_UNSUPPORTED\fP }"
+.br
+.ti -1c
+.RI "enum \fBFLAC__StreamDecoderWriteStatus\fP { \fBFLAC__STREAM_DECODER_WRITE_STATUS_CONTINUE\fP, \fBFLAC__STREAM_DECODER_WRITE_STATUS_ABORT\fP }"
+.br
+.ti -1c
+.RI "enum \fBFLAC__StreamDecoderErrorStatus\fP { \fBFLAC__STREAM_DECODER_ERROR_STATUS_LOST_SYNC\fP, \fBFLAC__STREAM_DECODER_ERROR_STATUS_BAD_HEADER\fP, \fBFLAC__STREAM_DECODER_ERROR_STATUS_FRAME_CRC_MISMATCH\fP, \fBFLAC__STREAM_DECODER_ERROR_STATUS_UNPARSEABLE_STREAM\fP }"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__StreamDecoder\fP * \fBFLAC__stream_decoder_new\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBvoid\fP \fBFLAC__stream_decoder_delete\fP (\fBFLAC__StreamDecoder\fP *decoder)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__stream_decoder_set_ogg_serial_number\fP (\fBFLAC__StreamDecoder\fP *decoder, long \fBserial_number\fP)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__stream_decoder_set_md5_checking\fP (\fBFLAC__StreamDecoder\fP *decoder, \fBFLAC__bool\fP \fBvalue\fP)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__stream_decoder_set_metadata_respond\fP (\fBFLAC__StreamDecoder\fP *decoder, \fBFLAC__MetadataType\fP type)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__stream_decoder_set_metadata_respond_application\fP (\fBFLAC__StreamDecoder\fP *decoder, \fBconst\fP \fBFLAC__byte\fP id[4])"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__stream_decoder_set_metadata_respond_all\fP (\fBFLAC__StreamDecoder\fP *decoder)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__stream_decoder_set_metadata_ignore\fP (\fBFLAC__StreamDecoder\fP *decoder, \fBFLAC__MetadataType\fP type)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__stream_decoder_set_metadata_ignore_application\fP (\fBFLAC__StreamDecoder\fP *decoder, \fBconst\fP \fBFLAC__byte\fP id[4])"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__stream_decoder_set_metadata_ignore_all\fP (\fBFLAC__StreamDecoder\fP *decoder)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__StreamDecoderState\fP \fBFLAC__stream_decoder_get_state\fP (\fBconst\fP \fBFLAC__StreamDecoder\fP *decoder)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBconst\fP char * \fBFLAC__stream_decoder_get_resolved_state_string\fP (\fBconst\fP \fBFLAC__StreamDecoder\fP *decoder)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__stream_decoder_get_md5_checking\fP (\fBconst\fP \fBFLAC__StreamDecoder\fP *decoder)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__uint64\fP \fBFLAC__stream_decoder_get_total_samples\fP (\fBconst\fP \fBFLAC__StreamDecoder\fP *decoder)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP unsigned \fBFLAC__stream_decoder_get_channels\fP (\fBconst\fP \fBFLAC__StreamDecoder\fP *decoder)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__ChannelAssignment\fP \fBFLAC__stream_decoder_get_channel_assignment\fP (\fBconst\fP \fBFLAC__StreamDecoder\fP *decoder)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP unsigned \fBFLAC__stream_decoder_get_bits_per_sample\fP (\fBconst\fP \fBFLAC__StreamDecoder\fP *decoder)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP unsigned \fBFLAC__stream_decoder_get_sample_rate\fP (\fBconst\fP \fBFLAC__StreamDecoder\fP *decoder)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP unsigned \fBFLAC__stream_decoder_get_blocksize\fP (\fBconst\fP \fBFLAC__StreamDecoder\fP *decoder)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__stream_decoder_get_decode_position\fP (\fBconst\fP \fBFLAC__StreamDecoder\fP *decoder, \fBFLAC__uint64\fP *\fBposition\fP)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__StreamDecoderInitStatus\fP \fBFLAC__stream_decoder_init_stream\fP (\fBFLAC__StreamDecoder\fP *decoder, \fBFLAC__StreamDecoderReadCallback\fP read_callback, \fBFLAC__StreamDecoderSeekCallback\fP seek_callback, \fBFLAC__StreamDecoderTellCallback\fP tell_callback, \fBFLAC__StreamDecoderLengthCallback\fP length_callback, \fBFLAC__StreamDecoderEofCallback\fP eof_callback, \fBFLAC__StreamDecoderWriteCallback\fP write_callback, \fBFLAC__StreamDecoderMetadataCallback\fP metadata_callback, \fBFLAC__StreamDecoderErrorCallback\fP error_callback, \fBvoid\fP *client_data)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__StreamDecoderInitStatus\fP \fBFLAC__stream_decoder_init_ogg_stream\fP (\fBFLAC__StreamDecoder\fP *decoder, \fBFLAC__StreamDecoderReadCallback\fP read_callback, \fBFLAC__StreamDecoderSeekCallback\fP seek_callback, \fBFLAC__StreamDecoderTellCallback\fP tell_callback, \fBFLAC__StreamDecoderLengthCallback\fP length_callback, \fBFLAC__StreamDecoderEofCallback\fP eof_callback, \fBFLAC__StreamDecoderWriteCallback\fP write_callback, \fBFLAC__StreamDecoderMetadataCallback\fP metadata_callback, \fBFLAC__StreamDecoderErrorCallback\fP error_callback, \fBvoid\fP *client_data)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__StreamDecoderInitStatus\fP \fBFLAC__stream_decoder_init_FILE\fP (\fBFLAC__StreamDecoder\fP *decoder, FILE *file, \fBFLAC__StreamDecoderWriteCallback\fP write_callback, \fBFLAC__StreamDecoderMetadataCallback\fP metadata_callback, \fBFLAC__StreamDecoderErrorCallback\fP error_callback, \fBvoid\fP *client_data)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__StreamDecoderInitStatus\fP \fBFLAC__stream_decoder_init_ogg_FILE\fP (\fBFLAC__StreamDecoder\fP *decoder, FILE *file, \fBFLAC__StreamDecoderWriteCallback\fP write_callback, \fBFLAC__StreamDecoderMetadataCallback\fP metadata_callback, \fBFLAC__StreamDecoderErrorCallback\fP error_callback, \fBvoid\fP *client_data)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__StreamDecoderInitStatus\fP \fBFLAC__stream_decoder_init_file\fP (\fBFLAC__StreamDecoder\fP *decoder, \fBconst\fP char *\fBfilename\fP, \fBFLAC__StreamDecoderWriteCallback\fP write_callback, \fBFLAC__StreamDecoderMetadataCallback\fP metadata_callback, \fBFLAC__StreamDecoderErrorCallback\fP error_callback, \fBvoid\fP *client_data)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__StreamDecoderInitStatus\fP \fBFLAC__stream_decoder_init_ogg_file\fP (\fBFLAC__StreamDecoder\fP *decoder, \fBconst\fP char *\fBfilename\fP, \fBFLAC__StreamDecoderWriteCallback\fP write_callback, \fBFLAC__StreamDecoderMetadataCallback\fP metadata_callback, \fBFLAC__StreamDecoderErrorCallback\fP error_callback, \fBvoid\fP *client_data)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__stream_decoder_finish\fP (\fBFLAC__StreamDecoder\fP *decoder)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__stream_decoder_flush\fP (\fBFLAC__StreamDecoder\fP *decoder)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__stream_decoder_reset\fP (\fBFLAC__StreamDecoder\fP *decoder)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__stream_decoder_process_single\fP (\fBFLAC__StreamDecoder\fP *decoder)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__stream_decoder_process_until_end_of_metadata\fP (\fBFLAC__StreamDecoder\fP *decoder)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__stream_decoder_process_until_end_of_stream\fP (\fBFLAC__StreamDecoder\fP *decoder)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__stream_decoder_skip_single_frame\fP (\fBFLAC__StreamDecoder\fP *decoder)"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBFLAC__bool\fP \fBFLAC__stream_decoder_seek_absolute\fP (\fBFLAC__StreamDecoder\fP *decoder, \fBFLAC__uint64\fP sample)"
+.br
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "\fBFLAC_API\fP \fBconst\fP char *\fBconst\fP \fBFLAC__StreamDecoderStateString\fP []"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBconst\fP char *\fBconst\fP \fBFLAC__StreamDecoderInitStatusString\fP []"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBconst\fP char *\fBconst\fP \fBFLAC__StreamDecoderReadStatusString\fP []"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBconst\fP char *\fBconst\fP \fBFLAC__StreamDecoderSeekStatusString\fP []"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBconst\fP char *\fBconst\fP \fBFLAC__StreamDecoderTellStatusString\fP []"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBconst\fP char *\fBconst\fP \fBFLAC__StreamDecoderLengthStatusString\fP []"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBconst\fP char *\fBconst\fP \fBFLAC__StreamDecoderWriteStatusString\fP []"
+.br
+.ti -1c
+.RI "\fBFLAC_API\fP \fBconst\fP char *\fBconst\fP \fBFLAC__StreamDecoderErrorStatusString\fP []"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+This module contains the functions which implement the stream decoder\&. 
+
+The stream decoder can decode native \fBFLAC\fP, and optionally Ogg \fBFLAC\fP (check FLAC_API_SUPPORTS_OGG_FLAC) streams and files\&.
+.PP
+The basic usage of this decoder is as follows:
+.IP "\(bu" 2
+The program creates an instance of a decoder using \fBFLAC__stream_decoder_new()\fP\&.
+.IP "\(bu" 2
+The program overrides the default settings using FLAC__stream_decoder_set_*() functions\&.
+.IP "\(bu" 2
+The program initializes the instance to validate the settings and prepare for decoding using
+.IP "  \(bu" 4
+\fBFLAC__stream_decoder_init_stream()\fP or \fBFLAC__stream_decoder_init_FILE()\fP or \fBFLAC__stream_decoder_init_file()\fP for native \fBFLAC\fP,
+.IP "  \(bu" 4
+\fBFLAC__stream_decoder_init_ogg_stream()\fP or \fBFLAC__stream_decoder_init_ogg_FILE()\fP or \fBFLAC__stream_decoder_init_ogg_file()\fP for Ogg \fBFLAC\fP
+.PP
+
+.IP "\(bu" 2
+The program calls the FLAC__stream_decoder_process_*() functions to decode data, which subsequently calls the callbacks\&.
+.IP "\(bu" 2
+The program finishes the decoding with \fBFLAC__stream_decoder_finish()\fP, which flushes the input and output and resets the decoder to the uninitialized state\&.
+.IP "\(bu" 2
+The instance may be used again or deleted with \fBFLAC__stream_decoder_delete()\fP\&.
+.PP
+.PP
+In more detail, the program will create a new instance by calling \fBFLAC__stream_decoder_new()\fP, then call FLAC__stream_decoder_set_*() functions to override the default decoder options, and call one of the FLAC__stream_decoder_init_*() functions\&.
+.PP
+There are three initialization functions for native \fBFLAC\fP, one for setting up the decoder to decode \fBFLAC\fP data from the client via callbacks, and two for decoding directly from a \fBFLAC\fP file\&.
+.PP
+For decoding via callbacks, use \fBFLAC__stream_decoder_init_stream()\fP\&. You must also supply several callbacks for handling I/O\&. Some (like seeking) are optional, depending on the capabilities of the input\&.
+.PP
+For decoding directly from a file, use \fBFLAC__stream_decoder_init_FILE()\fP or \fBFLAC__stream_decoder_init_file()\fP\&. Then you must only supply an open \fCFILE*\fP or filename and fewer callbacks; the decoder will handle the other callbacks internally\&.
+.PP
+There are three similarly-named init functions for decoding from Ogg \fBFLAC\fP streams\&. Check \fCFLAC_API_SUPPORTS_OGG_FLAC\fP to find out if the library has been built with Ogg support\&.
+.PP
+Once the decoder is initialized, your program will call one of several functions to start the decoding process:
+.PP
+.IP "\(bu" 2
+\fBFLAC__stream_decoder_process_single()\fP - Tells the decoder to process at most one metadata block or audio frame and return, calling either the metadata callback or write callback, respectively, once\&. If the decoder loses sync it will return with only the error callback being called\&.
+.IP "\(bu" 2
+\fBFLAC__stream_decoder_process_until_end_of_metadata()\fP - Tells the decoder to process the stream from the current location and stop upon reaching the first audio frame\&. The client will get one metadata, write, or error callback per metadata block, audio frame, or sync error, respectively\&.
+.IP "\(bu" 2
+\fBFLAC__stream_decoder_process_until_end_of_stream()\fP - Tells the decoder to process the stream from the current location until the read callback returns FLAC__STREAM_DECODER_READ_STATUS_END_OF_STREAM or FLAC__STREAM_DECODER_READ_STATUS_ABORT\&. The client will get one metadata, write, or error callback per metadata block, audio frame, or sync error, respectively\&.
+.PP
+.PP
+When the decoder has finished decoding (normally or through an abort), the instance is finished by calling \fBFLAC__stream_decoder_finish()\fP, which ensures the decoder is in the correct state and frees memory\&. Then the instance may be deleted with \fBFLAC__stream_decoder_delete()\fP or initialized again to decode another stream\&.
+.PP
+Seeking is exposed through the \fBFLAC__stream_decoder_seek_absolute()\fP method\&. At any point after the stream decoder has been initialized, the client can call this function to seek to an exact sample within the stream\&. Subsequently, the first time the write callback is called it will be passed a (possibly partial) block starting at that sample\&.
+.PP
+If the client cannot seek via the callback interface provided, but still has another way of seeking, it can flush the decoder using \fBFLAC__stream_decoder_flush()\fP and start feeding data from the new position through the read callback\&.
+.PP
+The stream decoder also provides MD5 signature checking\&. If this is turned on before initialization, \fBFLAC__stream_decoder_finish()\fP will report when the decoded MD5 signature does not match the one stored in the STREAMINFO block\&. MD5 checking is automatically turned off (until the next \fBFLAC__stream_decoder_reset()\fP) if there is no signature in the STREAMINFO block or when a seek is attempted\&.
+.PP
+The FLAC__stream_decoder_set_metadata_*() functions deserve special attention\&. By default, the decoder only calls the metadata_callback for the STREAMINFO block\&. These functions allow you to tell the decoder explicitly which blocks to parse and return via the metadata_callback and/or which to skip\&. Use a \fBFLAC__stream_decoder_set_metadata_respond_all()\fP, \fBFLAC__stream_decoder_set_metadata_ignore()\fP \&.\&.\&. or \fBFLAC__stream_decoder_set_metadata_ignore_all()\fP, \fBFLAC__stream_decoder_set_metadata_respond()\fP \&.\&.\&. sequence to exactly specify which blocks to return\&. Remember that metadata blocks can potentially be big (for example, cover art) so filtering out the ones you don't use can reduce the memory requirements of the decoder\&. Also note the special forms FLAC__stream_decoder_set_metadata_respond_application(id) and FLAC__stream_decoder_set_metadata_ignore_application(id) for filtering APPLICATION blocks based on the application ID\&.
+.PP
+STREAMINFO and SEEKTABLE blocks are always parsed and used internally, but they still can legally be filtered from the metadata_callback\&.
+.PP
+\fBNote:\fP
+.RS 4
+The 'set' functions may only be called when the decoder is in the state FLAC__STREAM_DECODER_UNINITIALIZED, i\&.e\&. after \fBFLAC__stream_decoder_new()\fP or \fBFLAC__stream_decoder_finish()\fP, but before FLAC__stream_decoder_init_*()\&. If this is the case they will return \fCtrue\fP, otherwise \fCfalse\fP\&.
+.PP
+\fBFLAC__stream_decoder_finish()\fP resets all settings to the constructor defaults, including the callbacks\&. 
+.RE
+.PP
+
+.SH "Typedef Documentation"
+.PP 
+.SS "typedef \fBFLAC__bool\fP(* FLAC__StreamDecoderEofCallback) (\fBconst\fP \fBFLAC__StreamDecoder\fP *decoder, \fBvoid\fP *client_data)"
+Signature for the EOF callback\&.
+.PP
+A function pointer matching this signature may be passed to FLAC__stream_decoder_init*_stream()\&. The supplied function will be called when the decoder needs to know if the end of the stream has been reached\&.
+.PP
+Here is an example of a EOF callback for stdio streams: FLAC__bool eof_cb(const FLAC__StreamDecoder *decoder, void *client_data) 
+.PP
+.nf
+1 {
+2   FILE *file = ((MyClientData*)client_data)->file;
+3   return feof(file)? true : false;
+4 }
+
+.fi
+.PP
+.PP
+\fBNote:\fP
+.RS 4
+In general, \fBFLAC__StreamDecoder\fP functions which change the state should not be called on the \fIdecoder\fP while in the callback\&.
+.RE
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdecoder\fP The decoder instance calling the callback\&. 
+.br
+\fIclient_data\fP The callee's client data set through FLAC__stream_decoder_init_*()\&. 
+.RE
+.PP
+\fBReturn values:\fP
+.RS 4
+\fIFLAC__bool\fP \fCtrue\fP if the currently at the end of the stream, else \fCfalse\fP\&. 
+.RE
+.PP
+
+.PP
+Definition at line 655 of file stream_decoder\&.h\&.
+.SS "typedef \fBvoid\fP(* FLAC__StreamDecoderErrorCallback) (\fBconst\fP \fBFLAC__StreamDecoder\fP *decoder, \fBFLAC__StreamDecoderErrorStatus\fP \fBstatus\fP, \fBvoid\fP *client_data)"
+Signature for the error callback\&.
+.PP
+A function pointer matching this signature must be passed to one of the FLAC__stream_decoder_init_*() functions\&. The supplied function will be called whenever an error occurs during decoding\&.
+.PP
+\fBNote:\fP
+.RS 4
+In general, \fBFLAC__StreamDecoder\fP functions which change the state should not be called on the \fIdecoder\fP while in the callback\&.
+.RE
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdecoder\fP The decoder instance calling the callback\&. 
+.br
+\fIstatus\fP The error encountered by the decoder\&. 
+.br
+\fIclient_data\fP The callee's client data set through FLAC__stream_decoder_init_*()\&. 
+.RE
+.PP
+
+.PP
+Definition at line 727 of file stream_decoder\&.h\&.
+.SS "typedef \fBFLAC__StreamDecoderLengthStatus\fP(* FLAC__StreamDecoderLengthCallback) (\fBconst\fP \fBFLAC__StreamDecoder\fP *decoder, \fBFLAC__uint64\fP *stream_length, \fBvoid\fP *client_data)"
+Signature for the length callback\&.
+.PP
+A function pointer matching this signature may be passed to FLAC__stream_decoder_init*_stream()\&. The supplied function will be called when the decoder wants to know the total length of the stream in bytes\&.
+.PP
+Here is an example of a length callback for stdio streams: 
+.PP
+.nf
+1 FLAC__StreamDecoderLengthStatus length_cb(const FLAC__StreamDecoder *decoder, FLAC__uint64 *stream_length, void *client_data)
+2 {
+3   FILE *file = ((MyClientData*)client_data)->file;
+4   struct stat filestats;
+5 
+6   if(file == stdin)
+7     return FLAC__STREAM_DECODER_LENGTH_STATUS_UNSUPPORTED;
+8   else if(fstat(fileno(file), &filestats) != 0)
+9     return FLAC__STREAM_DECODER_LENGTH_STATUS_ERROR;
+10   else {
+11     *stream_length = (FLAC__uint64)filestats\&.st_size;
+12     return FLAC__STREAM_DECODER_LENGTH_STATUS_OK;
+13   }
+14 }
+
+.fi
+.PP
+.PP
+\fBNote:\fP
+.RS 4
+In general, \fBFLAC__StreamDecoder\fP functions which change the state should not be called on the \fIdecoder\fP while in the callback\&.
+.RE
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdecoder\fP The decoder instance calling the callback\&. 
+.br
+\fIstream_length\fP A pointer to storage for the length of the stream in bytes\&. 
+.br
+\fIclient_data\fP The callee's client data set through FLAC__stream_decoder_init_*()\&. 
+.RE
+.PP
+\fBReturn values:\fP
+.RS 4
+\fIFLAC__StreamDecoderLengthStatus\fP The callee's return status\&. 
+.RE
+.PP
+
+.PP
+Definition at line 628 of file stream_decoder\&.h\&.
+.SS "typedef \fBvoid\fP(* FLAC__StreamDecoderMetadataCallback) (\fBconst\fP \fBFLAC__StreamDecoder\fP *decoder, \fBconst\fP \fBFLAC__StreamMetadata\fP *metadata, \fBvoid\fP *client_data)"
+Signature for the metadata callback\&.
+.PP
+A function pointer matching this signature must be passed to one of the FLAC__stream_decoder_init_*() functions\&. The supplied function will be called when the decoder has decoded a metadata block\&. In a valid \fBFLAC\fP file there will always be one \fCSTREAMINFO\fP block, followed by zero or more other metadata blocks\&. These will be supplied by the decoder in the same order as they appear in the stream and always before the first audio frame (i\&.e\&. write callback)\&. The metadata block that is passed in must not be modified, and it doesn't live beyond the callback, so you should make a copy of it with \fBFLAC__metadata_object_clone()\fP if you will need it elsewhere\&. Since metadata blocks can potentially be large, by default the decoder only calls the metadata callback for the \fCSTREAMINFO\fP block; you can instruct the decoder to pass or filter other blocks with FLAC__stream_decoder_set_metadata_*() calls\&.
+.PP
+\fBNote:\fP
+.RS 4
+In general, \fBFLAC__StreamDecoder\fP functions which change the state should not be called on the \fIdecoder\fP while in the callback\&.
+.RE
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdecoder\fP The decoder instance calling the callback\&. 
+.br
+\fImetadata\fP The decoded metadata block\&. 
+.br
+\fIclient_data\fP The callee's client data set through FLAC__stream_decoder_init_*()\&. 
+.RE
+.PP
+
+.PP
+Definition at line 710 of file stream_decoder\&.h\&.
+.SS "typedef \fBFLAC__StreamDecoderReadStatus\fP(* FLAC__StreamDecoderReadCallback) (\fBconst\fP \fBFLAC__StreamDecoder\fP *decoder, \fBFLAC__byte\fP \fBbuffer\fP[], size_t *bytes, \fBvoid\fP *client_data)"
+Signature for the read callback\&.
+.PP
+A function pointer matching this signature must be passed to FLAC__stream_decoder_init*_stream()\&. The supplied function will be called when the decoder needs more input data\&. The address of the buffer to be filled is supplied, along with the number of bytes the buffer can hold\&. The callback may choose to supply less data and modify the byte count but must be careful not to overflow the buffer\&. The callback then returns a status code chosen from FLAC__StreamDecoderReadStatus\&.
+.PP
+Here is an example of a read callback for stdio streams: 
+.PP
+.nf
+1 FLAC__StreamDecoderReadStatus read_cb(const FLAC__StreamDecoder *decoder, FLAC__byte buffer[], size_t *bytes, void *client_data)
+2 {
+3   FILE *file = ((MyClientData*)client_data)->file;
+4   if(*bytes > 0) {
+5     *bytes = fread(buffer, sizeof(FLAC__byte), *bytes, file);
+6     if(ferror(file))
+7       return FLAC__STREAM_DECODER_READ_STATUS_ABORT;
+8     else if(*bytes == 0)
+9       return FLAC__STREAM_DECODER_READ_STATUS_END_OF_STREAM;
+10     else
+11       return FLAC__STREAM_DECODER_READ_STATUS_CONTINUE;
+12   }
+13   else
+14     return FLAC__STREAM_DECODER_READ_STATUS_ABORT;
+15 }
+
+.fi
+.PP
+.PP
+\fBNote:\fP
+.RS 4
+In general, \fBFLAC__StreamDecoder\fP functions which change the state should not be called on the \fIdecoder\fP while in the callback\&.
+.RE
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdecoder\fP The decoder instance calling the callback\&. 
+.br
+\fIbuffer\fP A pointer to a location for the callee to store data to be decoded\&. 
+.br
+\fIbytes\fP A pointer to the size of the buffer\&. On entry to the callback, it contains the maximum number of bytes that may be stored in \fIbuffer\fP\&. The callee must set it to the actual number of bytes stored (0 in case of error or end-of-stream) before returning\&. 
+.br
+\fIclient_data\fP The callee's client data set through FLAC__stream_decoder_init_*()\&. 
+.RE
+.PP
+\fBReturn values:\fP
+.RS 4
+\fIFLAC__StreamDecoderReadStatus\fP The callee's return status\&. Note that the callback should return \fCFLAC__STREAM_DECODER_READ_STATUS_END_OF_STREAM\fP if and only if zero bytes were read and there is no more data to be read\&. 
+.RE
+.PP
+
+.PP
+Definition at line 517 of file stream_decoder\&.h\&.
+.SS "typedef \fBFLAC__StreamDecoderSeekStatus\fP(* FLAC__StreamDecoderSeekCallback) (\fBconst\fP \fBFLAC__StreamDecoder\fP *decoder, \fBFLAC__uint64\fP absolute_byte_offset, \fBvoid\fP *client_data)"
+Signature for the seek callback\&.
+.PP
+A function pointer matching this signature may be passed to FLAC__stream_decoder_init*_stream()\&. The supplied function will be called when the decoder needs to seek the input stream\&. The decoder will pass the absolute byte offset to seek to, 0 meaning the beginning of the stream\&.
+.PP
+Here is an example of a seek callback for stdio streams: 
+.PP
+.nf
+1 FLAC__StreamDecoderSeekStatus seek_cb(const FLAC__StreamDecoder *decoder, FLAC__uint64 absolute_byte_offset, void *client_data)
+2 {
+3   FILE *file = ((MyClientData*)client_data)->file;
+4   if(file == stdin)
+5     return FLAC__STREAM_DECODER_SEEK_STATUS_UNSUPPORTED;
+6   else if(fseeko(file, (off_t)absolute_byte_offset, SEEK_SET) < 0)
+7     return FLAC__STREAM_DECODER_SEEK_STATUS_ERROR;
+8   else
+9     return FLAC__STREAM_DECODER_SEEK_STATUS_OK;
+10 }
+
+.fi
+.PP
+.PP
+\fBNote:\fP
+.RS 4
+In general, \fBFLAC__StreamDecoder\fP functions which change the state should not be called on the \fIdecoder\fP while in the callback\&.
+.RE
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdecoder\fP The decoder instance calling the callback\&. 
+.br
+\fIabsolute_byte_offset\fP The offset from the beginning of the stream to seek to\&. 
+.br
+\fIclient_data\fP The callee's client data set through FLAC__stream_decoder_init_*()\&. 
+.RE
+.PP
+\fBReturn values:\fP
+.RS 4
+\fIFLAC__StreamDecoderSeekStatus\fP The callee's return status\&. 
+.RE
+.PP
+
+.PP
+Definition at line 552 of file stream_decoder\&.h\&.
+.SS "typedef \fBFLAC__StreamDecoderTellStatus\fP(* FLAC__StreamDecoderTellCallback) (\fBconst\fP \fBFLAC__StreamDecoder\fP *decoder, \fBFLAC__uint64\fP *absolute_byte_offset, \fBvoid\fP *client_data)"
+Signature for the tell callback\&.
+.PP
+A function pointer matching this signature may be passed to FLAC__stream_decoder_init*_stream()\&. The supplied function will be called when the decoder wants to know the current position of the stream\&. The callback should return the byte offset from the beginning of the stream\&.
+.PP
+Here is an example of a tell callback for stdio streams: 
+.PP
+.nf
+1 FLAC__StreamDecoderTellStatus tell_cb(const FLAC__StreamDecoder *decoder, FLAC__uint64 *absolute_byte_offset, void *client_data)
+2 {
+3   FILE *file = ((MyClientData*)client_data)->file;
+4   off_t pos;
+5   if(file == stdin)
+6     return FLAC__STREAM_DECODER_TELL_STATUS_UNSUPPORTED;
+7   else if((pos = ftello(file)) < 0)
+8     return FLAC__STREAM_DECODER_TELL_STATUS_ERROR;
+9   else {
+10     *absolute_byte_offset = (FLAC__uint64)pos;
+11     return FLAC__STREAM_DECODER_TELL_STATUS_OK;
+12   }
+13 }
+
+.fi
+.PP
+.PP
+\fBNote:\fP
+.RS 4
+In general, \fBFLAC__StreamDecoder\fP functions which change the state should not be called on the \fIdecoder\fP while in the callback\&.
+.RE
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdecoder\fP The decoder instance calling the callback\&. 
+.br
+\fIabsolute_byte_offset\fP A pointer to storage for the current offset from the beginning of the stream\&. 
+.br
+\fIclient_data\fP The callee's client data set through FLAC__stream_decoder_init_*()\&. 
+.RE
+.PP
+\fBReturn values:\fP
+.RS 4
+\fIFLAC__StreamDecoderTellStatus\fP The callee's return status\&. 
+.RE
+.PP
+
+.PP
+Definition at line 590 of file stream_decoder\&.h\&.
+.SS "typedef \fBFLAC__StreamDecoderWriteStatus\fP(* FLAC__StreamDecoderWriteCallback) (\fBconst\fP \fBFLAC__StreamDecoder\fP *decoder, \fBconst\fP \fBFLAC__Frame\fP *frame, \fBconst\fP \fBFLAC__int32\fP *\fBconst\fP \fBbuffer\fP[], \fBvoid\fP *client_data)"
+Signature for the write callback\&.
+.PP
+A function pointer matching this signature must be passed to one of the FLAC__stream_decoder_init_*() functions\&. The supplied function will be called when the decoder has decoded a single audio frame\&. The decoder will pass the frame metadata as well as an array of pointers (one for each channel) pointing to the decoded audio\&.
+.PP
+\fBNote:\fP
+.RS 4
+In general, \fBFLAC__StreamDecoder\fP functions which change the state should not be called on the \fIdecoder\fP while in the callback\&.
+.RE
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdecoder\fP The decoder instance calling the callback\&. 
+.br
+\fIframe\fP The description of the decoded frame\&. See \fBFLAC__Frame\fP\&. 
+.br
+\fIbuffer\fP An array of pointers to decoded channels of data\&. Each pointer will point to an array of signed samples of length \fIframe->header\&.blocksize\fP\&. Channels will be ordered according to the \fBFLAC\fP specification; see the documentation for the \fCframe header\fP\&. 
+.br
+\fIclient_data\fP The callee's client data set through FLAC__stream_decoder_init_*()\&. 
+.RE
+.PP
+\fBReturn values:\fP
+.RS 4
+\fIFLAC__StreamDecoderWriteStatus\fP The callee's return status\&. 
+.RE
+.PP
+
+.PP
+Definition at line 683 of file stream_decoder\&.h\&.
+.SH "Enumeration Type Documentation"
+.PP 
+.SS "enum \fBFLAC__StreamDecoderErrorStatus\fP"
+Possible values passed back to the \fBFLAC__StreamDecoder\fP error callback\&. \fCFLAC__STREAM_DECODER_ERROR_STATUS_LOST_SYNC\fP is the generic catch- all\&. The rest could be caused by bad sync (false synchronization on data that is not the start of a frame) or corrupted data\&. The error itself is the decoder's best guess at what happened assuming a correct sync\&. For example \fCFLAC__STREAM_DECODER_ERROR_STATUS_BAD_HEADER\fP could be caused by a correct sync on the start of a frame, but some data in the frame header was corrupted\&. Or it could be the result of syncing on a point the stream that looked like the starting of a frame but was not\&. \fCFLAC__STREAM_DECODER_ERROR_STATUS_UNPARSEABLE_STREAM\fP could be because the decoder encountered a valid frame made by a future version of the encoder which it cannot parse, or because of a false sync making it appear as though an encountered frame was generated by a future encoder\&. 
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fIFLAC__STREAM_DECODER_ERROR_STATUS_LOST_SYNC \fP\fP
+An error in the stream caused the decoder to lose synchronization\&. 
+.TP
+\fB\fIFLAC__STREAM_DECODER_ERROR_STATUS_BAD_HEADER \fP\fP
+The decoder encountered a corrupted frame header\&. 
+.TP
+\fB\fIFLAC__STREAM_DECODER_ERROR_STATUS_FRAME_CRC_MISMATCH \fP\fP
+The frame's data did not match the CRC in the footer\&. 
+.TP
+\fB\fIFLAC__STREAM_DECODER_ERROR_STATUS_UNPARSEABLE_STREAM \fP\fP
+The decoder encountered reserved fields in use in the stream\&. 
+.PP
+Definition at line 427 of file stream_decoder\&.h\&.
+.SS "enum \fBFLAC__StreamDecoderInitStatus\fP"
+Possible return values for the FLAC__stream_decoder_init_*() functions\&. 
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fIFLAC__STREAM_DECODER_INIT_STATUS_OK \fP\fP
+Initialization was successful\&. 
+.TP
+\fB\fIFLAC__STREAM_DECODER_INIT_STATUS_UNSUPPORTED_CONTAINER \fP\fP
+The library was not compiled with support for the given container format\&. 
+.TP
+\fB\fIFLAC__STREAM_DECODER_INIT_STATUS_INVALID_CALLBACKS \fP\fP
+A required callback was not supplied\&. 
+.TP
+\fB\fIFLAC__STREAM_DECODER_INIT_STATUS_MEMORY_ALLOCATION_ERROR \fP\fP
+An error occurred allocating memory\&. 
+.TP
+\fB\fIFLAC__STREAM_DECODER_INIT_STATUS_ERROR_OPENING_FILE \fP\fP
+fopen() failed in \fBFLAC__stream_decoder_init_file()\fP or \fBFLAC__stream_decoder_init_ogg_file()\fP\&. 
+.TP
+\fB\fIFLAC__STREAM_DECODER_INIT_STATUS_ALREADY_INITIALIZED \fP\fP
+FLAC__stream_decoder_init_*() was called when the decoder was already initialized, usually because \fBFLAC__stream_decoder_finish()\fP was not called\&. 
+.PP
+Definition at line 256 of file stream_decoder\&.h\&.
+.SS "enum \fBFLAC__StreamDecoderLengthStatus\fP"
+Return values for the \fBFLAC__StreamDecoder\fP length callback\&. 
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fIFLAC__STREAM_DECODER_LENGTH_STATUS_OK \fP\fP
+The length call was OK and decoding can continue\&. 
+.TP
+\fB\fIFLAC__STREAM_DECODER_LENGTH_STATUS_ERROR \fP\fP
+An unrecoverable error occurred\&. The decoder will return from the process call\&. 
+.TP
+\fB\fIFLAC__STREAM_DECODER_LENGTH_STATUS_UNSUPPORTED \fP\fP
+Client does not support reporting the length\&. 
+.PP
+Definition at line 371 of file stream_decoder\&.h\&.
+.SS "enum \fBFLAC__StreamDecoderReadStatus\fP"
+Return values for the \fBFLAC__StreamDecoder\fP read callback\&. 
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fIFLAC__STREAM_DECODER_READ_STATUS_CONTINUE \fP\fP
+The read was OK and decoding can continue\&. 
+.TP
+\fB\fIFLAC__STREAM_DECODER_READ_STATUS_END_OF_STREAM \fP\fP
+The read was attempted while at the end of the stream\&. Note that the client must only return this value when the read callback was called when already at the end of the stream\&. Otherwise, if the read itself moves to the end of the stream, the client should still return the data and \fCFLAC__STREAM_DECODER_READ_STATUS_CONTINUE\fP, and then on the next read callback it should return \fCFLAC__STREAM_DECODER_READ_STATUS_END_OF_STREAM\fP with a byte count of \fC0\fP\&. 
+.TP
+\fB\fIFLAC__STREAM_DECODER_READ_STATUS_ABORT \fP\fP
+An unrecoverable error occurred\&. The decoder will return from the process call\&. 
+.PP
+Definition at line 294 of file stream_decoder\&.h\&.
+.SS "enum \fBFLAC__StreamDecoderSeekStatus\fP"
+Return values for the \fBFLAC__StreamDecoder\fP seek callback\&. 
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fIFLAC__STREAM_DECODER_SEEK_STATUS_OK \fP\fP
+The seek was OK and decoding can continue\&. 
+.TP
+\fB\fIFLAC__STREAM_DECODER_SEEK_STATUS_ERROR \fP\fP
+An unrecoverable error occurred\&. The decoder will return from the process call\&. 
+.TP
+\fB\fIFLAC__STREAM_DECODER_SEEK_STATUS_UNSUPPORTED \fP\fP
+Client does not support seeking\&. 
+.PP
+Definition at line 325 of file stream_decoder\&.h\&.
+.SS "enum \fBFLAC__StreamDecoderState\fP"
+\fBState\fP values for a \fBFLAC__StreamDecoder\fP
+.PP
+The decoder's state can be obtained by calling \fBFLAC__stream_decoder_get_state()\fP\&. 
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fIFLAC__STREAM_DECODER_SEARCH_FOR_METADATA \fP\fP
+The decoder is ready to search for metadata\&. 
+.TP
+\fB\fIFLAC__STREAM_DECODER_READ_METADATA \fP\fP
+The decoder is ready to or is in the process of reading metadata\&. 
+.TP
+\fB\fIFLAC__STREAM_DECODER_SEARCH_FOR_FRAME_SYNC \fP\fP
+The decoder is ready to or is in the process of searching for the frame sync code\&. 
+.TP
+\fB\fIFLAC__STREAM_DECODER_READ_FRAME \fP\fP
+The decoder is ready to or is in the process of reading a frame\&. 
+.TP
+\fB\fIFLAC__STREAM_DECODER_END_OF_STREAM \fP\fP
+The decoder has reached the end of the stream\&. 
+.TP
+\fB\fIFLAC__STREAM_DECODER_OGG_ERROR \fP\fP
+An error occurred in the underlying Ogg layer\&. 
+.TP
+\fB\fIFLAC__STREAM_DECODER_SEEK_ERROR \fP\fP
+An error occurred while seeking\&. The decoder must be flushed with \fBFLAC__stream_decoder_flush()\fP or reset with \fBFLAC__stream_decoder_reset()\fP before decoding can continue\&. 
+.TP
+\fB\fIFLAC__STREAM_DECODER_ABORTED \fP\fP
+The decoder was aborted by the read callback\&. 
+.TP
+\fB\fIFLAC__STREAM_DECODER_MEMORY_ALLOCATION_ERROR \fP\fP
+An error occurred allocating memory\&. The decoder is in an invalid state and can no longer be used\&. 
+.TP
+\fB\fIFLAC__STREAM_DECODER_UNINITIALIZED \fP\fP
+The decoder is in the uninitialized state; one of the FLAC__stream_decoder_init_*() functions must be called before samples can be processed\&. 
+.PP
+Definition at line 202 of file stream_decoder\&.h\&.
+.SS "enum \fBFLAC__StreamDecoderTellStatus\fP"
+Return values for the \fBFLAC__StreamDecoder\fP tell callback\&. 
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fIFLAC__STREAM_DECODER_TELL_STATUS_OK \fP\fP
+The tell was OK and decoding can continue\&. 
+.TP
+\fB\fIFLAC__STREAM_DECODER_TELL_STATUS_ERROR \fP\fP
+An unrecoverable error occurred\&. The decoder will return from the process call\&. 
+.TP
+\fB\fIFLAC__STREAM_DECODER_TELL_STATUS_UNSUPPORTED \fP\fP
+Client does not support telling the position\&. 
+.PP
+Definition at line 348 of file stream_decoder\&.h\&.
+.SS "enum \fBFLAC__StreamDecoderWriteStatus\fP"
+Return values for the \fBFLAC__StreamDecoder\fP write callback\&. 
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fIFLAC__STREAM_DECODER_WRITE_STATUS_CONTINUE \fP\fP
+The write was OK and decoding can continue\&. 
+.TP
+\fB\fIFLAC__STREAM_DECODER_WRITE_STATUS_ABORT \fP\fP
+An unrecoverable error occurred\&. The decoder will return from the process call\&. 
+.PP
+Definition at line 394 of file stream_decoder\&.h\&.
+.SH "Function Documentation"
+.PP 
+.SS "\fBFLAC_API\fP \fBvoid\fP FLAC__stream_decoder_delete (\fBFLAC__StreamDecoder\fP * decoder)"
+Free a decoder instance\&. Deletes the object pointed to by \fIdecoder\fP\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdecoder\fP A pointer to an existing decoder\&.  
+.PP
+.nf
+1 decoder != NULL 
+
+.fi
+.PP
+ 
+.RE
+.PP
+
+.PP
+Definition at line 314 of file stream_decoder\&.c\&.
+.SS "\fBFLAC_API\fP \fBFLAC__bool\fP FLAC__stream_decoder_finish (\fBFLAC__StreamDecoder\fP * decoder)"
+Finish the decoding process\&. Flushes the decoding buffer, releases resources, resets the decoder settings to their defaults, and returns the decoder state to FLAC__STREAM_DECODER_UNINITIALIZED\&.
+.PP
+In the event of a prematurely-terminated decode, it is not strictly necessary to call this immediately before \fBFLAC__stream_decoder_delete()\fP but it is good practice to match every FLAC__stream_decoder_init_*() with a \fBFLAC__stream_decoder_finish()\fP\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdecoder\fP An uninitialized decoder instance\&.  
+.PP
+.nf
+1 decoder != NULL 
+
+.fi
+.PP
+ 
+.RE
+.PP
+\fBReturn values:\fP
+.RS 4
+\fIFLAC__bool\fP \fCfalse\fP if MD5 checking is on AND a STREAMINFO block was available AND the MD5 signature in the STREAMINFO block was non-zero AND the signature does not match the one computed by the decoder; else \fCtrue\fP\&. 
+.RE
+.PP
+
+.PP
+Definition at line 641 of file stream_decoder\&.c\&.
+.SS "\fBFLAC_API\fP \fBFLAC__bool\fP FLAC__stream_decoder_flush (\fBFLAC__StreamDecoder\fP * decoder)"
+Flush the stream input\&. The decoder's input buffer will be cleared and the state set to \fCFLAC__STREAM_DECODER_SEARCH_FOR_FRAME_SYNC\fP\&. This will also turn off MD5 checking\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdecoder\fP A decoder instance\&.  
+.PP
+.nf
+1 decoder != NULL 
+
+.fi
+.PP
+ 
+.RE
+.PP
+\fBReturn values:\fP
+.RS 4
+\fIFLAC__bool\fP \fCtrue\fP if successful, else \fCfalse\fP if a memory allocation error occurs (in which case the state will be set to \fCFLAC__STREAM_DECODER_MEMORY_ALLOCATION_ERROR\fP)\&. 
+.RE
+.PP
+
+.PP
+Definition at line 933 of file stream_decoder\&.c\&.
+.SS "\fBFLAC_API\fP unsigned FLAC__stream_decoder_get_bits_per_sample (\fBconst\fP \fBFLAC__StreamDecoder\fP * decoder)"
+Get the current sample resolution in the stream being decoded\&. Will only be valid after decoding has started and will contain the value from the most recently decoded frame header\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdecoder\fP A decoder instance to query\&.  
+.PP
+.nf
+1 decoder != NULL 
+
+.fi
+.PP
+ 
+.RE
+.PP
+\fBReturn values:\fP
+.RS 4
+\fIunsigned\fP See above\&. 
+.RE
+.PP
+
+.PP
+Definition at line 890 of file stream_decoder\&.c\&.
+.SS "\fBFLAC_API\fP unsigned FLAC__stream_decoder_get_blocksize (\fBconst\fP \fBFLAC__StreamDecoder\fP * decoder)"
+Get the current blocksize of the stream being decoded\&. Will only be valid after decoding has started and will contain the value from the most recently decoded frame header\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdecoder\fP A decoder instance to query\&.  
+.PP
+.nf
+1 decoder != NULL 
+
+.fi
+.PP
+ 
+.RE
+.PP
+\fBReturn values:\fP
+.RS 4
+\fIunsigned\fP See above\&. 
+.RE
+.PP
+
+.PP
+Definition at line 904 of file stream_decoder\&.c\&.
+.SS "\fBFLAC_API\fP \fBFLAC__ChannelAssignment\fP FLAC__stream_decoder_get_channel_assignment (\fBconst\fP \fBFLAC__StreamDecoder\fP * decoder)"
+Get the current channel assignment in the stream being decoded\&. Will only be valid after decoding has started and will contain the value from the most recently decoded frame header\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdecoder\fP A decoder instance to query\&.  
+.PP
+.nf
+1 decoder != NULL 
+
+.fi
+.PP
+ 
+.RE
+.PP
+\fBReturn values:\fP
+.RS 4
+\fIFLAC__ChannelAssignment\fP See above\&. 
+.RE
+.PP
+
+.PP
+Definition at line 883 of file stream_decoder\&.c\&.
+.SS "\fBFLAC_API\fP unsigned FLAC__stream_decoder_get_channels (\fBconst\fP \fBFLAC__StreamDecoder\fP * decoder)"
+Get the current number of channels in the stream being decoded\&. Will only be valid after decoding has started and will contain the value from the most recently decoded frame header\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdecoder\fP A decoder instance to query\&.  
+.PP
+.nf
+1 decoder != NULL 
+
+.fi
+.PP
+ 
+.RE
+.PP
+\fBReturn values:\fP
+.RS 4
+\fIunsigned\fP See above\&. 
+.RE
+.PP
+
+.PP
+Definition at line 876 of file stream_decoder\&.c\&.
+.SS "\fBFLAC_API\fP \fBFLAC__bool\fP FLAC__stream_decoder_get_decode_position (\fBconst\fP \fBFLAC__StreamDecoder\fP * decoder, \fBFLAC__uint64\fP * position)"
+Returns the decoder's current read position within the stream\&. The position is the byte offset from the start of the stream\&. Bytes before this position have been fully decoded\&. Note that there may still be undecoded bytes in the decoder's read FIFO\&. The returned position is correct even after a seek\&.
+.PP
+\fBWarning:\fP
+.RS 4
+This function currently only works for native \fBFLAC\fP, not Ogg \fBFLAC\fP streams\&.
+.RE
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdecoder\fP A decoder instance to query\&. 
+.br
+\fIposition\fP Address at which to return the desired position\&.  
+.PP
+.nf
+1 decoder != NULL 
+
+.fi
+.PP
+ 
+.PP
+.nf
+1 position != NULL 
+
+.fi
+.PP
+ 
+.RE
+.PP
+\fBReturn values:\fP
+.RS 4
+\fIFLAC__bool\fP \fCtrue\fP if successful, \fCfalse\fP if the stream is not native \fBFLAC\fP, or there was an error from the 'tell' callback or it returned \fCFLAC__STREAM_DECODER_TELL_STATUS_UNSUPPORTED\fP\&. 
+.RE
+.PP
+
+.PP
+Definition at line 911 of file stream_decoder\&.c\&.
+.SS "\fBFLAC_API\fP \fBFLAC__bool\fP FLAC__stream_decoder_get_md5_checking (\fBconst\fP \fBFLAC__StreamDecoder\fP * decoder)"
+Get the 'MD5 signature checking' flag\&. This is the value of the setting, not whether or not the decoder is currently checking the MD5 (remember, it can be turned off automatically by a seek)\&. When the decoder is reset the flag will be restored to the value returned by this function\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdecoder\fP A decoder instance to query\&.  
+.PP
+.nf
+1 decoder != NULL 
+
+.fi
+.PP
+ 
+.RE
+.PP
+\fBReturn values:\fP
+.RS 4
+\fIFLAC__bool\fP See above\&. 
+.RE
+.PP
+
+.PP
+Definition at line 862 of file stream_decoder\&.c\&.
+.SS "\fBFLAC_API\fP \fBconst\fP char* FLAC__stream_decoder_get_resolved_state_string (\fBconst\fP \fBFLAC__StreamDecoder\fP * decoder)"
+Get the current decoder state as a C string\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdecoder\fP A decoder instance to query\&.  
+.PP
+.nf
+1 decoder != NULL 
+
+.fi
+.PP
+ 
+.RE
+.PP
+\fBReturn values:\fP
+.RS 4
+\fIconst\fP char * The decoder state as a C string\&. Do not modify the contents\&. 
+.RE
+.PP
+
+.PP
+Definition at line 857 of file stream_decoder\&.c\&.
+.SS "\fBFLAC_API\fP unsigned FLAC__stream_decoder_get_sample_rate (\fBconst\fP \fBFLAC__StreamDecoder\fP * decoder)"
+Get the current sample rate in Hz of the stream being decoded\&. Will only be valid after decoding has started and will contain the value from the most recently decoded frame header\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdecoder\fP A decoder instance to query\&.  
+.PP
+.nf
+1 decoder != NULL 
+
+.fi
+.PP
+ 
+.RE
+.PP
+\fBReturn values:\fP
+.RS 4
+\fIunsigned\fP See above\&. 
+.RE
+.PP
+
+.PP
+Definition at line 897 of file stream_decoder\&.c\&.
+.SS "\fBFLAC_API\fP \fBFLAC__StreamDecoderState\fP FLAC__stream_decoder_get_state (\fBconst\fP \fBFLAC__StreamDecoder\fP * decoder)"
+Get the current decoder state\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdecoder\fP A decoder instance to query\&.  
+.PP
+.nf
+1 decoder != NULL 
+
+.fi
+.PP
+ 
+.RE
+.PP
+\fBReturn values:\fP
+.RS 4
+\fIFLAC__StreamDecoderState\fP The current decoder state\&. 
+.RE
+.PP
+
+.PP
+Definition at line 850 of file stream_decoder\&.c\&.
+.SS "\fBFLAC_API\fP \fBFLAC__uint64\fP FLAC__stream_decoder_get_total_samples (\fBconst\fP \fBFLAC__StreamDecoder\fP * decoder)"
+Get the total number of samples in the stream being decoded\&. Will only be valid after decoding has started and will contain the value from the \fCSTREAMINFO\fP block\&. A value of \fC0\fP means 'unknown'\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdecoder\fP A decoder instance to query\&.  
+.PP
+.nf
+1 decoder != NULL 
+
+.fi
+.PP
+ 
+.RE
+.PP
+\fBReturn values:\fP
+.RS 4
+\fIunsigned\fP See above\&. 
+.RE
+.PP
+
+.PP
+Definition at line 869 of file stream_decoder\&.c\&.
+.SS "\fBFLAC_API\fP \fBFLAC__StreamDecoderInitStatus\fP FLAC__stream_decoder_init_FILE (\fBFLAC__StreamDecoder\fP * decoder, FILE * file, \fBFLAC__StreamDecoderWriteCallback\fP write_callback, \fBFLAC__StreamDecoderMetadataCallback\fP metadata_callback, \fBFLAC__StreamDecoderErrorCallback\fP error_callback, \fBvoid\fP * client_data)"
+Initialize the decoder instance to decode native \fBFLAC\fP files\&.
+.PP
+This flavor of initialization sets up the decoder to decode from a plain native \fBFLAC\fP file\&. For non-stdio streams, you must use \fBFLAC__stream_decoder_init_stream()\fP and provide callbacks for the I/O\&.
+.PP
+This function should be called after \fBFLAC__stream_decoder_new()\fP and FLAC__stream_decoder_set_*() but before any of the FLAC__stream_decoder_process_*() functions\&. Will set and return the decoder state, which will be FLAC__STREAM_DECODER_SEARCH_FOR_METADATA if initialization succeeded\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdecoder\fP An uninitialized decoder instance\&. 
+.br
+\fIfile\fP An open \fBFLAC\fP file\&. The file should have been opened with mode \fC'rb'\fP and rewound\&. The file becomes owned by the decoder and should not be manipulated by the client while decoding\&. Unless \fIfile\fP is \fCstdin\fP, it will be closed when \fBFLAC__stream_decoder_finish()\fP is called\&. Note however that seeking will not work when decoding from \fCstdout\fP since it is not seekable\&. 
+.br
+\fIwrite_callback\fP See FLAC__StreamDecoderWriteCallback\&. This pointer must not be \fCNULL\fP\&. 
+.br
+\fImetadata_callback\fP See FLAC__StreamDecoderMetadataCallback\&. This pointer may be \fCNULL\fP if the callback is not desired\&. 
+.br
+\fIerror_callback\fP See FLAC__StreamDecoderErrorCallback\&. This pointer must not be \fCNULL\fP\&. 
+.br
+\fIclient_data\fP This value will be supplied to callbacks in their \fIclient_data\fP argument\&.  
+.PP
+.nf
+1 decoder != NULL 
+
+.fi
+.PP
+ 
+.PP
+.nf
+1 file != NULL 
+
+.fi
+.PP
+ 
+.RE
+.PP
+\fBReturn values:\fP
+.RS 4
+\fIFLAC__StreamDecoderInitStatus\fP \fCFLAC__STREAM_DECODER_INIT_STATUS_OK\fP if initialization was successful; see FLAC__StreamDecoderInitStatus for the meanings of other return values\&. 
+.RE
+.PP
+
+.PP
+Definition at line 560 of file stream_decoder\&.c\&.
+.SS "\fBFLAC_API\fP \fBFLAC__StreamDecoderInitStatus\fP FLAC__stream_decoder_init_file (\fBFLAC__StreamDecoder\fP * decoder, \fBconst\fP char * filename, \fBFLAC__StreamDecoderWriteCallback\fP write_callback, \fBFLAC__StreamDecoderMetadataCallback\fP metadata_callback, \fBFLAC__StreamDecoderErrorCallback\fP error_callback, \fBvoid\fP * client_data)"
+Initialize the decoder instance to decode native \fBFLAC\fP files\&.
+.PP
+This flavor of initialization sets up the decoder to decode from a plain native \fBFLAC\fP file\&. If POSIX fopen() semantics are not sufficient, (for example, with Unicode filenames on Windows), you must use \fBFLAC__stream_decoder_init_FILE()\fP, or \fBFLAC__stream_decoder_init_stream()\fP and provide callbacks for the I/O\&.
+.PP
+This function should be called after \fBFLAC__stream_decoder_new()\fP and FLAC__stream_decoder_set_*() but before any of the FLAC__stream_decoder_process_*() functions\&. Will set and return the decoder state, which will be FLAC__STREAM_DECODER_SEARCH_FOR_METADATA if initialization succeeded\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdecoder\fP An uninitialized decoder instance\&. 
+.br
+\fIfilename\fP The name of the file to decode from\&. The file will be opened with fopen()\&. Use \fCNULL\fP to decode from \fCstdin\fP\&. Note that \fCstdin\fP is not seekable\&. 
+.br
+\fIwrite_callback\fP See FLAC__StreamDecoderWriteCallback\&. This pointer must not be \fCNULL\fP\&. 
+.br
+\fImetadata_callback\fP See FLAC__StreamDecoderMetadataCallback\&. This pointer may be \fCNULL\fP if the callback is not desired\&. 
+.br
+\fIerror_callback\fP See FLAC__StreamDecoderErrorCallback\&. This pointer must not be \fCNULL\fP\&. 
+.br
+\fIclient_data\fP This value will be supplied to callbacks in their \fIclient_data\fP argument\&.  
+.PP
+.nf
+1 decoder != NULL 
+
+.fi
+.PP
+ 
+.RE
+.PP
+\fBReturn values:\fP
+.RS 4
+\fIFLAC__StreamDecoderInitStatus\fP \fCFLAC__STREAM_DECODER_INIT_STATUS_OK\fP if initialization was successful; see FLAC__StreamDecoderInitStatus for the meanings of other return values\&. 
+.RE
+.PP
+
+.PP
+Definition at line 617 of file stream_decoder\&.c\&.
+.SS "\fBFLAC_API\fP \fBFLAC__StreamDecoderInitStatus\fP FLAC__stream_decoder_init_ogg_FILE (\fBFLAC__StreamDecoder\fP * decoder, FILE * file, \fBFLAC__StreamDecoderWriteCallback\fP write_callback, \fBFLAC__StreamDecoderMetadataCallback\fP metadata_callback, \fBFLAC__StreamDecoderErrorCallback\fP error_callback, \fBvoid\fP * client_data)"
+Initialize the decoder instance to decode Ogg \fBFLAC\fP files\&.
+.PP
+This flavor of initialization sets up the decoder to decode from a plain Ogg \fBFLAC\fP file\&. For non-stdio streams, you must use \fBFLAC__stream_decoder_init_ogg_stream()\fP and provide callbacks for the I/O\&.
+.PP
+This function should be called after \fBFLAC__stream_decoder_new()\fP and FLAC__stream_decoder_set_*() but before any of the FLAC__stream_decoder_process_*() functions\&. Will set and return the decoder state, which will be FLAC__STREAM_DECODER_SEARCH_FOR_METADATA if initialization succeeded\&.
+.PP
+\fBNote:\fP
+.RS 4
+Support for Ogg \fBFLAC\fP in the library is optional\&. If this library has been built without support for Ogg \fBFLAC\fP, this function will return \fCFLAC__STREAM_DECODER_INIT_STATUS_UNSUPPORTED_CONTAINER\fP\&.
+.RE
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdecoder\fP An uninitialized decoder instance\&. 
+.br
+\fIfile\fP An open \fBFLAC\fP file\&. The file should have been opened with mode \fC'rb'\fP and rewound\&. The file becomes owned by the decoder and should not be manipulated by the client while decoding\&. Unless \fIfile\fP is \fCstdin\fP, it will be closed when \fBFLAC__stream_decoder_finish()\fP is called\&. Note however that seeking will not work when decoding from \fCstdout\fP since it is not seekable\&. 
+.br
+\fIwrite_callback\fP See FLAC__StreamDecoderWriteCallback\&. This pointer must not be \fCNULL\fP\&. 
+.br
+\fImetadata_callback\fP See FLAC__StreamDecoderMetadataCallback\&. This pointer may be \fCNULL\fP if the callback is not desired\&. 
+.br
+\fIerror_callback\fP See FLAC__StreamDecoderErrorCallback\&. This pointer must not be \fCNULL\fP\&. 
+.br
+\fIclient_data\fP This value will be supplied to callbacks in their \fIclient_data\fP argument\&.  
+.PP
+.nf
+1 decoder != NULL 
+
+.fi
+.PP
+ 
+.PP
+.nf
+1 file != NULL 
+
+.fi
+.PP
+ 
+.RE
+.PP
+\fBReturn values:\fP
+.RS 4
+\fIFLAC__StreamDecoderInitStatus\fP \fCFLAC__STREAM_DECODER_INIT_STATUS_OK\fP if initialization was successful; see FLAC__StreamDecoderInitStatus for the meanings of other return values\&. 
+.RE
+.PP
+
+.PP
+Definition at line 572 of file stream_decoder\&.c\&.
+.SS "\fBFLAC_API\fP \fBFLAC__StreamDecoderInitStatus\fP FLAC__stream_decoder_init_ogg_file (\fBFLAC__StreamDecoder\fP * decoder, \fBconst\fP char * filename, \fBFLAC__StreamDecoderWriteCallback\fP write_callback, \fBFLAC__StreamDecoderMetadataCallback\fP metadata_callback, \fBFLAC__StreamDecoderErrorCallback\fP error_callback, \fBvoid\fP * client_data)"
+Initialize the decoder instance to decode Ogg \fBFLAC\fP files\&.
+.PP
+This flavor of initialization sets up the decoder to decode from a plain Ogg \fBFLAC\fP file\&. If POSIX fopen() semantics are not sufficient, (for example, with Unicode filenames on Windows), you must use \fBFLAC__stream_decoder_init_ogg_FILE()\fP, or \fBFLAC__stream_decoder_init_ogg_stream()\fP and provide callbacks for the I/O\&.
+.PP
+This function should be called after \fBFLAC__stream_decoder_new()\fP and FLAC__stream_decoder_set_*() but before any of the FLAC__stream_decoder_process_*() functions\&. Will set and return the decoder state, which will be FLAC__STREAM_DECODER_SEARCH_FOR_METADATA if initialization succeeded\&.
+.PP
+\fBNote:\fP
+.RS 4
+Support for Ogg \fBFLAC\fP in the library is optional\&. If this library has been built without support for Ogg \fBFLAC\fP, this function will return \fCFLAC__STREAM_DECODER_INIT_STATUS_UNSUPPORTED_CONTAINER\fP\&.
+.RE
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdecoder\fP An uninitialized decoder instance\&. 
+.br
+\fIfilename\fP The name of the file to decode from\&. The file will be opened with fopen()\&. Use \fCNULL\fP to decode from \fCstdin\fP\&. Note that \fCstdin\fP is not seekable\&. 
+.br
+\fIwrite_callback\fP See FLAC__StreamDecoderWriteCallback\&. This pointer must not be \fCNULL\fP\&. 
+.br
+\fImetadata_callback\fP See FLAC__StreamDecoderMetadataCallback\&. This pointer may be \fCNULL\fP if the callback is not desired\&. 
+.br
+\fIerror_callback\fP See FLAC__StreamDecoderErrorCallback\&. This pointer must not be \fCNULL\fP\&. 
+.br
+\fIclient_data\fP This value will be supplied to callbacks in their \fIclient_data\fP argument\&.  
+.PP
+.nf
+1 decoder != NULL 
+
+.fi
+.PP
+ 
+.RE
+.PP
+\fBReturn values:\fP
+.RS 4
+\fIFLAC__StreamDecoderInitStatus\fP \fCFLAC__STREAM_DECODER_INIT_STATUS_OK\fP if initialization was successful; see FLAC__StreamDecoderInitStatus for the meanings of other return values\&. 
+.RE
+.PP
+
+.PP
+Definition at line 629 of file stream_decoder\&.c\&.
+.SS "\fBFLAC_API\fP \fBFLAC__StreamDecoderInitStatus\fP FLAC__stream_decoder_init_ogg_stream (\fBFLAC__StreamDecoder\fP * decoder, \fBFLAC__StreamDecoderReadCallback\fP read_callback, \fBFLAC__StreamDecoderSeekCallback\fP seek_callback, \fBFLAC__StreamDecoderTellCallback\fP tell_callback, \fBFLAC__StreamDecoderLengthCallback\fP length_callback, \fBFLAC__StreamDecoderEofCallback\fP eof_callback, \fBFLAC__StreamDecoderWriteCallback\fP write_callback, \fBFLAC__StreamDecoderMetadataCallback\fP metadata_callback, \fBFLAC__StreamDecoderErrorCallback\fP error_callback, \fBvoid\fP * client_data)"
+Initialize the decoder instance to decode Ogg \fBFLAC\fP streams\&.
+.PP
+This flavor of initialization sets up the decoder to decode from a \fBFLAC\fP stream in an Ogg container\&. I/O is performed via callbacks to the client\&. For decoding from a plain file via filename or open FILE*, \fBFLAC__stream_decoder_init_ogg_file()\fP and \fBFLAC__stream_decoder_init_ogg_FILE()\fP provide a simpler interface\&.
+.PP
+This function should be called after \fBFLAC__stream_decoder_new()\fP and FLAC__stream_decoder_set_*() but before any of the FLAC__stream_decoder_process_*() functions\&. Will set and return the decoder state, which will be FLAC__STREAM_DECODER_SEARCH_FOR_METADATA if initialization succeeded\&.
+.PP
+\fBNote:\fP
+.RS 4
+Support for Ogg \fBFLAC\fP in the library is optional\&. If this library has been built without support for Ogg \fBFLAC\fP, this function will return \fCFLAC__STREAM_DECODER_INIT_STATUS_UNSUPPORTED_CONTAINER\fP\&.
+.RE
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdecoder\fP An uninitialized decoder instance\&. 
+.br
+\fIread_callback\fP See FLAC__StreamDecoderReadCallback\&. This pointer must not be \fCNULL\fP\&. 
+.br
+\fIseek_callback\fP See FLAC__StreamDecoderSeekCallback\&. This pointer may be \fCNULL\fP if seeking is not supported\&. If \fIseek_callback\fP is not \fCNULL\fP then a \fItell_callback\fP, \fIlength_callback\fP, and \fIeof_callback\fP must also be supplied\&. Alternatively, a dummy seek callback that just returns \fCFLAC__STREAM_DECODER_SEEK_STATUS_UNSUPPORTED\fP may also be supplied, all though this is slightly less efficient for the decoder\&. 
+.br
+\fItell_callback\fP See FLAC__StreamDecoderTellCallback\&. This pointer may be \fCNULL\fP if not supported by the client\&. If \fIseek_callback\fP is not \fCNULL\fP then a \fItell_callback\fP must also be supplied\&. Alternatively, a dummy tell callback that just returns \fCFLAC__STREAM_DECODER_TELL_STATUS_UNSUPPORTED\fP may also be supplied, all though this is slightly less efficient for the decoder\&. 
+.br
+\fIlength_callback\fP See FLAC__StreamDecoderLengthCallback\&. This pointer may be \fCNULL\fP if not supported by the client\&. If \fIseek_callback\fP is not \fCNULL\fP then a \fIlength_callback\fP must also be supplied\&. Alternatively, a dummy length callback that just returns \fCFLAC__STREAM_DECODER_LENGTH_STATUS_UNSUPPORTED\fP may also be supplied, all though this is slightly less efficient for the decoder\&. 
+.br
+\fIeof_callback\fP See FLAC__StreamDecoderEofCallback\&. This pointer may be \fCNULL\fP if not supported by the client\&. If \fIseek_callback\fP is not \fCNULL\fP then a \fIeof_callback\fP must also be supplied\&. Alternatively, a dummy length callback that just returns \fCfalse\fP may also be supplied, all though this is slightly less efficient for the decoder\&. 
+.br
+\fIwrite_callback\fP See FLAC__StreamDecoderWriteCallback\&. This pointer must not be \fCNULL\fP\&. 
+.br
+\fImetadata_callback\fP See FLAC__StreamDecoderMetadataCallback\&. This pointer may be \fCNULL\fP if the callback is not desired\&. 
+.br
+\fIerror_callback\fP See FLAC__StreamDecoderErrorCallback\&. This pointer must not be \fCNULL\fP\&. 
+.br
+\fIclient_data\fP This value will be supplied to callbacks in their \fIclient_data\fP argument\&.  
+.PP
+.nf
+1 decoder != NULL 
+
+.fi
+.PP
+ 
+.RE
+.PP
+\fBReturn values:\fP
+.RS 4
+\fIFLAC__StreamDecoderInitStatus\fP \fCFLAC__STREAM_DECODER_INIT_STATUS_OK\fP if initialization was successful; see FLAC__StreamDecoderInitStatus for the meanings of other return values\&. 
+.RE
+.PP
+
+.PP
+Definition at line 488 of file stream_decoder\&.c\&.
+.SS "\fBFLAC_API\fP \fBFLAC__StreamDecoderInitStatus\fP FLAC__stream_decoder_init_stream (\fBFLAC__StreamDecoder\fP * decoder, \fBFLAC__StreamDecoderReadCallback\fP read_callback, \fBFLAC__StreamDecoderSeekCallback\fP seek_callback, \fBFLAC__StreamDecoderTellCallback\fP tell_callback, \fBFLAC__StreamDecoderLengthCallback\fP length_callback, \fBFLAC__StreamDecoderEofCallback\fP eof_callback, \fBFLAC__StreamDecoderWriteCallback\fP write_callback, \fBFLAC__StreamDecoderMetadataCallback\fP metadata_callback, \fBFLAC__StreamDecoderErrorCallback\fP error_callback, \fBvoid\fP * client_data)"
+Initialize the decoder instance to decode native \fBFLAC\fP streams\&.
+.PP
+This flavor of initialization sets up the decoder to decode from a native \fBFLAC\fP stream\&. I/O is performed via callbacks to the client\&. For decoding from a plain file via filename or open FILE*, \fBFLAC__stream_decoder_init_file()\fP and \fBFLAC__stream_decoder_init_FILE()\fP provide a simpler interface\&.
+.PP
+This function should be called after \fBFLAC__stream_decoder_new()\fP and FLAC__stream_decoder_set_*() but before any of the FLAC__stream_decoder_process_*() functions\&. Will set and return the decoder state, which will be FLAC__STREAM_DECODER_SEARCH_FOR_METADATA if initialization succeeded\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdecoder\fP An uninitialized decoder instance\&. 
+.br
+\fIread_callback\fP See FLAC__StreamDecoderReadCallback\&. This pointer must not be \fCNULL\fP\&. 
+.br
+\fIseek_callback\fP See FLAC__StreamDecoderSeekCallback\&. This pointer may be \fCNULL\fP if seeking is not supported\&. If \fIseek_callback\fP is not \fCNULL\fP then a \fItell_callback\fP, \fIlength_callback\fP, and \fIeof_callback\fP must also be supplied\&. Alternatively, a dummy seek callback that just returns \fCFLAC__STREAM_DECODER_SEEK_STATUS_UNSUPPORTED\fP may also be supplied, all though this is slightly less efficient for the decoder\&. 
+.br
+\fItell_callback\fP See FLAC__StreamDecoderTellCallback\&. This pointer may be \fCNULL\fP if not supported by the client\&. If \fIseek_callback\fP is not \fCNULL\fP then a \fItell_callback\fP must also be supplied\&. Alternatively, a dummy tell callback that just returns \fCFLAC__STREAM_DECODER_TELL_STATUS_UNSUPPORTED\fP may also be supplied, all though this is slightly less efficient for the decoder\&. 
+.br
+\fIlength_callback\fP See FLAC__StreamDecoderLengthCallback\&. This pointer may be \fCNULL\fP if not supported by the client\&. If \fIseek_callback\fP is not \fCNULL\fP then a \fIlength_callback\fP must also be supplied\&. Alternatively, a dummy length callback that just returns \fCFLAC__STREAM_DECODER_LENGTH_STATUS_UNSUPPORTED\fP may also be supplied, all though this is slightly less efficient for the decoder\&. 
+.br
+\fIeof_callback\fP See FLAC__StreamDecoderEofCallback\&. This pointer may be \fCNULL\fP if not supported by the client\&. If \fIseek_callback\fP is not \fCNULL\fP then a \fIeof_callback\fP must also be supplied\&. Alternatively, a dummy length callback that just returns \fCfalse\fP may also be supplied, all though this is slightly less efficient for the decoder\&. 
+.br
+\fIwrite_callback\fP See FLAC__StreamDecoderWriteCallback\&. This pointer must not be \fCNULL\fP\&. 
+.br
+\fImetadata_callback\fP See FLAC__StreamDecoderMetadataCallback\&. This pointer may be \fCNULL\fP if the callback is not desired\&. 
+.br
+\fIerror_callback\fP See FLAC__StreamDecoderErrorCallback\&. This pointer must not be \fCNULL\fP\&. 
+.br
+\fIclient_data\fP This value will be supplied to callbacks in their \fIclient_data\fP argument\&.  
+.PP
+.nf
+1 decoder != NULL 
+
+.fi
+.PP
+ 
+.RE
+.PP
+\fBReturn values:\fP
+.RS 4
+\fIFLAC__StreamDecoderInitStatus\fP \fCFLAC__STREAM_DECODER_INIT_STATUS_OK\fP if initialization was successful; see FLAC__StreamDecoderInitStatus for the meanings of other return values\&. 
+.RE
+.PP
+
+.PP
+Definition at line 460 of file stream_decoder\&.c\&.
+.SS "\fBFLAC_API\fP \fBFLAC__StreamDecoder\fP* FLAC__stream_decoder_new (\fBvoid\fP)"
+Create a new stream decoder instance\&. The instance is created with default settings; see the individual FLAC__stream_decoder_set_*() functions for each setting's default\&.
+.PP
+\fBReturn values:\fP
+.RS 4
+\fIFLAC__StreamDecoder*\fP \fCNULL\fP if there was an error allocating memory, else the new instance\&. 
+.RE
+.PP
+
+.PP
+Definition at line 251 of file stream_decoder\&.c\&.
+.SS "\fBFLAC_API\fP \fBFLAC__bool\fP FLAC__stream_decoder_process_single (\fBFLAC__StreamDecoder\fP * decoder)"
+Decode one metadata block or audio frame\&. This version instructs the decoder to decode a either a single metadata block or a single frame and stop, unless the callbacks return a fatal error or the read callback returns \fCFLAC__STREAM_DECODER_READ_STATUS_END_OF_STREAM\fP\&.
+.PP
+As the decoder needs more input it will call the read callback\&. Depending on what was decoded, the metadata or write callback will be called with the decoded metadata block or audio frame\&.
+.PP
+Unless there is a fatal read error or end of stream, this function will return once one whole frame is decoded\&. In other words, if the stream is not synchronized or points to a corrupt frame header, the decoder will continue to try and resync until it gets to a valid frame, then decode one frame, then return\&. If the decoder points to a frame whose frame CRC in the frame footer does not match the computed frame CRC, this function will issue a FLAC__STREAM_DECODER_ERROR_STATUS_FRAME_CRC_MISMATCH error to the error callback, and return, having decoded one complete, although corrupt, frame\&. (Such corrupted frames are sent as silence of the correct length to the write callback\&.)
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdecoder\fP An initialized decoder instance\&.  
+.PP
+.nf
+1 decoder != NULL 
+
+.fi
+.PP
+ 
+.RE
+.PP
+\fBReturn values:\fP
+.RS 4
+\fIFLAC__bool\fP \fCfalse\fP if any fatal read, write, or memory allocation error occurred (meaning decoding must stop), else \fCtrue\fP; for more information about the decoder, check the decoder state with \fBFLAC__stream_decoder_get_state()\fP\&. 
+.RE
+.PP
+
+.PP
+Definition at line 1016 of file stream_decoder\&.c\&.
+.SS "\fBFLAC_API\fP \fBFLAC__bool\fP FLAC__stream_decoder_process_until_end_of_metadata (\fBFLAC__StreamDecoder\fP * decoder)"
+Decode until the end of the metadata\&. This version instructs the decoder to decode from the current position and continue until all the metadata has been read, or until the callbacks return a fatal error or the read callback returns \fCFLAC__STREAM_DECODER_READ_STATUS_END_OF_STREAM\fP\&.
+.PP
+As the decoder needs more input it will call the read callback\&. As each metadata block is decoded, the metadata callback will be called with the decoded metadata\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdecoder\fP An initialized decoder instance\&.  
+.PP
+.nf
+1 decoder != NULL 
+
+.fi
+.PP
+ 
+.RE
+.PP
+\fBReturn values:\fP
+.RS 4
+\fIFLAC__bool\fP \fCfalse\fP if any fatal read, write, or memory allocation error occurred (meaning decoding must stop), else \fCtrue\fP; for more information about the decoder, check the decoder state with \fBFLAC__stream_decoder_get_state()\fP\&. 
+.RE
+.PP
+
+.PP
+Definition at line 1053 of file stream_decoder\&.c\&.
+.SS "\fBFLAC_API\fP \fBFLAC__bool\fP FLAC__stream_decoder_process_until_end_of_stream (\fBFLAC__StreamDecoder\fP * decoder)"
+Decode until the end of the stream\&. This version instructs the decoder to decode from the current position and continue until the end of stream (the read callback returns \fCFLAC__STREAM_DECODER_READ_STATUS_END_OF_STREAM\fP), or until the callbacks return a fatal error\&.
+.PP
+As the decoder needs more input it will call the read callback\&. As each metadata block and frame is decoded, the metadata or write callback will be called with the decoded metadata or frame\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdecoder\fP An initialized decoder instance\&.  
+.PP
+.nf
+1 decoder != NULL 
+
+.fi
+.PP
+ 
+.RE
+.PP
+\fBReturn values:\fP
+.RS 4
+\fIFLAC__bool\fP \fCfalse\fP if any fatal read, write, or memory allocation error occurred (meaning decoding must stop), else \fCtrue\fP; for more information about the decoder, check the decoder state with \fBFLAC__stream_decoder_get_state()\fP\&. 
+.RE
+.PP
+
+.PP
+Definition at line 1080 of file stream_decoder\&.c\&.
+.SS "\fBFLAC_API\fP \fBFLAC__bool\fP FLAC__stream_decoder_reset (\fBFLAC__StreamDecoder\fP * decoder)"
+Reset the decoding process\&. The decoder's input buffer will be cleared and the state set to \fCFLAC__STREAM_DECODER_SEARCH_FOR_METADATA\fP\&. This is similar to \fBFLAC__stream_decoder_finish()\fP except that the settings are preserved; there is no need to call FLAC__stream_decoder_init_*() before decoding again\&. MD5 checking will be restored to its original setting\&.
+.PP
+If the decoder is seekable, or was initialized with FLAC__stream_decoder_init*_FILE() or FLAC__stream_decoder_init*_file(), the decoder will also attempt to seek to the beginning of the file\&. If this rewind fails, this function will return \fCfalse\fP\&. It follows that \fBFLAC__stream_decoder_reset()\fP cannot be used when decoding from \fCstdin\fP\&.
+.PP
+If the decoder was initialized with FLAC__stream_encoder_init*_stream() and is not seekable (i\&.e\&. no seek callback was provided or the seek callback returns \fCFLAC__STREAM_DECODER_SEEK_STATUS_UNSUPPORTED\fP), it is the duty of the client to start feeding data from the beginning of the stream on the next FLAC__stream_decoder_process() or FLAC__stream_decoder_process_interleaved() call\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdecoder\fP A decoder instance\&.  
+.PP
+.nf
+1 decoder != NULL 
+
+.fi
+.PP
+ 
+.RE
+.PP
+\fBReturn values:\fP
+.RS 4
+\fIFLAC__bool\fP \fCtrue\fP if successful, else \fCfalse\fP if a memory allocation occurs (in which case the state will be set to \fCFLAC__STREAM_DECODER_MEMORY_ALLOCATION_ERROR\fP) or a seek error occurs (the state will be unchanged)\&. 
+.RE
+.PP
+
+.PP
+Definition at line 956 of file stream_decoder\&.c\&.
+.SS "\fBFLAC_API\fP \fBFLAC__bool\fP FLAC__stream_decoder_seek_absolute (\fBFLAC__StreamDecoder\fP * decoder, \fBFLAC__uint64\fP sample)"
+Flush the input and seek to an absolute sample\&. Decoding will resume at the given sample\&. Note that because of this, the next write callback may contain a partial block\&. The client must support seeking the input or this function will fail and return \fCfalse\fP\&. Furthermore, if the decoder state is \fCFLAC__STREAM_DECODER_SEEK_ERROR\fP, then the decoder must be flushed with \fBFLAC__stream_decoder_flush()\fP or reset with \fBFLAC__stream_decoder_reset()\fP before decoding can continue\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdecoder\fP A decoder instance\&. 
+.br
+\fIsample\fP The target sample number to seek to\&.  
+.PP
+.nf
+1 decoder != NULL 
+
+.fi
+.PP
+ 
+.RE
+.PP
+\fBReturn values:\fP
+.RS 4
+\fIFLAC__bool\fP \fCtrue\fP if successful, else \fCfalse\fP\&. 
+.RE
+.PP
+
+.PP
+Definition at line 1145 of file stream_decoder\&.c\&.
+.SS "\fBFLAC_API\fP \fBFLAC__bool\fP FLAC__stream_decoder_set_md5_checking (\fBFLAC__StreamDecoder\fP * decoder, \fBFLAC__bool\fP value)"
+Set the 'MD5 signature checking' flag\&. If \fCtrue\fP, the decoder will compute the MD5 signature of the unencoded audio data while decoding and compare it to the signature from the STREAMINFO block, if it exists, during \fBFLAC__stream_decoder_finish()\fP\&.
+.PP
+MD5 signature checking will be turned off (until the next \fBFLAC__stream_decoder_reset()\fP) if there is no signature in the STREAMINFO block or when a seek is attempted\&.
+.PP
+Clients that do not use the MD5 check should leave this off to speed up decoding\&.
+.PP
+\fCfalse\fP 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdecoder\fP A decoder instance to set\&. 
+.br
+\fIvalue\fP Flag value (see above)\&.  
+.PP
+.nf
+1 decoder != NULL 
+
+.fi
+.PP
+ 
+.RE
+.PP
+\fBReturn values:\fP
+.RS 4
+\fIFLAC__bool\fP \fCfalse\fP if the decoder is already initialized, else \fCtrue\fP\&. 
+.RE
+.PP
+
+.PP
+Definition at line 724 of file stream_decoder\&.c\&.
+.SS "\fBFLAC_API\fP \fBFLAC__bool\fP FLAC__stream_decoder_set_metadata_ignore (\fBFLAC__StreamDecoder\fP * decoder, \fBFLAC__MetadataType\fP type)"
+Direct the decoder to filter out all metadata blocks of type \fItype\fP\&.
+.PP
+By default, only the \fCSTREAMINFO\fP block is returned via the metadata callback\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdecoder\fP A decoder instance to set\&. 
+.br
+\fItype\fP See above\&.  
+.PP
+.nf
+1 decoder != NULL 
+
+.fi
+.PP
+ \fItype\fP is valid 
+.RE
+.PP
+\fBReturn values:\fP
+.RS 4
+\fIFLAC__bool\fP \fCfalse\fP if the decoder is already initialized, else \fCtrue\fP\&. 
+.RE
+.PP
+
+.PP
+Definition at line 793 of file stream_decoder\&.c\&.
+.SS "\fBFLAC_API\fP \fBFLAC__bool\fP FLAC__stream_decoder_set_metadata_ignore_all (\fBFLAC__StreamDecoder\fP * decoder)"
+Direct the decoder to filter out all metadata blocks of any type\&.
+.PP
+By default, only the \fCSTREAMINFO\fP block is returned via the metadata callback\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdecoder\fP A decoder instance to set\&.  
+.PP
+.nf
+1 decoder != NULL 
+
+.fi
+.PP
+ 
+.RE
+.PP
+\fBReturn values:\fP
+.RS 4
+\fIFLAC__bool\fP \fCfalse\fP if the decoder is already initialized, else \fCtrue\fP\&. 
+.RE
+.PP
+
+.PP
+Definition at line 838 of file stream_decoder\&.c\&.
+.SS "\fBFLAC_API\fP \fBFLAC__bool\fP FLAC__stream_decoder_set_metadata_ignore_application (\fBFLAC__StreamDecoder\fP * decoder, \fBconst\fP \fBFLAC__byte\fP id[4])"
+Direct the decoder to filter out all APPLICATION metadata blocks of the given \fIid\fP\&.
+.PP
+By default, only the \fCSTREAMINFO\fP block is returned via the metadata callback\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdecoder\fP A decoder instance to set\&. 
+.br
+\fIid\fP See above\&.  
+.PP
+.nf
+1 decoder != NULL 
+
+.fi
+.PP
+ 
+.PP
+.nf
+1 id != NULL 
+
+.fi
+.PP
+ 
+.RE
+.PP
+\fBReturn values:\fP
+.RS 4
+\fIFLAC__bool\fP \fCfalse\fP if the decoder is already initialized, else \fCtrue\fP\&. 
+.RE
+.PP
+
+.PP
+Definition at line 810 of file stream_decoder\&.c\&.
+.SS "\fBFLAC_API\fP \fBFLAC__bool\fP FLAC__stream_decoder_set_metadata_respond (\fBFLAC__StreamDecoder\fP * decoder, \fBFLAC__MetadataType\fP type)"
+Direct the decoder to pass on all metadata blocks of type \fItype\fP\&.
+.PP
+By default, only the \fCSTREAMINFO\fP block is returned via the metadata callback\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdecoder\fP A decoder instance to set\&. 
+.br
+\fItype\fP See above\&.  
+.PP
+.nf
+1 decoder != NULL 
+
+.fi
+.PP
+ \fItype\fP is valid 
+.RE
+.PP
+\fBReturn values:\fP
+.RS 4
+\fIFLAC__bool\fP \fCfalse\fP if the decoder is already initialized, else \fCtrue\fP\&. 
+.RE
+.PP
+
+.PP
+Definition at line 734 of file stream_decoder\&.c\&.
+.SS "\fBFLAC_API\fP \fBFLAC__bool\fP FLAC__stream_decoder_set_metadata_respond_all (\fBFLAC__StreamDecoder\fP * decoder)"
+Direct the decoder to pass on all metadata blocks of any type\&.
+.PP
+By default, only the \fCSTREAMINFO\fP block is returned via the metadata callback\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdecoder\fP A decoder instance to set\&.  
+.PP
+.nf
+1 decoder != NULL 
+
+.fi
+.PP
+ 
+.RE
+.PP
+\fBReturn values:\fP
+.RS 4
+\fIFLAC__bool\fP \fCfalse\fP if the decoder is already initialized, else \fCtrue\fP\&. 
+.RE
+.PP
+
+.PP
+Definition at line 779 of file stream_decoder\&.c\&.
+.SS "\fBFLAC_API\fP \fBFLAC__bool\fP FLAC__stream_decoder_set_metadata_respond_application (\fBFLAC__StreamDecoder\fP * decoder, \fBconst\fP \fBFLAC__byte\fP id[4])"
+Direct the decoder to pass on all APPLICATION metadata blocks of the given \fIid\fP\&.
+.PP
+By default, only the \fCSTREAMINFO\fP block is returned via the metadata callback\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdecoder\fP A decoder instance to set\&. 
+.br
+\fIid\fP See above\&.  
+.PP
+.nf
+1 decoder != NULL 
+
+.fi
+.PP
+ 
+.PP
+.nf
+1 id != NULL 
+
+.fi
+.PP
+ 
+.RE
+.PP
+\fBReturn values:\fP
+.RS 4
+\fIFLAC__bool\fP \fCfalse\fP if the decoder is already initialized, else \fCtrue\fP\&. 
+.RE
+.PP
+
+.PP
+Definition at line 751 of file stream_decoder\&.c\&.
+.SS "\fBFLAC_API\fP \fBFLAC__bool\fP FLAC__stream_decoder_set_ogg_serial_number (\fBFLAC__StreamDecoder\fP * decoder, long serial_number)"
+Set the serial number for the \fBFLAC\fP stream within the Ogg container\&. The default behavior is to use the serial number of the first Ogg page\&. Setting a serial number here will explicitly specify which stream is to be decoded\&.
+.PP
+\fBNote:\fP
+.RS 4
+This does not need to be set for native \fBFLAC\fP decoding\&.
+.RE
+.PP
+\fCuse\fP serial number of first page 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdecoder\fP A decoder instance to set\&. 
+.br
+\fIserial_number\fP See above\&.  
+.PP
+.nf
+1 decoder != NULL 
+
+.fi
+.PP
+ 
+.RE
+.PP
+\fBReturn values:\fP
+.RS 4
+\fIFLAC__bool\fP \fCfalse\fP if the decoder is already initialized, else \fCtrue\fP\&. 
+.RE
+.PP
+
+.PP
+Definition at line 707 of file stream_decoder\&.c\&.
+.SS "\fBFLAC_API\fP \fBFLAC__bool\fP FLAC__stream_decoder_skip_single_frame (\fBFLAC__StreamDecoder\fP * decoder)"
+Skip one audio frame\&. This version instructs the decoder to 'skip' a single frame and stop, unless the callbacks return a fatal error or the read callback returns \fCFLAC__STREAM_DECODER_READ_STATUS_END_OF_STREAM\fP\&.
+.PP
+The decoding flow is the same as what occurs when \fBFLAC__stream_decoder_process_single()\fP is called to process an audio frame, except that this function does not decode the parsed data into PCM or call the write callback\&. The integrity of the frame is still checked the same way as in the other process functions\&.
+.PP
+This function will return once one whole frame is skipped, in the same way that \fBFLAC__stream_decoder_process_single()\fP will return once one whole frame is decoded\&.
+.PP
+This function can be used in more quickly determining \fBFLAC\fP frame boundaries when decoding of the actual data is not needed, for example when an application is separating a \fBFLAC\fP stream into frames for editing or storing in a container\&. To do this, the application can use \fBFLAC__stream_decoder_skip_single_frame()\fP to quickly advance to the next frame, then use \fBFLAC__stream_decoder_get_decode_position()\fP to find the new frame boundary\&.
+.PP
+This function should only be called when the stream has advanced past all the metadata, otherwise it will return \fCfalse\fP\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdecoder\fP An initialized decoder instance not in a metadata state\&.  
+.PP
+.nf
+1 decoder != NULL 
+
+.fi
+.PP
+ 
+.RE
+.PP
+\fBReturn values:\fP
+.RS 4
+\fIFLAC__bool\fP \fCfalse\fP if any fatal read, write, or memory allocation error occurred (meaning decoding must stop), or if the decoder is in the FLAC__STREAM_DECODER_SEARCH_FOR_METADATA or FLAC__STREAM_DECODER_READ_METADATA state, else \fCtrue\fP; for more information about the decoder, check the decoder state with \fBFLAC__stream_decoder_get_state()\fP\&. 
+.RE
+.PP
+
+.PP
+Definition at line 1114 of file stream_decoder\&.c\&.
+.SH "Variable Documentation"
+.PP 
+.SS "\fBFLAC_API\fP \fBconst\fP char* \fBconst\fP FLAC__StreamDecoderErrorStatusString[]"
+Maps a FLAC__StreamDecoderErrorStatus to a C string\&.
+.PP
+Using a FLAC__StreamDecoderErrorStatus as the index to this array will give the string equivalent\&. The contents should not be modified\&. 
+.PP
+Definition at line 239 of file stream_decoder\&.c\&.
+.SS "\fBFLAC_API\fP \fBconst\fP char* \fBconst\fP FLAC__StreamDecoderInitStatusString[]"
+Maps a FLAC__StreamDecoderInitStatus to a C string\&.
+.PP
+Using a FLAC__StreamDecoderInitStatus as the index to this array will give the string equivalent\&. The contents should not be modified\&. 
+.PP
+Definition at line 201 of file stream_decoder\&.c\&.
+.SS "\fBFLAC_API\fP \fBconst\fP char* \fBconst\fP FLAC__StreamDecoderLengthStatusString[]"
+Maps a FLAC__StreamDecoderLengthStatus to a C string\&.
+.PP
+Using a FLAC__StreamDecoderLengthStatus as the index to this array will give the string equivalent\&. The contents should not be modified\&. 
+.PP
+Definition at line 228 of file stream_decoder\&.c\&.
+.SS "\fBFLAC_API\fP \fBconst\fP char* \fBconst\fP FLAC__StreamDecoderReadStatusString[]"
+Maps a FLAC__StreamDecoderReadStatus to a C string\&.
+.PP
+Using a FLAC__StreamDecoderReadStatus as the index to this array will give the string equivalent\&. The contents should not be modified\&. 
+.PP
+Definition at line 210 of file stream_decoder\&.c\&.
+.SS "\fBFLAC_API\fP \fBconst\fP char* \fBconst\fP FLAC__StreamDecoderSeekStatusString[]"
+Maps a FLAC__StreamDecoderSeekStatus to a C string\&.
+.PP
+Using a FLAC__StreamDecoderSeekStatus as the index to this array will give the string equivalent\&. The contents should not be modified\&. 
+.PP
+Definition at line 216 of file stream_decoder\&.c\&.
+.SS "\fBFLAC_API\fP \fBconst\fP char* \fBconst\fP FLAC__StreamDecoderStateString[]"
+Maps a FLAC__StreamDecoderState to a C string\&.
+.PP
+Using a FLAC__StreamDecoderState as the index to this array will give the string equivalent\&. The contents should not be modified\&. 
+.PP
+Definition at line 188 of file stream_decoder\&.c\&.
+.SS "\fBFLAC_API\fP \fBconst\fP char* \fBconst\fP FLAC__StreamDecoderTellStatusString[]"
+Maps a FLAC__StreamDecoderTellStatus to a C string\&.
+.PP
+Using a FLAC__StreamDecoderTellStatus as the index to this array will give the string equivalent\&. The contents should not be modified\&. 
+.PP
+Definition at line 222 of file stream_decoder\&.c\&.
+.SS "\fBFLAC_API\fP \fBconst\fP char* \fBconst\fP FLAC__StreamDecoderWriteStatusString[]"
+Maps a FLAC__StreamDecoderWriteStatus to a C string\&.
+.PP
+Using a FLAC__StreamDecoderWriteStatus as the index to this array will give the string equivalent\&. The contents should not be modified\&. 
+.PP
+Definition at line 234 of file stream_decoder\&.c\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

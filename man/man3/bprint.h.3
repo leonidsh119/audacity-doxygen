@@ -1,0 +1,233 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/lib-src/ffmpeg/libavutil/bprint.h" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/lib-src/ffmpeg/libavutil/bprint.h \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <stdarg\&.h>\fP
+.br
+\fC#include 'attributes\&.h'\fP
+.br
+\fC#include 'avstring\&.h'\fP
+.br
+
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "struct \fBAVBPrint\fP"
+.br
+.in -1c
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBFF_PAD_STRUCTURE\fP(\fBsize\fP, \&.\&.\&.)"
+.br
+.ti -1c
+.RI "#define \fBAV_BPRINT_SIZE_UNLIMITED\fP   ((unsigned)\-1)"
+.br
+.ti -1c
+.RI "#define \fBAV_BPRINT_SIZE_AUTOMATIC\fP   1"
+.br
+.ti -1c
+.RI "#define \fBAV_BPRINT_SIZE_COUNT_ONLY\fP   0"
+.br
+.in -1c
+.SS "Typedefs"
+
+.in +1c
+.ti -1c
+.RI "typedef struct \fBAVBPrint\fP \fBAVBPrint\fP"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBvoid\fP \fBav_bprint_init\fP (\fBAVBPrint\fP *\fBbuf\fP, unsigned size_init, unsigned size_max)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBav_bprint_init_for_buffer\fP (\fBAVBPrint\fP *\fBbuf\fP, char *\fBbuffer\fP, unsigned \fBsize\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBav_bprintf\fP (\fBAVBPrint\fP *\fBbuf\fP, \fBconst\fP char *fmt,\&.\&.\&.) \fBav_printf_format\fP(2"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBvoid\fP \fBav_vbprintf\fP (\fBAVBPrint\fP *\fBbuf\fP, \fBconst\fP char *fmt, va_list vl_arg)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBav_bprint_chars\fP (\fBAVBPrint\fP *\fBbuf\fP, char \fBc\fP, unsigned n)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBav_bprint_append_data\fP (\fBAVBPrint\fP *\fBbuf\fP, \fBconst\fP char *\fBdata\fP, unsigned \fBsize\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBav_bprint_strftime\fP (\fBAVBPrint\fP *\fBbuf\fP, \fBconst\fP char *fmt, \fBconst\fP struct tm *tm)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBav_bprint_get_buffer\fP (\fBAVBPrint\fP *\fBbuf\fP, unsigned \fBsize\fP, unsigned char **mem, unsigned *actual_size)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBav_bprint_clear\fP (\fBAVBPrint\fP *\fBbuf\fP)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_bprint_finalize\fP (\fBAVBPrint\fP *\fBbuf\fP, char **ret_str)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBav_bprint_escape\fP (\fBAVBPrint\fP *dstbuf, \fBconst\fP char *src, \fBconst\fP char *special_chars, enum \fBAVEscapeMode\fP mode, \fBint\fP flags)"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define AV_BPRINT_SIZE_AUTOMATIC   1"
+
+.PP
+Definition at line 92 of file bprint\&.h\&.
+.SS "#define AV_BPRINT_SIZE_COUNT_ONLY   0"
+
+.PP
+Definition at line 93 of file bprint\&.h\&.
+.SS "#define AV_BPRINT_SIZE_UNLIMITED   ((unsigned)\-1)"
+Convenience macros for special values for \fBav_bprint_init()\fP size_max parameter\&. 
+.PP
+Definition at line 91 of file bprint\&.h\&.
+.SS "#define FF_PAD_STRUCTURE(\fBsize\fP,  \&.\&.\&.)"
+\fBValue:\fP
+.PP
+.nf
+__VA_ARGS__ \
+    char reserved_padding[size - sizeof(struct { __VA_ARGS__ })];
+.fi
+Define a structure with extra padding to a fixed size This helps ensuring binary compatibility with future versions\&. 
+.PP
+Definition at line 33 of file bprint\&.h\&.
+.SH "Typedef Documentation"
+.PP 
+.SS "typedef struct \fBAVBPrint\fP  \fBAVBPrint\fP"
+Buffer to print data progressively
+.PP
+The string buffer grows as necessary and is always 0-terminated\&. The content of the string is never accessed, and thus is encoding-agnostic and can even hold binary data\&.
+.PP
+Small buffers are kept in the structure itself, and thus require no memory allocation at all (unless the contents of the buffer is needed after the structure goes out of scope)\&. This is almost as lightweight as declaring a local 'char buf[512]'\&.
+.PP
+The length of the string can go beyond the allocated size: the buffer is then truncated, but the functions still keep account of the actual total length\&.
+.PP
+In other words, buf->len can be greater than buf->size and records the total length of what would have been to the buffer if there had been enough memory\&.
+.PP
+Append operations do not need to be tested for failure: if a memory allocation fails, data stop being appended to the buffer, but the length is still updated\&. This situation can be tested with av_bprint_is_complete()\&.
+.PP
+The size_max field determines several possible behaviours:
+.PP
+size_max = -1 (= UINT_MAX) or any large value will let the buffer be reallocated as necessary, with an amortized linear cost\&.
+.PP
+size_max = 0 prevents writing anything to the buffer: only the total length is computed\&. The write operations can then possibly be repeated in a buffer with exactly the necessary size (using size_init = size_max = len + 1)\&.
+.PP
+size_max = 1 is automatically replaced by the exact size available in the structure itself, thus ensuring no dynamic memory allocation\&. The internal buffer is large enough to hold a reasonable paragraph of text, such as the current paragraph\&. 
+.SH "Function Documentation"
+.PP 
+.SS "\fBvoid\fP av_bprint_append_data (\fBAVBPrint\fP * buf, \fBconst\fP char * data, unsigned size)"
+Append data to a print buffer\&.
+.PP
+param buf bprint buffer to use param data pointer to data param size size of data 
+.SS "\fBvoid\fP av_bprint_chars (\fBAVBPrint\fP * buf, char c, unsigned n)"
+Append char c n times to a print buffer\&. 
+.SS "\fBvoid\fP av_bprint_clear (\fBAVBPrint\fP * buf)"
+Reset the string to '' but keep internal allocated data\&. 
+.SS "\fBvoid\fP av_bprint_escape (\fBAVBPrint\fP * dstbuf, \fBconst\fP char * src, \fBconst\fP char * special_chars, enum \fBAVEscapeMode\fP mode, \fBint\fP flags)"
+Escape the content in src and append it to dstbuf\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdstbuf\fP already inited destination bprint buffer 
+.br
+\fIsrc\fP string containing the text to escape 
+.br
+\fIspecial_chars\fP string containing the special characters which need to be escaped, can be NULL 
+.br
+\fImode\fP escape mode to employ, see AV_ESCAPE_MODE_* macros\&. Any unknown value for mode will be considered equivalent to AV_ESCAPE_MODE_BACKSLASH, but this behaviour can change without notice\&. 
+.br
+\fIflags\fP flags which control how to escape, see AV_ESCAPE_FLAG_* macros 
+.RE
+.PP
+
+.SS "\fBint\fP av_bprint_finalize (\fBAVBPrint\fP * buf, char ** ret_str)"
+Finalize a print buffer\&.
+.PP
+The print buffer can no longer be used afterwards, but the len and size fields are still valid\&.
+.PP
+.PD 0
+.IP "\(bu" 2
+[out] ret_str if not NULL, used to return a permanent copy of the buffer contents, or NULL if memory allocation fails; if NULL, the buffer is discarded and freed 
+.PP
+\fBReturns:\fP
+.RS 4
+0 for success or error code (probably \fBAVERROR(ENOMEM)\fP) 
+.RE
+.PP
+
+.PP
+
+.SS "\fBvoid\fP av_bprint_get_buffer (\fBAVBPrint\fP * buf, unsigned size, unsigned char ** mem, unsigned * actual_size)"
+Allocate bytes in the buffer for external use\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIbuf\fP buffer structure 
+.br
+\fIsize\fP required size 
+.br
+\fImem\fP pointer to the memory area 
+.br
+\fIactual_size\fP size of the memory area after allocation; can be larger or smaller than size 
+.RE
+.PP
+
+.SS "\fBvoid\fP av_bprint_init (\fBAVBPrint\fP * buf, unsigned size_init, unsigned size_max)"
+Init a print buffer\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIbuf\fP buffer to init 
+.br
+\fIsize_init\fP initial size (including the final 0) 
+.br
+\fIsize_max\fP maximum size; 0 means do not write anything, just count the length; 1 is replaced by the maximum value for automatic storage; any large value means that the internal buffer will be reallocated as needed up to that limit; -1 is converted to UINT_MAX, the largest limit possible\&. Check also AV_BPRINT_SIZE_* macros\&. 
+.RE
+.PP
+
+.SS "\fBvoid\fP av_bprint_init_for_buffer (\fBAVBPrint\fP * buf, char * buffer, unsigned size)"
+Init a print buffer using a pre-existing buffer\&.
+.PP
+The buffer will not be reallocated\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIbuf\fP buffer structure to init 
+.br
+\fIbuffer\fP byte buffer to use for the string data 
+.br
+\fIsize\fP size of buffer 
+.RE
+.PP
+
+.SS "\fBvoid\fP av_bprint_strftime (\fBAVBPrint\fP * buf, \fBconst\fP char * fmt, \fBconst\fP struct tm * tm)"
+Append a formatted date and time to a print buffer\&.
+.PP
+param buf bprint buffer to use param fmt date and time format string, see strftime() param tm broken-down time structure to translate
+.PP
+\fBNote:\fP
+.RS 4
+due to poor design of the standard strftime function, it may produce poor results if the format string expands to a very long text and the bprint buffer is near the limit stated by the size_max option\&. 
+.RE
+.PP
+
+.SS "\fBvoid\fP av_bprintf (\fBAVBPrint\fP * buf, \fBconst\fP char * fmt,  \&.\&.\&.)"
+Append a formatted string to a print buffer\&. 
+.SS "\fBvoid\fP \fBvoid\fP av_vbprintf (\fBAVBPrint\fP * buf, \fBconst\fP char * fmt, va_list vl_arg)"
+Append a formatted string to a print buffer\&. 
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

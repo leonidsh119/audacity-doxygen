@@ -1,0 +1,220 @@
+.TH "ODDecodeTask" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+ODDecodeTask \- A class representing a modular task to be used with the On-Demand structures\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <ODDecodeTask\&.h>\fP
+.PP
+Inherits \fBODTask\fP\&.
+.PP
+Inherited by \fBODDecodeFlacTask\fP\&.
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBODDecodeTask\fP ()"
+.br
+.RI "\fICreates a NEW task that computes summaries for a wavetrack that needs to be specified through SetWaveTrack() \fP"
+.ti -1c
+.RI "virtual \fB~ODDecodeTask\fP ()"
+.br
+.ti -1c
+.RI "virtual \fBODTask\fP * \fBClone\fP ()=0"
+.br
+.ti -1c
+.RI "virtual \fBbool\fP \fBSeekingAllowed\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBDemandTrackUpdate\fP (\fBWaveTrack\fP *track, double seconds) override"
+.br
+.ti -1c
+.RI "\fBconst\fP char * \fBGetTaskName\fP () override"
+.br
+.RI "\fIReturn the task name\&. \fP"
+.ti -1c
+.RI "\fBconst\fP wxChar * \fBGetTip\fP () override"
+.br
+.ti -1c
+.RI "unsigned \fBint\fP \fBGetODType\fP () override"
+.br
+.RI "\fISubclasses should override to return respective type\&. \fP"
+.ti -1c
+.RI "virtual \fBODFileDecoder\fP * \fBCreateFileDecoder\fP (\fBconst\fP wxString &fileName)=0"
+.br
+.RI "\fICreates an \fBODFileDecoder\fP that decodes a file of filetype the subclass handles\&. \fP"
+.ti -1c
+.RI "virtual \fBODFileDecoder\fP * \fBGetOrCreateMatchingFileDecoder\fP (\fBODDecodeBlockFile\fP *blockFile)"
+.br
+.ti -1c
+.RI "virtual \fBint\fP \fBGetNumFileDecoders\fP ()"
+.br
+.in -1c
+.SS "Protected Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBvoid\fP \fBCalculatePercentComplete\fP () override"
+.br
+.RI "\fIrecalculates the percentage complete\&. \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBDoSomeInternal\fP () override"
+.br
+.RI "\fIComputes and writes the data for one \fBBlockFile\fP if it still has a refcount\&. \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBUpdate\fP () override"
+.br
+.RI "\fIby default creates the order of the wavetrack to load\&. \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBOrderBlockFiles\fP (std::vector< \fBODDecodeBlockFile\fP * > &unorderedBlocks)"
+.br
+.RI "\fIOrders the input as either On-Demand or default layered order\&. \fP"
+.in -1c
+.SS "Protected Attributes"
+
+.in +1c
+.ti -1c
+.RI "std::vector< \fBODDecodeBlockFile\fP * > \fBmBlockFiles\fP"
+.br
+.ti -1c
+.RI "std::vector< \fBODFileDecoder\fP * > \fBmDecoders\fP"
+.br
+.ti -1c
+.RI "\fBint\fP \fBmMaxBlockFiles\fP"
+.br
+.ti -1c
+.RI "\fBint\fP \fBmComputedBlockFiles\fP"
+.br
+.in -1c
+.SS "Additional Inherited Members"
+.SH "Detailed Description"
+.PP 
+A class representing a modular task to be used with the On-Demand structures\&. 
+
+Decodes a file into a simpleBlockFile, but not immediately\&.
+.PP
+This is an abstract class that subclasses will have to derive the types from\&. For any type there should only be one \fBODDecodeTask\fP associated with a given track\&. There could be the ODBlockFiles of several FLACs in one track (after copy and pasting), so things aren't as simple as they seem - the implementation needs to be robust enough to allow all the user changes such as copy/paste, DELETE, and so on\&. 
+.PP
+Definition at line 40 of file ODDecodeTask\&.h\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "ODDecodeTask::ODDecodeTask ()"
+
+.PP
+Creates a NEW task that computes summaries for a wavetrack that needs to be specified through SetWaveTrack() 
+.PP
+Definition at line 26 of file ODDecodeTask\&.cpp\&.
+.SS "virtual ODDecodeTask::~ODDecodeTask ()\fC [inline]\fP, \fC [virtual]\fP"
+
+.PP
+Definition at line 44 of file ODDecodeTask\&.h\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "\fBvoid\fP ODDecodeTask::CalculatePercentComplete ()\fC [override]\fP, \fC [protected]\fP, \fC [virtual]\fP"
+
+.PP
+recalculates the percentage complete\&. 
+.PP
+Implements \fBODTask\fP\&.
+.PP
+Definition at line 110 of file ODDecodeTask\&.cpp\&.
+.SS "virtual \fBODTask\fP* ODDecodeTask::Clone ()\fC [pure virtual]\fP"
+
+.PP
+Implements \fBODTask\fP\&.
+.PP
+Implemented in \fBODDecodeFlacTask\fP\&.
+.SS "virtual \fBODFileDecoder\fP* ODDecodeTask::CreateFileDecoder (\fBconst\fP wxString & fileName)\fC [pure virtual]\fP"
+
+.PP
+Creates an \fBODFileDecoder\fP that decodes a file of filetype the subclass handles\&. 
+.PP
+Implemented in \fBODDecodeFlacTask\fP\&.
+.SS "\fBvoid\fP ODDecodeTask::DemandTrackUpdate (\fBWaveTrack\fP * track, double seconds)\fC [override]\fP, \fC [virtual]\fP"
+changes the tasks associated with this Waveform to process the task from a different point in the track this is overridden from \fBODTask\fP because certain classes don't allow users to seek sometimes, or not at all\&. 
+.PP
+Reimplemented from \fBODTask\fP\&.
+.PP
+Definition at line 246 of file ODDecodeTask\&.cpp\&.
+.SS "\fBvoid\fP ODDecodeTask::DoSomeInternal ()\fC [override]\fP, \fC [protected]\fP, \fC [virtual]\fP"
+
+.PP
+Computes and writes the data for one \fBBlockFile\fP if it still has a refcount\&. 
+.PP
+Implements \fBODTask\fP\&.
+.PP
+Definition at line 34 of file ODDecodeTask\&.cpp\&.
+.SS "\fBint\fP ODDecodeTask::GetNumFileDecoders ()\fC [virtual]\fP"
+
+.PP
+Definition at line 283 of file ODDecodeTask\&.cpp\&.
+.SS "unsigned \fBint\fP ODDecodeTask::GetODType ()\fC [inline]\fP, \fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Subclasses should override to return respective type\&. 
+.PP
+Reimplemented from \fBODTask\fP\&.
+.PP
+Definition at line 61 of file ODDecodeTask\&.h\&.
+.SS "\fBODFileDecoder\fP * ODDecodeTask::GetOrCreateMatchingFileDecoder (\fBODDecodeBlockFile\fP * blockFile)\fC [virtual]\fP"
+there could be the ODBlockFiles of several FLACs in one track (after copy and pasting) so we keep a list of decoders that keep track of the file names, etc, and check the blocks against them\&. Blocks that have IsDataAvailable()==false are blockfiles to be decoded\&. if BlockFile::GetDecodeType()==\fBODDecodeTask::GetODType()\fP then this decoder should handle it\&. Decoders are accessible with the methods below\&. These aren't thread-safe and should only be called from the decoding thread\&. 
+.PP
+Definition at line 259 of file ODDecodeTask\&.cpp\&.
+.SS "\fBconst\fP char* ODDecodeTask::GetTaskName ()\fC [inline]\fP, \fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Return the task name\&. 
+.PP
+Reimplemented from \fBODTask\fP\&.
+.PP
+Definition at line 56 of file ODDecodeTask\&.h\&.
+.SS "\fBconst\fP wxChar* ODDecodeTask::GetTip ()\fC [inline]\fP, \fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Implements \fBODTask\fP\&.
+.PP
+Definition at line 58 of file ODDecodeTask\&.h\&.
+.SS "\fBvoid\fP ODDecodeTask::OrderBlockFiles (std::vector< \fBODDecodeBlockFile\fP * > & unorderedBlocks)\fC [protected]\fP"
+
+.PP
+Orders the input as either On-Demand or default layered order\&. 
+.PP
+Definition at line 194 of file ODDecodeTask\&.cpp\&.
+.SS "\fBbool\fP ODDecodeTask::SeekingAllowed ()\fC [virtual]\fP"
+
+.PP
+Definition at line 117 of file ODDecodeTask\&.cpp\&.
+.SS "\fBvoid\fP ODDecodeTask::Update ()\fC [override]\fP, \fC [protected]\fP, \fC [virtual]\fP"
+
+.PP
+by default creates the order of the wavetrack to load\&. Readjusts the blockfile order in the default manner\&. If we have had an ODRequest Then it updates in the OD manner\&. 
+.PP
+Reimplemented from \fBODTask\fP\&.
+.PP
+Definition at line 127 of file ODDecodeTask\&.cpp\&.
+.SH "Member Data Documentation"
+.PP 
+.SS "std::vector<\fBODDecodeBlockFile\fP*> ODDecodeTask::mBlockFiles\fC [protected]\fP"
+
+.PP
+Definition at line 92 of file ODDecodeTask\&.h\&.
+.SS "\fBint\fP ODDecodeTask::mComputedBlockFiles\fC [protected]\fP"
+
+.PP
+Definition at line 96 of file ODDecodeTask\&.h\&.
+.SS "std::vector<\fBODFileDecoder\fP*> ODDecodeTask::mDecoders\fC [protected]\fP"
+
+.PP
+Definition at line 93 of file ODDecodeTask\&.h\&.
+.SS "\fBint\fP ODDecodeTask::mMaxBlockFiles\fC [protected]\fP"
+
+.PP
+Definition at line 95 of file ODDecodeTask\&.h\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

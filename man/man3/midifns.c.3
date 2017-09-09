@@ -1,0 +1,391 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/lib-src/libnyquist/nyquist/cmt/midifns.c" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/lib-src/libnyquist/nyquist/cmt/midifns.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include 'switches\&.h'\fP
+.br
+\fC#include 'stdio\&.h'\fP
+.br
+\fC#include 'cext\&.h'\fP
+.br
+\fC#include 'midicode\&.h'\fP
+.br
+\fC#include 'cmdline\&.h'\fP
+.br
+\fC#include 'pitch\&.h'\fP
+.br
+\fC#include 'midifns\&.h'\fP
+.br
+\fC#include 'userio\&.h'\fP
+.br
+\fC#include 'string\&.h'\fP
+.br
+
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBBREAKTEST\fP"
+.br
+.ti -1c
+.RI "#define \fBALL_NOTES_OFF\fP   0x7B /*DMH: from macmidi\&.c*/"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBprivate\fP \fBvoid\fP \fBfixup\fP ()"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBvoid\fP \fBmidi_init\fP ()"
+.br
+.ti -1c
+.RI "\fBboolean\fP \fBcheck_ascii\fP ()"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBvoid\fP \fBmusicterm\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBalloff\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBeventwait\fP (long timeout)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBexclusive\fP (\fBboolean\fP onflag)"
+.br
+.ti -1c
+.RI "long \fBget_excl\fP (byte *\fBbuffer\fP, long \fBlen\fP)"
+.br
+.ti -1c
+.RI "\fBboolean\fP \fBgetbuf\fP (\fBboolean\fP waitflag, unsigned char *\fBp\fP)"
+.br
+.ti -1c
+.RI "short \fBgetkey\fP (\fBboolean\fP waitflag)"
+.br
+.ti -1c
+.RI "\fBulong\fP \fBgettime\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBl_rest\fP (long time)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBl_restuntil\fP (long time)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBmetronome\fP (\fBboolean\fP onflag)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBmidi_bend\fP (\fBint\fP channel, \fBint\fP \fBvalue\fP)"
+.br
+.ti -1c
+.RI "\fBboolean\fP \fBmidi_buffer\fP (byte \fBhuge\fP *\fBbuffer\fP, \fBulong\fP \fBsize\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBmidi_clock\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBmidi_cont\fP (\fBboolean\fP onflag)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBmidi_ctrl\fP (\fBint\fP channel, \fBint\fP control, \fBint\fP \fBvalue\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBmidi_exclusive\fP (unsigned char *msg)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBmidi_note\fP (\fBint\fP channel, \fBint\fP \fBpitch\fP, \fBint\fP velocity)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBmidi_program\fP (\fBint\fP channel, \fBint\fP program)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBmidi_real\fP (\fBboolean\fP onflag)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBmidi_start\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBmidi_stop\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBmidi_thru\fP (\fBboolean\fP onflag)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBmidi_touch\fP (\fBint\fP channel, \fBint\fP \fBvalue\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBmidi_write_trace\fP (\fBint\fP n, \fBint\fP port, unsigned char c1, unsigned char \fBc2\fP, unsigned char c3)"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBvoid\fP \fBset_pitch_default\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBread_tuning\fP (char *\fBfilename\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBmusicinit\fP ()"
+.br
+.ti -1c
+.RI "short \fBcmtrand\fP (short lo, short hi)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBsettime\fP (\fBtime_type\fP newtime)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBtimereset\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBtrace\fP (\fBboolean\fP flag)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBtracemidi\fP (\fBboolean\fP flag)"
+.br
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "\fBboolean\fP \fBmiditrace\fP = \fBFALSE\fP"
+.br
+.ti -1c
+.RI "\fBboolean\fP \fBmusictrace\fP = \fBFALSE\fP"
+.br
+.ti -1c
+.RI "\fBpublic\fP \fBint\fP \fBkeyloud\fP"
+.br
+.ti -1c
+.RI "\fBpublic\fP short \fBmidi_error_flags\fP = 0"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBint\fP \fBinitialized\fP = \fBFALSE\fP"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBboolean\fP \fBtune_flag\fP = \fBFALSE\fP"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBint\fP \fBuser_scale\fP = \fBFALSE\fP"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBint\fP \fBbend\fP [\fBMAX_CHANNELS\fP]"
+.br
+.ti -1c
+.RI "short \fBcur_midi_prgm\fP [\fBMAX_CHANNELS\fP]"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBpitch_table\fP \fBpit_tab\fP [128]"
+.br
+.ti -1c
+.RI "long \fBrandseed\fP = 1534781L"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define ALL_NOTES_OFF   0x7B /*DMH: from macmidi\&.c*/"
+
+.PP
+Definition at line 348 of file midifns\&.c\&.
+.SS "#define BREAKTEST"
+
+.PP
+Definition at line 110 of file midifns\&.c\&.
+.SH "Function Documentation"
+.PP 
+.SS "\fBvoid\fP alloff (\fBvoid\fP)"
+
+.PP
+Definition at line 350 of file midifns\&.c\&.
+.SS "\fBboolean\fP check_ascii ()"
+
+.PP
+Definition at line 1158 of file userio\&.c\&.
+.SS "short cmtrand (short lo, short hi)"
+
+.PP
+Definition at line 1619 of file midifns\&.c\&.
+.SS "\fBvoid\fP eventwait (long timeout)"
+
+.PP
+Definition at line 489 of file midifns\&.c\&.
+.SS "\fBvoid\fP exclusive (\fBboolean\fP onflag)"
+
+.PP
+Definition at line 509 of file midifns\&.c\&.
+.SS "\fBprivate\fP \fBvoid\fP fixup ()"
+
+.PP
+Definition at line 531 of file midifns\&.c\&.
+.SS "long get_excl (byte * buffer, long len)"
+
+.PP
+Definition at line 541 of file midifns\&.c\&.
+.SS "\fBboolean\fP getbuf (\fBboolean\fP waitflag, unsigned char * p)"
+
+.PP
+Definition at line 619 of file midifns\&.c\&.
+.SS "short getkey (\fBboolean\fP waitflag)"
+
+.PP
+Definition at line 767 of file midifns\&.c\&.
+.SS "\fBulong\fP gettime (\fBvoid\fP)"
+
+.PP
+Definition at line 811 of file midifns\&.c\&.
+.SS "\fBvoid\fP l_rest (long time)"
+
+.PP
+Definition at line 867 of file midifns\&.c\&.
+.SS "\fBvoid\fP l_restuntil (long time)"
+
+.PP
+Definition at line 882 of file midifns\&.c\&.
+.SS "\fBvoid\fP metronome (\fBboolean\fP onflag)"
+
+.PP
+Definition at line 914 of file midifns\&.c\&.
+.SS "\fBvoid\fP midi_bend (\fBint\fP channel, \fBint\fP value)"
+
+.PP
+Definition at line 931 of file midifns\&.c\&.
+.SS "\fBboolean\fP midi_buffer (byte \fBhuge\fP * buffer, \fBulong\fP size)"
+
+.PP
+Definition at line 963 of file midifns\&.c\&.
+.SS "\fBvoid\fP midi_clock (\fBvoid\fP)"
+
+.PP
+Definition at line 997 of file midifns\&.c\&.
+.SS "\fBvoid\fP midi_cont (\fBboolean\fP onflag)"
+
+.PP
+Definition at line 1013 of file midifns\&.c\&.
+.SS "\fBvoid\fP midi_ctrl (\fBint\fP channel, \fBint\fP control, \fBint\fP value)"
+
+.PP
+Definition at line 1049 of file midifns\&.c\&.
+.SS "\fBvoid\fP midi_exclusive (unsigned char * msg)"
+
+.PP
+Definition at line 1076 of file midifns\&.c\&.
+.SS "\fBprivate\fP \fBvoid\fP midi_init ()"
+
+.PP
+Definition at line 1777 of file midifns\&.c\&.
+.SS "\fBvoid\fP midi_note (\fBint\fP channel, \fBint\fP pitch, \fBint\fP velocity)"
+
+.PP
+Definition at line 1200 of file midifns\&.c\&.
+.SS "\fBvoid\fP midi_program (\fBint\fP channel, \fBint\fP program)"
+
+.PP
+Definition at line 1229 of file midifns\&.c\&.
+.SS "\fBvoid\fP midi_real (\fBboolean\fP onflag)"
+
+.PP
+Definition at line 1255 of file midifns\&.c\&.
+.SS "\fBvoid\fP midi_start (\fBvoid\fP)"
+
+.PP
+Definition at line 1290 of file midifns\&.c\&.
+.SS "\fBvoid\fP midi_stop (\fBvoid\fP)"
+
+.PP
+Definition at line 1300 of file midifns\&.c\&.
+.SS "\fBvoid\fP midi_thru (\fBboolean\fP onflag)"
+
+.PP
+Definition at line 1319 of file midifns\&.c\&.
+.SS "\fBvoid\fP midi_touch (\fBint\fP channel, \fBint\fP value)"
+
+.PP
+Definition at line 1349 of file midifns\&.c\&.
+.SS "\fBvoid\fP midi_write_trace (\fBint\fP n, \fBint\fP port, unsigned char c1, unsigned char c2, unsigned char c3)"
+
+.PP
+Definition at line 1467 of file midifns\&.c\&.
+.SS "\fBvoid\fP musicinit (\fBvoid\fP)"
+
+.PP
+Definition at line 1529 of file midifns\&.c\&.
+.SS "\fBprivate\fP \fBvoid\fP musicterm ()"
+
+.PP
+Definition at line 1601 of file midifns\&.c\&.
+.SS "\fBvoid\fP read_tuning (char * filename)"
+
+.PP
+Definition at line 1502 of file midifns\&.c\&.
+.SS "\fBprivate\fP \fBvoid\fP set_pitch_default ()"
+
+.PP
+Definition at line 1488 of file midifns\&.c\&.
+.SS "\fBvoid\fP settime (\fBtime_type\fP newtime)"
+
+.PP
+Definition at line 1646 of file midifns\&.c\&.
+.SS "\fBvoid\fP timereset (\fBvoid\fP)"
+
+.PP
+Definition at line 1672 of file midifns\&.c\&.
+.SS "\fBvoid\fP trace (\fBboolean\fP flag)"
+
+.PP
+Definition at line 1721 of file midifns\&.c\&.
+.SS "\fBvoid\fP tracemidi (\fBboolean\fP flag)"
+
+.PP
+Definition at line 1734 of file midifns\&.c\&.
+.SH "Variable Documentation"
+.PP 
+.SS "\fBprivate\fP \fBint\fP bend[\fBMAX_CHANNELS\fP]"
+
+.PP
+Definition at line 281 of file midifns\&.c\&.
+.SS "short cur_midi_prgm[\fBMAX_CHANNELS\fP]"
+
+.PP
+Definition at line 282 of file midifns\&.c\&.
+.SS "\fBprivate\fP \fBint\fP initialized = \fBFALSE\fP"
+
+.PP
+Definition at line 275 of file midifns\&.c\&.
+.SS "\fBpublic\fP \fBint\fP keyloud"
+
+.PP
+Definition at line 205 of file midifns\&.c\&.
+.SS "\fBpublic\fP short midi_error_flags = 0"
+
+.PP
+Definition at line 207 of file midifns\&.c\&.
+.SS "\fBboolean\fP miditrace = \fBFALSE\fP"
+
+.PP
+Definition at line 191 of file midifns\&.c\&.
+.SS "\fBboolean\fP musictrace = \fBFALSE\fP"
+
+.PP
+Definition at line 192 of file midifns\&.c\&.
+.SS "\fBprivate\fP \fBpitch_table\fP pit_tab[128]"
+
+.PP
+Definition at line 283 of file midifns\&.c\&.
+.SS "long randseed = 1534781L"
+
+.PP
+Definition at line 1617 of file midifns\&.c\&.
+.SS "\fBprivate\fP \fBboolean\fP tune_flag = \fBFALSE\fP"
+
+.PP
+Definition at line 276 of file midifns\&.c\&.
+.SS "\fBprivate\fP \fBint\fP user_scale = \fBFALSE\fP"
+
+.PP
+Definition at line 280 of file midifns\&.c\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

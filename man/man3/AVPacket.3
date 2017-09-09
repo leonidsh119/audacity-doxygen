@@ -1,0 +1,150 @@
+.TH "AVPacket" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+AVPacket \- 
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <avcodec\&.h>\fP
+.SS "Public Attributes"
+
+.in +1c
+.ti -1c
+.RI "\fBAVBufferRef\fP * \fBbuf\fP"
+.br
+.ti -1c
+.RI "\fBint64_t\fP \fBpts\fP"
+.br
+.ti -1c
+.RI "\fBint64_t\fP \fBdts\fP"
+.br
+.ti -1c
+.RI "\fBuint8_t\fP * \fBdata\fP"
+.br
+.ti -1c
+.RI "\fBint\fP \fBsize\fP"
+.br
+.ti -1c
+.RI "\fBint\fP \fBstream_index\fP"
+.br
+.ti -1c
+.RI "\fBint\fP \fBflags\fP"
+.br
+.ti -1c
+.RI "struct {"
+.br
+.ti -1c
+.RI "   \fBuint8_t\fP * \fBdata\fP"
+.br
+.ti -1c
+.RI "   \fBint\fP \fBsize\fP"
+.br
+.ti -1c
+.RI "   enum \fBAVPacketSideDataType\fP \fBtype\fP"
+.br
+.ti -1c
+.RI "} * \fBside_data\fP"
+.br
+.ti -1c
+.RI "\fBint\fP \fBside_data_elems\fP"
+.br
+.ti -1c
+.RI "\fBint\fP \fBduration\fP"
+.br
+.ti -1c
+.RI "\fBattribute_deprecated\fP \fBvoid\fP(* \fBdestruct\fP )(struct \fBAVPacket\fP *)"
+.br
+.ti -1c
+.RI "\fBattribute_deprecated\fP \fBvoid\fP * \fBpriv\fP"
+.br
+.ti -1c
+.RI "\fBint64_t\fP \fBpos\fP"
+.br
+.RI "\fIbyte position in stream, -1 if unknown \fP"
+.ti -1c
+.RI "\fBint64_t\fP \fBconvergence_duration\fP"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+This structure stores compressed data\&. It is typically exported by demuxers and then passed as input to decoders, or received as output from encoders and then passed to muxers\&.
+.PP
+For video, it should typically contain one compressed frame\&. For audio it may contain several compressed frames\&.
+.PP
+\fBAVPacket\fP is one of the few structs in FFmpeg, whose size is a part of public ABI\&. Thus it may be allocated on stack and no new fields can be added to it without libavcodec and libavformat major bump\&.
+.PP
+The semantics of data ownership depends on the buf or destruct (deprecated) fields\&. If either is set, the packet data is dynamically allocated and is valid indefinitely until \fBav_free_packet()\fP is called (which in turn calls \fBav_buffer_unref()\fP/the destruct callback to free the data)\&. If neither is set, the packet data is typically backed by some static buffer somewhere and is only valid for a limited time (e\&.g\&. until the next read call when demuxing)\&.
+.PP
+The side data is always allocated with \fBav_malloc()\fP and is freed in \fBav_free_packet()\fP\&. 
+.PP
+Definition at line 1092 of file avcodec\&.h\&.
+.SH "Member Data Documentation"
+.PP 
+.SS "\fBAVBufferRef\fP* AVPacket::buf"
+A reference to the reference-counted buffer where the packet data is stored\&. May be NULL, then the packet data is not reference-counted\&. 
+.PP
+Definition at line 1098 of file avcodec\&.h\&.
+.SS "\fBint64_t\fP AVPacket::convergence_duration"
+Time difference in AVStream->time_base units from the pts of this packet to the point at which the output from the decoder has converged independent from the availability of previous frames\&. That is, the frames are virtually identical no matter if decoding started from the very first frame or from this keyframe\&. Is AV_NOPTS_VALUE if unknown\&. This field is not the display duration of the current packet\&. This field has no meaning if the packet does not have AV_PKT_FLAG_KEY set\&.
+.PP
+The purpose of this field is to allow seeking in streams that have no keyframes in the conventional sense\&. It corresponds to the recovery point SEI in H\&.264 and match_time_delta in NUT\&. It is also essential for some types of subtitle streams to ensure that all subtitles are correctly displayed after seeking\&. 
+.PP
+Definition at line 1163 of file avcodec\&.h\&.
+.SS "\fBuint8_t\fP* AVPacket::data"
+
+.PP
+Definition at line 1115 of file avcodec\&.h\&.
+.SS "\fBattribute_deprecated\fP \fBvoid\fP(* AVPacket::destruct) (struct \fBAVPacket\fP *)"
+
+.PP
+Definition at line 1140 of file avcodec\&.h\&.
+.SS "\fBint64_t\fP AVPacket::dts"
+Decompression timestamp in AVStream->time_base units; the time at which the packet is decompressed\&. Can be AV_NOPTS_VALUE if it is not stored in the file\&. 
+.PP
+Definition at line 1114 of file avcodec\&.h\&.
+.SS "\fBint\fP AVPacket::duration"
+Duration of this packet in AVStream->time_base units, 0 if unknown\&. Equals next_pts - this_pts in presentation order\&. 
+.PP
+Definition at line 1137 of file avcodec\&.h\&.
+.SS "\fBint\fP AVPacket::flags"
+A combination of AV_PKT_FLAG values 
+.PP
+Definition at line 1121 of file avcodec\&.h\&.
+.SS "\fBint64_t\fP AVPacket::pos"
+
+.PP
+byte position in stream, -1 if unknown 
+.PP
+Definition at line 1144 of file avcodec\&.h\&.
+.SS "\fBattribute_deprecated\fP \fBvoid\fP* AVPacket::priv"
+
+.PP
+Definition at line 1142 of file avcodec\&.h\&.
+.SS "\fBint64_t\fP AVPacket::pts"
+Presentation timestamp in AVStream->time_base units; the time at which the decompressed packet will be presented to the user\&. Can be AV_NOPTS_VALUE if it is not stored in the file\&. pts MUST be larger or equal to dts as presentation cannot happen before decompression, unless one wants to view hex dumps\&. Some formats misuse the terms dts and pts/cts to mean something different\&. Such timestamps must be converted to true pts/dts before they are stored in \fBAVPacket\fP\&. 
+.PP
+Definition at line 1108 of file avcodec\&.h\&.
+.SS "struct { \&.\&.\&. }  * AVPacket::side_data"
+Additional packet data that can be provided by the container\&. Packet can contain several types of side information\&. 
+.SS "\fBint\fP AVPacket::side_data_elems"
+
+.PP
+Definition at line 1131 of file avcodec\&.h\&.
+.SS "\fBint\fP AVPacket::size"
+
+.PP
+Definition at line 1116 of file avcodec\&.h\&.
+.SS "\fBint\fP AVPacket::stream_index"
+
+.PP
+Definition at line 1117 of file avcodec\&.h\&.
+.SS "enum \fBAVPacketSideDataType\fP AVPacket::type"
+
+.PP
+Definition at line 1129 of file avcodec\&.h\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

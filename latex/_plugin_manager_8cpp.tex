@@ -1,0 +1,446 @@
+\hypertarget{_plugin_manager_8cpp}{}\section{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/src/\+Plugin\+Manager.cpp File Reference}
+\label{_plugin_manager_8cpp}\index{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/src/\+Plugin\+Manager.\+cpp@{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/src/\+Plugin\+Manager.\+cpp}}
+{\ttfamily \#include $<$algorithm$>$}\\*
+{\ttfamily \#include \char`\"{}Audacity.\+h\char`\"{}}\\*
+{\ttfamily \#include $<$wx/defs.\+h$>$}\\*
+{\ttfamily \#include $<$wx/dialog.\+h$>$}\\*
+{\ttfamily \#include $<$wx/dir.\+h$>$}\\*
+{\ttfamily \#include $<$wx/dynarray.\+h$>$}\\*
+{\ttfamily \#include $<$wx/dynlib.\+h$>$}\\*
+{\ttfamily \#include $<$wx/hashmap.\+h$>$}\\*
+{\ttfamily \#include $<$wx/filename.\+h$>$}\\*
+{\ttfamily \#include $<$wx/list.\+h$>$}\\*
+{\ttfamily \#include $<$wx/listctrl.\+h$>$}\\*
+{\ttfamily \#include $<$wx/log.\+h$>$}\\*
+{\ttfamily \#include $<$wx/radiobut.\+h$>$}\\*
+{\ttfamily \#include $<$wx/string.\+h$>$}\\*
+{\ttfamily \#include $<$wx/tokenzr.\+h$>$}\\*
+{\ttfamily \#include $<$wx/wfstream.\+h$>$}\\*
+{\ttfamily \#include $<$wx/utils.\+h$>$}\\*
+{\ttfamily \#include \char`\"{}audacity/\+Effect\+Interface.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Audacity\+App.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}File\+Names.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Module\+Manager.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Platform\+Compatibility.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Prefs.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Shuttle\+Gui.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}effects/\+Effect\+Manager.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}widgets/\+Progress\+Dialog.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Plugin\+Manager.\+h\char`\"{}}\\*
+{\ttfamily \#include $<$wx/arrimpl.\+cpp$>$}\\*
+{\ttfamily \#include \char`\"{}Experimental.\+h\char`\"{}}\\*
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{struct_item_data}{Item\+Data}
+\item 
+class \hyperlink{class_plugin_registration_dialog}{Plugin\+Registration\+Dialog}
+\end{DoxyCompactItemize}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{_plugin_manager_8cpp_a0ee9fb13f7bbcf1fdc9f73bcf3d96b3b}{R\+E\+G\+V\+E\+R\+K\+EY}~wx\+String(wxT(\char`\"{}/pluginregistryversion\char`\"{}))
+\item 
+\#define \hyperlink{_plugin_manager_8cpp_adf1e4a5694e2ce4da45cfd6ffca57a74}{R\+E\+G\+V\+E\+R\+C\+UR}~wx\+String(wxT(\char`\"{}1.\+0\char`\"{}))
+\item 
+\#define \hyperlink{_plugin_manager_8cpp_ab981e3bdb43e2b75f10eacf4b52162c3}{R\+E\+G\+R\+O\+OT}~wx\+String(wxT(\char`\"{}/pluginregistry/\char`\"{}))
+\item 
+\#define \hyperlink{_plugin_manager_8cpp_a95c74bba13deaaac05790a68d568c0ec}{S\+E\+T\+V\+E\+R\+K\+EY}~wx\+String(wxT(\char`\"{}/pluginsettingsversion\char`\"{}))
+\item 
+\#define \hyperlink{_plugin_manager_8cpp_a9adc139c4379718dc39f67d93432c936}{S\+E\+T\+V\+E\+R\+C\+UR}~wx\+String(wxT(\char`\"{}1.\+0\char`\"{}))
+\item 
+\#define \hyperlink{_plugin_manager_8cpp_a83e39c63c2be13bda0bdbe65a798ff43}{S\+E\+T\+R\+O\+OT}~wx\+String(wxT(\char`\"{}/pluginsettings/\char`\"{}))
+\item 
+\#define \hyperlink{_plugin_manager_8cpp_af566e970e340c189be2edba7d92df822}{K\+E\+Y\+\_\+\+ID}~wxT(\char`\"{}ID\char`\"{})
+\item 
+\#define \hyperlink{_plugin_manager_8cpp_a522d378f6c1d4ec2d1edbad8a76238db}{K\+E\+Y\+\_\+\+P\+A\+TH}~wxT(\char`\"{}Path\char`\"{})
+\item 
+\#define \hyperlink{_plugin_manager_8cpp_a3cce47ad615a331b49344d6090c645a3}{K\+E\+Y\+\_\+\+S\+Y\+M\+B\+OL}~wxT(\char`\"{}Symbol\char`\"{})
+\item 
+\#define \hyperlink{_plugin_manager_8cpp_ae9819aceac0225bfcfdf691175c22d26}{K\+E\+Y\+\_\+\+N\+A\+ME}~wxT(\char`\"{}Name\char`\"{})
+\item 
+\#define \hyperlink{_plugin_manager_8cpp_a4d9b7491a3bac1662401e44d126cf2f8}{K\+E\+Y\+\_\+\+V\+E\+N\+D\+OR}~wxT(\char`\"{}Vendor\char`\"{})
+\item 
+\#define \hyperlink{_plugin_manager_8cpp_abcd911594f90afdd5b340c431c149e72}{K\+E\+Y\+\_\+\+V\+E\+R\+S\+I\+ON}~wxT(\char`\"{}Version\char`\"{})
+\item 
+\#define \hyperlink{_plugin_manager_8cpp_afbdf34f15c1918e34a0fb88309727e5f}{K\+E\+Y\+\_\+\+D\+E\+S\+C\+R\+I\+P\+T\+I\+ON}~wxT(\char`\"{}Description\char`\"{})
+\item 
+\#define \hyperlink{_plugin_manager_8cpp_ac268514d4016d8d89d1602680f310ed1}{K\+E\+Y\+\_\+\+L\+A\+S\+T\+U\+P\+D\+A\+T\+ED}~wxT(\char`\"{}Last\+Updated\char`\"{})
+\item 
+\#define \hyperlink{_plugin_manager_8cpp_a930ab5337180baef9fe6c115cbaeecb2}{K\+E\+Y\+\_\+\+E\+N\+A\+B\+L\+ED}~wxT(\char`\"{}Enabled\char`\"{})
+\item 
+\#define \hyperlink{_plugin_manager_8cpp_af27449032ce353aa329edd80cd2759a5}{K\+E\+Y\+\_\+\+V\+A\+L\+ID}~wxT(\char`\"{}Valid\char`\"{})
+\item 
+\#define \hyperlink{_plugin_manager_8cpp_a274bd7b88e1d702ba2d86d2831dff499}{K\+E\+Y\+\_\+\+P\+R\+O\+V\+I\+D\+E\+R\+ID}~wxT(\char`\"{}Provider\+ID\char`\"{})
+\item 
+\#define \hyperlink{_plugin_manager_8cpp_aca9a9aadc60eadb41b571d207b96ec5d}{K\+E\+Y\+\_\+\+E\+F\+F\+E\+C\+T\+T\+Y\+PE}~wxT(\char`\"{}Effect\+Type\char`\"{})
+\item 
+\#define \hyperlink{_plugin_manager_8cpp_addbc09449269328094c033d4f625f7bc}{K\+E\+Y\+\_\+\+E\+F\+F\+E\+C\+T\+F\+A\+M\+I\+LY}~wxT(\char`\"{}Effect\+Family\char`\"{})
+\item 
+\#define \hyperlink{_plugin_manager_8cpp_aff8e854c5a6fe1b1c8df4096f872e122}{K\+E\+Y\+\_\+\+E\+F\+F\+E\+C\+T\+D\+E\+F\+A\+U\+LT}~wxT(\char`\"{}Effect\+Default\char`\"{})
+\item 
+\#define \hyperlink{_plugin_manager_8cpp_a8be172ccb7a860c7aed136b77cb072f0}{K\+E\+Y\+\_\+\+E\+F\+F\+E\+C\+T\+I\+N\+T\+E\+R\+A\+C\+T\+I\+VE}~wxT(\char`\"{}Effect\+Interactive\char`\"{})
+\item 
+\#define \hyperlink{_plugin_manager_8cpp_ab8ad494741f5a19eca7784af94d2be08}{K\+E\+Y\+\_\+\+E\+F\+F\+E\+C\+T\+R\+E\+A\+L\+T\+I\+ME}~wxT(\char`\"{}Effect\+Realtime\char`\"{})
+\item 
+\#define \hyperlink{_plugin_manager_8cpp_a09beb5a09d878cd3e00027c2604086de}{K\+E\+Y\+\_\+\+E\+F\+F\+E\+C\+T\+A\+U\+T\+O\+M\+A\+T\+A\+B\+LE}~wxT(\char`\"{}Effect\+Automatable\char`\"{})
+\item 
+\#define \hyperlink{_plugin_manager_8cpp_abeae855afb6884a46af8bdf3a96f9b88}{K\+E\+Y\+\_\+\+E\+F\+F\+E\+C\+T\+T\+Y\+P\+E\+\_\+\+N\+O\+NE}~wxT(\char`\"{}None\char`\"{})
+\item 
+\#define \hyperlink{_plugin_manager_8cpp_af8b235f9c4f5968cc002ec1a92672942}{K\+E\+Y\+\_\+\+E\+F\+F\+E\+C\+T\+T\+Y\+P\+E\+\_\+\+A\+N\+A\+L\+Y\+ZE}~wxT(\char`\"{}Analyze\char`\"{})
+\item 
+\#define \hyperlink{_plugin_manager_8cpp_a7c46349ddbb85e8efce248d9478e0494}{K\+E\+Y\+\_\+\+E\+F\+F\+E\+C\+T\+T\+Y\+P\+E\+\_\+\+G\+E\+N\+E\+R\+A\+TE}~wxT(\char`\"{}Generate\char`\"{})
+\item 
+\#define \hyperlink{_plugin_manager_8cpp_a87523cb779a2be03db2e6c72da3493e6}{K\+E\+Y\+\_\+\+E\+F\+F\+E\+C\+T\+T\+Y\+P\+E\+\_\+\+P\+R\+O\+C\+E\+SS}~wxT(\char`\"{}Process\char`\"{})
+\item 
+\#define \hyperlink{_plugin_manager_8cpp_a7390e14fdfd42014ed08c82852897ef4}{K\+E\+Y\+\_\+\+I\+M\+P\+O\+R\+T\+E\+R\+I\+D\+E\+NT}~wxT(\char`\"{}Importer\+Ident\char`\"{})
+\item 
+\#define \hyperlink{_plugin_manager_8cpp_aa555dbde276e930be56d8ec0f6bc5eb2}{K\+E\+Y\+\_\+\+I\+M\+P\+O\+R\+T\+E\+R\+F\+I\+L\+T\+ER}~wxT(\char`\"{}Importer\+Filter\char`\"{})
+\item 
+\#define \hyperlink{_plugin_manager_8cpp_a4a12d1c1b5026fa527c385becab6e98b}{K\+E\+Y\+\_\+\+I\+M\+P\+O\+R\+T\+E\+R\+E\+X\+T\+E\+N\+S\+I\+O\+NS}~wxT(\char`\"{}Importer\+Extensions\char`\"{})
+\end{DoxyCompactItemize}
+\subsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \{ \hyperlink{_plugin_manager_8cpp_aa0ead9a390ae1a2e9537f8ea60f4f355a66d741200ec38dc7e4109566fd219c85}{S\+T\+A\+T\+E\+\_\+\+Enabled}, 
+\hyperlink{_plugin_manager_8cpp_aa0ead9a390ae1a2e9537f8ea60f4f355aaf856379bd3833625be7a60b1de80462}{S\+T\+A\+T\+E\+\_\+\+Disabled}, 
+\hyperlink{_plugin_manager_8cpp_aa0ead9a390ae1a2e9537f8ea60f4f355ab904430810436166e6afb41545e8d03a}{S\+T\+A\+T\+E\+\_\+\+New}, 
+\hyperlink{_plugin_manager_8cpp_aa0ead9a390ae1a2e9537f8ea60f4f355aefef5c4050ce6be953bf8aa072db1e76}{S\+T\+A\+T\+E\+\_\+\+C\+O\+U\+NT}
+ \}
+\item 
+enum \{ \\*
+\hyperlink{_plugin_manager_8cpp_a22a181a370d3ab8aa40e77637fb5a2f9a76dd5d3175e1166b08e3e3073e9094ca}{I\+D\+\_\+\+Show\+All} = 10000, 
+\hyperlink{_plugin_manager_8cpp_a22a181a370d3ab8aa40e77637fb5a2f9a29194d4117cb5a1ca48d376518fe634f}{I\+D\+\_\+\+Show\+Enabled}, 
+\hyperlink{_plugin_manager_8cpp_a22a181a370d3ab8aa40e77637fb5a2f9a0d230371a75d2f8adbf1cccf6571bd3c}{I\+D\+\_\+\+Show\+Disabled}, 
+\hyperlink{_plugin_manager_8cpp_a22a181a370d3ab8aa40e77637fb5a2f9a0915f6708176fc68239bb1b44aab9e21}{I\+D\+\_\+\+Show\+New}, 
+\\*
+\hyperlink{_plugin_manager_8cpp_a22a181a370d3ab8aa40e77637fb5a2f9a73608bb1c29c77b52aa5e12017cb1109}{I\+D\+\_\+\+List}, 
+\hyperlink{_plugin_manager_8cpp_a22a181a370d3ab8aa40e77637fb5a2f9ac9b9f07e4c8400c993af9386c98b31ae}{I\+D\+\_\+\+Clear\+All}, 
+\hyperlink{_plugin_manager_8cpp_a22a181a370d3ab8aa40e77637fb5a2f9ad6d428d8062df75bad5a08327da4e666}{I\+D\+\_\+\+Select\+All}, 
+\hyperlink{_plugin_manager_8cpp_a22a181a370d3ab8aa40e77637fb5a2f9a0004bb65b7dcf5c14081863ab794a5f0}{I\+D\+\_\+\+Enable}, 
+\\*
+\hyperlink{_plugin_manager_8cpp_a22a181a370d3ab8aa40e77637fb5a2f9a4044840874b5051a6f86df414b29c5ff}{I\+D\+\_\+\+Disable}
+ \}
+\item 
+enum \{ \hyperlink{_plugin_manager_8cpp_a573f0cc5fc240fb29edcf79155e5a542ae7014b7c2e694b9fd46b8e9f3e4534c6}{C\+O\+L\+\_\+\+Name}, 
+\hyperlink{_plugin_manager_8cpp_a573f0cc5fc240fb29edcf79155e5a542acca1ad33ae4b1a339c1f7d99f1eef495}{C\+O\+L\+\_\+\+State}, 
+\hyperlink{_plugin_manager_8cpp_a573f0cc5fc240fb29edcf79155e5a542a537c15c75096a2a4dc08dbdd94a20e4b}{C\+O\+L\+\_\+\+Path}, 
+\hyperlink{_plugin_manager_8cpp_a573f0cc5fc240fb29edcf79155e5a542a89af2ae689230c52064fc720c2605878}{C\+O\+L\+\_\+\+C\+O\+U\+NT}
+ \}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{_plugin_manager_8cpp_af9bdfbd6e050eb3affc82265ba0495e6}{W\+X\+\_\+\+D\+E\+C\+L\+A\+R\+E\+\_\+\+S\+T\+R\+I\+N\+G\+\_\+\+H\+A\+S\+H\+\_\+\+M\+AP} (wx\+Array\+String, Provider\+Map)
+\item 
+\hyperlink{_plugin_manager_8cpp_a43dab5541c459aee6babf5dce6190cf4}{W\+X\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+A\+R\+R\+AY} (\hyperlink{class_plugin_descriptor}{Plugin\+Descriptor} $\ast$, Descriptor\+Array)
+\item 
+\hyperlink{_plugin_manager_8cpp_a6a0fbb35e0fa7c302c99e3545148b389}{W\+X\+\_\+\+D\+E\+C\+L\+A\+R\+E\+\_\+\+S\+T\+R\+I\+N\+G\+\_\+\+H\+A\+S\+H\+\_\+\+M\+AP} (\hyperlink{struct_item_data}{Item\+Data}, Item\+Data\+Map)
+\end{DoxyCompactItemize}
+
+
+\subsection{Macro Definition Documentation}
+\index{Plugin\+Manager.\+cpp@{Plugin\+Manager.\+cpp}!K\+E\+Y\+\_\+\+D\+E\+S\+C\+R\+I\+P\+T\+I\+ON@{K\+E\+Y\+\_\+\+D\+E\+S\+C\+R\+I\+P\+T\+I\+ON}}
+\index{K\+E\+Y\+\_\+\+D\+E\+S\+C\+R\+I\+P\+T\+I\+ON@{K\+E\+Y\+\_\+\+D\+E\+S\+C\+R\+I\+P\+T\+I\+ON}!Plugin\+Manager.\+cpp@{Plugin\+Manager.\+cpp}}
+\subsubsection[{\texorpdfstring{K\+E\+Y\+\_\+\+D\+E\+S\+C\+R\+I\+P\+T\+I\+ON}{KEY_DESCRIPTION}}]{\setlength{\rightskip}{0pt plus 5cm}\#define K\+E\+Y\+\_\+\+D\+E\+S\+C\+R\+I\+P\+T\+I\+ON~wxT(\char`\"{}Description\char`\"{})}\hypertarget{_plugin_manager_8cpp_afbdf34f15c1918e34a0fb88309727e5f}{}\label{_plugin_manager_8cpp_afbdf34f15c1918e34a0fb88309727e5f}
+
+
+Definition at line 1333 of file Plugin\+Manager.\+cpp.
+
+\index{Plugin\+Manager.\+cpp@{Plugin\+Manager.\+cpp}!K\+E\+Y\+\_\+\+E\+F\+F\+E\+C\+T\+A\+U\+T\+O\+M\+A\+T\+A\+B\+LE@{K\+E\+Y\+\_\+\+E\+F\+F\+E\+C\+T\+A\+U\+T\+O\+M\+A\+T\+A\+B\+LE}}
+\index{K\+E\+Y\+\_\+\+E\+F\+F\+E\+C\+T\+A\+U\+T\+O\+M\+A\+T\+A\+B\+LE@{K\+E\+Y\+\_\+\+E\+F\+F\+E\+C\+T\+A\+U\+T\+O\+M\+A\+T\+A\+B\+LE}!Plugin\+Manager.\+cpp@{Plugin\+Manager.\+cpp}}
+\subsubsection[{\texorpdfstring{K\+E\+Y\+\_\+\+E\+F\+F\+E\+C\+T\+A\+U\+T\+O\+M\+A\+T\+A\+B\+LE}{KEY_EFFECTAUTOMATABLE}}]{\setlength{\rightskip}{0pt plus 5cm}\#define K\+E\+Y\+\_\+\+E\+F\+F\+E\+C\+T\+A\+U\+T\+O\+M\+A\+T\+A\+B\+LE~wxT(\char`\"{}Effect\+Automatable\char`\"{})}\hypertarget{_plugin_manager_8cpp_a09beb5a09d878cd3e00027c2604086de}{}\label{_plugin_manager_8cpp_a09beb5a09d878cd3e00027c2604086de}
+
+
+Definition at line 1343 of file Plugin\+Manager.\+cpp.
+
+\index{Plugin\+Manager.\+cpp@{Plugin\+Manager.\+cpp}!K\+E\+Y\+\_\+\+E\+F\+F\+E\+C\+T\+D\+E\+F\+A\+U\+LT@{K\+E\+Y\+\_\+\+E\+F\+F\+E\+C\+T\+D\+E\+F\+A\+U\+LT}}
+\index{K\+E\+Y\+\_\+\+E\+F\+F\+E\+C\+T\+D\+E\+F\+A\+U\+LT@{K\+E\+Y\+\_\+\+E\+F\+F\+E\+C\+T\+D\+E\+F\+A\+U\+LT}!Plugin\+Manager.\+cpp@{Plugin\+Manager.\+cpp}}
+\subsubsection[{\texorpdfstring{K\+E\+Y\+\_\+\+E\+F\+F\+E\+C\+T\+D\+E\+F\+A\+U\+LT}{KEY_EFFECTDEFAULT}}]{\setlength{\rightskip}{0pt plus 5cm}\#define K\+E\+Y\+\_\+\+E\+F\+F\+E\+C\+T\+D\+E\+F\+A\+U\+LT~wxT(\char`\"{}Effect\+Default\char`\"{})}\hypertarget{_plugin_manager_8cpp_aff8e854c5a6fe1b1c8df4096f872e122}{}\label{_plugin_manager_8cpp_aff8e854c5a6fe1b1c8df4096f872e122}
+
+
+Definition at line 1340 of file Plugin\+Manager.\+cpp.
+
+\index{Plugin\+Manager.\+cpp@{Plugin\+Manager.\+cpp}!K\+E\+Y\+\_\+\+E\+F\+F\+E\+C\+T\+F\+A\+M\+I\+LY@{K\+E\+Y\+\_\+\+E\+F\+F\+E\+C\+T\+F\+A\+M\+I\+LY}}
+\index{K\+E\+Y\+\_\+\+E\+F\+F\+E\+C\+T\+F\+A\+M\+I\+LY@{K\+E\+Y\+\_\+\+E\+F\+F\+E\+C\+T\+F\+A\+M\+I\+LY}!Plugin\+Manager.\+cpp@{Plugin\+Manager.\+cpp}}
+\subsubsection[{\texorpdfstring{K\+E\+Y\+\_\+\+E\+F\+F\+E\+C\+T\+F\+A\+M\+I\+LY}{KEY_EFFECTFAMILY}}]{\setlength{\rightskip}{0pt plus 5cm}\#define K\+E\+Y\+\_\+\+E\+F\+F\+E\+C\+T\+F\+A\+M\+I\+LY~wxT(\char`\"{}Effect\+Family\char`\"{})}\hypertarget{_plugin_manager_8cpp_addbc09449269328094c033d4f625f7bc}{}\label{_plugin_manager_8cpp_addbc09449269328094c033d4f625f7bc}
+
+
+Definition at line 1339 of file Plugin\+Manager.\+cpp.
+
+\index{Plugin\+Manager.\+cpp@{Plugin\+Manager.\+cpp}!K\+E\+Y\+\_\+\+E\+F\+F\+E\+C\+T\+I\+N\+T\+E\+R\+A\+C\+T\+I\+VE@{K\+E\+Y\+\_\+\+E\+F\+F\+E\+C\+T\+I\+N\+T\+E\+R\+A\+C\+T\+I\+VE}}
+\index{K\+E\+Y\+\_\+\+E\+F\+F\+E\+C\+T\+I\+N\+T\+E\+R\+A\+C\+T\+I\+VE@{K\+E\+Y\+\_\+\+E\+F\+F\+E\+C\+T\+I\+N\+T\+E\+R\+A\+C\+T\+I\+VE}!Plugin\+Manager.\+cpp@{Plugin\+Manager.\+cpp}}
+\subsubsection[{\texorpdfstring{K\+E\+Y\+\_\+\+E\+F\+F\+E\+C\+T\+I\+N\+T\+E\+R\+A\+C\+T\+I\+VE}{KEY_EFFECTINTERACTIVE}}]{\setlength{\rightskip}{0pt plus 5cm}\#define K\+E\+Y\+\_\+\+E\+F\+F\+E\+C\+T\+I\+N\+T\+E\+R\+A\+C\+T\+I\+VE~wxT(\char`\"{}Effect\+Interactive\char`\"{})}\hypertarget{_plugin_manager_8cpp_a8be172ccb7a860c7aed136b77cb072f0}{}\label{_plugin_manager_8cpp_a8be172ccb7a860c7aed136b77cb072f0}
+
+
+Definition at line 1341 of file Plugin\+Manager.\+cpp.
+
+\index{Plugin\+Manager.\+cpp@{Plugin\+Manager.\+cpp}!K\+E\+Y\+\_\+\+E\+F\+F\+E\+C\+T\+R\+E\+A\+L\+T\+I\+ME@{K\+E\+Y\+\_\+\+E\+F\+F\+E\+C\+T\+R\+E\+A\+L\+T\+I\+ME}}
+\index{K\+E\+Y\+\_\+\+E\+F\+F\+E\+C\+T\+R\+E\+A\+L\+T\+I\+ME@{K\+E\+Y\+\_\+\+E\+F\+F\+E\+C\+T\+R\+E\+A\+L\+T\+I\+ME}!Plugin\+Manager.\+cpp@{Plugin\+Manager.\+cpp}}
+\subsubsection[{\texorpdfstring{K\+E\+Y\+\_\+\+E\+F\+F\+E\+C\+T\+R\+E\+A\+L\+T\+I\+ME}{KEY_EFFECTREALTIME}}]{\setlength{\rightskip}{0pt plus 5cm}\#define K\+E\+Y\+\_\+\+E\+F\+F\+E\+C\+T\+R\+E\+A\+L\+T\+I\+ME~wxT(\char`\"{}Effect\+Realtime\char`\"{})}\hypertarget{_plugin_manager_8cpp_ab8ad494741f5a19eca7784af94d2be08}{}\label{_plugin_manager_8cpp_ab8ad494741f5a19eca7784af94d2be08}
+
+
+Definition at line 1342 of file Plugin\+Manager.\+cpp.
+
+\index{Plugin\+Manager.\+cpp@{Plugin\+Manager.\+cpp}!K\+E\+Y\+\_\+\+E\+F\+F\+E\+C\+T\+T\+Y\+PE@{K\+E\+Y\+\_\+\+E\+F\+F\+E\+C\+T\+T\+Y\+PE}}
+\index{K\+E\+Y\+\_\+\+E\+F\+F\+E\+C\+T\+T\+Y\+PE@{K\+E\+Y\+\_\+\+E\+F\+F\+E\+C\+T\+T\+Y\+PE}!Plugin\+Manager.\+cpp@{Plugin\+Manager.\+cpp}}
+\subsubsection[{\texorpdfstring{K\+E\+Y\+\_\+\+E\+F\+F\+E\+C\+T\+T\+Y\+PE}{KEY_EFFECTTYPE}}]{\setlength{\rightskip}{0pt plus 5cm}\#define K\+E\+Y\+\_\+\+E\+F\+F\+E\+C\+T\+T\+Y\+PE~wxT(\char`\"{}Effect\+Type\char`\"{})}\hypertarget{_plugin_manager_8cpp_aca9a9aadc60eadb41b571d207b96ec5d}{}\label{_plugin_manager_8cpp_aca9a9aadc60eadb41b571d207b96ec5d}
+
+
+Definition at line 1338 of file Plugin\+Manager.\+cpp.
+
+\index{Plugin\+Manager.\+cpp@{Plugin\+Manager.\+cpp}!K\+E\+Y\+\_\+\+E\+F\+F\+E\+C\+T\+T\+Y\+P\+E\+\_\+\+A\+N\+A\+L\+Y\+ZE@{K\+E\+Y\+\_\+\+E\+F\+F\+E\+C\+T\+T\+Y\+P\+E\+\_\+\+A\+N\+A\+L\+Y\+ZE}}
+\index{K\+E\+Y\+\_\+\+E\+F\+F\+E\+C\+T\+T\+Y\+P\+E\+\_\+\+A\+N\+A\+L\+Y\+ZE@{K\+E\+Y\+\_\+\+E\+F\+F\+E\+C\+T\+T\+Y\+P\+E\+\_\+\+A\+N\+A\+L\+Y\+ZE}!Plugin\+Manager.\+cpp@{Plugin\+Manager.\+cpp}}
+\subsubsection[{\texorpdfstring{K\+E\+Y\+\_\+\+E\+F\+F\+E\+C\+T\+T\+Y\+P\+E\+\_\+\+A\+N\+A\+L\+Y\+ZE}{KEY_EFFECTTYPE_ANALYZE}}]{\setlength{\rightskip}{0pt plus 5cm}\#define K\+E\+Y\+\_\+\+E\+F\+F\+E\+C\+T\+T\+Y\+P\+E\+\_\+\+A\+N\+A\+L\+Y\+ZE~wxT(\char`\"{}Analyze\char`\"{})}\hypertarget{_plugin_manager_8cpp_af8b235f9c4f5968cc002ec1a92672942}{}\label{_plugin_manager_8cpp_af8b235f9c4f5968cc002ec1a92672942}
+
+
+Definition at line 1345 of file Plugin\+Manager.\+cpp.
+
+\index{Plugin\+Manager.\+cpp@{Plugin\+Manager.\+cpp}!K\+E\+Y\+\_\+\+E\+F\+F\+E\+C\+T\+T\+Y\+P\+E\+\_\+\+G\+E\+N\+E\+R\+A\+TE@{K\+E\+Y\+\_\+\+E\+F\+F\+E\+C\+T\+T\+Y\+P\+E\+\_\+\+G\+E\+N\+E\+R\+A\+TE}}
+\index{K\+E\+Y\+\_\+\+E\+F\+F\+E\+C\+T\+T\+Y\+P\+E\+\_\+\+G\+E\+N\+E\+R\+A\+TE@{K\+E\+Y\+\_\+\+E\+F\+F\+E\+C\+T\+T\+Y\+P\+E\+\_\+\+G\+E\+N\+E\+R\+A\+TE}!Plugin\+Manager.\+cpp@{Plugin\+Manager.\+cpp}}
+\subsubsection[{\texorpdfstring{K\+E\+Y\+\_\+\+E\+F\+F\+E\+C\+T\+T\+Y\+P\+E\+\_\+\+G\+E\+N\+E\+R\+A\+TE}{KEY_EFFECTTYPE_GENERATE}}]{\setlength{\rightskip}{0pt plus 5cm}\#define K\+E\+Y\+\_\+\+E\+F\+F\+E\+C\+T\+T\+Y\+P\+E\+\_\+\+G\+E\+N\+E\+R\+A\+TE~wxT(\char`\"{}Generate\char`\"{})}\hypertarget{_plugin_manager_8cpp_a7c46349ddbb85e8efce248d9478e0494}{}\label{_plugin_manager_8cpp_a7c46349ddbb85e8efce248d9478e0494}
+
+
+Definition at line 1346 of file Plugin\+Manager.\+cpp.
+
+\index{Plugin\+Manager.\+cpp@{Plugin\+Manager.\+cpp}!K\+E\+Y\+\_\+\+E\+F\+F\+E\+C\+T\+T\+Y\+P\+E\+\_\+\+N\+O\+NE@{K\+E\+Y\+\_\+\+E\+F\+F\+E\+C\+T\+T\+Y\+P\+E\+\_\+\+N\+O\+NE}}
+\index{K\+E\+Y\+\_\+\+E\+F\+F\+E\+C\+T\+T\+Y\+P\+E\+\_\+\+N\+O\+NE@{K\+E\+Y\+\_\+\+E\+F\+F\+E\+C\+T\+T\+Y\+P\+E\+\_\+\+N\+O\+NE}!Plugin\+Manager.\+cpp@{Plugin\+Manager.\+cpp}}
+\subsubsection[{\texorpdfstring{K\+E\+Y\+\_\+\+E\+F\+F\+E\+C\+T\+T\+Y\+P\+E\+\_\+\+N\+O\+NE}{KEY_EFFECTTYPE_NONE}}]{\setlength{\rightskip}{0pt plus 5cm}\#define K\+E\+Y\+\_\+\+E\+F\+F\+E\+C\+T\+T\+Y\+P\+E\+\_\+\+N\+O\+NE~wxT(\char`\"{}None\char`\"{})}\hypertarget{_plugin_manager_8cpp_abeae855afb6884a46af8bdf3a96f9b88}{}\label{_plugin_manager_8cpp_abeae855afb6884a46af8bdf3a96f9b88}
+
+
+Definition at line 1344 of file Plugin\+Manager.\+cpp.
+
+\index{Plugin\+Manager.\+cpp@{Plugin\+Manager.\+cpp}!K\+E\+Y\+\_\+\+E\+F\+F\+E\+C\+T\+T\+Y\+P\+E\+\_\+\+P\+R\+O\+C\+E\+SS@{K\+E\+Y\+\_\+\+E\+F\+F\+E\+C\+T\+T\+Y\+P\+E\+\_\+\+P\+R\+O\+C\+E\+SS}}
+\index{K\+E\+Y\+\_\+\+E\+F\+F\+E\+C\+T\+T\+Y\+P\+E\+\_\+\+P\+R\+O\+C\+E\+SS@{K\+E\+Y\+\_\+\+E\+F\+F\+E\+C\+T\+T\+Y\+P\+E\+\_\+\+P\+R\+O\+C\+E\+SS}!Plugin\+Manager.\+cpp@{Plugin\+Manager.\+cpp}}
+\subsubsection[{\texorpdfstring{K\+E\+Y\+\_\+\+E\+F\+F\+E\+C\+T\+T\+Y\+P\+E\+\_\+\+P\+R\+O\+C\+E\+SS}{KEY_EFFECTTYPE_PROCESS}}]{\setlength{\rightskip}{0pt plus 5cm}\#define K\+E\+Y\+\_\+\+E\+F\+F\+E\+C\+T\+T\+Y\+P\+E\+\_\+\+P\+R\+O\+C\+E\+SS~wxT(\char`\"{}Process\char`\"{})}\hypertarget{_plugin_manager_8cpp_a87523cb779a2be03db2e6c72da3493e6}{}\label{_plugin_manager_8cpp_a87523cb779a2be03db2e6c72da3493e6}
+
+
+Definition at line 1347 of file Plugin\+Manager.\+cpp.
+
+\index{Plugin\+Manager.\+cpp@{Plugin\+Manager.\+cpp}!K\+E\+Y\+\_\+\+E\+N\+A\+B\+L\+ED@{K\+E\+Y\+\_\+\+E\+N\+A\+B\+L\+ED}}
+\index{K\+E\+Y\+\_\+\+E\+N\+A\+B\+L\+ED@{K\+E\+Y\+\_\+\+E\+N\+A\+B\+L\+ED}!Plugin\+Manager.\+cpp@{Plugin\+Manager.\+cpp}}
+\subsubsection[{\texorpdfstring{K\+E\+Y\+\_\+\+E\+N\+A\+B\+L\+ED}{KEY_ENABLED}}]{\setlength{\rightskip}{0pt plus 5cm}\#define K\+E\+Y\+\_\+\+E\+N\+A\+B\+L\+ED~wxT(\char`\"{}Enabled\char`\"{})}\hypertarget{_plugin_manager_8cpp_a930ab5337180baef9fe6c115cbaeecb2}{}\label{_plugin_manager_8cpp_a930ab5337180baef9fe6c115cbaeecb2}
+
+
+Definition at line 1335 of file Plugin\+Manager.\+cpp.
+
+\index{Plugin\+Manager.\+cpp@{Plugin\+Manager.\+cpp}!K\+E\+Y\+\_\+\+ID@{K\+E\+Y\+\_\+\+ID}}
+\index{K\+E\+Y\+\_\+\+ID@{K\+E\+Y\+\_\+\+ID}!Plugin\+Manager.\+cpp@{Plugin\+Manager.\+cpp}}
+\subsubsection[{\texorpdfstring{K\+E\+Y\+\_\+\+ID}{KEY_ID}}]{\setlength{\rightskip}{0pt plus 5cm}\#define K\+E\+Y\+\_\+\+ID~wxT(\char`\"{}ID\char`\"{})}\hypertarget{_plugin_manager_8cpp_af566e970e340c189be2edba7d92df822}{}\label{_plugin_manager_8cpp_af566e970e340c189be2edba7d92df822}
+
+
+Definition at line 1327 of file Plugin\+Manager.\+cpp.
+
+\index{Plugin\+Manager.\+cpp@{Plugin\+Manager.\+cpp}!K\+E\+Y\+\_\+\+I\+M\+P\+O\+R\+T\+E\+R\+E\+X\+T\+E\+N\+S\+I\+O\+NS@{K\+E\+Y\+\_\+\+I\+M\+P\+O\+R\+T\+E\+R\+E\+X\+T\+E\+N\+S\+I\+O\+NS}}
+\index{K\+E\+Y\+\_\+\+I\+M\+P\+O\+R\+T\+E\+R\+E\+X\+T\+E\+N\+S\+I\+O\+NS@{K\+E\+Y\+\_\+\+I\+M\+P\+O\+R\+T\+E\+R\+E\+X\+T\+E\+N\+S\+I\+O\+NS}!Plugin\+Manager.\+cpp@{Plugin\+Manager.\+cpp}}
+\subsubsection[{\texorpdfstring{K\+E\+Y\+\_\+\+I\+M\+P\+O\+R\+T\+E\+R\+E\+X\+T\+E\+N\+S\+I\+O\+NS}{KEY_IMPORTEREXTENSIONS}}]{\setlength{\rightskip}{0pt plus 5cm}\#define K\+E\+Y\+\_\+\+I\+M\+P\+O\+R\+T\+E\+R\+E\+X\+T\+E\+N\+S\+I\+O\+NS~wxT(\char`\"{}Importer\+Extensions\char`\"{})}\hypertarget{_plugin_manager_8cpp_a4a12d1c1b5026fa527c385becab6e98b}{}\label{_plugin_manager_8cpp_a4a12d1c1b5026fa527c385becab6e98b}
+
+
+Definition at line 1350 of file Plugin\+Manager.\+cpp.
+
+\index{Plugin\+Manager.\+cpp@{Plugin\+Manager.\+cpp}!K\+E\+Y\+\_\+\+I\+M\+P\+O\+R\+T\+E\+R\+F\+I\+L\+T\+ER@{K\+E\+Y\+\_\+\+I\+M\+P\+O\+R\+T\+E\+R\+F\+I\+L\+T\+ER}}
+\index{K\+E\+Y\+\_\+\+I\+M\+P\+O\+R\+T\+E\+R\+F\+I\+L\+T\+ER@{K\+E\+Y\+\_\+\+I\+M\+P\+O\+R\+T\+E\+R\+F\+I\+L\+T\+ER}!Plugin\+Manager.\+cpp@{Plugin\+Manager.\+cpp}}
+\subsubsection[{\texorpdfstring{K\+E\+Y\+\_\+\+I\+M\+P\+O\+R\+T\+E\+R\+F\+I\+L\+T\+ER}{KEY_IMPORTERFILTER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define K\+E\+Y\+\_\+\+I\+M\+P\+O\+R\+T\+E\+R\+F\+I\+L\+T\+ER~wxT(\char`\"{}Importer\+Filter\char`\"{})}\hypertarget{_plugin_manager_8cpp_aa555dbde276e930be56d8ec0f6bc5eb2}{}\label{_plugin_manager_8cpp_aa555dbde276e930be56d8ec0f6bc5eb2}
+
+
+Definition at line 1349 of file Plugin\+Manager.\+cpp.
+
+\index{Plugin\+Manager.\+cpp@{Plugin\+Manager.\+cpp}!K\+E\+Y\+\_\+\+I\+M\+P\+O\+R\+T\+E\+R\+I\+D\+E\+NT@{K\+E\+Y\+\_\+\+I\+M\+P\+O\+R\+T\+E\+R\+I\+D\+E\+NT}}
+\index{K\+E\+Y\+\_\+\+I\+M\+P\+O\+R\+T\+E\+R\+I\+D\+E\+NT@{K\+E\+Y\+\_\+\+I\+M\+P\+O\+R\+T\+E\+R\+I\+D\+E\+NT}!Plugin\+Manager.\+cpp@{Plugin\+Manager.\+cpp}}
+\subsubsection[{\texorpdfstring{K\+E\+Y\+\_\+\+I\+M\+P\+O\+R\+T\+E\+R\+I\+D\+E\+NT}{KEY_IMPORTERIDENT}}]{\setlength{\rightskip}{0pt plus 5cm}\#define K\+E\+Y\+\_\+\+I\+M\+P\+O\+R\+T\+E\+R\+I\+D\+E\+NT~wxT(\char`\"{}Importer\+Ident\char`\"{})}\hypertarget{_plugin_manager_8cpp_a7390e14fdfd42014ed08c82852897ef4}{}\label{_plugin_manager_8cpp_a7390e14fdfd42014ed08c82852897ef4}
+
+
+Definition at line 1348 of file Plugin\+Manager.\+cpp.
+
+\index{Plugin\+Manager.\+cpp@{Plugin\+Manager.\+cpp}!K\+E\+Y\+\_\+\+L\+A\+S\+T\+U\+P\+D\+A\+T\+ED@{K\+E\+Y\+\_\+\+L\+A\+S\+T\+U\+P\+D\+A\+T\+ED}}
+\index{K\+E\+Y\+\_\+\+L\+A\+S\+T\+U\+P\+D\+A\+T\+ED@{K\+E\+Y\+\_\+\+L\+A\+S\+T\+U\+P\+D\+A\+T\+ED}!Plugin\+Manager.\+cpp@{Plugin\+Manager.\+cpp}}
+\subsubsection[{\texorpdfstring{K\+E\+Y\+\_\+\+L\+A\+S\+T\+U\+P\+D\+A\+T\+ED}{KEY_LASTUPDATED}}]{\setlength{\rightskip}{0pt plus 5cm}\#define K\+E\+Y\+\_\+\+L\+A\+S\+T\+U\+P\+D\+A\+T\+ED~wxT(\char`\"{}Last\+Updated\char`\"{})}\hypertarget{_plugin_manager_8cpp_ac268514d4016d8d89d1602680f310ed1}{}\label{_plugin_manager_8cpp_ac268514d4016d8d89d1602680f310ed1}
+
+
+Definition at line 1334 of file Plugin\+Manager.\+cpp.
+
+\index{Plugin\+Manager.\+cpp@{Plugin\+Manager.\+cpp}!K\+E\+Y\+\_\+\+N\+A\+ME@{K\+E\+Y\+\_\+\+N\+A\+ME}}
+\index{K\+E\+Y\+\_\+\+N\+A\+ME@{K\+E\+Y\+\_\+\+N\+A\+ME}!Plugin\+Manager.\+cpp@{Plugin\+Manager.\+cpp}}
+\subsubsection[{\texorpdfstring{K\+E\+Y\+\_\+\+N\+A\+ME}{KEY_NAME}}]{\setlength{\rightskip}{0pt plus 5cm}\#define K\+E\+Y\+\_\+\+N\+A\+ME~wxT(\char`\"{}Name\char`\"{})}\hypertarget{_plugin_manager_8cpp_ae9819aceac0225bfcfdf691175c22d26}{}\label{_plugin_manager_8cpp_ae9819aceac0225bfcfdf691175c22d26}
+
+
+Definition at line 1330 of file Plugin\+Manager.\+cpp.
+
+\index{Plugin\+Manager.\+cpp@{Plugin\+Manager.\+cpp}!K\+E\+Y\+\_\+\+P\+A\+TH@{K\+E\+Y\+\_\+\+P\+A\+TH}}
+\index{K\+E\+Y\+\_\+\+P\+A\+TH@{K\+E\+Y\+\_\+\+P\+A\+TH}!Plugin\+Manager.\+cpp@{Plugin\+Manager.\+cpp}}
+\subsubsection[{\texorpdfstring{K\+E\+Y\+\_\+\+P\+A\+TH}{KEY_PATH}}]{\setlength{\rightskip}{0pt plus 5cm}\#define K\+E\+Y\+\_\+\+P\+A\+TH~wxT(\char`\"{}Path\char`\"{})}\hypertarget{_plugin_manager_8cpp_a522d378f6c1d4ec2d1edbad8a76238db}{}\label{_plugin_manager_8cpp_a522d378f6c1d4ec2d1edbad8a76238db}
+
+
+Definition at line 1328 of file Plugin\+Manager.\+cpp.
+
+\index{Plugin\+Manager.\+cpp@{Plugin\+Manager.\+cpp}!K\+E\+Y\+\_\+\+P\+R\+O\+V\+I\+D\+E\+R\+ID@{K\+E\+Y\+\_\+\+P\+R\+O\+V\+I\+D\+E\+R\+ID}}
+\index{K\+E\+Y\+\_\+\+P\+R\+O\+V\+I\+D\+E\+R\+ID@{K\+E\+Y\+\_\+\+P\+R\+O\+V\+I\+D\+E\+R\+ID}!Plugin\+Manager.\+cpp@{Plugin\+Manager.\+cpp}}
+\subsubsection[{\texorpdfstring{K\+E\+Y\+\_\+\+P\+R\+O\+V\+I\+D\+E\+R\+ID}{KEY_PROVIDERID}}]{\setlength{\rightskip}{0pt plus 5cm}\#define K\+E\+Y\+\_\+\+P\+R\+O\+V\+I\+D\+E\+R\+ID~wxT(\char`\"{}Provider\+ID\char`\"{})}\hypertarget{_plugin_manager_8cpp_a274bd7b88e1d702ba2d86d2831dff499}{}\label{_plugin_manager_8cpp_a274bd7b88e1d702ba2d86d2831dff499}
+
+
+Definition at line 1337 of file Plugin\+Manager.\+cpp.
+
+\index{Plugin\+Manager.\+cpp@{Plugin\+Manager.\+cpp}!K\+E\+Y\+\_\+\+S\+Y\+M\+B\+OL@{K\+E\+Y\+\_\+\+S\+Y\+M\+B\+OL}}
+\index{K\+E\+Y\+\_\+\+S\+Y\+M\+B\+OL@{K\+E\+Y\+\_\+\+S\+Y\+M\+B\+OL}!Plugin\+Manager.\+cpp@{Plugin\+Manager.\+cpp}}
+\subsubsection[{\texorpdfstring{K\+E\+Y\+\_\+\+S\+Y\+M\+B\+OL}{KEY_SYMBOL}}]{\setlength{\rightskip}{0pt plus 5cm}\#define K\+E\+Y\+\_\+\+S\+Y\+M\+B\+OL~wxT(\char`\"{}Symbol\char`\"{})}\hypertarget{_plugin_manager_8cpp_a3cce47ad615a331b49344d6090c645a3}{}\label{_plugin_manager_8cpp_a3cce47ad615a331b49344d6090c645a3}
+
+
+Definition at line 1329 of file Plugin\+Manager.\+cpp.
+
+\index{Plugin\+Manager.\+cpp@{Plugin\+Manager.\+cpp}!K\+E\+Y\+\_\+\+V\+A\+L\+ID@{K\+E\+Y\+\_\+\+V\+A\+L\+ID}}
+\index{K\+E\+Y\+\_\+\+V\+A\+L\+ID@{K\+E\+Y\+\_\+\+V\+A\+L\+ID}!Plugin\+Manager.\+cpp@{Plugin\+Manager.\+cpp}}
+\subsubsection[{\texorpdfstring{K\+E\+Y\+\_\+\+V\+A\+L\+ID}{KEY_VALID}}]{\setlength{\rightskip}{0pt plus 5cm}\#define K\+E\+Y\+\_\+\+V\+A\+L\+ID~wxT(\char`\"{}Valid\char`\"{})}\hypertarget{_plugin_manager_8cpp_af27449032ce353aa329edd80cd2759a5}{}\label{_plugin_manager_8cpp_af27449032ce353aa329edd80cd2759a5}
+
+
+Definition at line 1336 of file Plugin\+Manager.\+cpp.
+
+\index{Plugin\+Manager.\+cpp@{Plugin\+Manager.\+cpp}!K\+E\+Y\+\_\+\+V\+E\+N\+D\+OR@{K\+E\+Y\+\_\+\+V\+E\+N\+D\+OR}}
+\index{K\+E\+Y\+\_\+\+V\+E\+N\+D\+OR@{K\+E\+Y\+\_\+\+V\+E\+N\+D\+OR}!Plugin\+Manager.\+cpp@{Plugin\+Manager.\+cpp}}
+\subsubsection[{\texorpdfstring{K\+E\+Y\+\_\+\+V\+E\+N\+D\+OR}{KEY_VENDOR}}]{\setlength{\rightskip}{0pt plus 5cm}\#define K\+E\+Y\+\_\+\+V\+E\+N\+D\+OR~wxT(\char`\"{}Vendor\char`\"{})}\hypertarget{_plugin_manager_8cpp_a4d9b7491a3bac1662401e44d126cf2f8}{}\label{_plugin_manager_8cpp_a4d9b7491a3bac1662401e44d126cf2f8}
+
+
+Definition at line 1331 of file Plugin\+Manager.\+cpp.
+
+\index{Plugin\+Manager.\+cpp@{Plugin\+Manager.\+cpp}!K\+E\+Y\+\_\+\+V\+E\+R\+S\+I\+ON@{K\+E\+Y\+\_\+\+V\+E\+R\+S\+I\+ON}}
+\index{K\+E\+Y\+\_\+\+V\+E\+R\+S\+I\+ON@{K\+E\+Y\+\_\+\+V\+E\+R\+S\+I\+ON}!Plugin\+Manager.\+cpp@{Plugin\+Manager.\+cpp}}
+\subsubsection[{\texorpdfstring{K\+E\+Y\+\_\+\+V\+E\+R\+S\+I\+ON}{KEY_VERSION}}]{\setlength{\rightskip}{0pt plus 5cm}\#define K\+E\+Y\+\_\+\+V\+E\+R\+S\+I\+ON~wxT(\char`\"{}Version\char`\"{})}\hypertarget{_plugin_manager_8cpp_abcd911594f90afdd5b340c431c149e72}{}\label{_plugin_manager_8cpp_abcd911594f90afdd5b340c431c149e72}
+
+
+Definition at line 1332 of file Plugin\+Manager.\+cpp.
+
+\index{Plugin\+Manager.\+cpp@{Plugin\+Manager.\+cpp}!R\+E\+G\+R\+O\+OT@{R\+E\+G\+R\+O\+OT}}
+\index{R\+E\+G\+R\+O\+OT@{R\+E\+G\+R\+O\+OT}!Plugin\+Manager.\+cpp@{Plugin\+Manager.\+cpp}}
+\subsubsection[{\texorpdfstring{R\+E\+G\+R\+O\+OT}{REGROOT}}]{\setlength{\rightskip}{0pt plus 5cm}\#define R\+E\+G\+R\+O\+OT~wx\+String(wxT(\char`\"{}/pluginregistry/\char`\"{}))}\hypertarget{_plugin_manager_8cpp_ab981e3bdb43e2b75f10eacf4b52162c3}{}\label{_plugin_manager_8cpp_ab981e3bdb43e2b75f10eacf4b52162c3}
+
+
+Definition at line 1321 of file Plugin\+Manager.\+cpp.
+
+\index{Plugin\+Manager.\+cpp@{Plugin\+Manager.\+cpp}!R\+E\+G\+V\+E\+R\+C\+UR@{R\+E\+G\+V\+E\+R\+C\+UR}}
+\index{R\+E\+G\+V\+E\+R\+C\+UR@{R\+E\+G\+V\+E\+R\+C\+UR}!Plugin\+Manager.\+cpp@{Plugin\+Manager.\+cpp}}
+\subsubsection[{\texorpdfstring{R\+E\+G\+V\+E\+R\+C\+UR}{REGVERCUR}}]{\setlength{\rightskip}{0pt plus 5cm}\#define R\+E\+G\+V\+E\+R\+C\+UR~wx\+String(wxT(\char`\"{}1.\+0\char`\"{}))}\hypertarget{_plugin_manager_8cpp_adf1e4a5694e2ce4da45cfd6ffca57a74}{}\label{_plugin_manager_8cpp_adf1e4a5694e2ce4da45cfd6ffca57a74}
+
+
+Definition at line 1320 of file Plugin\+Manager.\+cpp.
+
+\index{Plugin\+Manager.\+cpp@{Plugin\+Manager.\+cpp}!R\+E\+G\+V\+E\+R\+K\+EY@{R\+E\+G\+V\+E\+R\+K\+EY}}
+\index{R\+E\+G\+V\+E\+R\+K\+EY@{R\+E\+G\+V\+E\+R\+K\+EY}!Plugin\+Manager.\+cpp@{Plugin\+Manager.\+cpp}}
+\subsubsection[{\texorpdfstring{R\+E\+G\+V\+E\+R\+K\+EY}{REGVERKEY}}]{\setlength{\rightskip}{0pt plus 5cm}\#define R\+E\+G\+V\+E\+R\+K\+EY~wx\+String(wxT(\char`\"{}/pluginregistryversion\char`\"{}))}\hypertarget{_plugin_manager_8cpp_a0ee9fb13f7bbcf1fdc9f73bcf3d96b3b}{}\label{_plugin_manager_8cpp_a0ee9fb13f7bbcf1fdc9f73bcf3d96b3b}
+
+
+Definition at line 1319 of file Plugin\+Manager.\+cpp.
+
+\index{Plugin\+Manager.\+cpp@{Plugin\+Manager.\+cpp}!S\+E\+T\+R\+O\+OT@{S\+E\+T\+R\+O\+OT}}
+\index{S\+E\+T\+R\+O\+OT@{S\+E\+T\+R\+O\+OT}!Plugin\+Manager.\+cpp@{Plugin\+Manager.\+cpp}}
+\subsubsection[{\texorpdfstring{S\+E\+T\+R\+O\+OT}{SETROOT}}]{\setlength{\rightskip}{0pt plus 5cm}\#define S\+E\+T\+R\+O\+OT~wx\+String(wxT(\char`\"{}/pluginsettings/\char`\"{}))}\hypertarget{_plugin_manager_8cpp_a83e39c63c2be13bda0bdbe65a798ff43}{}\label{_plugin_manager_8cpp_a83e39c63c2be13bda0bdbe65a798ff43}
+
+
+Definition at line 1325 of file Plugin\+Manager.\+cpp.
+
+\index{Plugin\+Manager.\+cpp@{Plugin\+Manager.\+cpp}!S\+E\+T\+V\+E\+R\+C\+UR@{S\+E\+T\+V\+E\+R\+C\+UR}}
+\index{S\+E\+T\+V\+E\+R\+C\+UR@{S\+E\+T\+V\+E\+R\+C\+UR}!Plugin\+Manager.\+cpp@{Plugin\+Manager.\+cpp}}
+\subsubsection[{\texorpdfstring{S\+E\+T\+V\+E\+R\+C\+UR}{SETVERCUR}}]{\setlength{\rightskip}{0pt plus 5cm}\#define S\+E\+T\+V\+E\+R\+C\+UR~wx\+String(wxT(\char`\"{}1.\+0\char`\"{}))}\hypertarget{_plugin_manager_8cpp_a9adc139c4379718dc39f67d93432c936}{}\label{_plugin_manager_8cpp_a9adc139c4379718dc39f67d93432c936}
+
+
+Definition at line 1324 of file Plugin\+Manager.\+cpp.
+
+\index{Plugin\+Manager.\+cpp@{Plugin\+Manager.\+cpp}!S\+E\+T\+V\+E\+R\+K\+EY@{S\+E\+T\+V\+E\+R\+K\+EY}}
+\index{S\+E\+T\+V\+E\+R\+K\+EY@{S\+E\+T\+V\+E\+R\+K\+EY}!Plugin\+Manager.\+cpp@{Plugin\+Manager.\+cpp}}
+\subsubsection[{\texorpdfstring{S\+E\+T\+V\+E\+R\+K\+EY}{SETVERKEY}}]{\setlength{\rightskip}{0pt plus 5cm}\#define S\+E\+T\+V\+E\+R\+K\+EY~wx\+String(wxT(\char`\"{}/pluginsettingsversion\char`\"{}))}\hypertarget{_plugin_manager_8cpp_a95c74bba13deaaac05790a68d568c0ec}{}\label{_plugin_manager_8cpp_a95c74bba13deaaac05790a68d568c0ec}
+
+
+Definition at line 1323 of file Plugin\+Manager.\+cpp.
+
+
+
+\subsection{Enumeration Type Documentation}
+\subsubsection[{\texorpdfstring{anonymous enum}{anonymous enum}}]{\setlength{\rightskip}{0pt plus 5cm}anonymous enum}\hypertarget{_plugin_manager_8cpp_aa0ead9a390ae1a2e9537f8ea60f4f355}{}\label{_plugin_manager_8cpp_aa0ead9a390ae1a2e9537f8ea60f4f355}
+\begin{Desc}
+\item[Enumerator]\par
+\begin{description}
+\index{S\+T\+A\+T\+E\+\_\+\+Enabled@{S\+T\+A\+T\+E\+\_\+\+Enabled}!Plugin\+Manager.\+cpp@{Plugin\+Manager.\+cpp}}\index{Plugin\+Manager.\+cpp@{Plugin\+Manager.\+cpp}!S\+T\+A\+T\+E\+\_\+\+Enabled@{S\+T\+A\+T\+E\+\_\+\+Enabled}}\item[{\em 
+S\+T\+A\+T\+E\+\_\+\+Enabled\hypertarget{_plugin_manager_8cpp_aa0ead9a390ae1a2e9537f8ea60f4f355a66d741200ec38dc7e4109566fd219c85}{}\label{_plugin_manager_8cpp_aa0ead9a390ae1a2e9537f8ea60f4f355a66d741200ec38dc7e4109566fd219c85}
+}]\index{S\+T\+A\+T\+E\+\_\+\+Disabled@{S\+T\+A\+T\+E\+\_\+\+Disabled}!Plugin\+Manager.\+cpp@{Plugin\+Manager.\+cpp}}\index{Plugin\+Manager.\+cpp@{Plugin\+Manager.\+cpp}!S\+T\+A\+T\+E\+\_\+\+Disabled@{S\+T\+A\+T\+E\+\_\+\+Disabled}}\item[{\em 
+S\+T\+A\+T\+E\+\_\+\+Disabled\hypertarget{_plugin_manager_8cpp_aa0ead9a390ae1a2e9537f8ea60f4f355aaf856379bd3833625be7a60b1de80462}{}\label{_plugin_manager_8cpp_aa0ead9a390ae1a2e9537f8ea60f4f355aaf856379bd3833625be7a60b1de80462}
+}]\index{S\+T\+A\+T\+E\+\_\+\+New@{S\+T\+A\+T\+E\+\_\+\+New}!Plugin\+Manager.\+cpp@{Plugin\+Manager.\+cpp}}\index{Plugin\+Manager.\+cpp@{Plugin\+Manager.\+cpp}!S\+T\+A\+T\+E\+\_\+\+New@{S\+T\+A\+T\+E\+\_\+\+New}}\item[{\em 
+S\+T\+A\+T\+E\+\_\+\+New\hypertarget{_plugin_manager_8cpp_aa0ead9a390ae1a2e9537f8ea60f4f355ab904430810436166e6afb41545e8d03a}{}\label{_plugin_manager_8cpp_aa0ead9a390ae1a2e9537f8ea60f4f355ab904430810436166e6afb41545e8d03a}
+}]\index{S\+T\+A\+T\+E\+\_\+\+C\+O\+U\+NT@{S\+T\+A\+T\+E\+\_\+\+C\+O\+U\+NT}!Plugin\+Manager.\+cpp@{Plugin\+Manager.\+cpp}}\index{Plugin\+Manager.\+cpp@{Plugin\+Manager.\+cpp}!S\+T\+A\+T\+E\+\_\+\+C\+O\+U\+NT@{S\+T\+A\+T\+E\+\_\+\+C\+O\+U\+NT}}\item[{\em 
+S\+T\+A\+T\+E\+\_\+\+C\+O\+U\+NT\hypertarget{_plugin_manager_8cpp_aa0ead9a390ae1a2e9537f8ea60f4f355aefef5c4050ce6be953bf8aa072db1e76}{}\label{_plugin_manager_8cpp_aa0ead9a390ae1a2e9537f8ea60f4f355aefef5c4050ce6be953bf8aa072db1e76}
+}]\end{description}
+\end{Desc}
+
+
+Definition at line 370 of file Plugin\+Manager.\+cpp.
+
+\subsubsection[{\texorpdfstring{anonymous enum}{anonymous enum}}]{\setlength{\rightskip}{0pt plus 5cm}anonymous enum}\hypertarget{_plugin_manager_8cpp_a22a181a370d3ab8aa40e77637fb5a2f9}{}\label{_plugin_manager_8cpp_a22a181a370d3ab8aa40e77637fb5a2f9}
+\begin{Desc}
+\item[Enumerator]\par
+\begin{description}
+\index{I\+D\+\_\+\+Show\+All@{I\+D\+\_\+\+Show\+All}!Plugin\+Manager.\+cpp@{Plugin\+Manager.\+cpp}}\index{Plugin\+Manager.\+cpp@{Plugin\+Manager.\+cpp}!I\+D\+\_\+\+Show\+All@{I\+D\+\_\+\+Show\+All}}\item[{\em 
+I\+D\+\_\+\+Show\+All\hypertarget{_plugin_manager_8cpp_a22a181a370d3ab8aa40e77637fb5a2f9a76dd5d3175e1166b08e3e3073e9094ca}{}\label{_plugin_manager_8cpp_a22a181a370d3ab8aa40e77637fb5a2f9a76dd5d3175e1166b08e3e3073e9094ca}
+}]\index{I\+D\+\_\+\+Show\+Enabled@{I\+D\+\_\+\+Show\+Enabled}!Plugin\+Manager.\+cpp@{Plugin\+Manager.\+cpp}}\index{Plugin\+Manager.\+cpp@{Plugin\+Manager.\+cpp}!I\+D\+\_\+\+Show\+Enabled@{I\+D\+\_\+\+Show\+Enabled}}\item[{\em 
+I\+D\+\_\+\+Show\+Enabled\hypertarget{_plugin_manager_8cpp_a22a181a370d3ab8aa40e77637fb5a2f9a29194d4117cb5a1ca48d376518fe634f}{}\label{_plugin_manager_8cpp_a22a181a370d3ab8aa40e77637fb5a2f9a29194d4117cb5a1ca48d376518fe634f}
+}]\index{I\+D\+\_\+\+Show\+Disabled@{I\+D\+\_\+\+Show\+Disabled}!Plugin\+Manager.\+cpp@{Plugin\+Manager.\+cpp}}\index{Plugin\+Manager.\+cpp@{Plugin\+Manager.\+cpp}!I\+D\+\_\+\+Show\+Disabled@{I\+D\+\_\+\+Show\+Disabled}}\item[{\em 
+I\+D\+\_\+\+Show\+Disabled\hypertarget{_plugin_manager_8cpp_a22a181a370d3ab8aa40e77637fb5a2f9a0d230371a75d2f8adbf1cccf6571bd3c}{}\label{_plugin_manager_8cpp_a22a181a370d3ab8aa40e77637fb5a2f9a0d230371a75d2f8adbf1cccf6571bd3c}
+}]\index{I\+D\+\_\+\+Show\+New@{I\+D\+\_\+\+Show\+New}!Plugin\+Manager.\+cpp@{Plugin\+Manager.\+cpp}}\index{Plugin\+Manager.\+cpp@{Plugin\+Manager.\+cpp}!I\+D\+\_\+\+Show\+New@{I\+D\+\_\+\+Show\+New}}\item[{\em 
+I\+D\+\_\+\+Show\+New\hypertarget{_plugin_manager_8cpp_a22a181a370d3ab8aa40e77637fb5a2f9a0915f6708176fc68239bb1b44aab9e21}{}\label{_plugin_manager_8cpp_a22a181a370d3ab8aa40e77637fb5a2f9a0915f6708176fc68239bb1b44aab9e21}
+}]\index{I\+D\+\_\+\+List@{I\+D\+\_\+\+List}!Plugin\+Manager.\+cpp@{Plugin\+Manager.\+cpp}}\index{Plugin\+Manager.\+cpp@{Plugin\+Manager.\+cpp}!I\+D\+\_\+\+List@{I\+D\+\_\+\+List}}\item[{\em 
+I\+D\+\_\+\+List\hypertarget{_plugin_manager_8cpp_a22a181a370d3ab8aa40e77637fb5a2f9a73608bb1c29c77b52aa5e12017cb1109}{}\label{_plugin_manager_8cpp_a22a181a370d3ab8aa40e77637fb5a2f9a73608bb1c29c77b52aa5e12017cb1109}
+}]\index{I\+D\+\_\+\+Clear\+All@{I\+D\+\_\+\+Clear\+All}!Plugin\+Manager.\+cpp@{Plugin\+Manager.\+cpp}}\index{Plugin\+Manager.\+cpp@{Plugin\+Manager.\+cpp}!I\+D\+\_\+\+Clear\+All@{I\+D\+\_\+\+Clear\+All}}\item[{\em 
+I\+D\+\_\+\+Clear\+All\hypertarget{_plugin_manager_8cpp_a22a181a370d3ab8aa40e77637fb5a2f9ac9b9f07e4c8400c993af9386c98b31ae}{}\label{_plugin_manager_8cpp_a22a181a370d3ab8aa40e77637fb5a2f9ac9b9f07e4c8400c993af9386c98b31ae}
+}]\index{I\+D\+\_\+\+Select\+All@{I\+D\+\_\+\+Select\+All}!Plugin\+Manager.\+cpp@{Plugin\+Manager.\+cpp}}\index{Plugin\+Manager.\+cpp@{Plugin\+Manager.\+cpp}!I\+D\+\_\+\+Select\+All@{I\+D\+\_\+\+Select\+All}}\item[{\em 
+I\+D\+\_\+\+Select\+All\hypertarget{_plugin_manager_8cpp_a22a181a370d3ab8aa40e77637fb5a2f9ad6d428d8062df75bad5a08327da4e666}{}\label{_plugin_manager_8cpp_a22a181a370d3ab8aa40e77637fb5a2f9ad6d428d8062df75bad5a08327da4e666}
+}]\index{I\+D\+\_\+\+Enable@{I\+D\+\_\+\+Enable}!Plugin\+Manager.\+cpp@{Plugin\+Manager.\+cpp}}\index{Plugin\+Manager.\+cpp@{Plugin\+Manager.\+cpp}!I\+D\+\_\+\+Enable@{I\+D\+\_\+\+Enable}}\item[{\em 
+I\+D\+\_\+\+Enable\hypertarget{_plugin_manager_8cpp_a22a181a370d3ab8aa40e77637fb5a2f9a0004bb65b7dcf5c14081863ab794a5f0}{}\label{_plugin_manager_8cpp_a22a181a370d3ab8aa40e77637fb5a2f9a0004bb65b7dcf5c14081863ab794a5f0}
+}]\index{I\+D\+\_\+\+Disable@{I\+D\+\_\+\+Disable}!Plugin\+Manager.\+cpp@{Plugin\+Manager.\+cpp}}\index{Plugin\+Manager.\+cpp@{Plugin\+Manager.\+cpp}!I\+D\+\_\+\+Disable@{I\+D\+\_\+\+Disable}}\item[{\em 
+I\+D\+\_\+\+Disable\hypertarget{_plugin_manager_8cpp_a22a181a370d3ab8aa40e77637fb5a2f9a4044840874b5051a6f86df414b29c5ff}{}\label{_plugin_manager_8cpp_a22a181a370d3ab8aa40e77637fb5a2f9a4044840874b5051a6f86df414b29c5ff}
+}]\end{description}
+\end{Desc}
+
+
+Definition at line 395 of file Plugin\+Manager.\+cpp.
+
+\subsubsection[{\texorpdfstring{anonymous enum}{anonymous enum}}]{\setlength{\rightskip}{0pt plus 5cm}anonymous enum}\hypertarget{_plugin_manager_8cpp_a573f0cc5fc240fb29edcf79155e5a542}{}\label{_plugin_manager_8cpp_a573f0cc5fc240fb29edcf79155e5a542}
+\begin{Desc}
+\item[Enumerator]\par
+\begin{description}
+\index{C\+O\+L\+\_\+\+Name@{C\+O\+L\+\_\+\+Name}!Plugin\+Manager.\+cpp@{Plugin\+Manager.\+cpp}}\index{Plugin\+Manager.\+cpp@{Plugin\+Manager.\+cpp}!C\+O\+L\+\_\+\+Name@{C\+O\+L\+\_\+\+Name}}\item[{\em 
+C\+O\+L\+\_\+\+Name\hypertarget{_plugin_manager_8cpp_a573f0cc5fc240fb29edcf79155e5a542ae7014b7c2e694b9fd46b8e9f3e4534c6}{}\label{_plugin_manager_8cpp_a573f0cc5fc240fb29edcf79155e5a542ae7014b7c2e694b9fd46b8e9f3e4534c6}
+}]\index{C\+O\+L\+\_\+\+State@{C\+O\+L\+\_\+\+State}!Plugin\+Manager.\+cpp@{Plugin\+Manager.\+cpp}}\index{Plugin\+Manager.\+cpp@{Plugin\+Manager.\+cpp}!C\+O\+L\+\_\+\+State@{C\+O\+L\+\_\+\+State}}\item[{\em 
+C\+O\+L\+\_\+\+State\hypertarget{_plugin_manager_8cpp_a573f0cc5fc240fb29edcf79155e5a542acca1ad33ae4b1a339c1f7d99f1eef495}{}\label{_plugin_manager_8cpp_a573f0cc5fc240fb29edcf79155e5a542acca1ad33ae4b1a339c1f7d99f1eef495}
+}]\index{C\+O\+L\+\_\+\+Path@{C\+O\+L\+\_\+\+Path}!Plugin\+Manager.\+cpp@{Plugin\+Manager.\+cpp}}\index{Plugin\+Manager.\+cpp@{Plugin\+Manager.\+cpp}!C\+O\+L\+\_\+\+Path@{C\+O\+L\+\_\+\+Path}}\item[{\em 
+C\+O\+L\+\_\+\+Path\hypertarget{_plugin_manager_8cpp_a573f0cc5fc240fb29edcf79155e5a542a537c15c75096a2a4dc08dbdd94a20e4b}{}\label{_plugin_manager_8cpp_a573f0cc5fc240fb29edcf79155e5a542a537c15c75096a2a4dc08dbdd94a20e4b}
+}]\index{C\+O\+L\+\_\+\+C\+O\+U\+NT@{C\+O\+L\+\_\+\+C\+O\+U\+NT}!Plugin\+Manager.\+cpp@{Plugin\+Manager.\+cpp}}\index{Plugin\+Manager.\+cpp@{Plugin\+Manager.\+cpp}!C\+O\+L\+\_\+\+C\+O\+U\+NT@{C\+O\+L\+\_\+\+C\+O\+U\+NT}}\item[{\em 
+C\+O\+L\+\_\+\+C\+O\+U\+NT\hypertarget{_plugin_manager_8cpp_a573f0cc5fc240fb29edcf79155e5a542a89af2ae689230c52064fc720c2605878}{}\label{_plugin_manager_8cpp_a573f0cc5fc240fb29edcf79155e5a542a89af2ae689230c52064fc720c2605878}
+}]\end{description}
+\end{Desc}
+
+
+Definition at line 408 of file Plugin\+Manager.\+cpp.
+
+
+
+\subsection{Function Documentation}
+\index{Plugin\+Manager.\+cpp@{Plugin\+Manager.\+cpp}!W\+X\+\_\+\+D\+E\+C\+L\+A\+R\+E\+\_\+\+S\+T\+R\+I\+N\+G\+\_\+\+H\+A\+S\+H\+\_\+\+M\+AP@{W\+X\+\_\+\+D\+E\+C\+L\+A\+R\+E\+\_\+\+S\+T\+R\+I\+N\+G\+\_\+\+H\+A\+S\+H\+\_\+\+M\+AP}}
+\index{W\+X\+\_\+\+D\+E\+C\+L\+A\+R\+E\+\_\+\+S\+T\+R\+I\+N\+G\+\_\+\+H\+A\+S\+H\+\_\+\+M\+AP@{W\+X\+\_\+\+D\+E\+C\+L\+A\+R\+E\+\_\+\+S\+T\+R\+I\+N\+G\+\_\+\+H\+A\+S\+H\+\_\+\+M\+AP}!Plugin\+Manager.\+cpp@{Plugin\+Manager.\+cpp}}
+\subsubsection[{\texorpdfstring{W\+X\+\_\+\+D\+E\+C\+L\+A\+R\+E\+\_\+\+S\+T\+R\+I\+N\+G\+\_\+\+H\+A\+S\+H\+\_\+\+M\+A\+P(wx\+Array\+String, Provider\+Map)}{WX_DECLARE_STRING_HASH_MAP(wxArrayString, ProviderMap)}}]{\setlength{\rightskip}{0pt plus 5cm}W\+X\+\_\+\+D\+E\+C\+L\+A\+R\+E\+\_\+\+S\+T\+R\+I\+N\+G\+\_\+\+H\+A\+S\+H\+\_\+\+M\+AP (
+\begin{DoxyParamCaption}
+\item[{wx\+Array\+String}]{, }
+\item[{Provider\+Map}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{_plugin_manager_8cpp_af9bdfbd6e050eb3affc82265ba0495e6}{}\label{_plugin_manager_8cpp_af9bdfbd6e050eb3affc82265ba0495e6}
+\index{Plugin\+Manager.\+cpp@{Plugin\+Manager.\+cpp}!W\+X\+\_\+\+D\+E\+C\+L\+A\+R\+E\+\_\+\+S\+T\+R\+I\+N\+G\+\_\+\+H\+A\+S\+H\+\_\+\+M\+AP@{W\+X\+\_\+\+D\+E\+C\+L\+A\+R\+E\+\_\+\+S\+T\+R\+I\+N\+G\+\_\+\+H\+A\+S\+H\+\_\+\+M\+AP}}
+\index{W\+X\+\_\+\+D\+E\+C\+L\+A\+R\+E\+\_\+\+S\+T\+R\+I\+N\+G\+\_\+\+H\+A\+S\+H\+\_\+\+M\+AP@{W\+X\+\_\+\+D\+E\+C\+L\+A\+R\+E\+\_\+\+S\+T\+R\+I\+N\+G\+\_\+\+H\+A\+S\+H\+\_\+\+M\+AP}!Plugin\+Manager.\+cpp@{Plugin\+Manager.\+cpp}}
+\subsubsection[{\texorpdfstring{W\+X\+\_\+\+D\+E\+C\+L\+A\+R\+E\+\_\+\+S\+T\+R\+I\+N\+G\+\_\+\+H\+A\+S\+H\+\_\+\+M\+A\+P(\+Item\+Data, Item\+Data\+Map)}{WX_DECLARE_STRING_HASH_MAP(ItemData, ItemDataMap)}}]{\setlength{\rightskip}{0pt plus 5cm}W\+X\+\_\+\+D\+E\+C\+L\+A\+R\+E\+\_\+\+S\+T\+R\+I\+N\+G\+\_\+\+H\+A\+S\+H\+\_\+\+M\+AP (
+\begin{DoxyParamCaption}
+\item[{{\bf Item\+Data}}]{, }
+\item[{Item\+Data\+Map}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{_plugin_manager_8cpp_a6a0fbb35e0fa7c302c99e3545148b389}{}\label{_plugin_manager_8cpp_a6a0fbb35e0fa7c302c99e3545148b389}
+\index{Plugin\+Manager.\+cpp@{Plugin\+Manager.\+cpp}!W\+X\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+A\+R\+R\+AY@{W\+X\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+A\+R\+R\+AY}}
+\index{W\+X\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+A\+R\+R\+AY@{W\+X\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+A\+R\+R\+AY}!Plugin\+Manager.\+cpp@{Plugin\+Manager.\+cpp}}
+\subsubsection[{\texorpdfstring{W\+X\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+A\+R\+R\+A\+Y(\+Plugin\+Descriptor $\ast$, Descriptor\+Array)}{WX_DEFINE_ARRAY(PluginDescriptor *, DescriptorArray)}}]{\setlength{\rightskip}{0pt plus 5cm}W\+X\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+A\+R\+R\+AY (
+\begin{DoxyParamCaption}
+\item[{{\bf Plugin\+Descriptor} $\ast$}]{, }
+\item[{Descriptor\+Array}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{_plugin_manager_8cpp_a43dab5541c459aee6babf5dce6190cf4}{}\label{_plugin_manager_8cpp_a43dab5541c459aee6babf5dce6190cf4}

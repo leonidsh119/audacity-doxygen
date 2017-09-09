@@ -1,0 +1,544 @@
+\hypertarget{vr32_8c}{}\section{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/libsoxr/src/vr32.c File Reference}
+\label{vr32_8c}\index{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/libsoxr/src/vr32.\+c@{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/libsoxr/src/vr32.\+c}}
+{\ttfamily \#include $<$assert.\+h$>$}\\*
+{\ttfamily \#include $<$math.\+h$>$}\\*
+{\ttfamily \#include $<$string.\+h$>$}\\*
+{\ttfamily \#include $<$stdlib.\+h$>$}\\*
+{\ttfamily \#include \char`\"{}internal.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}fifo.\+h\char`\"{}}\\*
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structhalf__iir__t}{half\+\_\+iir\+\_\+t}
+\item 
+struct \hyperlink{structstream__t}{stream\+\_\+t}
+\item 
+struct \hyperlink{structstage__t}{stage\+\_\+t}
+\item 
+struct \hyperlink{structrate__t}{rate\+\_\+t}
+\end{DoxyCompactItemize}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{vr32_8c_ae71449b1cc6e6250b91f539153a7a0d3}{M\+\_\+\+PI}~3.\+14159265358979323846
+\item 
+\#define \hyperlink{vr32_8c_a92428112a5d24721208748774a4f23e6}{M\+\_\+\+L\+N2}~0.\+69314718055994530942
+\item 
+\#define \hyperlink{vr32_8c_ae926807bd6da66f484d097d37ad4f636}{F\+I\+F\+O\+\_\+\+S\+I\+Z\+E\+\_\+T}~\hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int}
+\item 
+\#define \hyperlink{vr32_8c_a487d8dd8080f86bb9fbcbe1285fd19f5}{F\+I\+F\+O\+\_\+\+M\+IN}~0x8000
+\item 
+\#define \hyperlink{vr32_8c_ad5ba0614fa6a6b7a713a922349f076f0}{F\+A\+D\+E\+\_\+\+L\+E\+N\+\_\+\+B\+I\+TS}~9
+\item 
+\#define \hyperlink{vr32_8c_a03394bbd6b4568818b237e75defc88e3}{P\+H\+A\+S\+E\+\_\+\+B\+I\+T\+S\+\_\+D}~(8 + \hyperlink{vr32_8c_a69434ae7ef9daae1b96fff1831859405}{P\+H\+A\+S\+E\+\_\+\+M\+O\+RE})
+\item 
+\#define \hyperlink{vr32_8c_acf20d339423af98d723528108d9a0355}{P\+H\+A\+S\+E\+\_\+\+B\+I\+T\+S\+\_\+U}~(7 + \hyperlink{vr32_8c_a69434ae7ef9daae1b96fff1831859405}{P\+H\+A\+S\+E\+\_\+\+M\+O\+RE})
+\item 
+\#define \hyperlink{vr32_8c_a69434ae7ef9daae1b96fff1831859405}{P\+H\+A\+S\+E\+\_\+\+M\+O\+RE}~0 /$\ast$ 2 improves small \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int}, and large u, ratios. $\ast$/
+\item 
+\#define \hyperlink{vr32_8c_ab9fbe66dc34e852bc23c2692b9403cd2}{P\+H\+A\+S\+E\+S0\+\_\+D}~12
+\item 
+\#define \hyperlink{vr32_8c_a4a196fbc6b2ccf13e4e0ce7135220b3d}{P\+O\+L\+Y\+\_\+\+F\+I\+R\+\_\+\+L\+E\+N\+\_\+D}~20
+\item 
+\#define \hyperlink{vr32_8c_ae8f1e333338d235b659cd3594e62b967}{P\+H\+A\+S\+E\+S0\+\_\+U}~6
+\item 
+\#define \hyperlink{vr32_8c_a8d7d674af66dd24c7d91c8c5ef4ccb97}{P\+O\+L\+Y\+\_\+\+F\+I\+R\+\_\+\+L\+E\+N\+\_\+U}~12
+\item 
+\#define \hyperlink{vr32_8c_a02cca5ade7272f877064fa67c1bbdd48}{M\+U\+L\+T32}~(65536. $\ast$ 65536.)
+\item 
+\#define \hyperlink{vr32_8c_aa0d0bbf50e58d9c24e96ba4f11ac5ac0}{P\+H\+A\+S\+E\+S\+\_\+D}~(1 $<$$<$ \hyperlink{vr32_8c_a03394bbd6b4568818b237e75defc88e3}{P\+H\+A\+S\+E\+\_\+\+B\+I\+T\+S\+\_\+D})
+\item 
+\#define \hyperlink{vr32_8c_a6b1f229c43971a22fe315ad82e8def6f}{P\+H\+A\+S\+E\+S\+\_\+U}~(1 $<$$<$ \hyperlink{vr32_8c_acf20d339423af98d723528108d9a0355}{P\+H\+A\+S\+E\+\_\+\+B\+I\+T\+S\+\_\+U})
+\item 
+\#define \hyperlink{vr32_8c_aafef2de0ad775042f34be72751d67914}{C\+O\+N\+V\+O\+L\+VE}
+\item 
+\#define \hyperlink{vr32_8c_a15f631a25c224b0ea4586e500f520579}{H\+A\+L\+F\+\_\+\+F\+I\+R\+\_\+\+L\+E\+N\+\_\+2}~(\hyperlink{libsoxr_2src_2internal_8h_a6fbd26eab32b3064f6e30aab7d90af75}{i\+AL}(half\+\_\+fir\+\_\+coefs) -\/ 1)
+\item 
+\#define \hyperlink{vr32_8c_a7a0fcd6d6526ba0cfc6edf0aeadcf6da}{H\+A\+L\+F\+\_\+\+F\+I\+R\+\_\+\+L\+E\+N\+\_\+4}~(\hyperlink{vr32_8c_a15f631a25c224b0ea4586e500f520579}{H\+A\+L\+F\+\_\+\+F\+I\+R\+\_\+\+L\+E\+N\+\_\+2} / 2)
+\item 
+\#define \hyperlink{vr32_8c_ae4dfd7b0d66121016d6466d2ff10e8ba}{\+\_\+}~sum += (input\mbox{[}-\/\hyperlink{checksum_8c_ab80e330a3bc9e38c1297fe17381e92b4}{i}\mbox{]} + input\mbox{[}\hyperlink{checksum_8c_ab80e330a3bc9e38c1297fe17381e92b4}{i}\mbox{]}) $\ast$ half\+\_\+fir\+\_\+coefs\mbox{[}\hyperlink{checksum_8c_ab80e330a3bc9e38c1297fe17381e92b4}{i}\mbox{]}, ++\hyperlink{checksum_8c_ab80e330a3bc9e38c1297fe17381e92b4}{i};
+\item 
+\#define \hyperlink{vr32_8c_ae4dfd7b0d66121016d6466d2ff10e8ba}{\+\_\+}~sum += (input\mbox{[}-\/\hyperlink{checksum_8c_ab80e330a3bc9e38c1297fe17381e92b4}{i}\mbox{]} + input\mbox{[}\hyperlink{checksum_8c_ab80e330a3bc9e38c1297fe17381e92b4}{i}\mbox{]}) $\ast$ half\+\_\+fir\+\_\+coefs\mbox{[}2$\ast$\hyperlink{checksum_8c_ab80e330a3bc9e38c1297fe17381e92b4}{i}\mbox{]}, ++\hyperlink{checksum_8c_ab80e330a3bc9e38c1297fe17381e92b4}{i};
+\item 
+\#define \hyperlink{vr32_8c_ae4dfd7b0d66121016d6466d2ff10e8ba}{\+\_\+}~sum += (input\mbox{[}-\/\hyperlink{checksum_8c_ab80e330a3bc9e38c1297fe17381e92b4}{i}\mbox{]} + input\mbox{[}1+\hyperlink{checksum_8c_ab80e330a3bc9e38c1297fe17381e92b4}{i}\mbox{]}) $\ast$ half\+\_\+fir\+\_\+coefs\mbox{[}2$\ast$\hyperlink{checksum_8c_ab80e330a3bc9e38c1297fe17381e92b4}{i}+1\mbox{]}, ++\hyperlink{checksum_8c_ab80e330a3bc9e38c1297fe17381e92b4}{i};
+\item 
+\#define \hyperlink{vr32_8c_ae4dfd7b0d66121016d6466d2ff10e8ba}{\+\_\+}~sum += (input\mbox{[}-\/(2$\ast$\hyperlink{checksum_8c_ab80e330a3bc9e38c1297fe17381e92b4}{i}+1)\mbox{]} + input\mbox{[}2$\ast$\hyperlink{checksum_8c_ab80e330a3bc9e38c1297fe17381e92b4}{i}+1\mbox{]}) $\ast$ coefs\mbox{[}\hyperlink{checksum_8c_ab80e330a3bc9e38c1297fe17381e92b4}{i}\mbox{]}, ++\hyperlink{checksum_8c_ab80e330a3bc9e38c1297fe17381e92b4}{i};
+\item 
+\#define \hyperlink{vr32_8c_ad808e059f9e5e3110a9b80c178f9507b}{I\+I\+R\+\_\+\+F\+I\+L\+T\+ER}~\hyperlink{vr32_8c_ae4dfd7b0d66121016d6466d2ff10e8ba}{\+\_\+} \hyperlink{vr32_8c_ae4dfd7b0d66121016d6466d2ff10e8ba}{\+\_\+} \hyperlink{vr32_8c_ae4dfd7b0d66121016d6466d2ff10e8ba}{\+\_\+} \hyperlink{vr32_8c_ae4dfd7b0d66121016d6466d2ff10e8ba}{\+\_\+} \hyperlink{vr32_8c_ae4dfd7b0d66121016d6466d2ff10e8ba}{\+\_\+} \hyperlink{vr32_8c_ae4dfd7b0d66121016d6466d2ff10e8ba}{\+\_\+} \hyperlink{vr32_8c_ae4dfd7b0d66121016d6466d2ff10e8ba}{\+\_\+}
+\item 
+\#define \hyperlink{vr32_8c_ae4dfd7b0d66121016d6466d2ff10e8ba}{\+\_\+}
+\item 
+\#define \hyperlink{vr32_8c_ae4dfd7b0d66121016d6466d2ff10e8ba}{\+\_\+}~\hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p}-\/$>$y\mbox{[}\hyperlink{checksum_8c_ab80e330a3bc9e38c1297fe17381e92b4}{i}\mbox{]} += small\+\_\+normal, \hyperlink{checksum_8c_ab80e330a3bc9e38c1297fe17381e92b4}{i} += 2;
+\item 
+\#define \hyperlink{vr32_8c_ae4dfd7b0d66121016d6466d2ff10e8ba}{\+\_\+}~\hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p}-\/$>$y\mbox{[}\hyperlink{checksum_8c_ab80e330a3bc9e38c1297fe17381e92b4}{i}\mbox{]} -\/= small\+\_\+normal, \hyperlink{checksum_8c_ab80e330a3bc9e38c1297fe17381e92b4}{i} += 2;
+\item 
+\#define \hyperlink{vr32_8c_a49ba5e99187254b03d6710a312197a52}{raw\+\_\+coef\+\_\+t}~float
+\item 
+\#define \hyperlink{vr32_8c_abb25177205d56e90a9770f6b4c57c07f}{coef}(coef\+\_\+p,  interp\+\_\+order,  fir\+\_\+len,  phase\+\_\+num,  coef\+\_\+interp\+\_\+num,  fir\+\_\+coef\+\_\+num)
+\item 
+\#define \hyperlink{vr32_8c_a5b4e2ae7d0945cc3cb7f44d40dc2989b}{C\+O\+EF}(h,  \hyperlink{layer3_8c_a741dbb4d8e78c3cb69915db7282fcec0}{l},  \hyperlink{checksum_8c_ab80e330a3bc9e38c1297fe17381e92b4}{i})~((\hyperlink{checksum_8c_ab80e330a3bc9e38c1297fe17381e92b4}{i})$<$0$\vert$$\vert$(\hyperlink{checksum_8c_ab80e330a3bc9e38c1297fe17381e92b4}{i})$>$=(\hyperlink{layer3_8c_a741dbb4d8e78c3cb69915db7282fcec0}{l})?0\+:(h)\mbox{[}(\hyperlink{checksum_8c_ab80e330a3bc9e38c1297fe17381e92b4}{i})$>$(\hyperlink{layer3_8c_a741dbb4d8e78c3cb69915db7282fcec0}{l})/2?(\hyperlink{layer3_8c_a741dbb4d8e78c3cb69915db7282fcec0}{l})-\/(\hyperlink{checksum_8c_ab80e330a3bc9e38c1297fe17381e92b4}{i})\+:(\hyperlink{checksum_8c_ab80e330a3bc9e38c1297fe17381e92b4}{i})\mbox{]})
+\item 
+\#define \hyperlink{vr32_8c_ae4dfd7b0d66121016d6466d2ff10e8ba}{\+\_\+}~sum += (\hyperlink{convtest_8m_a21ad0bd836b90d08f4cf640b4c298e7c}{b} $\ast$x + \hyperlink{rfft2d_test_m_l_8m_a4124bc0a9335c27f086f24ba207a4912}{a})$\ast$input\mbox{[}\hyperlink{checksum_8c_ab80e330a3bc9e38c1297fe17381e92b4}{i}\mbox{]}, ++\hyperlink{checksum_8c_ab80e330a3bc9e38c1297fe17381e92b4}{i};
+\item 
+\#define \hyperlink{vr32_8c_a8d3c3518d793541417a4845125da1ae1}{a}~(\hyperlink{vr32_8c_abb25177205d56e90a9770f6b4c57c07f}{coef}(poly\+\_\+fir\+\_\+coefs\+\_\+d, 1, \hyperlink{vr32_8c_a4a196fbc6b2ccf13e4e0ce7135220b3d}{P\+O\+L\+Y\+\_\+\+F\+I\+R\+\_\+\+L\+E\+N\+\_\+D}, phase, 0,\hyperlink{checksum_8c_ab80e330a3bc9e38c1297fe17381e92b4}{i}))
+\item 
+\#define \hyperlink{vr32_8c_ab2d05693952610f937e5acb3c4a8fa1b}{b}~(\hyperlink{vr32_8c_abb25177205d56e90a9770f6b4c57c07f}{coef}(poly\+\_\+fir\+\_\+coefs\+\_\+d, 1, \hyperlink{vr32_8c_a4a196fbc6b2ccf13e4e0ce7135220b3d}{P\+O\+L\+Y\+\_\+\+F\+I\+R\+\_\+\+L\+E\+N\+\_\+D}, phase, 1,\hyperlink{checksum_8c_ab80e330a3bc9e38c1297fe17381e92b4}{i}))
+\item 
+\#define \hyperlink{vr32_8c_a8d3c3518d793541417a4845125da1ae1}{a}~(\hyperlink{vr32_8c_abb25177205d56e90a9770f6b4c57c07f}{coef}(poly\+\_\+fir\+\_\+coefs\+\_\+u, 1, \hyperlink{vr32_8c_a8d7d674af66dd24c7d91c8c5ef4ccb97}{P\+O\+L\+Y\+\_\+\+F\+I\+R\+\_\+\+L\+E\+N\+\_\+U}, phase, 0,\hyperlink{checksum_8c_ab80e330a3bc9e38c1297fe17381e92b4}{i}))
+\item 
+\#define \hyperlink{vr32_8c_ab2d05693952610f937e5acb3c4a8fa1b}{b}~(\hyperlink{vr32_8c_abb25177205d56e90a9770f6b4c57c07f}{coef}(poly\+\_\+fir\+\_\+coefs\+\_\+u, 1, \hyperlink{vr32_8c_a8d7d674af66dd24c7d91c8c5ef4ccb97}{P\+O\+L\+Y\+\_\+\+F\+I\+R\+\_\+\+L\+E\+N\+\_\+U}, phase, 1,\hyperlink{checksum_8c_ab80e330a3bc9e38c1297fe17381e92b4}{i}))
+\item 
+\#define \hyperlink{vr32_8c_a31ae70429915dedfff9bea286105a502}{A\+D\+D\+\_\+\+TO}(x,  y)                  ~x.\+all += y.\+all
+\item 
+\#define \hyperlink{vr32_8c_aec0b5f14919f902ae4eaff0743986ab8}{S\+U\+B\+T\+R\+A\+C\+T\+\_\+\+F\+R\+OM}(x,  y)    ~x.\+all -\/= y.\+all
+\item 
+\#define \hyperlink{vr32_8c_a1ff5b9a5666ca09e9067a18f42838aa0}{F\+R\+AC}(x)                          ~x.\+part.\+frac
+\item 
+\#define \hyperlink{vr32_8c_a77387b8d37d173f242ab062e4f4c0cac}{I\+NT}(x)                            ~\hyperlink{rate_8h_a30f7ba481fb6777d119ce55219426be0}{x.\+part.\+integer}
+\item 
+\#define \hyperlink{vr32_8c_a61d44d48687ae3ff881ec826a62371af}{shiftr}(x,  by)~((by) $<$ 0? (x) $<$$<$ (-\/(by)) \+: (x) $>$$>$ (by))
+\item 
+\#define \hyperlink{vr32_8c_ab39078e7cfd131730c8eccaf0521aaf7}{shiftl}(x,  by)~\hyperlink{vr32_8c_a61d44d48687ae3ff881ec826a62371af}{shiftr}(x,-\/(by))
+\item 
+\#define \hyperlink{vr32_8c_a99d1a8c8eef09c8366721929b32aab91}{stage\+\_\+occupancy}(\hyperlink{lib_2expat_8h_a755339d27872b13735c2cab829e47157}{s})~(fifo\+\_\+occupancy(\&(\hyperlink{lib_2expat_8h_a755339d27872b13735c2cab829e47157}{s})-\/$>$fifo) -\/ 4$\ast$\hyperlink{vr32_8c_a15f631a25c224b0ea4586e500f520579}{H\+A\+L\+F\+\_\+\+F\+I\+R\+\_\+\+L\+E\+N\+\_\+2})
+\item 
+\#define \hyperlink{vr32_8c_a0252bb6d8119002e67e16d9c8be0f4ac}{stage\+\_\+read\+\_\+p}(\hyperlink{lib_2expat_8h_a755339d27872b13735c2cab829e47157}{s})~((float $\ast$)\hyperlink{_reverb__lib_so_x_8h_a1b6d0c490d62effa12f8add51851db0d}{fifo\+\_\+read\+\_\+ptr}(\&(\hyperlink{lib_2expat_8h_a755339d27872b13735c2cab829e47157}{s})-\/$>$fifo) + 2$\ast$\hyperlink{vr32_8c_a15f631a25c224b0ea4586e500f520579}{H\+A\+L\+F\+\_\+\+F\+I\+R\+\_\+\+L\+E\+N\+\_\+2})
+\item 
+\#define \hyperlink{vr32_8c_a92bc296a6dd6926d435c23b6bc42ac95}{stage\+\_\+preload}(\hyperlink{lib_2expat_8h_a755339d27872b13735c2cab829e47157}{s})
+\item 
+\#define \hyperlink{vr32_8c_ae069eb81604a8be01602d67825901bb8}{lshift}(x,  by)~(x)=(by)$>$0?(x)$<$$<$(by)\+:(x)$>$$>$-\/(by)
+\end{DoxyCompactItemize}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef \hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void}($\ast$ \hyperlink{vr32_8c_afc8fa388a84372fc7153206dfbf24374}{fn\+\_\+t}) (\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void})
+\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{vr32_8c_afc8fa388a84372fc7153206dfbf24374}{fn\+\_\+t} \hyperlink{vr32_8c_a4930b13e147aad892a8f1af03a6ef7b0}{\+\_\+soxr\+\_\+vr32\+\_\+cb} \mbox{[}$\,$\mbox{]}
+\end{DoxyCompactItemize}
+
+
+\subsection{Macro Definition Documentation}
+\index{vr32.\+c@{vr32.\+c}!\+\_\+@{\+\_\+}}
+\index{\+\_\+@{\+\_\+}!vr32.\+c@{vr32.\+c}}
+\subsubsection[{\texorpdfstring{\+\_\+}{_}}]{\setlength{\rightskip}{0pt plus 5cm}\#define \+\_\+~sum += (input\mbox{[}-\/{\bf i}\mbox{]} + input\mbox{[}{\bf i}\mbox{]}) $\ast$ half\+\_\+fir\+\_\+coefs\mbox{[}{\bf i}\mbox{]}, ++{\bf i};}\hypertarget{vr32_8c_ae4dfd7b0d66121016d6466d2ff10e8ba}{}\label{vr32_8c_ae4dfd7b0d66121016d6466d2ff10e8ba}
+
+
+Definition at line 275 of file vr32.\+c.
+
+\index{vr32.\+c@{vr32.\+c}!\+\_\+@{\+\_\+}}
+\index{\+\_\+@{\+\_\+}!vr32.\+c@{vr32.\+c}}
+\subsubsection[{\texorpdfstring{\+\_\+}{_}}]{\setlength{\rightskip}{0pt plus 5cm}\#define \+\_\+~sum += (input\mbox{[}-\/{\bf i}\mbox{]} + input\mbox{[}{\bf i}\mbox{]}) $\ast$ half\+\_\+fir\+\_\+coefs\mbox{[}2$\ast${\bf i}\mbox{]}, ++{\bf i};}\hypertarget{vr32_8c_ae4dfd7b0d66121016d6466d2ff10e8ba}{}\label{vr32_8c_ae4dfd7b0d66121016d6466d2ff10e8ba}
+
+
+Definition at line 275 of file vr32.\+c.
+
+\index{vr32.\+c@{vr32.\+c}!\+\_\+@{\+\_\+}}
+\index{\+\_\+@{\+\_\+}!vr32.\+c@{vr32.\+c}}
+\subsubsection[{\texorpdfstring{\+\_\+}{_}}]{\setlength{\rightskip}{0pt plus 5cm}\#define \+\_\+~sum += (input\mbox{[}-\/{\bf i}\mbox{]} + input\mbox{[}1+{\bf i}\mbox{]}) $\ast$ half\+\_\+fir\+\_\+coefs\mbox{[}2$\ast${\bf i}+1\mbox{]}, ++{\bf i};}\hypertarget{vr32_8c_ae4dfd7b0d66121016d6466d2ff10e8ba}{}\label{vr32_8c_ae4dfd7b0d66121016d6466d2ff10e8ba}
+
+
+Definition at line 275 of file vr32.\+c.
+
+\index{vr32.\+c@{vr32.\+c}!\+\_\+@{\+\_\+}}
+\index{\+\_\+@{\+\_\+}!vr32.\+c@{vr32.\+c}}
+\subsubsection[{\texorpdfstring{\+\_\+}{_}}]{\setlength{\rightskip}{0pt plus 5cm}\#define \+\_\+~sum += (input\mbox{[}-\/(2$\ast${\bf i}+1)\mbox{]} + input\mbox{[}2$\ast${\bf i}+1\mbox{]}) $\ast$ coefs\mbox{[}{\bf i}\mbox{]}, ++{\bf i};}\hypertarget{vr32_8c_ae4dfd7b0d66121016d6466d2ff10e8ba}{}\label{vr32_8c_ae4dfd7b0d66121016d6466d2ff10e8ba}
+
+
+Definition at line 275 of file vr32.\+c.
+
+\index{vr32.\+c@{vr32.\+c}!\+\_\+@{\+\_\+}}
+\index{\+\_\+@{\+\_\+}!vr32.\+c@{vr32.\+c}}
+\subsubsection[{\texorpdfstring{\+\_\+}{_}}]{\setlength{\rightskip}{0pt plus 5cm}\#define \+\_\+}\hypertarget{vr32_8c_ae4dfd7b0d66121016d6466d2ff10e8ba}{}\label{vr32_8c_ae4dfd7b0d66121016d6466d2ff10e8ba}
+{\bfseries Value\+:}
+\begin{DoxyCode}
+in1=(in1-\hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p}->y[\hyperlink{checksum_8c_ab80e330a3bc9e38c1297fe17381e92b4}{i}])*iir\_coefs[\hyperlink{checksum_8c_ab80e330a3bc9e38c1297fe17381e92b4}{i}]+tmp1;tmp1=\hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p}->y[\hyperlink{checksum_8c_ab80e330a3bc9e38c1297fe17381e92b4}{i}],\hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p}->y[\hyperlink{checksum_8c_ab80e330a3bc9e38c1297fe17381e92b4}{i}]=in1;++\hyperlink{checksum_8c_ab80e330a3bc9e38c1297fe17381e92b4}{i};\(\backslash\)
+          in0=(in0-\hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p}->y[\hyperlink{checksum_8c_ab80e330a3bc9e38c1297fe17381e92b4}{i}])*iir\_coefs[\hyperlink{checksum_8c_ab80e330a3bc9e38c1297fe17381e92b4}{i}]+tmp0;tmp0=\hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p}->y[\hyperlink{checksum_8c_ab80e330a3bc9e38c1297fe17381e92b4}{i}],\hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p}->y[\hyperlink{checksum_8c_ab80e330a3bc9e38c1297fe17381e92b4}{i}]=in0;++
+      \hyperlink{checksum_8c_ab80e330a3bc9e38c1297fe17381e92b4}{i};
+\end{DoxyCode}
+
+
+Definition at line 275 of file vr32.\+c.
+
+\index{vr32.\+c@{vr32.\+c}!\+\_\+@{\+\_\+}}
+\index{\+\_\+@{\+\_\+}!vr32.\+c@{vr32.\+c}}
+\subsubsection[{\texorpdfstring{\+\_\+}{_}}]{\setlength{\rightskip}{0pt plus 5cm}\#define \+\_\+~{\bf p}-\/$>$y\mbox{[}{\bf i}\mbox{]} += small\+\_\+normal, {\bf i} += 2;}\hypertarget{vr32_8c_ae4dfd7b0d66121016d6466d2ff10e8ba}{}\label{vr32_8c_ae4dfd7b0d66121016d6466d2ff10e8ba}
+
+
+Definition at line 275 of file vr32.\+c.
+
+\index{vr32.\+c@{vr32.\+c}!\+\_\+@{\+\_\+}}
+\index{\+\_\+@{\+\_\+}!vr32.\+c@{vr32.\+c}}
+\subsubsection[{\texorpdfstring{\+\_\+}{_}}]{\setlength{\rightskip}{0pt plus 5cm}\#define \+\_\+~{\bf p}-\/$>$y\mbox{[}{\bf i}\mbox{]} -\/= small\+\_\+normal, {\bf i} += 2;}\hypertarget{vr32_8c_ae4dfd7b0d66121016d6466d2ff10e8ba}{}\label{vr32_8c_ae4dfd7b0d66121016d6466d2ff10e8ba}
+
+
+Definition at line 275 of file vr32.\+c.
+
+\index{vr32.\+c@{vr32.\+c}!\+\_\+@{\+\_\+}}
+\index{\+\_\+@{\+\_\+}!vr32.\+c@{vr32.\+c}}
+\subsubsection[{\texorpdfstring{\+\_\+}{_}}]{\setlength{\rightskip}{0pt plus 5cm}\#define \+\_\+~sum += ({\bf b} $\ast$x + {\bf a})$\ast$input\mbox{[}{\bf i}\mbox{]}, ++{\bf i};}\hypertarget{vr32_8c_ae4dfd7b0d66121016d6466d2ff10e8ba}{}\label{vr32_8c_ae4dfd7b0d66121016d6466d2ff10e8ba}
+
+
+Definition at line 275 of file vr32.\+c.
+
+\index{vr32.\+c@{vr32.\+c}!a@{a}}
+\index{a@{a}!vr32.\+c@{vr32.\+c}}
+\subsubsection[{\texorpdfstring{a}{a}}]{\setlength{\rightskip}{0pt plus 5cm}\#define a~({\bf coef}(poly\+\_\+fir\+\_\+coefs\+\_\+d, 1, {\bf P\+O\+L\+Y\+\_\+\+F\+I\+R\+\_\+\+L\+E\+N\+\_\+D}, phase, 0,{\bf i}))}\hypertarget{vr32_8c_a8d3c3518d793541417a4845125da1ae1}{}\label{vr32_8c_a8d3c3518d793541417a4845125da1ae1}
+
+
+Definition at line 290 of file vr32.\+c.
+
+\index{vr32.\+c@{vr32.\+c}!a@{a}}
+\index{a@{a}!vr32.\+c@{vr32.\+c}}
+\subsubsection[{\texorpdfstring{a}{a}}]{\setlength{\rightskip}{0pt plus 5cm}\#define a~({\bf coef}(poly\+\_\+fir\+\_\+coefs\+\_\+u, 1, {\bf P\+O\+L\+Y\+\_\+\+F\+I\+R\+\_\+\+L\+E\+N\+\_\+U}, phase, 0,{\bf i}))}\hypertarget{vr32_8c_a8d3c3518d793541417a4845125da1ae1}{}\label{vr32_8c_a8d3c3518d793541417a4845125da1ae1}
+
+
+Definition at line 290 of file vr32.\+c.
+
+\index{vr32.\+c@{vr32.\+c}!A\+D\+D\+\_\+\+TO@{A\+D\+D\+\_\+\+TO}}
+\index{A\+D\+D\+\_\+\+TO@{A\+D\+D\+\_\+\+TO}!vr32.\+c@{vr32.\+c}}
+\subsubsection[{\texorpdfstring{A\+D\+D\+\_\+\+TO}{ADD_TO}}]{\setlength{\rightskip}{0pt plus 5cm}\#define A\+D\+D\+\_\+\+TO(
+\begin{DoxyParamCaption}
+\item[{}]{x, }
+\item[{}]{y}
+\end{DoxyParamCaption}
+)~x.\+all += y.\+all}\hypertarget{vr32_8c_a31ae70429915dedfff9bea286105a502}{}\label{vr32_8c_a31ae70429915dedfff9bea286105a502}
+
+
+Definition at line 306 of file vr32.\+c.
+
+\index{vr32.\+c@{vr32.\+c}!b@{b}}
+\index{b@{b}!vr32.\+c@{vr32.\+c}}
+\subsubsection[{\texorpdfstring{b}{b}}]{\setlength{\rightskip}{0pt plus 5cm}\#define b~({\bf coef}(poly\+\_\+fir\+\_\+coefs\+\_\+d, 1, {\bf P\+O\+L\+Y\+\_\+\+F\+I\+R\+\_\+\+L\+E\+N\+\_\+D}, phase, 1,{\bf i}))}\hypertarget{vr32_8c_ab2d05693952610f937e5acb3c4a8fa1b}{}\label{vr32_8c_ab2d05693952610f937e5acb3c4a8fa1b}
+
+
+Definition at line 291 of file vr32.\+c.
+
+\index{vr32.\+c@{vr32.\+c}!b@{b}}
+\index{b@{b}!vr32.\+c@{vr32.\+c}}
+\subsubsection[{\texorpdfstring{b}{b}}]{\setlength{\rightskip}{0pt plus 5cm}\#define b~({\bf coef}(poly\+\_\+fir\+\_\+coefs\+\_\+u, 1, {\bf P\+O\+L\+Y\+\_\+\+F\+I\+R\+\_\+\+L\+E\+N\+\_\+U}, phase, 1,{\bf i}))}\hypertarget{vr32_8c_ab2d05693952610f937e5acb3c4a8fa1b}{}\label{vr32_8c_ab2d05693952610f937e5acb3c4a8fa1b}
+
+
+Definition at line 291 of file vr32.\+c.
+
+\index{vr32.\+c@{vr32.\+c}!coef@{coef}}
+\index{coef@{coef}!vr32.\+c@{vr32.\+c}}
+\subsubsection[{\texorpdfstring{coef}{coef}}]{\setlength{\rightskip}{0pt plus 5cm}\#define coef(
+\begin{DoxyParamCaption}
+\item[{}]{coef\+\_\+p, }
+\item[{}]{interp\+\_\+order, }
+\item[{}]{fir\+\_\+len, }
+\item[{}]{phase\+\_\+num, }
+\item[{}]{coef\+\_\+interp\+\_\+num, }
+\item[{}]{fir\+\_\+coef\+\_\+num}
+\end{DoxyParamCaption}
+)}\hypertarget{vr32_8c_abb25177205d56e90a9770f6b4c57c07f}{}\label{vr32_8c_abb25177205d56e90a9770f6b4c57c07f}
+{\bfseries Value\+:}
+\begin{DoxyCode}
+coef\_p[(fir\_len) * ((interp\_order) + 1) * (phase\_num) + \(\backslash\)
+    ((interp\_order) + 1) * (fir\_coef\_num) + (interp\_order - coef\_interp\_num)]
+\end{DoxyCode}
+
+
+Definition at line 237 of file vr32.\+c.
+
+\index{vr32.\+c@{vr32.\+c}!C\+O\+EF@{C\+O\+EF}}
+\index{C\+O\+EF@{C\+O\+EF}!vr32.\+c@{vr32.\+c}}
+\subsubsection[{\texorpdfstring{C\+O\+EF}{COEF}}]{\setlength{\rightskip}{0pt plus 5cm}\#define C\+O\+EF(
+\begin{DoxyParamCaption}
+\item[{}]{h, }
+\item[{}]{{\bf l}, }
+\item[{}]{{\bf i}}
+\end{DoxyParamCaption}
+)~(({\bf i})$<$0$\vert$$\vert$({\bf i})$>$=({\bf l})?0\+:(h)\mbox{[}({\bf i})$>$({\bf l})/2?({\bf l})-\/({\bf i})\+:({\bf i})\mbox{]})}\hypertarget{vr32_8c_a5b4e2ae7d0945cc3cb7f44d40dc2989b}{}\label{vr32_8c_a5b4e2ae7d0945cc3cb7f44d40dc2989b}
+
+
+Definition at line 241 of file vr32.\+c.
+
+\index{vr32.\+c@{vr32.\+c}!C\+O\+N\+V\+O\+L\+VE@{C\+O\+N\+V\+O\+L\+VE}}
+\index{C\+O\+N\+V\+O\+L\+VE@{C\+O\+N\+V\+O\+L\+VE}!vr32.\+c@{vr32.\+c}}
+\subsubsection[{\texorpdfstring{C\+O\+N\+V\+O\+L\+VE}{CONVOLVE}}]{\setlength{\rightskip}{0pt plus 5cm}\#define C\+O\+N\+V\+O\+L\+VE}\hypertarget{vr32_8c_aafef2de0ad775042f34be72751d67914}{}\label{vr32_8c_aafef2de0ad775042f34be72751d67914}
+{\bfseries Value\+:}
+\begin{DoxyCode}
+\hyperlink{vr32_8c_ae4dfd7b0d66121016d6466d2ff10e8ba}{\_} \hyperlink{vr32_8c_ae4dfd7b0d66121016d6466d2ff10e8ba}{\_} \hyperlink{vr32_8c_ae4dfd7b0d66121016d6466d2ff10e8ba}{\_} \hyperlink{vr32_8c_ae4dfd7b0d66121016d6466d2ff10e8ba}{\_} \hyperlink{vr32_8c_ae4dfd7b0d66121016d6466d2ff10e8ba}{\_} \hyperlink{vr32_8c_ae4dfd7b0d66121016d6466d2ff10e8ba}{\_} \hyperlink{vr32_8c_ae4dfd7b0d66121016d6466d2ff10e8ba}{\_} \hyperlink{vr32_8c_ae4dfd7b0d66121016d6466d2ff10e8ba}{\_} \hyperlink{vr32_8c_ae4dfd7b0d66121016d6466d2ff10e8ba}{\_} \hyperlink{vr32_8c_ae4dfd7b0d66121016d6466d2ff10e8ba}{\_}  \hyperlink{vr32_8c_ae4dfd7b0d66121016d6466d2ff10e8ba}{\_} \hyperlink{vr32_8c_ae4dfd7b0d66121016d6466d2ff10e8ba}{\_} \hyperlink{vr32_8c_ae4dfd7b0d66121016d6466d2ff10e8ba}{\_} \hyperlink{vr32_8c_ae4dfd7b0d66121016d6466d2ff10e8ba}{\_} \hyperlink{vr32_8c_ae4dfd7b0d66121016d6466d2ff10e8ba}{\_} \hyperlink{vr32_8c_ae4dfd7b0d66121016d6466d2ff10e8ba}{\_} \hyperlink{vr32_8c_ae4dfd7b0d66121016d6466d2ff10e8ba}{\_} \hyperlink{vr32_8c_ae4dfd7b0d66121016d6466d2ff10e8ba}{\_} \hyperlink{vr32_8c_ae4dfd7b0d66121016d6466d2ff10e8ba}{\_} \_ \(\backslash\)
+    \_ \hyperlink{vr32_8c_ae4dfd7b0d66121016d6466d2ff10e8ba}{\_} \hyperlink{vr32_8c_ae4dfd7b0d66121016d6466d2ff10e8ba}{\_} \hyperlink{vr32_8c_ae4dfd7b0d66121016d6466d2ff10e8ba}{\_} \hyperlink{vr32_8c_ae4dfd7b0d66121016d6466d2ff10e8ba}{\_} \hyperlink{vr32_8c_ae4dfd7b0d66121016d6466d2ff10e8ba}{\_} \hyperlink{vr32_8c_ae4dfd7b0d66121016d6466d2ff10e8ba}{\_} \hyperlink{vr32_8c_ae4dfd7b0d66121016d6466d2ff10e8ba}{\_} \hyperlink{vr32_8c_ae4dfd7b0d66121016d6466d2ff10e8ba}{\_} \hyperlink{vr32_8c_ae4dfd7b0d66121016d6466d2ff10e8ba}{\_}  \hyperlink{vr32_8c_ae4dfd7b0d66121016d6466d2ff10e8ba}{\_} \hyperlink{vr32_8c_ae4dfd7b0d66121016d6466d2ff10e8ba}{\_} \hyperlink{vr32_8c_ae4dfd7b0d66121016d6466d2ff10e8ba}{\_} \hyperlink{vr32_8c_ae4dfd7b0d66121016d6466d2ff10e8ba}{\_} \hyperlink{vr32_8c_ae4dfd7b0d66121016d6466d2ff10e8ba}{\_} \hyperlink{vr32_8c_ae4dfd7b0d66121016d6466d2ff10e8ba}{\_} \hyperlink{vr32_8c_ae4dfd7b0d66121016d6466d2ff10e8ba}{\_} \hyperlink{vr32_8c_ae4dfd7b0d66121016d6466d2ff10e8ba}{\_} \hyperlink{vr32_8c_ae4dfd7b0d66121016d6466d2ff10e8ba}{\_} \_ \(\backslash\)
+    \_ \hyperlink{vr32_8c_ae4dfd7b0d66121016d6466d2ff10e8ba}{\_} \hyperlink{vr32_8c_ae4dfd7b0d66121016d6466d2ff10e8ba}{\_} \hyperlink{vr32_8c_ae4dfd7b0d66121016d6466d2ff10e8ba}{\_} \hyperlink{vr32_8c_ae4dfd7b0d66121016d6466d2ff10e8ba}{\_} \hyperlink{vr32_8c_ae4dfd7b0d66121016d6466d2ff10e8ba}{\_} \hyperlink{vr32_8c_ae4dfd7b0d66121016d6466d2ff10e8ba}{\_} \hyperlink{vr32_8c_ae4dfd7b0d66121016d6466d2ff10e8ba}{\_} \hyperlink{vr32_8c_ae4dfd7b0d66121016d6466d2ff10e8ba}{\_} \hyperlink{vr32_8c_ae4dfd7b0d66121016d6466d2ff10e8ba}{\_}  \hyperlink{vr32_8c_ae4dfd7b0d66121016d6466d2ff10e8ba}{\_} \hyperlink{vr32_8c_ae4dfd7b0d66121016d6466d2ff10e8ba}{\_} \hyperlink{vr32_8c_ae4dfd7b0d66121016d6466d2ff10e8ba}{\_} \hyperlink{vr32_8c_ae4dfd7b0d66121016d6466d2ff10e8ba}{\_} \hyperlink{vr32_8c_ae4dfd7b0d66121016d6466d2ff10e8ba}{\_} \hyperlink{vr32_8c_ae4dfd7b0d66121016d6466d2ff10e8ba}{\_} \hyperlink{vr32_8c_ae4dfd7b0d66121016d6466d2ff10e8ba}{\_} \hyperlink{vr32_8c_ae4dfd7b0d66121016d6466d2ff10e8ba}{\_} \hyperlink{vr32_8c_ae4dfd7b0d66121016d6466d2ff10e8ba}{\_} \hyperlink{vr32_8c_ae4dfd7b0d66121016d6466d2ff10e8ba}{\_}
+\end{DoxyCode}
+
+
+Definition at line 79 of file vr32.\+c.
+
+\index{vr32.\+c@{vr32.\+c}!F\+A\+D\+E\+\_\+\+L\+E\+N\+\_\+\+B\+I\+TS@{F\+A\+D\+E\+\_\+\+L\+E\+N\+\_\+\+B\+I\+TS}}
+\index{F\+A\+D\+E\+\_\+\+L\+E\+N\+\_\+\+B\+I\+TS@{F\+A\+D\+E\+\_\+\+L\+E\+N\+\_\+\+B\+I\+TS}!vr32.\+c@{vr32.\+c}}
+\subsubsection[{\texorpdfstring{F\+A\+D\+E\+\_\+\+L\+E\+N\+\_\+\+B\+I\+TS}{FADE_LEN_BITS}}]{\setlength{\rightskip}{0pt plus 5cm}\#define F\+A\+D\+E\+\_\+\+L\+E\+N\+\_\+\+B\+I\+TS~9}\hypertarget{vr32_8c_ad5ba0614fa6a6b7a713a922349f076f0}{}\label{vr32_8c_ad5ba0614fa6a6b7a713a922349f076f0}
+
+
+Definition at line 21 of file vr32.\+c.
+
+\index{vr32.\+c@{vr32.\+c}!F\+I\+F\+O\+\_\+\+M\+IN@{F\+I\+F\+O\+\_\+\+M\+IN}}
+\index{F\+I\+F\+O\+\_\+\+M\+IN@{F\+I\+F\+O\+\_\+\+M\+IN}!vr32.\+c@{vr32.\+c}}
+\subsubsection[{\texorpdfstring{F\+I\+F\+O\+\_\+\+M\+IN}{FIFO_MIN}}]{\setlength{\rightskip}{0pt plus 5cm}\#define F\+I\+F\+O\+\_\+\+M\+IN~0x8000}\hypertarget{vr32_8c_a487d8dd8080f86bb9fbcbe1285fd19f5}{}\label{vr32_8c_a487d8dd8080f86bb9fbcbe1285fd19f5}
+
+
+Definition at line 18 of file vr32.\+c.
+
+\index{vr32.\+c@{vr32.\+c}!F\+I\+F\+O\+\_\+\+S\+I\+Z\+E\+\_\+T@{F\+I\+F\+O\+\_\+\+S\+I\+Z\+E\+\_\+T}}
+\index{F\+I\+F\+O\+\_\+\+S\+I\+Z\+E\+\_\+T@{F\+I\+F\+O\+\_\+\+S\+I\+Z\+E\+\_\+T}!vr32.\+c@{vr32.\+c}}
+\subsubsection[{\texorpdfstring{F\+I\+F\+O\+\_\+\+S\+I\+Z\+E\+\_\+T}{FIFO_SIZE_T}}]{\setlength{\rightskip}{0pt plus 5cm}\#define F\+I\+F\+O\+\_\+\+S\+I\+Z\+E\+\_\+T~{\bf int}}\hypertarget{vr32_8c_ae926807bd6da66f484d097d37ad4f636}{}\label{vr32_8c_ae926807bd6da66f484d097d37ad4f636}
+
+
+Definition at line 17 of file vr32.\+c.
+
+\index{vr32.\+c@{vr32.\+c}!F\+R\+AC@{F\+R\+AC}}
+\index{F\+R\+AC@{F\+R\+AC}!vr32.\+c@{vr32.\+c}}
+\subsubsection[{\texorpdfstring{F\+R\+AC}{FRAC}}]{\setlength{\rightskip}{0pt plus 5cm}\#define F\+R\+AC(
+\begin{DoxyParamCaption}
+\item[{}]{x}
+\end{DoxyParamCaption}
+)~x.\+part.\+frac}\hypertarget{vr32_8c_a1ff5b9a5666ca09e9067a18f42838aa0}{}\label{vr32_8c_a1ff5b9a5666ca09e9067a18f42838aa0}
+
+
+Definition at line 308 of file vr32.\+c.
+
+\index{vr32.\+c@{vr32.\+c}!H\+A\+L\+F\+\_\+\+F\+I\+R\+\_\+\+L\+E\+N\+\_\+2@{H\+A\+L\+F\+\_\+\+F\+I\+R\+\_\+\+L\+E\+N\+\_\+2}}
+\index{H\+A\+L\+F\+\_\+\+F\+I\+R\+\_\+\+L\+E\+N\+\_\+2@{H\+A\+L\+F\+\_\+\+F\+I\+R\+\_\+\+L\+E\+N\+\_\+2}!vr32.\+c@{vr32.\+c}}
+\subsubsection[{\texorpdfstring{H\+A\+L\+F\+\_\+\+F\+I\+R\+\_\+\+L\+E\+N\+\_\+2}{HALF_FIR_LEN_2}}]{\setlength{\rightskip}{0pt plus 5cm}\#define H\+A\+L\+F\+\_\+\+F\+I\+R\+\_\+\+L\+E\+N\+\_\+2~({\bf i\+AL}(half\+\_\+fir\+\_\+coefs) -\/ 1)}\hypertarget{vr32_8c_a15f631a25c224b0ea4586e500f520579}{}\label{vr32_8c_a15f631a25c224b0ea4586e500f520579}
+
+
+Definition at line 84 of file vr32.\+c.
+
+\index{vr32.\+c@{vr32.\+c}!H\+A\+L\+F\+\_\+\+F\+I\+R\+\_\+\+L\+E\+N\+\_\+4@{H\+A\+L\+F\+\_\+\+F\+I\+R\+\_\+\+L\+E\+N\+\_\+4}}
+\index{H\+A\+L\+F\+\_\+\+F\+I\+R\+\_\+\+L\+E\+N\+\_\+4@{H\+A\+L\+F\+\_\+\+F\+I\+R\+\_\+\+L\+E\+N\+\_\+4}!vr32.\+c@{vr32.\+c}}
+\subsubsection[{\texorpdfstring{H\+A\+L\+F\+\_\+\+F\+I\+R\+\_\+\+L\+E\+N\+\_\+4}{HALF_FIR_LEN_4}}]{\setlength{\rightskip}{0pt plus 5cm}\#define H\+A\+L\+F\+\_\+\+F\+I\+R\+\_\+\+L\+E\+N\+\_\+4~({\bf H\+A\+L\+F\+\_\+\+F\+I\+R\+\_\+\+L\+E\+N\+\_\+2} / 2)}\hypertarget{vr32_8c_a7a0fcd6d6526ba0cfc6edf0aeadcf6da}{}\label{vr32_8c_a7a0fcd6d6526ba0cfc6edf0aeadcf6da}
+
+
+Definition at line 85 of file vr32.\+c.
+
+\index{vr32.\+c@{vr32.\+c}!I\+I\+R\+\_\+\+F\+I\+L\+T\+ER@{I\+I\+R\+\_\+\+F\+I\+L\+T\+ER}}
+\index{I\+I\+R\+\_\+\+F\+I\+L\+T\+ER@{I\+I\+R\+\_\+\+F\+I\+L\+T\+ER}!vr32.\+c@{vr32.\+c}}
+\subsubsection[{\texorpdfstring{I\+I\+R\+\_\+\+F\+I\+L\+T\+ER}{IIR_FILTER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define I\+I\+R\+\_\+\+F\+I\+L\+T\+ER~{\bf \+\_\+} {\bf \+\_\+} {\bf \+\_\+} {\bf \+\_\+} {\bf \+\_\+} {\bf \+\_\+} {\bf \+\_\+}}\hypertarget{vr32_8c_ad808e059f9e5e3110a9b80c178f9507b}{}\label{vr32_8c_ad808e059f9e5e3110a9b80c178f9507b}
+
+
+Definition at line 141 of file vr32.\+c.
+
+\index{vr32.\+c@{vr32.\+c}!I\+NT@{I\+NT}}
+\index{I\+NT@{I\+NT}!vr32.\+c@{vr32.\+c}}
+\subsubsection[{\texorpdfstring{I\+NT}{INT}}]{\setlength{\rightskip}{0pt plus 5cm}\#define I\+NT(
+\begin{DoxyParamCaption}
+\item[{}]{x}
+\end{DoxyParamCaption}
+)~{\bf x.\+part.\+integer}}\hypertarget{vr32_8c_a77387b8d37d173f242ab062e4f4c0cac}{}\label{vr32_8c_a77387b8d37d173f242ab062e4f4c0cac}
+
+
+Definition at line 309 of file vr32.\+c.
+
+\index{vr32.\+c@{vr32.\+c}!lshift@{lshift}}
+\index{lshift@{lshift}!vr32.\+c@{vr32.\+c}}
+\subsubsection[{\texorpdfstring{lshift}{lshift}}]{\setlength{\rightskip}{0pt plus 5cm}\#define lshift(
+\begin{DoxyParamCaption}
+\item[{}]{x, }
+\item[{}]{by}
+\end{DoxyParamCaption}
+)~(x)=(by)$>$0?(x)$<$$<$(by)\+:(x)$>$$>$-\/(by)}\hypertarget{vr32_8c_ae069eb81604a8be01602d67825901bb8}{}\label{vr32_8c_ae069eb81604a8be01602d67825901bb8}
+\index{vr32.\+c@{vr32.\+c}!M\+\_\+\+L\+N2@{M\+\_\+\+L\+N2}}
+\index{M\+\_\+\+L\+N2@{M\+\_\+\+L\+N2}!vr32.\+c@{vr32.\+c}}
+\subsubsection[{\texorpdfstring{M\+\_\+\+L\+N2}{M_LN2}}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+\_\+\+L\+N2~0.\+69314718055994530942}\hypertarget{vr32_8c_a92428112a5d24721208748774a4f23e6}{}\label{vr32_8c_a92428112a5d24721208748774a4f23e6}
+
+
+Definition at line 12 of file vr32.\+c.
+
+\index{vr32.\+c@{vr32.\+c}!M\+\_\+\+PI@{M\+\_\+\+PI}}
+\index{M\+\_\+\+PI@{M\+\_\+\+PI}!vr32.\+c@{vr32.\+c}}
+\subsubsection[{\texorpdfstring{M\+\_\+\+PI}{M_PI}}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+\_\+\+PI~3.\+14159265358979323846}\hypertarget{vr32_8c_ae71449b1cc6e6250b91f539153a7a0d3}{}\label{vr32_8c_ae71449b1cc6e6250b91f539153a7a0d3}
+
+
+Definition at line 9 of file vr32.\+c.
+
+\index{vr32.\+c@{vr32.\+c}!M\+U\+L\+T32@{M\+U\+L\+T32}}
+\index{M\+U\+L\+T32@{M\+U\+L\+T32}!vr32.\+c@{vr32.\+c}}
+\subsubsection[{\texorpdfstring{M\+U\+L\+T32}{MULT32}}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+U\+L\+T32~(65536. $\ast$ 65536.)}\hypertarget{vr32_8c_a02cca5ade7272f877064fa67c1bbdd48}{}\label{vr32_8c_a02cca5ade7272f877064fa67c1bbdd48}
+
+
+Definition at line 31 of file vr32.\+c.
+
+\index{vr32.\+c@{vr32.\+c}!P\+H\+A\+S\+E\+\_\+\+B\+I\+T\+S\+\_\+D@{P\+H\+A\+S\+E\+\_\+\+B\+I\+T\+S\+\_\+D}}
+\index{P\+H\+A\+S\+E\+\_\+\+B\+I\+T\+S\+\_\+D@{P\+H\+A\+S\+E\+\_\+\+B\+I\+T\+S\+\_\+D}!vr32.\+c@{vr32.\+c}}
+\subsubsection[{\texorpdfstring{P\+H\+A\+S\+E\+\_\+\+B\+I\+T\+S\+\_\+D}{PHASE_BITS_D}}]{\setlength{\rightskip}{0pt plus 5cm}\#define P\+H\+A\+S\+E\+\_\+\+B\+I\+T\+S\+\_\+D~(8 + {\bf P\+H\+A\+S\+E\+\_\+\+M\+O\+RE})}\hypertarget{vr32_8c_a03394bbd6b4568818b237e75defc88e3}{}\label{vr32_8c_a03394bbd6b4568818b237e75defc88e3}
+
+
+Definition at line 22 of file vr32.\+c.
+
+\index{vr32.\+c@{vr32.\+c}!P\+H\+A\+S\+E\+\_\+\+B\+I\+T\+S\+\_\+U@{P\+H\+A\+S\+E\+\_\+\+B\+I\+T\+S\+\_\+U}}
+\index{P\+H\+A\+S\+E\+\_\+\+B\+I\+T\+S\+\_\+U@{P\+H\+A\+S\+E\+\_\+\+B\+I\+T\+S\+\_\+U}!vr32.\+c@{vr32.\+c}}
+\subsubsection[{\texorpdfstring{P\+H\+A\+S\+E\+\_\+\+B\+I\+T\+S\+\_\+U}{PHASE_BITS_U}}]{\setlength{\rightskip}{0pt plus 5cm}\#define P\+H\+A\+S\+E\+\_\+\+B\+I\+T\+S\+\_\+U~(7 + {\bf P\+H\+A\+S\+E\+\_\+\+M\+O\+RE})}\hypertarget{vr32_8c_acf20d339423af98d723528108d9a0355}{}\label{vr32_8c_acf20d339423af98d723528108d9a0355}
+
+
+Definition at line 23 of file vr32.\+c.
+
+\index{vr32.\+c@{vr32.\+c}!P\+H\+A\+S\+E\+\_\+\+M\+O\+RE@{P\+H\+A\+S\+E\+\_\+\+M\+O\+RE}}
+\index{P\+H\+A\+S\+E\+\_\+\+M\+O\+RE@{P\+H\+A\+S\+E\+\_\+\+M\+O\+RE}!vr32.\+c@{vr32.\+c}}
+\subsubsection[{\texorpdfstring{P\+H\+A\+S\+E\+\_\+\+M\+O\+RE}{PHASE_MORE}}]{\setlength{\rightskip}{0pt plus 5cm}\#define P\+H\+A\+S\+E\+\_\+\+M\+O\+RE~0 /$\ast$ 2 improves small {\bf int}, and large u, ratios. $\ast$/}\hypertarget{vr32_8c_a69434ae7ef9daae1b96fff1831859405}{}\label{vr32_8c_a69434ae7ef9daae1b96fff1831859405}
+
+
+Definition at line 24 of file vr32.\+c.
+
+\index{vr32.\+c@{vr32.\+c}!P\+H\+A\+S\+E\+S0\+\_\+D@{P\+H\+A\+S\+E\+S0\+\_\+D}}
+\index{P\+H\+A\+S\+E\+S0\+\_\+D@{P\+H\+A\+S\+E\+S0\+\_\+D}!vr32.\+c@{vr32.\+c}}
+\subsubsection[{\texorpdfstring{P\+H\+A\+S\+E\+S0\+\_\+D}{PHASES0_D}}]{\setlength{\rightskip}{0pt plus 5cm}\#define P\+H\+A\+S\+E\+S0\+\_\+D~12}\hypertarget{vr32_8c_ab9fbe66dc34e852bc23c2692b9403cd2}{}\label{vr32_8c_ab9fbe66dc34e852bc23c2692b9403cd2}
+
+
+Definition at line 26 of file vr32.\+c.
+
+\index{vr32.\+c@{vr32.\+c}!P\+H\+A\+S\+E\+S0\+\_\+U@{P\+H\+A\+S\+E\+S0\+\_\+U}}
+\index{P\+H\+A\+S\+E\+S0\+\_\+U@{P\+H\+A\+S\+E\+S0\+\_\+U}!vr32.\+c@{vr32.\+c}}
+\subsubsection[{\texorpdfstring{P\+H\+A\+S\+E\+S0\+\_\+U}{PHASES0_U}}]{\setlength{\rightskip}{0pt plus 5cm}\#define P\+H\+A\+S\+E\+S0\+\_\+U~6}\hypertarget{vr32_8c_ae8f1e333338d235b659cd3594e62b967}{}\label{vr32_8c_ae8f1e333338d235b659cd3594e62b967}
+
+
+Definition at line 28 of file vr32.\+c.
+
+\index{vr32.\+c@{vr32.\+c}!P\+H\+A\+S\+E\+S\+\_\+D@{P\+H\+A\+S\+E\+S\+\_\+D}}
+\index{P\+H\+A\+S\+E\+S\+\_\+D@{P\+H\+A\+S\+E\+S\+\_\+D}!vr32.\+c@{vr32.\+c}}
+\subsubsection[{\texorpdfstring{P\+H\+A\+S\+E\+S\+\_\+D}{PHASES_D}}]{\setlength{\rightskip}{0pt plus 5cm}\#define P\+H\+A\+S\+E\+S\+\_\+D~(1 $<$$<$ {\bf P\+H\+A\+S\+E\+\_\+\+B\+I\+T\+S\+\_\+D})}\hypertarget{vr32_8c_aa0d0bbf50e58d9c24e96ba4f11ac5ac0}{}\label{vr32_8c_aa0d0bbf50e58d9c24e96ba4f11ac5ac0}
+
+
+Definition at line 32 of file vr32.\+c.
+
+\index{vr32.\+c@{vr32.\+c}!P\+H\+A\+S\+E\+S\+\_\+U@{P\+H\+A\+S\+E\+S\+\_\+U}}
+\index{P\+H\+A\+S\+E\+S\+\_\+U@{P\+H\+A\+S\+E\+S\+\_\+U}!vr32.\+c@{vr32.\+c}}
+\subsubsection[{\texorpdfstring{P\+H\+A\+S\+E\+S\+\_\+U}{PHASES_U}}]{\setlength{\rightskip}{0pt plus 5cm}\#define P\+H\+A\+S\+E\+S\+\_\+U~(1 $<$$<$ {\bf P\+H\+A\+S\+E\+\_\+\+B\+I\+T\+S\+\_\+U})}\hypertarget{vr32_8c_a6b1f229c43971a22fe315ad82e8def6f}{}\label{vr32_8c_a6b1f229c43971a22fe315ad82e8def6f}
+
+
+Definition at line 33 of file vr32.\+c.
+
+\index{vr32.\+c@{vr32.\+c}!P\+O\+L\+Y\+\_\+\+F\+I\+R\+\_\+\+L\+E\+N\+\_\+D@{P\+O\+L\+Y\+\_\+\+F\+I\+R\+\_\+\+L\+E\+N\+\_\+D}}
+\index{P\+O\+L\+Y\+\_\+\+F\+I\+R\+\_\+\+L\+E\+N\+\_\+D@{P\+O\+L\+Y\+\_\+\+F\+I\+R\+\_\+\+L\+E\+N\+\_\+D}!vr32.\+c@{vr32.\+c}}
+\subsubsection[{\texorpdfstring{P\+O\+L\+Y\+\_\+\+F\+I\+R\+\_\+\+L\+E\+N\+\_\+D}{POLY_FIR_LEN_D}}]{\setlength{\rightskip}{0pt plus 5cm}\#define P\+O\+L\+Y\+\_\+\+F\+I\+R\+\_\+\+L\+E\+N\+\_\+D~20}\hypertarget{vr32_8c_a4a196fbc6b2ccf13e4e0ce7135220b3d}{}\label{vr32_8c_a4a196fbc6b2ccf13e4e0ce7135220b3d}
+
+
+Definition at line 27 of file vr32.\+c.
+
+\index{vr32.\+c@{vr32.\+c}!P\+O\+L\+Y\+\_\+\+F\+I\+R\+\_\+\+L\+E\+N\+\_\+U@{P\+O\+L\+Y\+\_\+\+F\+I\+R\+\_\+\+L\+E\+N\+\_\+U}}
+\index{P\+O\+L\+Y\+\_\+\+F\+I\+R\+\_\+\+L\+E\+N\+\_\+U@{P\+O\+L\+Y\+\_\+\+F\+I\+R\+\_\+\+L\+E\+N\+\_\+U}!vr32.\+c@{vr32.\+c}}
+\subsubsection[{\texorpdfstring{P\+O\+L\+Y\+\_\+\+F\+I\+R\+\_\+\+L\+E\+N\+\_\+U}{POLY_FIR_LEN_U}}]{\setlength{\rightskip}{0pt plus 5cm}\#define P\+O\+L\+Y\+\_\+\+F\+I\+R\+\_\+\+L\+E\+N\+\_\+U~12}\hypertarget{vr32_8c_a8d7d674af66dd24c7d91c8c5ef4ccb97}{}\label{vr32_8c_a8d7d674af66dd24c7d91c8c5ef4ccb97}
+
+
+Definition at line 29 of file vr32.\+c.
+
+\index{vr32.\+c@{vr32.\+c}!raw\+\_\+coef\+\_\+t@{raw\+\_\+coef\+\_\+t}}
+\index{raw\+\_\+coef\+\_\+t@{raw\+\_\+coef\+\_\+t}!vr32.\+c@{vr32.\+c}}
+\subsubsection[{\texorpdfstring{raw\+\_\+coef\+\_\+t}{raw_coef_t}}]{\setlength{\rightskip}{0pt plus 5cm}\#define raw\+\_\+coef\+\_\+t~float}\hypertarget{vr32_8c_a49ba5e99187254b03d6710a312197a52}{}\label{vr32_8c_a49ba5e99187254b03d6710a312197a52}
+
+
+Definition at line 178 of file vr32.\+c.
+
+\index{vr32.\+c@{vr32.\+c}!shiftl@{shiftl}}
+\index{shiftl@{shiftl}!vr32.\+c@{vr32.\+c}}
+\subsubsection[{\texorpdfstring{shiftl}{shiftl}}]{\setlength{\rightskip}{0pt plus 5cm}\#define shiftl(
+\begin{DoxyParamCaption}
+\item[{}]{x, }
+\item[{}]{by}
+\end{DoxyParamCaption}
+)~{\bf shiftr}(x,-\/(by))}\hypertarget{vr32_8c_ab39078e7cfd131730c8eccaf0521aaf7}{}\label{vr32_8c_ab39078e7cfd131730c8eccaf0521aaf7}
+
+
+Definition at line 389 of file vr32.\+c.
+
+\index{vr32.\+c@{vr32.\+c}!shiftr@{shiftr}}
+\index{shiftr@{shiftr}!vr32.\+c@{vr32.\+c}}
+\subsubsection[{\texorpdfstring{shiftr}{shiftr}}]{\setlength{\rightskip}{0pt plus 5cm}\#define shiftr(
+\begin{DoxyParamCaption}
+\item[{}]{x, }
+\item[{}]{by}
+\end{DoxyParamCaption}
+)~((by) $<$ 0? (x) $<$$<$ (-\/(by)) \+: (x) $>$$>$ (by))}\hypertarget{vr32_8c_a61d44d48687ae3ff881ec826a62371af}{}\label{vr32_8c_a61d44d48687ae3ff881ec826a62371af}
+
+
+Definition at line 388 of file vr32.\+c.
+
+\index{vr32.\+c@{vr32.\+c}!stage\+\_\+occupancy@{stage\+\_\+occupancy}}
+\index{stage\+\_\+occupancy@{stage\+\_\+occupancy}!vr32.\+c@{vr32.\+c}}
+\subsubsection[{\texorpdfstring{stage\+\_\+occupancy}{stage_occupancy}}]{\setlength{\rightskip}{0pt plus 5cm}\#define stage\+\_\+occupancy(
+\begin{DoxyParamCaption}
+\item[{}]{{\bf s}}
+\end{DoxyParamCaption}
+)~(fifo\+\_\+occupancy(\&({\bf s})-\/$>$fifo) -\/ 4$\ast${\bf H\+A\+L\+F\+\_\+\+F\+I\+R\+\_\+\+L\+E\+N\+\_\+2})}\hypertarget{vr32_8c_a99d1a8c8eef09c8366721929b32aab91}{}\label{vr32_8c_a99d1a8c8eef09c8366721929b32aab91}
+
+
+Definition at line 390 of file vr32.\+c.
+
+\index{vr32.\+c@{vr32.\+c}!stage\+\_\+preload@{stage\+\_\+preload}}
+\index{stage\+\_\+preload@{stage\+\_\+preload}!vr32.\+c@{vr32.\+c}}
+\subsubsection[{\texorpdfstring{stage\+\_\+preload}{stage_preload}}]{\setlength{\rightskip}{0pt plus 5cm}\#define stage\+\_\+preload(
+\begin{DoxyParamCaption}
+\item[{}]{{\bf s}}
+\end{DoxyParamCaption}
+)}\hypertarget{vr32_8c_a92bc296a6dd6926d435c23b6bc42ac95}{}\label{vr32_8c_a92bc296a6dd6926d435c23b6bc42ac95}
+{\bfseries Value\+:}
+\begin{DoxyCode}
+memset(fifo\_reserve(&(\hyperlink{lib_2expat_8h_a755339d27872b13735c2cab829e47157}{s})->fifo, (\hyperlink{lib_2expat_8h_a755339d27872b13735c2cab829e47157}{s})->preload), \(\backslash\)
+    0, \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{float}) * (\textcolor{keywordtype}{size\_t})(\hyperlink{lib_2expat_8h_a755339d27872b13735c2cab829e47157}{s})->preload);
+\end{DoxyCode}
+
+
+Definition at line 392 of file vr32.\+c.
+
+\index{vr32.\+c@{vr32.\+c}!stage\+\_\+read\+\_\+p@{stage\+\_\+read\+\_\+p}}
+\index{stage\+\_\+read\+\_\+p@{stage\+\_\+read\+\_\+p}!vr32.\+c@{vr32.\+c}}
+\subsubsection[{\texorpdfstring{stage\+\_\+read\+\_\+p}{stage_read_p}}]{\setlength{\rightskip}{0pt plus 5cm}\#define stage\+\_\+read\+\_\+p(
+\begin{DoxyParamCaption}
+\item[{}]{{\bf s}}
+\end{DoxyParamCaption}
+)~((float $\ast$){\bf fifo\+\_\+read\+\_\+ptr}(\&({\bf s})-\/$>$fifo) + 2$\ast${\bf H\+A\+L\+F\+\_\+\+F\+I\+R\+\_\+\+L\+E\+N\+\_\+2})}\hypertarget{vr32_8c_a0252bb6d8119002e67e16d9c8be0f4ac}{}\label{vr32_8c_a0252bb6d8119002e67e16d9c8be0f4ac}
+
+
+Definition at line 391 of file vr32.\+c.
+
+\index{vr32.\+c@{vr32.\+c}!S\+U\+B\+T\+R\+A\+C\+T\+\_\+\+F\+R\+OM@{S\+U\+B\+T\+R\+A\+C\+T\+\_\+\+F\+R\+OM}}
+\index{S\+U\+B\+T\+R\+A\+C\+T\+\_\+\+F\+R\+OM@{S\+U\+B\+T\+R\+A\+C\+T\+\_\+\+F\+R\+OM}!vr32.\+c@{vr32.\+c}}
+\subsubsection[{\texorpdfstring{S\+U\+B\+T\+R\+A\+C\+T\+\_\+\+F\+R\+OM}{SUBTRACT_FROM}}]{\setlength{\rightskip}{0pt plus 5cm}\#define S\+U\+B\+T\+R\+A\+C\+T\+\_\+\+F\+R\+OM(
+\begin{DoxyParamCaption}
+\item[{}]{x, }
+\item[{}]{y}
+\end{DoxyParamCaption}
+)~x.\+all -\/= y.\+all}\hypertarget{vr32_8c_aec0b5f14919f902ae4eaff0743986ab8}{}\label{vr32_8c_aec0b5f14919f902ae4eaff0743986ab8}
+
+
+Definition at line 307 of file vr32.\+c.
+
+
+
+\subsection{Typedef Documentation}
+\index{vr32.\+c@{vr32.\+c}!fn\+\_\+t@{fn\+\_\+t}}
+\index{fn\+\_\+t@{fn\+\_\+t}!vr32.\+c@{vr32.\+c}}
+\subsubsection[{\texorpdfstring{fn\+\_\+t}{fn_t}}]{\setlength{\rightskip}{0pt plus 5cm}typedef {\bf void}($\ast$  fn\+\_\+t) ({\bf void})}\hypertarget{vr32_8c_afc8fa388a84372fc7153206dfbf24374}{}\label{vr32_8c_afc8fa388a84372fc7153206dfbf24374}
+
+
+Definition at line 759 of file vr32.\+c.
+
+
+
+\subsection{Variable Documentation}
+\index{vr32.\+c@{vr32.\+c}!\+\_\+soxr\+\_\+vr32\+\_\+cb@{\+\_\+soxr\+\_\+vr32\+\_\+cb}}
+\index{\+\_\+soxr\+\_\+vr32\+\_\+cb@{\+\_\+soxr\+\_\+vr32\+\_\+cb}!vr32.\+c@{vr32.\+c}}
+\subsubsection[{\texorpdfstring{\+\_\+soxr\+\_\+vr32\+\_\+cb}{_soxr_vr32_cb}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fn\+\_\+t} \+\_\+soxr\+\_\+vr32\+\_\+cb\mbox{[}$\,$\mbox{]}}\hypertarget{vr32_8c_a4930b13e147aad892a8f1af03a6ef7b0}{}\label{vr32_8c_a4930b13e147aad892a8f1af03a6ef7b0}
+{\bfseries Initial value\+:}
+\begin{DoxyCode}
+= \{
+  (\hyperlink{vr32_8c_afc8fa388a84372fc7153206dfbf24374}{fn\_t})vr\_input,
+  (\hyperlink{vr32_8c_afc8fa388a84372fc7153206dfbf24374}{fn\_t})vr\_process,
+  (\hyperlink{vr32_8c_afc8fa388a84372fc7153206dfbf24374}{fn\_t})vr\_output,
+  (\hyperlink{vr32_8c_afc8fa388a84372fc7153206dfbf24374}{fn\_t})vr\_flush,
+  (\hyperlink{vr32_8c_afc8fa388a84372fc7153206dfbf24374}{fn\_t})vr\_close,
+  (\hyperlink{vr32_8c_afc8fa388a84372fc7153206dfbf24374}{fn\_t})vr\_delay,
+  (\hyperlink{vr32_8c_afc8fa388a84372fc7153206dfbf24374}{fn\_t})vr\_sizes,
+  (\hyperlink{vr32_8c_afc8fa388a84372fc7153206dfbf24374}{fn\_t})vr\_create,
+  (\hyperlink{vr32_8c_afc8fa388a84372fc7153206dfbf24374}{fn\_t})vr\_set\_io\_ratio,
+  (\hyperlink{vr32_8c_afc8fa388a84372fc7153206dfbf24374}{fn\_t})vr\_id,
+\}
+\end{DoxyCode}
+
+
+Definition at line 760 of file vr32.\+c.
+

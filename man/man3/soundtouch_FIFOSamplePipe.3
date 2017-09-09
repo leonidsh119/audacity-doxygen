@@ -1,0 +1,149 @@
+.TH "soundtouch::FIFOSamplePipe" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+soundtouch::FIFOSamplePipe \- Abstract base class for FIFO (first-in-first-out) sample processing classes\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <FIFOSamplePipe\&.h>\fP
+.PP
+Inherited by \fBsoundtouch::FIFOProcessor\fP, and \fBsoundtouch::FIFOSampleBuffer\fP\&.
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "virtual \fB~FIFOSamplePipe\fP ()"
+.br
+.ti -1c
+.RI "virtual \fBSAMPLETYPE\fP * \fBptrBegin\fP ()=0"
+.br
+.ti -1c
+.RI "virtual \fBvoid\fP \fBputSamples\fP (\fBconst\fP \fBSAMPLETYPE\fP *\fBsamples\fP, \fBuint\fP \fBnumSamples\fP)=0"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBmoveSamples\fP (\fBFIFOSamplePipe\fP &other)"
+.br
+.ti -1c
+.RI "virtual \fBuint\fP \fBreceiveSamples\fP (\fBSAMPLETYPE\fP *\fBoutput\fP, \fBuint\fP maxSamples)=0"
+.br
+.ti -1c
+.RI "virtual \fBuint\fP \fBreceiveSamples\fP (\fBuint\fP maxSamples)=0"
+.br
+.ti -1c
+.RI "virtual \fBuint\fP \fBnumSamples\fP () \fBconst\fP  =0"
+.br
+.RI "\fIReturns number of samples currently available\&. \fP"
+.ti -1c
+.RI "virtual \fBint\fP \fBisEmpty\fP () \fBconst\fP  =0"
+.br
+.ti -1c
+.RI "virtual \fBvoid\fP \fBclear\fP ()=0"
+.br
+.RI "\fIClears all the samples\&. \fP"
+.ti -1c
+.RI "virtual \fBuint\fP \fBadjustAmountOfSamples\fP (\fBuint\fP \fBnumSamples\fP)=0"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Abstract base class for FIFO (first-in-first-out) sample processing classes\&. 
+.PP
+Definition at line 59 of file FIFOSamplePipe\&.h\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "virtual soundtouch::FIFOSamplePipe::~FIFOSamplePipe ()\fC [inline]\fP, \fC [virtual]\fP"
+
+.PP
+Definition at line 63 of file FIFOSamplePipe\&.h\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "virtual \fBuint\fP soundtouch::FIFOSamplePipe::adjustAmountOfSamples (\fBuint\fP numSamples)\fC [pure virtual]\fP"
+allow trimming (downwards) amount of samples in pipeline\&. Returns adjusted amount of samples 
+.PP
+Implemented in \fBsoundtouch::FIFOProcessor\fP, and \fBsoundtouch::FIFOSampleBuffer\fP\&.
+.SS "virtual \fBvoid\fP soundtouch::FIFOSamplePipe::clear ()\fC [pure virtual]\fP"
+
+.PP
+Clears all the samples\&. 
+.PP
+Implemented in \fBsoundtouch::SoundTouch\fP, \fBsoundtouch::TDStretch\fP, \fBsoundtouch::FIFOSampleBuffer\fP, and \fBsoundtouch::RateTransposer\fP\&.
+.SS "virtual \fBint\fP soundtouch::FIFOSamplePipe::isEmpty () const\fC [pure virtual]\fP"
+
+.PP
+Implemented in \fBsoundtouch::FIFOProcessor\fP, \fBsoundtouch::FIFOSampleBuffer\fP, and \fBsoundtouch::RateTransposer\fP\&.
+.SS "\fBvoid\fP soundtouch::FIFOSamplePipe::moveSamples (\fBFIFOSamplePipe\fP & other)\fC [inline]\fP"
+
+.PP
+\fBParameters:\fP
+.RS 4
+\fIother\fP Other pipe instance where from the receive the data\&. 
+.RE
+.PP
+
+.PP
+Definition at line 83 of file FIFOSamplePipe\&.h\&.
+.SS "virtual \fBuint\fP soundtouch::FIFOSamplePipe::numSamples () const\fC [pure virtual]\fP"
+
+.PP
+Returns number of samples currently available\&. 
+.PP
+Implemented in \fBsoundtouch::FIFOProcessor\fP, and \fBsoundtouch::FIFOSampleBuffer\fP\&.
+.SS "virtual \fBSAMPLETYPE\fP* soundtouch::FIFOSamplePipe::ptrBegin ()\fC [pure virtual]\fP"
+Returns a pointer to the beginning of the output samples\&. This function is provided for accessing the output samples directly\&. Please be careful for not to corrupt the book-keeping!
+.PP
+When using this function to output samples, also remember to 'remove' the output samples from the buffer by calling the 'receiveSamples(numSamples)' function 
+.PP
+Implemented in \fBsoundtouch::FIFOProcessor\fP, and \fBsoundtouch::FIFOSampleBuffer\fP\&.
+.SS "virtual \fBvoid\fP soundtouch::FIFOSamplePipe::putSamples (\fBconst\fP \fBSAMPLETYPE\fP * samples, \fBuint\fP numSamples)\fC [pure virtual]\fP"
+Adds 'numSamples' pcs of samples from the 'samples' memory position to the sample buffer\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIsamples\fP Pointer to samples\&. 
+.br
+\fInumSamples\fP Number of samples to insert\&. 
+.RE
+.PP
+
+.PP
+Implemented in \fBsoundtouch::SoundTouch\fP, \fBsoundtouch::TDStretch\fP, \fBsoundtouch::RateTransposer\fP, and \fBsoundtouch::FIFOSampleBuffer\fP\&.
+.SS "virtual \fBuint\fP soundtouch::FIFOSamplePipe::receiveSamples (\fBSAMPLETYPE\fP * output, \fBuint\fP maxSamples)\fC [pure virtual]\fP"
+Output samples from beginning of the sample buffer\&. Copies requested samples to output buffer and removes them from the sample buffer\&. If there are less than 'numsample' samples in the buffer, returns all that available\&.
+.PP
+\fBReturns:\fP
+.RS 4
+Number of samples returned\&. 
+.RE
+.PP
+
+.PP
+\fBParameters:\fP
+.RS 4
+\fIoutput\fP Buffer where to copy output samples\&. 
+.br
+\fImaxSamples\fP How many samples to receive at max\&. 
+.RE
+.PP
+
+.PP
+Implemented in \fBsoundtouch::FIFOProcessor\fP, and \fBsoundtouch::FIFOSampleBuffer\fP\&.
+.SS "virtual \fBuint\fP soundtouch::FIFOSamplePipe::receiveSamples (\fBuint\fP maxSamples)\fC [pure virtual]\fP"
+Adjusts book-keeping so that given number of samples are removed from beginning of the sample buffer without copying them anywhere\&.
+.PP
+Used to reduce the number of samples in the buffer when accessing the sample buffer directly with 'ptrBegin' function\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fImaxSamples\fP Remove this many samples from the beginning of pipe\&. 
+.RE
+.PP
+
+.PP
+Implemented in \fBsoundtouch::FIFOProcessor\fP, and \fBsoundtouch::FIFOSampleBuffer\fP\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

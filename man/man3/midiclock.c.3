@@ -1,0 +1,258 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/lib-src/portmidi/pm_test/midiclock.c" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/lib-src/portmidi/pm_test/midiclock.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include 'portmidi\&.h'\fP
+.br
+\fC#include 'porttime\&.h'\fP
+.br
+\fC#include <stdlib\&.h>\fP
+.br
+\fC#include <stdio\&.h>\fP
+.br
+\fC#include <string\&.h>\fP
+.br
+\fC#include <assert\&.h>\fP
+.br
+\fC#include <ctype\&.h>\fP
+.br
+
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBfalse\fP   0"
+.br
+.ti -1c
+.RI "#define \fBtrue\fP   1"
+.br
+.ti -1c
+.RI "#define \fBprivate\fP   static"
+.br
+.ti -1c
+.RI "#define \fBMIDI_TIME_CLOCK\fP   0xf8"
+.br
+.ti -1c
+.RI "#define \fBMIDI_START\fP   0xfa"
+.br
+.ti -1c
+.RI "#define \fBMIDI_CONTINUE\fP   0xfb"
+.br
+.ti -1c
+.RI "#define \fBMIDI_STOP\fP   0xfc"
+.br
+.ti -1c
+.RI "#define \fBMIDI_Q_FRAME\fP   0xf1"
+.br
+.ti -1c
+.RI "#define \fBOUTPUT_BUFFER_SIZE\fP   0"
+.br
+.ti -1c
+.RI "#define \fBDRIVER_INFO\fP   \fBNULL\fP"
+.br
+.ti -1c
+.RI "#define \fBTIME_PROC\fP   ((\fBint32_t\fP (*)(\fBvoid\fP *)) \fBPt_Time\fP)"
+.br
+.ti -1c
+.RI "#define \fBTIME_INFO\fP   \fBNULL\fP"
+.br
+.ti -1c
+.RI "#define \fBLATENCY\fP   0"
+.br
+.ti -1c
+.RI "#define \fBTIME_START\fP   \fBPt_Start\fP(1, 0, 0) /* timer started w/millisecond accuracy */"
+.br
+.ti -1c
+.RI "#define \fBSTRING_MAX\fP   80 /* used \fBfor\fP console input */"
+.br
+.ti -1c
+.RI "#define \fBTEMPO_TO_CLOCK\fP   2500\&.0"
+.br
+.ti -1c
+.RI "#define \fBQUARTER_FRAME_PERIOD\fP   (1\&.0 / 120\&.0) /* 30fps, 1/4 frame */"
+.br
+.in -1c
+.SS "Typedefs"
+
+.in +1c
+.ti -1c
+.RI "typedef \fBint\fP \fBboolean\fP"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBvoid\fP \fBtimer_poll\fP (\fBPtTimestamp\fP timestamp, \fBvoid\fP *\fBuserData\fP)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBget_number\fP (char *prompt)"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBvoid\fP \fBshowhelp\fP ()"
+.br
+.ti -1c
+.RI "\fBprivate\fP \fBvoid\fP \fBdoascii\fP (char \fBc\fP)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBmain\fP (\fBint\fP \fBargc\fP, char **\fBargv\fP)"
+.br
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "\fBboolean\fP \fBdone\fP = \fBfalse\fP"
+.br
+.ti -1c
+.RI "\fBPmStream\fP * \fBmidi\fP"
+.br
+.ti -1c
+.RI "\fBboolean\fP \fBclock_running\fP = \fBfalse\fP"
+.br
+.ti -1c
+.RI "\fBboolean\fP \fBsend_start_stop\fP = \fBfalse\fP"
+.br
+.ti -1c
+.RI "\fBboolean\fP \fBtime_code_running\fP = \fBfalse\fP"
+.br
+.ti -1c
+.RI "\fBboolean\fP \fBactive\fP = \fBfalse\fP"
+.br
+.ti -1c
+.RI "float \fBtempo\fP = 60\&.0F"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define DRIVER_INFO   \fBNULL\fP"
+
+.PP
+Definition at line 26 of file midiclock\&.c\&.
+.SS "#define false   0"
+
+.PP
+Definition at line 12 of file midiclock\&.c\&.
+.SS "#define LATENCY   0"
+
+.PP
+Definition at line 29 of file midiclock\&.c\&.
+.SS "#define MIDI_CONTINUE   0xfb"
+
+.PP
+Definition at line 21 of file midiclock\&.c\&.
+.SS "#define MIDI_Q_FRAME   0xf1"
+
+.PP
+Definition at line 23 of file midiclock\&.c\&.
+.SS "#define MIDI_START   0xfa"
+
+.PP
+Definition at line 20 of file midiclock\&.c\&.
+.SS "#define MIDI_STOP   0xfc"
+
+.PP
+Definition at line 22 of file midiclock\&.c\&.
+.SS "#define MIDI_TIME_CLOCK   0xf8"
+
+.PP
+Definition at line 19 of file midiclock\&.c\&.
+.SS "#define OUTPUT_BUFFER_SIZE   0"
+
+.PP
+Definition at line 25 of file midiclock\&.c\&.
+.SS "#define private   static"
+
+.PP
+Definition at line 16 of file midiclock\&.c\&.
+.SS "#define QUARTER_FRAME_PERIOD   (1\&.0 / 120\&.0) /* 30fps, 1/4 frame */"
+
+.SS "#define STRING_MAX   80 /* used \fBfor\fP console input */"
+
+.PP
+Definition at line 32 of file midiclock\&.c\&.
+.SS "#define TEMPO_TO_CLOCK   2500\&.0"
+
+.PP
+Definition at line 40 of file midiclock\&.c\&.
+.SS "#define TIME_INFO   \fBNULL\fP"
+
+.PP
+Definition at line 28 of file midiclock\&.c\&.
+.SS "#define TIME_PROC   ((\fBint32_t\fP (*)(\fBvoid\fP *)) \fBPt_Time\fP)"
+
+.PP
+Definition at line 27 of file midiclock\&.c\&.
+.SS "#define TIME_START   \fBPt_Start\fP(1, 0, 0) /* timer started w/millisecond accuracy */"
+
+.PP
+Definition at line 30 of file midiclock\&.c\&.
+.SS "#define true   1"
+
+.PP
+Definition at line 13 of file midiclock\&.c\&.
+.SH "Typedef Documentation"
+.PP 
+.SS "typedef \fBint\fP \fBboolean\fP"
+
+.PP
+Definition at line 17 of file midiclock\&.c\&.
+.SH "Function Documentation"
+.PP 
+.SS "\fBprivate\fP \fBvoid\fP doascii (char c)"
+
+.PP
+Definition at line 201 of file midiclock\&.c\&.
+.SS "\fBint\fP get_number (char * prompt)"
+
+.PP
+Definition at line 166 of file midiclock\&.c\&.
+.SS "\fBint\fP main (\fBint\fP argc, char ** argv)"
+
+.PP
+Definition at line 237 of file midiclock\&.c\&.
+.SS "\fBprivate\fP \fBvoid\fP showhelp ()"
+
+.PP
+Definition at line 184 of file midiclock\&.c\&.
+.SS "\fBvoid\fP timer_poll (\fBPtTimestamp\fP timestamp, \fBvoid\fP * userData)"
+
+.PP
+Definition at line 64 of file midiclock\&.c\&.
+.SH "Variable Documentation"
+.PP 
+.SS "\fBboolean\fP active = \fBfalse\fP"
+
+.PP
+Definition at line 48 of file midiclock\&.c\&.
+.SS "\fBboolean\fP clock_running = \fBfalse\fP"
+
+.PP
+Definition at line 45 of file midiclock\&.c\&.
+.SS "\fBboolean\fP done = \fBfalse\fP"
+
+.PP
+Definition at line 42 of file midiclock\&.c\&.
+.SS "\fBPmStream\fP* midi"
+
+.PP
+Definition at line 43 of file midiclock\&.c\&.
+.SS "\fBboolean\fP send_start_stop = \fBfalse\fP"
+
+.PP
+Definition at line 46 of file midiclock\&.c\&.
+.SS "float tempo = 60\&.0F"
+
+.PP
+Definition at line 49 of file midiclock\&.c\&.
+.SS "\fBboolean\fP time_code_running = \fBfalse\fP"
+
+.PP
+Definition at line 47 of file midiclock\&.c\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

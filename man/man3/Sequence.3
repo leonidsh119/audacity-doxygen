@@ -1,0 +1,349 @@
+.TH "Sequence" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Sequence \- A \fBWaveTrack\fP contains \fBWaveClip(s)\fP\&. A \fBWaveClip\fP contains a \fBSequence\fP\&. A \fBSequence\fP is primarily an interface to an array of \fBSeqBlock\fP instances, corresponding to the audio BlockFiles on disk\&. Contrast with \fBRingBuffer\fP\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <Sequence\&.h>\fP
+.PP
+Inherits \fBXMLTagHandler\fP\&.
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "struct \fBDeleteUpdateMutexLocker\fP"
+.br
+.in -1c
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBSequence\fP (\fBDirManager\fP *projDirManager, \fBsampleFormat\fP \fBformat\fP)"
+.br
+.ti -1c
+.RI "\fBSequence\fP (\fBconst\fP \fBSequence\fP &orig, \fBDirManager\fP *projDirManager)"
+.br
+.ti -1c
+.RI "\fBSequence\fP * \fBDuplicate\fP (\fBDirManager\fP *projDirManager) \fBconst\fP "
+.br
+.ti -1c
+.RI "\fB~Sequence\fP ()"
+.br
+.ti -1c
+.RI "\fBsampleCount\fP \fBGetNumSamples\fP () \fBconst\fP "
+.br
+.ti -1c
+.RI "\fBbool\fP \fBGet\fP (\fBsamplePtr\fP \fBbuffer\fP, \fBsampleFormat\fP \fBformat\fP, \fBsampleCount\fP \fBstart\fP, \fBsampleCount\fP \fBlen\fP) \fBconst\fP "
+.br
+.ti -1c
+.RI "\fBbool\fP \fBSet\fP (\fBsamplePtr\fP \fBbuffer\fP, \fBsampleFormat\fP \fBformat\fP, \fBsampleCount\fP \fBstart\fP, \fBsampleCount\fP \fBlen\fP)"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBGetWaveDisplay\fP (float *\fBmin\fP, float *\fBmax\fP, float *rms, \fBint\fP *bl, \fBint\fP \fBlen\fP, \fBconst\fP \fBsampleCount\fP *where)"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBCopy\fP (\fBsampleCount\fP s0, \fBsampleCount\fP s1, \fBSequence\fP **dest)"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBPaste\fP (\fBsampleCount\fP s0, \fBconst\fP \fBSequence\fP *src)"
+.br
+.ti -1c
+.RI "\fBsampleCount\fP \fBGetIdealAppendLen\fP ()"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBAppend\fP (\fBsamplePtr\fP \fBbuffer\fP, \fBsampleFormat\fP \fBformat\fP, \fBsampleCount\fP \fBlen\fP, \fBXMLWriter\fP *blockFileLog=\fBNULL\fP)"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBDelete\fP (\fBsampleCount\fP \fBstart\fP, \fBsampleCount\fP \fBlen\fP)"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBAppendAlias\fP (\fBconst\fP wxString &fullPath, \fBsampleCount\fP \fBstart\fP, \fBsampleCount\fP \fBlen\fP, \fBint\fP channel, \fBbool\fP useOD)"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBAppendCoded\fP (\fBconst\fP wxString &fName, \fBsampleCount\fP \fBstart\fP, \fBsampleCount\fP \fBlen\fP, \fBint\fP channel, \fBint\fP decodeType)"
+.br
+.ti -1c
+.RI "unsigned \fBint\fP \fBGetODFlags\fP ()"
+.br
+.RI "\fIgets an int with OD flags so that we can determine which ODTasks should be run on this track after save/open, etc\&. \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBAppendBlockFile\fP (\fBBlockFile\fP *blockFile)"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBSetSilence\fP (\fBsampleCount\fP s0, \fBsampleCount\fP \fBlen\fP)"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBInsertSilence\fP (\fBsampleCount\fP s0, \fBsampleCount\fP \fBlen\fP)"
+.br
+.ti -1c
+.RI "\fBDirManager\fP * \fBGetDirManager\fP ()"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBHandleXMLTag\fP (\fBconst\fP wxChar *\fBtag\fP, \fBconst\fP wxChar **attrs) override"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBHandleXMLEndTag\fP (\fBconst\fP wxChar *\fBtag\fP) override"
+.br
+.ti -1c
+.RI "\fBXMLTagHandler\fP * \fBHandleXMLChild\fP (\fBconst\fP wxChar *\fBtag\fP) override"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBWriteXML\fP (\fBXMLWriter\fP &xmlFile)"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBGetErrorOpening\fP ()"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBLock\fP ()"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBCloseLock\fP ()"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBUnlock\fP ()"
+.br
+.ti -1c
+.RI "\fBsampleFormat\fP \fBGetSampleFormat\fP () \fBconst\fP "
+.br
+.ti -1c
+.RI "\fBbool\fP \fBConvertToSampleFormat\fP (\fBsampleFormat\fP \fBformat\fP, \fBbool\fP *pbChanged)"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBGetMinMax\fP (\fBsampleCount\fP \fBstart\fP, \fBsampleCount\fP \fBlen\fP, float *\fBmin\fP, float *\fBmax\fP) \fBconst\fP "
+.br
+.ti -1c
+.RI "\fBbool\fP \fBGetRMS\fP (\fBsampleCount\fP \fBstart\fP, \fBsampleCount\fP \fBlen\fP, float *outRMS) \fBconst\fP "
+.br
+.ti -1c
+.RI "\fBsampleCount\fP \fBGetBlockStart\fP (\fBsampleCount\fP \fBposition\fP) \fBconst\fP "
+.br
+.ti -1c
+.RI "\fBsampleCount\fP \fBGetBestBlockSize\fP (\fBsampleCount\fP \fBstart\fP) \fBconst\fP "
+.br
+.ti -1c
+.RI "\fBsampleCount\fP \fBGetMaxBlockSize\fP () \fBconst\fP "
+.br
+.ti -1c
+.RI "\fBsampleCount\fP \fBGetIdealBlockSize\fP () \fBconst\fP "
+.br
+.ti -1c
+.RI "\fBBlockArray\fP & \fBGetBlockArray\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBLockDeleteUpdateMutex\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBUnlockDeleteUpdateMutex\fP ()"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBConsistencyCheck\fP (\fBconst\fP wxChar *whereStr) \fBconst\fP "
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBDebugPrintf\fP (wxString *dest) \fBconst\fP "
+.br
+.in -1c
+.SS "Static Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "static \fBvoid\fP \fBSetMaxDiskBlockSize\fP (\fBint\fP bytes)"
+.br
+.ti -1c
+.RI "static \fBint\fP \fBGetMaxDiskBlockSize\fP ()"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+A \fBWaveTrack\fP contains \fBWaveClip(s)\fP\&. A \fBWaveClip\fP contains a \fBSequence\fP\&. A \fBSequence\fP is primarily an interface to an array of \fBSeqBlock\fP instances, corresponding to the audio BlockFiles on disk\&. Contrast with \fBRingBuffer\fP\&. 
+.PP
+Definition at line 58 of file Sequence\&.h\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "Sequence::Sequence (\fBDirManager\fP * projDirManager, \fBsampleFormat\fP format)"
+
+.PP
+Definition at line 55 of file Sequence\&.cpp\&.
+.SS "Sequence::Sequence (\fBconst\fP \fBSequence\fP & orig, \fBDirManager\fP * projDirManager)"
+
+.PP
+Definition at line 67 of file Sequence\&.cpp\&.
+.SS "Sequence::~Sequence ()"
+
+.PP
+Definition at line 80 of file Sequence\&.cpp\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "\fBbool\fP Sequence::Append (\fBsamplePtr\fP buffer, \fBsampleFormat\fP format, \fBsampleCount\fP len, \fBXMLWriter\fP * blockFileLog = \fC\fBNULL\fP\fP)"
+
+.PP
+Definition at line 1514 of file Sequence\&.cpp\&.
+.SS "\fBbool\fP Sequence::AppendAlias (\fBconst\fP wxString & fullPath, \fBsampleCount\fP start, \fBsampleCount\fP len, \fBint\fP channel, \fBbool\fP useOD)"
+
+.PP
+Definition at line 709 of file Sequence\&.cpp\&.
+.SS "\fBvoid\fP Sequence::AppendBlockFile (\fBBlockFile\fP * blockFile)"
+
+.PP
+Definition at line 1861 of file Sequence\&.cpp\&.
+.SS "\fBbool\fP Sequence::AppendCoded (\fBconst\fP wxString & fName, \fBsampleCount\fP start, \fBsampleCount\fP len, \fBint\fP channel, \fBint\fP decodeType)"
+
+.PP
+Definition at line 729 of file Sequence\&.cpp\&.
+.SS "\fBbool\fP Sequence::CloseLock ()"
+
+.PP
+Definition at line 116 of file Sequence\&.cpp\&.
+.SS "\fBbool\fP Sequence::ConsistencyCheck (\fBconst\fP wxChar * whereStr) const"
+
+.PP
+Definition at line 1784 of file Sequence\&.cpp\&.
+.SS "\fBbool\fP Sequence::ConvertToSampleFormat (\fBsampleFormat\fP format, \fBbool\fP * pbChanged)"
+
+.PP
+Definition at line 148 of file Sequence\&.cpp\&.
+.SS "\fBbool\fP Sequence::Copy (\fBsampleCount\fP s0, \fBsampleCount\fP s1, \fBSequence\fP ** dest)"
+
+.PP
+Definition at line 409 of file Sequence\&.cpp\&.
+.SS "\fBvoid\fP Sequence::DebugPrintf (wxString * dest) const"
+
+.PP
+Definition at line 1818 of file Sequence\&.cpp\&.
+.SS "\fBbool\fP Sequence::Delete (\fBsampleCount\fP start, \fBsampleCount\fP len)"
+
+.PP
+Definition at line 1614 of file Sequence\&.cpp\&.
+.SS "\fBSequence\fP* Sequence::Duplicate (\fBDirManager\fP * projDirManager) const\fC [inline]\fP"
+
+.PP
+Definition at line 78 of file Sequence\&.h\&.
+.SS "\fBbool\fP Sequence::Get (\fBsamplePtr\fP buffer, \fBsampleFormat\fP format, \fBsampleCount\fP start, \fBsampleCount\fP len) const"
+
+.PP
+Definition at line 1166 of file Sequence\&.cpp\&.
+.SS "\fBsampleCount\fP Sequence::GetBestBlockSize (\fBsampleCount\fP start) const"
+
+.PP
+Definition at line 794 of file Sequence\&.cpp\&.
+.SS "\fBBlockArray\fP& Sequence::GetBlockArray ()\fC [inline]\fP"
+
+.PP
+Definition at line 188 of file Sequence\&.h\&.
+.SS "\fBsampleCount\fP Sequence::GetBlockStart (\fBsampleCount\fP position) const"
+
+.PP
+Definition at line 788 of file Sequence\&.cpp\&.
+.SS "\fBDirManager\fP* Sequence::GetDirManager ()\fC [inline]\fP"
+
+.PP
+Definition at line 133 of file Sequence\&.h\&.
+.SS "\fBbool\fP Sequence::GetErrorOpening ()\fC [inline]\fP"
+
+.PP
+Definition at line 144 of file Sequence\&.h\&.
+.SS "\fBsampleCount\fP Sequence::GetIdealAppendLen ()"
+
+.PP
+Definition at line 1499 of file Sequence\&.cpp\&.
+.SS "\fBsampleCount\fP Sequence::GetIdealBlockSize () const"
+
+.PP
+Definition at line 103 of file Sequence\&.cpp\&.
+.SS "\fBsampleCount\fP Sequence::GetMaxBlockSize () const"
+
+.PP
+Definition at line 98 of file Sequence\&.cpp\&.
+.SS "\fBint\fP Sequence::GetMaxDiskBlockSize ()\fC [static]\fP"
+
+.PP
+Definition at line 1856 of file Sequence\&.cpp\&.
+.SS "\fBbool\fP Sequence::GetMinMax (\fBsampleCount\fP start, \fBsampleCount\fP len, float * min, float * max) const"
+
+.PP
+Definition at line 247 of file Sequence\&.cpp\&.
+.SS "\fBsampleCount\fP Sequence::GetNumSamples () const\fC [inline]\fP"
+
+.PP
+Definition at line 88 of file Sequence\&.h\&.
+.SS "unsigned \fBint\fP Sequence::GetODFlags ()"
+
+.PP
+gets an int with OD flags so that we can determine which ODTasks should be run on this track after save/open, etc\&. 
+.PP
+Definition at line 775 of file Sequence\&.cpp\&.
+.SS "\fBbool\fP Sequence::GetRMS (\fBsampleCount\fP start, \fBsampleCount\fP len, float * outRMS) const"
+
+.PP
+Definition at line 335 of file Sequence\&.cpp\&.
+.SS "\fBsampleFormat\fP Sequence::GetSampleFormat () const"
+
+.PP
+Definition at line 132 of file Sequence\&.cpp\&.
+.SS "\fBbool\fP Sequence::GetWaveDisplay (float * min, float * max, float * rms, \fBint\fP * bl, \fBint\fP len, \fBconst\fP \fBsampleCount\fP * where)"
+
+.PP
+Definition at line 1303 of file Sequence\&.cpp\&.
+.SS "\fBXMLTagHandler\fP * Sequence::HandleXMLChild (\fBconst\fP wxChar * tag)\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Implements \fBXMLTagHandler\fP\&.
+.PP
+Definition at line 1020 of file Sequence\&.cpp\&.
+.SS "\fBvoid\fP Sequence::HandleXMLEndTag (\fBconst\fP wxChar * tag)\fC [override]\fP"
+
+.PP
+Definition at line 951 of file Sequence\&.cpp\&.
+.SS "\fBbool\fP Sequence::HandleXMLTag (\fBconst\fP wxChar * tag, \fBconst\fP wxChar ** attrs)\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Implements \fBXMLTagHandler\fP\&.
+.PP
+Definition at line 822 of file Sequence\&.cpp\&.
+.SS "\fBbool\fP Sequence::InsertSilence (\fBsampleCount\fP s0, \fBsampleCount\fP len)"
+
+.PP
+Definition at line 662 of file Sequence\&.cpp\&.
+.SS "\fBbool\fP Sequence::Lock ()"
+
+.PP
+Definition at line 108 of file Sequence\&.cpp\&.
+.SS "\fBvoid\fP Sequence::LockDeleteUpdateMutex ()\fC [inline]\fP"
+
+.PP
+Definition at line 191 of file Sequence\&.h\&.
+.SS "\fBbool\fP Sequence::Paste (\fBsampleCount\fP s0, \fBconst\fP \fBSequence\fP * src)"
+
+.PP
+Definition at line 476 of file Sequence\&.cpp\&.
+.SS "\fBbool\fP Sequence::Set (\fBsamplePtr\fP buffer, \fBsampleFormat\fP format, \fBsampleCount\fP start, \fBsampleCount\fP len)"
+
+.PP
+Definition at line 1202 of file Sequence\&.cpp\&.
+.SS "\fBvoid\fP Sequence::SetMaxDiskBlockSize (\fBint\fP bytes)\fC [static]\fP"
+
+.PP
+Definition at line 1851 of file Sequence\&.cpp\&.
+.SS "\fBbool\fP Sequence::SetSilence (\fBsampleCount\fP s0, \fBsampleCount\fP len)"
+
+.PP
+Definition at line 657 of file Sequence\&.cpp\&.
+.SS "\fBbool\fP Sequence::Unlock ()"
+
+.PP
+Definition at line 124 of file Sequence\&.cpp\&.
+.SS "\fBvoid\fP Sequence::UnlockDeleteUpdateMutex ()\fC [inline]\fP"
+
+.PP
+Definition at line 192 of file Sequence\&.h\&.
+.SS "\fBvoid\fP Sequence::WriteXML (\fBXMLWriter\fP & xmlFile)"
+
+.PP
+Definition at line 1030 of file Sequence\&.cpp\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

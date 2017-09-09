@@ -1,0 +1,486 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="class_vamp_1_1_host_ext_1_1_plugin_input_domain_adapter" kind="class" language="C++" prot="public">
+    <compoundname>Vamp::HostExt::PluginInputDomainAdapter</compoundname>
+    <basecompoundref refid="class_vamp_1_1_host_ext_1_1_plugin_wrapper" prot="public" virt="non-virtual">Vamp::HostExt::PluginWrapper</basecompoundref>
+    <includes refid="_plugin_input_domain_adapter_8h" local="no">vamp-hostsdk/PluginInputDomainAdapter.h</includes>
+    <innerclass refid="class_vamp_1_1_host_ext_1_1_plugin_input_domain_adapter_1_1_impl" prot="public">Vamp::HostExt::PluginInputDomainAdapter::Impl</innerclass>
+      <sectiondef kind="public-type">
+      <memberdef kind="enum" id="class_vamp_1_1_host_ext_1_1_plugin_input_domain_adapter_1a2518e4922d77bc4e514d84cec9a0b577" prot="public" static="no">
+        <name>ProcessTimestampMethod</name>
+        <enumvalue id="class_vamp_1_1_host_ext_1_1_plugin_input_domain_adapter_1a2518e4922d77bc4e514d84cec9a0b577afcf39fe57ba29a908d4877c21de145dd" prot="public">
+          <name>ShiftTimestamp</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="class_vamp_1_1_host_ext_1_1_plugin_input_domain_adapter_1a2518e4922d77bc4e514d84cec9a0b577a0838ff456d829e9096b5d968e6c55152" prot="public">
+          <name>ShiftData</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="class_vamp_1_1_host_ext_1_1_plugin_input_domain_adapter_1a2518e4922d77bc4e514d84cec9a0b577ab06e8c6824802978d0be4074a556b297" prot="public">
+          <name>NoShift</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>ProcessTimestampMethod determines how the <ref refid="class_vamp_1_1_host_ext_1_1_plugin_input_domain_adapter" kindref="compound">PluginInputDomainAdapter</ref> handles timestamps for the data passed to the <ref refid="class_vamp_1_1_host_ext_1_1_plugin_input_domain_adapter_1a0867737693c16801d40a6adbde07ec07" kindref="member">process()</ref> function of the plugin it wraps, in the case where the plugin is expecting frequency-domain data.</para><para>The <ref refid="namespace_vamp" kindref="compound">Vamp</ref> specification requires that the timestamp passed to the plugin for frequency-domain input should be that of the centre of the processing block, rather than the start as is the case for time-domain input.</para><para>Since <ref refid="class_vamp_1_1_host_ext_1_1_plugin_input_domain_adapter" kindref="compound">PluginInputDomainAdapter</ref> aims to be transparent in use, it needs to handle this timestamp adjustment itself. However, some control is available over the method used for adjustment, by means of the ProcessTimestampMethod setting.</para><para>If ProcessTimestampMethod is set to ShiftTimestamp (the default), then the data passed to the wrapped plugin will be calculated from the same input data block as passed to the wrapper, but the timestamp passed to the plugin will be advanced by half of the window size.</para><para>If ProcessTimestampMethod is set to ShiftData, then the timestamp passed to the wrapped plugin will be the same as that passed to the process call of the wrapper, but the data block used to calculate the input will be shifted back (earlier) by half of the window size, with half a block of zero padding at the start of the first process call. This has the advantage of preserving the first half block of audio without any deterioration from window shaping.</para><para>If ProcessTimestampMethod is set to NoShift, then no adjustment will be made and the timestamps will be incorrect. </para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/_dev/OpenU/Audacity/audacity/lib-src/libvamp/vamp-hostsdk/PluginInputDomainAdapter.h" line="142" column="1" bodyfile="C:/_dev/OpenU/Audacity/audacity/lib-src/libvamp/vamp-hostsdk/PluginInputDomainAdapter.h" bodystart="142" bodyend="146"/>
+      </memberdef>
+      <memberdef kind="enum" id="class_vamp_1_1_host_ext_1_1_plugin_input_domain_adapter_1a27e6a7c3f93f1618836792b588b767dc" prot="public" static="no">
+        <name>WindowType</name>
+        <enumvalue id="class_vamp_1_1_host_ext_1_1_plugin_input_domain_adapter_1a27e6a7c3f93f1618836792b588b767dca99b08cf7a7f4a1b52a09044ea12c6324" prot="public">
+          <name>RectangularWindow</name>
+          <initializer>= 0</initializer>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="class_vamp_1_1_host_ext_1_1_plugin_input_domain_adapter_1a27e6a7c3f93f1618836792b588b767dca77fd88a7d94fcd9c6c4aef30b86f077d" prot="public">
+          <name>BartlettWindow</name>
+          <initializer>= 1</initializer>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="class_vamp_1_1_host_ext_1_1_plugin_input_domain_adapter_1a27e6a7c3f93f1618836792b588b767dcaae5133bd639336a5c31378f4c2939d42" prot="public">
+          <name>TriangularWindow</name>
+          <initializer>= 1</initializer>
+          <briefdescription>
+<para>synonym for RectangularWindow </para>          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="class_vamp_1_1_host_ext_1_1_plugin_input_domain_adapter_1a27e6a7c3f93f1618836792b588b767dca9d522bff8d5884a8ba57d5a8c7e113c8" prot="public">
+          <name>HammingWindow</name>
+          <initializer>= 2</initializer>
+          <briefdescription>
+<para>synonym for BartlettWindow </para>          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="class_vamp_1_1_host_ext_1_1_plugin_input_domain_adapter_1a27e6a7c3f93f1618836792b588b767dcacad78947b6c8db20feb5ddf208ac1108" prot="public">
+          <name>HanningWindow</name>
+          <initializer>= 3</initializer>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="class_vamp_1_1_host_ext_1_1_plugin_input_domain_adapter_1a27e6a7c3f93f1618836792b588b767dcadc87b20cfb5f1ddd23ebc281e3e47916" prot="public">
+          <name>HannWindow</name>
+          <initializer>= 3</initializer>
+          <briefdescription>
+<para>synonym for HannWindow </para>          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="class_vamp_1_1_host_ext_1_1_plugin_input_domain_adapter_1a27e6a7c3f93f1618836792b588b767dca2e298b1bee28272721953b2921891da6" prot="public">
+          <name>BlackmanWindow</name>
+          <initializer>= 4</initializer>
+          <briefdescription>
+<para>synonym for HanningWindow </para>          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="class_vamp_1_1_host_ext_1_1_plugin_input_domain_adapter_1a27e6a7c3f93f1618836792b588b767dcaa6a2f46966a46cc7abdf2df74270999e" prot="public">
+          <name>NuttallWindow</name>
+          <initializer>= 7</initializer>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="class_vamp_1_1_host_ext_1_1_plugin_input_domain_adapter_1a27e6a7c3f93f1618836792b588b767dca7cbf5d8c58f33bcfa28e3a5863d6ac94" prot="public">
+          <name>BlackmanHarrisWindow</name>
+          <initializer>= 8</initializer>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>The set of supported window shapes. </para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/_dev/OpenU/Audacity/audacity/lib-src/libvamp/vamp-hostsdk/PluginInputDomainAdapter.h" line="195" column="1" bodyfile="C:/_dev/OpenU/Audacity/audacity/lib-src/libvamp/vamp-hostsdk/PluginInputDomainAdapter.h" bodystart="195" bodyend="212"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="protected-attrib">
+      <memberdef kind="variable" id="class_vamp_1_1_host_ext_1_1_plugin_input_domain_adapter_1a9fa8a6b8a4e41b6e3f2fabc0d23678cc" prot="protected" static="no" mutable="no">
+        <type><ref refid="class_vamp_1_1_host_ext_1_1_plugin_input_domain_adapter_1_1_impl" kindref="compound">Impl</ref> *</type>
+        <definition>Impl* Vamp::HostExt::PluginInputDomainAdapter::m_impl</definition>
+        <argsstring></argsstring>
+        <name>m_impl</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/_dev/OpenU/Audacity/audacity/lib-src/libvamp/vamp-hostsdk/PluginInputDomainAdapter.h" line="227" column="1" bodyfile="C:/_dev/OpenU/Audacity/audacity/lib-src/libvamp/vamp-hostsdk/PluginInputDomainAdapter.h" bodystart="226" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_vamp_1_1_host_ext_1_1_plugin_input_domain_adapter_1a878e7275acdb77efc7a802944305039d" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>Vamp::HostExt::PluginInputDomainAdapter::PluginInputDomainAdapter</definition>
+        <argsstring>(Plugin *plugin)</argsstring>
+        <name>PluginInputDomainAdapter</name>
+        <param>
+          <type><ref refid="class_vamp_1_1_plugin" kindref="compound">Plugin</ref> *</type>
+          <declname>plugin</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Construct a <ref refid="class_vamp_1_1_host_ext_1_1_plugin_input_domain_adapter" kindref="compound">PluginInputDomainAdapter</ref> wrapping the given plugin. The adapter takes ownership of the plugin, which will be deleted when the adapter is deleted. </para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/_dev/OpenU/Audacity/audacity/lib-src/libvamp/vamp-hostsdk/PluginInputDomainAdapter.h" line="95" column="1" bodyfile="C:/_dev/OpenU/Audacity/audacity/lib-src/libvamp/src/vamp-hostsdk/PluginInputDomainAdapter.cpp" bodystart="139" bodyend="143"/>
+      </memberdef>
+      <memberdef kind="function" id="class_vamp_1_1_host_ext_1_1_plugin_input_domain_adapter_1aec457c952155adf516dd8e3dc7739321" prot="public" static="no" const="no" explicit="no" inline="no" virt="virtual">
+        <type></type>
+        <definition>Vamp::HostExt::PluginInputDomainAdapter::~PluginInputDomainAdapter</definition>
+        <argsstring>()</argsstring>
+        <name>~PluginInputDomainAdapter</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/_dev/OpenU/Audacity/audacity/lib-src/libvamp/vamp-hostsdk/PluginInputDomainAdapter.h" line="96" column="1" bodyfile="C:/_dev/OpenU/Audacity/audacity/lib-src/libvamp/src/vamp-hostsdk/PluginInputDomainAdapter.cpp" bodystart="145" bodyend="148"/>
+      </memberdef>
+      <memberdef kind="function" id="class_vamp_1_1_host_ext_1_1_plugin_input_domain_adapter_1a72d201eca10ec73bf16e07984f58f94c" prot="public" static="no" const="no" explicit="no" inline="no" virt="virtual">
+        <type><ref refid="mac_2config_2i386_2lib-src_2libsoxr_2soxr-config_8h_1abb452686968e48b67397da5f97445f5b" kindref="member">bool</ref></type>
+        <definition>bool Vamp::HostExt::PluginInputDomainAdapter::initialise</definition>
+        <argsstring>(size_t channels, size_t stepSize, size_t blockSize)</argsstring>
+        <name>initialise</name>
+        <reimplements refid="class_vamp_1_1_plugin_1af26212cf5fc511b603a8b48034247822">initialise</reimplements>
+        <param>
+          <type>size_t</type>
+          <declname>inputChannels</declname>
+        </param>
+        <param>
+          <type>size_t</type>
+          <declname>stepSize</declname>
+        </param>
+        <param>
+          <type>size_t</type>
+          <declname>blockSize</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Initialise a plugin to prepare it for use with the given number of input channels, step size (window increment, in sample frames) and block size (window size, in sample frames).</para><para>The input sample rate should have been already specified at construction time.</para><para>Return true for successful initialisation, false if the number of input channels, step size and/or block size cannot be supported. </para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/_dev/OpenU/Audacity/audacity/lib-src/libvamp/vamp-hostsdk/PluginInputDomainAdapter.h" line="98" column="1" bodyfile="C:/_dev/OpenU/Audacity/audacity/lib-src/libvamp/src/vamp-hostsdk/PluginInputDomainAdapter.cpp" bodystart="151" bodyend="154"/>
+      </memberdef>
+      <memberdef kind="function" id="class_vamp_1_1_host_ext_1_1_plugin_input_domain_adapter_1a984a12b5b4cb0be1e2f7a0aa84106c4c" prot="public" static="no" const="no" explicit="no" inline="no" virt="virtual">
+        <type><ref refid="sound_8c_1ae35f5844602719cf66324f4de2a658b3" kindref="member">void</ref></type>
+        <definition>void Vamp::HostExt::PluginInputDomainAdapter::reset</definition>
+        <argsstring>()</argsstring>
+        <name>reset</name>
+        <reimplements refid="class_vamp_1_1_plugin_1aad67dc9d0052417511070c4ebcfbf24f">reset</reimplements>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Reset the plugin after use, to prepare it for another clean run. Not called for the first initialisation (i.e. initialise must also do a reset). </para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/_dev/OpenU/Audacity/audacity/lib-src/libvamp/vamp-hostsdk/PluginInputDomainAdapter.h" line="99" column="1" bodyfile="C:/_dev/OpenU/Audacity/audacity/lib-src/libvamp/src/vamp-hostsdk/PluginInputDomainAdapter.cpp" bodystart="157" bodyend="160"/>
+      </memberdef>
+      <memberdef kind="function" id="class_vamp_1_1_host_ext_1_1_plugin_input_domain_adapter_1a376fa97a1c721255541fe35d71368976" prot="public" static="no" const="yes" explicit="no" inline="no" virt="virtual">
+        <type><ref refid="class_vamp_1_1_plugin_1a39cb7649d6dcc20e4cb1640cd55907bc" kindref="member">InputDomain</ref></type>
+        <definition>Plugin::InputDomain Vamp::HostExt::PluginInputDomainAdapter::getInputDomain</definition>
+        <argsstring>() const </argsstring>
+        <name>getInputDomain</name>
+        <reimplements refid="class_vamp_1_1_plugin_1adfbdde456a19b4751dfa65dfa72e5458">getInputDomain</reimplements>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Get the plugin&apos;s required input domain.</para><para>If this is TimeDomain, the samples provided to the <ref refid="class_vamp_1_1_host_ext_1_1_plugin_input_domain_adapter_1a0867737693c16801d40a6adbde07ec07" kindref="member">process()</ref> function (below) will be in the time domain, as for a traditional audio processing plugin.</para><para>If this is FrequencyDomain, the host will carry out a windowed <ref refid="class_vamp_1_1_f_f_t" kindref="compound">FFT</ref> of size equal to the negotiated block size on the data before passing the frequency bin data in to <ref refid="class_vamp_1_1_host_ext_1_1_plugin_input_domain_adapter_1a0867737693c16801d40a6adbde07ec07" kindref="member">process()</ref>. The input data for the <ref refid="class_vamp_1_1_f_f_t" kindref="compound">FFT</ref> will be rotated so as to place the origin in the centre of the block. The plugin does not get to choose the window type <ndash/> the host will either let the user do so, or will use a Hanning window. </para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/_dev/OpenU/Audacity/audacity/lib-src/libvamp/vamp-hostsdk/PluginInputDomainAdapter.h" line="101" column="1" bodyfile="C:/_dev/OpenU/Audacity/audacity/lib-src/libvamp/src/vamp-hostsdk/PluginInputDomainAdapter.cpp" bodystart="163" bodyend="166"/>
+      </memberdef>
+      <memberdef kind="function" id="class_vamp_1_1_host_ext_1_1_plugin_input_domain_adapter_1ad979af9f1cbf2eeb16f4eaedb4a4f565" prot="public" static="no" const="yes" explicit="no" inline="no" virt="virtual">
+        <type>size_t</type>
+        <definition>size_t Vamp::HostExt::PluginInputDomainAdapter::getPreferredStepSize</definition>
+        <argsstring>() const </argsstring>
+        <name>getPreferredStepSize</name>
+        <reimplements refid="class_vamp_1_1_plugin_1a514c716c22f81c055f19b56c3f882567">getPreferredStepSize</reimplements>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Get the preferred step size (window increment <ndash/> the distance in sample frames between the start frames of consecutive blocks passed to the <ref refid="class_vamp_1_1_host_ext_1_1_plugin_input_domain_adapter_1a0867737693c16801d40a6adbde07ec07" kindref="member">process()</ref> function) for the plugin. This should be called before <ref refid="class_vamp_1_1_host_ext_1_1_plugin_input_domain_adapter_1a72d201eca10ec73bf16e07984f58f94c" kindref="member">initialise()</ref>.</para><para>A plugin may return 0 if it has no particular interest in the step size. In this case, the host should make the step size equal to the block size if the plugin is accepting input in the time domain. If the plugin is accepting input in the frequency domain, the host may use any step size. The final step size will be set in the <ref refid="class_vamp_1_1_host_ext_1_1_plugin_input_domain_adapter_1a72d201eca10ec73bf16e07984f58f94c" kindref="member">initialise()</ref> call. </para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/_dev/OpenU/Audacity/audacity/lib-src/libvamp/vamp-hostsdk/PluginInputDomainAdapter.h" line="103" column="1" bodyfile="C:/_dev/OpenU/Audacity/audacity/lib-src/libvamp/src/vamp-hostsdk/PluginInputDomainAdapter.cpp" bodystart="169" bodyend="172"/>
+      </memberdef>
+      <memberdef kind="function" id="class_vamp_1_1_host_ext_1_1_plugin_input_domain_adapter_1a4cf40d09d02022b1962ff17bb0324ea5" prot="public" static="no" const="yes" explicit="no" inline="no" virt="virtual">
+        <type>size_t</type>
+        <definition>size_t Vamp::HostExt::PluginInputDomainAdapter::getPreferredBlockSize</definition>
+        <argsstring>() const </argsstring>
+        <name>getPreferredBlockSize</name>
+        <reimplements refid="class_vamp_1_1_plugin_1aa529adf83f87a603954eb31407602aac">getPreferredBlockSize</reimplements>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Get the preferred block size (window size <ndash/> the number of sample frames passed in each block to the <ref refid="class_vamp_1_1_host_ext_1_1_plugin_input_domain_adapter_1a0867737693c16801d40a6adbde07ec07" kindref="member">process()</ref> function). This should be called before <ref refid="class_vamp_1_1_host_ext_1_1_plugin_input_domain_adapter_1a72d201eca10ec73bf16e07984f58f94c" kindref="member">initialise()</ref>.</para><para>A plugin that can handle any block size may return 0. The final block size will be set in the <ref refid="class_vamp_1_1_host_ext_1_1_plugin_input_domain_adapter_1a72d201eca10ec73bf16e07984f58f94c" kindref="member">initialise()</ref> call. </para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/_dev/OpenU/Audacity/audacity/lib-src/libvamp/vamp-hostsdk/PluginInputDomainAdapter.h" line="104" column="1" bodyfile="C:/_dev/OpenU/Audacity/audacity/lib-src/libvamp/src/vamp-hostsdk/PluginInputDomainAdapter.cpp" bodystart="175" bodyend="178"/>
+      </memberdef>
+      <memberdef kind="function" id="class_vamp_1_1_host_ext_1_1_plugin_input_domain_adapter_1a0867737693c16801d40a6adbde07ec07" prot="public" static="no" const="no" explicit="no" inline="no" virt="virtual">
+        <type><ref refid="class_vamp_1_1_plugin_1a448fb57dc245d47923ec9eeaf9856c5f" kindref="member">FeatureSet</ref></type>
+        <definition>Plugin::FeatureSet Vamp::HostExt::PluginInputDomainAdapter::process</definition>
+        <argsstring>(const float *const *inputBuffers, RealTime timestamp)</argsstring>
+        <name>process</name>
+        <reimplements refid="class_vamp_1_1_plugin_1ae4aed3bebfe80a2e2fccd3d37af26996">process</reimplements>
+        <param>
+          <type><ref refid="getopt1_8c_1a2c212835823e3c54a8ab6d95c652660e" kindref="member">const</ref> float *<ref refid="getopt1_8c_1a2c212835823e3c54a8ab6d95c652660e" kindref="member">const</ref> *</type>
+          <declname>inputBuffers</declname>
+        </param>
+        <param>
+          <type><ref refid="struct_vamp_1_1_real_time" kindref="compound">RealTime</ref></type>
+          <declname>timestamp</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Process a single block of input data.</para><para>If the plugin&apos;s inputDomain is TimeDomain, inputBuffers will point to one array of floats per input channel, and each of these arrays will contain blockSize consecutive audio samples (the host will zero-pad as necessary). The timestamp in this case will be the real time in seconds of the start of the supplied block of samples.</para><para>If the plugin&apos;s inputDomain is FrequencyDomain, inputBuffers will point to one array of floats per input channel, and each of these arrays will contain blockSize/2+1 consecutive pairs of real and imaginary component floats corresponding to bins 0..(blockSize/2) of the <ref refid="class_vamp_1_1_f_f_t" kindref="compound">FFT</ref> output. That is, bin 0 (the first pair of floats) contains the DC output, up to bin blockSize/2 which contains the Nyquist-frequency output. There will therefore be blockSize+2 floats per channel in total. The timestamp will be the real time in seconds of the centre of the <ref refid="class_vamp_1_1_f_f_t" kindref="compound">FFT</ref> input window (i.e. the very first block passed to process might contain the <ref refid="class_vamp_1_1_f_f_t" kindref="compound">FFT</ref> of half a block of zero samples and the first half-block of the actual data, with a timestamp of zero).</para><para>Return any features that have become available after this process call. (These do not necessarily have to fall within the process block, except for OneSamplePerStep outputs.) </para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/_dev/OpenU/Audacity/audacity/lib-src/libvamp/vamp-hostsdk/PluginInputDomainAdapter.h" line="106" column="1" bodyfile="C:/_dev/OpenU/Audacity/audacity/lib-src/libvamp/src/vamp-hostsdk/PluginInputDomainAdapter.cpp" bodystart="181" bodyend="184"/>
+      </memberdef>
+      <memberdef kind="function" id="class_vamp_1_1_host_ext_1_1_plugin_input_domain_adapter_1a1d7366f8cab39abc01ebfc7bf7ca8089" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="sound_8c_1ae35f5844602719cf66324f4de2a658b3" kindref="member">void</ref></type>
+        <definition>void Vamp::HostExt::PluginInputDomainAdapter::setProcessTimestampMethod</definition>
+        <argsstring>(ProcessTimestampMethod)</argsstring>
+        <name>setProcessTimestampMethod</name>
+        <param>
+          <type><ref refid="class_vamp_1_1_host_ext_1_1_plugin_input_domain_adapter_1a2518e4922d77bc4e514d84cec9a0b577" kindref="member">ProcessTimestampMethod</ref></type>
+          <defname>m</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Set the method used for timestamp adjustment in plugins taking frequency-domain input. See the ProcessTimestampMethod documentation for details.</para><para>This function must be called before the first call to <ref refid="class_vamp_1_1_host_ext_1_1_plugin_input_domain_adapter_1a0867737693c16801d40a6adbde07ec07" kindref="member">process()</ref>. </para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/_dev/OpenU/Audacity/audacity/lib-src/libvamp/vamp-hostsdk/PluginInputDomainAdapter.h" line="156" column="1" bodyfile="C:/_dev/OpenU/Audacity/audacity/lib-src/libvamp/src/vamp-hostsdk/PluginInputDomainAdapter.cpp" bodystart="187" bodyend="190"/>
+      </memberdef>
+      <memberdef kind="function" id="class_vamp_1_1_host_ext_1_1_plugin_input_domain_adapter_1a091560e10d7c242708b5a49f7d1ed8db" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="class_vamp_1_1_host_ext_1_1_plugin_input_domain_adapter_1a2518e4922d77bc4e514d84cec9a0b577" kindref="member">ProcessTimestampMethod</ref></type>
+        <definition>PluginInputDomainAdapter::ProcessTimestampMethod Vamp::HostExt::PluginInputDomainAdapter::getProcessTimestampMethod</definition>
+        <argsstring>() const </argsstring>
+        <name>getProcessTimestampMethod</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Retrieve the method used for timestamp adjustment in plugins taking frequency-domain input. See the ProcessTimestampMethod documentation for details. </para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/_dev/OpenU/Audacity/audacity/lib-src/libvamp/vamp-hostsdk/PluginInputDomainAdapter.h" line="163" column="1" bodyfile="C:/_dev/OpenU/Audacity/audacity/lib-src/libvamp/src/vamp-hostsdk/PluginInputDomainAdapter.cpp" bodystart="193" bodyend="196"/>
+      </memberdef>
+      <memberdef kind="function" id="class_vamp_1_1_host_ext_1_1_plugin_input_domain_adapter_1ac1ab6af0fcda0a4c3f050c54b2db4769" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="struct_vamp_1_1_real_time" kindref="compound">RealTime</ref></type>
+        <definition>RealTime Vamp::HostExt::PluginInputDomainAdapter::getTimestampAdjustment</definition>
+        <argsstring>() const </argsstring>
+        <name>getTimestampAdjustment</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Return the amount by which the timestamps supplied to <ref refid="class_vamp_1_1_host_ext_1_1_plugin_input_domain_adapter_1a0867737693c16801d40a6adbde07ec07" kindref="member">process()</ref> are being incremented when they are passed to the plugin&apos;s own <ref refid="class_vamp_1_1_host_ext_1_1_plugin_input_domain_adapter_1a0867737693c16801d40a6adbde07ec07" kindref="member">process()</ref> implementation.</para><para>The <ref refid="namespace_vamp" kindref="compound">Vamp</ref> API mandates that the timestamp passed to the plugin for time-domain input should be the time of the first sample in the block, but the timestamp passed for frequency-domain input should be the timestamp of the centre of the block.</para><para>The <ref refid="class_vamp_1_1_host_ext_1_1_plugin_input_domain_adapter" kindref="compound">PluginInputDomainAdapter</ref> adjusts its timestamps properly so that the plugin receives correct times, but in some circumstances (such as for establishing the correct timing of implicitly-timed features, i.e. features without their own timestamps) the host may need to be aware that this adjustment is taking place.</para><para>If the plugin requires time-domain input or the <ref refid="class_vamp_1_1_host_ext_1_1_plugin_input_domain_adapter" kindref="compound">PluginInputDomainAdapter</ref> is configured with its ProcessTimestampMethod set to ShiftData instead of ShiftTimestamp, then this function will return zero.</para><para>The result of calling this function before <ref refid="class_vamp_1_1_host_ext_1_1_plugin_input_domain_adapter_1a72d201eca10ec73bf16e07984f58f94c" kindref="member">initialise()</ref> has been called is undefined. </para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/_dev/OpenU/Audacity/audacity/lib-src/libvamp/vamp-hostsdk/PluginInputDomainAdapter.h" line="190" column="1" bodyfile="C:/_dev/OpenU/Audacity/audacity/lib-src/libvamp/src/vamp-hostsdk/PluginInputDomainAdapter.cpp" bodystart="199" bodyend="202"/>
+      </memberdef>
+      <memberdef kind="function" id="class_vamp_1_1_host_ext_1_1_plugin_input_domain_adapter_1a6559c5dc5da37dbf84f1df3e5fea2a77" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="class_vamp_1_1_host_ext_1_1_plugin_input_domain_adapter_1a27e6a7c3f93f1618836792b588b767dc" kindref="member">WindowType</ref></type>
+        <definition>PluginInputDomainAdapter::WindowType Vamp::HostExt::PluginInputDomainAdapter::getWindowType</definition>
+        <argsstring>() const </argsstring>
+        <name>getWindowType</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Return the current window shape. The default is HanningWindow. </para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/_dev/OpenU/Audacity/audacity/lib-src/libvamp/vamp-hostsdk/PluginInputDomainAdapter.h" line="217" column="1" bodyfile="C:/_dev/OpenU/Audacity/audacity/lib-src/libvamp/src/vamp-hostsdk/PluginInputDomainAdapter.cpp" bodystart="205" bodyend="208"/>
+      </memberdef>
+      <memberdef kind="function" id="class_vamp_1_1_host_ext_1_1_plugin_input_domain_adapter_1a652bf9f25352a4fa89dd80ff816558d4" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="sound_8c_1ae35f5844602719cf66324f4de2a658b3" kindref="member">void</ref></type>
+        <definition>void Vamp::HostExt::PluginInputDomainAdapter::setWindowType</definition>
+        <argsstring>(WindowType type)</argsstring>
+        <name>setWindowType</name>
+        <param>
+          <type><ref refid="class_vamp_1_1_host_ext_1_1_plugin_input_domain_adapter_1a27e6a7c3f93f1618836792b588b767dc" kindref="member">WindowType</ref></type>
+          <declname>type</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Set the current window shape. </para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/_dev/OpenU/Audacity/audacity/lib-src/libvamp/vamp-hostsdk/PluginInputDomainAdapter.h" line="222" column="1" bodyfile="C:/_dev/OpenU/Audacity/audacity/lib-src/libvamp/src/vamp-hostsdk/PluginInputDomainAdapter.cpp" bodystart="211" bodyend="214"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><ref refid="class_vamp_1_1_host_ext_1_1_plugin_input_domain_adapter" kindref="compound">PluginInputDomainAdapter</ref> is a <ref refid="namespace_vamp" kindref="compound">Vamp</ref> plugin adapter that converts time-domain input into frequency-domain input for plugins that need it. This permits a host to use time- and frequency-domain plugins interchangeably without needing to handle the conversion itself.</para><para>This adapter uses a basic windowed <ref refid="class_vamp_1_1_f_f_t" kindref="compound">FFT</ref> (using Hann window by default) that supports power-of-two block sizes only. If a frequency domain plugin requests a non-power-of-two blocksize, the adapter will adjust it to a nearby power of two instead. Thus, <ref refid="class_vamp_1_1_host_ext_1_1_plugin_input_domain_adapter_1a4cf40d09d02022b1962ff17bb0324ea5" kindref="member">getPreferredBlockSize()</ref> will always return a power of two if the wrapped plugin is a frequency domain one. If the plugin doesn&apos;t accept the adjusted power of two block size, <ref refid="class_vamp_1_1_host_ext_1_1_plugin_input_domain_adapter_1a72d201eca10ec73bf16e07984f58f94c" kindref="member">initialise()</ref> will fail.</para><para>The adapter provides no way for the host to discover whether the underlying plugin is actually a time or frequency domain plugin (except that if the preferred block size is not a power of two, it must be a time domain plugin).</para><para>The <ref refid="class_vamp_1_1_f_f_t" kindref="compound">FFT</ref> implementation is simple and self-contained, but unlikely to be the fastest available: a host can usually do better if it cares enough.</para><para>The window shape for the <ref refid="class_vamp_1_1_f_f_t" kindref="compound">FFT</ref> frame can be set using setWindowType and the current shape retrieved using getWindowType. (This was added in v2.3 of the SDK.)</para><para>In every respect other than its input domain handling, the <ref refid="class_vamp_1_1_host_ext_1_1_plugin_input_domain_adapter" kindref="compound">PluginInputDomainAdapter</ref> behaves identically to the plugin that it wraps. The wrapped plugin will be deleted when the wrapper is deleted.</para><para><simplesect kind="note"><para>This class was introduced in version 1.1 of the <ref refid="namespace_vamp" kindref="compound">Vamp</ref> plugin SDK. </para></simplesect>
+</para>    </detaileddescription>
+    <inheritancegraph>
+      <node id="8973">
+        <label>Vamp::Plugin</label>
+        <link refid="class_vamp_1_1_plugin"/>
+        <childnode refid="8974" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="8971">
+        <label>Vamp::HostExt::PluginInputDomainAdapter</label>
+        <link refid="class_vamp_1_1_host_ext_1_1_plugin_input_domain_adapter"/>
+        <childnode refid="8972" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="8974">
+        <label>Vamp::PluginBase</label>
+        <link refid="class_vamp_1_1_plugin_base"/>
+      </node>
+      <node id="8972">
+        <label>Vamp::HostExt::PluginWrapper</label>
+        <link refid="class_vamp_1_1_host_ext_1_1_plugin_wrapper"/>
+        <childnode refid="8973" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="8977">
+        <label>Vamp::Plugin</label>
+        <link refid="class_vamp_1_1_plugin"/>
+        <childnode refid="8978" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="8975">
+        <label>Vamp::HostExt::PluginInputDomainAdapter</label>
+        <link refid="class_vamp_1_1_host_ext_1_1_plugin_input_domain_adapter"/>
+        <childnode refid="8976" relation="public-inheritance">
+        </childnode>
+        <childnode refid="8979" relation="usage">
+          <edgelabel>m_impl</edgelabel>
+        </childnode>
+      </node>
+      <node id="8978">
+        <label>Vamp::PluginBase</label>
+        <link refid="class_vamp_1_1_plugin_base"/>
+      </node>
+      <node id="8980">
+        <label>Window&lt; double &gt;</label>
+        <link refid="class_window"/>
+      </node>
+      <node id="8976">
+        <label>Vamp::HostExt::PluginWrapper</label>
+        <link refid="class_vamp_1_1_host_ext_1_1_plugin_wrapper"/>
+        <childnode refid="8977" relation="public-inheritance">
+        </childnode>
+        <childnode refid="8977" relation="usage">
+          <edgelabel>m_plugin</edgelabel>
+        </childnode>
+      </node>
+      <node id="8979">
+        <label>Vamp::HostExt::PluginInputDomainAdapter::Impl</label>
+        <link refid="class_vamp_1_1_host_ext_1_1_plugin_input_domain_adapter_1_1_impl"/>
+        <childnode refid="8977" relation="usage">
+          <edgelabel>m_plugin</edgelabel>
+        </childnode>
+        <childnode refid="8980" relation="usage">
+          <edgelabel>m_window</edgelabel>
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="C:/_dev/OpenU/Audacity/audacity/lib-src/libvamp/vamp-hostsdk/PluginInputDomainAdapter.h" line="88" column="1" bodyfile="C:/_dev/OpenU/Audacity/audacity/lib-src/libvamp/vamp-hostsdk/PluginInputDomainAdapter.h" bodystart="87" bodyend="228"/>
+    <listofallmembers>
+      <member refid="class_vamp_1_1_host_ext_1_1_plugin_input_domain_adapter_1a27e6a7c3f93f1618836792b588b767dca77fd88a7d94fcd9c6c4aef30b86f077d" prot="public" virt="non-virtual"><scope>Vamp::HostExt::PluginInputDomainAdapter</scope><name>BartlettWindow</name></member>
+      <member refid="class_vamp_1_1_host_ext_1_1_plugin_input_domain_adapter_1a27e6a7c3f93f1618836792b588b767dca7cbf5d8c58f33bcfa28e3a5863d6ac94" prot="public" virt="non-virtual"><scope>Vamp::HostExt::PluginInputDomainAdapter</scope><name>BlackmanHarrisWindow</name></member>
+      <member refid="class_vamp_1_1_host_ext_1_1_plugin_input_domain_adapter_1a27e6a7c3f93f1618836792b588b767dca2e298b1bee28272721953b2921891da6" prot="public" virt="non-virtual"><scope>Vamp::HostExt::PluginInputDomainAdapter</scope><name>BlackmanWindow</name></member>
+      <member refid="class_vamp_1_1_plugin_1a0730bc72c87fa02eb8d2854b233f7be1" prot="public" virt="non-virtual"><scope>Vamp::HostExt::PluginInputDomainAdapter</scope><name>FeatureList</name></member>
+      <member refid="class_vamp_1_1_plugin_1a448fb57dc245d47923ec9eeaf9856c5f" prot="public" virt="non-virtual"><scope>Vamp::HostExt::PluginInputDomainAdapter</scope><name>FeatureSet</name></member>
+      <member refid="class_vamp_1_1_plugin_1a39cb7649d6dcc20e4cb1640cd55907bcaa30e7877ab33f76acbdca28607e6ab53" prot="public" virt="non-virtual"><scope>Vamp::HostExt::PluginInputDomainAdapter</scope><name>FrequencyDomain</name></member>
+      <member refid="class_vamp_1_1_host_ext_1_1_plugin_wrapper_1ae14f6ecb78be909c4cd5f0cdaed3c566" prot="public" virt="virtual"><scope>Vamp::HostExt::PluginInputDomainAdapter</scope><name>getCopyright</name></member>
+      <member refid="class_vamp_1_1_host_ext_1_1_plugin_wrapper_1a7a312dd42d161064b70afd7ff24c0651" prot="public" virt="virtual"><scope>Vamp::HostExt::PluginInputDomainAdapter</scope><name>getCurrentProgram</name></member>
+      <member refid="class_vamp_1_1_host_ext_1_1_plugin_wrapper_1ac334f699c0996055942785410d8a065c" prot="public" virt="virtual"><scope>Vamp::HostExt::PluginInputDomainAdapter</scope><name>getDescription</name></member>
+      <member refid="class_vamp_1_1_host_ext_1_1_plugin_wrapper_1a4baa9e48f717c2b3e7f92496aa39d904" prot="public" virt="virtual"><scope>Vamp::HostExt::PluginInputDomainAdapter</scope><name>getIdentifier</name></member>
+      <member refid="class_vamp_1_1_host_ext_1_1_plugin_input_domain_adapter_1a376fa97a1c721255541fe35d71368976" prot="public" virt="virtual"><scope>Vamp::HostExt::PluginInputDomainAdapter</scope><name>getInputDomain</name></member>
+      <member refid="class_vamp_1_1_host_ext_1_1_plugin_wrapper_1a59d5a2298951b317995675e664b1c7bb" prot="public" virt="virtual"><scope>Vamp::HostExt::PluginInputDomainAdapter</scope><name>getMaker</name></member>
+      <member refid="class_vamp_1_1_host_ext_1_1_plugin_wrapper_1a985eb21f1827bfbc3950d6871b107a58" prot="public" virt="virtual"><scope>Vamp::HostExt::PluginInputDomainAdapter</scope><name>getMaxChannelCount</name></member>
+      <member refid="class_vamp_1_1_host_ext_1_1_plugin_wrapper_1a2b28f1cf37d46a514f1e1411a6037bf8" prot="public" virt="virtual"><scope>Vamp::HostExt::PluginInputDomainAdapter</scope><name>getMinChannelCount</name></member>
+      <member refid="class_vamp_1_1_host_ext_1_1_plugin_wrapper_1ac70a3265bb25aeb03f6dd8f8a0442088" prot="public" virt="virtual"><scope>Vamp::HostExt::PluginInputDomainAdapter</scope><name>getName</name></member>
+      <member refid="class_vamp_1_1_host_ext_1_1_plugin_wrapper_1a02c8c01972affeea58b091335e791ace" prot="public" virt="virtual"><scope>Vamp::HostExt::PluginInputDomainAdapter</scope><name>getOutputDescriptors</name></member>
+      <member refid="class_vamp_1_1_host_ext_1_1_plugin_wrapper_1a034920f56c8d7609a85447c42556048c" prot="public" virt="virtual"><scope>Vamp::HostExt::PluginInputDomainAdapter</scope><name>getParameter</name></member>
+      <member refid="class_vamp_1_1_host_ext_1_1_plugin_wrapper_1a3b075b8f950b344503f0d27ac0fe332e" prot="public" virt="virtual"><scope>Vamp::HostExt::PluginInputDomainAdapter</scope><name>getParameterDescriptors</name></member>
+      <member refid="class_vamp_1_1_host_ext_1_1_plugin_wrapper_1a47e1acf1696813008324a915c9ba59c5" prot="public" virt="virtual"><scope>Vamp::HostExt::PluginInputDomainAdapter</scope><name>getPluginVersion</name></member>
+      <member refid="class_vamp_1_1_host_ext_1_1_plugin_input_domain_adapter_1a4cf40d09d02022b1962ff17bb0324ea5" prot="public" virt="virtual"><scope>Vamp::HostExt::PluginInputDomainAdapter</scope><name>getPreferredBlockSize</name></member>
+      <member refid="class_vamp_1_1_host_ext_1_1_plugin_input_domain_adapter_1ad979af9f1cbf2eeb16f4eaedb4a4f565" prot="public" virt="virtual"><scope>Vamp::HostExt::PluginInputDomainAdapter</scope><name>getPreferredStepSize</name></member>
+      <member refid="class_vamp_1_1_host_ext_1_1_plugin_input_domain_adapter_1a091560e10d7c242708b5a49f7d1ed8db" prot="public" virt="non-virtual"><scope>Vamp::HostExt::PluginInputDomainAdapter</scope><name>getProcessTimestampMethod</name></member>
+      <member refid="class_vamp_1_1_host_ext_1_1_plugin_wrapper_1af3abaf717dc4b00cad5770ed6dfa01e1" prot="public" virt="virtual"><scope>Vamp::HostExt::PluginInputDomainAdapter</scope><name>getPrograms</name></member>
+      <member refid="class_vamp_1_1_host_ext_1_1_plugin_wrapper_1a1dce55a75a32b08fc56a52a300d9fcbe" prot="public" virt="virtual"><scope>Vamp::HostExt::PluginInputDomainAdapter</scope><name>getRemainingFeatures</name></member>
+      <member refid="class_vamp_1_1_host_ext_1_1_plugin_input_domain_adapter_1ac1ab6af0fcda0a4c3f050c54b2db4769" prot="public" virt="non-virtual"><scope>Vamp::HostExt::PluginInputDomainAdapter</scope><name>getTimestampAdjustment</name></member>
+      <member refid="class_vamp_1_1_plugin_1abe13b3997a69fbcc09e2213faa352f91" prot="public" virt="virtual"><scope>Vamp::HostExt::PluginInputDomainAdapter</scope><name>getType</name></member>
+      <member refid="class_vamp_1_1_host_ext_1_1_plugin_wrapper_1a74147fda6b44ff2169bd4a1eea0d46ff" prot="public" virt="virtual"><scope>Vamp::HostExt::PluginInputDomainAdapter</scope><name>getVampApiVersion</name></member>
+      <member refid="class_vamp_1_1_host_ext_1_1_plugin_input_domain_adapter_1a6559c5dc5da37dbf84f1df3e5fea2a77" prot="public" virt="non-virtual"><scope>Vamp::HostExt::PluginInputDomainAdapter</scope><name>getWindowType</name></member>
+      <member refid="class_vamp_1_1_host_ext_1_1_plugin_wrapper_1a653d0308e8e34881a8749b7631d00f05" prot="public" virt="non-virtual"><scope>Vamp::HostExt::PluginInputDomainAdapter</scope><name>getWrapper</name></member>
+      <member refid="class_vamp_1_1_host_ext_1_1_plugin_input_domain_adapter_1a27e6a7c3f93f1618836792b588b767dca9d522bff8d5884a8ba57d5a8c7e113c8" prot="public" virt="non-virtual"><scope>Vamp::HostExt::PluginInputDomainAdapter</scope><name>HammingWindow</name></member>
+      <member refid="class_vamp_1_1_host_ext_1_1_plugin_input_domain_adapter_1a27e6a7c3f93f1618836792b588b767dcacad78947b6c8db20feb5ddf208ac1108" prot="public" virt="non-virtual"><scope>Vamp::HostExt::PluginInputDomainAdapter</scope><name>HanningWindow</name></member>
+      <member refid="class_vamp_1_1_host_ext_1_1_plugin_input_domain_adapter_1a27e6a7c3f93f1618836792b588b767dcadc87b20cfb5f1ddd23ebc281e3e47916" prot="public" virt="non-virtual"><scope>Vamp::HostExt::PluginInputDomainAdapter</scope><name>HannWindow</name></member>
+      <member refid="class_vamp_1_1_host_ext_1_1_plugin_input_domain_adapter_1a72d201eca10ec73bf16e07984f58f94c" prot="public" virt="virtual"><scope>Vamp::HostExt::PluginInputDomainAdapter</scope><name>initialise</name></member>
+      <member refid="class_vamp_1_1_plugin_1a39cb7649d6dcc20e4cb1640cd55907bc" prot="public" virt="non-virtual"><scope>Vamp::HostExt::PluginInputDomainAdapter</scope><name>InputDomain</name></member>
+      <member refid="class_vamp_1_1_host_ext_1_1_plugin_input_domain_adapter_1a9fa8a6b8a4e41b6e3f2fabc0d23678cc" prot="protected" virt="non-virtual"><scope>Vamp::HostExt::PluginInputDomainAdapter</scope><name>m_impl</name></member>
+      <member refid="class_vamp_1_1_plugin_1a59b9dd82a4f4eb946cd0474cc81abc23" prot="protected" virt="non-virtual"><scope>Vamp::HostExt::PluginInputDomainAdapter</scope><name>m_inputSampleRate</name></member>
+      <member refid="class_vamp_1_1_host_ext_1_1_plugin_wrapper_1ab4e40ecd98b445e1a2aa9e7baa280ea2" prot="protected" virt="non-virtual"><scope>Vamp::HostExt::PluginInputDomainAdapter</scope><name>m_plugin</name></member>
+      <member refid="class_vamp_1_1_host_ext_1_1_plugin_input_domain_adapter_1a2518e4922d77bc4e514d84cec9a0b577ab06e8c6824802978d0be4074a556b297" prot="public" virt="non-virtual"><scope>Vamp::HostExt::PluginInputDomainAdapter</scope><name>NoShift</name></member>
+      <member refid="class_vamp_1_1_host_ext_1_1_plugin_input_domain_adapter_1a27e6a7c3f93f1618836792b588b767dcaa6a2f46966a46cc7abdf2df74270999e" prot="public" virt="non-virtual"><scope>Vamp::HostExt::PluginInputDomainAdapter</scope><name>NuttallWindow</name></member>
+      <member refid="class_vamp_1_1_plugin_1a30f531b8fb69fac41a24e3d2a6a08ed9" prot="public" virt="non-virtual"><scope>Vamp::HostExt::PluginInputDomainAdapter</scope><name>OutputList</name></member>
+      <member refid="class_vamp_1_1_plugin_base_1a3b6bb4bbd86affe1ca9deceea1aad4f8" prot="public" virt="non-virtual"><scope>Vamp::HostExt::PluginInputDomainAdapter</scope><name>ParameterList</name></member>
+      <member refid="class_vamp_1_1_plugin_1a1b78c4f46c72ef345ed27f0b9bf20ac9" prot="protected" virt="non-virtual"><scope>Vamp::HostExt::PluginInputDomainAdapter</scope><name>Plugin</name></member>
+      <member refid="class_vamp_1_1_host_ext_1_1_plugin_input_domain_adapter_1a878e7275acdb77efc7a802944305039d" prot="public" virt="non-virtual"><scope>Vamp::HostExt::PluginInputDomainAdapter</scope><name>PluginInputDomainAdapter</name></member>
+      <member refid="class_vamp_1_1_host_ext_1_1_plugin_wrapper_1a35cc2d42f8322f5022e89859a79c97be" prot="protected" virt="non-virtual"><scope>Vamp::HostExt::PluginInputDomainAdapter</scope><name>PluginWrapper</name></member>
+      <member refid="class_vamp_1_1_host_ext_1_1_plugin_input_domain_adapter_1a0867737693c16801d40a6adbde07ec07" prot="public" virt="virtual"><scope>Vamp::HostExt::PluginInputDomainAdapter</scope><name>process</name></member>
+      <member refid="class_vamp_1_1_host_ext_1_1_plugin_input_domain_adapter_1a2518e4922d77bc4e514d84cec9a0b577" prot="public" virt="non-virtual"><scope>Vamp::HostExt::PluginInputDomainAdapter</scope><name>ProcessTimestampMethod</name></member>
+      <member refid="class_vamp_1_1_plugin_base_1a7f66f00437b21e5f694fe02356b12f20" prot="public" virt="non-virtual"><scope>Vamp::HostExt::PluginInputDomainAdapter</scope><name>ProgramList</name></member>
+      <member refid="class_vamp_1_1_host_ext_1_1_plugin_input_domain_adapter_1a27e6a7c3f93f1618836792b588b767dca99b08cf7a7f4a1b52a09044ea12c6324" prot="public" virt="non-virtual"><scope>Vamp::HostExt::PluginInputDomainAdapter</scope><name>RectangularWindow</name></member>
+      <member refid="class_vamp_1_1_host_ext_1_1_plugin_input_domain_adapter_1a984a12b5b4cb0be1e2f7a0aa84106c4c" prot="public" virt="virtual"><scope>Vamp::HostExt::PluginInputDomainAdapter</scope><name>reset</name></member>
+      <member refid="class_vamp_1_1_host_ext_1_1_plugin_wrapper_1a074978333a74fdcf336a8a1d8ea20abf" prot="public" virt="virtual"><scope>Vamp::HostExt::PluginInputDomainAdapter</scope><name>selectProgram</name></member>
+      <member refid="class_vamp_1_1_host_ext_1_1_plugin_wrapper_1a651b15a5dc4c27942ac0c87c6092bfe5" prot="public" virt="virtual"><scope>Vamp::HostExt::PluginInputDomainAdapter</scope><name>setParameter</name></member>
+      <member refid="class_vamp_1_1_host_ext_1_1_plugin_input_domain_adapter_1a1d7366f8cab39abc01ebfc7bf7ca8089" prot="public" virt="non-virtual"><scope>Vamp::HostExt::PluginInputDomainAdapter</scope><name>setProcessTimestampMethod</name></member>
+      <member refid="class_vamp_1_1_host_ext_1_1_plugin_input_domain_adapter_1a652bf9f25352a4fa89dd80ff816558d4" prot="public" virt="non-virtual"><scope>Vamp::HostExt::PluginInputDomainAdapter</scope><name>setWindowType</name></member>
+      <member refid="class_vamp_1_1_host_ext_1_1_plugin_input_domain_adapter_1a2518e4922d77bc4e514d84cec9a0b577a0838ff456d829e9096b5d968e6c55152" prot="public" virt="non-virtual"><scope>Vamp::HostExt::PluginInputDomainAdapter</scope><name>ShiftData</name></member>
+      <member refid="class_vamp_1_1_host_ext_1_1_plugin_input_domain_adapter_1a2518e4922d77bc4e514d84cec9a0b577afcf39fe57ba29a908d4877c21de145dd" prot="public" virt="non-virtual"><scope>Vamp::HostExt::PluginInputDomainAdapter</scope><name>ShiftTimestamp</name></member>
+      <member refid="class_vamp_1_1_plugin_1a39cb7649d6dcc20e4cb1640cd55907bcad4a9f31b958a43a9757af7893aa2e7ff" prot="public" virt="non-virtual"><scope>Vamp::HostExt::PluginInputDomainAdapter</scope><name>TimeDomain</name></member>
+      <member refid="class_vamp_1_1_host_ext_1_1_plugin_input_domain_adapter_1a27e6a7c3f93f1618836792b588b767dcaae5133bd639336a5c31378f4c2939d42" prot="public" virt="non-virtual"><scope>Vamp::HostExt::PluginInputDomainAdapter</scope><name>TriangularWindow</name></member>
+      <member refid="class_vamp_1_1_host_ext_1_1_plugin_input_domain_adapter_1a27e6a7c3f93f1618836792b588b767dc" prot="public" virt="non-virtual"><scope>Vamp::HostExt::PluginInputDomainAdapter</scope><name>WindowType</name></member>
+      <member refid="class_vamp_1_1_plugin_1a42d3096f9c1f58b1876024cd8d9ab80b" prot="public" virt="virtual"><scope>Vamp::HostExt::PluginInputDomainAdapter</scope><name>~Plugin</name></member>
+      <member refid="class_vamp_1_1_plugin_base_1a3773b37c658cf22d7f135c575a28f5c5" prot="public" virt="virtual"><scope>Vamp::HostExt::PluginInputDomainAdapter</scope><name>~PluginBase</name></member>
+      <member refid="class_vamp_1_1_host_ext_1_1_plugin_input_domain_adapter_1aec457c952155adf516dd8e3dc7739321" prot="public" virt="virtual"><scope>Vamp::HostExt::PluginInputDomainAdapter</scope><name>~PluginInputDomainAdapter</name></member>
+      <member refid="class_vamp_1_1_host_ext_1_1_plugin_wrapper_1a7449a364d524de75352a4719fec2e1f5" prot="public" virt="virtual"><scope>Vamp::HostExt::PluginInputDomainAdapter</scope><name>~PluginWrapper</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

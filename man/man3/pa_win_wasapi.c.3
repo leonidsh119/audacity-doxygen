@@ -1,0 +1,1139 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/lib-src/portaudio-v19/src/hostapi/wasapi/pa_win_wasapi.c" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/lib-src/portaudio-v19/src/hostapi/wasapi/pa_win_wasapi.c \- WASAPI implementation of support for a host API\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <windows\&.h>\fP
+.br
+\fC#include <stdio\&.h>\fP
+.br
+\fC#include <process\&.h>\fP
+.br
+\fC#include <assert\&.h>\fP
+.br
+\fC#include <mmsystem\&.h>\fP
+.br
+\fC#include <mmreg\&.h>\fP
+.br
+\fC#include <malloc\&.h>\fP
+.br
+\fC#include <memory\&.h>\fP
+.br
+\fC#include 'pa_util\&.h'\fP
+.br
+\fC#include 'pa_allocation\&.h'\fP
+.br
+\fC#include 'pa_hostapi\&.h'\fP
+.br
+\fC#include 'pa_stream\&.h'\fP
+.br
+\fC#include 'pa_cpuload\&.h'\fP
+.br
+\fC#include 'pa_process\&.h'\fP
+.br
+\fC#include 'pa_win_wasapi\&.h'\fP
+.br
+\fC#include 'pa_debugprint\&.h'\fP
+.br
+\fC#include 'pa_ringbuffer\&.h'\fP
+.br
+\fC#include 'pa_win_coinitialize\&.h'\fP
+.br
+\fC#include <basetyps\&.h>\fP
+.br
+\fC#include <rpcsal\&.h>\fP
+.br
+\fC#include <sal\&.h>\fP
+.br
+\fC#include <sdkddkver\&.h>\fP
+.br
+\fC#include <propkeydef\&.h>\fP
+.br
+\fC#include <audioclient\&.h>\fP
+.br
+\fC#include <mmdeviceapi\&.h>\fP
+.br
+\fC#include <endpointvolume\&.h>\fP
+.br
+\fC#include <functiondiscoverykeys\&.h>\fP
+.br
+\fC#include <devicetopology\&.h>\fP
+.br
+
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "struct \fB_tagpropertykey\fP"
+.br
+.ti -1c
+.RI "struct \fB_BYTE_BLOB\fP"
+.br
+.ti -1c
+.RI "struct \fBPaWasapiDeviceInfo\fP"
+.br
+.ti -1c
+.RI "struct \fBPaWasapiHostApiRepresentation\fP"
+.br
+.ti -1c
+.RI "struct \fBPaWasapiAudioClientParams\fP"
+.br
+.ti -1c
+.RI "struct \fBPaWasapiSubStream\fP"
+.br
+.ti -1c
+.RI "struct \fBPaWasapiHostProcessor\fP"
+.br
+.ti -1c
+.RI "struct \fBPaWasapiStream\fP"
+.br
+.ti -1c
+.RI "struct \fBThreadIdleScheduler\fP"
+.br
+.in -1c
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBWIN32_LEAN_AND_MEAN\fP"
+.br
+.ti -1c
+.RI "#define \fBWINVER\fP   0x0600"
+.br
+.ti -1c
+.RI "#define \fB_WIN32_WINNT\fP   \fBWINVER\fP"
+.br
+.ti -1c
+.RI "#define \fB__LPCGUID_DEFINED__\fP"
+.br
+.ti -1c
+.RI "#define \fBPROPERTYKEY_DEFINED\fP"
+.br
+.ti -1c
+.RI "#define \fB__MIDL_CONST\fP   \fBconst\fP"
+.br
+.ti -1c
+.RI "#define \fBNONAMELESSUNION\fP"
+.br
+.ti -1c
+.RI "#define \fBWAVE_FORMAT_IEEE_FLOAT\fP   0x0003"
+.br
+.ti -1c
+.RI "#define \fB__MINGW_EXTENSION\fP"
+.br
+.ti -1c
+.RI "#define \fBCOBJMACROS\fP"
+.br
+.ti -1c
+.RI "#define \fBINITGUID\fP"
+.br
+.ti -1c
+.RI "#define \fBGUID_SECT\fP"
+.br
+.ti -1c
+.RI "#define \fB__DEFINE_GUID\fP(n,  \fBl\fP,  w1,  w2,  b1,  b2,  b3,  b4,  b5,  b6,  b7,  b8)   static \fBconst\fP GUID n \fBGUID_SECT\fP = {\fBl\fP,w1,w2,{b1,b2,b3,b4,b5,b6,b7,b8}}"
+.br
+.ti -1c
+.RI "#define \fB__DEFINE_IID\fP(n,  \fBl\fP,  w1,  w2,  b1,  b2,  b3,  b4,  b5,  b6,  b7,  b8)   static \fBconst\fP IID n \fBGUID_SECT\fP = {\fBl\fP,w1,w2,{b1,b2,b3,b4,b5,b6,b7,b8}}"
+.br
+.ti -1c
+.RI "#define \fB__DEFINE_CLSID\fP(n,  \fBl\fP,  w1,  w2,  b1,  b2,  b3,  b4,  b5,  b6,  b7,  b8)   static \fBconst\fP CLSID n \fBGUID_SECT\fP = {\fBl\fP,w1,w2,{b1,b2,b3,b4,b5,b6,b7,b8}}"
+.br
+.ti -1c
+.RI "#define \fBPA_DEFINE_CLSID\fP(className,  \fBl\fP,  w1,  w2,  b1,  b2,  b3,  b4,  b5,  b6,  b7,  b8)   \fB__DEFINE_CLSID\fP(pa_CLSID_##className, 0x##l, 0x##w1, 0x##w2, 0x##b1, 0x##b2, 0x##b3, 0x##b4, 0x##b5, 0x##b6, 0x##b7, 0x##b8)"
+.br
+.ti -1c
+.RI "#define \fBPA_DEFINE_IID\fP(interfaceName,  \fBl\fP,  w1,  w2,  b1,  b2,  b3,  b4,  b5,  b6,  b7,  b8)   \fB__DEFINE_IID\fP(pa_IID_##interfaceName, 0x##l, 0x##w1, 0x##w2, 0x##b1, 0x##b2, 0x##b3, 0x##b4, 0x##b5, 0x##b6, 0x##b7, 0x##b8)"
+.br
+.ti -1c
+.RI "#define \fBCREATE_THREAD\fP(PROC)   (\fBHANDLE\fP)_beginthreadex( \fBNULL\fP, 0, (PROC), stream, 0, &stream\->dwThreadId )"
+.br
+.ti -1c
+.RI "#define \fBPA_THREAD_FUNC\fP   static unsigned \fBWINAPI\fP"
+.br
+.ti -1c
+.RI "#define \fBPA_THREAD_ID\fP   unsigned"
+.br
+.ti -1c
+.RI "#define \fBAUDCLNT_E_BUFFER_ERROR\fP   \fBAUDCLNT_ERR\fP(0x018)"
+.br
+.ti -1c
+.RI "#define \fBAUDCLNT_E_BUFFER_SIZE_NOT_ALIGNED\fP   \fBAUDCLNT_ERR\fP(0x019)"
+.br
+.ti -1c
+.RI "#define \fBAUDCLNT_E_INVALID_DEVICE_PERIOD\fP   \fBAUDCLNT_ERR\fP(0x020)"
+.br
+.ti -1c
+.RI "#define \fBMAX_STR_LEN\fP   512"
+.br
+.ti -1c
+.RI "#define \fBSTATIC_ARRAY_SIZE\fP(array)   (sizeof(array)/sizeof(array[0]))"
+.br
+.ti -1c
+.RI "#define \fBPRINT\fP(x)   \fBPA_DEBUG\fP(x);"
+.br
+.ti -1c
+.RI "#define \fBPA_SKELETON_SET_LAST_HOST_ERROR\fP(\fBerrorCode\fP,  errorText)   \fBPaUtil_SetLastHostErrorInfo\fP( \fBpaWASAPI\fP, \fBerrorCode\fP, errorText )"
+.br
+.ti -1c
+.RI "#define \fBPA_WASAPI__IS_FULLDUPLEX\fP(\fBSTREAM\fP)   ((\fBSTREAM\fP)\->in\&.clientProc && (\fBSTREAM\fP)\->out\&.clientProc)"
+.br
+.ti -1c
+.RI "#define \fBIF_FAILED_JUMP\fP(hr,  \fBlabel\fP)   \fBif\fP(FAILED(hr)) goto \fBlabel\fP;"
+.br
+.ti -1c
+.RI "#define \fBIF_FAILED_INTERNAL_ERROR_JUMP\fP(hr,  \fBerror\fP,  \fBlabel\fP)   \fBif\fP(FAILED(hr)) { \fBerror\fP = \fBpaInternalError\fP; goto \fBlabel\fP; }"
+.br
+.ti -1c
+.RI "#define \fBSAFE_CLOSE\fP(h)   \fBif\fP ((h) != \fBNULL\fP) { CloseHandle((h)); (h) = \fBNULL\fP; }"
+.br
+.ti -1c
+.RI "#define \fBSAFE_RELEASE\fP(punk)   \fBif\fP ((punk) != \fBNULL\fP) { (punk)\->lpVtbl\->Release((punk)); (punk) = \fBNULL\fP; }"
+.br
+.ti -1c
+.RI "#define \fB_GetProc\fP(fun,  type,  \fBname\fP)"
+.br
+.ti -1c
+.RI "#define \fBLogHostError\fP(HRES)   __LogHostError(HRES, __FUNCTION__, __FILE__, __LINE__)"
+.br
+.ti -1c
+.RI "#define \fBLogPaError\fP(PAERR)   __LogPaError(PAERR, __FUNCTION__, __FILE__, __LINE__)"
+.br
+.ti -1c
+.RI "#define \fBHDA_PACKET_SIZE\fP   (128)"
+.br
+.ti -1c
+.RI "#define \fBREFTIMES_PER_SEC\fP   10000000"
+.br
+.ti -1c
+.RI "#define \fBREFTIMES_PER_MILLISEC\fP   10000"
+.br
+.ti -1c
+.RI "#define \fBREFTIMES_PER_SEC\fP   10000000"
+.br
+.ti -1c
+.RI "#define \fBREFTIMES_PER_MILLISEC\fP   10000"
+.br
+.ti -1c
+.RI "#define \fB_WASAPI_MONO_TO_STEREO_MIXER_1_TO_2\fP(TYPE)"
+.br
+.ti -1c
+.RI "#define \fB_WASAPI_MONO_TO_STEREO_MIXER_2_TO_1_FLT32\fP(TYPE)"
+.br
+.ti -1c
+.RI "#define \fB_WASAPI_MONO_TO_STEREO_MIXER_2_TO_1_INT32\fP(TYPE)"
+.br
+.ti -1c
+.RI "#define \fB_WASAPI_MONO_TO_STEREO_MIXER_2_TO_1_INT64\fP(TYPE)"
+.br
+.ti -1c
+.RI "#define \fB_WASAPI_MONO_TO_STEREO_MIXER_2_TO_1_L\fP(TYPE)"
+.br
+.in -1c
+.SS "Typedefs"
+
+.in +1c
+.ti -1c
+.RI "typedef enum \fB_AVRT_PRIORITY\fP \fBAVRT_PRIORITY\fP"
+.br
+.ti -1c
+.RI "typedef enum \fB_AVRT_PRIORITY\fP * \fBPAVRT_PRIORITY\fP"
+.br
+.ti -1c
+.RI "typedef \fBconst\fP GUID * \fBLPCGUID\fP"
+.br
+.ti -1c
+.RI "typedef struct \fB_tagpropertykey\fP \fBPROPERTYKEY\fP"
+.br
+.ti -1c
+.RI "typedef struct \fB_BYTE_BLOB\fP \fBBYTE_BLOB\fP"
+.br
+.ti -1c
+.RI "typedef \fB__RPC_unique_pointer\fP \fBBYTE_BLOB\fP * \fBUP_BYTE_BLOB\fP"
+.br
+.ti -1c
+.RI "typedef LONGLONG \fBREFERENCE_TIME\fP"
+.br
+.ti -1c
+.RI "typedef \fBvoid\fP(* \fBMixMonoToStereoF\fP) (\fBvoid\fP *__to, \fBvoid\fP *__from, UINT32 \fBcount\fP)"
+.br
+.ti -1c
+.RI "typedef GUID \fBPLARGE_INTEGER\fP"
+.br
+.ti -1c
+.RI "typedef \fBBOOL\fP(\fBWINAPI\fP * \fBFAvRevertMmThreadCharacteristics\fP) (\fBHANDLE\fP)"
+.br
+.ti -1c
+.RI "typedef struct \fBPaWasapiDeviceInfo\fP \fBPaWasapiDeviceInfo\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBPaWasapiAudioClientParams\fP \fBPaWasapiAudioClientParams\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBPaWasapiSubStream\fP \fBPaWasapiSubStream\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBPaWasapiHostProcessor\fP \fBPaWasapiHostProcessor\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBPaWasapiStream\fP \fBPaWasapiStream\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBThreadIdleScheduler\fP \fBThreadIdleScheduler\fP"
+.br
+.ti -1c
+.RI "typedef UINT32(* \fBALIGN_FUNC\fP) (UINT32 v, UINT32 align)"
+.br
+.ti -1c
+.RI "typedef enum \fBEWindowsVersion\fP \fBEWindowsVersion\fP"
+.br
+.ti -1c
+.RI "typedef enum \fBEMixerDir\fP \fBEMixerDir\fP"
+.br
+.in -1c
+.SS "Enumerations"
+
+.in +1c
+.ti -1c
+.RI "enum \fB_AVRT_PRIORITY\fP { \fBAVRT_PRIORITY_LOW\fP = -1, \fBAVRT_PRIORITY_NORMAL\fP, \fBAVRT_PRIORITY_HIGH\fP, \fBAVRT_PRIORITY_CRITICAL\fP }"
+.br
+.ti -1c
+.RI "enum { \fBS_INPUT\fP = 0, \fBS_OUTPUT\fP = 1, \fBS_COUNT\fP = 2, \fBS_FULLDUPLEX\fP = 0 }"
+.br
+.ti -1c
+.RI "enum { \fBWASAPI_PACKETS_PER_INPUT_BUFFER\fP = 6 }"
+.br
+.ti -1c
+.RI "enum \fBEWindowsVersion\fP { \fBWINDOWS_UNKNOWN\fP = 0, \fBWINDOWS_VISTA_SERVER2008\fP, \fBWINDOWS_7_SERVER2008R2\fP, \fBWINDOWS_8_SERVER2012\fP, \fBWINDOWS_8_1_SERVER2012R2\fP, \fBWINDOWS_10_SERVER2016\fP, \fBWINDOWS_FUTURE\fP }"
+.br
+.ti -1c
+.RI "enum \fBEMixerDir\fP { \fBMIX_DIR__1TO2\fP, \fBMIX_DIR__2TO1\fP, \fBMIX_DIR__2TO1_L\fP }"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBPA_DEFINE_IID\fP (\fBIAudioClient\fP, 1cb9ad4c, dbfa, 4c32, b1, 78, c2, f5, 68, a7, 03, b2)"
+.br
+.ti -1c
+.RI "\fBPA_DEFINE_IID\fP (IAudioClient2, 726778cd, f60a, 4eda, 82, de, e4, 76, 10, cd, 78, aa)"
+.br
+.ti -1c
+.RI "\fBPA_DEFINE_IID\fP (\fBIMMEndpoint\fP, 1be09788, 6894, 4089, 85, 86, 9a, 2a, 6c, 26, 5a, c5)"
+.br
+.ti -1c
+.RI "\fBPA_DEFINE_IID\fP (\fBIMMDeviceEnumerator\fP, a95664d2, 9614, 4f35, a7, 46, de, 8d, b6, 36, 17, e6)"
+.br
+.ti -1c
+.RI "\fBPA_DEFINE_CLSID\fP (\fBIMMDeviceEnumerator\fP, bcde0395, e52f, 467c, 8e, 3d, c4, 57, 92, 91, 69, 2e)"
+.br
+.ti -1c
+.RI "\fBPA_DEFINE_IID\fP (\fBIAudioRenderClient\fP, f294acfc, 3146, 4483, a7, bf, ad, dc, a7, \fBc2\fP, 60, e2)"
+.br
+.ti -1c
+.RI "\fBPA_DEFINE_IID\fP (\fBIAudioCaptureClient\fP, c8adbd64, e71e, 48a0, a4, de, 18, 5c, 39, 5c, d3, 17)"
+.br
+.ti -1c
+.RI "\fBPA_DEFINE_IID\fP (\fBIDeviceTopology\fP, 2A07407E, 6497, 4A18, 97, 87, 32, f7, 9b, d0, d9, 8f)"
+.br
+.ti -1c
+.RI "\fBPA_DEFINE_IID\fP (\fBIPart\fP, AE2DE0E4, 5BCA, 4F2D, aa, 46, 5d, 13, f8, fd, b3, a9)"
+.br
+.ti -1c
+.RI "\fBPA_DEFINE_IID\fP (\fBIKsJackDescription\fP, 4509F757, 2D46, 4637, 8e, 62, ce, 7d, b9, 44, f5, 7b)"
+.br
+.ti -1c
+.RI "\fB__DEFINE_GUID\fP (pa_KSDATAFORMAT_SUBTYPE_PCM, 0x00000001, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xaa, 0x00, 0x38, 0x9b, 0x71)"
+.br
+.ti -1c
+.RI "\fB__DEFINE_GUID\fP (pa_KSDATAFORMAT_SUBTYPE_ADPCM, 0x00000002, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xaa, 0x00, 0x38, 0x9b, 0x71)"
+.br
+.ti -1c
+.RI "\fB__DEFINE_GUID\fP (pa_KSDATAFORMAT_SUBTYPE_IEEE_FLOAT, 0x00000003, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xaa, 0x00, 0x38, 0x9b, 0x71)"
+.br
+.ti -1c
+.RI "\fBPA_THREAD_FUNC\fP \fBProcThreadEvent\fP (\fBvoid\fP *param)"
+.br
+.ti -1c
+.RI "\fBPA_THREAD_FUNC\fP \fBProcThreadPoll\fP (\fBvoid\fP *param)"
+.br
+.ti -1c
+.RI "typedef \fBBOOL\fP (\fBWINAPI\fP *FAvRtCreateThreadOrderingGroup)(PHANDLE"
+.br
+.ti -1c
+.RI "typedef \fBHANDLE\fP (\fBWINAPI\fP *FAvSetMmThreadCharacteristics)(\fBLPCSTR\fP"
+.br
+.ti -1c
+.RI "\fBPaError\fP \fBPaWasapi_Initialize\fP (\fBPaUtilHostApiRepresentation\fP **hostApi, \fBPaHostApiIndex\fP index)"
+.br
+.ti -1c
+.RI "UINT32 \fBALIGN_NEXT_POW2\fP (UINT32 v)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBPaWasapi_GetDeviceDefaultFormat\fP (\fBvoid\fP *pFormat, unsigned \fBint\fP nFormatSize, \fBPaDeviceIndex\fP nDevice)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBPaWasapi_GetDeviceRole\fP (\fBPaDeviceIndex\fP nDevice)"
+.br
+.ti -1c
+.RI "\fBconst\fP wchar_t * \fBPaWasapi_GetInputDeviceID\fP (\fBPaStream\fP *\fBs\fP)"
+.br
+.ti -1c
+.RI "\fBconst\fP wchar_t * \fBPaWasapi_GetOutputDeviceID\fP (\fBPaStream\fP *\fBs\fP)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBPaWasapi_IsLoopback\fP (\fBPaDeviceIndex\fP nDevice)"
+.br
+.ti -1c
+.RI "\fBPaError\fP \fBPaWasapi_GetFramesPerHostBuffer\fP (\fBPaStream\fP *pStream, unsigned \fBint\fP *nInput, unsigned \fBint\fP *nOutput)"
+.br
+.ti -1c
+.RI "unsigned long \fBPaUtil_GetOutputFrameCount\fP (\fBPaUtilBufferProcessor\fP *bp)"
+.br
+.ti -1c
+.RI "\fBHANDLE\fP \fBMMCSS_activate\fP (\fBconst\fP char *\fBname\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBMMCSS_deactivate\fP (\fBHANDLE\fP hTask)"
+.br
+.ti -1c
+.RI "\fBPaError\fP \fBPaWasapi_ThreadPriorityBoost\fP (\fBvoid\fP **hTask, \fBPaWasapiThreadPriority\fP nPriorityClass)"
+.br
+.ti -1c
+.RI "\fBPaError\fP \fBPaWasapi_ThreadPriorityRevert\fP (\fBvoid\fP *hTask)"
+.br
+.ti -1c
+.RI "\fBPaError\fP \fBPaWasapi_GetJackCount\fP (\fBPaDeviceIndex\fP nDevice, \fBint\fP *jcount)"
+.br
+.ti -1c
+.RI "\fBPaError\fP \fBPaWasapi_GetJackDescription\fP (\fBPaDeviceIndex\fP nDevice, \fBint\fP jindex, \fBPaWasapiJackDescription\fP *pJackDescription)"
+.br
+.ti -1c
+.RI "\fBHRESULT\fP \fBProcessOutputBuffer\fP (\fBPaWasapiStream\fP *stream, \fBPaWasapiHostProcessor\fP *\fBprocessor\fP, UINT32 frames)"
+.br
+.ti -1c
+.RI "\fBHRESULT\fP \fBProcessInputBuffer\fP (\fBPaWasapiStream\fP *stream, \fBPaWasapiHostProcessor\fP *\fBprocessor\fP)"
+.br
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "typedef \fBLPDWORD\fP"
+.br
+.ti -1c
+.RI "FAvRtCreateThreadOrderingGroup \fBpAvRtCreateThreadOrderingGroup\fP = \fBNULL\fP"
+.br
+.ti -1c
+.RI "FAvRtDeleteThreadOrderingGroup \fBpAvRtDeleteThreadOrderingGroup\fP = \fBNULL\fP"
+.br
+.ti -1c
+.RI "FAvRtWaitOnThreadOrderingGroup \fBpAvRtWaitOnThreadOrderingGroup\fP = \fBNULL\fP"
+.br
+.ti -1c
+.RI "FAvSetMmThreadCharacteristics \fBpAvSetMmThreadCharacteristics\fP = \fBNULL\fP"
+.br
+.ti -1c
+.RI "\fBFAvRevertMmThreadCharacteristics\fP \fBpAvRevertMmThreadCharacteristics\fP = \fBNULL\fP"
+.br
+.ti -1c
+.RI "FAvSetMmThreadPriority \fBpAvSetMmThreadPriority\fP = \fBNULL\fP"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+WASAPI implementation of support for a host API\&. 
+
+
+.PP
+\fBNote:\fP
+.RS 4
+pa_wasapi currently requires minimum VC 2005, and the latest Vista SDK 
+.RE
+.PP
+
+.PP
+Definition in file \fBpa_win_wasapi\&.c\fP\&.
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define __DEFINE_CLSID(n, \fBl\fP, w1, w2, b1, b2, b3, b4, b5, b6, b7, b8)   static \fBconst\fP CLSID n \fBGUID_SECT\fP = {\fBl\fP,w1,w2,{b1,b2,b3,b4,b5,b6,b7,b8}}"
+
+.PP
+Definition at line 169 of file pa_win_wasapi\&.c\&.
+.SS "#define __DEFINE_GUID(n, \fBl\fP, w1, w2, b1, b2, b3, b4, b5, b6, b7, b8)   static \fBconst\fP GUID n \fBGUID_SECT\fP = {\fBl\fP,w1,w2,{b1,b2,b3,b4,b5,b6,b7,b8}}"
+
+.PP
+Definition at line 167 of file pa_win_wasapi\&.c\&.
+.SS "#define __DEFINE_IID(n, \fBl\fP, w1, w2, b1, b2, b3, b4, b5, b6, b7, b8)   static \fBconst\fP IID n \fBGUID_SECT\fP = {\fBl\fP,w1,w2,{b1,b2,b3,b4,b5,b6,b7,b8}}"
+
+.PP
+Definition at line 168 of file pa_win_wasapi\&.c\&.
+.SS "#define __LPCGUID_DEFINED__"
+
+.PP
+Definition at line 102 of file pa_win_wasapi\&.c\&.
+.SS "#define __MIDL_CONST   \fBconst\fP"
+
+.PP
+Definition at line 118 of file pa_win_wasapi\&.c\&.
+.SS "#define __MINGW_EXTENSION"
+
+.PP
+Definition at line 146 of file pa_win_wasapi\&.c\&.
+.SS "#define _GetProc(fun, type, \fBname\fP)"
+\fBValue:\fP
+.PP
+.nf
+{                                                        \
+                                        fun = (type) GetProcAddress(hDInputDLL,name);       \
+                                        if (fun == NULL) {                                  \
+                                            PRINT(("GetProcAddr failed for %s" ,name));     \
+                                            return FALSE;                                   \
+                                        }                                                   \
+                                    }                                                       \
+.fi
+.PP
+Definition at line 290 of file pa_win_wasapi\&.c\&.
+.SS "#define _WASAPI_MONO_TO_STEREO_MIXER_1_TO_2(TYPE)"
+\fBValue:\fP
+.PP
+.nf
+TYPE * __restrict to   = __to;\
+    TYPE * __restrict from = __from;\
+    TYPE * __restrict end  = from + count;\
+    while (from != end)\
+    {\
+        *to ++ = *from;\
+        *to ++ = *from;\
+        ++ from;\
+    }
+.fi
+.PP
+Definition at line 1058 of file pa_win_wasapi\&.c\&.
+.SS "#define _WASAPI_MONO_TO_STEREO_MIXER_2_TO_1_FLT32(TYPE)"
+\fBValue:\fP
+.PP
+.nf
+TYPE * __restrict to   = (TYPE *)__to;\
+    TYPE * __restrict from = (TYPE *)__from;\
+    TYPE * __restrict end  = to + count;\
+    while (to != end)\
+    {\
+        *to ++ = (TYPE)((float)(from[0] + from[1]) * 0\&.5f);\\
+		from += 2;\
+    }
+.fi
+.PP
+Definition at line 1070 of file pa_win_wasapi\&.c\&.
+.SS "#define _WASAPI_MONO_TO_STEREO_MIXER_2_TO_1_INT32(TYPE)"
+\fBValue:\fP
+.PP
+.nf
+TYPE * __restrict to   = (TYPE *)__to;\
+    TYPE * __restrict from = (TYPE *)__from;\
+    TYPE * __restrict end  = to + count;\
+    while (to != end)\
+    {\
+        *to ++ = (TYPE)(((INT32)from[0] + (INT32)from[1]) >> 1);\\
+		from += 2;\
+    }
+.fi
+.PP
+Definition at line 1081 of file pa_win_wasapi\&.c\&.
+.SS "#define _WASAPI_MONO_TO_STEREO_MIXER_2_TO_1_INT64(TYPE)"
+\fBValue:\fP
+.PP
+.nf
+TYPE * __restrict to   = (TYPE *)__to;\
+    TYPE * __restrict from = (TYPE *)__from;\
+    TYPE * __restrict end  = to + count;\
+    while (to != end)\
+    {\
+        *to ++ = (TYPE)(((INT64)from[0] + (INT64)from[1]) >> 1);\\
+		from += 2;\
+    }
+.fi
+.PP
+Definition at line 1092 of file pa_win_wasapi\&.c\&.
+.SS "#define _WASAPI_MONO_TO_STEREO_MIXER_2_TO_1_L(TYPE)"
+\fBValue:\fP
+.PP
+.nf
+TYPE * __restrict to   = (TYPE *)__to;\
+    TYPE * __restrict from = (TYPE *)__from;\
+    TYPE * __restrict end  = to + count;\
+    while (to != end)\
+    {\
+        *to ++ = from[0];\\
+		from += 2;\
+    }
+.fi
+.PP
+Definition at line 1103 of file pa_win_wasapi\&.c\&.
+.SS "#define _WIN32_WINNT   \fBWINVER\fP"
+
+.PP
+Definition at line 85 of file pa_win_wasapi\&.c\&.
+.SS "#define AUDCLNT_E_BUFFER_ERROR   \fBAUDCLNT_ERR\fP(0x018)"
+
+.PP
+Definition at line 233 of file pa_win_wasapi\&.c\&.
+.SS "#define AUDCLNT_E_BUFFER_SIZE_NOT_ALIGNED   \fBAUDCLNT_ERR\fP(0x019)"
+
+.PP
+Definition at line 236 of file pa_win_wasapi\&.c\&.
+.SS "#define AUDCLNT_E_INVALID_DEVICE_PERIOD   \fBAUDCLNT_ERR\fP(0x020)"
+
+.PP
+Definition at line 239 of file pa_win_wasapi\&.c\&.
+.SS "#define COBJMACROS"
+
+.PP
+Definition at line 152 of file pa_win_wasapi\&.c\&.
+.SS "#define CREATE_THREAD(PROC)   (\fBHANDLE\fP)_beginthreadex( \fBNULL\fP, 0, (PROC), stream, 0, &stream\->dwThreadId )"
+
+.PP
+Definition at line 218 of file pa_win_wasapi\&.c\&.
+.SS "#define GUID_SECT"
+
+.PP
+Definition at line 164 of file pa_win_wasapi\&.c\&.
+.SS "#define HDA_PACKET_SIZE   (128)"
+
+.SS "#define IF_FAILED_INTERNAL_ERROR_JUMP(hr, \fBerror\fP, \fBlabel\fP)   \fBif\fP(FAILED(hr)) { \fBerror\fP = \fBpaInternalError\fP; goto \fBlabel\fP; }"
+
+.PP
+Definition at line 265 of file pa_win_wasapi\&.c\&.
+.SS "#define IF_FAILED_JUMP(hr, \fBlabel\fP)   \fBif\fP(FAILED(hr)) goto \fBlabel\fP;"
+
+.PP
+Definition at line 261 of file pa_win_wasapi\&.c\&.
+.SS "#define INITGUID"
+
+.PP
+Definition at line 153 of file pa_win_wasapi\&.c\&.
+.SS "#define LogHostError(HRES)   __LogHostError(HRES, __FUNCTION__, __FILE__, __LINE__)"
+
+.PP
+Definition at line 553 of file pa_win_wasapi\&.c\&.
+.SS "#define LogPaError(PAERR)   __LogPaError(PAERR, __FUNCTION__, __FILE__, __LINE__)"
+
+.PP
+Definition at line 605 of file pa_win_wasapi\&.c\&.
+.SS "#define MAX_STR_LEN   512"
+
+.PP
+Definition at line 242 of file pa_win_wasapi\&.c\&.
+.SS "#define NONAMELESSUNION"
+
+.PP
+Definition at line 135 of file pa_win_wasapi\&.c\&.
+.SS "#define PA_DEFINE_CLSID(className, \fBl\fP, w1, w2, b1, b2, b3, b4, b5, b6, b7, b8)   \fB__DEFINE_CLSID\fP(pa_CLSID_##className, 0x##l, 0x##w1, 0x##w2, 0x##b1, 0x##b2, 0x##b3, 0x##b4, 0x##b5, 0x##b6, 0x##b7, 0x##b8)"
+
+.PP
+Definition at line 170 of file pa_win_wasapi\&.c\&.
+.SS "#define PA_DEFINE_IID(interfaceName, \fBl\fP, w1, w2, b1, b2, b3, b4, b5, b6, b7, b8)   \fB__DEFINE_IID\fP(pa_IID_##interfaceName, 0x##l, 0x##w1, 0x##w2, 0x##b1, 0x##b2, 0x##b3, 0x##b4, 0x##b5, 0x##b6, 0x##b7, 0x##b8)"
+
+.PP
+Definition at line 172 of file pa_win_wasapi\&.c\&.
+.SS "#define PA_SKELETON_SET_LAST_HOST_ERROR(\fBerrorCode\fP, errorText)   \fBPaUtil_SetLastHostErrorInfo\fP( \fBpaWASAPI\fP, \fBerrorCode\fP, errorText )"
+
+.PP
+Definition at line 255 of file pa_win_wasapi\&.c\&.
+.SS "#define PA_THREAD_FUNC   static unsigned \fBWINAPI\fP"
+
+.PP
+Definition at line 219 of file pa_win_wasapi\&.c\&.
+.SS "#define PA_THREAD_ID   unsigned"
+
+.PP
+Definition at line 220 of file pa_win_wasapi\&.c\&.
+.SS "#define PA_WASAPI__IS_FULLDUPLEX(\fBSTREAM\fP)   ((\fBSTREAM\fP)\->in\&.clientProc && (\fBSTREAM\fP)\->out\&.clientProc)"
+
+.PP
+Definition at line 258 of file pa_win_wasapi\&.c\&.
+.SS "#define PRINT(x)   \fBPA_DEBUG\fP(x);"
+
+.PP
+Definition at line 253 of file pa_win_wasapi\&.c\&.
+.SS "#define PROPERTYKEY_DEFINED"
+
+.PP
+Definition at line 107 of file pa_win_wasapi\&.c\&.
+.SS "#define REFTIMES_PER_MILLISEC   10000"
+
+.SS "#define REFTIMES_PER_MILLISEC   10000"
+
+.SS "#define REFTIMES_PER_SEC   10000000"
+
+.SS "#define REFTIMES_PER_SEC   10000000"
+
+.SS "#define SAFE_CLOSE(h)   \fBif\fP ((h) != \fBNULL\fP) { CloseHandle((h)); (h) = \fBNULL\fP; }"
+
+.PP
+Definition at line 268 of file pa_win_wasapi\&.c\&.
+.SS "#define SAFE_RELEASE(punk)   \fBif\fP ((punk) != \fBNULL\fP) { (punk)\->lpVtbl\->Release((punk)); (punk) = \fBNULL\fP; }"
+
+.PP
+Definition at line 269 of file pa_win_wasapi\&.c\&.
+.SS "#define STATIC_ARRAY_SIZE(array)   (sizeof(array)/sizeof(array[0]))"
+
+.PP
+Definition at line 251 of file pa_win_wasapi\&.c\&.
+.SS "#define WAVE_FORMAT_IEEE_FLOAT   0x0003"
+
+.PP
+Definition at line 139 of file pa_win_wasapi\&.c\&.
+.SS "#define WIN32_LEAN_AND_MEAN"
+
+.PP
+Definition at line 45 of file pa_win_wasapi\&.c\&.
+.SS "#define WINVER   0x0600"
+
+.PP
+Definition at line 84 of file pa_win_wasapi\&.c\&.
+.SH "Typedef Documentation"
+.PP 
+.SS "typedef UINT32(* ALIGN_FUNC) (UINT32 v, UINT32 align)"
+
+.PP
+Definition at line 735 of file pa_win_wasapi\&.c\&.
+.SS "typedef \fBAVRT_PRIORITY\fP"
+
+.PP
+Definition at line 280 of file pa_win_wasapi\&.c\&.
+.SS "typedef struct \fB_BYTE_BLOB\fP 	 \fBBYTE_BLOB\fP"
+
+.SS "typedef enum \fBEMixerDir\fP  \fBEMixerDir\fP"
+
+.SS "typedef enum \fBEWindowsVersion\fP
+ \fBEWindowsVersion\fP"
+
+.SS "typedef \fBBOOL\fP(\fBWINAPI\fP * FAvRevertMmThreadCharacteristics) (\fBHANDLE\fP)"
+
+.PP
+Definition at line 279 of file pa_win_wasapi\&.c\&.
+.SS "typedef \fBconst\fP GUID* \fBLPCGUID\fP"
+
+.PP
+Definition at line 103 of file pa_win_wasapi\&.c\&.
+.SS "typedef \fBvoid\fP(* MixMonoToStereoF) (\fBvoid\fP *__to, \fBvoid\fP *__from, UINT32 \fBcount\fP)"
+
+.PP
+Definition at line 272 of file pa_win_wasapi\&.c\&.
+.SS "typedef enum \fB_AVRT_PRIORITY\fP * \fBPAVRT_PRIORITY\fP"
+
+.SS "typedef struct \fBPaWasapiAudioClientParams\fP
+ \fBPaWasapiAudioClientParams\fP"
+
+.SS "typedef struct \fBPaWasapiDeviceInfo\fP
+ \fBPaWasapiDeviceInfo\fP"
+
+.SS "typedef struct \fBPaWasapiHostProcessor\fP
+ \fBPaWasapiHostProcessor\fP"
+
+.SS "typedef struct \fBPaWasapiStream\fP
+ \fBPaWasapiStream\fP"
+
+.SS "typedef struct \fBPaWasapiSubStream\fP
+ \fBPaWasapiSubStream\fP"
+
+.SS "typedef \fBPLARGE_INTEGER\fP"
+
+.PP
+Definition at line 275 of file pa_win_wasapi\&.c\&.
+.SS "typedef struct \fB_tagpropertykey\fP 	 \fBPROPERTYKEY\fP"
+
+.SS "typedef LONGLONG \fBREFERENCE_TIME\fP"
+
+.PP
+Definition at line 134 of file pa_win_wasapi\&.c\&.
+.SS "typedef struct \fBThreadIdleScheduler\fP
+ \fBThreadIdleScheduler\fP"
+
+.SS "typedef \fB__RPC_unique_pointer\fP \fBBYTE_BLOB\fP* \fBUP_BYTE_BLOB\fP"
+
+.PP
+Definition at line 133 of file pa_win_wasapi\&.c\&.
+.SH "Enumeration Type Documentation"
+.PP 
+.SS "anonymous enum"
+
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fIS_INPUT \fP\fP
+.TP
+\fB\fIS_OUTPUT \fP\fP
+.TP
+\fB\fIS_COUNT \fP\fP
+.TP
+\fB\fIS_FULLDUPLEX \fP\fP
+.PP
+Definition at line 244 of file pa_win_wasapi\&.c\&.
+.SS "anonymous enum"
+
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fIWASAPI_PACKETS_PER_INPUT_BUFFER \fP\fP
+.PP
+Definition at line 249 of file pa_win_wasapi\&.c\&.
+.SS "enum \fB_AVRT_PRIORITY\fP"
+
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fIAVRT_PRIORITY_LOW \fP\fP
+.TP
+\fB\fIAVRT_PRIORITY_NORMAL \fP\fP
+.TP
+\fB\fIAVRT_PRIORITY_HIGH \fP\fP
+.TP
+\fB\fIAVRT_PRIORITY_CRITICAL \fP\fP
+.PP
+Definition at line 88 of file pa_win_wasapi\&.c\&.
+.SS "enum \fBEMixerDir\fP"
+
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fIMIX_DIR__1TO2 \fP\fP
+.TP
+\fB\fIMIX_DIR__2TO1 \fP\fP
+.TP
+\fB\fIMIX_DIR__2TO1_L \fP\fP
+.PP
+Definition at line 1055 of file pa_win_wasapi\&.c\&.
+.SS "enum \fBEWindowsVersion\fP"
+
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fIWINDOWS_UNKNOWN \fP\fP
+.TP
+\fB\fIWINDOWS_VISTA_SERVER2008 \fP\fP
+.TP
+\fB\fIWINDOWS_7_SERVER2008R2 \fP\fP
+.TP
+\fB\fIWINDOWS_8_SERVER2012 \fP\fP
+.TP
+\fB\fIWINDOWS_8_1_SERVER2012R2 \fP\fP
+.TP
+\fB\fIWINDOWS_10_SERVER2016 \fP\fP
+.TP
+\fB\fIWINDOWS_FUTURE \fP\fP
+.PP
+Definition at line 877 of file pa_win_wasapi\&.c\&.
+.SH "Function Documentation"
+.PP 
+.SS "__DEFINE_GUID (pa_KSDATAFORMAT_SUBTYPE_PCM, 0x00000001, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xaa, 0x00, 0x38, 0x9b, 0x71)"
+
+.SS "__DEFINE_GUID (pa_KSDATAFORMAT_SUBTYPE_ADPCM, 0x00000002, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xaa, 0x00, 0x38, 0x9b, 0x71)"
+
+.SS "__DEFINE_GUID (pa_KSDATAFORMAT_SUBTYPE_IEEE_FLOAT, 0x00000003, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xaa, 0x00, 0x38, 0x9b, 0x71)"
+
+.SS "UINT32 ALIGN_NEXT_POW2 (UINT32 v)"
+
+.PP
+Definition at line 756 of file pa_win_wasapi\&.c\&.
+.SS "typedef \fBBOOL\fP (\fBWINAPI\fP * FAvRtCreateThreadOrderingGroup)"
+
+.SS "typedef \fBHANDLE\fP (\fBWINAPI\fP * FAvSetMmThreadCharacteristics)"
+
+.SS "\fBHANDLE\fP MMCSS_activate (\fBconst\fP char * name)"
+
+.PP
+Definition at line 4197 of file pa_win_wasapi\&.c\&.
+.SS "\fBvoid\fP MMCSS_deactivate (\fBHANDLE\fP hTask)"
+
+.PP
+Definition at line 4223 of file pa_win_wasapi\&.c\&.
+.SS "PA_DEFINE_CLSID (\fBIMMDeviceEnumerator\fP, bcde0395, e52f, 467c, 8e, 3d, c4, 57, 92, 91, 69, 2e)"
+
+.SS "PA_DEFINE_IID (\fBIAudioClient\fP, 1cb9ad4c, dbfa, 4c32, b1, 78, \fBc2\fP, f5, 68, a7, 03, b2)"
+
+.SS "PA_DEFINE_IID (IAudioClient2, 726778cd, f60a, 4eda, 82, de, e4, 76, 10, \fBcd\fP, 78, aa)"
+
+.SS "PA_DEFINE_IID (\fBIMMEndpoint\fP, 1be09788, 6894, 4089, 85, 86, 9a, 2a, 6c, 26, 5a, c5)"
+
+.SS "PA_DEFINE_IID (\fBIMMDeviceEnumerator\fP, a95664d2, 9614, 4f35, a7, 46, de, 8d, b6, 36, 17, e6)"
+
+.SS "PA_DEFINE_IID (\fBIAudioRenderClient\fP, f294acfc, 3146, 4483, a7, bf, ad, dc, a7, \fBc2\fP, 60, e2)"
+
+.SS "PA_DEFINE_IID (\fBIAudioCaptureClient\fP, c8adbd64, e71e, 48a0, a4, de, 18, 5c, 39, 5c, d3, 17)"
+
+.SS "PA_DEFINE_IID (\fBIDeviceTopology\fP, 2A07407E, 6497, 4A18, 97, 87, 32, f7, 9b, d0, d9, 8f)"
+
+.SS "PA_DEFINE_IID (\fBIPart\fP, AE2DE0E4, 5BCA, 4F2D, aa, 46, 5d, 13, f8, fd, b3, a9)"
+
+.SS "PA_DEFINE_IID (\fBIKsJackDescription\fP, 4509F757, 2D46, 4637, 8e, 62, ce, 7d, b9, 44, f5, 7b)"
+
+.SS "unsigned long PaUtil_GetOutputFrameCount (\fBPaUtilBufferProcessor\fP * bp)"
+
+.PP
+Definition at line 4033 of file pa_win_wasapi\&.c\&.
+.SS "\fBint\fP PaWasapi_GetDeviceDefaultFormat (\fBvoid\fP * pFormat, unsigned \fBint\fP nFormatSize, \fBPaDeviceIndex\fP nDevice)"
+Returns default sound format for device\&. \fBFormat\fP is represented by \fBPaWinWaveFormat\fP or WAVEFORMATEXTENSIBLE structure\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIpFormat\fP Pointer to \fBPaWinWaveFormat\fP or WAVEFORMATEXTENSIBLE structure\&. 
+.br
+\fInFormatSize\fP Size of \fBPaWinWaveFormat\fP or WAVEFORMATEXTENSIBLE structure in bytes\&. 
+.br
+\fInDevice\fP Device index\&.
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+Non-negative value indicating the number of bytes copied into format decriptor or, a PaErrorCode (which are always negative) if PortAudio is not initialized or an error is encountered\&. 
+.RE
+.PP
+
+.PP
+Definition at line 1669 of file pa_win_wasapi\&.c\&.
+.SS "\fBint\fP PaWasapi_GetDeviceRole (\fBPaDeviceIndex\fP nDevice)"
+Returns device role (PaWasapiDeviceRole enum)\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fInDevice\fP device index\&.
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+Non-negative value indicating device role or, a PaErrorCode (which are always negative) if PortAudio is not initialized or an error is encountered\&. 
+.RE
+.PP
+
+.PP
+Definition at line 1702 of file pa_win_wasapi\&.c\&.
+.SS "\fBPaError\fP PaWasapi_GetFramesPerHostBuffer (\fBPaStream\fP * pStream, unsigned \fBint\fP * nInput, unsigned \fBint\fP * nOutput)"
+Get number of frames per host buffer\&. This is maximal value of frames of WASAPI buffer which can be locked for operations\&. Use this method as helper to findout maximal values of inputFrames/outputFrames of PaWasapiHostProcessorCallback\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIpStream\fP Pointer to PaStream to query\&. 
+.br
+\fInInput\fP Pointer to variable to receive number of input frames\&. Can be NULL\&. 
+.br
+\fInOutput\fP Pointer to variable to receive number of output frames\&. Can be NULL\&. 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+Error code indicating success or failure\&. 
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBPaWasapiHostProcessorCallback\fP 
+.RE
+.PP
+
+.PP
+Definition at line 1774 of file pa_win_wasapi\&.c\&.
+.SS "\fBconst\fP wchar_t* PaWasapi_GetInputDeviceID (\fBPaStream\fP * s)"
+Returns Windows device ID for input stream
+.PP
+\fBParameters:\fP
+.RS 4
+\fIpStream\fP Pointer to PaStream to query\&.
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+non-null value pointing to static device ID 
+.RE
+.PP
+
+.PP
+Definition at line 1725 of file pa_win_wasapi\&.c\&.
+.SS "\fBPaError\fP PaWasapi_GetJackCount (\fBPaDeviceIndex\fP nDevice, \fBint\fP * jcount)"
+Get number of jacks associated with a WASAPI device\&. Use this method to determine if there are any jacks associated with the provided WASAPI device\&. Not all audio devices will support this capability\&. This is valid for both input and output devices\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fInDevice\fP device index\&. 
+.br
+\fIjcount\fP Number of jacks is returned in this variable 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+Error code indicating success or failure 
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBPaWasapi_GetJackDescription\fP 
+.RE
+.PP
+
+.PP
+Definition at line 4279 of file pa_win_wasapi\&.c\&.
+.SS "\fBPaError\fP PaWasapi_GetJackDescription (\fBPaDeviceIndex\fP nDevice, \fBint\fP jindex, \fBPaWasapiJackDescription\fP * pJackDescription)"
+Get the jack description associated with a WASAPI device and jack number Before this function is called, use PaWasapi_GetJackCount to determine the number of jacks associated with device\&. If jcount is greater than zero, then each jack from 0 to jcount can be queried with this function to get the jack description\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fInDevice\fP device index\&. 
+.br
+\fIjindex\fP Which jack to return information 
+.br
+\fI\fBKSJACK_DESCRIPTION\fP\fP This structure filled in on success\&. 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+Error code indicating success or failure 
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBPaWasapi_GetJackCount\fP 
+.RE
+.PP
+
+.PP
+Definition at line 4437 of file pa_win_wasapi\&.c\&.
+.SS "\fBconst\fP wchar_t* PaWasapi_GetOutputDeviceID (\fBPaStream\fP * s)"
+Returns Windows device ID for output stream
+.PP
+\fBParameters:\fP
+.RS 4
+\fIpStream\fP Pointer to PaStream to query\&.
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+non-null value pointing to static device ID 
+.RE
+.PP
+
+.PP
+Definition at line 1738 of file pa_win_wasapi\&.c\&.
+.SS "\fBPaError\fP PaWasapi_Initialize (\fBPaUtilHostApiRepresentation\fP ** hostApi, \fBPaHostApiIndex\fP index)"
+
+.PP
+Definition at line 1177 of file pa_win_wasapi\&.c\&.
+.SS "\fBint\fP PaWasapi_IsLoopback (\fBPaDeviceIndex\fP nDevice)"
+Returns device loopback indicator\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fInDevice\fP device index\&.
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+0 = Not loopback, 1 = loopback, < 0 = PaErrorCode if PortAudio is not initialized or an error is encountered\&. 
+.RE
+.PP
+
+.PP
+Definition at line 1751 of file pa_win_wasapi\&.c\&.
+.SS "\fBPaError\fP PaWasapi_ThreadPriorityBoost (\fBvoid\fP ** hTask, \fBPaWasapiThreadPriority\fP nPriorityClass)"
+Boost thread priority of calling thread (MMCSS)\&. Use it for Blocking Interface only for thread which makes calls to Pa_WriteStream/Pa_ReadStream\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIhTask\fP Handle to pointer to priority task\&. Must be used with PaWasapi_RevertThreadPriority method to revert thread priority to initial state\&.
+.br
+\fInPriorityClass\fP Id of thread priority of PaWasapiThreadPriority type\&. Specifying eThreadPriorityNone does nothing\&.
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+Error code indicating success or failure\&. 
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+PaWasapi_RevertThreadPriority 
+.RE
+.PP
+
+.PP
+Definition at line 4235 of file pa_win_wasapi\&.c\&.
+.SS "\fBPaError\fP PaWasapi_ThreadPriorityRevert (\fBvoid\fP * hTask)"
+Boost thread priority of calling thread (MMCSS)\&. Use it for Blocking Interface only for thread which makes calls to Pa_WriteStream/Pa_ReadStream\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIhTask\fP Task handle obtained by PaWasapi_BoostThreadPriority method\&. 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+Error code indicating success or failure\&. 
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+PaWasapi_BoostThreadPriority 
+.RE
+.PP
+
+.PP
+Definition at line 4265 of file pa_win_wasapi\&.c\&.
+.SS "\fBHRESULT\fP ProcessInputBuffer (\fBPaWasapiStream\fP * stream, \fBPaWasapiHostProcessor\fP * processor)"
+
+.PP
+Definition at line 4616 of file pa_win_wasapi\&.c\&.
+.SS "\fBHRESULT\fP ProcessOutputBuffer (\fBPaWasapiStream\fP * stream, \fBPaWasapiHostProcessor\fP * processor, UINT32 frames)"
+
+.PP
+Definition at line 4552 of file pa_win_wasapi\&.c\&.
+.SS "\fBPA_THREAD_FUNC\fP ProcThreadEvent (\fBvoid\fP * param)"
+
+.PP
+Definition at line 4716 of file pa_win_wasapi\&.c\&.
+.SS "\fBPA_THREAD_FUNC\fP ProcThreadPoll (\fBvoid\fP * param)"
+
+.PP
+Definition at line 4918 of file pa_win_wasapi\&.c\&.
+.SH "Variable Documentation"
+.PP 
+.SS "typedef LPDWORD"
+
+.PP
+Definition at line 278 of file pa_win_wasapi\&.c\&.
+.SS "\fBFAvRevertMmThreadCharacteristics\fP pAvRevertMmThreadCharacteristics = \fBNULL\fP"
+
+.PP
+Definition at line 287 of file pa_win_wasapi\&.c\&.
+.SS "FAvRtCreateThreadOrderingGroup pAvRtCreateThreadOrderingGroup = \fBNULL\fP"
+
+.PP
+Definition at line 283 of file pa_win_wasapi\&.c\&.
+.SS "FAvRtDeleteThreadOrderingGroup pAvRtDeleteThreadOrderingGroup = \fBNULL\fP"
+
+.PP
+Definition at line 284 of file pa_win_wasapi\&.c\&.
+.SS "FAvRtWaitOnThreadOrderingGroup pAvRtWaitOnThreadOrderingGroup = \fBNULL\fP"
+
+.PP
+Definition at line 285 of file pa_win_wasapi\&.c\&.
+.SS "FAvSetMmThreadCharacteristics pAvSetMmThreadCharacteristics = \fBNULL\fP"
+
+.PP
+Definition at line 286 of file pa_win_wasapi\&.c\&.
+.SS "FAvSetMmThreadPriority pAvSetMmThreadPriority = \fBNULL\fP"
+
+.PP
+Definition at line 288 of file pa_win_wasapi\&.c\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

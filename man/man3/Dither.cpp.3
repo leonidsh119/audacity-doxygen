@@ -1,0 +1,201 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/src/Dither.cpp" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/src/Dither.cpp \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include 'float_cast\&.h'\fP
+.br
+\fC#include <stdlib\&.h>\fP
+.br
+\fC#include <math\&.h>\fP
+.br
+\fC#include <string\&.h>\fP
+.br
+\fC#include <wx/defs\&.h>\fP
+.br
+\fC#include 'Dither\&.h'\fP
+.br
+
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBDITHER_NOISE\fP   (rand() / (float)RAND_MAX \- 0\&.5f)"
+.br
+.ti -1c
+.RI "#define \fBCONVERT_DIV16\fP   float(1<<15)"
+.br
+.ti -1c
+.RI "#define \fBCONVERT_DIV24\fP   float(1<<23)"
+.br
+.ti -1c
+.RI "#define \fBFROM_INT16\fP(ptr)   (*((short*)(ptr)) / \fBCONVERT_DIV16\fP)"
+.br
+.ti -1c
+.RI "#define \fBFROM_INT24\fP(ptr)   (*((  \fBint\fP*)(ptr)) / \fBCONVERT_DIV24\fP)"
+.br
+.ti -1c
+.RI "#define \fBFROM_FLOAT\fP(ptr)"
+.br
+.ti -1c
+.RI "#define \fBPROMOTE_TO_INT16\fP(sample)   ((sample) * \fBCONVERT_DIV16\fP)"
+.br
+.ti -1c
+.RI "#define \fBPROMOTE_TO_INT24\fP(sample)   ((sample) * \fBCONVERT_DIV24\fP)"
+.br
+.ti -1c
+.RI "#define \fBIMPLEMENT_STORE\fP(ptr,  sample,  ptr_type,  min_bound,  max_bound)"
+.br
+.ti -1c
+.RI "#define \fBSTORE_INT16\fP(ptr,  sample)   \fBIMPLEMENT_STORE\fP((ptr), (sample), short, \-32768, 32767)"
+.br
+.ti -1c
+.RI "#define \fBSTORE_INT24\fP(ptr,  sample)   \fBIMPLEMENT_STORE\fP((ptr), (sample), \fBint\fP, \-8388608, 8388607)"
+.br
+.ti -1c
+.RI "#define \fBDITHER_TO_INT16\fP(dither,  dst,  sample)   \fBSTORE_INT16\fP((dst), dither(\fBPROMOTE_TO_INT16\fP(sample)))"
+.br
+.ti -1c
+.RI "#define \fBDITHER_TO_INT24\fP(dither,  dst,  sample)   \fBSTORE_INT24\fP((dst), dither(\fBPROMOTE_TO_INT24\fP(sample)))"
+.br
+.ti -1c
+.RI "#define \fBDITHER_STEP\fP(dither,  store,  load,  dst,  src)   store(dither, (dst), load(src))"
+.br
+.ti -1c
+.RI "#define \fBDITHER_LOOP\fP(dither,  store,  load,  dst,  dstFormat,  dstStride,  src,  srcFormat,  srcStride,  \fBlen\fP)"
+.br
+.ti -1c
+.RI "#define \fBDITHER_INT24_TO_INT16\fP(dither,  dst,  dstStride,  src,  srcStride,  \fBlen\fP)   \fBDITHER_LOOP\fP(dither, \fBDITHER_TO_INT16\fP, \fBFROM_INT24\fP, dst, \fBint16Sample\fP, dstStride, src, \fBint24Sample\fP, srcStride, \fBlen\fP)"
+.br
+.ti -1c
+.RI "#define \fBDITHER_FLOAT_TO_INT16\fP(dither,  dst,  dstStride,  src,  srcStride,  \fBlen\fP)   \fBDITHER_LOOP\fP(dither, \fBDITHER_TO_INT16\fP, \fBFROM_FLOAT\fP, dst, \fBint16Sample\fP, dstStride, src, \fBfloatSample\fP, srcStride, \fBlen\fP)"
+.br
+.ti -1c
+.RI "#define \fBDITHER_FLOAT_TO_INT24\fP(dither,  dst,  dstStride,  src,  srcStride,  \fBlen\fP)   \fBDITHER_LOOP\fP(dither, \fBDITHER_TO_INT24\fP, \fBFROM_FLOAT\fP, dst, \fBint24Sample\fP, dstStride, src, \fBfloatSample\fP, srcStride, \fBlen\fP)"
+.br
+.ti -1c
+.RI "#define \fBDITHER\fP(dither,  dst,  dstFormat,  dstStride,  src,  srcFormat,  srcStride,  \fBlen\fP)"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define CONVERT_DIV16   float(1<<15)"
+
+.PP
+Definition at line 133 of file Dither\&.cpp\&.
+.SS "#define CONVERT_DIV24   float(1<<23)"
+
+.PP
+Definition at line 134 of file Dither\&.cpp\&.
+.SS "#define DITHER(dither, dst, dstFormat, dstStride, src, srcFormat, srcStride, \fBlen\fP)"
+\fBValue:\fP
+.PP
+.nf
+do { if (srcFormat == int24Sample && dstFormat == int16Sample) \
+        DITHER_INT24_TO_INT16(dither, dst, dstStride, src, srcStride, len); \
+    else if (srcFormat == floatSample && dstFormat == int16Sample) \
+        DITHER_FLOAT_TO_INT16(dither, dst, dstStride, src, srcStride, len); \
+    else if (srcFormat == floatSample && dstFormat == int24Sample) \
+        DITHER_FLOAT_TO_INT24(dither, dst, dstStride, src, srcStride, len); \
+    else { wxASSERT(false); } \
+    } while (0)
+.fi
+.PP
+Definition at line 196 of file Dither\&.cpp\&.
+.SS "#define DITHER_FLOAT_TO_INT16(dither, dst, dstStride, src, srcStride, \fBlen\fP)   \fBDITHER_LOOP\fP(dither, \fBDITHER_TO_INT16\fP, \fBFROM_FLOAT\fP, dst, \fBint16Sample\fP, dstStride, src, \fBfloatSample\fP, srcStride, \fBlen\fP)"
+
+.PP
+Definition at line 189 of file Dither\&.cpp\&.
+.SS "#define DITHER_FLOAT_TO_INT24(dither, dst, dstStride, src, srcStride, \fBlen\fP)   \fBDITHER_LOOP\fP(dither, \fBDITHER_TO_INT24\fP, \fBFROM_FLOAT\fP, dst, \fBint24Sample\fP, dstStride, src, \fBfloatSample\fP, srcStride, \fBlen\fP)"
+
+.PP
+Definition at line 191 of file Dither\&.cpp\&.
+.SS "#define DITHER_INT24_TO_INT16(dither, dst, dstStride, src, srcStride, \fBlen\fP)   \fBDITHER_LOOP\fP(dither, \fBDITHER_TO_INT16\fP, \fBFROM_INT24\fP, dst, \fBint16Sample\fP, dstStride, src, \fBint24Sample\fP, srcStride, \fBlen\fP)"
+
+.PP
+Definition at line 187 of file Dither\&.cpp\&.
+.SS "#define DITHER_LOOP(dither, store, load, dst, dstFormat, dstStride, src, srcFormat, srcStride, \fBlen\fP)"
+\fBValue:\fP
+.PP
+.nf
+do { \
+       char *d, *s; \
+       unsigned int i; \
+       int x; \
+       for (d = (char*)dst, s = (char*)src, i = 0; \
+            i < len; \
+            i++, d += SAMPLE_SIZE(dstFormat) * dstStride, \
+                 s += SAMPLE_SIZE(srcFormat) * srcStride) \
+          DITHER_STEP(dither, store, load, d, s); \
+   } while (0)
+.fi
+.PP
+Definition at line 174 of file Dither\&.cpp\&.
+.SS "#define DITHER_NOISE   (rand() / (float)RAND_MAX \- 0\&.5f)"
+
+.PP
+Definition at line 64 of file Dither\&.cpp\&.
+.SS "#define DITHER_STEP(dither, store, load, dst, src)   store(dither, (dst), load(src))"
+
+.PP
+Definition at line 169 of file Dither\&.cpp\&.
+.SS "#define DITHER_TO_INT16(dither, dst, sample)   \fBSTORE_INT16\fP((dst), dither(\fBPROMOTE_TO_INT16\fP(sample)))"
+
+.PP
+Definition at line 165 of file Dither\&.cpp\&.
+.SS "#define DITHER_TO_INT24(dither, dst, sample)   \fBSTORE_INT24\fP((dst), dither(\fBPROMOTE_TO_INT24\fP(sample)))"
+
+.PP
+Definition at line 166 of file Dither\&.cpp\&.
+.SS "#define FROM_FLOAT(ptr)"
+\fBValue:\fP
+.PP
+.nf
+(*((float*)(ptr)) >  1\&.0 ?  1\&.0 : \
+                         *((float*)(ptr)) < -1\&.0 ? -1\&.0 : \
+                         *((float*)(ptr)))
+.fi
+.PP
+Definition at line 143 of file Dither\&.cpp\&.
+.SS "#define FROM_INT16(ptr)   (*((short*)(ptr)) / \fBCONVERT_DIV16\fP)"
+
+.PP
+Definition at line 137 of file Dither\&.cpp\&.
+.SS "#define FROM_INT24(ptr)   (*((  \fBint\fP*)(ptr)) / \fBCONVERT_DIV24\fP)"
+
+.PP
+Definition at line 138 of file Dither\&.cpp\&.
+.SS "#define IMPLEMENT_STORE(ptr, sample, ptr_type, min_bound, max_bound)"
+\fBValue:\fP
+.PP
+.nf
+do { \
+    x = lrintf(sample); \
+    if (x>(max_bound)) *((ptr_type*)(ptr))=(max_bound); \
+    else if (x<(min_bound)) *((ptr_type*)(ptr))=(min_bound); \
+    else *((ptr_type*)(ptr))=(ptr_type)x; } while (0)
+.fi
+.PP
+Definition at line 154 of file Dither\&.cpp\&.
+.SS "#define PROMOTE_TO_INT16(sample)   ((sample) * \fBCONVERT_DIV16\fP)"
+
+.PP
+Definition at line 148 of file Dither\&.cpp\&.
+.SS "#define PROMOTE_TO_INT24(sample)   ((sample) * \fBCONVERT_DIV24\fP)"
+
+.PP
+Definition at line 149 of file Dither\&.cpp\&.
+.SS "#define STORE_INT16(ptr, sample)   \fBIMPLEMENT_STORE\fP((ptr), (sample), short, \-32768, 32767)"
+
+.PP
+Definition at line 161 of file Dither\&.cpp\&.
+.SS "#define STORE_INT24(ptr, sample)   \fBIMPLEMENT_STORE\fP((ptr), (sample), \fBint\fP, \-8388608, 8388607)"
+
+.PP
+Definition at line 162 of file Dither\&.cpp\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

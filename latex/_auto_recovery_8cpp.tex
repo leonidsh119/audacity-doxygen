@@ -1,0 +1,143 @@
+\hypertarget{_auto_recovery_8cpp}{}\section{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/src/\+Auto\+Recovery.cpp File Reference}
+\label{_auto_recovery_8cpp}\index{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/src/\+Auto\+Recovery.\+cpp@{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/src/\+Auto\+Recovery.\+cpp}}
+{\ttfamily \#include \char`\"{}Auto\+Recovery.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Audacity.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Audacity\+App.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}File\+Names.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}blockfile/\+Simple\+Block\+File.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Sequence.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Shuttle\+Gui.\+h\char`\"{}}\\*
+{\ttfamily \#include $<$wx/wxprec.\+h$>$}\\*
+{\ttfamily \#include $<$wx/filefn.\+h$>$}\\*
+{\ttfamily \#include $<$wx/dir.\+h$>$}\\*
+{\ttfamily \#include $<$wx/dialog.\+h$>$}\\*
+{\ttfamily \#include $<$wx/app.\+h$>$}\\*
+{\ttfamily \#include \char`\"{}Wave\+Track.\+h\char`\"{}}\\*
+{\ttfamily \#include $<$wx/arrimpl.\+cpp$>$}\\*
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \hyperlink{class_auto_recovery_dialog}{Auto\+Recovery\+Dialog}
+\begin{DoxyCompactList}\small\item\em The \hyperlink{class_auto_recovery_dialog}{Auto\+Recovery\+Dialog} prompts the user whether to recover previous Audacity projects that were closed incorrectly. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \{ \hyperlink{_auto_recovery_8cpp_a3b7c5804a12566fee0141f284efcb572a37a963588f700e63af6d7f10507247d3}{I\+D\+\_\+\+R\+E\+C\+O\+V\+E\+R\+\_\+\+A\+LL} = 10000, 
+\hyperlink{_auto_recovery_8cpp_a3b7c5804a12566fee0141f284efcb572af45b56da60d502e81223ecf7ef7efc47}{I\+D\+\_\+\+R\+E\+C\+O\+V\+E\+R\+\_\+\+N\+O\+NE}, 
+\hyperlink{_auto_recovery_8cpp_a3b7c5804a12566fee0141f284efcb572ac5f60a75040432cf807c890166972c90}{I\+D\+\_\+\+Q\+U\+I\+T\+\_\+\+A\+U\+D\+A\+C\+I\+TY}, 
+\hyperlink{_auto_recovery_8cpp_a3b7c5804a12566fee0141f284efcb572a2e68a42461dde224d0b630b54d02cbd6}{I\+D\+\_\+\+F\+I\+L\+E\+\_\+\+L\+I\+ST}
+ \}
+\item 
+enum \hyperlink{_auto_recovery_8cpp_ad282183b327c04b54b4d83706212f9c8}{Field\+Types} \{ \\*
+\hyperlink{_auto_recovery_8cpp_ad282183b327c04b54b4d83706212f9c8af26e43766f2ff77e32cb5b2d30c68074}{F\+T\+\_\+\+Start\+Tag}, 
+\hyperlink{_auto_recovery_8cpp_ad282183b327c04b54b4d83706212f9c8a255f12e93f8a1a60bc0a5ed0b81a98db}{F\+T\+\_\+\+End\+Tag}, 
+\hyperlink{_auto_recovery_8cpp_ad282183b327c04b54b4d83706212f9c8a1d38cf4948e8d150326b4c19498df15e}{F\+T\+\_\+\+String}, 
+\hyperlink{_auto_recovery_8cpp_ad282183b327c04b54b4d83706212f9c8a0eede6f7537ea0c40df8b7cf9ee8c499}{F\+T\+\_\+\+Int}, 
+\\*
+\hyperlink{_auto_recovery_8cpp_ad282183b327c04b54b4d83706212f9c8a9db081489b24c36a06282255cd1d53e0}{F\+T\+\_\+\+Bool}, 
+\hyperlink{_auto_recovery_8cpp_ad282183b327c04b54b4d83706212f9c8afb46b449f62a859ef421c7c8ef4f3eb8}{F\+T\+\_\+\+Long}, 
+\hyperlink{_auto_recovery_8cpp_ad282183b327c04b54b4d83706212f9c8aec730917dd1f346eab119cd1c1a9be25}{F\+T\+\_\+\+Long\+Long}, 
+\hyperlink{_auto_recovery_8cpp_ad282183b327c04b54b4d83706212f9c8ad9debf4299d5199a857580cff927d112}{F\+T\+\_\+\+SizeT}, 
+\\*
+\hyperlink{_auto_recovery_8cpp_ad282183b327c04b54b4d83706212f9c8a5e0c7a8174b82f9f0d317c408ca2e8b7}{F\+T\+\_\+\+Float}, 
+\hyperlink{_auto_recovery_8cpp_ad282183b327c04b54b4d83706212f9c8ab1b25f89e463662f2ccf5b29389b6dbc}{F\+T\+\_\+\+Double}, 
+\hyperlink{_auto_recovery_8cpp_ad282183b327c04b54b4d83706212f9c8adfec87f92c48fd58af7459c817b02da0}{F\+T\+\_\+\+Data}, 
+\hyperlink{_auto_recovery_8cpp_ad282183b327c04b54b4d83706212f9c8a5b7e9f4361e7a322f21e5614c06c990b}{F\+T\+\_\+\+Raw}, 
+\\*
+\hyperlink{_auto_recovery_8cpp_ad282183b327c04b54b4d83706212f9c8a461d24009f3aac2ecf3b3a7ae543bd0c}{F\+T\+\_\+\+Push}, 
+\hyperlink{_auto_recovery_8cpp_ad282183b327c04b54b4d83706212f9c8ab3e89020c9bb91f1a9515958c45a78a7}{F\+T\+\_\+\+Pop}, 
+\hyperlink{_auto_recovery_8cpp_ad282183b327c04b54b4d83706212f9c8aac0ea34f6835a102ce81d79829cb3c62}{F\+T\+\_\+\+Name}
+ \}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{mac_2config_2i386_2lib-src_2libsoxr_2soxr-config_8h_abb452686968e48b67397da5f97445f5b}{bool} \hyperlink{_auto_recovery_8cpp_a56ed23115d31c43cbc618f348f0537c8}{Show\+Auto\+Recovery\+Dialog\+If\+Needed} (\hyperlink{class_audacity_project}{Audacity\+Project} $\ast$$\ast$pproj, \hyperlink{mac_2config_2i386_2lib-src_2libsoxr_2soxr-config_8h_abb452686968e48b67397da5f97445f5b}{bool} $\ast$did\+Recover\+Anything)
+\item 
+\hyperlink{_auto_recovery_8cpp_a9260abb5b5a4c99940ebb92c759ef40a}{W\+X\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+O\+B\+J\+A\+R\+R\+AY} (Id\+Map\+Array)
+\end{DoxyCompactItemize}
+
+
+\subsection{Enumeration Type Documentation}
+\subsubsection[{\texorpdfstring{anonymous enum}{anonymous enum}}]{\setlength{\rightskip}{0pt plus 5cm}anonymous enum}\hypertarget{_auto_recovery_8cpp_a3b7c5804a12566fee0141f284efcb572}{}\label{_auto_recovery_8cpp_a3b7c5804a12566fee0141f284efcb572}
+\begin{Desc}
+\item[Enumerator]\par
+\begin{description}
+\index{I\+D\+\_\+\+R\+E\+C\+O\+V\+E\+R\+\_\+\+A\+LL@{I\+D\+\_\+\+R\+E\+C\+O\+V\+E\+R\+\_\+\+A\+LL}!Auto\+Recovery.\+cpp@{Auto\+Recovery.\+cpp}}\index{Auto\+Recovery.\+cpp@{Auto\+Recovery.\+cpp}!I\+D\+\_\+\+R\+E\+C\+O\+V\+E\+R\+\_\+\+A\+LL@{I\+D\+\_\+\+R\+E\+C\+O\+V\+E\+R\+\_\+\+A\+LL}}\item[{\em 
+I\+D\+\_\+\+R\+E\+C\+O\+V\+E\+R\+\_\+\+A\+LL\hypertarget{_auto_recovery_8cpp_a3b7c5804a12566fee0141f284efcb572a37a963588f700e63af6d7f10507247d3}{}\label{_auto_recovery_8cpp_a3b7c5804a12566fee0141f284efcb572a37a963588f700e63af6d7f10507247d3}
+}]\index{I\+D\+\_\+\+R\+E\+C\+O\+V\+E\+R\+\_\+\+N\+O\+NE@{I\+D\+\_\+\+R\+E\+C\+O\+V\+E\+R\+\_\+\+N\+O\+NE}!Auto\+Recovery.\+cpp@{Auto\+Recovery.\+cpp}}\index{Auto\+Recovery.\+cpp@{Auto\+Recovery.\+cpp}!I\+D\+\_\+\+R\+E\+C\+O\+V\+E\+R\+\_\+\+N\+O\+NE@{I\+D\+\_\+\+R\+E\+C\+O\+V\+E\+R\+\_\+\+N\+O\+NE}}\item[{\em 
+I\+D\+\_\+\+R\+E\+C\+O\+V\+E\+R\+\_\+\+N\+O\+NE\hypertarget{_auto_recovery_8cpp_a3b7c5804a12566fee0141f284efcb572af45b56da60d502e81223ecf7ef7efc47}{}\label{_auto_recovery_8cpp_a3b7c5804a12566fee0141f284efcb572af45b56da60d502e81223ecf7ef7efc47}
+}]\index{I\+D\+\_\+\+Q\+U\+I\+T\+\_\+\+A\+U\+D\+A\+C\+I\+TY@{I\+D\+\_\+\+Q\+U\+I\+T\+\_\+\+A\+U\+D\+A\+C\+I\+TY}!Auto\+Recovery.\+cpp@{Auto\+Recovery.\+cpp}}\index{Auto\+Recovery.\+cpp@{Auto\+Recovery.\+cpp}!I\+D\+\_\+\+Q\+U\+I\+T\+\_\+\+A\+U\+D\+A\+C\+I\+TY@{I\+D\+\_\+\+Q\+U\+I\+T\+\_\+\+A\+U\+D\+A\+C\+I\+TY}}\item[{\em 
+I\+D\+\_\+\+Q\+U\+I\+T\+\_\+\+A\+U\+D\+A\+C\+I\+TY\hypertarget{_auto_recovery_8cpp_a3b7c5804a12566fee0141f284efcb572ac5f60a75040432cf807c890166972c90}{}\label{_auto_recovery_8cpp_a3b7c5804a12566fee0141f284efcb572ac5f60a75040432cf807c890166972c90}
+}]\index{I\+D\+\_\+\+F\+I\+L\+E\+\_\+\+L\+I\+ST@{I\+D\+\_\+\+F\+I\+L\+E\+\_\+\+L\+I\+ST}!Auto\+Recovery.\+cpp@{Auto\+Recovery.\+cpp}}\index{Auto\+Recovery.\+cpp@{Auto\+Recovery.\+cpp}!I\+D\+\_\+\+F\+I\+L\+E\+\_\+\+L\+I\+ST@{I\+D\+\_\+\+F\+I\+L\+E\+\_\+\+L\+I\+ST}}\item[{\em 
+I\+D\+\_\+\+F\+I\+L\+E\+\_\+\+L\+I\+ST\hypertarget{_auto_recovery_8cpp_a3b7c5804a12566fee0141f284efcb572a2e68a42461dde224d0b630b54d02cbd6}{}\label{_auto_recovery_8cpp_a3b7c5804a12566fee0141f284efcb572a2e68a42461dde224d0b630b54d02cbd6}
+}]\end{description}
+\end{Desc}
+
+
+Definition at line 33 of file Auto\+Recovery.\+cpp.
+
+\index{Auto\+Recovery.\+cpp@{Auto\+Recovery.\+cpp}!Field\+Types@{Field\+Types}}
+\index{Field\+Types@{Field\+Types}!Auto\+Recovery.\+cpp@{Auto\+Recovery.\+cpp}}
+\subsubsection[{\texorpdfstring{Field\+Types}{FieldTypes}}]{\setlength{\rightskip}{0pt plus 5cm}enum {\bf Field\+Types}}\hypertarget{_auto_recovery_8cpp_ad282183b327c04b54b4d83706212f9c8}{}\label{_auto_recovery_8cpp_ad282183b327c04b54b4d83706212f9c8}
+\hyperlink{class_auto_save_file}{Auto\+Save\+File} class \begin{Desc}
+\item[Enumerator]\par
+\begin{description}
+\index{F\+T\+\_\+\+Start\+Tag@{F\+T\+\_\+\+Start\+Tag}!Auto\+Recovery.\+cpp@{Auto\+Recovery.\+cpp}}\index{Auto\+Recovery.\+cpp@{Auto\+Recovery.\+cpp}!F\+T\+\_\+\+Start\+Tag@{F\+T\+\_\+\+Start\+Tag}}\item[{\em 
+F\+T\+\_\+\+Start\+Tag\hypertarget{_auto_recovery_8cpp_ad282183b327c04b54b4d83706212f9c8af26e43766f2ff77e32cb5b2d30c68074}{}\label{_auto_recovery_8cpp_ad282183b327c04b54b4d83706212f9c8af26e43766f2ff77e32cb5b2d30c68074}
+}]\index{F\+T\+\_\+\+End\+Tag@{F\+T\+\_\+\+End\+Tag}!Auto\+Recovery.\+cpp@{Auto\+Recovery.\+cpp}}\index{Auto\+Recovery.\+cpp@{Auto\+Recovery.\+cpp}!F\+T\+\_\+\+End\+Tag@{F\+T\+\_\+\+End\+Tag}}\item[{\em 
+F\+T\+\_\+\+End\+Tag\hypertarget{_auto_recovery_8cpp_ad282183b327c04b54b4d83706212f9c8a255f12e93f8a1a60bc0a5ed0b81a98db}{}\label{_auto_recovery_8cpp_ad282183b327c04b54b4d83706212f9c8a255f12e93f8a1a60bc0a5ed0b81a98db}
+}]\index{F\+T\+\_\+\+String@{F\+T\+\_\+\+String}!Auto\+Recovery.\+cpp@{Auto\+Recovery.\+cpp}}\index{Auto\+Recovery.\+cpp@{Auto\+Recovery.\+cpp}!F\+T\+\_\+\+String@{F\+T\+\_\+\+String}}\item[{\em 
+F\+T\+\_\+\+String\hypertarget{_auto_recovery_8cpp_ad282183b327c04b54b4d83706212f9c8a1d38cf4948e8d150326b4c19498df15e}{}\label{_auto_recovery_8cpp_ad282183b327c04b54b4d83706212f9c8a1d38cf4948e8d150326b4c19498df15e}
+}]\index{F\+T\+\_\+\+Int@{F\+T\+\_\+\+Int}!Auto\+Recovery.\+cpp@{Auto\+Recovery.\+cpp}}\index{Auto\+Recovery.\+cpp@{Auto\+Recovery.\+cpp}!F\+T\+\_\+\+Int@{F\+T\+\_\+\+Int}}\item[{\em 
+F\+T\+\_\+\+Int\hypertarget{_auto_recovery_8cpp_ad282183b327c04b54b4d83706212f9c8a0eede6f7537ea0c40df8b7cf9ee8c499}{}\label{_auto_recovery_8cpp_ad282183b327c04b54b4d83706212f9c8a0eede6f7537ea0c40df8b7cf9ee8c499}
+}]\index{F\+T\+\_\+\+Bool@{F\+T\+\_\+\+Bool}!Auto\+Recovery.\+cpp@{Auto\+Recovery.\+cpp}}\index{Auto\+Recovery.\+cpp@{Auto\+Recovery.\+cpp}!F\+T\+\_\+\+Bool@{F\+T\+\_\+\+Bool}}\item[{\em 
+F\+T\+\_\+\+Bool\hypertarget{_auto_recovery_8cpp_ad282183b327c04b54b4d83706212f9c8a9db081489b24c36a06282255cd1d53e0}{}\label{_auto_recovery_8cpp_ad282183b327c04b54b4d83706212f9c8a9db081489b24c36a06282255cd1d53e0}
+}]\index{F\+T\+\_\+\+Long@{F\+T\+\_\+\+Long}!Auto\+Recovery.\+cpp@{Auto\+Recovery.\+cpp}}\index{Auto\+Recovery.\+cpp@{Auto\+Recovery.\+cpp}!F\+T\+\_\+\+Long@{F\+T\+\_\+\+Long}}\item[{\em 
+F\+T\+\_\+\+Long\hypertarget{_auto_recovery_8cpp_ad282183b327c04b54b4d83706212f9c8afb46b449f62a859ef421c7c8ef4f3eb8}{}\label{_auto_recovery_8cpp_ad282183b327c04b54b4d83706212f9c8afb46b449f62a859ef421c7c8ef4f3eb8}
+}]\index{F\+T\+\_\+\+Long\+Long@{F\+T\+\_\+\+Long\+Long}!Auto\+Recovery.\+cpp@{Auto\+Recovery.\+cpp}}\index{Auto\+Recovery.\+cpp@{Auto\+Recovery.\+cpp}!F\+T\+\_\+\+Long\+Long@{F\+T\+\_\+\+Long\+Long}}\item[{\em 
+F\+T\+\_\+\+Long\+Long\hypertarget{_auto_recovery_8cpp_ad282183b327c04b54b4d83706212f9c8aec730917dd1f346eab119cd1c1a9be25}{}\label{_auto_recovery_8cpp_ad282183b327c04b54b4d83706212f9c8aec730917dd1f346eab119cd1c1a9be25}
+}]\index{F\+T\+\_\+\+SizeT@{F\+T\+\_\+\+SizeT}!Auto\+Recovery.\+cpp@{Auto\+Recovery.\+cpp}}\index{Auto\+Recovery.\+cpp@{Auto\+Recovery.\+cpp}!F\+T\+\_\+\+SizeT@{F\+T\+\_\+\+SizeT}}\item[{\em 
+F\+T\+\_\+\+SizeT\hypertarget{_auto_recovery_8cpp_ad282183b327c04b54b4d83706212f9c8ad9debf4299d5199a857580cff927d112}{}\label{_auto_recovery_8cpp_ad282183b327c04b54b4d83706212f9c8ad9debf4299d5199a857580cff927d112}
+}]\index{F\+T\+\_\+\+Float@{F\+T\+\_\+\+Float}!Auto\+Recovery.\+cpp@{Auto\+Recovery.\+cpp}}\index{Auto\+Recovery.\+cpp@{Auto\+Recovery.\+cpp}!F\+T\+\_\+\+Float@{F\+T\+\_\+\+Float}}\item[{\em 
+F\+T\+\_\+\+Float\hypertarget{_auto_recovery_8cpp_ad282183b327c04b54b4d83706212f9c8a5e0c7a8174b82f9f0d317c408ca2e8b7}{}\label{_auto_recovery_8cpp_ad282183b327c04b54b4d83706212f9c8a5e0c7a8174b82f9f0d317c408ca2e8b7}
+}]\index{F\+T\+\_\+\+Double@{F\+T\+\_\+\+Double}!Auto\+Recovery.\+cpp@{Auto\+Recovery.\+cpp}}\index{Auto\+Recovery.\+cpp@{Auto\+Recovery.\+cpp}!F\+T\+\_\+\+Double@{F\+T\+\_\+\+Double}}\item[{\em 
+F\+T\+\_\+\+Double\hypertarget{_auto_recovery_8cpp_ad282183b327c04b54b4d83706212f9c8ab1b25f89e463662f2ccf5b29389b6dbc}{}\label{_auto_recovery_8cpp_ad282183b327c04b54b4d83706212f9c8ab1b25f89e463662f2ccf5b29389b6dbc}
+}]\index{F\+T\+\_\+\+Data@{F\+T\+\_\+\+Data}!Auto\+Recovery.\+cpp@{Auto\+Recovery.\+cpp}}\index{Auto\+Recovery.\+cpp@{Auto\+Recovery.\+cpp}!F\+T\+\_\+\+Data@{F\+T\+\_\+\+Data}}\item[{\em 
+F\+T\+\_\+\+Data\hypertarget{_auto_recovery_8cpp_ad282183b327c04b54b4d83706212f9c8adfec87f92c48fd58af7459c817b02da0}{}\label{_auto_recovery_8cpp_ad282183b327c04b54b4d83706212f9c8adfec87f92c48fd58af7459c817b02da0}
+}]\index{F\+T\+\_\+\+Raw@{F\+T\+\_\+\+Raw}!Auto\+Recovery.\+cpp@{Auto\+Recovery.\+cpp}}\index{Auto\+Recovery.\+cpp@{Auto\+Recovery.\+cpp}!F\+T\+\_\+\+Raw@{F\+T\+\_\+\+Raw}}\item[{\em 
+F\+T\+\_\+\+Raw\hypertarget{_auto_recovery_8cpp_ad282183b327c04b54b4d83706212f9c8a5b7e9f4361e7a322f21e5614c06c990b}{}\label{_auto_recovery_8cpp_ad282183b327c04b54b4d83706212f9c8a5b7e9f4361e7a322f21e5614c06c990b}
+}]\index{F\+T\+\_\+\+Push@{F\+T\+\_\+\+Push}!Auto\+Recovery.\+cpp@{Auto\+Recovery.\+cpp}}\index{Auto\+Recovery.\+cpp@{Auto\+Recovery.\+cpp}!F\+T\+\_\+\+Push@{F\+T\+\_\+\+Push}}\item[{\em 
+F\+T\+\_\+\+Push\hypertarget{_auto_recovery_8cpp_ad282183b327c04b54b4d83706212f9c8a461d24009f3aac2ecf3b3a7ae543bd0c}{}\label{_auto_recovery_8cpp_ad282183b327c04b54b4d83706212f9c8a461d24009f3aac2ecf3b3a7ae543bd0c}
+}]\index{F\+T\+\_\+\+Pop@{F\+T\+\_\+\+Pop}!Auto\+Recovery.\+cpp@{Auto\+Recovery.\+cpp}}\index{Auto\+Recovery.\+cpp@{Auto\+Recovery.\+cpp}!F\+T\+\_\+\+Pop@{F\+T\+\_\+\+Pop}}\item[{\em 
+F\+T\+\_\+\+Pop\hypertarget{_auto_recovery_8cpp_ad282183b327c04b54b4d83706212f9c8ab3e89020c9bb91f1a9515958c45a78a7}{}\label{_auto_recovery_8cpp_ad282183b327c04b54b4d83706212f9c8ab3e89020c9bb91f1a9515958c45a78a7}
+}]\index{F\+T\+\_\+\+Name@{F\+T\+\_\+\+Name}!Auto\+Recovery.\+cpp@{Auto\+Recovery.\+cpp}}\index{Auto\+Recovery.\+cpp@{Auto\+Recovery.\+cpp}!F\+T\+\_\+\+Name@{F\+T\+\_\+\+Name}}\item[{\em 
+F\+T\+\_\+\+Name\hypertarget{_auto_recovery_8cpp_ad282183b327c04b54b4d83706212f9c8aac0ea34f6835a102ce81d79829cb3c62}{}\label{_auto_recovery_8cpp_ad282183b327c04b54b4d83706212f9c8aac0ea34f6835a102ce81d79829cb3c62}
+}]\end{description}
+\end{Desc}
+
+
+Definition at line 463 of file Auto\+Recovery.\+cpp.
+
+
+
+\subsection{Function Documentation}
+\index{Auto\+Recovery.\+cpp@{Auto\+Recovery.\+cpp}!Show\+Auto\+Recovery\+Dialog\+If\+Needed@{Show\+Auto\+Recovery\+Dialog\+If\+Needed}}
+\index{Show\+Auto\+Recovery\+Dialog\+If\+Needed@{Show\+Auto\+Recovery\+Dialog\+If\+Needed}!Auto\+Recovery.\+cpp@{Auto\+Recovery.\+cpp}}
+\subsubsection[{\texorpdfstring{Show\+Auto\+Recovery\+Dialog\+If\+Needed(\+Audacity\+Project $\ast$$\ast$pproj, bool $\ast$did\+Recover\+Anything)}{ShowAutoRecoveryDialogIfNeeded(AudacityProject **pproj, bool *didRecoverAnything)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf bool} Show\+Auto\+Recovery\+Dialog\+If\+Needed (
+\begin{DoxyParamCaption}
+\item[{{\bf Audacity\+Project} $\ast$$\ast$}]{pproj, }
+\item[{{\bf bool} $\ast$}]{did\+Recover\+Anything}
+\end{DoxyParamCaption}
+)}\hypertarget{_auto_recovery_8cpp_a56ed23115d31c43cbc618f348f0537c8}{}\label{_auto_recovery_8cpp_a56ed23115d31c43cbc618f348f0537c8}
+
+
+Definition at line 230 of file Auto\+Recovery.\+cpp.
+
+\index{Auto\+Recovery.\+cpp@{Auto\+Recovery.\+cpp}!W\+X\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+O\+B\+J\+A\+R\+R\+AY@{W\+X\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+O\+B\+J\+A\+R\+R\+AY}}
+\index{W\+X\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+O\+B\+J\+A\+R\+R\+AY@{W\+X\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+O\+B\+J\+A\+R\+R\+AY}!Auto\+Recovery.\+cpp@{Auto\+Recovery.\+cpp}}
+\subsubsection[{\texorpdfstring{W\+X\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+O\+B\+J\+A\+R\+R\+A\+Y(\+Id\+Map\+Array)}{WX_DEFINE_OBJARRAY(IdMapArray)}}]{\setlength{\rightskip}{0pt plus 5cm}W\+X\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+O\+B\+J\+A\+R\+R\+AY (
+\begin{DoxyParamCaption}
+\item[{Id\+Map\+Array}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{_auto_recovery_8cpp_a9260abb5b5a4c99940ebb92c759ef40a}{}\label{_auto_recovery_8cpp_a9260abb5b5a4c99940ebb92c759ef40a}

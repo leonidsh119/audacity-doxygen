@@ -1,0 +1,143 @@
+.TH "PCMAliasBlockFile" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+PCMAliasBlockFile \- An \fBAliasBlockFile\fP that references uncompressed data in an existing file\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <PCMAliasBlockFile\&.h>\fP
+.PP
+Inherits \fBAliasBlockFile\fP\&.
+.PP
+Inherited by \fBLegacyAliasBlockFile\fP, and \fBODPCMAliasBlockFile\fP\&.
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBPCMAliasBlockFile\fP (wxFileName baseFileName, wxFileName aliasedFileName, \fBsampleCount\fP aliasStart, \fBsampleCount\fP aliasLen, \fBint\fP aliasChannel)"
+.br
+.RI "\fIConstructs a \fBPCMAliasBlockFile\fP, writing the summary to disk\&. \fP"
+.ti -1c
+.RI "\fBPCMAliasBlockFile\fP (wxFileName fileName, wxFileName aliasedFileName, \fBsampleCount\fP aliasStart, \fBsampleCount\fP aliasLen, \fBint\fP aliasChannel, \fBbool\fP writeSummary)"
+.br
+.RI "\fIConstructs a \fBPCMAliasBlockFile\fP with the option of not writing to disk\&. \fP"
+.ti -1c
+.RI "\fBPCMAliasBlockFile\fP (wxFileName existingSummaryFileName, wxFileName aliasedFileName, \fBsampleCount\fP aliasStart, \fBsampleCount\fP aliasLen, \fBint\fP aliasChannel, float \fBmin\fP, float \fBmax\fP, float rms)"
+.br
+.ti -1c
+.RI "virtual \fB~PCMAliasBlockFile\fP ()"
+.br
+.ti -1c
+.RI "\fBint\fP \fBReadData\fP (\fBsamplePtr\fP \fBdata\fP, \fBsampleFormat\fP \fBformat\fP, \fBsampleCount\fP \fBstart\fP, \fBsampleCount\fP \fBlen\fP) override"
+.br
+.RI "\fIReads the specified data from the aliased file using libsndfile\&. \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBSaveXML\fP (\fBXMLWriter\fP &xmlFile) override"
+.br
+.RI "\fIStores a representation of this file in XML\&. \fP"
+.ti -1c
+.RI "\fBBlockFile\fP * \fBCopy\fP (wxFileName fileName) override"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBRecover\fP () override"
+.br
+.RI "\fIif the on-disk state disappeared, either recover it (if it was \fP"
+.in -1c
+.SS "Static Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "static \fBBlockFile\fP * \fBBuildFromXML\fP (\fBDirManager\fP &dm, \fBconst\fP wxChar **attrs)"
+.br
+.in -1c
+.SS "Additional Inherited Members"
+.SH "Detailed Description"
+.PP 
+An \fBAliasBlockFile\fP that references uncompressed data in an existing file\&. 
+.PP
+Definition at line 18 of file PCMAliasBlockFile\&.h\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "PCMAliasBlockFile::PCMAliasBlockFile (wxFileName baseFileName, wxFileName aliasedFileName, \fBsampleCount\fP aliasStart, \fBsampleCount\fP aliasLen, \fBint\fP aliasChannel)"
+
+.PP
+Constructs a \fBPCMAliasBlockFile\fP, writing the summary to disk\&. 
+.PP
+Definition at line 28 of file PCMAliasBlockFile\&.cpp\&.
+.SS "PCMAliasBlockFile::PCMAliasBlockFile (wxFileName fileName, wxFileName aliasedFileName, \fBsampleCount\fP aliasStart, \fBsampleCount\fP aliasLen, \fBint\fP aliasChannel, \fBbool\fP writeSummary)"
+
+.PP
+Constructs a \fBPCMAliasBlockFile\fP with the option of not writing to disk\&. 
+.PP
+Definition at line 39 of file PCMAliasBlockFile\&.cpp\&.
+.SS "PCMAliasBlockFile::PCMAliasBlockFile (wxFileName existingSummaryFileName, wxFileName aliasedFileName, \fBsampleCount\fP aliasStart, \fBsampleCount\fP aliasLen, \fBint\fP aliasChannel, float min, float max, float rms)"
+
+.PP
+Definition at line 51 of file PCMAliasBlockFile\&.cpp\&.
+.SS "PCMAliasBlockFile::~PCMAliasBlockFile ()\fC [virtual]\fP"
+
+.PP
+Definition at line 63 of file PCMAliasBlockFile\&.cpp\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "\fBBlockFile\fP * PCMAliasBlockFile::BuildFromXML (\fBDirManager\fP & dm, \fBconst\fP wxChar ** attrs)\fC [static]\fP"
+
+.PP
+Definition at line 189 of file PCMAliasBlockFile\&.cpp\&.
+.SS "\fBBlockFile\fP * PCMAliasBlockFile::Copy (wxFileName newFileName)\fC [override]\fP, \fC [virtual]\fP"
+Construct a NEW \fBPCMAliasBlockFile\fP based on this one, but writing the summary data to a NEW file\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fInewFileName\fP The filename to copy the summary data to\&. 
+.RE
+.PP
+
+.PP
+Implements \fBBlockFile\fP\&.
+.PP
+Definition at line 160 of file PCMAliasBlockFile\&.cpp\&.
+.SS "\fBint\fP PCMAliasBlockFile::ReadData (\fBsamplePtr\fP data, \fBsampleFormat\fP format, \fBsampleCount\fP start, \fBsampleCount\fP len)\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Reads the specified data from the aliased file using libsndfile\&. Reads the specified data from the aliased file, using libsndfile, and converts it to the given sample format\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdata\fP The buffer to read the sample data into\&. 
+.br
+\fIformat\fP The format to convert the data into 
+.br
+\fIstart\fP The offset within the block to begin reading 
+.br
+\fIlen\fP The number of samples to read 
+.RE
+.PP
+
+.PP
+Implements \fBBlockFile\fP\&.
+.PP
+Definition at line 74 of file PCMAliasBlockFile\&.cpp\&.
+.SS "\fBvoid\fP PCMAliasBlockFile::Recover ()\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+if the on-disk state disappeared, either recover it (if it was 
+.PP
+Implements \fBBlockFile\fP\&.
+.PP
+Definition at line 264 of file PCMAliasBlockFile\&.cpp\&.
+.SS "\fBvoid\fP PCMAliasBlockFile::SaveXML (\fBXMLWriter\fP & xmlFile)\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Stores a representation of this file in XML\&. 
+.PP
+Implements \fBBlockFile\fP\&.
+.PP
+Definition at line 170 of file PCMAliasBlockFile\&.cpp\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

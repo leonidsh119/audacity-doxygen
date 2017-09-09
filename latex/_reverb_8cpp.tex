@@ -1,0 +1,428 @@
+\hypertarget{_reverb_8cpp}{}\section{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/src/effects/\+Reverb.cpp File Reference}
+\label{_reverb_8cpp}\index{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/src/effects/\+Reverb.\+cpp@{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/src/effects/\+Reverb.\+cpp}}
+{\ttfamily \#include \char`\"{}../\+Audacity.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Reverb.\+h\char`\"{}}\\*
+{\ttfamily \#include $<$wx/arrstr.\+h$>$}\\*
+{\ttfamily \#include $<$wx/intl.\+h$>$}\\*
+{\ttfamily \#include \char`\"{}../\+Prefs.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../\+Shuttle\+Gui.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../widgets/valnum.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Reverb\+\_\+lib\+So\+X.\+h\char`\"{}}\\*
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{struct_reverb__priv__t}{Reverb\+\_\+priv\+\_\+t}
+\end{DoxyCompactItemize}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{_reverb_8cpp_aaad3b7d3b91c97486859c466932ed324}{Spin\+Slider\+Event}(n)
+\item 
+\#define \hyperlink{_reverb_8cpp_a52220397ecea855b3a99746e451426e1}{B\+L\+O\+CK}~16384
+\item 
+\#define \hyperlink{_reverb_8cpp_a323a693857589f59e36664934785bc38}{Spin\+Slider}(n,  \hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p})
+\item 
+\#define \hyperlink{_reverb_8cpp_a12b03c74baa951880fe68530108b38fd}{Set\+Spin\+Slider}(n)
+\item 
+\#define \hyperlink{_reverb_8cpp_a3221fd3069cf32c4b1e6d10342279bd1}{Spin\+Slider\+Handlers}(n)
+\end{DoxyCompactItemize}
+\subsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \{ \\*
+\hyperlink{_reverb_8cpp_add18e1506c718e8a28df3a2bfdaa9ad2a6e99252f1cec000ae220554d86541566}{I\+D\+\_\+\+Room\+Size} = 10000, 
+\hyperlink{_reverb_8cpp_add18e1506c718e8a28df3a2bfdaa9ad2a1263ca16d554892e3937ba8e1d03c733}{I\+D\+\_\+\+Pre\+Delay}, 
+\hyperlink{_reverb_8cpp_add18e1506c718e8a28df3a2bfdaa9ad2a46e616b5fe29883af18852c320faf661}{I\+D\+\_\+\+Reverberance}, 
+\hyperlink{_reverb_8cpp_add18e1506c718e8a28df3a2bfdaa9ad2a1c5b9b96da27639982eec6a998892d53}{I\+D\+\_\+\+Hf\+Damping}, 
+\\*
+\hyperlink{_reverb_8cpp_add18e1506c718e8a28df3a2bfdaa9ad2a716ff1b9fa08361d09384755178f0fd9}{I\+D\+\_\+\+Tone\+Low}, 
+\hyperlink{_reverb_8cpp_add18e1506c718e8a28df3a2bfdaa9ad2a337b63dbde65d43fcf3a7cbe66a7e6ab}{I\+D\+\_\+\+Tone\+High}, 
+\hyperlink{_reverb_8cpp_add18e1506c718e8a28df3a2bfdaa9ad2a786e4f0780a461fd64939fa102411f4d}{I\+D\+\_\+\+Wet\+Gain}, 
+\hyperlink{_reverb_8cpp_add18e1506c718e8a28df3a2bfdaa9ad2acb2b536082e99da9ca0bf9cd5dcf6d3d}{I\+D\+\_\+\+Dry\+Gain}, 
+\\*
+\hyperlink{_reverb_8cpp_add18e1506c718e8a28df3a2bfdaa9ad2aa5b1e68134e2097afe8785e7334328ca}{I\+D\+\_\+\+Stereo\+Width}, 
+\hyperlink{_reverb_8cpp_add18e1506c718e8a28df3a2bfdaa9ad2a18a280fb2b128a5b7c3226d079cb23ff}{I\+D\+\_\+\+Wet\+Only}
+ \}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{_reverb_8cpp_a6d2fee7ea656f695cc155e95eb1253af}{Param} (Room\+Size, double, \hyperlink{_theme_8cpp_ad4baed404c66b57e257af684bdc5ecf2}{XO}(\char`\"{}Room\+Size\char`\"{}), 75, 0, 100, 1)
+\item 
+\hyperlink{_reverb_8cpp_aea4b0fbfde49b1cf38360a7c319dbfe2}{Param} (Pre\+Delay, double, \hyperlink{_theme_8cpp_ad4baed404c66b57e257af684bdc5ecf2}{XO}(\char`\"{}Delay\char`\"{}), 10, 0, 200, 1)
+\item 
+\hyperlink{_reverb_8cpp_ae20f9864406ea2b1554260fcdddb9b49}{Param} (Reverberance, double, \hyperlink{_theme_8cpp_ad4baed404c66b57e257af684bdc5ecf2}{XO}(\char`\"{}Reverberance\char`\"{}), 50, 0, 100, 1)
+\item 
+\hyperlink{_reverb_8cpp_a8817c9657473b06169c3cb41f365cb5a}{Param} (Hf\+Damping, double, \hyperlink{_theme_8cpp_ad4baed404c66b57e257af684bdc5ecf2}{XO}(\char`\"{}Hf\+Damping\char`\"{}), 50, 0, 100, 1)
+\item 
+\hyperlink{_reverb_8cpp_a88e0f4bf35857f6f97c246b649d60c76}{Param} (Tone\+Low, double, \hyperlink{_theme_8cpp_ad4baed404c66b57e257af684bdc5ecf2}{XO}(\char`\"{}Tone\+Low\char`\"{}), 100, 0, 100, 1)
+\item 
+\hyperlink{_reverb_8cpp_a35b258c2dbdae73ada6eccba498be463}{Param} (Tone\+High, double, \hyperlink{_theme_8cpp_ad4baed404c66b57e257af684bdc5ecf2}{XO}(\char`\"{}Tone\+High\char`\"{}), 100, 0, 100, 1)
+\item 
+\hyperlink{_reverb_8cpp_a09ecda9e46e5c74e183c54e511d55069}{Param} (Wet\+Gain, double, \hyperlink{_theme_8cpp_ad4baed404c66b57e257af684bdc5ecf2}{XO}(\char`\"{}Wet\+Gain\char`\"{}),-\/1,-\/20, 10, 1)
+\item 
+\hyperlink{_reverb_8cpp_a7eb41f7f92e2d7f88b455d7a12a5dda7}{Param} (Dry\+Gain, double, \hyperlink{_theme_8cpp_ad4baed404c66b57e257af684bdc5ecf2}{XO}(\char`\"{}Dry\+Gain\char`\"{}),-\/1,-\/20, 10, 1)
+\item 
+\hyperlink{_reverb_8cpp_a6f3f826a825fe8cfa88a2f28098b3dd4}{Param} (Stereo\+Width, double, \hyperlink{_theme_8cpp_ad4baed404c66b57e257af684bdc5ecf2}{XO}(\char`\"{}Stereo\+Width\char`\"{}), 100, 0, 100, 1)
+\item 
+\hyperlink{_reverb_8cpp_ac41128d7721b146280dc1497c29b7ba1}{Param} (Wet\+Only, \hyperlink{mac_2config_2i386_2lib-src_2libsoxr_2soxr-config_8h_abb452686968e48b67397da5f97445f5b}{bool}, \hyperlink{_theme_8cpp_ad4baed404c66b57e257af684bdc5ecf2}{XO}(\char`\"{}Wet\+Only\char`\"{}), false, \hyperlink{mac_2config_2i386_2lib-src_2libsoxr_2soxr-config_8h_a65e9886d74aaee76545e83dd09011727}{false}, \hyperlink{mac_2config_2i386_2lib-src_2libsoxr_2soxr-config_8h_a41f9c5fb8b08eb5dc3edce4dcb37fee7}{true}, 1)
+\item 
+\hyperlink{_reverb_8cpp_adb6ce2c97094088ebe5dcdc70d974293}{Spin\+Slider\+Event} (Room\+Size) Spin\+Slider\+Event(Pre\+Delay) Spin\+Slider\+Event(Reverberance) Spin\+Slider\+Event(Hf\+Damping) Spin\+Slider\+Event(Tone\+Low) Spin\+Slider\+Event(Tone\+High) Spin\+Slider\+Event(Wet\+Gain) Spin\+Slider\+Event(Dry\+Gain) Spin\+Slider\+Event(Stereo\+Width) \hyperlink{class_effect_reverb}{Effect\+Reverb}
+\item 
+\hyperlink{_reverb_8cpp_a0b4a60cc01ab39a0a05f42f1a0c54a98}{Spin\+Slider\+Handlers} (Room\+Size)
+\item 
+\hyperlink{_reverb_8cpp_a4d978248b722559524bf737d52b4a528}{Spin\+Slider\+Handlers} (Pre\+Delay)
+\item 
+\hyperlink{_reverb_8cpp_a27fab2a22ca6f4df5b34773a0836f05d}{Spin\+Slider\+Handlers} (Reverberance)
+\item 
+\hyperlink{_reverb_8cpp_a33f77546300bbf81048403872b8f55a4}{Spin\+Slider\+Handlers} (Hf\+Damping)
+\item 
+\hyperlink{_reverb_8cpp_aa2a6de1395902ee8c4214420700b124b}{Spin\+Slider\+Handlers} (Tone\+Low)
+\item 
+\hyperlink{_reverb_8cpp_af9a968da58d6d4303e0b5e975b61c715}{Spin\+Slider\+Handlers} (Tone\+High)
+\item 
+\hyperlink{_reverb_8cpp_af8709eccaaa6c50e3d390571bf93834f}{Spin\+Slider\+Handlers} (Wet\+Gain)
+\item 
+\hyperlink{_reverb_8cpp_ae4a6f00622c5503dfdfbe2121350e7e8}{Spin\+Slider\+Handlers} (Dry\+Gain)
+\item 
+\hyperlink{_reverb_8cpp_a3895f0e2ea4a089ab9c577f322ad1ed0}{Spin\+Slider\+Handlers} (Stereo\+Width)
+\end{DoxyCompactItemize}
+
+
+\subsection{Macro Definition Documentation}
+\index{Reverb.\+cpp@{Reverb.\+cpp}!B\+L\+O\+CK@{B\+L\+O\+CK}}
+\index{B\+L\+O\+CK@{B\+L\+O\+CK}!Reverb.\+cpp@{Reverb.\+cpp}}
+\subsubsection[{\texorpdfstring{B\+L\+O\+CK}{BLOCK}}]{\setlength{\rightskip}{0pt plus 5cm}\#define {\bf B\+L\+O\+CK}~16384}\hypertarget{_reverb_8cpp_a52220397ecea855b3a99746e451426e1}{}\label{_reverb_8cpp_a52220397ecea855b3a99746e451426e1}
+
+
+Definition at line 162 of file Reverb.\+cpp.
+
+\index{Reverb.\+cpp@{Reverb.\+cpp}!Set\+Spin\+Slider@{Set\+Spin\+Slider}}
+\index{Set\+Spin\+Slider@{Set\+Spin\+Slider}!Reverb.\+cpp@{Reverb.\+cpp}}
+\subsubsection[{\texorpdfstring{Set\+Spin\+Slider}{SetSpinSlider}}]{\setlength{\rightskip}{0pt plus 5cm}\#define Set\+Spin\+Slider(
+\begin{DoxyParamCaption}
+\item[{}]{n}
+\end{DoxyParamCaption}
+)}\hypertarget{_reverb_8cpp_a12b03c74baa951880fe68530108b38fd}{}\label{_reverb_8cpp_a12b03c74baa951880fe68530108b38fd}
+{\bfseries Value\+:}
+\begin{DoxyCode}
+\hyperlink{layer3_8c_a4b8bfe70f28d6faddcb10d6ecf8c1989}{m} ## n ## \hyperlink{xlftab_8c_af933676109efed7ab34cea71d748a517}{S}->SetValue((\textcolor{keywordtype}{int}) mParams.m ## n); \(\backslash\)
+   m ## n ## \hyperlink{xmltchar_8h_a16a0f7e7053a679c9bf4289b441a2be7}{T}->SetValue(wxString::Format(wxT(\textcolor{stringliteral}{"%d"}), (\textcolor{keywordtype}{int}) mParams.m ## n));
+\end{DoxyCode}
+\index{Reverb.\+cpp@{Reverb.\+cpp}!Spin\+Slider@{Spin\+Slider}}
+\index{Spin\+Slider@{Spin\+Slider}!Reverb.\+cpp@{Reverb.\+cpp}}
+\subsubsection[{\texorpdfstring{Spin\+Slider}{SpinSlider}}]{\setlength{\rightskip}{0pt plus 5cm}\#define Spin\+Slider(
+\begin{DoxyParamCaption}
+\item[{}]{n, }
+\item[{}]{{\bf p}}
+\end{DoxyParamCaption}
+)}\hypertarget{_reverb_8cpp_a323a693857589f59e36664934785bc38}{}\label{_reverb_8cpp_a323a693857589f59e36664934785bc38}
+{\bfseries Value\+:}
+\begin{DoxyCode}
+\hyperlink{layer3_8c_a4b8bfe70f28d6faddcb10d6ecf8c1989}{m} ## n ## \hyperlink{xmltchar_8h_a16a0f7e7053a679c9bf4289b441a2be7}{T} = \hyperlink{xlftab_8c_af933676109efed7ab34cea71d748a517}{S}.Id(ID\_ ## n). \(\backslash\)
+         AddSpinCtrl( \hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p}, DEF\_ ## n, MAX\_ ## n, MIN\_ ## n); \(\backslash\)
+      S.SetStyle(wxSL\_HORIZONTAL); \(\backslash\)
+      m ## n ## \hyperlink{xlftab_8c_af933676109efed7ab34cea71d748a517}{S} = S.Id(ID\_ ## n). \(\backslash\)
+         AddSlider(wxT(\textcolor{stringliteral}{""}), DEF\_ ## n, MAX\_ ## n, MIN\_ ## n);
+\end{DoxyCode}
+\index{Reverb.\+cpp@{Reverb.\+cpp}!Spin\+Slider\+Event@{Spin\+Slider\+Event}}
+\index{Spin\+Slider\+Event@{Spin\+Slider\+Event}!Reverb.\+cpp@{Reverb.\+cpp}}
+\subsubsection[{\texorpdfstring{Spin\+Slider\+Event}{SpinSliderEvent}}]{\setlength{\rightskip}{0pt plus 5cm}\#define Spin\+Slider\+Event(
+\begin{DoxyParamCaption}
+\item[{}]{n}
+\end{DoxyParamCaption}
+)}\hypertarget{_reverb_8cpp_aaad3b7d3b91c97486859c466932ed324}{}\label{_reverb_8cpp_aaad3b7d3b91c97486859c466932ed324}
+{\bfseries Value\+:}
+\begin{DoxyCode}
+EVT\_SLIDER(ID\_ ## n, EffectReverb::On ## n ## Slider) \(\backslash\)
+   EVT\_TEXT(ID\_ ## n, EffectReverb::On ## n ## Text)
+\end{DoxyCode}
+
+
+Definition at line 91 of file Reverb.\+cpp.
+
+\index{Reverb.\+cpp@{Reverb.\+cpp}!Spin\+Slider\+Handlers@{Spin\+Slider\+Handlers}}
+\index{Spin\+Slider\+Handlers@{Spin\+Slider\+Handlers}!Reverb.\+cpp@{Reverb.\+cpp}}
+\subsubsection[{\texorpdfstring{Spin\+Slider\+Handlers}{SpinSliderHandlers}}]{\setlength{\rightskip}{0pt plus 5cm}\#define Spin\+Slider\+Handlers(
+\begin{DoxyParamCaption}
+\item[{}]{n}
+\end{DoxyParamCaption}
+)}\hypertarget{_reverb_8cpp_a3221fd3069cf32c4b1e6d10342279bd1}{}\label{_reverb_8cpp_a3221fd3069cf32c4b1e6d10342279bd1}
+{\bfseries Value\+:}
+\begin{DoxyCode}
+\textcolor{keywordtype}{void} EffectReverb::On ## n ## Slider(wxCommandEvent & evt) \(\backslash\)
+   \{ \(\backslash\)
+      if (mProcessingEvent) \hyperlink{hashrout_8h_a9842e92184417c07866419916b2b3ce3}{return}; \(\backslash\)
+      mProcessingEvent = \hyperlink{ordinals_8h_a41f9c5fb8b08eb5dc3edce4dcb37fee7}{true}; \(\backslash\)
+      \hyperlink{layer3_8c_a4b8bfe70f28d6faddcb10d6ecf8c1989}{m} \textcolor{preprocessor}{## n ## T->SetValue(wxString::Format(wxT("%d"), evt.GetInt())); \(\backslash\)}
+\textcolor{preprocessor}{      mProcessingEvent = false; \(\backslash\)}
+\textcolor{preprocessor}{   \} \(\backslash\)}
+\textcolor{preprocessor}{   void EffectReverb::On ## n ## Text(wxCommandEvent & evt) \(\backslash\)}
+\textcolor{preprocessor}{   \{ \(\backslash\)}
+\textcolor{preprocessor}{      if (mProcessingEvent) return; \(\backslash\)}
+\textcolor{preprocessor}{      mProcessingEvent = true; \(\backslash\)}
+\textcolor{preprocessor}{      m ## n ## S->SetValue(TrapLong(evt.GetInt(), MIN\_ ## n, MAX\_ ## n)); \(\backslash\)}
+\textcolor{preprocessor}{      mProcessingEvent = false; \(\backslash\)}
+\textcolor{preprocessor}{   \}}
+\end{DoxyCode}
+
+
+Definition at line 494 of file Reverb.\+cpp.
+
+
+
+\subsection{Enumeration Type Documentation}
+\subsubsection[{\texorpdfstring{anonymous enum}{anonymous enum}}]{\setlength{\rightskip}{0pt plus 5cm}anonymous enum}\hypertarget{_reverb_8cpp_add18e1506c718e8a28df3a2bfdaa9ad2}{}\label{_reverb_8cpp_add18e1506c718e8a28df3a2bfdaa9ad2}
+\begin{Desc}
+\item[Enumerator]\par
+\begin{description}
+\index{I\+D\+\_\+\+Room\+Size@{I\+D\+\_\+\+Room\+Size}!Reverb.\+cpp@{Reverb.\+cpp}}\index{Reverb.\+cpp@{Reverb.\+cpp}!I\+D\+\_\+\+Room\+Size@{I\+D\+\_\+\+Room\+Size}}\item[{\em 
+I\+D\+\_\+\+Room\+Size\hypertarget{_reverb_8cpp_add18e1506c718e8a28df3a2bfdaa9ad2a6e99252f1cec000ae220554d86541566}{}\label{_reverb_8cpp_add18e1506c718e8a28df3a2bfdaa9ad2a6e99252f1cec000ae220554d86541566}
+}]\index{I\+D\+\_\+\+Pre\+Delay@{I\+D\+\_\+\+Pre\+Delay}!Reverb.\+cpp@{Reverb.\+cpp}}\index{Reverb.\+cpp@{Reverb.\+cpp}!I\+D\+\_\+\+Pre\+Delay@{I\+D\+\_\+\+Pre\+Delay}}\item[{\em 
+I\+D\+\_\+\+Pre\+Delay\hypertarget{_reverb_8cpp_add18e1506c718e8a28df3a2bfdaa9ad2a1263ca16d554892e3937ba8e1d03c733}{}\label{_reverb_8cpp_add18e1506c718e8a28df3a2bfdaa9ad2a1263ca16d554892e3937ba8e1d03c733}
+}]\index{I\+D\+\_\+\+Reverberance@{I\+D\+\_\+\+Reverberance}!Reverb.\+cpp@{Reverb.\+cpp}}\index{Reverb.\+cpp@{Reverb.\+cpp}!I\+D\+\_\+\+Reverberance@{I\+D\+\_\+\+Reverberance}}\item[{\em 
+I\+D\+\_\+\+Reverberance\hypertarget{_reverb_8cpp_add18e1506c718e8a28df3a2bfdaa9ad2a46e616b5fe29883af18852c320faf661}{}\label{_reverb_8cpp_add18e1506c718e8a28df3a2bfdaa9ad2a46e616b5fe29883af18852c320faf661}
+}]\index{I\+D\+\_\+\+Hf\+Damping@{I\+D\+\_\+\+Hf\+Damping}!Reverb.\+cpp@{Reverb.\+cpp}}\index{Reverb.\+cpp@{Reverb.\+cpp}!I\+D\+\_\+\+Hf\+Damping@{I\+D\+\_\+\+Hf\+Damping}}\item[{\em 
+I\+D\+\_\+\+Hf\+Damping\hypertarget{_reverb_8cpp_add18e1506c718e8a28df3a2bfdaa9ad2a1c5b9b96da27639982eec6a998892d53}{}\label{_reverb_8cpp_add18e1506c718e8a28df3a2bfdaa9ad2a1c5b9b96da27639982eec6a998892d53}
+}]\index{I\+D\+\_\+\+Tone\+Low@{I\+D\+\_\+\+Tone\+Low}!Reverb.\+cpp@{Reverb.\+cpp}}\index{Reverb.\+cpp@{Reverb.\+cpp}!I\+D\+\_\+\+Tone\+Low@{I\+D\+\_\+\+Tone\+Low}}\item[{\em 
+I\+D\+\_\+\+Tone\+Low\hypertarget{_reverb_8cpp_add18e1506c718e8a28df3a2bfdaa9ad2a716ff1b9fa08361d09384755178f0fd9}{}\label{_reverb_8cpp_add18e1506c718e8a28df3a2bfdaa9ad2a716ff1b9fa08361d09384755178f0fd9}
+}]\index{I\+D\+\_\+\+Tone\+High@{I\+D\+\_\+\+Tone\+High}!Reverb.\+cpp@{Reverb.\+cpp}}\index{Reverb.\+cpp@{Reverb.\+cpp}!I\+D\+\_\+\+Tone\+High@{I\+D\+\_\+\+Tone\+High}}\item[{\em 
+I\+D\+\_\+\+Tone\+High\hypertarget{_reverb_8cpp_add18e1506c718e8a28df3a2bfdaa9ad2a337b63dbde65d43fcf3a7cbe66a7e6ab}{}\label{_reverb_8cpp_add18e1506c718e8a28df3a2bfdaa9ad2a337b63dbde65d43fcf3a7cbe66a7e6ab}
+}]\index{I\+D\+\_\+\+Wet\+Gain@{I\+D\+\_\+\+Wet\+Gain}!Reverb.\+cpp@{Reverb.\+cpp}}\index{Reverb.\+cpp@{Reverb.\+cpp}!I\+D\+\_\+\+Wet\+Gain@{I\+D\+\_\+\+Wet\+Gain}}\item[{\em 
+I\+D\+\_\+\+Wet\+Gain\hypertarget{_reverb_8cpp_add18e1506c718e8a28df3a2bfdaa9ad2a786e4f0780a461fd64939fa102411f4d}{}\label{_reverb_8cpp_add18e1506c718e8a28df3a2bfdaa9ad2a786e4f0780a461fd64939fa102411f4d}
+}]\index{I\+D\+\_\+\+Dry\+Gain@{I\+D\+\_\+\+Dry\+Gain}!Reverb.\+cpp@{Reverb.\+cpp}}\index{Reverb.\+cpp@{Reverb.\+cpp}!I\+D\+\_\+\+Dry\+Gain@{I\+D\+\_\+\+Dry\+Gain}}\item[{\em 
+I\+D\+\_\+\+Dry\+Gain\hypertarget{_reverb_8cpp_add18e1506c718e8a28df3a2bfdaa9ad2acb2b536082e99da9ca0bf9cd5dcf6d3d}{}\label{_reverb_8cpp_add18e1506c718e8a28df3a2bfdaa9ad2acb2b536082e99da9ca0bf9cd5dcf6d3d}
+}]\index{I\+D\+\_\+\+Stereo\+Width@{I\+D\+\_\+\+Stereo\+Width}!Reverb.\+cpp@{Reverb.\+cpp}}\index{Reverb.\+cpp@{Reverb.\+cpp}!I\+D\+\_\+\+Stereo\+Width@{I\+D\+\_\+\+Stereo\+Width}}\item[{\em 
+I\+D\+\_\+\+Stereo\+Width\hypertarget{_reverb_8cpp_add18e1506c718e8a28df3a2bfdaa9ad2aa5b1e68134e2097afe8785e7334328ca}{}\label{_reverb_8cpp_add18e1506c718e8a28df3a2bfdaa9ad2aa5b1e68134e2097afe8785e7334328ca}
+}]\index{I\+D\+\_\+\+Wet\+Only@{I\+D\+\_\+\+Wet\+Only}!Reverb.\+cpp@{Reverb.\+cpp}}\index{Reverb.\+cpp@{Reverb.\+cpp}!I\+D\+\_\+\+Wet\+Only@{I\+D\+\_\+\+Wet\+Only}}\item[{\em 
+I\+D\+\_\+\+Wet\+Only\hypertarget{_reverb_8cpp_add18e1506c718e8a28df3a2bfdaa9ad2a18a280fb2b128a5b7c3226d079cb23ff}{}\label{_reverb_8cpp_add18e1506c718e8a28df3a2bfdaa9ad2a18a280fb2b128a5b7c3226d079cb23ff}
+}]\end{description}
+\end{Desc}
+
+
+Definition at line 30 of file Reverb.\+cpp.
+
+
+
+\subsection{Function Documentation}
+\index{Reverb.\+cpp@{Reverb.\+cpp}!Param@{Param}}
+\index{Param@{Param}!Reverb.\+cpp@{Reverb.\+cpp}}
+\subsubsection[{\texorpdfstring{Param(\+Room\+Size, double, X\+O(""Room\+Size""), 75, 0, 100, 1)}{Param(RoomSize, double, XO("RoomSize"), 75, 0, 100, 1)}}]{\setlength{\rightskip}{0pt plus 5cm}Param (
+\begin{DoxyParamCaption}
+\item[{Room\+Size}]{, }
+\item[{double}]{, }
+\item[{{\bf XO}(\char`\"{}Room\+Size\char`\"{})}]{, }
+\item[{75}]{, }
+\item[{0}]{, }
+\item[{100}]{, }
+\item[{1}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{_reverb_8cpp_a6d2fee7ea656f695cc155e95eb1253af}{}\label{_reverb_8cpp_a6d2fee7ea656f695cc155e95eb1253af}
+\index{Reverb.\+cpp@{Reverb.\+cpp}!Param@{Param}}
+\index{Param@{Param}!Reverb.\+cpp@{Reverb.\+cpp}}
+\subsubsection[{\texorpdfstring{Param(\+Pre\+Delay, double, X\+O(""Delay""), 10, 0, 200, 1)}{Param(PreDelay, double, XO("Delay"), 10, 0, 200, 1)}}]{\setlength{\rightskip}{0pt plus 5cm}Param (
+\begin{DoxyParamCaption}
+\item[{Pre\+Delay}]{, }
+\item[{double}]{, }
+\item[{{\bf XO}(\char`\"{}Delay\char`\"{})}]{, }
+\item[{10}]{, }
+\item[{0}]{, }
+\item[{200}]{, }
+\item[{1}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{_reverb_8cpp_aea4b0fbfde49b1cf38360a7c319dbfe2}{}\label{_reverb_8cpp_aea4b0fbfde49b1cf38360a7c319dbfe2}
+\index{Reverb.\+cpp@{Reverb.\+cpp}!Param@{Param}}
+\index{Param@{Param}!Reverb.\+cpp@{Reverb.\+cpp}}
+\subsubsection[{\texorpdfstring{Param(\+Reverberance, double, X\+O(""Reverberance""), 50, 0, 100, 1)}{Param(Reverberance, double, XO("Reverberance"), 50, 0, 100, 1)}}]{\setlength{\rightskip}{0pt plus 5cm}Param (
+\begin{DoxyParamCaption}
+\item[{Reverberance}]{, }
+\item[{double}]{, }
+\item[{{\bf XO}(\char`\"{}Reverberance\char`\"{})}]{, }
+\item[{50}]{, }
+\item[{0}]{, }
+\item[{100}]{, }
+\item[{1}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{_reverb_8cpp_ae20f9864406ea2b1554260fcdddb9b49}{}\label{_reverb_8cpp_ae20f9864406ea2b1554260fcdddb9b49}
+\index{Reverb.\+cpp@{Reverb.\+cpp}!Param@{Param}}
+\index{Param@{Param}!Reverb.\+cpp@{Reverb.\+cpp}}
+\subsubsection[{\texorpdfstring{Param(\+Hf\+Damping, double, X\+O(""Hf\+Damping""), 50, 0, 100, 1)}{Param(HfDamping, double, XO("HfDamping"), 50, 0, 100, 1)}}]{\setlength{\rightskip}{0pt plus 5cm}Param (
+\begin{DoxyParamCaption}
+\item[{Hf\+Damping}]{, }
+\item[{double}]{, }
+\item[{{\bf XO}(\char`\"{}Hf\+Damping\char`\"{})}]{, }
+\item[{50}]{, }
+\item[{0}]{, }
+\item[{100}]{, }
+\item[{1}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{_reverb_8cpp_a8817c9657473b06169c3cb41f365cb5a}{}\label{_reverb_8cpp_a8817c9657473b06169c3cb41f365cb5a}
+\index{Reverb.\+cpp@{Reverb.\+cpp}!Param@{Param}}
+\index{Param@{Param}!Reverb.\+cpp@{Reverb.\+cpp}}
+\subsubsection[{\texorpdfstring{Param(\+Tone\+Low, double, X\+O(""Tone\+Low""), 100, 0, 100, 1)}{Param(ToneLow, double, XO("ToneLow"), 100, 0, 100, 1)}}]{\setlength{\rightskip}{0pt plus 5cm}Param (
+\begin{DoxyParamCaption}
+\item[{Tone\+Low}]{, }
+\item[{double}]{, }
+\item[{{\bf XO}(\char`\"{}Tone\+Low\char`\"{})}]{, }
+\item[{100}]{, }
+\item[{0}]{, }
+\item[{100}]{, }
+\item[{1}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{_reverb_8cpp_a88e0f4bf35857f6f97c246b649d60c76}{}\label{_reverb_8cpp_a88e0f4bf35857f6f97c246b649d60c76}
+\index{Reverb.\+cpp@{Reverb.\+cpp}!Param@{Param}}
+\index{Param@{Param}!Reverb.\+cpp@{Reverb.\+cpp}}
+\subsubsection[{\texorpdfstring{Param(\+Tone\+High, double, X\+O(""Tone\+High""), 100, 0, 100, 1)}{Param(ToneHigh, double, XO("ToneHigh"), 100, 0, 100, 1)}}]{\setlength{\rightskip}{0pt plus 5cm}Param (
+\begin{DoxyParamCaption}
+\item[{Tone\+High}]{, }
+\item[{double}]{, }
+\item[{{\bf XO}(\char`\"{}Tone\+High\char`\"{})}]{, }
+\item[{100}]{, }
+\item[{0}]{, }
+\item[{100}]{, }
+\item[{1}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{_reverb_8cpp_a35b258c2dbdae73ada6eccba498be463}{}\label{_reverb_8cpp_a35b258c2dbdae73ada6eccba498be463}
+\index{Reverb.\+cpp@{Reverb.\+cpp}!Param@{Param}}
+\index{Param@{Param}!Reverb.\+cpp@{Reverb.\+cpp}}
+\subsubsection[{\texorpdfstring{Param(\+Wet\+Gain, double, X\+O(""Wet\+Gain""),-\/1,-\/20, 10, 1)}{Param(WetGain, double, XO("WetGain"),-1,-20, 10, 1)}}]{\setlength{\rightskip}{0pt plus 5cm}Param (
+\begin{DoxyParamCaption}
+\item[{Wet\+Gain}]{, }
+\item[{double}]{, }
+\item[{{\bf XO}(\char`\"{}Wet\+Gain\char`\"{})}]{, }
+\item[{-\/}]{1, }
+\item[{-\/}]{20, }
+\item[{10}]{, }
+\item[{1}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{_reverb_8cpp_a09ecda9e46e5c74e183c54e511d55069}{}\label{_reverb_8cpp_a09ecda9e46e5c74e183c54e511d55069}
+\index{Reverb.\+cpp@{Reverb.\+cpp}!Param@{Param}}
+\index{Param@{Param}!Reverb.\+cpp@{Reverb.\+cpp}}
+\subsubsection[{\texorpdfstring{Param(\+Dry\+Gain, double, X\+O(""Dry\+Gain""),-\/1,-\/20, 10, 1)}{Param(DryGain, double, XO("DryGain"),-1,-20, 10, 1)}}]{\setlength{\rightskip}{0pt plus 5cm}Param (
+\begin{DoxyParamCaption}
+\item[{Dry\+Gain}]{, }
+\item[{double}]{, }
+\item[{{\bf XO}(\char`\"{}Dry\+Gain\char`\"{})}]{, }
+\item[{-\/}]{1, }
+\item[{-\/}]{20, }
+\item[{10}]{, }
+\item[{1}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{_reverb_8cpp_a7eb41f7f92e2d7f88b455d7a12a5dda7}{}\label{_reverb_8cpp_a7eb41f7f92e2d7f88b455d7a12a5dda7}
+\index{Reverb.\+cpp@{Reverb.\+cpp}!Param@{Param}}
+\index{Param@{Param}!Reverb.\+cpp@{Reverb.\+cpp}}
+\subsubsection[{\texorpdfstring{Param(\+Stereo\+Width, double, X\+O(""Stereo\+Width""), 100, 0, 100, 1)}{Param(StereoWidth, double, XO("StereoWidth"), 100, 0, 100, 1)}}]{\setlength{\rightskip}{0pt plus 5cm}Param (
+\begin{DoxyParamCaption}
+\item[{Stereo\+Width}]{, }
+\item[{double}]{, }
+\item[{{\bf XO}(\char`\"{}Stereo\+Width\char`\"{})}]{, }
+\item[{100}]{, }
+\item[{0}]{, }
+\item[{100}]{, }
+\item[{1}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{_reverb_8cpp_a6f3f826a825fe8cfa88a2f28098b3dd4}{}\label{_reverb_8cpp_a6f3f826a825fe8cfa88a2f28098b3dd4}
+\index{Reverb.\+cpp@{Reverb.\+cpp}!Param@{Param}}
+\index{Param@{Param}!Reverb.\+cpp@{Reverb.\+cpp}}
+\subsubsection[{\texorpdfstring{Param(\+Wet\+Only, bool, X\+O(""Wet\+Only""), false, false, true, 1)}{Param(WetOnly, bool, XO("WetOnly"), false, false, true, 1)}}]{\setlength{\rightskip}{0pt plus 5cm}Param (
+\begin{DoxyParamCaption}
+\item[{Wet\+Only}]{, }
+\item[{{\bf bool}}]{, }
+\item[{{\bf XO}(\char`\"{}Wet\+Only\char`\"{})}]{, }
+\item[{{\bf false}}]{, }
+\item[{{\bf false}}]{, }
+\item[{{\bf true}}]{, }
+\item[{1}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{_reverb_8cpp_ac41128d7721b146280dc1497c29b7ba1}{}\label{_reverb_8cpp_ac41128d7721b146280dc1497c29b7ba1}
+\index{Reverb.\+cpp@{Reverb.\+cpp}!Spin\+Slider\+Event@{Spin\+Slider\+Event}}
+\index{Spin\+Slider\+Event@{Spin\+Slider\+Event}!Reverb.\+cpp@{Reverb.\+cpp}}
+\subsubsection[{\texorpdfstring{Spin\+Slider\+Event(\+Room\+Size) Spin\+Slider\+Event(\+Pre\+Delay) Spin\+Slider\+Event(\+Reverberance) Spin\+Slider\+Event(\+Hf\+Damping) Spin\+Slider\+Event(\+Tone\+Low) Spin\+Slider\+Event(\+Tone\+High) Spin\+Slider\+Event(\+Wet\+Gain) Spin\+Slider\+Event(\+Dry\+Gain) Spin\+Slider\+Event(\+Stereo\+Width) Effect\+Reverb}{SpinSliderEvent(RoomSize) SpinSliderEvent(PreDelay) SpinSliderEvent(Reverberance) SpinSliderEvent(HfDamping) SpinSliderEvent(ToneLow) SpinSliderEvent(ToneHigh) SpinSliderEvent(WetGain) SpinSliderEvent(DryGain) SpinSliderEvent(StereoWidth) EffectReverb}}]{\setlength{\rightskip}{0pt plus 5cm}Spin\+Slider\+Event (
+\begin{DoxyParamCaption}
+\item[{Room\+Size}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{_reverb_8cpp_adb6ce2c97094088ebe5dcdc70d974293}{}\label{_reverb_8cpp_adb6ce2c97094088ebe5dcdc70d974293}
+
+
+Definition at line 95 of file Reverb.\+cpp.
+
+\index{Reverb.\+cpp@{Reverb.\+cpp}!Spin\+Slider\+Handlers@{Spin\+Slider\+Handlers}}
+\index{Spin\+Slider\+Handlers@{Spin\+Slider\+Handlers}!Reverb.\+cpp@{Reverb.\+cpp}}
+\subsubsection[{\texorpdfstring{Spin\+Slider\+Handlers(\+Room\+Size)}{SpinSliderHandlers(RoomSize)}}]{\setlength{\rightskip}{0pt plus 5cm}Spin\+Slider\+Handlers (
+\begin{DoxyParamCaption}
+\item[{Room\+Size}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{_reverb_8cpp_a0b4a60cc01ab39a0a05f42f1a0c54a98}{}\label{_reverb_8cpp_a0b4a60cc01ab39a0a05f42f1a0c54a98}
+\index{Reverb.\+cpp@{Reverb.\+cpp}!Spin\+Slider\+Handlers@{Spin\+Slider\+Handlers}}
+\index{Spin\+Slider\+Handlers@{Spin\+Slider\+Handlers}!Reverb.\+cpp@{Reverb.\+cpp}}
+\subsubsection[{\texorpdfstring{Spin\+Slider\+Handlers(\+Pre\+Delay)}{SpinSliderHandlers(PreDelay)}}]{\setlength{\rightskip}{0pt plus 5cm}Spin\+Slider\+Handlers (
+\begin{DoxyParamCaption}
+\item[{Pre\+Delay}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{_reverb_8cpp_a4d978248b722559524bf737d52b4a528}{}\label{_reverb_8cpp_a4d978248b722559524bf737d52b4a528}
+\index{Reverb.\+cpp@{Reverb.\+cpp}!Spin\+Slider\+Handlers@{Spin\+Slider\+Handlers}}
+\index{Spin\+Slider\+Handlers@{Spin\+Slider\+Handlers}!Reverb.\+cpp@{Reverb.\+cpp}}
+\subsubsection[{\texorpdfstring{Spin\+Slider\+Handlers(\+Reverberance)}{SpinSliderHandlers(Reverberance)}}]{\setlength{\rightskip}{0pt plus 5cm}Spin\+Slider\+Handlers (
+\begin{DoxyParamCaption}
+\item[{Reverberance}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{_reverb_8cpp_a27fab2a22ca6f4df5b34773a0836f05d}{}\label{_reverb_8cpp_a27fab2a22ca6f4df5b34773a0836f05d}
+\index{Reverb.\+cpp@{Reverb.\+cpp}!Spin\+Slider\+Handlers@{Spin\+Slider\+Handlers}}
+\index{Spin\+Slider\+Handlers@{Spin\+Slider\+Handlers}!Reverb.\+cpp@{Reverb.\+cpp}}
+\subsubsection[{\texorpdfstring{Spin\+Slider\+Handlers(\+Hf\+Damping)}{SpinSliderHandlers(HfDamping)}}]{\setlength{\rightskip}{0pt plus 5cm}Spin\+Slider\+Handlers (
+\begin{DoxyParamCaption}
+\item[{Hf\+Damping}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{_reverb_8cpp_a33f77546300bbf81048403872b8f55a4}{}\label{_reverb_8cpp_a33f77546300bbf81048403872b8f55a4}
+\index{Reverb.\+cpp@{Reverb.\+cpp}!Spin\+Slider\+Handlers@{Spin\+Slider\+Handlers}}
+\index{Spin\+Slider\+Handlers@{Spin\+Slider\+Handlers}!Reverb.\+cpp@{Reverb.\+cpp}}
+\subsubsection[{\texorpdfstring{Spin\+Slider\+Handlers(\+Tone\+Low)}{SpinSliderHandlers(ToneLow)}}]{\setlength{\rightskip}{0pt plus 5cm}Spin\+Slider\+Handlers (
+\begin{DoxyParamCaption}
+\item[{Tone\+Low}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{_reverb_8cpp_aa2a6de1395902ee8c4214420700b124b}{}\label{_reverb_8cpp_aa2a6de1395902ee8c4214420700b124b}
+\index{Reverb.\+cpp@{Reverb.\+cpp}!Spin\+Slider\+Handlers@{Spin\+Slider\+Handlers}}
+\index{Spin\+Slider\+Handlers@{Spin\+Slider\+Handlers}!Reverb.\+cpp@{Reverb.\+cpp}}
+\subsubsection[{\texorpdfstring{Spin\+Slider\+Handlers(\+Tone\+High)}{SpinSliderHandlers(ToneHigh)}}]{\setlength{\rightskip}{0pt plus 5cm}Spin\+Slider\+Handlers (
+\begin{DoxyParamCaption}
+\item[{Tone\+High}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{_reverb_8cpp_af9a968da58d6d4303e0b5e975b61c715}{}\label{_reverb_8cpp_af9a968da58d6d4303e0b5e975b61c715}
+\index{Reverb.\+cpp@{Reverb.\+cpp}!Spin\+Slider\+Handlers@{Spin\+Slider\+Handlers}}
+\index{Spin\+Slider\+Handlers@{Spin\+Slider\+Handlers}!Reverb.\+cpp@{Reverb.\+cpp}}
+\subsubsection[{\texorpdfstring{Spin\+Slider\+Handlers(\+Wet\+Gain)}{SpinSliderHandlers(WetGain)}}]{\setlength{\rightskip}{0pt plus 5cm}Spin\+Slider\+Handlers (
+\begin{DoxyParamCaption}
+\item[{Wet\+Gain}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{_reverb_8cpp_af8709eccaaa6c50e3d390571bf93834f}{}\label{_reverb_8cpp_af8709eccaaa6c50e3d390571bf93834f}
+\index{Reverb.\+cpp@{Reverb.\+cpp}!Spin\+Slider\+Handlers@{Spin\+Slider\+Handlers}}
+\index{Spin\+Slider\+Handlers@{Spin\+Slider\+Handlers}!Reverb.\+cpp@{Reverb.\+cpp}}
+\subsubsection[{\texorpdfstring{Spin\+Slider\+Handlers(\+Dry\+Gain)}{SpinSliderHandlers(DryGain)}}]{\setlength{\rightskip}{0pt plus 5cm}Spin\+Slider\+Handlers (
+\begin{DoxyParamCaption}
+\item[{Dry\+Gain}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{_reverb_8cpp_ae4a6f00622c5503dfdfbe2121350e7e8}{}\label{_reverb_8cpp_ae4a6f00622c5503dfdfbe2121350e7e8}
+\index{Reverb.\+cpp@{Reverb.\+cpp}!Spin\+Slider\+Handlers@{Spin\+Slider\+Handlers}}
+\index{Spin\+Slider\+Handlers@{Spin\+Slider\+Handlers}!Reverb.\+cpp@{Reverb.\+cpp}}
+\subsubsection[{\texorpdfstring{Spin\+Slider\+Handlers(\+Stereo\+Width)}{SpinSliderHandlers(StereoWidth)}}]{\setlength{\rightskip}{0pt plus 5cm}Spin\+Slider\+Handlers (
+\begin{DoxyParamCaption}
+\item[{Stereo\+Width}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{_reverb_8cpp_a3895f0e2ea4a089ab9c577f322ad1ed0}{}\label{_reverb_8cpp_a3895f0e2ea4a089ab9c577f322ad1ed0}
+
+
+\subsection{Variable Documentation}
+\index{Reverb.\+cpp@{Reverb.\+cpp}!name@{name}}
+\index{name@{name}!Reverb.\+cpp@{Reverb.\+cpp}}
+\subsubsection[{\texorpdfstring{name}{name}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf const} wx\+Char$\ast$ {\bf name}}\hypertarget{_reverb_8cpp_afa3d6790b7479e7011a917598dfc26cf}{}\label{_reverb_8cpp_afa3d6790b7479e7011a917598dfc26cf}
+
+
+Definition at line 60 of file Reverb.\+cpp.
+
+\index{Reverb.\+cpp@{Reverb.\+cpp}!params@{params}}
+\index{params@{params}!Reverb.\+cpp@{Reverb.\+cpp}}
+\subsubsection[{\texorpdfstring{params}{params}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Effect\+Reverb\+::\+Params} params}\hypertarget{_reverb_8cpp_aacc5617877d2aa4d17c729c1c8ba4eec}{}\label{_reverb_8cpp_aacc5617877d2aa4d17c729c1c8ba4eec}
+
+
+Definition at line 61 of file Reverb.\+cpp.
+

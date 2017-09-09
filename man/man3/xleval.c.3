@@ -1,0 +1,238 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/lib-src/libnyquist/nyquist/xlisp/xleval.c" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/lib-src/libnyquist/nyquist/xlisp/xleval.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include 'string\&.h'\fP
+.br
+\fC#include 'xlisp\&.h'\fP
+.br
+
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBiskey\fP(\fBs\fP)"
+.br
+.ti -1c
+.RI "#define \fBtrenter\fP(sym,  \fBargc\fP,  \fBargv\fP)   {\fBif\fP (sym) \fBdoenter\fP(sym,\fBargc\fP,\fBargv\fP);}"
+.br
+.ti -1c
+.RI "#define \fBtrexit\fP(sym,  val)   {\fBif\fP (sym) \fBdoexit\fP(sym,val);}"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBFORWARD\fP \fBLOCAL\fP \fBLVAL\fP \fBevalhook\fP (\fBLVAL\fP expr)"
+.br
+.ti -1c
+.RI "\fBFORWARD\fP \fBLOCAL\fP \fBLVAL\fP \fBevform\fP (\fBLVAL\fP form)"
+.br
+.ti -1c
+.RI "\fBFORWARD\fP \fBLOCAL\fP \fBLVAL\fP \fBevfun\fP (\fBLVAL\fP fun, \fBint\fP \fBargc\fP, \fBLVAL\fP *\fBargv\fP)"
+.br
+.ti -1c
+.RI "\fBFORWARD\fP \fBLVAL\fP \fBxlclose\fP (\fBLVAL\fP \fBname\fP, \fBLVAL\fP type, \fBLVAL\fP fargs, \fBLVAL\fP body, \fBLVAL\fP env, \fBLVAL\fP fenv)"
+.br
+.ti -1c
+.RI "\fBFORWARD\fP \fBLOCAL\fP \fBint\fP \fBmember\fP (\fBLVAL\fP x, \fBLVAL\fP list)"
+.br
+.ti -1c
+.RI "\fBFORWARD\fP \fBLOCAL\fP \fBint\fP \fBevpushargs\fP (\fBLVAL\fP fun, \fBLVAL\fP args)"
+.br
+.ti -1c
+.RI "\fBFORWARD\fP \fBLOCAL\fP \fBvoid\fP \fBdoenter\fP (\fBLVAL\fP sym, \fBint\fP \fBargc\fP, \fBLVAL\fP *\fBargv\fP)"
+.br
+.ti -1c
+.RI "\fBFORWARD\fP \fBLOCAL\fP \fBvoid\fP \fBdoexit\fP (\fBLVAL\fP sym, \fBLVAL\fP val)"
+.br
+.ti -1c
+.RI "\fBFORWARD\fP \fBLOCAL\fP \fBvoid\fP \fBbadarglist\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxleval\fP (\fBLVAL\fP expr)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlxeval\fP (\fBLVAL\fP expr)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlapply\fP (\fBint\fP \fBargc\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxlexpandmacros\fP (\fBLVAL\fP form)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBmacroexpand\fP (\fBLVAL\fP fun, \fBLVAL\fP args, \fBLVAL\fP *pval)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBpushargs\fP (\fBLVAL\fP fun, \fBLVAL\fP args)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBmakearglist\fP (\fBint\fP \fBargc\fP, \fBLVAL\fP *\fBargv\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBxlabind\fP (\fBLVAL\fP fun, \fBint\fP \fBargc\fP, \fBLVAL\fP *\fBargv\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBxlunbound\fP (\fBLVAL\fP sym)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBxlfunbound\fP (\fBLVAL\fP sym)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBxlstkoverflow\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBxlargstkoverflow\fP (\fBvoid\fP)"
+.br
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "\fBLVAL\fP \fBs_profile\fP"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBprofile_fixnum\fP"
+.br
+.ti -1c
+.RI "\fBFIXTYPE\fP * \fBprofile_count_ptr\fP"
+.br
+.ti -1c
+.RI "\fBFIXTYPE\fP \fBprofile_flag\fP"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define iskey(\fBs\fP)"
+\fBValue:\fP
+.PP
+.nf
+((s) == lk_optional \
+               || (s) == lk_rest \
+               || (s) == lk_key \
+               || (s) == lk_aux \
+               || (s) == lk_allow_other_keys)
+.fi
+.PP
+Definition at line 15 of file xleval\&.c\&.
+.SS "#define trenter(sym, \fBargc\fP, \fBargv\fP)   {\fBif\fP (sym) \fBdoenter\fP(sym,\fBargc\fP,\fBargv\fP);}"
+
+.PP
+Definition at line 22 of file xleval\&.c\&.
+.SS "#define trexit(sym, val)   {\fBif\fP (sym) \fBdoexit\fP(sym,val);}"
+
+.PP
+Definition at line 23 of file xleval\&.c\&.
+.SH "Function Documentation"
+.PP 
+.SS "\fBLOCAL\fP \fBvoid\fP badarglist (\fBvoid\fP)"
+
+.PP
+Definition at line 882 of file xleval\&.c\&.
+.SS "\fBLOCAL\fP \fBvoid\fP doenter (\fBLVAL\fP sym, \fBint\fP argc, \fBLVAL\fP * argv)"
+
+.PP
+Definition at line 810 of file xleval\&.c\&.
+.SS "\fBLOCAL\fP \fBvoid\fP doexit (\fBLVAL\fP sym, \fBLVAL\fP val)"
+
+.PP
+Definition at line 831 of file xleval\&.c\&.
+.SS "\fBLOCAL\fP \fBLVAL\fP evalhook (\fBLVAL\fP expr)"
+
+.PP
+Definition at line 341 of file xleval\&.c\&.
+.SS "\fBLOCAL\fP \fBLVAL\fP evform (\fBLVAL\fP form)"
+
+.PP
+Definition at line 175 of file xleval\&.c\&.
+.SS "\fBLOCAL\fP \fBLVAL\fP evfun (\fBLVAL\fP fun, \fBint\fP argc, \fBLVAL\fP * argv)"
+
+.PP
+Definition at line 438 of file xleval\&.c\&.
+.SS "\fBLOCAL\fP \fBint\fP evpushargs (\fBLVAL\fP fun, \fBLVAL\fP args)"
+
+.PP
+Definition at line 370 of file xleval\&.c\&.
+.SS "\fBint\fP macroexpand (\fBLVAL\fP fun, \fBLVAL\fP args, \fBLVAL\fP * pval)"
+
+.PP
+Definition at line 322 of file xleval\&.c\&.
+.SS "\fBLVAL\fP makearglist (\fBint\fP argc, \fBLVAL\fP * argv)"
+
+.PP
+Definition at line 423 of file xleval\&.c\&.
+.SS "\fBLOCAL\fP \fBint\fP member (\fBLVAL\fP x, \fBLVAL\fP list)"
+
+.PP
+Definition at line 849 of file xleval\&.c\&.
+.SS "\fBint\fP pushargs (\fBLVAL\fP fun, \fBLVAL\fP args)"
+
+.PP
+Definition at line 399 of file xleval\&.c\&.
+.SS "\fBvoid\fP xlabind (\fBLVAL\fP fun, \fBint\fP argc, \fBLVAL\fP * argv)"
+
+.PP
+Definition at line 706 of file xleval\&.c\&.
+.SS "\fBLVAL\fP xlapply (\fBint\fP argc)"
+
+.PP
+Definition at line 89 of file xleval\&.c\&.
+.SS "\fBvoid\fP xlargstkoverflow (\fBvoid\fP)"
+
+.PP
+Definition at line 876 of file xleval\&.c\&.
+.SS "\fBLVAL\fP xlclose (\fBLVAL\fP name, \fBLVAL\fP type, \fBLVAL\fP fargs, \fBLVAL\fP body, \fBLVAL\fP env, \fBLVAL\fP fenv)"
+
+.PP
+Definition at line 486 of file xleval\&.c\&.
+.SS "\fBLVAL\fP xleval (\fBLVAL\fP expr)"
+
+.PP
+Definition at line 43 of file xleval\&.c\&.
+.SS "\fBLVAL\fP xlexpandmacros (\fBLVAL\fP form)"
+
+.PP
+Definition at line 295 of file xleval\&.c\&.
+.SS "\fBvoid\fP xlfunbound (\fBLVAL\fP sym)"
+
+.PP
+Definition at line 864 of file xleval\&.c\&.
+.SS "\fBvoid\fP xlstkoverflow (\fBvoid\fP)"
+
+.PP
+Definition at line 870 of file xleval\&.c\&.
+.SS "\fBvoid\fP xlunbound (\fBLVAL\fP sym)"
+
+.PP
+Definition at line 858 of file xleval\&.c\&.
+.SS "\fBLVAL\fP xlxeval (\fBLVAL\fP expr)"
+
+.PP
+Definition at line 71 of file xleval\&.c\&.
+.SH "Variable Documentation"
+.PP 
+.SS "\fBFIXTYPE\fP* profile_count_ptr"
+
+.PP
+Definition at line 35 of file xlsys\&.c\&.
+.SS "\fBLVAL\fP profile_fixnum"
+
+.PP
+Definition at line 30 of file xlglob\&.c\&.
+.SS "\fBFIXTYPE\fP profile_flag"
+
+.PP
+Definition at line 36 of file xlsys\&.c\&.
+.SS "\fBLVAL\fP s_profile"
+
+.PP
+Definition at line 30 of file xlglob\&.c\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

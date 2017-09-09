@@ -1,0 +1,334 @@
+.TH "waflib.Tools.c_preproc" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+waflib.Tools.c_preproc \- 
+.SH SYNOPSIS
+.br
+.PP
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "class \fBc_parser\fP"
+.br
+.ti -1c
+.RI "class \fBPreprocError\fP"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "def \fBrepl\fP (\fBm\fP)"
+.br
+.ti -1c
+.RI "def \fBfilter_comments\fP (\fBfilename\fP)"
+.br
+.ti -1c
+.RI "def \fBtrimquotes\fP (\fBs\fP)"
+.br
+.ti -1c
+.RI "def \fBreduce_nums\fP (val_1, val_2, val_op)"
+.br
+.ti -1c
+.RI "def \fBget_num\fP (lst)"
+.br
+.ti -1c
+.RI "def \fBget_term\fP (lst)"
+.br
+.ti -1c
+.RI "def \fBreduce_eval\fP (lst)"
+.br
+.ti -1c
+.RI "def \fBstringize\fP (lst)"
+.br
+.ti -1c
+.RI "def \fBpaste_tokens\fP (t1, t2)"
+.br
+.ti -1c
+.RI "def \fBreduce_tokens\fP (lst, defs, ban=[])"
+.br
+.ti -1c
+.RI "def \fBeval_macro\fP (lst, defs)"
+.br
+.ti -1c
+.RI "def \fBextract_macro\fP (txt)"
+.br
+.ti -1c
+.RI "def \fBextract_include\fP (txt, defs)"
+.br
+.ti -1c
+.RI "def \fBparse_char\fP (txt)"
+.br
+.ti -1c
+.RI "def \fBtokenize\fP (\fBs\fP)"
+.br
+.ti -1c
+.RI "def \fBtokenize_private\fP (\fBs\fP)"
+.br
+.ti -1c
+.RI "def \fBdefine_name\fP (\fBline\fP)"
+.br
+.ti -1c
+.RI "def \fBscan\fP (task)"
+.br
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "list \fBstandard_includes\fP = []"
+.br
+.ti -1c
+.RI "\fBint\fP \fBuse_trigraphs\fP = 0"
+.br
+.ti -1c
+.RI "\fBint\fP \fBstrict_quotes\fP = 0"
+.br
+.ti -1c
+.RI "dictionary \fBg_optrans\fP = {'not':'!','and':'&&','bitand':'&','and_eq':'&=','or':'||','bitor':'|','or_eq':'|=','xor':'^','xor_eq':'^=','compl':'~',}"
+.br
+.ti -1c
+.RI "\fBre_lines\fP = re\&.compile('^[ \\\fBt\fP]*(#|%:)[ \\\fBt\fP]*(ifdef|ifndef|\fBif\fP|else|elif|\fBendif\fP|include|import|define|undef|pragma)[ \\\fBt\fP]*(\&.*)\\r*$',re\&.IGNORECASE|re\&.MULTILINE)"
+.br
+.ti -1c
+.RI "\fBre_mac\fP = re\&.compile('^[a\-zA\-Z_]\\w*')"
+.br
+.ti -1c
+.RI "\fBre_fun\fP = re\&.compile('^[\fBa\fP\-zA\-Z_][\fBa\fP\-zA\-Z0\-9_]*[(]')"
+.br
+.ti -1c
+.RI "\fBre_pragma_once\fP = re\&.compile('^\\\fBs\fP*\fBonce\\s\fP*',re\&.IGNORECASE)"
+.br
+.ti -1c
+.RI "\fBre_nl\fP = re\&.compile('\\\\\\\\\\r*\\n',re\&.MULTILINE)"
+.br
+.ti -1c
+.RI "\fBre_cpp\fP = re\&.compile(r'//\&.*?$|/\\*\&.*?\\*/|\\'(?:\\\\\&.|[^\\\\\\'])*\\'|'(?:\\\\\&.|[^\\\\'])*'',re\&.DOTALL|re\&.MULTILINE)"
+.br
+.ti -1c
+.RI "list \fBtrig_def\fP = [('??'+\fBa\fP,\fBb\fP)\fBfor\fP \fBa\fP,\fBb\fP \fBin\fP zip('=\-/!'()<>',r'#~\\|^[]{}')]"
+.br
+.ti -1c
+.RI "dictionary \fBchr_esc\fP = {'0':0,'\fBa\fP':7,'\fBb\fP':8,'\fBt\fP':9,'n':10,'\fBf\fP':11,'v':12,'r':13,'\\\\':92,''':39}"
+.br
+.ti -1c
+.RI "\fBstring\fP \fBNUM\fP = '\fBi\fP'"
+.br
+.ti -1c
+.RI "\fBstring\fP \fBOP\fP = 'O'"
+.br
+.ti -1c
+.RI "\fBstring\fP \fBIDENT\fP = '\fBT\fP'"
+.br
+.ti -1c
+.RI "\fBstring\fP \fBSTR\fP = '\fBs\fP'"
+.br
+.ti -1c
+.RI "\fBstring\fP \fBCHAR\fP = '\fBc\fP'"
+.br
+.ti -1c
+.RI "list \fBtok_types\fP = [\fBNUM\fP,\fBSTR\fP,\fBIDENT\fP,\fBOP\fP]"
+.br
+.ti -1c
+.RI "list \fBexp_types\fP = [r,r'L?'([^'\\\\]|\\\\\&.)*'',r'[\fBa\fP\-zA\-Z_]\\w*',r'%:%:|<<=|>>=|\\\&.\\\&.\\\&.|<<|<%|<:|<=|>>|>=|\\+\\+|\\+=|\-\-|\->|\-=|\\*=|/=|%:|%=|%>|==|&&|&=|\\|\\||\\|=|\\^=|:>|!=|##|[\\(\\)\\{\\}\\[\\]<>\\?\\|\\^\\*\\+&=:!#;,%/\\\-\\?\\~\\\&.]',]"
+.br
+.ti -1c
+.RI "\fBre_clexer\fP = re\&.compile('|'\&.join(['(?P<%\fBs\fP>%\fBs\fP)'%(name,part)\fBfor\fP \fBname\fP,part \fBin\fP zip(\fBtok_types\fP,\fBexp_types\fP)]),\fBre\&.M\fP)"
+.br
+.ti -1c
+.RI "\fBstring\fP \fBaccepted\fP = '\fBa\fP'"
+.br
+.ti -1c
+.RI "\fBstring\fP \fBignored\fP = '\fBi\fP'"
+.br
+.ti -1c
+.RI "\fBstring\fP \fBundefined\fP = 'u'"
+.br
+.ti -1c
+.RI "\fBstring\fP \fBskipped\fP = '\fBs\fP'"
+.br
+.ti -1c
+.RI "\fBsyms\fP = ops[x]"
+.br
+.in -1c
+.SH "Function Documentation"
+.PP 
+.SS "def waflib\&.Tools\&.c_preproc\&.define_name ( line)"
+
+.PP
+Definition at line 438 of file c_preproc\&.py\&.
+.SS "def waflib\&.Tools\&.c_preproc\&.eval_macro ( lst,  defs)"
+
+.PP
+Definition at line 315 of file c_preproc\&.py\&.
+.SS "def waflib\&.Tools\&.c_preproc\&.extract_include ( txt,  defs)"
+
+.PP
+Definition at line 370 of file c_preproc\&.py\&.
+.SS "def waflib\&.Tools\&.c_preproc\&.extract_macro ( txt)"
+
+.PP
+Definition at line 320 of file c_preproc\&.py\&.
+.SS "def waflib\&.Tools\&.c_preproc\&.filter_comments ( filename)"
+
+.PP
+Definition at line 44 of file c_preproc\&.py\&.
+.SS "def waflib\&.Tools\&.c_preproc\&.get_num ( lst)"
+
+.PP
+Definition at line 89 of file c_preproc\&.py\&.
+.SS "def waflib\&.Tools\&.c_preproc\&.get_term ( lst)"
+
+.PP
+Definition at line 129 of file c_preproc\&.py\&.
+.SS "def waflib\&.Tools\&.c_preproc\&.parse_char ( txt)"
+
+.PP
+Definition at line 386 of file c_preproc\&.py\&.
+.SS "def waflib\&.Tools\&.c_preproc\&.paste_tokens ( t1,  t2)"
+
+.PP
+Definition at line 180 of file c_preproc\&.py\&.
+.SS "def waflib\&.Tools\&.c_preproc\&.reduce_eval ( lst)"
+
+.PP
+Definition at line 174 of file c_preproc\&.py\&.
+.SS "def waflib\&.Tools\&.c_preproc\&.reduce_nums ( val_1,  val_2,  val_op)"
+
+.PP
+Definition at line 62 of file c_preproc\&.py\&.
+.SS "def waflib\&.Tools\&.c_preproc\&.reduce_tokens ( lst,  defs,  ban = \fC[]\fP)"
+
+.PP
+Definition at line 191 of file c_preproc\&.py\&.
+.SS "def waflib\&.Tools\&.c_preproc\&.repl ( m)"
+
+.PP
+Definition at line 39 of file c_preproc\&.py\&.
+.SS "def waflib\&.Tools\&.c_preproc\&.scan ( task)"
+
+.PP
+Definition at line 593 of file c_preproc\&.py\&.
+.SS "def waflib\&.Tools\&.c_preproc\&.stringize ( lst)"
+
+.PP
+Definition at line 177 of file c_preproc\&.py\&.
+.SS "def waflib\&.Tools\&.c_preproc\&.tokenize ( s)"
+
+.PP
+Definition at line 402 of file c_preproc\&.py\&.
+.SS "def waflib\&.Tools\&.c_preproc\&.tokenize_private ( s)"
+
+.PP
+Definition at line 405 of file c_preproc\&.py\&.
+.SS "def waflib\&.Tools\&.c_preproc\&.trimquotes ( s)"
+
+.PP
+Definition at line 57 of file c_preproc\&.py\&.
+.SH "Variable Documentation"
+.PP 
+.SS "\fBstring\fP waflib\&.Tools\&.c_preproc\&.accepted = '\fBa\fP'"
+
+.PP
+Definition at line 35 of file c_preproc\&.py\&.
+.SS "\fBstring\fP waflib\&.Tools\&.c_preproc\&.CHAR = '\fBc\fP'"
+
+.PP
+Definition at line 31 of file c_preproc\&.py\&.
+.SS "dictionary waflib\&.Tools\&.c_preproc\&.chr_esc = {'0':0,'\fBa\fP':7,'\fBb\fP':8,'\fBt\fP':9,'n':10,'\fBf\fP':11,'v':12,'r':13,'\\\\':92,''':39}"
+
+.PP
+Definition at line 26 of file c_preproc\&.py\&.
+.SS "list waflib\&.Tools\&.c_preproc\&.exp_types = [r,r'L?'([^'\\\\]|\\\\\&.)*'',r'[\fBa\fP\-zA\-Z_]\\w*',r'%:%:|<<=|>>=|\\\&.\\\&.\\\&.|<<|<%|<:|<=|>>|>=|\\+\\+|\\+=|\-\-|\->|\-=|\\*=|/=|%:|%=|%>|==|&&|&=|\\|\\||\\|=|\\^=|:>|!=|##|[\\(\\)\\{\\}\\[\\]<>\\?\\|\\^\\*\\+&=:!#;,%/\\\-\\?\\~\\\&.]',]"
+
+.PP
+Definition at line 33 of file c_preproc\&.py\&.
+.SS "dictionary waflib\&.Tools\&.c_preproc\&.g_optrans = {'not':'!','and':'&&','bitand':'&','and_eq':'&=','or':'||','bitor':'|','or_eq':'|=','xor':'^','xor_eq':'^=','compl':'~',}"
+
+.PP
+Definition at line 18 of file c_preproc\&.py\&.
+.SS "\fBstring\fP waflib\&.Tools\&.c_preproc\&.IDENT = '\fBT\fP'"
+
+.PP
+Definition at line 29 of file c_preproc\&.py\&.
+.SS "\fBstring\fP waflib\&.Tools\&.c_preproc\&.ignored = '\fBi\fP'"
+
+.PP
+Definition at line 36 of file c_preproc\&.py\&.
+.SS "\fBstring\fP waflib\&.Tools\&.c_preproc\&.NUM = '\fBi\fP'"
+
+.PP
+Definition at line 27 of file c_preproc\&.py\&.
+.SS "\fBstring\fP waflib\&.Tools\&.c_preproc\&.OP = 'O'"
+
+.PP
+Definition at line 28 of file c_preproc\&.py\&.
+.SS "waflib\&.Tools\&.c_preproc\&.re_clexer = re\&.compile('|'\&.join(['(?P<%\fBs\fP>%\fBs\fP)'%(name,part)\fBfor\fP \fBname\fP,part \fBin\fP zip(\fBtok_types\fP,\fBexp_types\fP)]),\fBre\&.M\fP)"
+
+.PP
+Definition at line 34 of file c_preproc\&.py\&.
+.SS "waflib\&.Tools\&.c_preproc\&.re_cpp = re\&.compile(r'//\&.*?$|/\\*\&.*?\\*/|\\'(?:\\\\\&.|[^\\\\\\'])*\\'|'(?:\\\\\&.|[^\\\\'])*'',re\&.DOTALL|re\&.MULTILINE)"
+
+.PP
+Definition at line 24 of file c_preproc\&.py\&.
+.SS "waflib\&.Tools\&.c_preproc\&.re_fun = re\&.compile('^[\fBa\fP\-zA\-Z_][\fBa\fP\-zA\-Z0\-9_]*[(]')"
+
+.PP
+Definition at line 21 of file c_preproc\&.py\&.
+.SS "waflib\&.Tools\&.c_preproc\&.re_lines = re\&.compile('^[ \\\fBt\fP]*(#|%:)[ \\\fBt\fP]*(ifdef|ifndef|\fBif\fP|else|elif|\fBendif\fP|include|import|define|undef|pragma)[ \\\fBt\fP]*(\&.*)\\r*$',re\&.IGNORECASE|re\&.MULTILINE)"
+
+.PP
+Definition at line 19 of file c_preproc\&.py\&.
+.SS "waflib\&.Tools\&.c_preproc\&.re_mac = re\&.compile('^[a\-zA\-Z_]\\w*')"
+
+.PP
+Definition at line 20 of file c_preproc\&.py\&.
+.SS "waflib\&.Tools\&.c_preproc\&.re_nl = re\&.compile('\\\\\\\\\\r*\\n',re\&.MULTILINE)"
+
+.PP
+Definition at line 23 of file c_preproc\&.py\&.
+.SS "waflib\&.Tools\&.c_preproc\&.re_pragma_once = re\&.compile('^\\\fBs\fP*\fBonce\\s\fP*',re\&.IGNORECASE)"
+
+.PP
+Definition at line 22 of file c_preproc\&.py\&.
+.SS "\fBstring\fP waflib\&.Tools\&.c_preproc\&.skipped = '\fBs\fP'"
+
+.PP
+Definition at line 38 of file c_preproc\&.py\&.
+.SS "list waflib\&.Tools\&.c_preproc\&.standard_includes = []"
+
+.PP
+Definition at line 15 of file c_preproc\&.py\&.
+.SS "\fBstring\fP waflib\&.Tools\&.c_preproc\&.STR = '\fBs\fP'"
+
+.PP
+Definition at line 30 of file c_preproc\&.py\&.
+.SS "\fBint\fP waflib\&.Tools\&.c_preproc\&.strict_quotes = 0"
+
+.PP
+Definition at line 17 of file c_preproc\&.py\&.
+.SS "waflib\&.Tools\&.c_preproc\&.syms = ops[x]"
+
+.PP
+Definition at line 54 of file c_preproc\&.py\&.
+.SS "list waflib\&.Tools\&.c_preproc\&.tok_types = [\fBNUM\fP,\fBSTR\fP,\fBIDENT\fP,\fBOP\fP]"
+
+.PP
+Definition at line 32 of file c_preproc\&.py\&.
+.SS "list waflib\&.Tools\&.c_preproc\&.trig_def = [('??'+\fBa\fP,\fBb\fP)\fBfor\fP \fBa\fP,\fBb\fP \fBin\fP zip('=\-/!'()<>',r'#~\\|^[]{}')]"
+
+.PP
+Definition at line 25 of file c_preproc\&.py\&.
+.SS "\fBstring\fP waflib\&.Tools\&.c_preproc\&.undefined = 'u'"
+
+.PP
+Definition at line 37 of file c_preproc\&.py\&.
+.SS "\fBint\fP waflib\&.Tools\&.c_preproc\&.use_trigraphs = 0"
+
+.PP
+Definition at line 16 of file c_preproc\&.py\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

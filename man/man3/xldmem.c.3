@@ -1,0 +1,330 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/lib-src/libnyquist/nyquist/xlisp/xldmem.c" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/lib-src/libnyquist/nyquist/xlisp/xldmem.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include 'stdlib\&.h'\fP
+.br
+\fC#include 'string\&.h'\fP
+.br
+\fC#include 'xlisp\&.h'\fP
+.br
+
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBMARK\fP   1"
+.br
+.ti -1c
+.RI "#define \fBLEFT\fP   2"
+.br
+.ti -1c
+.RI "#define \fBsegsize\fP(n)   (sizeof(\fBSEGMENT\fP)+((n)\-1)*sizeof(struct \fBnode\fP))"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBFORWARD\fP \fBLOCAL\fP \fBvoid\fP \fBfindmem\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBFORWARD\fP \fBLVAL\fP \fBnewnode\fP (\fBint\fP type)"
+.br
+.ti -1c
+.RI "\fBFORWARD\fP \fBLOCAL\fP unsigned char * \fBstralloc\fP (\fBint\fP \fBsize\fP)"
+.br
+.ti -1c
+.RI "\fBFORWARD\fP \fBLOCAL\fP \fBint\fP \fBaddseg\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBFORWARD\fP \fBvoid\fP \fBmark\fP (\fBLVAL\fP ptr)"
+.br
+.ti -1c
+.RI "\fBFORWARD\fP \fBLOCAL\fP \fBvoid\fP \fBsweep\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBcons\fP (\fBLVAL\fP x, \fBLVAL\fP y)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBcvstring\fP (\fBconst\fP char *\fBstr\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBnew_string\fP (\fBint\fP \fBsize\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBcvsymbol\fP (\fBconst\fP char *\fBpname\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBcvsubr\fP (\fBLVAL\fP(*fcn)(\fBvoid\fP), \fBint\fP type, \fBint\fP \fBoffset\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBcvfile\fP (FILE *fp)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBcvfixnum\fP (\fBFIXTYPE\fP n)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBcvflonum\fP (\fBFLOTYPE\fP n)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBcvchar\fP (\fBint\fP n)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBnewustream\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBnewobject\fP (\fBLVAL\fP cls, \fBint\fP \fBsize\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBnewclosure\fP (\fBLVAL\fP \fBname\fP, \fBLVAL\fP type, \fBLVAL\fP env, \fBLVAL\fP fenv)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBnewvector\fP (\fBint\fP \fBsize\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBgc\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBSEGMENT\fP * \fBnewsegment\fP (\fBint\fP n)"
+.br
+.ti -1c
+.RI "\fBLOCAL\fP \fBvoid\fP \fBstats\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxgc\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxexpand\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxalloc\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxmem\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBxinfo\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBxlminit\fP (\fBvoid\fP)"
+.br
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "\fBSEGMENT\fP * \fBsegs\fP"
+.br
+.ti -1c
+.RI "\fBSEGMENT\fP * \fBlastseg\fP"
+.br
+.ti -1c
+.RI "\fBSEGMENT\fP * \fBfixseg\fP"
+.br
+.ti -1c
+.RI "\fBSEGMENT\fP * \fBcharseg\fP"
+.br
+.ti -1c
+.RI "\fBint\fP \fBanodes\fP"
+.br
+.ti -1c
+.RI "\fBint\fP \fBnsegs\fP"
+.br
+.ti -1c
+.RI "\fBint\fP \fBgccalls\fP"
+.br
+.ti -1c
+.RI "long \fBnnodes\fP"
+.br
+.ti -1c
+.RI "long \fBnfree\fP"
+.br
+.ti -1c
+.RI "long \fBtotal\fP"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBfnodes\fP"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define LEFT   2"
+
+.PP
+Definition at line 26 of file xldmem\&.c\&.
+.SS "#define MARK   1"
+
+.PP
+Definition at line 25 of file xldmem\&.c\&.
+.SS "#define segsize(n)   (sizeof(\fBSEGMENT\fP)+((n)\-1)*sizeof(struct \fBnode\fP))"
+
+.PP
+Definition at line 29 of file xldmem\&.c\&.
+.SH "Function Documentation"
+.PP 
+.SS "\fBLOCAL\fP \fBint\fP addseg (\fBvoid\fP)"
+
+.PP
+Definition at line 528 of file xldmem\&.c\&.
+.SS "\fBLVAL\fP cons (\fBLVAL\fP x, \fBLVAL\fP y)"
+
+.PP
+Definition at line 77 of file xldmem\&.c\&.
+.SS "\fBLVAL\fP cvchar (\fBint\fP n)"
+
+.PP
+Definition at line 195 of file xldmem\&.c\&.
+.SS "\fBLVAL\fP cvfile (FILE * fp)"
+
+.PP
+Definition at line 165 of file xldmem\&.c\&.
+.SS "\fBLVAL\fP cvfixnum (\fBFIXTYPE\fP n)"
+
+.PP
+Definition at line 175 of file xldmem\&.c\&.
+.SS "\fBLVAL\fP cvflonum (\fBFLOTYPE\fP n)"
+
+.PP
+Definition at line 186 of file xldmem\&.c\&.
+.SS "\fBLVAL\fP cvstring (\fBconst\fP char * str)"
+
+.PP
+Definition at line 106 of file xldmem\&.c\&.
+.SS "\fBLVAL\fP cvsubr (\fBLVAL\fP(*)(\fBvoid\fP) fcn, \fBint\fP type, \fBint\fP offset)"
+
+.PP
+Definition at line 155 of file xldmem\&.c\&.
+.SS "\fBLVAL\fP cvsymbol (\fBconst\fP char * pname)"
+
+.PP
+Definition at line 132 of file xldmem\&.c\&.
+.SS "\fBLOCAL\fP \fBvoid\fP findmem (\fBvoid\fP)"
+
+.PP
+Definition at line 299 of file xldmem\&.c\&.
+.SS "\fBvoid\fP gc (\fBvoid\fP)"
+
+.PP
+Definition at line 307 of file xldmem\&.c\&.
+.SS "\fBvoid\fP mark (\fBLVAL\fP ptr)"
+
+.PP
+Definition at line 379 of file xldmem\&.c\&.
+.SS "\fBLVAL\fP new_string (\fBint\fP size)"
+
+.PP
+Definition at line 119 of file xldmem\&.c\&.
+.SS "\fBLVAL\fP newclosure (\fBLVAL\fP name, \fBLVAL\fP type, \fBLVAL\fP env, \fBLVAL\fP fenv)"
+
+.PP
+Definition at line 224 of file xldmem\&.c\&.
+.SS "\fBLVAL\fP newnode (\fBint\fP type)"
+
+.PP
+Definition at line 258 of file xldmem\&.c\&.
+.SS "\fBLVAL\fP newobject (\fBLVAL\fP cls, \fBint\fP size)"
+
+.PP
+Definition at line 214 of file xldmem\&.c\&.
+.SS "\fBSEGMENT\fP* newsegment (\fBint\fP n)"
+
+.PP
+Definition at line 550 of file xldmem\&.c\&.
+.SS "\fBLVAL\fP newustream (\fBvoid\fP)"
+
+.PP
+Definition at line 204 of file xldmem\&.c\&.
+.SS "\fBLVAL\fP newvector (\fBint\fP size)"
+
+.PP
+Definition at line 237 of file xldmem\&.c\&.
+.SS "\fBLOCAL\fP \fBvoid\fP stats (\fBvoid\fP)"
+
+.PP
+Definition at line 578 of file xldmem\&.c\&.
+.SS "\fBLOCAL\fP unsigned char * stralloc (\fBint\fP size)"
+
+.PP
+Definition at line 282 of file xldmem\&.c\&.
+.SS "\fBLOCAL\fP \fBvoid\fP sweep (\fBvoid\fP)"
+
+.PP
+Definition at line 460 of file xldmem\&.c\&.
+.SS "\fBLVAL\fP xalloc (\fBvoid\fP)"
+
+.PP
+Definition at line 626 of file xldmem\&.c\&.
+.SS "\fBLVAL\fP xexpand (\fBvoid\fP)"
+
+.PP
+Definition at line 602 of file xldmem\&.c\&.
+.SS "\fBLVAL\fP xgc (\fBvoid\fP)"
+
+.PP
+Definition at line 589 of file xldmem\&.c\&.
+.SS "\fBLVAL\fP xinfo (\fBvoid\fP)"
+
+.PP
+Definition at line 661 of file xldmem\&.c\&.
+.SS "\fBvoid\fP xlminit (\fBvoid\fP)"
+
+.PP
+Definition at line 709 of file xldmem\&.c\&.
+.SS "\fBLVAL\fP xmem (\fBvoid\fP)"
+
+.PP
+Definition at line 647 of file xldmem\&.c\&.
+.SH "Variable Documentation"
+.PP 
+.SS "\fBint\fP anodes"
+
+.PP
+Definition at line 38 of file xldmem\&.c\&.
+.SS "\fBSEGMENT\fP * charseg"
+
+.PP
+Definition at line 37 of file xldmem\&.c\&.
+.SS "\fBSEGMENT\fP * fixseg"
+
+.PP
+Definition at line 37 of file xldmem\&.c\&.
+.SS "\fBLVAL\fP fnodes"
+
+.PP
+Definition at line 40 of file xldmem\&.c\&.
+.SS "\fBint\fP gccalls"
+
+.PP
+Definition at line 38 of file xldmem\&.c\&.
+.SS "\fBSEGMENT\fP * lastseg"
+
+.PP
+Definition at line 37 of file xldmem\&.c\&.
+.SS "long nfree"
+
+.PP
+Definition at line 39 of file xldmem\&.c\&.
+.SS "long nnodes"
+
+.PP
+Definition at line 39 of file xldmem\&.c\&.
+.SS "\fBint\fP nsegs"
+
+.PP
+Definition at line 38 of file xldmem\&.c\&.
+.SS "\fBSEGMENT\fP* segs"
+
+.PP
+Definition at line 37 of file xldmem\&.c\&.
+.SS "long total"
+
+.PP
+Definition at line 39 of file xldmem\&.c\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

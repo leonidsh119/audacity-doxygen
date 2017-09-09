@@ -1,0 +1,63 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="sratom_2waflib_2_tools_2ifort_8py" kind="file" language="Python">
+    <compoundname>ifort.py</compoundname>
+    <innernamespace refid="namespacewaflib_1_1_tools_1_1ifort">waflib::Tools::ifort</innernamespace>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="comment">#!<sp/>/usr/bin/env<sp/>python</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="comment">#<sp/>encoding:<sp/>utf-8</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="comment">#<sp/>WARNING!<sp/>Do<sp/>not<sp/>edit!<sp/>http://waf.googlecode.com/git/docs/wafbook/single.html#_obtaining_the_waf_file</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="keyword">import</highlight><highlight class="normal"><sp/>re</highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="keyword">from</highlight><highlight class="normal"><sp/>waflib<sp/></highlight><highlight class="keyword">import</highlight><highlight class="normal"><sp/>Utils</highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="keyword">from</highlight><highlight class="normal"><sp/><ref refid="namespacewaflib_1_1_tools" kindref="compound">waflib.Tools</ref><sp/></highlight><highlight class="keyword">import</highlight><highlight class="normal"><sp/>fc,fc_config,fc_scan,ar</highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight><highlight class="keyword">from</highlight><highlight class="normal"><sp/><ref refid="namespacewaflib_1_1_configure" kindref="compound">waflib.Configure</ref><sp/></highlight><highlight class="keyword">import</highlight><highlight class="normal"><sp/>conf</highlight></codeline>
+<codeline lineno="9"><highlight class="normal">@conf</highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal"><ref refid="namespacewaflib_1_1_tools_1_1ifort_1aa6838492a72ffb343c49d099cbbe1a25" kindref="member">find_ifort</ref>(conf):</highlight></codeline>
+<codeline lineno="11"><highlight class="normal"><sp/><sp/><sp/><sp/>fc=conf.find_program(</highlight><highlight class="stringliteral">&apos;ifort&apos;</highlight><highlight class="normal">,var=</highlight><highlight class="stringliteral">&apos;FC&apos;</highlight><highlight class="normal">)</highlight></codeline>
+<codeline lineno="12"><highlight class="normal"><sp/><sp/><sp/><sp/>fc=conf.cmd_to_list(fc)</highlight></codeline>
+<codeline lineno="13"><highlight class="normal"><sp/><sp/><sp/><sp/>conf.get_ifort_version(fc)</highlight></codeline>
+<codeline lineno="14"><highlight class="normal"><sp/><sp/><sp/><sp/>conf.env.FC_NAME=</highlight><highlight class="stringliteral">&apos;IFORT&apos;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="15"><highlight class="normal">@conf</highlight></codeline>
+<codeline lineno="16"><highlight class="normal"></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal"><ref refid="namespacewaflib_1_1_tools_1_1ifort_1aa44d118aa83e088e0ab4e7ab47d662de" kindref="member">ifort_modifier_cygwin</ref>(conf):</highlight></codeline>
+<codeline lineno="17"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">raise</highlight><highlight class="normal"><sp/>NotImplementedError(</highlight><highlight class="stringliteral">&quot;Ifort<sp/>on<sp/>cygwin<sp/>not<sp/>yet<sp/>implemented&quot;</highlight><highlight class="normal">)</highlight></codeline>
+<codeline lineno="18"><highlight class="normal">@conf</highlight></codeline>
+<codeline lineno="19"><highlight class="normal"></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal"><ref refid="namespacewaflib_1_1_tools_1_1ifort_1a89fe1b18d4886bfeec97636459f81d35" kindref="member">ifort_modifier_win32</ref>(conf):</highlight></codeline>
+<codeline lineno="20"><highlight class="normal"><sp/><sp/><sp/><sp/>fc_config.fortran_modifier_win32(conf)</highlight></codeline>
+<codeline lineno="21"><highlight class="normal">@conf</highlight></codeline>
+<codeline lineno="22"><highlight class="normal"></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal"><ref refid="namespacewaflib_1_1_tools_1_1ifort_1a3078d523f12c208147b3ee500f2cbd99" kindref="member">ifort_modifier_darwin</ref>(conf):</highlight></codeline>
+<codeline lineno="23"><highlight class="normal"><sp/><sp/><sp/><sp/>fc_config.fortran_modifier_darwin(conf)</highlight></codeline>
+<codeline lineno="24"><highlight class="normal">@conf</highlight></codeline>
+<codeline lineno="25"><highlight class="normal"></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal"><ref refid="namespacewaflib_1_1_tools_1_1ifort_1a468f9dd549fcae601c2733fae8e70e25" kindref="member">ifort_modifier_platform</ref>(conf):</highlight></codeline>
+<codeline lineno="26"><highlight class="normal"><sp/><sp/><sp/><sp/>dest_os=conf.env[</highlight><highlight class="stringliteral">&apos;DEST_OS&apos;</highlight><highlight class="normal">]</highlight><highlight class="keywordflow">or</highlight><highlight class="normal"><sp/>Utils.unversioned_sys_platform()</highlight></codeline>
+<codeline lineno="27"><highlight class="normal"><sp/><sp/><sp/><sp/>ifort_modifier_func=getattr(conf,</highlight><highlight class="stringliteral">&apos;ifort_modifier_&apos;</highlight><highlight class="normal">+dest_os,</highlight><highlight class="keywordtype">None</highlight><highlight class="normal">)</highlight></codeline>
+<codeline lineno="28"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>ifort_modifier_func:</highlight></codeline>
+<codeline lineno="29"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>ifort_modifier_func()</highlight></codeline>
+<codeline lineno="30"><highlight class="normal">@conf</highlight></codeline>
+<codeline lineno="31"><highlight class="normal"></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal"><ref refid="namespacewaflib_1_1_tools_1_1ifort_1afde0bb56d9602a855a6357c8021ace77" kindref="member">get_ifort_version</ref>(conf,fc):</highlight></codeline>
+<codeline lineno="32"><highlight class="normal"><sp/><sp/><sp/><sp/>version_re=re.compile(</highlight><highlight class="stringliteral">r&quot;ifort\s*\(IFORT\)\s*(?P&lt;major&gt;\d*)\.(?P&lt;minor&gt;\d*)&quot;</highlight><highlight class="normal">,re.I).search</highlight></codeline>
+<codeline lineno="33"><highlight class="normal"><sp/><sp/><sp/><sp/>cmd=fc+[</highlight><highlight class="stringliteral">&apos;--version&apos;</highlight><highlight class="normal">]</highlight></codeline>
+<codeline lineno="34"><highlight class="normal"><sp/><sp/><sp/><sp/>out,err=fc_config.getoutput(conf,cmd,stdin=</highlight><highlight class="keyword">False</highlight><highlight class="normal">)</highlight></codeline>
+<codeline lineno="35"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>out:</highlight></codeline>
+<codeline lineno="36"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>match=version_re(out)</highlight></codeline>
+<codeline lineno="37"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="38"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>match=version_re(err)</highlight></codeline>
+<codeline lineno="39"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordflow">not</highlight><highlight class="normal"><sp/>match:</highlight></codeline>
+<codeline lineno="40"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>conf.fatal(</highlight><highlight class="stringliteral">&apos;cannot<sp/>determine<sp/>ifort<sp/>version.&apos;</highlight><highlight class="normal">)</highlight></codeline>
+<codeline lineno="41"><highlight class="normal"><sp/><sp/><sp/><sp/>k=match.groupdict()</highlight></codeline>
+<codeline lineno="42"><highlight class="normal"><sp/><sp/><sp/><sp/>conf.env[</highlight><highlight class="stringliteral">&apos;FC_VERSION&apos;</highlight><highlight class="normal">]=(k[</highlight><highlight class="stringliteral">&apos;major&apos;</highlight><highlight class="normal">],k[</highlight><highlight class="stringliteral">&apos;minor&apos;</highlight><highlight class="normal">])</highlight></codeline>
+<codeline lineno="43"><highlight class="normal"></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal"><ref refid="namespacewaflib_1_1_tools_1_1ifort_1a2eceee8c0f041a660b0759d18822b668" kindref="member">configure</ref>(conf):</highlight></codeline>
+<codeline lineno="44"><highlight class="normal"><sp/><sp/><sp/><sp/>conf.find_ifort()</highlight></codeline>
+<codeline lineno="45"><highlight class="normal"><sp/><sp/><sp/><sp/>conf.find_program(</highlight><highlight class="stringliteral">&apos;xiar&apos;</highlight><highlight class="normal">,var=</highlight><highlight class="stringliteral">&apos;AR&apos;</highlight><highlight class="normal">)</highlight></codeline>
+<codeline lineno="46"><highlight class="normal"><sp/><sp/><sp/><sp/>conf.env.ARFLAGS=</highlight><highlight class="stringliteral">&apos;rcs&apos;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="47"><highlight class="normal"><sp/><sp/><sp/><sp/>conf.fc_flags()</highlight></codeline>
+<codeline lineno="48"><highlight class="normal"><sp/><sp/><sp/><sp/>conf.fc_add_flags()</highlight></codeline>
+<codeline lineno="49"><highlight class="normal"><sp/><sp/><sp/><sp/>conf.ifort_modifier_platform()</highlight></codeline>
+    </programlisting>
+    <location file="C:/_dev/OpenU/Audacity/audacity/lib-src/lv2/sratom/waflib/Tools/ifort.py"/>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,157 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/lib-src/lv2/serd/src/reader.c" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/lib-src/lv2/serd/src/reader.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include 'serd_internal\&.h'\fP
+.br
+\fC#include <assert\&.h>\fP
+.br
+\fC#include <errno\&.h>\fP
+.br
+\fC#include <stdarg\&.h>\fP
+.br
+\fC#include <stdint\&.h>\fP
+.br
+\fC#include <stdio\&.h>\fP
+.br
+\fC#include <stdlib\&.h>\fP
+.br
+\fC#include <string\&.h>\fP
+.br
+
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "struct \fBCursor\fP"
+.br
+.ti -1c
+.RI "struct \fBReadContext\fP"
+.br
+.ti -1c
+.RI "struct \fBSerdReaderImpl\fP"
+.br
+.in -1c
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBNS_XSD\fP   'http://www\&.w3\&.org/2001/XMLSchema#'"
+.br
+.ti -1c
+.RI "#define \fBNS_RDF\fP   'http://www\&.w3\&.org/1999/02/22\-rdf\-\fBsyntax\fP\-\fBns\fP#'"
+.br
+.ti -1c
+.RI "#define \fBTRY_THROW\fP(exp)   \fBif\fP (!(exp)) goto except;"
+.br
+.ti -1c
+.RI "#define \fBTRY_RET\fP(exp)     \fBif\fP (!(exp)) \fBreturn\fP 0;"
+.br
+.ti -1c
+.RI "#define \fBSERD_STACK_ASSERT_TOP\fP(reader,  ref)"
+.br
+.ti -1c
+.RI "#define \fBXSD_DECIMAL\fP   \fBNS_XSD\fP 'decimal'"
+.br
+.ti -1c
+.RI "#define \fBXSD_DOUBLE\fP   \fBNS_XSD\fP 'double'"
+.br
+.ti -1c
+.RI "#define \fBXSD_INTEGER\fP   \fBNS_XSD\fP 'integer'"
+.br
+.in -1c
+.SS "Typedefs"
+
+.in +1c
+.ti -1c
+.RI "typedef \fBuint32_t\fP \fBuchar\fP"
+.br
+.ti -1c
+.RI "typedef size_t \fBRef\fP"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBSERD_API\fP \fBSerdReader\fP * \fBserd_reader_new\fP (\fBSerdSyntax\fP \fBsyntax\fP, \fBvoid\fP *handle, \fBvoid\fP(*free_handle)(\fBvoid\fP *), \fBSerdBaseSink\fP base_sink, \fBSerdPrefixSink\fP prefix_sink, \fBSerdStatementSink\fP statement_sink, \fBSerdEndSink\fP end_sink)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBvoid\fP \fBserd_reader_set_error_sink\fP (\fBSerdReader\fP *reader, \fBSerdErrorSink\fP error_sink, \fBvoid\fP *error_handle)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBvoid\fP \fBserd_reader_free\fP (\fBSerdReader\fP *reader)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBvoid\fP * \fBserd_reader_get_handle\fP (\fBconst\fP \fBSerdReader\fP *reader)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBvoid\fP \fBserd_reader_add_blank_prefix\fP (\fBSerdReader\fP *reader, \fBconst\fP \fBuint8_t\fP *\fBprefix\fP)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBvoid\fP \fBserd_reader_set_default_graph\fP (\fBSerdReader\fP *reader, \fBconst\fP \fBSerdNode\fP *graph)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBSerdStatus\fP \fBserd_reader_read_file\fP (\fBSerdReader\fP *reader, \fBconst\fP \fBuint8_t\fP *\fBuri\fP)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBSerdStatus\fP \fBserd_reader_start_stream\fP (\fBSerdReader\fP *me, FILE *file, \fBconst\fP \fBuint8_t\fP *\fBname\fP, \fBbool\fP bulk)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBSerdStatus\fP \fBserd_reader_read_chunk\fP (\fBSerdReader\fP *me)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBSerdStatus\fP \fBserd_reader_end_stream\fP (\fBSerdReader\fP *me)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBSerdStatus\fP \fBserd_reader_read_file_handle\fP (\fBSerdReader\fP *me, FILE *file, \fBconst\fP \fBuint8_t\fP *\fBname\fP)"
+.br
+.ti -1c
+.RI "\fBSERD_API\fP \fBSerdStatus\fP \fBserd_reader_read_string\fP (\fBSerdReader\fP *me, \fBconst\fP \fBuint8_t\fP *utf8)"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define NS_RDF   'http://www\&.w3\&.org/1999/02/22\-rdf\-\fBsyntax\fP\-\fBns\fP#'"
+
+.PP
+Definition at line 28 of file reader\&.c\&.
+.SS "#define NS_XSD   'http://www\&.w3\&.org/2001/XMLSchema#'"
+
+.PP
+Definition at line 27 of file reader\&.c\&.
+.SS "#define SERD_STACK_ASSERT_TOP(reader, ref)"
+
+.PP
+Definition at line 37 of file reader\&.c\&.
+.SS "#define TRY_RET(exp)   \fBif\fP (!(exp)) \fBreturn\fP 0;"
+
+.PP
+Definition at line 31 of file reader\&.c\&.
+.SS "#define TRY_THROW(exp)   \fBif\fP (!(exp)) goto except;"
+
+.PP
+Definition at line 30 of file reader\&.c\&.
+.SS "#define XSD_DECIMAL   \fBNS_XSD\fP 'decimal'"
+
+.SS "#define XSD_DOUBLE   \fBNS_XSD\fP 'double'"
+
+.SS "#define XSD_INTEGER   \fBNS_XSD\fP 'integer'"
+
+.SH "Typedef Documentation"
+.PP 
+.SS "typedef size_t \fBRef\fP"
+
+.PP
+Definition at line 51 of file reader\&.c\&.
+.SS "typedef \fBuint32_t\fP \fBuchar\fP"
+
+.PP
+Definition at line 46 of file reader\&.c\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

@@ -1,0 +1,485 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/lib-src/libnyquist/nyquist/sys/mac/macint.c" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/lib-src/libnyquist/nyquist/sys/mac/macint.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <Events\&.h>\fP
+.br
+\fC#include <Gestalt\&.h>\fP
+.br
+\fC#include <Memory\&.h>\fP
+.br
+\fC#include <Menus\&.h>\fP
+.br
+\fC#include <Quickdraw\&.h>\fP
+.br
+\fC#include <StandardFile\&.h>\fP
+.br
+\fC#include <TextEdit\&.h>\fP
+.br
+\fC#include <ToolUtils\&.h>\fP
+.br
+\fC#include <Traps\&.h>\fP
+.br
+\fC#include <Windows\&.h>\fP
+.br
+\fC#include <Controls\&.h>\fP
+.br
+\fC#include <SIOUX\&.h>\fP
+.br
+\fC#include <AppleEvents\&.h>\fP
+.br
+\fC#include 'macint\&.h'\fP
+.br
+\fC#include 'MacCommandWin\&.h'\fP
+.br
+\fC#include 'macaboutbox\&.h'\fP
+.br
+\fC#include 'MacDrag\&.h'\fP
+.br
+\fC#include 'MacHandleEv\&.h'\fP
+.br
+\fC#include 'macstuff\&.h'\fP
+.br
+\fC#include 'stdio\&.h'\fP
+.br
+
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "struct \fBAEventList\fP"
+.br
+.in -1c
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBNIL\fP   ((\fBvoid\fP *) 0)"
+.br
+.ti -1c
+.RI "#define \fBTEXTREC\fP   (*\fBhTERec\fP)  /* \fBthe\fP command window text record */"
+.br
+.ti -1c
+.RI "#define \fBTEXTCHAR\fP(\fBi\fP)   ((*(\fBTEXTREC\fP\->hText))[\fBi\fP])"
+.br
+.in -1c
+.SS "Typedefs"
+
+.in +1c
+.ti -1c
+.RI "typedef struct \fBAEventList\fP \fBAEventList\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBAEventList\fP * \fBAEventListPtr\fP"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "pascal Boolean \fBScrollClickLoop\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "pascal \fBvoid\fP \fBScrollProc\fP (ControlHandle control, short thePart)"
+.br
+.ti -1c
+.RI "Rect \fBSetTERect\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBFlushOutput\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBShowGrafWin\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBHideGrafWin\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBInitMac\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBGetFullPath\fP (FSSpec *theSpec, StringPtr \fBtheName\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBDoMenu\fP (long choice)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBAdjustMenus\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBDoContent\fP (EventRecord *theEvent)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBDoEvent\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBMacWrapUp\fP (\fBvoid\fP)"
+.br
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "MenuHandle \fBappleMenu\fP"
+.br
+.ti -1c
+.RI "MenuHandle \fBfileMenu\fP"
+.br
+.ti -1c
+.RI "MenuHandle \fBeditMenu\fP"
+.br
+.ti -1c
+.RI "MenuHandle \fBcontrolMenu\fP"
+.br
+.ti -1c
+.RI "WindowPtr \fBgCommandWin\fP"
+.br
+.ti -1c
+.RI "WindowPtr \fBgGraphicsWin\fP"
+.br
+.ti -1c
+.RI "WindowRecord \fBcommandWinRec\fP"
+.br
+.ti -1c
+.RI "WindowRecord \fBbwGraphicsWinRec\fP"
+.br
+.ti -1c
+.RI "CWindowRecord \fBcolorGraphicsWinRec\fP"
+.br
+.ti -1c
+.RI "Boolean \fBgGraphicsShown\fP"
+.br
+.ti -1c
+.RI "Boolean \fBgCommandWinResized\fP = \fBfalse\fP"
+.br
+.ti -1c
+.RI "Rect \fBdragRect\fP"
+.br
+.ti -1c
+.RI "Rect \fBsizeRect\fP"
+.br
+.ti -1c
+.RI "\fBint\fP \fBscreenWidth\fP"
+.br
+.ti -1c
+.RI "\fBint\fP \fBscreenHeight\fP"
+.br
+.ti -1c
+.RI "\fBint\fP \fBsHorizontal\fP"
+.br
+.ti -1c
+.RI "\fBint\fP \fBsVertical\fP"
+.br
+.ti -1c
+.RI "\fBint\fP \fBsWidth\fP"
+.br
+.ti -1c
+.RI "\fBint\fP \fBsHeight\fP"
+.br
+.ti -1c
+.RI "\fBint\fP \fBgHorizontal\fP"
+.br
+.ti -1c
+.RI "\fBint\fP \fBgVertical\fP"
+.br
+.ti -1c
+.RI "\fBint\fP \fBgWidth\fP"
+.br
+.ti -1c
+.RI "\fBint\fP \fBgHeight\fP"
+.br
+.ti -1c
+.RI "TEHandle \fBhTERec\fP"
+.br
+.ti -1c
+.RI "\fBint\fP \fBoutputBufferLength\fP = 0"
+.br
+.ti -1c
+.RI "ControlActionUPP \fBuppScrollProc\fP"
+.br
+.ti -1c
+.RI "TEClickLoopUPP \fBuppScrollClickLoop\fP"
+.br
+.ti -1c
+.RI "CharsHandle \fBpastedTextH\fP = \fBNULL\fP"
+.br
+.ti -1c
+.RI "\fBint\fP \fBpastedLength\fP = 0"
+.br
+.ti -1c
+.RI "\fBint\fP \fBflashTime\fP = 0"
+.br
+.ti -1c
+.RI "\fBint\fP \fBcursorBeforeFlash\fP"
+.br
+.ti -1c
+.RI "char \fBrecentChar\fP"
+.br
+.ti -1c
+.RI "RgnHandle \fBgMouseRgn\fP"
+.br
+.ti -1c
+.RI "Boolean \fBgInBackground\fP"
+.br
+.ti -1c
+.RI "\fBint\fP \fBwneImplemented\fP"
+.br
+.ti -1c
+.RI "unsigned long \fBstartupTicks\fP"
+.br
+.ti -1c
+.RI "Boolean \fBhasColorQD\fP"
+.br
+.ti -1c
+.RI "short \fBhowManyFiles\fP = 0"
+.br
+.ti -1c
+.RI "short \fBwhichFile\fP = 0"
+.br
+.ti -1c
+.RI "RgnHandle \fBrgn\fP = nil"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define NIL   ((\fBvoid\fP *) 0)"
+
+.PP
+Definition at line 23 of file macint\&.c\&.
+.SS "#define TEXTCHAR(\fBi\fP)   ((*(\fBTEXTREC\fP\->hText))[\fBi\fP])"
+
+.PP
+Definition at line 33 of file macint\&.c\&.
+.SS "#define TEXTREC   (*\fBhTERec\fP)  /* \fBthe\fP command window text record */"
+
+.PP
+Definition at line 32 of file macint\&.c\&.
+.SH "Typedef Documentation"
+.PP 
+.SS "typedef struct \fBAEventList\fP  \fBAEventList\fP"
+
+.SS "typedef struct \fBAEventList\fP * \fBAEventListPtr\fP"
+
+.SH "Function Documentation"
+.PP 
+.SS "\fBvoid\fP AdjustMenus (\fBvoid\fP)"
+
+.PP
+Definition at line 390 of file macint\&.c\&.
+.SS "\fBvoid\fP DoContent (EventRecord * theEvent)"
+
+.PP
+Definition at line 409 of file macint\&.c\&.
+.SS "\fBvoid\fP DoEvent (\fBvoid\fP)"
+
+.PP
+Definition at line 455 of file macint\&.c\&.
+.SS "\fBvoid\fP DoMenu (long choice)"
+
+.PP
+Definition at line 377 of file macint\&.c\&.
+.SS "\fBvoid\fP FlushOutput (\fBvoid\fP)"
+
+.PP
+Definition at line 337 of file MacCommandWin\&.c\&.
+.SS "\fBvoid\fP GetFullPath (FSSpec * theSpec, StringPtr theName)"
+
+.PP
+Definition at line 43 of file MacFileUtils\&.c\&.
+.SS "\fBvoid\fP HideGrafWin (\fBvoid\fP)"
+
+.PP
+Definition at line 107 of file macint\&.c\&.
+.SS "\fBvoid\fP InitMac (\fBvoid\fP)"
+
+.PP
+Definition at line 120 of file macint\&.c\&.
+.SS "\fBvoid\fP MacWrapUp (\fBvoid\fP)"
+
+.PP
+Definition at line 517 of file macint\&.c\&.
+.SS "pascal Boolean ScrollClickLoop (\fBvoid\fP)"
+
+.PP
+Definition at line 54 of file MacCommandWin\&.c\&.
+.SS "pascal \fBvoid\fP ScrollProc (ControlHandle control, short thePart)"
+
+.PP
+Definition at line 85 of file MacCommandWin\&.c\&.
+.SS "Rect SetTERect (\fBvoid\fP)"
+
+.PP
+Definition at line 106 of file MacCommandWin\&.c\&.
+.SS "\fBvoid\fP ShowGrafWin (\fBvoid\fP)"
+
+.PP
+Definition at line 98 of file macint\&.c\&.
+.SH "Variable Documentation"
+.PP 
+.SS "MenuHandle appleMenu"
+
+.PP
+Definition at line 48 of file macint\&.c\&.
+.SS "WindowRecord bwGraphicsWinRec"
+
+.PP
+Definition at line 52 of file macint\&.c\&.
+.SS "CWindowRecord colorGraphicsWinRec"
+
+.PP
+Definition at line 53 of file macint\&.c\&.
+.SS "WindowRecord commandWinRec"
+
+.PP
+Definition at line 52 of file macint\&.c\&.
+.SS "MenuHandle controlMenu"
+
+.PP
+Definition at line 48 of file macint\&.c\&.
+.SS "\fBint\fP cursorBeforeFlash"
+
+.PP
+Definition at line 77 of file macint\&.c\&.
+.SS "Rect dragRect"
+
+.PP
+Definition at line 57 of file macint\&.c\&.
+.SS "MenuHandle editMenu"
+
+.PP
+Definition at line 48 of file macint\&.c\&.
+.SS "MenuHandle fileMenu"
+
+.PP
+Definition at line 48 of file macint\&.c\&.
+.SS "\fBint\fP flashTime = 0"
+
+.PP
+Definition at line 77 of file macint\&.c\&.
+.SS "WindowPtr gCommandWin"
+
+.PP
+Definition at line 51 of file macint\&.c\&.
+.SS "Boolean gCommandWinResized = \fBfalse\fP"
+
+.PP
+Definition at line 54 of file macint\&.c\&.
+.SS "Boolean gGraphicsShown"
+
+.PP
+Definition at line 54 of file macint\&.c\&.
+.SS "WindowPtr gGraphicsWin"
+
+.PP
+Definition at line 51 of file macint\&.c\&.
+.SS "\fBint\fP gHeight"
+
+.PP
+Definition at line 60 of file macint\&.c\&.
+.SS "\fBint\fP gHorizontal"
+
+.PP
+Definition at line 60 of file macint\&.c\&.
+.SS "Boolean gInBackground"
+
+.PP
+Definition at line 82 of file macint\&.c\&.
+.SS "RgnHandle gMouseRgn"
+
+.PP
+Definition at line 79 of file macint\&.c\&.
+.SS "\fBint\fP gVertical"
+
+.PP
+Definition at line 60 of file macint\&.c\&.
+.SS "\fBint\fP gWidth"
+
+.PP
+Definition at line 60 of file macint\&.c\&.
+.SS "Boolean hasColorQD"
+
+.PP
+Definition at line 85 of file macint\&.c\&.
+.SS "short howManyFiles = 0"
+
+.PP
+Definition at line 87 of file macint\&.c\&.
+.SS "TEHandle hTERec"
+
+.PP
+Definition at line 63 of file macint\&.c\&.
+.SS "\fBint\fP outputBufferLength = 0"
+
+.PP
+Definition at line 67 of file macint\&.c\&.
+.SS "\fBint\fP pastedLength = 0"
+
+.PP
+Definition at line 76 of file macint\&.c\&.
+.SS "CharsHandle pastedTextH = \fBNULL\fP"
+
+.PP
+Definition at line 75 of file macint\&.c\&.
+.SS "char recentChar"
+
+.PP
+Definition at line 78 of file macint\&.c\&.
+.SS "RgnHandle rgn = nil"
+
+.PP
+Definition at line 407 of file macint\&.c\&.
+.SS "\fBint\fP screenHeight"
+
+.PP
+Definition at line 58 of file macint\&.c\&.
+.SS "\fBint\fP screenWidth"
+
+.PP
+Definition at line 58 of file macint\&.c\&.
+.SS "\fBint\fP sHeight"
+
+.PP
+Definition at line 59 of file macint\&.c\&.
+.SS "\fBint\fP sHorizontal"
+
+.PP
+Definition at line 59 of file macint\&.c\&.
+.SS "Rect sizeRect"
+
+.PP
+Definition at line 57 of file macint\&.c\&.
+.SS "unsigned long startupTicks"
+
+.PP
+Definition at line 84 of file macint\&.c\&.
+.SS "\fBint\fP sVertical"
+
+.PP
+Definition at line 59 of file macint\&.c\&.
+.SS "\fBint\fP sWidth"
+
+.PP
+Definition at line 59 of file macint\&.c\&.
+.SS "TEClickLoopUPP uppScrollClickLoop"
+
+.PP
+Definition at line 71 of file macint\&.c\&.
+.SS "ControlActionUPP uppScrollProc"
+
+.PP
+Definition at line 70 of file macint\&.c\&.
+.SS "short whichFile = 0"
+
+.PP
+Definition at line 87 of file macint\&.c\&.
+.SS "\fBint\fP wneImplemented"
+
+.PP
+Definition at line 83 of file macint\&.c\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

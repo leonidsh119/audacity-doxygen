@@ -1,0 +1,234 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/lib-src/ffmpeg/libavutil/parseutils.h" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/lib-src/ffmpeg/libavutil/parseutils.h \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <time\&.h>\fP
+.br
+\fC#include 'rational\&.h'\fP
+.br
+
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBav_parse_ratio_quiet\fP(\fBrate\fP,  \fBstr\fP,  \fBmax\fP)   \fBav_parse_ratio\fP(\fBrate\fP, \fBstr\fP, \fBmax\fP, \fBAV_LOG_MAX_OFFSET\fP, \fBNULL\fP)"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBint\fP \fBav_parse_ratio\fP (\fBAVRational\fP *\fBq\fP, \fBconst\fP char *\fBstr\fP, \fBint\fP \fBmax\fP, \fBint\fP log_offset, \fBvoid\fP *log_ctx)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_parse_video_size\fP (\fBint\fP *width_ptr, \fBint\fP *height_ptr, \fBconst\fP char *\fBstr\fP)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_parse_video_rate\fP (\fBAVRational\fP *\fBrate\fP, \fBconst\fP char *\fBstr\fP)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_parse_color\fP (\fBuint8_t\fP *rgba_color, \fBconst\fP char *color_string, \fBint\fP slen, \fBvoid\fP *log_ctx)"
+.br
+.ti -1c
+.RI "\fBconst\fP char * \fBav_get_known_color_name\fP (\fBint\fP color_idx, \fBconst\fP \fBuint8_t\fP **rgb)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_parse_time\fP (\fBint64_t\fP *timeval, \fBconst\fP char *timestr, \fBint\fP duration)"
+.br
+.ti -1c
+.RI "char * \fBav_small_strptime\fP (\fBconst\fP char *\fBp\fP, \fBconst\fP char *fmt, struct tm *dt)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_find_info_tag\fP (char *arg, \fBint\fP arg_size, \fBconst\fP char *tag1, \fBconst\fP char *\fBinfo\fP)"
+.br
+.ti -1c
+.RI "time_t \fBav_timegm\fP (struct tm *tm)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+misc parsing utilities 
+.PP
+Definition in file \fBparseutils\&.h\fP\&.
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define av_parse_ratio_quiet(\fBrate\fP, \fBstr\fP, \fBmax\fP)   \fBav_parse_ratio\fP(\fBrate\fP, \fBstr\fP, \fBmax\fP, \fBAV_LOG_MAX_OFFSET\fP, \fBNULL\fP)"
+
+.PP
+Definition at line 52 of file parseutils\&.h\&.
+.SH "Function Documentation"
+.PP 
+.SS "\fBint\fP av_find_info_tag (char * arg, \fBint\fP arg_size, \fBconst\fP char * tag1, \fBconst\fP char * info)"
+Attempt to find a specific tag in a URL\&.
+.PP
+syntax: '?tag1=val1&tag2=val2\&.\&.\&.'\&. Little URL decoding is done\&. Return 1 if found\&. 
+.SS "\fBconst\fP char* av_get_known_color_name (\fBint\fP color_idx, \fBconst\fP \fBuint8_t\fP ** rgb)"
+Get the name of a color from the internal table of hard-coded named colors\&.
+.PP
+This function is meant to enumerate the color names recognized by \fBav_parse_color()\fP\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcolor_idx\fP index of the requested color, starting from 0 
+.br
+\fIrgbp\fP if not NULL, will point to a 3-elements array with the color value in RGB 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the color name string or NULL if color_idx is not in the array 
+.RE
+.PP
+
+.SS "\fBint\fP av_parse_color (\fBuint8_t\fP * rgba_color, \fBconst\fP char * color_string, \fBint\fP slen, \fBvoid\fP * log_ctx)"
+Put the RGBA values that correspond to color_string in rgba_color\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcolor_string\fP a string specifying a color\&. It can be the name of a color (case insensitive match) or a [0x|#]RRGGBB[AA] sequence, possibly followed by '@' and a string representing the alpha component\&. The alpha component may be a string composed by '0x' followed by an hexadecimal number or a decimal number between 0\&.0 and 1\&.0, which represents the opacity value (0x00/0\&.0 means completely transparent, 0xff/1\&.0 completely opaque)\&. If the alpha component is not specified then 0xff is assumed\&. The string 'random' will result in a random color\&. 
+.br
+\fIslen\fP length of the initial part of color_string containing the color\&. It can be set to -1 if color_string is a null terminated string containing nothing else than the color\&. 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+>= 0 in case of success, a negative value in case of failure (for example if color_string cannot be parsed)\&. 
+.RE
+.PP
+
+.SS "\fBint\fP av_parse_ratio (\fBAVRational\fP * q, \fBconst\fP char * str, \fBint\fP max, \fBint\fP log_offset, \fBvoid\fP * log_ctx)"
+Parse str and store the parsed ratio in q\&.
+.PP
+Note that a ratio with infinite (1/0) or negative value is considered valid, so you should check on the returned value if you want to exclude those values\&.
+.PP
+The undefined value can be expressed using the '0:0' string\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIq\fP pointer to the \fBAVRational\fP which will contain the ratio 
+.br
+\fIstr\fP the string to parse: it has to be a string in the format num:den, a float number or an expression 
+.br
+\fImax\fP the maximum allowed numerator and denominator 
+.br
+\fIlog_offset\fP log level offset which is applied to the log level of log_ctx 
+.br
+\fIlog_ctx\fP parent logging context 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+>= 0 on success, a negative error code otherwise 
+.RE
+.PP
+
+.SS "\fBint\fP av_parse_time (\fBint64_t\fP * timeval, \fBconst\fP char * timestr, \fBint\fP duration)"
+Parse timestr and return in *time a corresponding number of microseconds\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fItimeval\fP puts here the number of microseconds corresponding to the string in timestr\&. If the string represents a duration, it is the number of microseconds contained in the time interval\&. If the string is a date, is the number of microseconds since 1st of January, 1970 up to the time of the parsed date\&. If timestr cannot be successfully parsed, set *time to INT64_MIN\&.
+.br
+\fItimestr\fP a string representing a date or a duration\&.
+.IP "\(bu" 2
+If a date the syntax is: 
+.PP
+.nf
+1 [{YYYY-MM-DD|YYYYMMDD}[T|t| ]]{{HH:MM:SS[\&.m\&.\&.\&.]]]}|{HHMMSS[\&.m\&.\&.\&.]]]}}[Z]
+2 now
+
+.fi
+.PP
+ If the value is 'now' it takes the current time\&. Time is local time unless Z is appended, in which case it is interpreted as UTC\&. If the year-month-day part is not specified it takes the current year-month-day\&.
+.IP "\(bu" 2
+If a duration the syntax is: 
+.PP
+.nf
+1 [-][HH:]MM:SS[\&.m\&.\&.\&.]
+2 [-]S+[\&.m\&.\&.\&.]
+
+.fi
+.PP
+ 
+.PP
+.br
+\fIduration\fP flag which tells how to interpret timestr, if not zero timestr is interpreted as a duration, otherwise as a date 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+>= 0 in case of success, a negative value corresponding to an AVERROR code otherwise 
+.RE
+.PP
+
+.SS "\fBint\fP av_parse_video_rate (\fBAVRational\fP * rate, \fBconst\fP char * str)"
+Parse str and store the detected values in *rate\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIrate\fP pointer to the \fBAVRational\fP which will contain the detected frame rate 
+.br
+\fIstr\fP the string to parse: it has to be a string in the format rate_num / rate_den, a float number or a valid video rate abbreviation 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+>= 0 on success, a negative error code otherwise 
+.RE
+.PP
+
+.SS "\fBint\fP av_parse_video_size (\fBint\fP * width_ptr, \fBint\fP * height_ptr, \fBconst\fP char * str)"
+Parse str and put in width_ptr and height_ptr the detected values\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIwidth_ptr\fP pointer to the variable which will contain the detected width value 
+.br
+\fIheight_ptr\fP pointer to the variable which will contain the detected height value 
+.br
+\fIstr\fP the string to parse: it has to be a string in the format width x height or a valid video size abbreviation\&. 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+>= 0 on success, a negative error code otherwise 
+.RE
+.PP
+
+.SS "char* av_small_strptime (\fBconst\fP char * p, \fBconst\fP char * fmt, struct tm * dt)"
+Parse the input string p according to the format string fmt and store its results in the structure dt\&. This implementation supports only a subset of the formats supported by the standard strptime()\&.
+.PP
+In particular it actually supports the parameters:
+.IP "\(bu" 2
+H: the hour as a decimal number, using a 24-hour clock, in the range '00' through '23'
+.IP "\(bu" 2
+J: hours as a decimal number, in the range '0' through INT_MAX
+.IP "\(bu" 2
+M: the minute as a decimal number, using a 24-hour clock, in the range '00' through '59'
+.IP "\(bu" 2
+S: the second as a decimal number, using a 24-hour clock, in the range '00' through '59'
+.IP "\(bu" 2
+Y: the year as a decimal number, using the Gregorian calendar
+.IP "\(bu" 2
+m: the month as a decimal number, in the range '1' through '12'
+.IP "\(bu" 2
+d: the day of the month as a decimal number, in the range '1' through '31'
+.IP "\(bu" 2
+%%: a literal ''
+.PP
+.PP
+\fBReturns:\fP
+.RS 4
+a pointer to the first character not processed in this function call, or NULL in case the function fails to match all of the fmt string and therefore an error occurred 
+.RE
+.PP
+
+.SS "time_t av_timegm (struct tm * tm)"
+Convert the decomposed UTC time in tm to a time_t value\&. 
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

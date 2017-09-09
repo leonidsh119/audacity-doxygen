@@ -1,0 +1,557 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/lib-src/libnyquist/nyquist/nyqsrc/sound.c" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/lib-src/libnyquist/nyquist/nyqsrc/sound.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <stdio\&.h>\fP
+.br
+\fC#include 'xlisp\&.h'\fP
+.br
+\fC#include 'sound\&.h'\fP
+.br
+\fC#include 'falloc\&.h'\fP
+.br
+\fC#include 'samples\&.h'\fP
+.br
+\fC#include 'extern\&.h'\fP
+.br
+\fC#include 'debug\&.h'\fP
+.br
+\fC#include 'assert\&.h'\fP
+.br
+\fC#include 'cext\&.h'\fP
+.br
+\fC#include 'userio\&.h'\fP
+.br
+
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBp1\fP   0\&.0577622650466621"
+.br
+.ti -1c
+.RI "#define \fBp2\fP   2\&.1011784386926213"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBvoid\fP \fBsound_print_array\fP (\fBLVAL\fP \fBsa\fP, long n)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBsound_print_sound\fP (\fBsound_type\fP \fBs\fP, long n)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBsample_block_unref\fP (\fBsample_block_type\fP sam)"
+.br
+.ti -1c
+.RI "double \fBsnd_set_latency\fP (double \fBlatency\fP)"
+.br
+.ti -1c
+.RI "long \fBcheck_terminate_cnt\fP (long tc)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBsnd_badsr\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "double \fBcompute_phase\fP (double phase, double key, long n, double srate, double new_srate, double freq, double *incr_ptr)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBblock_watch\fP (long sample_block)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBfetch_zeros\fP (\fBsnd_susp_type\fP susp, \fBsnd_list_type\fP snd_list)"
+.br
+.ti -1c
+.RI "long \fBsound_nth_block\fP (\fBsound_type\fP snd, long n)"
+.br
+.ti -1c
+.RI "\fBsnd_list_type\fP \fBsnd_list_create\fP (\fBsnd_susp_type\fP susp)"
+.br
+.ti -1c
+.RI "\fBsound_type\fP \fBsound_create\fP (\fBsnd_susp_type\fP susp, \fBtime_type\fP t0, \fBrate_type\fP sr, \fBpromoted_sample_type\fP \fBscale\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBsound_prepend_zeros\fP (\fBsound_type\fP snd, \fBtime_type\fP t0)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBsound_array_copy\fP (\fBLVAL\fP \fBsa\fP)"
+.br
+.ti -1c
+.RI "\fBsound_type\fP \fBsound_copy\fP (\fBsound_type\fP snd)"
+.br
+.ti -1c
+.RI "\fBtable_type\fP \fBsound_to_table\fP (\fBsound_type\fP \fBs\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBtable_free\fP (\fBtable_type\fP table)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBtable_unref\fP (\fBtable_type\fP table)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBsound_unref\fP (\fBsound_type\fP snd)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBsnd_list_ref\fP (\fBsnd_list_type\fP list)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBsnd_list_terminate\fP (\fBsnd_list_type\fP snd_list)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBsnd_list_unref\fP (\fBsnd_list_type\fP list)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBsample_block_ref\fP (\fBsample_block_type\fP sam)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBsample_block_test\fP (\fBsample_block_type\fP sam, char *\fBs\fP)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBinterp_style\fP (\fBsound_type\fP \fBs\fP, \fBrate_type\fP sr)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBsnd_sort_2\fP (\fBsound_type\fP *s1_ptr, \fBsound_type\fP *s2_ptr, \fBrate_type\fP sr)"
+.br
+.ti -1c
+.RI "double \fBsnd_sref\fP (\fBsound_type\fP \fBs\fP, \fBtime_type\fP \fBt\fP)"
+.br
+.ti -1c
+.RI "double \fBsnd_sref_inverse\fP (\fBsound_type\fP \fBs\fP, double val)"
+.br
+.ti -1c
+.RI "\fBtime_type\fP \fBsnd_stop_time\fP (\fBsound_type\fP \fBs\fP)"
+.br
+.ti -1c
+.RI "\fBsound_type\fP \fBsnd_xform\fP (\fBsound_type\fP snd, \fBrate_type\fP sr, \fBtime_type\fP time, \fBtime_type\fP \fBstart_time\fP, \fBtime_type\fP stop_time, \fBpromoted_sample_type\fP \fBscale\fP)"
+.br
+.ti -1c
+.RI "\fBsample_block_type\fP \fBSND_flush\fP (\fBsound_type\fP snd, long *cnt)"
+.br
+.ti -1c
+.RI "\fBsample_block_type\fP \fBSND_get_zeros\fP (\fBsound_type\fP snd, long *cnt)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBadd_s1_s2_nn_fetch\fP ()"
+.br
+.ti -1c
+.RI "\fBsample_block_type\fP \fBSND_get_first\fP (\fBsound_type\fP snd, long *cnt)"
+.br
+.ti -1c
+.RI "\fBsample_block_type\fP \fBSND_get_next\fP (\fBsound_type\fP snd, long *cnt)"
+.br
+.ti -1c
+.RI "\fBsample_block_type\fP \fBmake_zero_block\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBmin_cnt\fP (long *cnt_ptr, \fBsound_type\fP sound, \fBsnd_susp_type\fP susp, long cnt)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBsound_init\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBsound_type\fP \fBsound_scale\fP (double factor, \fBsound_type\fP snd)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBset_logical_stop_time\fP (\fBsound_type\fP sound, \fBtime_type\fP when)"
+.br
+.ti -1c
+.RI "\fBvoid\fP ((**watch_me)())"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBset_watch\fP (\fBvoid\fP((**where)()))"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBsound_print\fP (\fBLVAL\fP snd_expr, long n)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBsound_play\fP (\fBLVAL\fP snd_expr)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBsound_print_tree\fP (\fBsound_type\fP snd)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBindent\fP (\fBint\fP n)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBsound_print_tree_1\fP (\fBsound_type\fP snd, \fBint\fP n)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBmark_audio_time\fP ()"
+.br
+.ti -1c
+.RI "double \fBhz_to_step\fP (double hz)"
+.br
+.ti -1c
+.RI "double \fBstep_to_hz\fP (double steps)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBsound_xlmark\fP (\fBvoid\fP *\fBa_sound\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBsound_symbols\fP ()"
+.br
+.ti -1c
+.RI "\fBboolean\fP \fBsoundp\fP (\fBLVAL\fP \fBs\fP)"
+.br
+.ti -1c
+.RI "\fBsound_type\fP \fBsound_zero\fP (\fBtime_type\fP t0, \fBrate_type\fP sr)"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBcvsound\fP (\fBsound_type\fP \fBs\fP)"
+.br
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "\fBsnd_list_type\fP \fBlist_watch\fP"
+.br
+.ti -1c
+.RI "long \fBtable_memory\fP"
+.br
+.ti -1c
+.RI "\fBsample_block_type\fP \fBzero_block\fP"
+.br
+.ti -1c
+.RI "\fBsample_block_type\fP \fBinternal_zero_block\fP"
+.br
+.ti -1c
+.RI "\fBsnd_list_type\fP \fBzero_snd_list\fP"
+.br
+.ti -1c
+.RI "\fBxtype_desc\fP \fBsound_desc\fP"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBa_sound\fP"
+.br
+.ti -1c
+.RI "\fBLVAL\fP \fBs_audio_markers\fP"
+.br
+.ti -1c
+.RI "double \fBsound_latency\fP = 0\&.3"
+.br
+.ti -1c
+.RI "double \fBsound_srate\fP = 44100\&.0"
+.br
+.ti -1c
+.RI "long \fBsound_frames\fP = 0"
+.br
+.ti -1c
+.RI "\fBsnd_list_type\fP \fBgcbug_snd_list\fP = 0"
+.br
+.ti -1c
+.RI "long \fBblocks_to_watch_len\fP = 0"
+.br
+.ti -1c
+.RI "\fBsample_block_type\fP \fBblocks_to_watch\fP [\fBblocks_to_watch_max\fP]"
+.br
+.ti -1c
+.RI "\fBsound_type\fP \fBlast_sound\fP = \fBNULL\fP"
+.br
+.ti -1c
+.RI "\fBsound_type\fP \fBprinting_this_sound\fP = \fBNULL\fP"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define p1   0\&.0577622650466621"
+
+.PP
+Definition at line 1575 of file sound\&.c\&.
+.SS "#define p2   2\&.1011784386926213"
+
+.PP
+Definition at line 1576 of file sound\&.c\&.
+.SH "Function Documentation"
+.PP 
+.SS "\fBvoid\fP add_s1_s2_nn_fetch ()"
+
+.SS "\fBvoid\fP block_watch (long sample_block)"
+
+.PP
+Definition at line 140 of file sound\&.c\&.
+.SS "long check_terminate_cnt (long tc)"
+
+.PP
+Definition at line 76 of file sound\&.c\&.
+.SS "double compute_phase (double phase, double key, long n, double srate, double new_srate, double freq, double * incr_ptr)"
+
+.PP
+Definition at line 103 of file sound\&.c\&.
+.SS "\fBLVAL\fP cvsound (\fBsound_type\fP s)"
+
+.PP
+Definition at line 1722 of file sound\&.c\&.
+.SS "\fBvoid\fP fetch_zeros (\fBsnd_susp_type\fP susp, \fBsnd_list_type\fP snd_list)"
+
+.PP
+Definition at line 162 of file sound\&.c\&.
+.SS "double hz_to_step (double hz)"
+
+.PP
+Definition at line 1579 of file sound\&.c\&.
+.SS "\fBvoid\fP indent (\fBint\fP n)"
+
+.PP
+Definition at line 1482 of file sound\&.c\&.
+.SS "\fBint\fP interp_style (\fBsound_type\fP s, \fBrate_type\fP sr)"
+
+.PP
+Definition at line 603 of file sound\&.c\&.
+.SS "\fBsample_block_type\fP make_zero_block (\fBvoid\fP)"
+
+.PP
+Definition at line 1146 of file sound\&.c\&.
+.SS "\fBvoid\fP mark_audio_time (\fBvoid\fP)"
+
+.PP
+Definition at line 1550 of file sound\&.c\&.
+.SS "\fBvoid\fP min_cnt (long * cnt_ptr, \fBsound_type\fP sound, \fBsnd_susp_type\fP susp, long cnt)"
+
+.PP
+Definition at line 1178 of file sound\&.c\&.
+.SS "\fBvoid\fP sample_block_ref (\fBsample_block_type\fP sam)"
+
+.PP
+Definition at line 550 of file sound\&.c\&.
+.SS "\fBvoid\fP sample_block_test (\fBsample_block_type\fP sam, char * s)"
+
+.PP
+Definition at line 556 of file sound\&.c\&.
+.SS "\fBvoid\fP sample_block_unref (\fBsample_block_type\fP sam)"
+
+.PP
+Definition at line 571 of file sound\&.c\&.
+.SS "\fBvoid\fP set_logical_stop_time (\fBsound_type\fP sound, \fBtime_type\fP when)"
+
+.PP
+Definition at line 1252 of file sound\&.c\&.
+.SS "\fBvoid\fP set_watch (\fBvoid\fP ((**)()) where)"
+
+.PP
+Definition at line 1279 of file sound\&.c\&.
+.SS "\fBLVAL\fP snd_badsr (\fBvoid\fP)"
+
+.PP
+Definition at line 87 of file sound\&.c\&.
+.SS "\fBsample_block_type\fP SND_flush (\fBsound_type\fP snd, long * cnt)"
+
+.PP
+Definition at line 870 of file sound\&.c\&.
+.SS "\fBsample_block_type\fP SND_get_first (\fBsound_type\fP snd, long * cnt)"
+
+.PP
+Definition at line 1048 of file sound\&.c\&.
+.SS "\fBsample_block_type\fP SND_get_next (\fBsound_type\fP snd, long * cnt)"
+
+.PP
+Definition at line 1117 of file sound\&.c\&.
+.SS "\fBsample_block_type\fP SND_get_zeros (\fBsound_type\fP snd, long * cnt)"
+
+.PP
+Definition at line 919 of file sound\&.c\&.
+.SS "\fBsnd_list_type\fP snd_list_create (\fBsnd_susp_type\fP susp)"
+
+.PP
+Definition at line 224 of file sound\&.c\&.
+.SS "\fBvoid\fP snd_list_ref (\fBsnd_list_type\fP list)"
+
+.PP
+Definition at line 485 of file sound\&.c\&.
+.SS "\fBvoid\fP snd_list_terminate (\fBsnd_list_type\fP snd_list)"
+
+.PP
+Definition at line 491 of file sound\&.c\&.
+.SS "\fBvoid\fP snd_list_unref (\fBsnd_list_type\fP list)"
+
+.PP
+Definition at line 516 of file sound\&.c\&.
+.SS "double snd_set_latency (double latency)"
+
+.PP
+Definition at line 68 of file sound\&.c\&.
+.SS "\fBvoid\fP snd_sort_2 (\fBsound_type\fP * s1_ptr, \fBsound_type\fP * s2_ptr, \fBrate_type\fP sr)"
+
+.PP
+Definition at line 633 of file sound\&.c\&.
+.SS "double snd_sref (\fBsound_type\fP s, \fBtime_type\fP t)"
+
+.PP
+Definition at line 645 of file sound\&.c\&.
+.SS "double snd_sref_inverse (\fBsound_type\fP s, double val)"
+
+.PP
+Definition at line 689 of file sound\&.c\&.
+.SS "\fBtime_type\fP snd_stop_time (\fBsound_type\fP s)"
+
+.PP
+Definition at line 751 of file sound\&.c\&.
+.SS "\fBsound_type\fP snd_xform (\fBsound_type\fP snd, \fBrate_type\fP sr, \fBtime_type\fP time, \fBtime_type\fP start_time, \fBtime_type\fP stop_time, \fBpromoted_sample_type\fP scale)"
+
+.PP
+Definition at line 785 of file sound\&.c\&.
+.SS "\fBLVAL\fP sound_array_copy (\fBLVAL\fP sa)"
+
+.PP
+Definition at line 356 of file sound\&.c\&.
+.SS "\fBsound_type\fP sound_copy (\fBsound_type\fP snd)"
+
+.PP
+Definition at line 375 of file sound\&.c\&.
+.SS "\fBsound_type\fP sound_create (\fBsnd_susp_type\fP susp, \fBtime_type\fP t0, \fBrate_type\fP sr, \fBpromoted_sample_type\fP scale)"
+
+.PP
+Definition at line 261 of file sound\&.c\&.
+.SS "\fBvoid\fP sound_init (\fBvoid\fP)"
+
+.PP
+Definition at line 1203 of file sound\&.c\&.
+.SS "long sound_nth_block (\fBsound_type\fP snd, long n)"
+
+.PP
+Definition at line 189 of file sound\&.c\&.
+.SS "\fBvoid\fP sound_play (\fBLVAL\fP snd_expr)"
+
+.PP
+Definition at line 1426 of file sound\&.c\&.
+.SS "\fBvoid\fP sound_prepend_zeros (\fBsound_type\fP snd, \fBtime_type\fP t0)"
+
+.PP
+Definition at line 321 of file sound\&.c\&.
+.SS "\fBvoid\fP sound_print (\fBLVAL\fP snd_expr, long n)"
+
+.PP
+Definition at line 1292 of file sound\&.c\&.
+.SS "\fBvoid\fP sound_print_array (\fBLVAL\fP sa, long n)"
+
+.PP
+Definition at line 1348 of file sound\&.c\&.
+.SS "\fBvoid\fP sound_print_sound (\fBsound_type\fP s, long n)"
+
+.PP
+Definition at line 1321 of file sound\&.c\&.
+.SS "\fBvoid\fP sound_print_tree (\fBsound_type\fP snd)"
+
+.PP
+Definition at line 1473 of file sound\&.c\&.
+.SS "\fBvoid\fP sound_print_tree_1 (\fBsound_type\fP snd, \fBint\fP n)"
+
+.PP
+Definition at line 1488 of file sound\&.c\&.
+.SS "\fBsound_type\fP sound_scale (double factor, \fBsound_type\fP snd)"
+
+.PP
+Definition at line 1229 of file sound\&.c\&.
+.SS "\fBvoid\fP sound_symbols (\fBvoid\fP)"
+
+.PP
+Definition at line 1683 of file sound\&.c\&.
+.SS "\fBtable_type\fP sound_to_table (\fBsound_type\fP s)"
+
+.PP
+Definition at line 394 of file sound\&.c\&.
+.SS "\fBvoid\fP sound_unref (\fBsound_type\fP snd)"
+
+.PP
+Definition at line 471 of file sound\&.c\&.
+.SS "\fBvoid\fP sound_xlmark (\fBvoid\fP * a_sound)"
+
+.PP
+Definition at line 1638 of file sound\&.c\&.
+.SS "\fBsound_type\fP sound_zero (\fBtime_type\fP t0, \fBrate_type\fP sr)"
+
+.PP
+Definition at line 1703 of file sound\&.c\&.
+.SS "\fBboolean\fP soundp (\fBLVAL\fP s)"
+
+.PP
+Definition at line 1694 of file sound\&.c\&.
+.SS "double step_to_hz (double steps)"
+
+.PP
+Definition at line 1585 of file sound\&.c\&.
+.SS "\fBvoid\fP table_free (\fBtable_type\fP table)"
+
+.PP
+Definition at line 451 of file sound\&.c\&.
+.SS "\fBvoid\fP table_unref (\fBtable_type\fP table)"
+
+.PP
+Definition at line 460 of file sound\&.c\&.
+.SS "void ((**)() watch_me)"
+
+.SH "Variable Documentation"
+.PP 
+.SS "\fBLVAL\fP a_sound"
+
+.PP
+Definition at line 43 of file sound\&.c\&.
+.SS "\fBsample_block_type\fP blocks_to_watch[\fBblocks_to_watch_max\fP]"
+
+.PP
+Definition at line 138 of file sound\&.c\&.
+.SS "long blocks_to_watch_len = 0"
+
+.PP
+Definition at line 137 of file sound\&.c\&.
+.SS "\fBsnd_list_type\fP gcbug_snd_list = 0"
+
+.PP
+Definition at line 136 of file sound\&.c\&.
+.SS "\fBsample_block_type\fP internal_zero_block"
+
+.PP
+Definition at line 38 of file sound\&.c\&.
+.SS "\fBsound_type\fP last_sound = \fBNULL\fP"
+
+.PP
+Definition at line 259 of file sound\&.c\&.
+.SS "\fBsnd_list_type\fP list_watch"
+
+.PP
+Definition at line 31 of file sound\&.c\&.
+.SS "\fBsound_type\fP printing_this_sound = \fBNULL\fP"
+
+.PP
+Definition at line 1276 of file sound\&.c\&.
+.SS "\fBLVAL\fP s_audio_markers"
+
+.PP
+Definition at line 44 of file sound\&.c\&.
+.SS "\fBxtype_desc\fP sound_desc"
+
+.PP
+Definition at line 42 of file sound\&.c\&.
+.SS "long sound_frames = 0"
+
+.PP
+Definition at line 66 of file sound\&.c\&.
+.SS "double sound_latency = 0\&.3"
+
+.PP
+Definition at line 63 of file sound\&.c\&.
+.SS "double sound_srate = 44100\&.0"
+
+.PP
+Definition at line 65 of file sound\&.c\&.
+.SS "long table_memory"
+
+.PP
+Definition at line 35 of file sound\&.c\&.
+.SS "\fBsample_block_type\fP zero_block"
+
+.PP
+Definition at line 37 of file sound\&.c\&.
+.SS "\fBsnd_list_type\fP zero_snd_list"
+
+.PP
+Definition at line 40 of file sound\&.c\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

@@ -1,0 +1,373 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/lib-src/portmidi/pm_common/portmidi.h" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/lib-src/portmidi/pm_common/portmidi.h \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <stdint\&.h>\fP
+.br
+
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "struct \fBPmDeviceInfo\fP"
+.br
+.ti -1c
+.RI "struct \fBPmEvent\fP"
+.br
+.in -1c
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBPMEXPORT\fP"
+.br
+.ti -1c
+.RI "#define \fBFALSE\fP   0"
+.br
+.ti -1c
+.RI "#define \fBTRUE\fP   1"
+.br
+.ti -1c
+.RI "#define \fBPM_DEFAULT_SYSEX_BUFFER_SIZE\fP   1024"
+.br
+.ti -1c
+.RI "#define \fBPmStream\fP   \fBPortMidiStream\fP"
+.br
+.ti -1c
+.RI "#define \fBHDRLENGTH\fP   50"
+.br
+.ti -1c
+.RI "#define \fBPM_HOST_ERROR_MSG_LEN\fP"
+.br
+.ti -1c
+.RI "#define \fBpmNoDevice\fP   \-1"
+.br
+.ti -1c
+.RI "#define \fBPmBefore\fP(t1,  t2)   ((t1\-t2) < 0)"
+.br
+.ti -1c
+.RI "#define \fBPM_FILT_ACTIVE\fP   (1 << 0x0E)"
+.br
+.ti -1c
+.RI "#define \fBPM_FILT_SYSEX\fP   (1 << 0x00)"
+.br
+.ti -1c
+.RI "#define \fBPM_FILT_CLOCK\fP   (1 << 0x08)"
+.br
+.ti -1c
+.RI "#define \fBPM_FILT_PLAY\fP   ((1 << 0x0A) | (1 << 0x0C) | (1 << 0x0B))"
+.br
+.ti -1c
+.RI "#define \fBPM_FILT_TICK\fP   (1 << 0x09)"
+.br
+.ti -1c
+.RI "#define \fBPM_FILT_FD\fP   (1 << 0x0D)"
+.br
+.ti -1c
+.RI "#define \fBPM_FILT_UNDEFINED\fP   \fBPM_FILT_FD\fP"
+.br
+.ti -1c
+.RI "#define \fBPM_FILT_RESET\fP   (1 << 0x0F)"
+.br
+.ti -1c
+.RI "#define \fBPM_FILT_REALTIME\fP"
+.br
+.ti -1c
+.RI "#define \fBPM_FILT_NOTE\fP   ((1 << 0x19) | (1 << 0x18))"
+.br
+.ti -1c
+.RI "#define \fBPM_FILT_CHANNEL_AFTERTOUCH\fP   (1 << 0x1D)"
+.br
+.ti -1c
+.RI "#define \fBPM_FILT_POLY_AFTERTOUCH\fP   (1 << 0x1A)"
+.br
+.ti -1c
+.RI "#define \fBPM_FILT_AFTERTOUCH\fP   (\fBPM_FILT_CHANNEL_AFTERTOUCH\fP | \fBPM_FILT_POLY_AFTERTOUCH\fP)"
+.br
+.ti -1c
+.RI "#define \fBPM_FILT_PROGRAM\fP   (1 << 0x1C)"
+.br
+.ti -1c
+.RI "#define \fBPM_FILT_CONTROL\fP   (1 << 0x1B)"
+.br
+.ti -1c
+.RI "#define \fBPM_FILT_PITCHBEND\fP   (1 << 0x1E)"
+.br
+.ti -1c
+.RI "#define \fBPM_FILT_MTC\fP   (1 << 0x01)"
+.br
+.ti -1c
+.RI "#define \fBPM_FILT_SONG_POSITION\fP   (1 << 0x02)"
+.br
+.ti -1c
+.RI "#define \fBPM_FILT_SONG_SELECT\fP   (1 << 0x03)"
+.br
+.ti -1c
+.RI "#define \fBPM_FILT_TUNE\fP   (1 << 0x06)"
+.br
+.ti -1c
+.RI "#define \fBPM_FILT_SYSTEMCOMMON\fP   (\fBPM_FILT_MTC\fP | \fBPM_FILT_SONG_POSITION\fP | \fBPM_FILT_SONG_SELECT\fP | \fBPM_FILT_TUNE\fP)"
+.br
+.ti -1c
+.RI "#define \fBPm_Channel\fP(channel)   (1<<(channel))"
+.br
+.ti -1c
+.RI "#define \fBPm_Message\fP(\fBstatus\fP,  data1,  data2)"
+.br
+.ti -1c
+.RI "#define \fBPm_MessageStatus\fP(msg)   ((msg) & 0xFF)"
+.br
+.ti -1c
+.RI "#define \fBPm_MessageData1\fP(msg)   (((msg) >> 8) & 0xFF)"
+.br
+.ti -1c
+.RI "#define \fBPm_MessageData2\fP(msg)   (((msg) >> 16) & 0xFF)"
+.br
+.in -1c
+.SS "Typedefs"
+
+.in +1c
+.ti -1c
+.RI "typedef \fBvoid\fP \fBPortMidiStream\fP"
+.br
+.ti -1c
+.RI "typedef \fBint\fP \fBPmDeviceID\fP"
+.br
+.ti -1c
+.RI "typedef \fBint32_t\fP \fBPmTimestamp\fP"
+.br
+.ti -1c
+.RI "typedef \fBPmTimestamp\fP(* \fBPmTimeProcPtr\fP) (\fBvoid\fP *time_info)"
+.br
+.ti -1c
+.RI "typedef \fBint32_t\fP \fBPmMessage\fP"
+.br
+.in -1c
+.SS "Enumerations"
+
+.in +1c
+.ti -1c
+.RI "enum \fBPmError\fP { \fBpmNoError\fP = 0, \fBpmNoData\fP = 0, \fBpmGotData\fP = 1, \fBpmHostError\fP = -10000, \fBpmInvalidDeviceId\fP, \fBpmInsufficientMemory\fP, \fBpmBufferTooSmall\fP, \fBpmBufferOverflow\fP, \fBpmBadPtr\fP, \fBpmBadData\fP, \fBpmInternalError\fP, \fBpmBufferMaxSize\fP }"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBPMEXPORT\fP \fBPmError\fP \fBPm_Initialize\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBPMEXPORT\fP \fBPmError\fP \fBPm_Terminate\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBPMEXPORT\fP \fBint\fP \fBPm_HasHostError\fP (\fBPortMidiStream\fP *stream)"
+.br
+.ti -1c
+.RI "\fBPMEXPORT\fP \fBconst\fP char * \fBPm_GetErrorText\fP (\fBPmError\fP errnum)"
+.br
+.ti -1c
+.RI "\fBPMEXPORT\fP \fBvoid\fP \fBPm_GetHostErrorText\fP (char *msg, unsigned \fBint\fP \fBlen\fP)"
+.br
+.ti -1c
+.RI "\fBPMEXPORT\fP \fBint\fP \fBPm_CountDevices\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBPMEXPORT\fP \fBPmDeviceID\fP \fBPm_GetDefaultInputDeviceID\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBPMEXPORT\fP \fBPmDeviceID\fP \fBPm_GetDefaultOutputDeviceID\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBPMEXPORT\fP \fBconst\fP \fBPmDeviceInfo\fP * \fBPm_GetDeviceInfo\fP (\fBPmDeviceID\fP id)"
+.br
+.ti -1c
+.RI "\fBPMEXPORT\fP \fBPmError\fP \fBPm_OpenInput\fP (\fBPortMidiStream\fP **stream, \fBPmDeviceID\fP inputDevice, \fBvoid\fP *inputDriverInfo, \fBint32_t\fP bufferSize, \fBPmTimeProcPtr\fP time_proc, \fBvoid\fP *time_info)"
+.br
+.ti -1c
+.RI "\fBPMEXPORT\fP \fBPmError\fP \fBPm_OpenOutput\fP (\fBPortMidiStream\fP **stream, \fBPmDeviceID\fP outputDevice, \fBvoid\fP *outputDriverInfo, \fBint32_t\fP bufferSize, \fBPmTimeProcPtr\fP time_proc, \fBvoid\fP *time_info, \fBint32_t\fP \fBlatency\fP)"
+.br
+.ti -1c
+.RI "\fBPMEXPORT\fP \fBPmError\fP \fBPm_SetFilter\fP (\fBPortMidiStream\fP *stream, \fBint32_t\fP filters)"
+.br
+.ti -1c
+.RI "\fBPMEXPORT\fP \fBPmError\fP \fBPm_SetChannelMask\fP (\fBPortMidiStream\fP *stream, \fBint\fP \fBmask\fP)"
+.br
+.ti -1c
+.RI "\fBPMEXPORT\fP \fBPmError\fP \fBPm_Abort\fP (\fBPortMidiStream\fP *stream)"
+.br
+.ti -1c
+.RI "\fBPMEXPORT\fP \fBPmError\fP \fBPm_Close\fP (\fBPortMidiStream\fP *stream)"
+.br
+.ti -1c
+.RI "\fBPmError\fP \fBPm_Synchronize\fP (\fBPortMidiStream\fP *stream)"
+.br
+.ti -1c
+.RI "\fBPMEXPORT\fP \fBint\fP \fBPm_Read\fP (\fBPortMidiStream\fP *stream, \fBPmEvent\fP *\fBbuffer\fP, \fBint32_t\fP \fBlength\fP)"
+.br
+.ti -1c
+.RI "\fBPMEXPORT\fP \fBPmError\fP \fBPm_Poll\fP (\fBPortMidiStream\fP *stream)"
+.br
+.ti -1c
+.RI "\fBPMEXPORT\fP \fBPmError\fP \fBPm_Write\fP (\fBPortMidiStream\fP *stream, \fBPmEvent\fP *\fBbuffer\fP, \fBint32_t\fP \fBlength\fP)"
+.br
+.ti -1c
+.RI "\fBPMEXPORT\fP \fBPmError\fP \fBPm_WriteShort\fP (\fBPortMidiStream\fP *stream, \fBPmTimestamp\fP when, \fBint32_t\fP msg)"
+.br
+.ti -1c
+.RI "\fBPMEXPORT\fP \fBPmError\fP \fBPm_WriteSysEx\fP (\fBPortMidiStream\fP *stream, \fBPmTimestamp\fP when, unsigned char *msg)"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define FALSE   0"
+
+.PP
+Definition at line 116 of file portmidi\&.h\&.
+.SS "#define HDRLENGTH   50"
+
+.PP
+Definition at line 195 of file portmidi\&.h\&.
+.SS "#define PM_DEFAULT_SYSEX_BUFFER_SIZE   1024"
+
+.PP
+Definition at line 123 of file portmidi\&.h\&.
+.SS "#define PM_HOST_ERROR_MSG_LEN"
+\fBValue:\fP
+.PP
+.nf
+256u /* any host error msg will occupy less 
+                                      than this number of characters */
+.fi
+.PP
+Definition at line 196 of file portmidi\&.h\&.
+.SS "#define PmBefore(t1, t2)   ((t1\-t2) < 0)"
+TRUE if t1 before t2 
+.PP
+Definition at line 273 of file portmidi\&.h\&.
+.SS "#define PMEXPORT"
+
+.PP
+Definition at line 112 of file portmidi\&.h\&.
+.SS "#define pmNoDevice   \-1"
+
+.PP
+Definition at line 206 of file portmidi\&.h\&.
+.SS "#define PmStream   \fBPortMidiStream\fP"
+
+.PP
+Definition at line 164 of file portmidi\&.h\&.
+.SS "#define TRUE   1"
+
+.PP
+Definition at line 119 of file portmidi\&.h\&.
+.SH "Typedef Documentation"
+.PP 
+.SS "typedef \fBint\fP \fBPmDeviceID\fP"
+Device enumeration mechanism\&.
+.PP
+Device ids range from 0 to \fBPm_CountDevices()\fP-1\&. 
+.PP
+Definition at line 205 of file portmidi\&.h\&.
+.SS "typedef \fBPmTimestamp\fP(* PmTimeProcPtr) (\fBvoid\fP *time_info)"
+
+.PP
+Definition at line 270 of file portmidi\&.h\&.
+.SS "typedef \fBint32_t\fP \fBPmTimestamp\fP"
+PmTimestamp is used to represent a millisecond clock with arbitrary start time\&. The type is used for all MIDI timestampes and clocks\&. 
+.PP
+Definition at line 269 of file portmidi\&.h\&.
+.SS "typedef \fBvoid\fP \fBPortMidiStream\fP"
+A single PortMidiStream is a descriptor for an open MIDI device\&. 
+.PP
+Definition at line 163 of file portmidi\&.h\&.
+.SH "Enumeration Type Documentation"
+.PP 
+.SS "enum \fBPmError\fP"
+List of portmidi errors\&. 
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fIpmNoError \fP\fP
+.TP
+\fB\fIpmNoData \fP\fP
+A 'no error' return that also indicates no data avail\&. 
+.TP
+\fB\fIpmGotData \fP\fP
+A 'no error' return that also indicates data available 
+.TP
+\fB\fIpmHostError \fP\fP
+.TP
+\fB\fIpmInvalidDeviceId \fP\fP
+.TP
+\fB\fIpmInsufficientMemory \fP\fP
+out of range or output device when input is requested or input device when output is requested or device is already opened 
+.TP
+\fB\fIpmBufferTooSmall \fP\fP
+.TP
+\fB\fIpmBufferOverflow \fP\fP
+.TP
+\fB\fIpmBadPtr \fP\fP
+.TP
+\fB\fIpmBadData \fP\fP
+.TP
+\fB\fIpmInternalError \fP\fP
+illegal midi data, e\&.g\&. missing EOX 
+.TP
+\fB\fIpmBufferMaxSize \fP\fP
+buffer is already as large as it can be 
+.PP
+Definition at line 126 of file portmidi\&.h\&.
+.SH "Function Documentation"
+.PP 
+.SS "\fBPMEXPORT\fP \fBint\fP Pm_CountDevices (\fBvoid\fP)"
+Get devices count, ids range from 0 to \fBPm_CountDevices()\fP-1\&. 
+.PP
+Definition at line 176 of file portmidi\&.c\&.
+.SS "\fBPMEXPORT\fP \fBPmDeviceID\fP Pm_GetDefaultInputDeviceID (\fBvoid\fP)"
+\fBPm_GetDefaultInputDeviceID()\fP, \fBPm_GetDefaultOutputDeviceID()\fP
+.PP
+Return the default device ID or pmNoDevice if there are no devices\&. The result (but not pmNoDevice) can be passed to Pm_OpenMidi()\&.
+.PP
+The default device can be specified using a small application named pmdefaults that is part of the PortMidi distribution\&. This program in turn uses the Java Preferences object created by java\&.util\&.prefs\&.Preferences\&.userRoot()\&.node('/PortMidi'); the preference is set by calling prefs\&.put('PM_RECOMMENDED_OUTPUT_DEVICE', prefName); or prefs\&.put('PM_RECOMMENDED_INPUT_DEVICE', prefName);
+.PP
+In the statements above, prefName is a string describing the MIDI device in the form 'interf, name' where interf identifies the underlying software system or API used by PortMdi to access devices and name is the name of the device\&. These correspond to the interf and name fields of a \fBPmDeviceInfo\fP\&. (Currently supported interfaces are 'MMSystem' for Win32, 'ALSA' for Linux, and 'CoreMIDI' for OS X, so in fact, there is no choice of interface\&.) In 'interf, name', the strings are actually substrings of the full interface and name strings\&. For example, the preference 'Core, Sport' will match a device with interface 'CoreMIDI' and name 'In USB MidiSport 1x1'\&. It will also match 'CoreMIDI' and 'In USB MidiSport 2x2'\&. The devices are enumerated in device ID order, so the lowest device ID that matches the pattern becomes the default device\&. Finally, if the comma-space (', ') separator between interface and name parts of the preference is not found, the entire preference string is interpreted as a name, and the interface part is the empty string, which matches anything\&.
+.PP
+On the MAC, preferences are stored in /Users/$NAME/Library/Preferences/com\&.apple\&.java\&.util\&.prefs\&.plist which is a binary file\&. In addition to the pmdefaults program, there are utilities that can read and edit this preference file\&.
+.PP
+On the PC,
+.PP
+On Linux, 
+.PP
+Definition at line 60 of file pmlinux\&.c\&.
+.SS "\fBPMEXPORT\fP \fBPmDeviceID\fP Pm_GetDefaultOutputDeviceID (\fBvoid\fP)"
+see PmDeviceID \fBPm_GetDefaultInputDeviceID()\fP 
+.PP
+Definition at line 65 of file pmlinux\&.c\&.
+.SS "\fBPMEXPORT\fP \fBconst\fP char* Pm_GetErrorText (\fBPmError\fP errnum)"
+Translate portmidi error number into human readable message\&. These strings are constants (set at compile time) so client has no need to allocate storage 
+.PP
+Definition at line 249 of file portmidi\&.c\&.
+.SS "\fBPMEXPORT\fP \fBvoid\fP Pm_GetHostErrorText (char * msg, unsigned \fBint\fP len)"
+Translate portmidi host error into human readable message\&. These strings are computed at run time, so client has to allocate storage\&. After this routine executes, the host error is cleared\&. 
+.PP
+Definition at line 295 of file portmidi\&.c\&.
+.SS "\fBPMEXPORT\fP \fBint\fP Pm_HasHostError (\fBPortMidiStream\fP * stream)"
+\fBTest\fP whether stream has a pending host error\&. Normally, the client finds out about errors through returned error codes, but some errors can occur asynchronously where the client does not explicitly call a function, and therefore cannot receive an error code\&. The client can test for a pending error using \fBPm_HasHostError()\fP\&. If true, the error can be accessed and cleared by calling \fBPm_GetErrorText()\fP\&. Errors are also cleared by calling other functions that can return errors, e\&.g\&. \fBPm_OpenInput()\fP, \fBPm_OpenOutput()\fP, \fBPm_Read()\fP, \fBPm_Write()\fP\&. The client does not need to call \fBPm_HasHostError()\fP\&. Any pending error will be reported the next time the client performs an explicit function call on the stream, e\&.g\&. an input or output operation\&. Until the error is cleared, no new error codes will be obtained, even for a different stream\&. 
+.PP
+Definition at line 310 of file portmidi\&.c\&.
+.SS "\fBPMEXPORT\fP \fBPmError\fP Pm_Initialize (\fBvoid\fP)"
+\fBPm_Initialize()\fP is the library initialisation function - call this before using the library\&. 
+.PP
+Definition at line 326 of file portmidi\&.c\&.
+.SS "\fBPMEXPORT\fP \fBPmError\fP Pm_Terminate (\fBvoid\fP)"
+\fBPm_Terminate()\fP is the library termination function - call this after using the library\&. 
+.PP
+Definition at line 337 of file portmidi\&.c\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

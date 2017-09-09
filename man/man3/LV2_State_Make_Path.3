@@ -1,0 +1,59 @@
+.TH "LV2_State_Make_Path" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+LV2_State_Make_Path \- 
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <state\&.h>\fP
+.SS "Public Attributes"
+
+.in +1c
+.ti -1c
+.RI "\fBLV2_State_Make_Path_Handle\fP \fBhandle\fP"
+.br
+.ti -1c
+.RI "char *(* \fBpath\fP )(\fBLV2_State_Make_Path_Handle\fP \fBhandle\fP, \fBconst\fP char *path)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Feature data for state:makePath (\fBLV2_STATE__makePath\fP)\&. 
+.PP
+Definition at line 315 of file state\&.h\&.
+.SH "Member Data Documentation"
+.PP 
+.SS "\fBLV2_State_Make_Path_Handle\fP LV2_State_Make_Path::handle"
+Opaque host data\&. 
+.PP
+Definition at line 319 of file state\&.h\&.
+.SS "char*(* LV2_State_Make_Path::path) (\fBLV2_State_Make_Path_Handle\fP \fBhandle\fP, \fBconst\fP char *path)"
+Return a path the plugin may use to create a new file\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIhandle\fP MUST be the \fChandle\fP member of this struct\&. 
+.br
+\fIpath\fP The path of the new file within a namespace unique to this plugin instance\&. 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+The absolute path to use for the new file\&.
+.RE
+.PP
+This function can be used by plugins to create files and directories, either at state saving time (if this feature is passed to \fBLV2_State_Interface\&.save()\fP) or any time (if this feature is passed to \fBLV2_Descriptor\&.instantiate()\fP)\&.
+.PP
+The host MUST do whatever is necessary for the plugin to be able to create a file at the returned path (e\&.g\&. using fopen), including creating any leading directories\&.
+.PP
+If this function is passed to \fBLV2_Descriptor\&.instantiate()\fP, it may be called from any non-realtime context\&. If it is passed to \fBLV2_State_Interface\&.save()\fP, it may only be called within the dynamic scope of that function call\&.
+.PP
+The caller is responsible for freeing the returned value with free()\&. 
+.PP
+Definition at line 344 of file state\&.h\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

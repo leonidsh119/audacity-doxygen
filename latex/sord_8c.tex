@@ -1,0 +1,408 @@
+\hypertarget{sord_8c}{}\section{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/lv2/sord/src/sord.c File Reference}
+\label{sord_8c}\index{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/lv2/sord/src/sord.\+c@{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/lv2/sord/src/sord.\+c}}
+{\ttfamily \#include $<$assert.\+h$>$}\\*
+{\ttfamily \#include $<$errno.\+h$>$}\\*
+{\ttfamily \#include $<$stdint.\+h$>$}\\*
+{\ttfamily \#include $<$stdio.\+h$>$}\\*
+{\ttfamily \#include $<$stdlib.\+h$>$}\\*
+{\ttfamily \#include $<$string.\+h$>$}\\*
+{\ttfamily \#include \char`\"{}zix/digest.\+c\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}zix/hash.\+c\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}zix/tree.\+c\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}sord\+\_\+config.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}sord\+\_\+internal.\+h\char`\"{}}\\*
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{struct_sord_world_impl}{Sord\+World\+Impl}
+\item 
+struct \hyperlink{struct_sord_model_impl}{Sord\+Model\+Impl}
+\item 
+struct \hyperlink{struct_sord_iter_impl}{Sord\+Iter\+Impl}
+\end{DoxyCompactItemize}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{sord_8c_a229739ffab14acb41cd246b61a18cc87}{Z\+I\+X\+\_\+\+I\+N\+L\+I\+NE}
+\item 
+\#define \hyperlink{sord_8c_a0058aa93c7cd0602658a4b0f42e1ba3f}{S\+O\+R\+D\+\_\+\+L\+OG}(\hyperlink{structprefix}{prefix}, ...)~fprintf(stderr, \char`\"{}\mbox{[}Sord\+::\char`\"{} prefix \char`\"{}\mbox{]} \char`\"{} \+\_\+\+\_\+\+V\+A\+\_\+\+A\+R\+G\+S\+\_\+\+\_\+)
+\item 
+\#define \hyperlink{sord_8c_accbe42e160f07b6f8a7d624a53a0e4eb}{S\+O\+R\+D\+\_\+\+I\+T\+E\+R\+\_\+\+L\+OG}(...)
+\item 
+\#define \hyperlink{sord_8c_a8271b81211a0f2e7b3a55b9459bd01c5}{S\+O\+R\+D\+\_\+\+F\+I\+N\+D\+\_\+\+L\+OG}(...)
+\item 
+\#define \hyperlink{sord_8c_a4f268c4bcd324fee3d7a2fe4fec30662}{S\+O\+R\+D\+\_\+\+W\+R\+I\+T\+E\+\_\+\+L\+OG}(...)
+\item 
+\#define \hyperlink{sord_8c_a9237fc26918812bfb16ed5d1d8169724}{N\+U\+M\+\_\+\+O\+R\+D\+E\+RS}~12
+\item 
+\#define \hyperlink{sord_8c_ae47cf9cbef1e11b189db139c1dfa8791}{S\+T\+A\+T\+E\+M\+E\+N\+T\+\_\+\+L\+EN}~3
+\item 
+\#define \hyperlink{sord_8c_abf2b9ab4f1ef77e2813701e8679e48c2}{T\+U\+P\+\_\+\+L\+EN}~\hyperlink{sord_8c_ae47cf9cbef1e11b189db139c1dfa8791}{S\+T\+A\+T\+E\+M\+E\+N\+T\+\_\+\+L\+EN} + 1
+\item 
+\#define \hyperlink{sord_8c_a889a1c08592b6ef9195889a2baec9c78}{D\+E\+F\+A\+U\+L\+T\+\_\+\+O\+R\+D\+ER}~\hyperlink{sord_8c_a4a73452c777904d8c172948a285fb76ba037fbf5052ce9e2ef5d7795b52340a2e}{S\+PO}
+\item 
+\#define \hyperlink{sord_8c_ad2e75b37a743ce1d4bef218fd31a5c0a}{D\+E\+F\+A\+U\+L\+T\+\_\+\+G\+R\+A\+P\+H\+\_\+\+O\+R\+D\+ER}~\hyperlink{sord_8c_a4a73452c777904d8c172948a285fb76ba1d9a094f4deb1febfbe12db8496c2ab1}{G\+S\+PO}
+\item 
+\#define \hyperlink{sord_8c_a4f028582975d03f1229b736bf45df3c9}{T\+U\+P\+\_\+\+F\+MT}~\char`\"{}(\%s \%\hyperlink{lib_2expat_8h_a755339d27872b13735c2cab829e47157}{s} \%\hyperlink{lib_2expat_8h_a755339d27872b13735c2cab829e47157}{s} \%\hyperlink{lib_2expat_8h_a755339d27872b13735c2cab829e47157}{s})\char`\"{}
+\item 
+\#define \hyperlink{sord_8c_a83a9545e9571528e33c537141555c33f}{T\+U\+P\+\_\+\+F\+M\+T\+\_\+\+E\+L\+EM}(e)~((e) ? \hyperlink{group__sord_gaaac09d1114d46785f01bed6e48728c18}{sord\+\_\+node\+\_\+get\+\_\+string}(e) \+: (\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{lib-src_2ffmpeg_2win32_2stdint_8h_a9a941819355e6f658991890ff66b4b0e}{uint8\+\_\+t}$\ast$)\char`\"{}$\ast$\char`\"{})
+\item 
+\#define \hyperlink{sord_8c_ae5ba4c48c3093167848e87a2833ee399}{T\+U\+P\+\_\+\+F\+M\+T\+\_\+\+A\+R\+GS}(\hyperlink{octave__test_8m_aaccc9105df5383111407fd5b41255e23}{t})
+\item 
+\#define \hyperlink{sord_8c_aa2ca2ca7c3bcf81bc95e8316a17145de}{T\+U\+P\+\_\+S}~0
+\item 
+\#define \hyperlink{sord_8c_ab5bcd046f906662be6d5a11c8061e859}{T\+U\+P\+\_\+P}~1
+\item 
+\#define \hyperlink{sord_8c_a6db3118d6c2a80a521744333798eda9b}{T\+U\+P\+\_\+O}~2
+\item 
+\#define \hyperlink{sord_8c_a956efb2e4df766d975216d19a7b33f8d}{T\+U\+P\+\_\+G}~3
+\item 
+\#define \hyperlink{sord_8c_a5aefe02a9ce3dab20cae53f3c311f3ed}{P\+A\+T\+\_\+\+C\+A\+SE}(sig,  \hyperlink{layer3_8c_a4b8bfe70f28d6faddcb10d6ecf8c1989}{m},  g0,  g1,  np)
+\end{DoxyCompactItemize}
+\subsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \hyperlink{sord_8c_a4a73452c777904d8c172948a285fb76b}{Sord\+Order} \{ \\*
+\hyperlink{sord_8c_a4a73452c777904d8c172948a285fb76ba037fbf5052ce9e2ef5d7795b52340a2e}{S\+PO}, 
+\hyperlink{sord_8c_a4a73452c777904d8c172948a285fb76ba6988b642480925a08eb33beb921098fa}{S\+OP}, 
+\hyperlink{sord_8c_a4a73452c777904d8c172948a285fb76ba155799991ffba2f405e45466d7dbf078}{O\+PS}, 
+\hyperlink{sord_8c_a4a73452c777904d8c172948a285fb76ba4da6ed7929ad552bc19d274c90b369f5}{O\+SP}, 
+\\*
+\hyperlink{sord_8c_a4a73452c777904d8c172948a285fb76bada065dbd33b2528ea062b611bf9cd178}{P\+SO}, 
+\hyperlink{sord_8c_a4a73452c777904d8c172948a285fb76ba91743bc3932693c4b8a6ca984e8a8437}{P\+OS}, 
+\hyperlink{sord_8c_a4a73452c777904d8c172948a285fb76ba1d9a094f4deb1febfbe12db8496c2ab1}{G\+S\+PO}, 
+\hyperlink{sord_8c_a4a73452c777904d8c172948a285fb76badfbcf4e6027e3e05d1682d8d7bbd551d}{G\+S\+OP}, 
+\\*
+\hyperlink{sord_8c_a4a73452c777904d8c172948a285fb76bac5a8de28a9caa7c4d9a9f7221682bd5b}{G\+O\+PS}, 
+\hyperlink{sord_8c_a4a73452c777904d8c172948a285fb76ba55febc8500cc6cf9fc241516732cfe4a}{G\+O\+SP}, 
+\hyperlink{sord_8c_a4a73452c777904d8c172948a285fb76bae80bfe6b3579f97d0be341786a55ccfc}{G\+P\+SO}, 
+\hyperlink{sord_8c_a4a73452c777904d8c172948a285fb76baa15ead9add63225c8817e1dce851d39e}{G\+P\+OS}
+ \}
+\item 
+enum \hyperlink{sord_8c_a5a2afa1489549bc706d12bc66c0c4e72}{Search\+Mode} \{ \\*
+\hyperlink{sord_8c_a5a2afa1489549bc706d12bc66c0c4e72ab1d5eac4b1dca480c8056eaea7663b7a}{A\+LL}, 
+\hyperlink{sord_8c_a5a2afa1489549bc706d12bc66c0c4e72a3388f7110f6f25a54e215eb75d5d7516}{S\+I\+N\+G\+LE}, 
+\hyperlink{sord_8c_a5a2afa1489549bc706d12bc66c0c4e72a36ccd76c516f51bf87c02b44305284ca}{R\+A\+N\+GE}, 
+\hyperlink{sord_8c_a5a2afa1489549bc706d12bc66c0c4e72a684d9883b21a2b884ea3615b65eea513}{F\+I\+L\+T\+E\+R\+\_\+\+R\+A\+N\+GE}, 
+\\*
+\hyperlink{sord_8c_a5a2afa1489549bc706d12bc66c0c4e72ac9a1737e5152068114f3ce89e0f55ff5}{F\+I\+L\+T\+E\+R\+\_\+\+A\+LL}
+ \}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{group__sord_ga133d918ec58f829198b2cf65f250ed69}{Sord\+World} $\ast$ \hyperlink{group__sord_gaed6f1a14a2d2750435bff14fc644e8cc}{sord\+\_\+world\+\_\+new} (\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void})
+\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{group__sord_gacc90d35094a70d4acfb2ba1ce00cfbcc}{sord\+\_\+world\+\_\+free} (\hyperlink{group__sord_ga133d918ec58f829198b2cf65f250ed69}{Sord\+World} $\ast$world)
+\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{group__sord_gaf3939f3c6c19044e41f66622fd079762}{sord\+\_\+world\+\_\+set\+\_\+error\+\_\+sink} (\hyperlink{group__sord_ga133d918ec58f829198b2cf65f250ed69}{Sord\+World} $\ast$world, \hyperlink{group__serd_ga925d2fda236697a3e643b307ffe242e5}{Serd\+Error\+Sink} error\+\_\+sink, \hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} $\ast$handle)
+\item 
+\hyperlink{mac_2config_2i386_2lib-src_2libsoxr_2soxr-config_8h_abb452686968e48b67397da5f97445f5b}{bool} \hyperlink{group__sord_ga7b57ce59639dbf22e48d59e71667b6d5}{sord\+\_\+node\+\_\+equals} (\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{group__sord_ga804ac7d56d9fdea50f2d1e7278b1f82b}{Sord\+Node} $\ast$\hyperlink{rfft2d_test_m_l_8m_a4124bc0a9335c27f086f24ba207a4912}{a}, \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{group__sord_ga804ac7d56d9fdea50f2d1e7278b1f82b}{Sord\+Node} $\ast$\hyperlink{convtest_8m_a21ad0bd836b90d08f4cf640b4c298e7c}{b})
+\item 
+\hyperlink{mac_2config_2i386_2lib-src_2libsoxr_2soxr-config_8h_abb452686968e48b67397da5f97445f5b}{bool} \hyperlink{group__sord_ga6276430f3de7c4c4ab8e53ef2c452f1b}{sord\+\_\+quad\+\_\+match} (\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{group__sord_gac79773a042527877d00158c75a41bab2}{Sord\+Quad} x, \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{group__sord_gac79773a042527877d00158c75a41bab2}{Sord\+Quad} y)
+\item 
+\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{group__sord_gaea018cfebfedd10280b1d8dd6d650a28}{Sord\+Model} $\ast$ \hyperlink{group__sord_gae1b0324b3bda64356fd9c351035d53b8}{sord\+\_\+iter\+\_\+get\+\_\+model} (\hyperlink{group__sord_ga59314650e0ab9b1cdeebc0bf7a0419fa}{Sord\+Iter} $\ast$iter)
+\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{group__sord_ga87ae8158572802b02a1d3f81fb20e54a}{sord\+\_\+iter\+\_\+get} (\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{group__sord_ga59314650e0ab9b1cdeebc0bf7a0419fa}{Sord\+Iter} $\ast$iter, \hyperlink{group__sord_gac79773a042527877d00158c75a41bab2}{Sord\+Quad} id)
+\item 
+\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{group__sord_ga804ac7d56d9fdea50f2d1e7278b1f82b}{Sord\+Node} $\ast$ \hyperlink{group__sord_ga34db8db692181aca9ffc5506861f95cd}{sord\+\_\+iter\+\_\+get\+\_\+node} (\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{group__sord_ga59314650e0ab9b1cdeebc0bf7a0419fa}{Sord\+Iter} $\ast$iter, \hyperlink{group__sord_gad8ed181fe76f9085ba4188988527c633}{Sord\+Quad\+Index} index)
+\item 
+\hyperlink{mac_2config_2i386_2lib-src_2libsoxr_2soxr-config_8h_abb452686968e48b67397da5f97445f5b}{bool} \hyperlink{group__sord_ga9e505568184171df51514d436bff4a52}{sord\+\_\+iter\+\_\+next} (\hyperlink{group__sord_ga59314650e0ab9b1cdeebc0bf7a0419fa}{Sord\+Iter} $\ast$iter)
+\item 
+\hyperlink{mac_2config_2i386_2lib-src_2libsoxr_2soxr-config_8h_abb452686968e48b67397da5f97445f5b}{bool} \hyperlink{group__sord_ga287f3764973d96c2f1df566abf569f5e}{sord\+\_\+iter\+\_\+end} (\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{group__sord_ga59314650e0ab9b1cdeebc0bf7a0419fa}{Sord\+Iter} $\ast$iter)
+\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{group__sord_ga6450c3214e90ffffc47f756e66d66037}{sord\+\_\+iter\+\_\+free} (\hyperlink{group__sord_ga59314650e0ab9b1cdeebc0bf7a0419fa}{Sord\+Iter} $\ast$iter)
+\item 
+\hyperlink{group__sord_gaea018cfebfedd10280b1d8dd6d650a28}{Sord\+Model} $\ast$ \hyperlink{group__sord_gac2d10de1c3b21b17c2d7eed4a5c7fd55}{sord\+\_\+new} (\hyperlink{group__sord_ga133d918ec58f829198b2cf65f250ed69}{Sord\+World} $\ast$world, unsigned indices, \hyperlink{mac_2config_2i386_2lib-src_2libsoxr_2soxr-config_8h_abb452686968e48b67397da5f97445f5b}{bool} graphs)
+\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{group__sord_ga9e43e4eb96045ce7a07997267c813a15}{sord\+\_\+free} (\hyperlink{group__sord_gaea018cfebfedd10280b1d8dd6d650a28}{Sord\+Model} $\ast$sord)
+\item 
+\hyperlink{group__sord_ga133d918ec58f829198b2cf65f250ed69}{Sord\+World} $\ast$ \hyperlink{group__sord_ga27a0540b02602c5aeb3db056f903e6af}{sord\+\_\+get\+\_\+world} (\hyperlink{group__sord_gaea018cfebfedd10280b1d8dd6d650a28}{Sord\+Model} $\ast$sord)
+\item 
+size\+\_\+t \hyperlink{group__sord_ga8f9c599ef7e60a5fd0af126a5f983cfb}{sord\+\_\+num\+\_\+quads} (\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{group__sord_gaea018cfebfedd10280b1d8dd6d650a28}{Sord\+Model} $\ast$sord)
+\item 
+size\+\_\+t \hyperlink{group__sord_ga97b4cb950f59a16efec5767c80f03a19}{sord\+\_\+num\+\_\+nodes} (\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{group__sord_ga133d918ec58f829198b2cf65f250ed69}{Sord\+World} $\ast$world)
+\item 
+\hyperlink{group__sord_ga59314650e0ab9b1cdeebc0bf7a0419fa}{Sord\+Iter} $\ast$ \hyperlink{group__sord_gaf85f5c99b6cb5a6f2a7267d86cc17de8}{sord\+\_\+begin} (\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{group__sord_gaea018cfebfedd10280b1d8dd6d650a28}{Sord\+Model} $\ast$sord)
+\item 
+\hyperlink{group__sord_ga59314650e0ab9b1cdeebc0bf7a0419fa}{Sord\+Iter} $\ast$ \hyperlink{group__sord_ga76e5cc69be0fb45c8cdfb4c9a2450fa5}{sord\+\_\+find} (\hyperlink{group__sord_gaea018cfebfedd10280b1d8dd6d650a28}{Sord\+Model} $\ast$sord, \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{group__sord_gac79773a042527877d00158c75a41bab2}{Sord\+Quad} pat)
+\item 
+\hyperlink{group__sord_ga59314650e0ab9b1cdeebc0bf7a0419fa}{Sord\+Iter} $\ast$ \hyperlink{group__sord_ga2e4c3af6cfb6ef748e9f934669c06312}{sord\+\_\+search} (\hyperlink{group__sord_gaea018cfebfedd10280b1d8dd6d650a28}{Sord\+Model} $\ast$\hyperlink{lib_2expat_8h_ac517f0c27408fbd365e7dd34e032faca}{model}, \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{group__sord_ga804ac7d56d9fdea50f2d1e7278b1f82b}{Sord\+Node} $\ast$\hyperlink{lib_2expat_8h_a755339d27872b13735c2cab829e47157}{s}, \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{group__sord_ga804ac7d56d9fdea50f2d1e7278b1f82b}{Sord\+Node} $\ast$\hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p}, \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{group__sord_ga804ac7d56d9fdea50f2d1e7278b1f82b}{Sord\+Node} $\ast$o, \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{group__sord_ga804ac7d56d9fdea50f2d1e7278b1f82b}{Sord\+Node} $\ast$g)
+\item 
+\hyperlink{group__sord_ga804ac7d56d9fdea50f2d1e7278b1f82b}{Sord\+Node} $\ast$ \hyperlink{group__sord_ga1f930d35ae80d0f5cb9bb3122a4d8152}{sord\+\_\+get} (\hyperlink{group__sord_gaea018cfebfedd10280b1d8dd6d650a28}{Sord\+Model} $\ast$\hyperlink{lib_2expat_8h_ac517f0c27408fbd365e7dd34e032faca}{model}, \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{group__sord_ga804ac7d56d9fdea50f2d1e7278b1f82b}{Sord\+Node} $\ast$\hyperlink{lib_2expat_8h_a755339d27872b13735c2cab829e47157}{s}, \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{group__sord_ga804ac7d56d9fdea50f2d1e7278b1f82b}{Sord\+Node} $\ast$\hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p}, \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{group__sord_ga804ac7d56d9fdea50f2d1e7278b1f82b}{Sord\+Node} $\ast$o, \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{group__sord_ga804ac7d56d9fdea50f2d1e7278b1f82b}{Sord\+Node} $\ast$g)
+\item 
+\hyperlink{mac_2config_2i386_2lib-src_2libsoxr_2soxr-config_8h_abb452686968e48b67397da5f97445f5b}{bool} \hyperlink{group__sord_gadd60c013214cb56e8b4f1ba0f245e696}{sord\+\_\+ask} (\hyperlink{group__sord_gaea018cfebfedd10280b1d8dd6d650a28}{Sord\+Model} $\ast$\hyperlink{lib_2expat_8h_ac517f0c27408fbd365e7dd34e032faca}{model}, \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{group__sord_ga804ac7d56d9fdea50f2d1e7278b1f82b}{Sord\+Node} $\ast$\hyperlink{lib_2expat_8h_a755339d27872b13735c2cab829e47157}{s}, \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{group__sord_ga804ac7d56d9fdea50f2d1e7278b1f82b}{Sord\+Node} $\ast$\hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p}, \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{group__sord_ga804ac7d56d9fdea50f2d1e7278b1f82b}{Sord\+Node} $\ast$o, \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{group__sord_ga804ac7d56d9fdea50f2d1e7278b1f82b}{Sord\+Node} $\ast$g)
+\item 
+\hyperlink{lib-src_2ffmpeg_2win32_2stdint_8h_aec6fcb673ff035718c238c8c9d544c47}{uint64\+\_\+t} \hyperlink{group__sord_ga6c1d2d5abb7216c424d14611140954be}{sord\+\_\+count} (\hyperlink{group__sord_gaea018cfebfedd10280b1d8dd6d650a28}{Sord\+Model} $\ast$\hyperlink{lib_2expat_8h_ac517f0c27408fbd365e7dd34e032faca}{model}, \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{group__sord_ga804ac7d56d9fdea50f2d1e7278b1f82b}{Sord\+Node} $\ast$\hyperlink{lib_2expat_8h_a755339d27872b13735c2cab829e47157}{s}, \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{group__sord_ga804ac7d56d9fdea50f2d1e7278b1f82b}{Sord\+Node} $\ast$\hyperlink{xmltok_8h_a94b60f3beb36ae85555d36dc9816769c}{p}, \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{group__sord_ga804ac7d56d9fdea50f2d1e7278b1f82b}{Sord\+Node} $\ast$o, \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{group__sord_ga804ac7d56d9fdea50f2d1e7278b1f82b}{Sord\+Node} $\ast$g)
+\item 
+\hyperlink{mac_2config_2i386_2lib-src_2libsoxr_2soxr-config_8h_abb452686968e48b67397da5f97445f5b}{bool} \hyperlink{group__sord_ga27c89030392c62427533afd03a64a4c5}{sord\+\_\+contains} (\hyperlink{group__sord_gaea018cfebfedd10280b1d8dd6d650a28}{Sord\+Model} $\ast$sord, \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{group__sord_gac79773a042527877d00158c75a41bab2}{Sord\+Quad} pat)
+\item 
+\hyperlink{group__sord_ga69e82f5abb700cfbde0c9ee8d3574154}{Sord\+Node\+Type} \hyperlink{group__sord_ga34de2b7b44fbd614e7831c9c1b6d114e}{sord\+\_\+node\+\_\+get\+\_\+type} (\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{group__sord_ga804ac7d56d9fdea50f2d1e7278b1f82b}{Sord\+Node} $\ast$\hyperlink{structnode}{node})
+\item 
+\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{lib-src_2ffmpeg_2win32_2stdint_8h_a9a941819355e6f658991890ff66b4b0e}{uint8\+\_\+t} $\ast$ \hyperlink{group__sord_gaaac09d1114d46785f01bed6e48728c18}{sord\+\_\+node\+\_\+get\+\_\+string} (\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{group__sord_ga804ac7d56d9fdea50f2d1e7278b1f82b}{Sord\+Node} $\ast$\hyperlink{structnode}{node})
+\item 
+\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{lib-src_2ffmpeg_2win32_2stdint_8h_a9a941819355e6f658991890ff66b4b0e}{uint8\+\_\+t} $\ast$ \hyperlink{group__sord_ga414bd4926765816493f35b42b008e30b}{sord\+\_\+node\+\_\+get\+\_\+string\+\_\+counted} (\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{group__sord_ga804ac7d56d9fdea50f2d1e7278b1f82b}{Sord\+Node} $\ast$\hyperlink{structnode}{node}, size\+\_\+t $\ast$\hyperlink{lib_2expat_8h_af86d325fecfc8f47b61fbf5a5146f582}{len})
+\item 
+\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} char $\ast$ \hyperlink{group__sord_ga0f0d52d14ece45c5b8b4c28e0d885798}{sord\+\_\+node\+\_\+get\+\_\+language} (\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{group__sord_ga804ac7d56d9fdea50f2d1e7278b1f82b}{Sord\+Node} $\ast$\hyperlink{structnode}{node})
+\item 
+\hyperlink{group__sord_ga804ac7d56d9fdea50f2d1e7278b1f82b}{Sord\+Node} $\ast$ \hyperlink{group__sord_gaa6fd74ff5079ab6d60d174eedc373b13}{sord\+\_\+node\+\_\+get\+\_\+datatype} (\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{group__sord_ga804ac7d56d9fdea50f2d1e7278b1f82b}{Sord\+Node} $\ast$\hyperlink{structnode}{node})
+\item 
+\hyperlink{group__serd_gafa75ae761bd7490db787b2f9e237595a}{Serd\+Node\+Flags} \hyperlink{group__sord_ga46af5ce521ba3e558cc4bcfd3b61d4ec}{sord\+\_\+node\+\_\+get\+\_\+flags} (\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{group__sord_ga804ac7d56d9fdea50f2d1e7278b1f82b}{Sord\+Node} $\ast$\hyperlink{structnode}{node})
+\item 
+\hyperlink{mac_2config_2i386_2lib-src_2libsoxr_2soxr-config_8h_abb452686968e48b67397da5f97445f5b}{bool} \hyperlink{group__sord_gae686e38224ff87bd0946b21e84fef1c4}{sord\+\_\+node\+\_\+is\+\_\+inline\+\_\+object} (\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{group__sord_ga804ac7d56d9fdea50f2d1e7278b1f82b}{Sord\+Node} $\ast$\hyperlink{structnode}{node})
+\item 
+\hyperlink{group__sord_ga804ac7d56d9fdea50f2d1e7278b1f82b}{Sord\+Node} $\ast$ \hyperlink{group__sord_ga6cee4ab8de97cd6bca7e1587c837fdbf}{sord\+\_\+new\+\_\+uri} (\hyperlink{group__sord_ga133d918ec58f829198b2cf65f250ed69}{Sord\+World} $\ast$world, \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{lib-src_2ffmpeg_2win32_2stdint_8h_a9a941819355e6f658991890ff66b4b0e}{uint8\+\_\+t} $\ast$\hyperlink{sndfile__save_8m_a4b99ff73a8a869319570237b5c57ab03}{str})
+\item 
+\hyperlink{group__sord_ga804ac7d56d9fdea50f2d1e7278b1f82b}{Sord\+Node} $\ast$ \hyperlink{group__sord_gaaeeb39f050f7e68aee42d79d5c4ce621}{sord\+\_\+new\+\_\+relative\+\_\+uri} (\hyperlink{group__sord_ga133d918ec58f829198b2cf65f250ed69}{Sord\+World} $\ast$world, \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{lib-src_2ffmpeg_2win32_2stdint_8h_a9a941819355e6f658991890ff66b4b0e}{uint8\+\_\+t} $\ast$\hyperlink{sndfile__save_8m_a4b99ff73a8a869319570237b5c57ab03}{str}, \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{lib-src_2ffmpeg_2win32_2stdint_8h_a9a941819355e6f658991890ff66b4b0e}{uint8\+\_\+t} $\ast$base\+\_\+str)
+\item 
+\hyperlink{group__sord_ga804ac7d56d9fdea50f2d1e7278b1f82b}{Sord\+Node} $\ast$ \hyperlink{group__sord_ga465202db49656e1c1df531391a75fc15}{sord\+\_\+new\+\_\+blank} (\hyperlink{group__sord_ga133d918ec58f829198b2cf65f250ed69}{Sord\+World} $\ast$world, \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{lib-src_2ffmpeg_2win32_2stdint_8h_a9a941819355e6f658991890ff66b4b0e}{uint8\+\_\+t} $\ast$\hyperlink{sndfile__save_8m_a4b99ff73a8a869319570237b5c57ab03}{str})
+\item 
+\hyperlink{group__sord_ga804ac7d56d9fdea50f2d1e7278b1f82b}{Sord\+Node} $\ast$ \hyperlink{group__sord_gaf4a386554304e783089ba263d7537932}{sord\+\_\+new\+\_\+literal} (\hyperlink{group__sord_ga133d918ec58f829198b2cf65f250ed69}{Sord\+World} $\ast$world, \hyperlink{group__sord_ga804ac7d56d9fdea50f2d1e7278b1f82b}{Sord\+Node} $\ast$datatype, \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{lib-src_2ffmpeg_2win32_2stdint_8h_a9a941819355e6f658991890ff66b4b0e}{uint8\+\_\+t} $\ast$\hyperlink{sndfile__save_8m_a4b99ff73a8a869319570237b5c57ab03}{str}, \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} char $\ast$lang)
+\item 
+\hyperlink{group__sord_ga804ac7d56d9fdea50f2d1e7278b1f82b}{Sord\+Node} $\ast$ \hyperlink{group__sord_ga9367640305491801ab3bed714aeb5448}{sord\+\_\+node\+\_\+from\+\_\+serd\+\_\+node} (\hyperlink{group__sord_ga133d918ec58f829198b2cf65f250ed69}{Sord\+World} $\ast$world, \hyperlink{group__serd_gaea4226dd80abea7afa05986f195d4755}{Serd\+Env} $\ast$env, \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{struct_serd_node}{Serd\+Node} $\ast$sn, \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{struct_serd_node}{Serd\+Node} $\ast$datatype, \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{struct_serd_node}{Serd\+Node} $\ast$lang)
+\item 
+\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{struct_serd_node}{Serd\+Node} $\ast$ \hyperlink{group__sord_ga497e0859abcc9e6e39c5bcbfcc7c9f70}{sord\+\_\+node\+\_\+to\+\_\+serd\+\_\+node} (\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{group__sord_ga804ac7d56d9fdea50f2d1e7278b1f82b}{Sord\+Node} $\ast$\hyperlink{structnode}{node})
+\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{group__sord_ga89d2f20cde1d09361a73f596ba45b57f}{sord\+\_\+node\+\_\+free} (\hyperlink{group__sord_ga133d918ec58f829198b2cf65f250ed69}{Sord\+World} $\ast$world, \hyperlink{group__sord_ga804ac7d56d9fdea50f2d1e7278b1f82b}{Sord\+Node} $\ast$\hyperlink{structnode}{node})
+\item 
+\hyperlink{group__sord_ga804ac7d56d9fdea50f2d1e7278b1f82b}{Sord\+Node} $\ast$ \hyperlink{group__sord_ga719bb3ccc2c8091b1ae7b4266f65890a}{sord\+\_\+node\+\_\+copy} (\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{group__sord_ga804ac7d56d9fdea50f2d1e7278b1f82b}{Sord\+Node} $\ast$\hyperlink{structnode}{node})
+\item 
+\hyperlink{mac_2config_2i386_2lib-src_2libsoxr_2soxr-config_8h_abb452686968e48b67397da5f97445f5b}{bool} \hyperlink{group__sord_gaf302459de8a5474600b6f3e0eb4ea3b4}{sord\+\_\+add} (\hyperlink{group__sord_gaea018cfebfedd10280b1d8dd6d650a28}{Sord\+Model} $\ast$sord, \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{group__sord_gac79773a042527877d00158c75a41bab2}{Sord\+Quad} tup)
+\item 
+\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{group__sord_ga15109faf500fa7d7e898e319bdb67c4c}{sord\+\_\+remove} (\hyperlink{group__sord_gaea018cfebfedd10280b1d8dd6d650a28}{Sord\+Model} $\ast$sord, \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{group__sord_gac79773a042527877d00158c75a41bab2}{Sord\+Quad} tup)
+\end{DoxyCompactItemize}
+
+
+\subsection{Macro Definition Documentation}
+\index{sord.\+c@{sord.\+c}!D\+E\+F\+A\+U\+L\+T\+\_\+\+G\+R\+A\+P\+H\+\_\+\+O\+R\+D\+ER@{D\+E\+F\+A\+U\+L\+T\+\_\+\+G\+R\+A\+P\+H\+\_\+\+O\+R\+D\+ER}}
+\index{D\+E\+F\+A\+U\+L\+T\+\_\+\+G\+R\+A\+P\+H\+\_\+\+O\+R\+D\+ER@{D\+E\+F\+A\+U\+L\+T\+\_\+\+G\+R\+A\+P\+H\+\_\+\+O\+R\+D\+ER}!sord.\+c@{sord.\+c}}
+\subsubsection[{\texorpdfstring{D\+E\+F\+A\+U\+L\+T\+\_\+\+G\+R\+A\+P\+H\+\_\+\+O\+R\+D\+ER}{DEFAULT_GRAPH_ORDER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define D\+E\+F\+A\+U\+L\+T\+\_\+\+G\+R\+A\+P\+H\+\_\+\+O\+R\+D\+ER~{\bf G\+S\+PO}}\hypertarget{sord_8c_ad2e75b37a743ce1d4bef218fd31a5c0a}{}\label{sord_8c_ad2e75b37a743ce1d4bef218fd31a5c0a}
+
+
+Definition at line 55 of file sord.\+c.
+
+\index{sord.\+c@{sord.\+c}!D\+E\+F\+A\+U\+L\+T\+\_\+\+O\+R\+D\+ER@{D\+E\+F\+A\+U\+L\+T\+\_\+\+O\+R\+D\+ER}}
+\index{D\+E\+F\+A\+U\+L\+T\+\_\+\+O\+R\+D\+ER@{D\+E\+F\+A\+U\+L\+T\+\_\+\+O\+R\+D\+ER}!sord.\+c@{sord.\+c}}
+\subsubsection[{\texorpdfstring{D\+E\+F\+A\+U\+L\+T\+\_\+\+O\+R\+D\+ER}{DEFAULT_ORDER}}]{\setlength{\rightskip}{0pt plus 5cm}\#define D\+E\+F\+A\+U\+L\+T\+\_\+\+O\+R\+D\+ER~{\bf S\+PO}}\hypertarget{sord_8c_a889a1c08592b6ef9195889a2baec9c78}{}\label{sord_8c_a889a1c08592b6ef9195889a2baec9c78}
+
+
+Definition at line 54 of file sord.\+c.
+
+\index{sord.\+c@{sord.\+c}!N\+U\+M\+\_\+\+O\+R\+D\+E\+RS@{N\+U\+M\+\_\+\+O\+R\+D\+E\+RS}}
+\index{N\+U\+M\+\_\+\+O\+R\+D\+E\+RS@{N\+U\+M\+\_\+\+O\+R\+D\+E\+RS}!sord.\+c@{sord.\+c}}
+\subsubsection[{\texorpdfstring{N\+U\+M\+\_\+\+O\+R\+D\+E\+RS}{NUM_ORDERS}}]{\setlength{\rightskip}{0pt plus 5cm}\#define N\+U\+M\+\_\+\+O\+R\+D\+E\+RS~12}\hypertarget{sord_8c_a9237fc26918812bfb16ed5d1d8169724}{}\label{sord_8c_a9237fc26918812bfb16ed5d1d8169724}
+
+
+Definition at line 51 of file sord.\+c.
+
+\index{sord.\+c@{sord.\+c}!P\+A\+T\+\_\+\+C\+A\+SE@{P\+A\+T\+\_\+\+C\+A\+SE}}
+\index{P\+A\+T\+\_\+\+C\+A\+SE@{P\+A\+T\+\_\+\+C\+A\+SE}!sord.\+c@{sord.\+c}}
+\subsubsection[{\texorpdfstring{P\+A\+T\+\_\+\+C\+A\+SE}{PAT_CASE}}]{\setlength{\rightskip}{0pt plus 5cm}\#define P\+A\+T\+\_\+\+C\+A\+SE(
+\begin{DoxyParamCaption}
+\item[{}]{sig, }
+\item[{}]{{\bf m}, }
+\item[{}]{g0, }
+\item[{}]{g1, }
+\item[{}]{np}
+\end{DoxyParamCaption}
+)}\hypertarget{sord_8c_a5aefe02a9ce3dab20cae53f3c311f3ed}{}\label{sord_8c_a5aefe02a9ce3dab20cae53f3c311f3ed}
+{\bfseries Value\+:}
+\begin{DoxyCode}
+\textcolor{keywordflow}{case} sig: \(\backslash\)
+        *mode     = \hyperlink{layer3_8c_a4b8bfe70f28d6faddcb10d6ecf8c1989}{m}; \hyperlink{charmaps_8h_a422f205059a9d17797eb370ded3c21c6}{\(\backslash\)}
+\hyperlink{charmaps_8h_a422f205059a9d17797eb370ded3c21c6}{        good}[0]   = g0; \hyperlink{charmaps_8h_a422f205059a9d17797eb370ded3c21c6}{\(\backslash\)}
+\hyperlink{charmaps_8h_a422f205059a9d17797eb370ded3c21c6}{        good}[1]   = g1; \(\backslash\)
+        *n\_prefix = np; \(\backslash\)
+        break
+\end{DoxyCode}
+\index{sord.\+c@{sord.\+c}!S\+O\+R\+D\+\_\+\+F\+I\+N\+D\+\_\+\+L\+OG@{S\+O\+R\+D\+\_\+\+F\+I\+N\+D\+\_\+\+L\+OG}}
+\index{S\+O\+R\+D\+\_\+\+F\+I\+N\+D\+\_\+\+L\+OG@{S\+O\+R\+D\+\_\+\+F\+I\+N\+D\+\_\+\+L\+OG}!sord.\+c@{sord.\+c}}
+\subsubsection[{\texorpdfstring{S\+O\+R\+D\+\_\+\+F\+I\+N\+D\+\_\+\+L\+OG}{SORD_FIND_LOG}}]{\setlength{\rightskip}{0pt plus 5cm}\#define S\+O\+R\+D\+\_\+\+F\+I\+N\+D\+\_\+\+L\+OG(
+\begin{DoxyParamCaption}
+\item[{}]{...}
+\end{DoxyParamCaption}
+)}\hypertarget{sord_8c_a8271b81211a0f2e7b3a55b9459bd01c5}{}\label{sord_8c_a8271b81211a0f2e7b3a55b9459bd01c5}
+
+
+Definition at line 43 of file sord.\+c.
+
+\index{sord.\+c@{sord.\+c}!S\+O\+R\+D\+\_\+\+I\+T\+E\+R\+\_\+\+L\+OG@{S\+O\+R\+D\+\_\+\+I\+T\+E\+R\+\_\+\+L\+OG}}
+\index{S\+O\+R\+D\+\_\+\+I\+T\+E\+R\+\_\+\+L\+OG@{S\+O\+R\+D\+\_\+\+I\+T\+E\+R\+\_\+\+L\+OG}!sord.\+c@{sord.\+c}}
+\subsubsection[{\texorpdfstring{S\+O\+R\+D\+\_\+\+I\+T\+E\+R\+\_\+\+L\+OG}{SORD_ITER_LOG}}]{\setlength{\rightskip}{0pt plus 5cm}\#define S\+O\+R\+D\+\_\+\+I\+T\+E\+R\+\_\+\+L\+OG(
+\begin{DoxyParamCaption}
+\item[{}]{...}
+\end{DoxyParamCaption}
+)}\hypertarget{sord_8c_accbe42e160f07b6f8a7d624a53a0e4eb}{}\label{sord_8c_accbe42e160f07b6f8a7d624a53a0e4eb}
+
+
+Definition at line 38 of file sord.\+c.
+
+\index{sord.\+c@{sord.\+c}!S\+O\+R\+D\+\_\+\+L\+OG@{S\+O\+R\+D\+\_\+\+L\+OG}}
+\index{S\+O\+R\+D\+\_\+\+L\+OG@{S\+O\+R\+D\+\_\+\+L\+OG}!sord.\+c@{sord.\+c}}
+\subsubsection[{\texorpdfstring{S\+O\+R\+D\+\_\+\+L\+OG}{SORD_LOG}}]{\setlength{\rightskip}{0pt plus 5cm}\#define S\+O\+R\+D\+\_\+\+L\+OG(
+\begin{DoxyParamCaption}
+\item[{}]{{\bf prefix}, }
+\item[{}]{...}
+\end{DoxyParamCaption}
+)~fprintf(stderr, \char`\"{}\mbox{[}Sord\+::\char`\"{} prefix \char`\"{}\mbox{]} \char`\"{} \+\_\+\+\_\+\+V\+A\+\_\+\+A\+R\+G\+S\+\_\+\+\_\+)}\hypertarget{sord_8c_a0058aa93c7cd0602658a4b0f42e1ba3f}{}\label{sord_8c_a0058aa93c7cd0602658a4b0f42e1ba3f}
+
+
+Definition at line 33 of file sord.\+c.
+
+\index{sord.\+c@{sord.\+c}!S\+O\+R\+D\+\_\+\+W\+R\+I\+T\+E\+\_\+\+L\+OG@{S\+O\+R\+D\+\_\+\+W\+R\+I\+T\+E\+\_\+\+L\+OG}}
+\index{S\+O\+R\+D\+\_\+\+W\+R\+I\+T\+E\+\_\+\+L\+OG@{S\+O\+R\+D\+\_\+\+W\+R\+I\+T\+E\+\_\+\+L\+OG}!sord.\+c@{sord.\+c}}
+\subsubsection[{\texorpdfstring{S\+O\+R\+D\+\_\+\+W\+R\+I\+T\+E\+\_\+\+L\+OG}{SORD_WRITE_LOG}}]{\setlength{\rightskip}{0pt plus 5cm}\#define S\+O\+R\+D\+\_\+\+W\+R\+I\+T\+E\+\_\+\+L\+OG(
+\begin{DoxyParamCaption}
+\item[{}]{...}
+\end{DoxyParamCaption}
+)}\hypertarget{sord_8c_a4f268c4bcd324fee3d7a2fe4fec30662}{}\label{sord_8c_a4f268c4bcd324fee3d7a2fe4fec30662}
+
+
+Definition at line 48 of file sord.\+c.
+
+\index{sord.\+c@{sord.\+c}!S\+T\+A\+T\+E\+M\+E\+N\+T\+\_\+\+L\+EN@{S\+T\+A\+T\+E\+M\+E\+N\+T\+\_\+\+L\+EN}}
+\index{S\+T\+A\+T\+E\+M\+E\+N\+T\+\_\+\+L\+EN@{S\+T\+A\+T\+E\+M\+E\+N\+T\+\_\+\+L\+EN}!sord.\+c@{sord.\+c}}
+\subsubsection[{\texorpdfstring{S\+T\+A\+T\+E\+M\+E\+N\+T\+\_\+\+L\+EN}{STATEMENT_LEN}}]{\setlength{\rightskip}{0pt plus 5cm}\#define S\+T\+A\+T\+E\+M\+E\+N\+T\+\_\+\+L\+EN~3}\hypertarget{sord_8c_ae47cf9cbef1e11b189db139c1dfa8791}{}\label{sord_8c_ae47cf9cbef1e11b189db139c1dfa8791}
+
+
+Definition at line 52 of file sord.\+c.
+
+\index{sord.\+c@{sord.\+c}!T\+U\+P\+\_\+\+F\+MT@{T\+U\+P\+\_\+\+F\+MT}}
+\index{T\+U\+P\+\_\+\+F\+MT@{T\+U\+P\+\_\+\+F\+MT}!sord.\+c@{sord.\+c}}
+\subsubsection[{\texorpdfstring{T\+U\+P\+\_\+\+F\+MT}{TUP_FMT}}]{\setlength{\rightskip}{0pt plus 5cm}\#define T\+U\+P\+\_\+\+F\+MT~\char`\"{}(\%s \%{\bf s} \%{\bf s} \%{\bf s})\char`\"{}}\hypertarget{sord_8c_a4f028582975d03f1229b736bf45df3c9}{}\label{sord_8c_a4f028582975d03f1229b736bf45df3c9}
+
+
+Definition at line 57 of file sord.\+c.
+
+\index{sord.\+c@{sord.\+c}!T\+U\+P\+\_\+\+F\+M\+T\+\_\+\+A\+R\+GS@{T\+U\+P\+\_\+\+F\+M\+T\+\_\+\+A\+R\+GS}}
+\index{T\+U\+P\+\_\+\+F\+M\+T\+\_\+\+A\+R\+GS@{T\+U\+P\+\_\+\+F\+M\+T\+\_\+\+A\+R\+GS}!sord.\+c@{sord.\+c}}
+\subsubsection[{\texorpdfstring{T\+U\+P\+\_\+\+F\+M\+T\+\_\+\+A\+R\+GS}{TUP_FMT_ARGS}}]{\setlength{\rightskip}{0pt plus 5cm}\#define T\+U\+P\+\_\+\+F\+M\+T\+\_\+\+A\+R\+GS(
+\begin{DoxyParamCaption}
+\item[{}]{{\bf t}}
+\end{DoxyParamCaption}
+)}\hypertarget{sord_8c_ae5ba4c48c3093167848e87a2833ee399}{}\label{sord_8c_ae5ba4c48c3093167848e87a2833ee399}
+{\bfseries Value\+:}
+\begin{DoxyCode}
+\hyperlink{sord_8c_a83a9545e9571528e33c537141555c33f}{TUP\_FMT\_ELEM}((\hyperlink{octave__test_8m_aaccc9105df5383111407fd5b41255e23}{t})[0]), \hyperlink{sord_8c_a83a9545e9571528e33c537141555c33f}{\(\backslash\)}
+\hyperlink{sord_8c_a83a9545e9571528e33c537141555c33f}{    TUP\_FMT\_ELEM}((\hyperlink{octave__test_8m_aaccc9105df5383111407fd5b41255e23}{t})[1]), \hyperlink{sord_8c_a83a9545e9571528e33c537141555c33f}{\(\backslash\)}
+\hyperlink{sord_8c_a83a9545e9571528e33c537141555c33f}{    TUP\_FMT\_ELEM}((\hyperlink{octave__test_8m_aaccc9105df5383111407fd5b41255e23}{t})[2]), \hyperlink{sord_8c_a83a9545e9571528e33c537141555c33f}{\(\backslash\)}
+\hyperlink{sord_8c_a83a9545e9571528e33c537141555c33f}{    TUP\_FMT\_ELEM}((\hyperlink{octave__test_8m_aaccc9105df5383111407fd5b41255e23}{t})[3])
+\end{DoxyCode}
+
+
+Definition at line 59 of file sord.\+c.
+
+\index{sord.\+c@{sord.\+c}!T\+U\+P\+\_\+\+F\+M\+T\+\_\+\+E\+L\+EM@{T\+U\+P\+\_\+\+F\+M\+T\+\_\+\+E\+L\+EM}}
+\index{T\+U\+P\+\_\+\+F\+M\+T\+\_\+\+E\+L\+EM@{T\+U\+P\+\_\+\+F\+M\+T\+\_\+\+E\+L\+EM}!sord.\+c@{sord.\+c}}
+\subsubsection[{\texorpdfstring{T\+U\+P\+\_\+\+F\+M\+T\+\_\+\+E\+L\+EM}{TUP_FMT_ELEM}}]{\setlength{\rightskip}{0pt plus 5cm}\#define T\+U\+P\+\_\+\+F\+M\+T\+\_\+\+E\+L\+EM(
+\begin{DoxyParamCaption}
+\item[{}]{e}
+\end{DoxyParamCaption}
+)~((e) ? {\bf sord\+\_\+node\+\_\+get\+\_\+string}(e) \+: ({\bf const} {\bf uint8\+\_\+t}$\ast$)\char`\"{}$\ast$\char`\"{})}\hypertarget{sord_8c_a83a9545e9571528e33c537141555c33f}{}\label{sord_8c_a83a9545e9571528e33c537141555c33f}
+
+
+Definition at line 58 of file sord.\+c.
+
+\index{sord.\+c@{sord.\+c}!T\+U\+P\+\_\+G@{T\+U\+P\+\_\+G}}
+\index{T\+U\+P\+\_\+G@{T\+U\+P\+\_\+G}!sord.\+c@{sord.\+c}}
+\subsubsection[{\texorpdfstring{T\+U\+P\+\_\+G}{TUP_G}}]{\setlength{\rightskip}{0pt plus 5cm}\#define T\+U\+P\+\_\+G~3}\hypertarget{sord_8c_a956efb2e4df766d975216d19a7b33f8d}{}\label{sord_8c_a956efb2e4df766d975216d19a7b33f8d}
+
+
+Definition at line 68 of file sord.\+c.
+
+\index{sord.\+c@{sord.\+c}!T\+U\+P\+\_\+\+L\+EN@{T\+U\+P\+\_\+\+L\+EN}}
+\index{T\+U\+P\+\_\+\+L\+EN@{T\+U\+P\+\_\+\+L\+EN}!sord.\+c@{sord.\+c}}
+\subsubsection[{\texorpdfstring{T\+U\+P\+\_\+\+L\+EN}{TUP_LEN}}]{\setlength{\rightskip}{0pt plus 5cm}\#define T\+U\+P\+\_\+\+L\+EN~{\bf S\+T\+A\+T\+E\+M\+E\+N\+T\+\_\+\+L\+EN} + 1}\hypertarget{sord_8c_abf2b9ab4f1ef77e2813701e8679e48c2}{}\label{sord_8c_abf2b9ab4f1ef77e2813701e8679e48c2}
+
+
+Definition at line 53 of file sord.\+c.
+
+\index{sord.\+c@{sord.\+c}!T\+U\+P\+\_\+O@{T\+U\+P\+\_\+O}}
+\index{T\+U\+P\+\_\+O@{T\+U\+P\+\_\+O}!sord.\+c@{sord.\+c}}
+\subsubsection[{\texorpdfstring{T\+U\+P\+\_\+O}{TUP_O}}]{\setlength{\rightskip}{0pt plus 5cm}\#define T\+U\+P\+\_\+O~2}\hypertarget{sord_8c_a6db3118d6c2a80a521744333798eda9b}{}\label{sord_8c_a6db3118d6c2a80a521744333798eda9b}
+
+
+Definition at line 67 of file sord.\+c.
+
+\index{sord.\+c@{sord.\+c}!T\+U\+P\+\_\+P@{T\+U\+P\+\_\+P}}
+\index{T\+U\+P\+\_\+P@{T\+U\+P\+\_\+P}!sord.\+c@{sord.\+c}}
+\subsubsection[{\texorpdfstring{T\+U\+P\+\_\+P}{TUP_P}}]{\setlength{\rightskip}{0pt plus 5cm}\#define T\+U\+P\+\_\+P~1}\hypertarget{sord_8c_ab5bcd046f906662be6d5a11c8061e859}{}\label{sord_8c_ab5bcd046f906662be6d5a11c8061e859}
+
+
+Definition at line 66 of file sord.\+c.
+
+\index{sord.\+c@{sord.\+c}!T\+U\+P\+\_\+S@{T\+U\+P\+\_\+S}}
+\index{T\+U\+P\+\_\+S@{T\+U\+P\+\_\+S}!sord.\+c@{sord.\+c}}
+\subsubsection[{\texorpdfstring{T\+U\+P\+\_\+S}{TUP_S}}]{\setlength{\rightskip}{0pt plus 5cm}\#define T\+U\+P\+\_\+S~0}\hypertarget{sord_8c_aa2ca2ca7c3bcf81bc95e8316a17145de}{}\label{sord_8c_aa2ca2ca7c3bcf81bc95e8316a17145de}
+
+
+Definition at line 65 of file sord.\+c.
+
+\index{sord.\+c@{sord.\+c}!Z\+I\+X\+\_\+\+I\+N\+L\+I\+NE@{Z\+I\+X\+\_\+\+I\+N\+L\+I\+NE}}
+\index{Z\+I\+X\+\_\+\+I\+N\+L\+I\+NE@{Z\+I\+X\+\_\+\+I\+N\+L\+I\+NE}!sord.\+c@{sord.\+c}}
+\subsubsection[{\texorpdfstring{Z\+I\+X\+\_\+\+I\+N\+L\+I\+NE}{ZIX_INLINE}}]{\setlength{\rightskip}{0pt plus 5cm}\#define Z\+I\+X\+\_\+\+I\+N\+L\+I\+NE}\hypertarget{sord_8c_a229739ffab14acb41cd246b61a18cc87}{}\label{sord_8c_a229739ffab14acb41cd246b61a18cc87}
+
+
+Definition at line 25 of file sord.\+c.
+
+
+
+\subsection{Enumeration Type Documentation}
+\index{sord.\+c@{sord.\+c}!Search\+Mode@{Search\+Mode}}
+\index{Search\+Mode@{Search\+Mode}!sord.\+c@{sord.\+c}}
+\subsubsection[{\texorpdfstring{Search\+Mode}{SearchMode}}]{\setlength{\rightskip}{0pt plus 5cm}enum {\bf Search\+Mode}}\hypertarget{sord_8c_a5a2afa1489549bc706d12bc66c0c4e72}{}\label{sord_8c_a5a2afa1489549bc706d12bc66c0c4e72}
+Mode for searching or iteration \begin{Desc}
+\item[Enumerator]\par
+\begin{description}
+\index{A\+LL@{A\+LL}!sord.\+c@{sord.\+c}}\index{sord.\+c@{sord.\+c}!A\+LL@{A\+LL}}\item[{\em 
+A\+LL\hypertarget{sord_8c_a5a2afa1489549bc706d12bc66c0c4e72ab1d5eac4b1dca480c8056eaea7663b7a}{}\label{sord_8c_a5a2afa1489549bc706d12bc66c0c4e72ab1d5eac4b1dca480c8056eaea7663b7a}
+}]Iterate over entire store. \index{S\+I\+N\+G\+LE@{S\+I\+N\+G\+LE}!sord.\+c@{sord.\+c}}\index{sord.\+c@{sord.\+c}!S\+I\+N\+G\+LE@{S\+I\+N\+G\+LE}}\item[{\em 
+S\+I\+N\+G\+LE\hypertarget{sord_8c_a5a2afa1489549bc706d12bc66c0c4e72a3388f7110f6f25a54e215eb75d5d7516}{}\label{sord_8c_a5a2afa1489549bc706d12bc66c0c4e72a3388f7110f6f25a54e215eb75d5d7516}
+}]Iteration over a single element (exact search) \index{R\+A\+N\+GE@{R\+A\+N\+GE}!sord.\+c@{sord.\+c}}\index{sord.\+c@{sord.\+c}!R\+A\+N\+GE@{R\+A\+N\+GE}}\item[{\em 
+R\+A\+N\+GE\hypertarget{sord_8c_a5a2afa1489549bc706d12bc66c0c4e72a36ccd76c516f51bf87c02b44305284ca}{}\label{sord_8c_a5a2afa1489549bc706d12bc66c0c4e72a36ccd76c516f51bf87c02b44305284ca}
+}]Iterate over range with equal prefix. \index{F\+I\+L\+T\+E\+R\+\_\+\+R\+A\+N\+GE@{F\+I\+L\+T\+E\+R\+\_\+\+R\+A\+N\+GE}!sord.\+c@{sord.\+c}}\index{sord.\+c@{sord.\+c}!F\+I\+L\+T\+E\+R\+\_\+\+R\+A\+N\+GE@{F\+I\+L\+T\+E\+R\+\_\+\+R\+A\+N\+GE}}\item[{\em 
+F\+I\+L\+T\+E\+R\+\_\+\+R\+A\+N\+GE\hypertarget{sord_8c_a5a2afa1489549bc706d12bc66c0c4e72a684d9883b21a2b884ea3615b65eea513}{}\label{sord_8c_a5a2afa1489549bc706d12bc66c0c4e72a684d9883b21a2b884ea3615b65eea513}
+}]Iterate over range with equal prefix, filtering. \index{F\+I\+L\+T\+E\+R\+\_\+\+A\+LL@{F\+I\+L\+T\+E\+R\+\_\+\+A\+LL}!sord.\+c@{sord.\+c}}\index{sord.\+c@{sord.\+c}!F\+I\+L\+T\+E\+R\+\_\+\+A\+LL@{F\+I\+L\+T\+E\+R\+\_\+\+A\+LL}}\item[{\em 
+F\+I\+L\+T\+E\+R\+\_\+\+A\+LL\hypertarget{sord_8c_a5a2afa1489549bc706d12bc66c0c4e72ac9a1737e5152068114f3ce89e0f55ff5}{}\label{sord_8c_a5a2afa1489549bc706d12bc66c0c4e72ac9a1737e5152068114f3ce89e0f55ff5}
+}]Iterate to end of store, filtering. \end{description}
+\end{Desc}
+
+
+Definition at line 125 of file sord.\+c.
+
+\index{sord.\+c@{sord.\+c}!Sord\+Order@{Sord\+Order}}
+\index{Sord\+Order@{Sord\+Order}!sord.\+c@{sord.\+c}}
+\subsubsection[{\texorpdfstring{Sord\+Order}{SordOrder}}]{\setlength{\rightskip}{0pt plus 5cm}enum {\bf Sord\+Order}}\hypertarget{sord_8c_a4a73452c777904d8c172948a285fb76b}{}\label{sord_8c_a4a73452c777904d8c172948a285fb76b}
+Triple ordering \begin{Desc}
+\item[Enumerator]\par
+\begin{description}
+\index{S\+PO@{S\+PO}!sord.\+c@{sord.\+c}}\index{sord.\+c@{sord.\+c}!S\+PO@{S\+PO}}\item[{\em 
+S\+PO\hypertarget{sord_8c_a4a73452c777904d8c172948a285fb76ba037fbf5052ce9e2ef5d7795b52340a2e}{}\label{sord_8c_a4a73452c777904d8c172948a285fb76ba037fbf5052ce9e2ef5d7795b52340a2e}
+}]Subject, Predicate, Object. \index{S\+OP@{S\+OP}!sord.\+c@{sord.\+c}}\index{sord.\+c@{sord.\+c}!S\+OP@{S\+OP}}\item[{\em 
+S\+OP\hypertarget{sord_8c_a4a73452c777904d8c172948a285fb76ba6988b642480925a08eb33beb921098fa}{}\label{sord_8c_a4a73452c777904d8c172948a285fb76ba6988b642480925a08eb33beb921098fa}
+}]Subject, Object, Predicate. \index{O\+PS@{O\+PS}!sord.\+c@{sord.\+c}}\index{sord.\+c@{sord.\+c}!O\+PS@{O\+PS}}\item[{\em 
+O\+PS\hypertarget{sord_8c_a4a73452c777904d8c172948a285fb76ba155799991ffba2f405e45466d7dbf078}{}\label{sord_8c_a4a73452c777904d8c172948a285fb76ba155799991ffba2f405e45466d7dbf078}
+}]Object, Predicate, Subject. \index{O\+SP@{O\+SP}!sord.\+c@{sord.\+c}}\index{sord.\+c@{sord.\+c}!O\+SP@{O\+SP}}\item[{\em 
+O\+SP\hypertarget{sord_8c_a4a73452c777904d8c172948a285fb76ba4da6ed7929ad552bc19d274c90b369f5}{}\label{sord_8c_a4a73452c777904d8c172948a285fb76ba4da6ed7929ad552bc19d274c90b369f5}
+}]Object, Subject, Predicate. \index{P\+SO@{P\+SO}!sord.\+c@{sord.\+c}}\index{sord.\+c@{sord.\+c}!P\+SO@{P\+SO}}\item[{\em 
+P\+SO\hypertarget{sord_8c_a4a73452c777904d8c172948a285fb76bada065dbd33b2528ea062b611bf9cd178}{}\label{sord_8c_a4a73452c777904d8c172948a285fb76bada065dbd33b2528ea062b611bf9cd178}
+}]Predicate, Subject, Object. \index{P\+OS@{P\+OS}!sord.\+c@{sord.\+c}}\index{sord.\+c@{sord.\+c}!P\+OS@{P\+OS}}\item[{\em 
+P\+OS\hypertarget{sord_8c_a4a73452c777904d8c172948a285fb76ba91743bc3932693c4b8a6ca984e8a8437}{}\label{sord_8c_a4a73452c777904d8c172948a285fb76ba91743bc3932693c4b8a6ca984e8a8437}
+}]Predicate, Object, Subject. \index{G\+S\+PO@{G\+S\+PO}!sord.\+c@{sord.\+c}}\index{sord.\+c@{sord.\+c}!G\+S\+PO@{G\+S\+PO}}\item[{\em 
+G\+S\+PO\hypertarget{sord_8c_a4a73452c777904d8c172948a285fb76ba1d9a094f4deb1febfbe12db8496c2ab1}{}\label{sord_8c_a4a73452c777904d8c172948a285fb76ba1d9a094f4deb1febfbe12db8496c2ab1}
+}]Graph, Subject, Predicate, Object. \index{G\+S\+OP@{G\+S\+OP}!sord.\+c@{sord.\+c}}\index{sord.\+c@{sord.\+c}!G\+S\+OP@{G\+S\+OP}}\item[{\em 
+G\+S\+OP\hypertarget{sord_8c_a4a73452c777904d8c172948a285fb76badfbcf4e6027e3e05d1682d8d7bbd551d}{}\label{sord_8c_a4a73452c777904d8c172948a285fb76badfbcf4e6027e3e05d1682d8d7bbd551d}
+}]Graph, Subject, Object, Predicate. \index{G\+O\+PS@{G\+O\+PS}!sord.\+c@{sord.\+c}}\index{sord.\+c@{sord.\+c}!G\+O\+PS@{G\+O\+PS}}\item[{\em 
+G\+O\+PS\hypertarget{sord_8c_a4a73452c777904d8c172948a285fb76bac5a8de28a9caa7c4d9a9f7221682bd5b}{}\label{sord_8c_a4a73452c777904d8c172948a285fb76bac5a8de28a9caa7c4d9a9f7221682bd5b}
+}]Graph, Object, Predicate, Subject. \index{G\+O\+SP@{G\+O\+SP}!sord.\+c@{sord.\+c}}\index{sord.\+c@{sord.\+c}!G\+O\+SP@{G\+O\+SP}}\item[{\em 
+G\+O\+SP\hypertarget{sord_8c_a4a73452c777904d8c172948a285fb76ba55febc8500cc6cf9fc241516732cfe4a}{}\label{sord_8c_a4a73452c777904d8c172948a285fb76ba55febc8500cc6cf9fc241516732cfe4a}
+}]Graph, Object, Subject, Predicate. \index{G\+P\+SO@{G\+P\+SO}!sord.\+c@{sord.\+c}}\index{sord.\+c@{sord.\+c}!G\+P\+SO@{G\+P\+SO}}\item[{\em 
+G\+P\+SO\hypertarget{sord_8c_a4a73452c777904d8c172948a285fb76bae80bfe6b3579f97d0be341786a55ccfc}{}\label{sord_8c_a4a73452c777904d8c172948a285fb76bae80bfe6b3579f97d0be341786a55ccfc}
+}]Graph, Predicate, Subject, Object. \index{G\+P\+OS@{G\+P\+OS}!sord.\+c@{sord.\+c}}\index{sord.\+c@{sord.\+c}!G\+P\+OS@{G\+P\+OS}}\item[{\em 
+G\+P\+OS\hypertarget{sord_8c_a4a73452c777904d8c172948a285fb76baa15ead9add63225c8817e1dce851d39e}{}\label{sord_8c_a4a73452c777904d8c172948a285fb76baa15ead9add63225c8817e1dce851d39e}
+}]Graph, Predicate, Object, Subject. \end{description}
+\end{Desc}
+
+
+Definition at line 71 of file sord.\+c.
+

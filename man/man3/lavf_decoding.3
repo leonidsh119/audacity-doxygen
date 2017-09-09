@@ -1,0 +1,374 @@
+.TH "lavf_decoding" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+lavf_decoding \- Demuxing
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "struct \fBAVInputFormat\fP"
+.br
+.in -1c
+.SS "Typedefs"
+
+.in +1c
+.ti -1c
+.RI "typedef struct \fBAVInputFormat\fP \fBAVInputFormat\fP"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBAVInputFormat\fP * \fBav_find_input_format\fP (\fBconst\fP char *short_name)"
+.br
+.ti -1c
+.RI "\fBAVInputFormat\fP * \fBav_probe_input_format\fP (\fBAVProbeData\fP *pd, \fBint\fP is_opened)"
+.br
+.ti -1c
+.RI "\fBAVInputFormat\fP * \fBav_probe_input_format2\fP (\fBAVProbeData\fP *pd, \fBint\fP is_opened, \fBint\fP *score_max)"
+.br
+.ti -1c
+.RI "\fBAVInputFormat\fP * \fBav_probe_input_format3\fP (\fBAVProbeData\fP *pd, \fBint\fP is_opened, \fBint\fP *score_ret)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_probe_input_buffer2\fP (\fBAVIOContext\fP *pb, \fBAVInputFormat\fP **fmt, \fBconst\fP char *\fBfilename\fP, \fBvoid\fP *logctx, unsigned \fBint\fP \fBoffset\fP, unsigned \fBint\fP max_probe_size)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_probe_input_buffer\fP (\fBAVIOContext\fP *pb, \fBAVInputFormat\fP **fmt, \fBconst\fP char *\fBfilename\fP, \fBvoid\fP *logctx, unsigned \fBint\fP \fBoffset\fP, unsigned \fBint\fP max_probe_size)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBavformat_open_input\fP (\fBAVFormatContext\fP **ps, \fBconst\fP char *\fBfilename\fP, \fBAVInputFormat\fP *fmt, \fBAVDictionary\fP **options)"
+.br
+.ti -1c
+.RI "\fBattribute_deprecated\fP \fBint\fP \fBav_demuxer_open\fP (\fBAVFormatContext\fP *ic)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBavformat_find_stream_info\fP (\fBAVFormatContext\fP *ic, \fBAVDictionary\fP **options)"
+.br
+.ti -1c
+.RI "\fBAVProgram\fP * \fBav_find_program_from_stream\fP (\fBAVFormatContext\fP *ic, \fBAVProgram\fP *\fBlast\fP, \fBint\fP \fBs\fP)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_find_best_stream\fP (\fBAVFormatContext\fP *ic, enum \fBAVMediaType\fP type, \fBint\fP wanted_stream_nb, \fBint\fP related_stream, \fBAVCodec\fP **decoder_ret, \fBint\fP flags)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_read_frame\fP (\fBAVFormatContext\fP *\fBs\fP, \fBAVPacket\fP *pkt)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_seek_frame\fP (\fBAVFormatContext\fP *\fBs\fP, \fBint\fP stream_index, \fBint64_t\fP timestamp, \fBint\fP flags)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBavformat_seek_file\fP (\fBAVFormatContext\fP *\fBs\fP, \fBint\fP stream_index, \fBint64_t\fP min_ts, \fBint64_t\fP ts, \fBint64_t\fP max_ts, \fBint\fP flags)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_read_play\fP (\fBAVFormatContext\fP *\fBs\fP)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_read_pause\fP (\fBAVFormatContext\fP *\fBs\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBavformat_close_input\fP (\fBAVFormatContext\fP **\fBs\fP)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Demuxers read a media file and split it into chunks of data (\fIpackets\fP)\&. A \fBpacket\fP contains one or more encoded frames which belongs to a single elementary stream\&. In the lavf API this process is represented by the \fBavformat_open_input()\fP function for opening a file, \fBav_read_frame()\fP for reading a single packet and finally \fBavformat_close_input()\fP, which does the cleanup\&.
+.SH "Opening a media file"
+.PP
+The minimum information required to open a file is its URL or filename, which is passed to \fBavformat_open_input()\fP, as in the following code: 
+.PP
+.nf
+const char    *url = "in\&.mp3";
+AVFormatContext *s = NULL;
+int ret = avformat_open_input(&s, url, NULL, NULL);
+if (ret < 0)
+    abort();
+
+.fi
+.PP
+ The above code attempts to allocate an \fBAVFormatContext\fP, open the specified file (autodetecting the format) and read the header, exporting the information stored there into s\&. Some formats do not have a header or do not store enough information there, so it is recommended that you call the \fBavformat_find_stream_info()\fP function which tries to read and decode a few frames to find missing information\&.
+.PP
+In some cases you might want to preallocate an \fBAVFormatContext\fP yourself with \fBavformat_alloc_context()\fP and do some tweaking on it before passing it to \fBavformat_open_input()\fP\&. One such case is when you want to use custom functions for reading input data instead of lavf internal I/O layer\&. To do that, create your own \fBAVIOContext\fP with \fBavio_alloc_context()\fP, passing your reading callbacks to it\&. Then set the \fIpb\fP field of your \fBAVFormatContext\fP to newly created \fBAVIOContext\fP\&.
+.PP
+Since the format of the opened file is in general not known until after \fBavformat_open_input()\fP has returned, it is not possible to set demuxer private options on a preallocated context\&. Instead, the options should be passed to \fBavformat_open_input()\fP wrapped in an AVDictionary: 
+.PP
+.nf
+AVDictionary *options = NULL;
+av_dict_set(&options, "video_size", "640x480", 0);
+av_dict_set(&options, "pixel_format", "rgb24", 0);
+
+if (avformat_open_input(&s, url, NULL, &options) < 0)
+    abort();
+av_dict_free(&options);
+
+.fi
+.PP
+ This code passes the private options 'video_size' and 'pixel_format' to the demuxer\&. They would be necessary for e\&.g\&. the rawvideo demuxer, since it cannot know how to interpret raw video data otherwise\&. If the format turns out to be something different than raw video, those options will not be recognized by the demuxer and therefore will not be applied\&. Such unrecognized options are then returned in the options dictionary (recognized options are consumed)\&. The calling program can handle such unrecognized options as it wishes, e\&.g\&. 
+.PP
+.nf
+AVDictionaryEntry *e;
+if (e = av_dict_get(options, "", NULL, AV_DICT_IGNORE_SUFFIX)) {
+    fprintf(stderr, "Option %s not recognized by the demuxer\&.\n", e->key);
+    abort();
+}
+
+.fi
+.PP
+.PP
+After you have finished reading the file, you must close it with \fBavformat_close_input()\fP\&. It will free everything associated with the file\&.
+.SH "Reading from an opened file"
+.PP
+Reading data from an opened \fBAVFormatContext\fP is done by repeatedly calling \fBav_read_frame()\fP on it\&. Each call, if successful, will return an \fBAVPacket\fP containing encoded data for one \fBAVStream\fP, identified by \fBAVPacket\&.stream_index\fP\&. This packet may be passed straight into the libavcodec decoding functions \fBavcodec_decode_video2()\fP, \fBavcodec_decode_audio4()\fP or \fBavcodec_decode_subtitle2()\fP if the caller wishes to decode the data\&.
+.PP
+\fBAVPacket\&.pts\fP, \fBAVPacket\&.dts\fP and \fBAVPacket\&.duration\fP timing information will be set if known\&. They may also be unset (i\&.e\&. AV_NOPTS_VALUE for pts/dts, 0 for duration) if the stream does not provide them\&. The timing information will be in \fBAVStream\&.time_base\fP units, i\&.e\&. it has to be multiplied by the timebase to convert them to seconds\&.
+.PP
+If \fBAVPacket\&.buf\fP is set on the returned packet, then the packet is allocated dynamically and the user may keep it indefinitely\&. Otherwise, if \fBAVPacket\&.buf\fP is NULL, the packet data is backed by a static storage somewhere inside the demuxer and the packet is only valid until the next \fBav_read_frame()\fP call or closing the file\&. If the caller requires a longer lifetime, \fBav_dup_packet()\fP will make an \fBav_malloc()\fPed copy of it\&. In both cases, the packet must be freed with \fBav_free_packet()\fP when it is no longer needed\&.
+.SH "Seeking"
+.PP
+
+.SH "Typedef Documentation"
+.PP 
+.SS "typedef struct \fBAVInputFormat\fP  \fBAVInputFormat\fP"
+
+.SH "Function Documentation"
+.PP 
+.SS "\fBattribute_deprecated\fP \fBint\fP av_demuxer_open (\fBAVFormatContext\fP * ic)"
+
+.SS "\fBint\fP av_find_best_stream (\fBAVFormatContext\fP * ic, enum \fBAVMediaType\fP type, \fBint\fP wanted_stream_nb, \fBint\fP related_stream, \fBAVCodec\fP ** decoder_ret, \fBint\fP flags)"
+Find the 'best' stream in the file\&. The best stream is determined according to various heuristics as the most likely to be what the user expects\&. If the decoder parameter is non-NULL, av_find_best_stream will find the default decoder for the stream's codec; streams for which no decoder can be found are ignored\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIic\fP media file handle 
+.br
+\fItype\fP stream type: video, audio, subtitles, etc\&. 
+.br
+\fIwanted_stream_nb\fP user-requested stream number, or -1 for automatic selection 
+.br
+\fIrelated_stream\fP try to find a stream related (eg\&. in the same program) to this one, or -1 if none 
+.br
+\fIdecoder_ret\fP if non-NULL, returns the decoder for the selected stream 
+.br
+\fIflags\fP flags; none are currently defined 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the non-negative stream number in case of success, AVERROR_STREAM_NOT_FOUND if no stream with the requested type could be found, AVERROR_DECODER_NOT_FOUND if streams were found but no decoder 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+If av_find_best_stream returns successfully and decoder_ret is not NULL, then *decoder_ret is guaranteed to be set to a valid \fBAVCodec\fP\&. 
+.RE
+.PP
+
+.SS "\fBAVInputFormat\fP* av_find_input_format (\fBconst\fP char * short_name)"
+Find \fBAVInputFormat\fP based on the short name of the input format\&. 
+.SS "\fBAVProgram\fP* av_find_program_from_stream (\fBAVFormatContext\fP * ic, \fBAVProgram\fP * last, \fBint\fP s)"
+Find the programs which belong to a given stream\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIic\fP media file handle 
+.br
+\fIlast\fP the last found program, the search will start after this program, or from the beginning if it is NULL 
+.br
+\fIs\fP stream index 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the next program which belongs to s, NULL if no program is found or the last program is not among the programs of ic\&. 
+.RE
+.PP
+
+.SS "\fBint\fP av_probe_input_buffer (\fBAVIOContext\fP * pb, \fBAVInputFormat\fP ** fmt, \fBconst\fP char * filename, \fBvoid\fP * logctx, unsigned \fBint\fP offset, unsigned \fBint\fP max_probe_size)"
+Like \fBav_probe_input_buffer2()\fP but returns 0 on success 
+.SS "\fBint\fP av_probe_input_buffer2 (\fBAVIOContext\fP * pb, \fBAVInputFormat\fP ** fmt, \fBconst\fP char * filename, \fBvoid\fP * logctx, unsigned \fBint\fP offset, unsigned \fBint\fP max_probe_size)"
+Probe a bytestream to determine the input format\&. Each time a probe returns with a score that is too low, the probe buffer size is increased and another attempt is made\&. When the maximum probe size is reached, the input format with the highest score is returned\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIpb\fP the bytestream to probe 
+.br
+\fIfmt\fP the input format is put here 
+.br
+\fIfilename\fP the filename of the stream 
+.br
+\fIlogctx\fP the log context 
+.br
+\fIoffset\fP the offset within the bytestream to probe from 
+.br
+\fImax_probe_size\fP the maximum probe buffer size (zero for default) 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the score in case of success, a negative value corresponding to an the maximal score is AVPROBE_SCORE_MAX AVERROR code otherwise 
+.RE
+.PP
+
+.SS "\fBAVInputFormat\fP* av_probe_input_format (\fBAVProbeData\fP * pd, \fBint\fP is_opened)"
+Guess the file format\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIpd\fP data to be probed 
+.br
+\fIis_opened\fP Whether the file is already opened; determines whether demuxers with or without AVFMT_NOFILE are probed\&. 
+.RE
+.PP
+
+.SS "\fBAVInputFormat\fP* av_probe_input_format2 (\fBAVProbeData\fP * pd, \fBint\fP is_opened, \fBint\fP * score_max)"
+Guess the file format\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIpd\fP data to be probed 
+.br
+\fIis_opened\fP Whether the file is already opened; determines whether demuxers with or without AVFMT_NOFILE are probed\&. 
+.br
+\fIscore_max\fP A probe score larger that this is required to accept a detection, the variable is set to the actual detection score afterwards\&. If the score is <= AVPROBE_SCORE_MAX / 4 it is recommended to retry with a larger probe buffer\&. 
+.RE
+.PP
+
+.SS "\fBAVInputFormat\fP* av_probe_input_format3 (\fBAVProbeData\fP * pd, \fBint\fP is_opened, \fBint\fP * score_ret)"
+Guess the file format\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIis_opened\fP Whether the file is already opened; determines whether demuxers with or without AVFMT_NOFILE are probed\&. 
+.br
+\fIscore_ret\fP The score of the best detection\&. 
+.RE
+.PP
+
+.SS "\fBint\fP av_read_frame (\fBAVFormatContext\fP * s, \fBAVPacket\fP * pkt)"
+Return the next frame of a stream\&. This function returns what is stored in the file, and does not validate that what is there are valid frames for the decoder\&. It will split what is stored in the file into frames and return one for each call\&. It will not omit invalid data between valid frames so as to give the decoder the maximum information possible for decoding\&.
+.PP
+If pkt->buf is NULL, then the packet is valid until the next \fBav_read_frame()\fP or until \fBavformat_close_input()\fP\&. Otherwise the packet is valid indefinitely\&. In both cases the packet must be freed with av_free_packet when it is no longer needed\&. For video, the packet contains exactly one frame\&. For audio, it contains an integer number of frames if each frame has a known fixed size (e\&.g\&. PCM or ADPCM data)\&. If the audio frames have a variable size (e\&.g\&. MPEG audio), then it contains one frame\&.
+.PP
+pkt->pts, pkt->dts and pkt->duration are always set to correct values in \fBAVStream\&.time_base\fP units (and guessed if the format cannot provide them)\&. pkt->pts can be AV_NOPTS_VALUE if the video format has B-frames, so it is better to rely on pkt->dts if you do not decompress the payload\&.
+.PP
+\fBReturns:\fP
+.RS 4
+0 if OK, < 0 on error or end of file 
+.RE
+.PP
+
+.SS "\fBint\fP av_read_pause (\fBAVFormatContext\fP * s)"
+Pause a network-based stream (e\&.g\&. RTSP stream)\&.
+.PP
+Use \fBav_read_play()\fP to resume it\&. 
+.SS "\fBint\fP av_read_play (\fBAVFormatContext\fP * s)"
+Start playing a network-based stream (e\&.g\&. RTSP stream) at the current position\&. 
+.SS "\fBint\fP av_seek_frame (\fBAVFormatContext\fP * s, \fBint\fP stream_index, \fBint64_t\fP timestamp, \fBint\fP flags)"
+Seek to the keyframe at timestamp\&. 'timestamp' in 'stream_index'\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIs\fP media file handle 
+.br
+\fIstream_index\fP If stream_index is (-1), a default stream is selected, and timestamp is automatically converted from AV_TIME_BASE units to the stream specific time_base\&. 
+.br
+\fItimestamp\fP Timestamp in \fBAVStream\&.time_base\fP units or, if no stream is specified, in AV_TIME_BASE units\&. 
+.br
+\fIflags\fP flags which select direction and seeking mode 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+>= 0 on success 
+.RE
+.PP
+
+.SS "\fBvoid\fP avformat_close_input (\fBAVFormatContext\fP ** s)"
+Close an opened input \fBAVFormatContext\fP\&. Free it and all its contents and set *s to NULL\&. 
+.SS "\fBint\fP avformat_find_stream_info (\fBAVFormatContext\fP * ic, \fBAVDictionary\fP ** options)"
+Read packets of a media file to get stream information\&. This is useful for file formats with no headers such as MPEG\&. This function also computes the real framerate in case of MPEG-2 repeat frame mode\&. The logical file position is not changed by this function; examined packets may be buffered for later processing\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIic\fP media file handle 
+.br
+\fIoptions\fP If non-NULL, an ic\&.nb_streams long array of pointers to dictionaries, where i-th member contains options for codec corresponding to i-th stream\&. On return each dictionary will be filled with options that were not found\&. 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+>=0 if OK, AVERROR_xxx on error
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+this function isn't guaranteed to open all the codecs, so options being non-empty at return is a perfectly normal behavior\&.
+.RE
+.PP
+\fBTodo\fP
+.RS 4
+Let the user decide somehow what information is needed so that we do not waste time getting stuff the user does not need\&. 
+.RE
+.PP
+
+.SS "\fBint\fP avformat_open_input (\fBAVFormatContext\fP ** ps, \fBconst\fP char * filename, \fBAVInputFormat\fP * fmt, \fBAVDictionary\fP ** options)"
+Open an input stream and read the header\&. The codecs are not opened\&. The stream must be closed with \fBavformat_close_input()\fP\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIps\fP Pointer to user-supplied \fBAVFormatContext\fP (allocated by avformat_alloc_context)\&. May be a pointer to NULL, in which case an \fBAVFormatContext\fP is allocated by this function and written into ps\&. Note that a user-supplied \fBAVFormatContext\fP will be freed on failure\&. 
+.br
+\fIfilename\fP Name of the stream to open\&. 
+.br
+\fIfmt\fP If non-NULL, this parameter forces a specific input format\&. Otherwise the format is autodetected\&. 
+.br
+\fIoptions\fP A dictionary filled with \fBAVFormatContext\fP and demuxer-private options\&. On return this parameter will be destroyed and replaced with a dict containing options that were not found\&. May be NULL\&.
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+0 on success, a negative AVERROR on failure\&.
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+If you want to use custom IO, preallocate the format context and set its pb field\&. 
+.RE
+.PP
+
+.SS "\fBint\fP avformat_seek_file (\fBAVFormatContext\fP * s, \fBint\fP stream_index, \fBint64_t\fP min_ts, \fBint64_t\fP ts, \fBint64_t\fP max_ts, \fBint\fP flags)"
+Seek to timestamp ts\&. Seeking will be done so that the point from which all active streams can be presented successfully will be closest to ts and within min/max_ts\&. Active streams are all streams that have \fBAVStream\&.discard\fP < AVDISCARD_ALL\&.
+.PP
+If flags contain AVSEEK_FLAG_BYTE, then all timestamps are in bytes and are the file position (this may not be supported by all demuxers)\&. If flags contain AVSEEK_FLAG_FRAME, then all timestamps are in frames in the stream with stream_index (this may not be supported by all demuxers)\&. Otherwise all timestamps are in units of the stream selected by stream_index or if stream_index is -1, in AV_TIME_BASE units\&. If flags contain AVSEEK_FLAG_ANY, then non-keyframes are treated as keyframes (this may not be supported by all demuxers)\&. If flags contain AVSEEK_FLAG_BACKWARD, it is ignored\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIs\fP media file handle 
+.br
+\fIstream_index\fP index of the stream which is used as time base reference 
+.br
+\fImin_ts\fP smallest acceptable timestamp 
+.br
+\fIts\fP target timestamp 
+.br
+\fImax_ts\fP largest acceptable timestamp 
+.br
+\fIflags\fP flags 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+>=0 on success, error code otherwise
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+This is part of the new seek API which is still under construction\&. Thus do not use this yet\&. It may change at any time, do not expect ABI compatibility yet! 
+.RE
+.PP
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

@@ -1,0 +1,527 @@
+\hypertarget{_track_panel_8cpp}{}\section{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/src/\+Track\+Panel.cpp File Reference}
+\label{_track_panel_8cpp}\index{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/src/\+Track\+Panel.\+cpp@{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/src/\+Track\+Panel.\+cpp}}
+
+
+Implements \hyperlink{class_track_panel}{Track\+Panel} and \hyperlink{class_track_info}{Track\+Info}.  
+
+
+{\ttfamily \#include \char`\"{}Audacity.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Experimental.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Track\+Panel.\+h\char`\"{}}\\*
+{\ttfamily \#include $<$wx/fontenum.\+h$>$}\\*
+{\ttfamily \#include $<$wx/numdlg.\+h$>$}\\*
+{\ttfamily \#include $<$wx/spinctrl.\+h$>$}\\*
+{\ttfamily \#include \char`\"{}Freq\+Window.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}A\+Color.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}All\+Theme\+Resources.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Audio\+I\+O.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Envelope.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}float\+\_\+cast.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Label\+Track.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Mixer\+Board.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Note\+Track.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Number\+Scale.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Prefs.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Snap.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Shuttle\+Gui.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Time\+Track.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Track\+Artist.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Track\+Panel\+Ax.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Undo\+Manager.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Wave\+Track.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}commands/\+Keyboard.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}ondemand/\+O\+D\+Manager.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}prefs/\+Prefs\+Dialog.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}prefs/\+Spectrum\+Prefs.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}prefs/\+Waveform\+Prefs.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}toolbars/\+Control\+Tool\+Bar.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}toolbars/\+Tools\+Tool\+Bar.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../images/\+Cursors.\+h\char`\"{}}\\*
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \hyperlink{class_view_settings_dialog}{View\+Settings\+Dialog}
+\item 
+class \hyperlink{class_track_panel_font_enumerator}{Track\+Panel\+Font\+Enumerator}
+\end{DoxyCompactItemize}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{_track_panel_8cpp_a0535b2c11fb2d31bddd10dd8f33ed2e8}{Z\+O\+O\+M\+L\+I\+M\+IT}~0.\+001f
+\end{DoxyCompactItemize}
+\subsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \{ \\*
+\hyperlink{_track_panel_8cpp_a7c35be1de655e733eaac059ccd76f796ae714a9264332af8cc1842e49271efd32}{k\+Left\+Inset} = 4, 
+\hyperlink{_track_panel_8cpp_a7c35be1de655e733eaac059ccd76f796aab9a830c18ced8b35e7ea11354f1e168}{k\+Right\+Inset} = k\+Left\+Inset, 
+\hyperlink{_track_panel_8cpp_a7c35be1de655e733eaac059ccd76f796a2b662f69b0ee4c7fabe0992ae06f45c1}{k\+Top\+Inset} = 4, 
+\hyperlink{_track_panel_8cpp_a7c35be1de655e733eaac059ccd76f796abaa67d3ef1fa09ffb7628408a78af075}{k\+Shadow\+Thickness} = 1, 
+\\*
+\hyperlink{_track_panel_8cpp_a7c35be1de655e733eaac059ccd76f796acb6c4347365946fb1f9c06a761c7637d}{k\+Border\+Thickness} = 1, 
+\hyperlink{_track_panel_8cpp_a7c35be1de655e733eaac059ccd76f796a7781d53ca68e0c137fc6a42954d77b9e}{k\+Top\+Margin} = k\+Top\+Inset + k\+Border\+Thickness, 
+\hyperlink{_track_panel_8cpp_a7c35be1de655e733eaac059ccd76f796a27c2391c392d603648f6605578d5335a}{k\+Bottom\+Margin} = k\+Shadow\+Thickness + k\+Border\+Thickness, 
+\hyperlink{_track_panel_8cpp_a7c35be1de655e733eaac059ccd76f796ad2ccfac30caa5459ba58082187577146}{k\+Left\+Margin} = k\+Left\+Inset + k\+Border\+Thickness, 
+\\*
+\hyperlink{_track_panel_8cpp_a7c35be1de655e733eaac059ccd76f796a3350016f0960d9fe59103dc2b675d2c9}{k\+Right\+Margin} = k\+Right\+Inset + k\+Shadow\+Thickness + k\+Border\+Thickness, 
+\hyperlink{_track_panel_8cpp_a7c35be1de655e733eaac059ccd76f796a004ffd768278ee9c9a78ae35835fdc85}{k\+Timer\+Interval} = 50, 
+\hyperlink{_track_panel_8cpp_a7c35be1de655e733eaac059ccd76f796ac22796cffaa71790d270ae6de466774b}{k\+One\+Second\+Countdown} = 1000 / k\+Timer\+Interval
+ \}
+\item 
+enum \{ \hyperlink{_track_panel_8cpp_a2a5937706f1724c8f06a0396bdc87855a485b14b589ff0ea3f160823d54d4ccce}{S\+C\+R\+U\+B\+B\+I\+N\+G\+\_\+\+P\+I\+X\+E\+L\+\_\+\+T\+O\+L\+E\+R\+A\+N\+CE} = 10, 
+\hyperlink{_track_panel_8cpp_a2a5937706f1724c8f06a0396bdc87855a5ce300bd11671e2ae59e9a91a4bf8739}{Scrub\+Speed\+Steps\+Per\+Octave} = 4
+ \}
+\item 
+enum \{ \\*
+\hyperlink{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61a7007a1d7117eaad547371b1a2f8638f6}{Track\+Panel\+First\+ID} = 2000, 
+\hyperlink{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61a7ddaba585f35e22fbb4ce7f017f0b6ad}{On\+Set\+Name\+ID}, 
+\hyperlink{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61ae7dbe59e412e660607ddb28cb03b4464}{On\+Set\+Font\+ID}, 
+\hyperlink{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61ad781ffda3075b971f26483311fe506ae}{On\+Move\+Up\+ID}, 
+\\*
+\hyperlink{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61ab184908e548cefe0ea27c0f12390c0f8}{On\+Move\+Down\+ID}, 
+\hyperlink{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61ac4946484a27cc46670834bdc3d8e08ab}{On\+Move\+Top\+ID}, 
+\hyperlink{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61a2f1133cee583410fe1121f57980b5add}{On\+Move\+Bottom\+ID}, 
+\hyperlink{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61a6cc8f9ad4c0ff6600f9cbb53262149fc}{On\+Up\+Octave\+ID}, 
+\\*
+\hyperlink{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61a8a40c66fb44fb22922b2c4fbc43d5a04}{On\+Down\+Octave\+ID}, 
+\hyperlink{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61aeae4ed7d29cbab95d9c2cdbd4c72e57c}{On\+Channel\+Left\+ID}, 
+\hyperlink{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61a475c7c1e18831e81165aba2a067d63dd}{On\+Channel\+Right\+ID}, 
+\hyperlink{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61aeb81f02f8b3e274935d4b9fa864765c1}{On\+Channel\+Mono\+ID}, 
+\\*
+\hyperlink{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61aefb7e2e0c50a86122b83fa8b8dd68086}{On\+Rate8\+ID}, 
+\hyperlink{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61afbcef4e96d17e895132d32d02f0b133d}{On\+Rate11\+ID}, 
+\hyperlink{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61a01d127b3730f3daf3115bf2cc47e3adb}{On\+Rate16\+ID}, 
+\hyperlink{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61ad3a7b24424c05a64f2ad83e5c7fb1171}{On\+Rate22\+ID}, 
+\\*
+\hyperlink{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61a8de06b9867cde6dcdb488ace78edc2f0}{On\+Rate44\+ID}, 
+\hyperlink{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61a763096bb423ae3950b350cefaad7f7fb}{On\+Rate48\+ID}, 
+\hyperlink{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61a4a10baf94dcf8075ec10cf1446c0448e}{On\+Rate88\+ID}, 
+\hyperlink{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61af233bbad81c8dff20587b379df8142e5}{On\+Rate96\+ID}, 
+\\*
+\hyperlink{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61a4867d65750c43bab28e67527676f8278}{On\+Rate176\+ID}, 
+\hyperlink{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61a606bab1ae8b3a2edd7ce4bff1eedb6d8}{On\+Rate192\+ID}, 
+\hyperlink{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61a087627b6f2b7b8345efa8f4d9fd6a495}{On\+Rate352\+ID}, 
+\hyperlink{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61a8af9906f0e3a387c143c3a758701fe9e}{On\+Rate384\+ID}, 
+\\*
+\hyperlink{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61aa34e718ffff0fb7f81dd5df722344674}{On\+Rate\+Other\+ID}, 
+\hyperlink{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61a277454ef2627523e78245ea07550f9dc}{On16\+Bit\+ID}, 
+\hyperlink{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61ac7e189eced3f209bb48e606b166b8fea}{On24\+Bit\+ID}, 
+\hyperlink{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61a4f7cdf8dd4dcce5be8d8cd972e3de710}{On\+Float\+ID}, 
+\\*
+\hyperlink{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61ac08c6b7ae5c6e30226f7512ff0123037}{On\+Waveform\+ID}, 
+\hyperlink{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61a86c5bfe045792bba915af0d2cceb53da}{On\+Waveform\+D\+B\+ID}, 
+\hyperlink{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61ac914784d8cbbb1789af612dc70e06acd}{On\+Spectrum\+ID}, 
+\hyperlink{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61ae58578c1d0f405fa039fa34d20fc8a9d}{On\+Spectrogram\+Settings\+ID}, 
+\\*
+\hyperlink{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61aaa68f7243bd4c74caf5402a8c4a96dfb}{On\+Split\+Stereo\+ID}, 
+\hyperlink{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61a74c22f542d18fb7ee573748a4669ec1a}{On\+Split\+Stereo\+Mono\+ID}, 
+\hyperlink{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61a7ad784ff9ce99b40087f63dff61b282e}{On\+Merge\+Stereo\+ID}, 
+\hyperlink{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61af589f96236ab336de6fe1de0b2e071d6}{On\+Swap\+Channels\+ID}, 
+\\*
+\hyperlink{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61af67502b033a66614e9c7d0682094c61b}{On\+Set\+Time\+Track\+Range\+ID}, 
+\hyperlink{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61a5a5f9a31d18e3ef8bd32400f8504f856}{On\+Time\+Track\+Lin\+ID}, 
+\hyperlink{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61aab54102776a5a7d34947f83e180cb3e4}{On\+Time\+Track\+Log\+ID}, 
+\hyperlink{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61a47b3a9c92aebd73eb16c9ecc40144ac3}{On\+Time\+Track\+Log\+Int\+ID}, 
+\\*
+\hyperlink{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61ad8599d18e8a5c41d385547ef7a321874}{On\+First\+Waveform\+Scale\+ID}, 
+\hyperlink{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61a0c513e949c529583013efd63a1e88dcc}{On\+Last\+Waveform\+Scale\+ID} = On\+First\+Waveform\+Scale\+ID + 9, 
+\hyperlink{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61a1cb27731327caaf24bf61d12a07f75ff}{On\+First\+Spectrum\+Scale\+ID}, 
+\hyperlink{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61a2137c31bab5da20c0370631bfe4d75f2}{On\+Last\+Spectrum\+Scale\+ID} = On\+First\+Spectrum\+Scale\+ID + 19, 
+\\*
+\hyperlink{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61ae656e0beae2fdd9c0e1d5f09cfc3fff3}{On\+Zoom\+In\+Vertical\+ID}, 
+\hyperlink{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61a1efe09881810d5a0a6d6d57355bed707}{On\+Zoom\+Out\+Vertical\+ID}, 
+\hyperlink{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61a6be651161f793f51d95679059fcfb57a}{On\+Zoom\+Fit\+Vertical\+ID}
+ \}
+\item 
+enum \{ \hyperlink{_track_panel_8cpp_ad2d3a7869c500e9ee6bfbdcc1cd8ff46abab198a93564721fbb1b49be9dbe2b30}{F\+R\+E\+Q\+\_\+\+S\+N\+A\+P\+\_\+\+D\+I\+S\+T\+A\+N\+CE} = 10
+ \}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$class A , class B , class D\+I\+ST $>$ }\\\hyperlink{mac_2config_2i386_2lib-src_2libsoxr_2soxr-config_8h_abb452686968e48b67397da5f97445f5b}{bool} \hyperlink{_track_panel_8cpp_ab4369791699474ab3b61abb763dbe858}{within} (\hyperlink{libnyquist_2nyquist_2nyqsrc_2add_8c_a955f504eccf76b4eb2489c0adab03121}{A} \hyperlink{rfft2d_test_m_l_8m_a4124bc0a9335c27f086f24ba207a4912}{a}, \hyperlink{libnyquist_2nyquist_2nyqsrc_2add_8c_a111da81ae5883147168bbb8366377b10}{B} \hyperlink{convtest_8m_a21ad0bd836b90d08f4cf640b4c298e7c}{b}, D\+I\+ST \hyperlink{poly-fir_8h_a2530554172d8629149ec56816eeaa947}{d})
+\item 
+{\footnotesize template$<$class L\+OW , class M\+ID , class H\+I\+GH $>$ }\\\hyperlink{mac_2config_2i386_2lib-src_2libsoxr_2soxr-config_8h_abb452686968e48b67397da5f97445f5b}{bool} \hyperlink{_track_panel_8cpp_afcdedea96419683c76415bb68bb93564}{between\+\_\+incexc} (L\+OW \hyperlink{layer3_8c_a741dbb4d8e78c3cb69915db7282fcec0}{l}, M\+ID \hyperlink{layer3_8c_a4b8bfe70f28d6faddcb10d6ecf8c1989}{m}, H\+I\+GH h)
+\item 
+{\footnotesize template$<$class C\+L\+I\+P\+P\+EE , class C\+L\+I\+P\+V\+AL $>$ }\\\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{_track_panel_8cpp_ae727a553a0cbf21f301b84a544c70aca}{clip\+\_\+top} (C\+L\+I\+P\+P\+EE \&clippee, C\+L\+I\+P\+V\+AL val)
+\item 
+{\footnotesize template$<$class C\+L\+I\+P\+P\+EE , class C\+L\+I\+P\+V\+AL $>$ }\\\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{_track_panel_8cpp_aeb6c6687a1c2f164448cdd651d694849}{clip\+\_\+bottom} (C\+L\+I\+P\+P\+EE \&clippee, C\+L\+I\+P\+V\+AL val)
+\item 
+\hyperlink{_track_panel_8cpp_a71b7571eb34f9bd037742769f46ceee9}{E\+V\+T\+\_\+\+M\+E\+N\+U\+\_\+\+R\+A\+N\+GE} (\hyperlink{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61aeae4ed7d29cbab95d9c2cdbd4c72e57c}{On\+Channel\+Left\+ID}, \hyperlink{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61aeb81f02f8b3e274935d4b9fa864765c1}{On\+Channel\+Mono\+ID}, \hyperlink{class_track_panel_aa575d9021c5b4893cd4020a1becf498d}{Track\+Panel\+::\+On\+Channel\+Change}) wx\+Cursor $\ast$\hyperlink{_cursors_8h_a6f0eb65caf5ba60aff271091774c9712}{Make\+Cursor}(\hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} W\+X\+U\+N\+U\+S\+ED(Cursor\+Id)
+\item 
+\hyperlink{_track_panel_8cpp_ada56b55720b370c07ae23c07d31516d1}{Image} \hyperlink{_track_panel_8cpp_a14453f00b9411c0791353c15fc6d9990}{Set\+Mask\+Colour} (255, 0, 0)
+\item 
+\hyperlink{_track_panel_8cpp_ada56b55720b370c07ae23c07d31516d1}{Image} \hyperlink{_track_panel_8cpp_a798fca3c5159f3a011132156bc4f56aa}{Set\+Mask} ()
+\item 
+\hyperlink{_track_panel_8cpp_ada56b55720b370c07ae23c07d31516d1}{Image} \hyperlink{_track_panel_8cpp_a74a65b060223e97138bf395172ca2520}{Set\+Option} (wx\+I\+M\+A\+G\+E\+\_\+\+O\+P\+T\+I\+O\+N\+\_\+\+C\+U\+R\+\_\+\+H\+O\+T\+S\+P\+O\+T\+\_\+X, \hyperlink{_track_panel_8cpp_a8e3bc98230a8c07cf1fa538be2180afb}{HotX}-\/\hyperlink{_track_panel_8cpp_ad5bc86b19e27ab2dabb6581286ed059c}{Hot\+Adjust})
+\item 
+\hyperlink{_track_panel_8cpp_ada56b55720b370c07ae23c07d31516d1}{Image} \hyperlink{_track_panel_8cpp_afe73cd8abf3b46ca6b5501768ad042f2}{Set\+Option} (wx\+I\+M\+A\+G\+E\+\_\+\+O\+P\+T\+I\+O\+N\+\_\+\+C\+U\+R\+\_\+\+H\+O\+T\+S\+P\+O\+T\+\_\+Y, \hyperlink{_track_panel_8cpp_a9614b5e020cb0112ddffb09edf5f6253}{HotY}-\/\hyperlink{_track_panel_8cpp_ad5bc86b19e27ab2dabb6581286ed059c}{Hot\+Adjust})
+\item 
+{\footnotesize template$<$typename T $>$ }\\\hyperlink{sound_8c_ae35f5844602719cf66324f4de2a658b3}{void} \hyperlink{_track_panel_8cpp_a07aa4410f8fd1fbac865a15892b9a736}{Set\+If\+Not\+Null} (\hyperlink{xmltchar_8h_a16a0f7e7053a679c9bf4289b441a2be7}{T} $\ast$p\+Value, \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{xmltchar_8h_a16a0f7e7053a679c9bf4289b441a2be7}{T} Value)
+\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} char $\ast$ \hyperlink{_track_panel_8cpp_a63096d6582a75d647088db680060c12a}{p\+Xpm} \mbox{[}36\mbox{]}
+\item 
+\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} char \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{_track_panel_8cpp_a8e3bc98230a8c07cf1fa538be2180afb}{HotX}
+\item 
+\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} char \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{_track_panel_8cpp_a9614b5e020cb0112ddffb09edf5f6253}{HotY}
+\item 
+\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{_track_panel_8cpp_ad5bc86b19e27ab2dabb6581286ed059c}{Hot\+Adjust} =0
+\item 
+wx\+Image \hyperlink{_track_panel_8cpp_ada56b55720b370c07ae23c07d31516d1}{Image} = wx\+Image(wx\+Bitmap(\hyperlink{_track_panel_8cpp_a63096d6582a75d647088db680060c12a}{p\+Xpm}).Convert\+To\+Image())
+\item 
+\hyperlink{_track_panel_8cpp_a05b64122c94645f8a4cefd4d93b47f1e}{p\+Cursor} = new wx\+Cursor( \hyperlink{_track_panel_8cpp_ada56b55720b370c07ae23c07d31516d1}{Image} )
+\item 
+\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int} \hyperlink{_track_panel_8cpp_a3de95f88110d982efab006ba65ba37ec}{n\+Rates} =12
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Implements \hyperlink{class_track_panel}{Track\+Panel} and \hyperlink{class_track_info}{Track\+Info}. 
+
+\begin{DoxyRefDesc}{Todo}
+\item[\hyperlink{todo__todo000052}{Todo}]Refactoring of the \hyperlink{class_track_panel}{Track\+Panel}, possibly as described in \hyperlink{TrackPanelRefactor}{Track Panel Refactor}\end{DoxyRefDesc}
+
+
+\hyperlink{_track_panel_8cpp}{Track\+Panel.\+cpp} is currently some of the worst code in Audacity. It\textquotesingle{}s not really unreadable, there\textquotesingle{}s just way too much stuff in this one file. Rather than apply a quick fix, the long-\/term plan is to create a G\+U\+I\+Track class that knows how to draw itself and handle events. Then this class just helps coordinate between tracks.
+
+Plans under discussion are described in \hyperlink{TrackPanelRefactor}{Track Panel Refactor} 
+
+\subsection{Macro Definition Documentation}
+\index{Track\+Panel.\+cpp@{Track\+Panel.\+cpp}!Z\+O\+O\+M\+L\+I\+M\+IT@{Z\+O\+O\+M\+L\+I\+M\+IT}}
+\index{Z\+O\+O\+M\+L\+I\+M\+IT@{Z\+O\+O\+M\+L\+I\+M\+IT}!Track\+Panel.\+cpp@{Track\+Panel.\+cpp}}
+\subsubsection[{\texorpdfstring{Z\+O\+O\+M\+L\+I\+M\+IT}{ZOOMLIMIT}}]{\setlength{\rightskip}{0pt plus 5cm}\#define Z\+O\+O\+M\+L\+I\+M\+IT~0.\+001f}\hypertarget{_track_panel_8cpp_a0535b2c11fb2d31bddd10dd8f33ed2e8}{}\label{_track_panel_8cpp_a0535b2c11fb2d31bddd10dd8f33ed2e8}
+
+
+Definition at line 198 of file Track\+Panel.\+cpp.
+
+
+
+\subsection{Enumeration Type Documentation}
+\subsubsection[{\texorpdfstring{anonymous enum}{anonymous enum}}]{\setlength{\rightskip}{0pt plus 5cm}anonymous enum}\hypertarget{_track_panel_8cpp_a7c35be1de655e733eaac059ccd76f796}{}\label{_track_panel_8cpp_a7c35be1de655e733eaac059ccd76f796}
+\begin{Desc}
+\item[Enumerator]\par
+\begin{description}
+\index{k\+Left\+Inset@{k\+Left\+Inset}!Track\+Panel.\+cpp@{Track\+Panel.\+cpp}}\index{Track\+Panel.\+cpp@{Track\+Panel.\+cpp}!k\+Left\+Inset@{k\+Left\+Inset}}\item[{\em 
+k\+Left\+Inset\hypertarget{_track_panel_8cpp_a7c35be1de655e733eaac059ccd76f796ae714a9264332af8cc1842e49271efd32}{}\label{_track_panel_8cpp_a7c35be1de655e733eaac059ccd76f796ae714a9264332af8cc1842e49271efd32}
+}]\index{k\+Right\+Inset@{k\+Right\+Inset}!Track\+Panel.\+cpp@{Track\+Panel.\+cpp}}\index{Track\+Panel.\+cpp@{Track\+Panel.\+cpp}!k\+Right\+Inset@{k\+Right\+Inset}}\item[{\em 
+k\+Right\+Inset\hypertarget{_track_panel_8cpp_a7c35be1de655e733eaac059ccd76f796aab9a830c18ced8b35e7ea11354f1e168}{}\label{_track_panel_8cpp_a7c35be1de655e733eaac059ccd76f796aab9a830c18ced8b35e7ea11354f1e168}
+}]\index{k\+Top\+Inset@{k\+Top\+Inset}!Track\+Panel.\+cpp@{Track\+Panel.\+cpp}}\index{Track\+Panel.\+cpp@{Track\+Panel.\+cpp}!k\+Top\+Inset@{k\+Top\+Inset}}\item[{\em 
+k\+Top\+Inset\hypertarget{_track_panel_8cpp_a7c35be1de655e733eaac059ccd76f796a2b662f69b0ee4c7fabe0992ae06f45c1}{}\label{_track_panel_8cpp_a7c35be1de655e733eaac059ccd76f796a2b662f69b0ee4c7fabe0992ae06f45c1}
+}]\index{k\+Shadow\+Thickness@{k\+Shadow\+Thickness}!Track\+Panel.\+cpp@{Track\+Panel.\+cpp}}\index{Track\+Panel.\+cpp@{Track\+Panel.\+cpp}!k\+Shadow\+Thickness@{k\+Shadow\+Thickness}}\item[{\em 
+k\+Shadow\+Thickness\hypertarget{_track_panel_8cpp_a7c35be1de655e733eaac059ccd76f796abaa67d3ef1fa09ffb7628408a78af075}{}\label{_track_panel_8cpp_a7c35be1de655e733eaac059ccd76f796abaa67d3ef1fa09ffb7628408a78af075}
+}]\index{k\+Border\+Thickness@{k\+Border\+Thickness}!Track\+Panel.\+cpp@{Track\+Panel.\+cpp}}\index{Track\+Panel.\+cpp@{Track\+Panel.\+cpp}!k\+Border\+Thickness@{k\+Border\+Thickness}}\item[{\em 
+k\+Border\+Thickness\hypertarget{_track_panel_8cpp_a7c35be1de655e733eaac059ccd76f796acb6c4347365946fb1f9c06a761c7637d}{}\label{_track_panel_8cpp_a7c35be1de655e733eaac059ccd76f796acb6c4347365946fb1f9c06a761c7637d}
+}]\index{k\+Top\+Margin@{k\+Top\+Margin}!Track\+Panel.\+cpp@{Track\+Panel.\+cpp}}\index{Track\+Panel.\+cpp@{Track\+Panel.\+cpp}!k\+Top\+Margin@{k\+Top\+Margin}}\item[{\em 
+k\+Top\+Margin\hypertarget{_track_panel_8cpp_a7c35be1de655e733eaac059ccd76f796a7781d53ca68e0c137fc6a42954d77b9e}{}\label{_track_panel_8cpp_a7c35be1de655e733eaac059ccd76f796a7781d53ca68e0c137fc6a42954d77b9e}
+}]\index{k\+Bottom\+Margin@{k\+Bottom\+Margin}!Track\+Panel.\+cpp@{Track\+Panel.\+cpp}}\index{Track\+Panel.\+cpp@{Track\+Panel.\+cpp}!k\+Bottom\+Margin@{k\+Bottom\+Margin}}\item[{\em 
+k\+Bottom\+Margin\hypertarget{_track_panel_8cpp_a7c35be1de655e733eaac059ccd76f796a27c2391c392d603648f6605578d5335a}{}\label{_track_panel_8cpp_a7c35be1de655e733eaac059ccd76f796a27c2391c392d603648f6605578d5335a}
+}]\index{k\+Left\+Margin@{k\+Left\+Margin}!Track\+Panel.\+cpp@{Track\+Panel.\+cpp}}\index{Track\+Panel.\+cpp@{Track\+Panel.\+cpp}!k\+Left\+Margin@{k\+Left\+Margin}}\item[{\em 
+k\+Left\+Margin\hypertarget{_track_panel_8cpp_a7c35be1de655e733eaac059ccd76f796ad2ccfac30caa5459ba58082187577146}{}\label{_track_panel_8cpp_a7c35be1de655e733eaac059ccd76f796ad2ccfac30caa5459ba58082187577146}
+}]\index{k\+Right\+Margin@{k\+Right\+Margin}!Track\+Panel.\+cpp@{Track\+Panel.\+cpp}}\index{Track\+Panel.\+cpp@{Track\+Panel.\+cpp}!k\+Right\+Margin@{k\+Right\+Margin}}\item[{\em 
+k\+Right\+Margin\hypertarget{_track_panel_8cpp_a7c35be1de655e733eaac059ccd76f796a3350016f0960d9fe59103dc2b675d2c9}{}\label{_track_panel_8cpp_a7c35be1de655e733eaac059ccd76f796a3350016f0960d9fe59103dc2b675d2c9}
+}]\index{k\+Timer\+Interval@{k\+Timer\+Interval}!Track\+Panel.\+cpp@{Track\+Panel.\+cpp}}\index{Track\+Panel.\+cpp@{Track\+Panel.\+cpp}!k\+Timer\+Interval@{k\+Timer\+Interval}}\item[{\em 
+k\+Timer\+Interval\hypertarget{_track_panel_8cpp_a7c35be1de655e733eaac059ccd76f796a004ffd768278ee9c9a78ae35835fdc85}{}\label{_track_panel_8cpp_a7c35be1de655e733eaac059ccd76f796a004ffd768278ee9c9a78ae35835fdc85}
+}]\index{k\+One\+Second\+Countdown@{k\+One\+Second\+Countdown}!Track\+Panel.\+cpp@{Track\+Panel.\+cpp}}\index{Track\+Panel.\+cpp@{Track\+Panel.\+cpp}!k\+One\+Second\+Countdown@{k\+One\+Second\+Countdown}}\item[{\em 
+k\+One\+Second\+Countdown\hypertarget{_track_panel_8cpp_a7c35be1de655e733eaac059ccd76f796ac22796cffaa71790d270ae6de466774b}{}\label{_track_panel_8cpp_a7c35be1de655e733eaac059ccd76f796ac22796cffaa71790d270ae6de466774b}
+}]\end{description}
+\end{Desc}
+
+
+Definition at line 258 of file Track\+Panel.\+cpp.
+
+\subsubsection[{\texorpdfstring{anonymous enum}{anonymous enum}}]{\setlength{\rightskip}{0pt plus 5cm}anonymous enum}\hypertarget{_track_panel_8cpp_a2a5937706f1724c8f06a0396bdc87855}{}\label{_track_panel_8cpp_a2a5937706f1724c8f06a0396bdc87855}
+\begin{Desc}
+\item[Enumerator]\par
+\begin{description}
+\index{S\+C\+R\+U\+B\+B\+I\+N\+G\+\_\+\+P\+I\+X\+E\+L\+\_\+\+T\+O\+L\+E\+R\+A\+N\+CE@{S\+C\+R\+U\+B\+B\+I\+N\+G\+\_\+\+P\+I\+X\+E\+L\+\_\+\+T\+O\+L\+E\+R\+A\+N\+CE}!Track\+Panel.\+cpp@{Track\+Panel.\+cpp}}\index{Track\+Panel.\+cpp@{Track\+Panel.\+cpp}!S\+C\+R\+U\+B\+B\+I\+N\+G\+\_\+\+P\+I\+X\+E\+L\+\_\+\+T\+O\+L\+E\+R\+A\+N\+CE@{S\+C\+R\+U\+B\+B\+I\+N\+G\+\_\+\+P\+I\+X\+E\+L\+\_\+\+T\+O\+L\+E\+R\+A\+N\+CE}}\item[{\em 
+S\+C\+R\+U\+B\+B\+I\+N\+G\+\_\+\+P\+I\+X\+E\+L\+\_\+\+T\+O\+L\+E\+R\+A\+N\+CE\hypertarget{_track_panel_8cpp_a2a5937706f1724c8f06a0396bdc87855a485b14b589ff0ea3f160823d54d4ccce}{}\label{_track_panel_8cpp_a2a5937706f1724c8f06a0396bdc87855a485b14b589ff0ea3f160823d54d4ccce}
+}]\index{Scrub\+Speed\+Steps\+Per\+Octave@{Scrub\+Speed\+Steps\+Per\+Octave}!Track\+Panel.\+cpp@{Track\+Panel.\+cpp}}\index{Track\+Panel.\+cpp@{Track\+Panel.\+cpp}!Scrub\+Speed\+Steps\+Per\+Octave@{Scrub\+Speed\+Steps\+Per\+Octave}}\item[{\em 
+Scrub\+Speed\+Steps\+Per\+Octave\hypertarget{_track_panel_8cpp_a2a5937706f1724c8f06a0396bdc87855a5ce300bd11671e2ae59e9a91a4bf8739}{}\label{_track_panel_8cpp_a2a5937706f1724c8f06a0396bdc87855a5ce300bd11671e2ae59e9a91a4bf8739}
+}]\end{description}
+\end{Desc}
+
+
+Definition at line 273 of file Track\+Panel.\+cpp.
+
+\subsubsection[{\texorpdfstring{anonymous enum}{anonymous enum}}]{\setlength{\rightskip}{0pt plus 5cm}anonymous enum}\hypertarget{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61}{}\label{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61}
+\begin{Desc}
+\item[Enumerator]\par
+\begin{description}
+\index{Track\+Panel\+First\+ID@{Track\+Panel\+First\+ID}!Track\+Panel.\+cpp@{Track\+Panel.\+cpp}}\index{Track\+Panel.\+cpp@{Track\+Panel.\+cpp}!Track\+Panel\+First\+ID@{Track\+Panel\+First\+ID}}\item[{\em 
+Track\+Panel\+First\+ID\hypertarget{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61a7007a1d7117eaad547371b1a2f8638f6}{}\label{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61a7007a1d7117eaad547371b1a2f8638f6}
+}]\index{On\+Set\+Name\+ID@{On\+Set\+Name\+ID}!Track\+Panel.\+cpp@{Track\+Panel.\+cpp}}\index{Track\+Panel.\+cpp@{Track\+Panel.\+cpp}!On\+Set\+Name\+ID@{On\+Set\+Name\+ID}}\item[{\em 
+On\+Set\+Name\+ID\hypertarget{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61a7ddaba585f35e22fbb4ce7f017f0b6ad}{}\label{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61a7ddaba585f35e22fbb4ce7f017f0b6ad}
+}]\index{On\+Set\+Font\+ID@{On\+Set\+Font\+ID}!Track\+Panel.\+cpp@{Track\+Panel.\+cpp}}\index{Track\+Panel.\+cpp@{Track\+Panel.\+cpp}!On\+Set\+Font\+ID@{On\+Set\+Font\+ID}}\item[{\em 
+On\+Set\+Font\+ID\hypertarget{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61ae7dbe59e412e660607ddb28cb03b4464}{}\label{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61ae7dbe59e412e660607ddb28cb03b4464}
+}]\index{On\+Move\+Up\+ID@{On\+Move\+Up\+ID}!Track\+Panel.\+cpp@{Track\+Panel.\+cpp}}\index{Track\+Panel.\+cpp@{Track\+Panel.\+cpp}!On\+Move\+Up\+ID@{On\+Move\+Up\+ID}}\item[{\em 
+On\+Move\+Up\+ID\hypertarget{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61ad781ffda3075b971f26483311fe506ae}{}\label{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61ad781ffda3075b971f26483311fe506ae}
+}]\index{On\+Move\+Down\+ID@{On\+Move\+Down\+ID}!Track\+Panel.\+cpp@{Track\+Panel.\+cpp}}\index{Track\+Panel.\+cpp@{Track\+Panel.\+cpp}!On\+Move\+Down\+ID@{On\+Move\+Down\+ID}}\item[{\em 
+On\+Move\+Down\+ID\hypertarget{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61ab184908e548cefe0ea27c0f12390c0f8}{}\label{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61ab184908e548cefe0ea27c0f12390c0f8}
+}]\index{On\+Move\+Top\+ID@{On\+Move\+Top\+ID}!Track\+Panel.\+cpp@{Track\+Panel.\+cpp}}\index{Track\+Panel.\+cpp@{Track\+Panel.\+cpp}!On\+Move\+Top\+ID@{On\+Move\+Top\+ID}}\item[{\em 
+On\+Move\+Top\+ID\hypertarget{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61ac4946484a27cc46670834bdc3d8e08ab}{}\label{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61ac4946484a27cc46670834bdc3d8e08ab}
+}]\index{On\+Move\+Bottom\+ID@{On\+Move\+Bottom\+ID}!Track\+Panel.\+cpp@{Track\+Panel.\+cpp}}\index{Track\+Panel.\+cpp@{Track\+Panel.\+cpp}!On\+Move\+Bottom\+ID@{On\+Move\+Bottom\+ID}}\item[{\em 
+On\+Move\+Bottom\+ID\hypertarget{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61a2f1133cee583410fe1121f57980b5add}{}\label{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61a2f1133cee583410fe1121f57980b5add}
+}]\index{On\+Up\+Octave\+ID@{On\+Up\+Octave\+ID}!Track\+Panel.\+cpp@{Track\+Panel.\+cpp}}\index{Track\+Panel.\+cpp@{Track\+Panel.\+cpp}!On\+Up\+Octave\+ID@{On\+Up\+Octave\+ID}}\item[{\em 
+On\+Up\+Octave\+ID\hypertarget{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61a6cc8f9ad4c0ff6600f9cbb53262149fc}{}\label{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61a6cc8f9ad4c0ff6600f9cbb53262149fc}
+}]\index{On\+Down\+Octave\+ID@{On\+Down\+Octave\+ID}!Track\+Panel.\+cpp@{Track\+Panel.\+cpp}}\index{Track\+Panel.\+cpp@{Track\+Panel.\+cpp}!On\+Down\+Octave\+ID@{On\+Down\+Octave\+ID}}\item[{\em 
+On\+Down\+Octave\+ID\hypertarget{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61a8a40c66fb44fb22922b2c4fbc43d5a04}{}\label{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61a8a40c66fb44fb22922b2c4fbc43d5a04}
+}]\index{On\+Channel\+Left\+ID@{On\+Channel\+Left\+ID}!Track\+Panel.\+cpp@{Track\+Panel.\+cpp}}\index{Track\+Panel.\+cpp@{Track\+Panel.\+cpp}!On\+Channel\+Left\+ID@{On\+Channel\+Left\+ID}}\item[{\em 
+On\+Channel\+Left\+ID\hypertarget{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61aeae4ed7d29cbab95d9c2cdbd4c72e57c}{}\label{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61aeae4ed7d29cbab95d9c2cdbd4c72e57c}
+}]\index{On\+Channel\+Right\+ID@{On\+Channel\+Right\+ID}!Track\+Panel.\+cpp@{Track\+Panel.\+cpp}}\index{Track\+Panel.\+cpp@{Track\+Panel.\+cpp}!On\+Channel\+Right\+ID@{On\+Channel\+Right\+ID}}\item[{\em 
+On\+Channel\+Right\+ID\hypertarget{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61a475c7c1e18831e81165aba2a067d63dd}{}\label{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61a475c7c1e18831e81165aba2a067d63dd}
+}]\index{On\+Channel\+Mono\+ID@{On\+Channel\+Mono\+ID}!Track\+Panel.\+cpp@{Track\+Panel.\+cpp}}\index{Track\+Panel.\+cpp@{Track\+Panel.\+cpp}!On\+Channel\+Mono\+ID@{On\+Channel\+Mono\+ID}}\item[{\em 
+On\+Channel\+Mono\+ID\hypertarget{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61aeb81f02f8b3e274935d4b9fa864765c1}{}\label{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61aeb81f02f8b3e274935d4b9fa864765c1}
+}]\index{On\+Rate8\+ID@{On\+Rate8\+ID}!Track\+Panel.\+cpp@{Track\+Panel.\+cpp}}\index{Track\+Panel.\+cpp@{Track\+Panel.\+cpp}!On\+Rate8\+ID@{On\+Rate8\+ID}}\item[{\em 
+On\+Rate8\+ID\hypertarget{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61aefb7e2e0c50a86122b83fa8b8dd68086}{}\label{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61aefb7e2e0c50a86122b83fa8b8dd68086}
+}]\index{On\+Rate11\+ID@{On\+Rate11\+ID}!Track\+Panel.\+cpp@{Track\+Panel.\+cpp}}\index{Track\+Panel.\+cpp@{Track\+Panel.\+cpp}!On\+Rate11\+ID@{On\+Rate11\+ID}}\item[{\em 
+On\+Rate11\+ID\hypertarget{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61afbcef4e96d17e895132d32d02f0b133d}{}\label{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61afbcef4e96d17e895132d32d02f0b133d}
+}]\index{On\+Rate16\+ID@{On\+Rate16\+ID}!Track\+Panel.\+cpp@{Track\+Panel.\+cpp}}\index{Track\+Panel.\+cpp@{Track\+Panel.\+cpp}!On\+Rate16\+ID@{On\+Rate16\+ID}}\item[{\em 
+On\+Rate16\+ID\hypertarget{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61a01d127b3730f3daf3115bf2cc47e3adb}{}\label{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61a01d127b3730f3daf3115bf2cc47e3adb}
+}]\index{On\+Rate22\+ID@{On\+Rate22\+ID}!Track\+Panel.\+cpp@{Track\+Panel.\+cpp}}\index{Track\+Panel.\+cpp@{Track\+Panel.\+cpp}!On\+Rate22\+ID@{On\+Rate22\+ID}}\item[{\em 
+On\+Rate22\+ID\hypertarget{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61ad3a7b24424c05a64f2ad83e5c7fb1171}{}\label{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61ad3a7b24424c05a64f2ad83e5c7fb1171}
+}]\index{On\+Rate44\+ID@{On\+Rate44\+ID}!Track\+Panel.\+cpp@{Track\+Panel.\+cpp}}\index{Track\+Panel.\+cpp@{Track\+Panel.\+cpp}!On\+Rate44\+ID@{On\+Rate44\+ID}}\item[{\em 
+On\+Rate44\+ID\hypertarget{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61a8de06b9867cde6dcdb488ace78edc2f0}{}\label{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61a8de06b9867cde6dcdb488ace78edc2f0}
+}]\index{On\+Rate48\+ID@{On\+Rate48\+ID}!Track\+Panel.\+cpp@{Track\+Panel.\+cpp}}\index{Track\+Panel.\+cpp@{Track\+Panel.\+cpp}!On\+Rate48\+ID@{On\+Rate48\+ID}}\item[{\em 
+On\+Rate48\+ID\hypertarget{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61a763096bb423ae3950b350cefaad7f7fb}{}\label{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61a763096bb423ae3950b350cefaad7f7fb}
+}]\index{On\+Rate88\+ID@{On\+Rate88\+ID}!Track\+Panel.\+cpp@{Track\+Panel.\+cpp}}\index{Track\+Panel.\+cpp@{Track\+Panel.\+cpp}!On\+Rate88\+ID@{On\+Rate88\+ID}}\item[{\em 
+On\+Rate88\+ID\hypertarget{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61a4a10baf94dcf8075ec10cf1446c0448e}{}\label{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61a4a10baf94dcf8075ec10cf1446c0448e}
+}]\index{On\+Rate96\+ID@{On\+Rate96\+ID}!Track\+Panel.\+cpp@{Track\+Panel.\+cpp}}\index{Track\+Panel.\+cpp@{Track\+Panel.\+cpp}!On\+Rate96\+ID@{On\+Rate96\+ID}}\item[{\em 
+On\+Rate96\+ID\hypertarget{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61af233bbad81c8dff20587b379df8142e5}{}\label{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61af233bbad81c8dff20587b379df8142e5}
+}]\index{On\+Rate176\+ID@{On\+Rate176\+ID}!Track\+Panel.\+cpp@{Track\+Panel.\+cpp}}\index{Track\+Panel.\+cpp@{Track\+Panel.\+cpp}!On\+Rate176\+ID@{On\+Rate176\+ID}}\item[{\em 
+On\+Rate176\+ID\hypertarget{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61a4867d65750c43bab28e67527676f8278}{}\label{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61a4867d65750c43bab28e67527676f8278}
+}]\index{On\+Rate192\+ID@{On\+Rate192\+ID}!Track\+Panel.\+cpp@{Track\+Panel.\+cpp}}\index{Track\+Panel.\+cpp@{Track\+Panel.\+cpp}!On\+Rate192\+ID@{On\+Rate192\+ID}}\item[{\em 
+On\+Rate192\+ID\hypertarget{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61a606bab1ae8b3a2edd7ce4bff1eedb6d8}{}\label{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61a606bab1ae8b3a2edd7ce4bff1eedb6d8}
+}]\index{On\+Rate352\+ID@{On\+Rate352\+ID}!Track\+Panel.\+cpp@{Track\+Panel.\+cpp}}\index{Track\+Panel.\+cpp@{Track\+Panel.\+cpp}!On\+Rate352\+ID@{On\+Rate352\+ID}}\item[{\em 
+On\+Rate352\+ID\hypertarget{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61a087627b6f2b7b8345efa8f4d9fd6a495}{}\label{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61a087627b6f2b7b8345efa8f4d9fd6a495}
+}]\index{On\+Rate384\+ID@{On\+Rate384\+ID}!Track\+Panel.\+cpp@{Track\+Panel.\+cpp}}\index{Track\+Panel.\+cpp@{Track\+Panel.\+cpp}!On\+Rate384\+ID@{On\+Rate384\+ID}}\item[{\em 
+On\+Rate384\+ID\hypertarget{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61a8af9906f0e3a387c143c3a758701fe9e}{}\label{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61a8af9906f0e3a387c143c3a758701fe9e}
+}]\index{On\+Rate\+Other\+ID@{On\+Rate\+Other\+ID}!Track\+Panel.\+cpp@{Track\+Panel.\+cpp}}\index{Track\+Panel.\+cpp@{Track\+Panel.\+cpp}!On\+Rate\+Other\+ID@{On\+Rate\+Other\+ID}}\item[{\em 
+On\+Rate\+Other\+ID\hypertarget{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61aa34e718ffff0fb7f81dd5df722344674}{}\label{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61aa34e718ffff0fb7f81dd5df722344674}
+}]\index{On16\+Bit\+ID@{On16\+Bit\+ID}!Track\+Panel.\+cpp@{Track\+Panel.\+cpp}}\index{Track\+Panel.\+cpp@{Track\+Panel.\+cpp}!On16\+Bit\+ID@{On16\+Bit\+ID}}\item[{\em 
+On16\+Bit\+ID\hypertarget{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61a277454ef2627523e78245ea07550f9dc}{}\label{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61a277454ef2627523e78245ea07550f9dc}
+}]\index{On24\+Bit\+ID@{On24\+Bit\+ID}!Track\+Panel.\+cpp@{Track\+Panel.\+cpp}}\index{Track\+Panel.\+cpp@{Track\+Panel.\+cpp}!On24\+Bit\+ID@{On24\+Bit\+ID}}\item[{\em 
+On24\+Bit\+ID\hypertarget{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61ac7e189eced3f209bb48e606b166b8fea}{}\label{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61ac7e189eced3f209bb48e606b166b8fea}
+}]\index{On\+Float\+ID@{On\+Float\+ID}!Track\+Panel.\+cpp@{Track\+Panel.\+cpp}}\index{Track\+Panel.\+cpp@{Track\+Panel.\+cpp}!On\+Float\+ID@{On\+Float\+ID}}\item[{\em 
+On\+Float\+ID\hypertarget{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61a4f7cdf8dd4dcce5be8d8cd972e3de710}{}\label{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61a4f7cdf8dd4dcce5be8d8cd972e3de710}
+}]\index{On\+Waveform\+ID@{On\+Waveform\+ID}!Track\+Panel.\+cpp@{Track\+Panel.\+cpp}}\index{Track\+Panel.\+cpp@{Track\+Panel.\+cpp}!On\+Waveform\+ID@{On\+Waveform\+ID}}\item[{\em 
+On\+Waveform\+ID\hypertarget{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61ac08c6b7ae5c6e30226f7512ff0123037}{}\label{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61ac08c6b7ae5c6e30226f7512ff0123037}
+}]\index{On\+Waveform\+D\+B\+ID@{On\+Waveform\+D\+B\+ID}!Track\+Panel.\+cpp@{Track\+Panel.\+cpp}}\index{Track\+Panel.\+cpp@{Track\+Panel.\+cpp}!On\+Waveform\+D\+B\+ID@{On\+Waveform\+D\+B\+ID}}\item[{\em 
+On\+Waveform\+D\+B\+ID\hypertarget{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61a86c5bfe045792bba915af0d2cceb53da}{}\label{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61a86c5bfe045792bba915af0d2cceb53da}
+}]\index{On\+Spectrum\+ID@{On\+Spectrum\+ID}!Track\+Panel.\+cpp@{Track\+Panel.\+cpp}}\index{Track\+Panel.\+cpp@{Track\+Panel.\+cpp}!On\+Spectrum\+ID@{On\+Spectrum\+ID}}\item[{\em 
+On\+Spectrum\+ID\hypertarget{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61ac914784d8cbbb1789af612dc70e06acd}{}\label{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61ac914784d8cbbb1789af612dc70e06acd}
+}]\index{On\+Spectrogram\+Settings\+ID@{On\+Spectrogram\+Settings\+ID}!Track\+Panel.\+cpp@{Track\+Panel.\+cpp}}\index{Track\+Panel.\+cpp@{Track\+Panel.\+cpp}!On\+Spectrogram\+Settings\+ID@{On\+Spectrogram\+Settings\+ID}}\item[{\em 
+On\+Spectrogram\+Settings\+ID\hypertarget{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61ae58578c1d0f405fa039fa34d20fc8a9d}{}\label{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61ae58578c1d0f405fa039fa34d20fc8a9d}
+}]\index{On\+Split\+Stereo\+ID@{On\+Split\+Stereo\+ID}!Track\+Panel.\+cpp@{Track\+Panel.\+cpp}}\index{Track\+Panel.\+cpp@{Track\+Panel.\+cpp}!On\+Split\+Stereo\+ID@{On\+Split\+Stereo\+ID}}\item[{\em 
+On\+Split\+Stereo\+ID\hypertarget{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61aaa68f7243bd4c74caf5402a8c4a96dfb}{}\label{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61aaa68f7243bd4c74caf5402a8c4a96dfb}
+}]\index{On\+Split\+Stereo\+Mono\+ID@{On\+Split\+Stereo\+Mono\+ID}!Track\+Panel.\+cpp@{Track\+Panel.\+cpp}}\index{Track\+Panel.\+cpp@{Track\+Panel.\+cpp}!On\+Split\+Stereo\+Mono\+ID@{On\+Split\+Stereo\+Mono\+ID}}\item[{\em 
+On\+Split\+Stereo\+Mono\+ID\hypertarget{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61a74c22f542d18fb7ee573748a4669ec1a}{}\label{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61a74c22f542d18fb7ee573748a4669ec1a}
+}]\index{On\+Merge\+Stereo\+ID@{On\+Merge\+Stereo\+ID}!Track\+Panel.\+cpp@{Track\+Panel.\+cpp}}\index{Track\+Panel.\+cpp@{Track\+Panel.\+cpp}!On\+Merge\+Stereo\+ID@{On\+Merge\+Stereo\+ID}}\item[{\em 
+On\+Merge\+Stereo\+ID\hypertarget{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61a7ad784ff9ce99b40087f63dff61b282e}{}\label{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61a7ad784ff9ce99b40087f63dff61b282e}
+}]\index{On\+Swap\+Channels\+ID@{On\+Swap\+Channels\+ID}!Track\+Panel.\+cpp@{Track\+Panel.\+cpp}}\index{Track\+Panel.\+cpp@{Track\+Panel.\+cpp}!On\+Swap\+Channels\+ID@{On\+Swap\+Channels\+ID}}\item[{\em 
+On\+Swap\+Channels\+ID\hypertarget{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61af589f96236ab336de6fe1de0b2e071d6}{}\label{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61af589f96236ab336de6fe1de0b2e071d6}
+}]\index{On\+Set\+Time\+Track\+Range\+ID@{On\+Set\+Time\+Track\+Range\+ID}!Track\+Panel.\+cpp@{Track\+Panel.\+cpp}}\index{Track\+Panel.\+cpp@{Track\+Panel.\+cpp}!On\+Set\+Time\+Track\+Range\+ID@{On\+Set\+Time\+Track\+Range\+ID}}\item[{\em 
+On\+Set\+Time\+Track\+Range\+ID\hypertarget{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61af67502b033a66614e9c7d0682094c61b}{}\label{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61af67502b033a66614e9c7d0682094c61b}
+}]\index{On\+Time\+Track\+Lin\+ID@{On\+Time\+Track\+Lin\+ID}!Track\+Panel.\+cpp@{Track\+Panel.\+cpp}}\index{Track\+Panel.\+cpp@{Track\+Panel.\+cpp}!On\+Time\+Track\+Lin\+ID@{On\+Time\+Track\+Lin\+ID}}\item[{\em 
+On\+Time\+Track\+Lin\+ID\hypertarget{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61a5a5f9a31d18e3ef8bd32400f8504f856}{}\label{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61a5a5f9a31d18e3ef8bd32400f8504f856}
+}]\index{On\+Time\+Track\+Log\+ID@{On\+Time\+Track\+Log\+ID}!Track\+Panel.\+cpp@{Track\+Panel.\+cpp}}\index{Track\+Panel.\+cpp@{Track\+Panel.\+cpp}!On\+Time\+Track\+Log\+ID@{On\+Time\+Track\+Log\+ID}}\item[{\em 
+On\+Time\+Track\+Log\+ID\hypertarget{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61aab54102776a5a7d34947f83e180cb3e4}{}\label{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61aab54102776a5a7d34947f83e180cb3e4}
+}]\index{On\+Time\+Track\+Log\+Int\+ID@{On\+Time\+Track\+Log\+Int\+ID}!Track\+Panel.\+cpp@{Track\+Panel.\+cpp}}\index{Track\+Panel.\+cpp@{Track\+Panel.\+cpp}!On\+Time\+Track\+Log\+Int\+ID@{On\+Time\+Track\+Log\+Int\+ID}}\item[{\em 
+On\+Time\+Track\+Log\+Int\+ID\hypertarget{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61a47b3a9c92aebd73eb16c9ecc40144ac3}{}\label{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61a47b3a9c92aebd73eb16c9ecc40144ac3}
+}]\index{On\+First\+Waveform\+Scale\+ID@{On\+First\+Waveform\+Scale\+ID}!Track\+Panel.\+cpp@{Track\+Panel.\+cpp}}\index{Track\+Panel.\+cpp@{Track\+Panel.\+cpp}!On\+First\+Waveform\+Scale\+ID@{On\+First\+Waveform\+Scale\+ID}}\item[{\em 
+On\+First\+Waveform\+Scale\+ID\hypertarget{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61ad8599d18e8a5c41d385547ef7a321874}{}\label{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61ad8599d18e8a5c41d385547ef7a321874}
+}]\index{On\+Last\+Waveform\+Scale\+ID@{On\+Last\+Waveform\+Scale\+ID}!Track\+Panel.\+cpp@{Track\+Panel.\+cpp}}\index{Track\+Panel.\+cpp@{Track\+Panel.\+cpp}!On\+Last\+Waveform\+Scale\+ID@{On\+Last\+Waveform\+Scale\+ID}}\item[{\em 
+On\+Last\+Waveform\+Scale\+ID\hypertarget{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61a0c513e949c529583013efd63a1e88dcc}{}\label{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61a0c513e949c529583013efd63a1e88dcc}
+}]\index{On\+First\+Spectrum\+Scale\+ID@{On\+First\+Spectrum\+Scale\+ID}!Track\+Panel.\+cpp@{Track\+Panel.\+cpp}}\index{Track\+Panel.\+cpp@{Track\+Panel.\+cpp}!On\+First\+Spectrum\+Scale\+ID@{On\+First\+Spectrum\+Scale\+ID}}\item[{\em 
+On\+First\+Spectrum\+Scale\+ID\hypertarget{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61a1cb27731327caaf24bf61d12a07f75ff}{}\label{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61a1cb27731327caaf24bf61d12a07f75ff}
+}]\index{On\+Last\+Spectrum\+Scale\+ID@{On\+Last\+Spectrum\+Scale\+ID}!Track\+Panel.\+cpp@{Track\+Panel.\+cpp}}\index{Track\+Panel.\+cpp@{Track\+Panel.\+cpp}!On\+Last\+Spectrum\+Scale\+ID@{On\+Last\+Spectrum\+Scale\+ID}}\item[{\em 
+On\+Last\+Spectrum\+Scale\+ID\hypertarget{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61a2137c31bab5da20c0370631bfe4d75f2}{}\label{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61a2137c31bab5da20c0370631bfe4d75f2}
+}]\index{On\+Zoom\+In\+Vertical\+ID@{On\+Zoom\+In\+Vertical\+ID}!Track\+Panel.\+cpp@{Track\+Panel.\+cpp}}\index{Track\+Panel.\+cpp@{Track\+Panel.\+cpp}!On\+Zoom\+In\+Vertical\+ID@{On\+Zoom\+In\+Vertical\+ID}}\item[{\em 
+On\+Zoom\+In\+Vertical\+ID\hypertarget{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61ae656e0beae2fdd9c0e1d5f09cfc3fff3}{}\label{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61ae656e0beae2fdd9c0e1d5f09cfc3fff3}
+}]\index{On\+Zoom\+Out\+Vertical\+ID@{On\+Zoom\+Out\+Vertical\+ID}!Track\+Panel.\+cpp@{Track\+Panel.\+cpp}}\index{Track\+Panel.\+cpp@{Track\+Panel.\+cpp}!On\+Zoom\+Out\+Vertical\+ID@{On\+Zoom\+Out\+Vertical\+ID}}\item[{\em 
+On\+Zoom\+Out\+Vertical\+ID\hypertarget{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61a1efe09881810d5a0a6d6d57355bed707}{}\label{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61a1efe09881810d5a0a6d6d57355bed707}
+}]\index{On\+Zoom\+Fit\+Vertical\+ID@{On\+Zoom\+Fit\+Vertical\+ID}!Track\+Panel.\+cpp@{Track\+Panel.\+cpp}}\index{Track\+Panel.\+cpp@{Track\+Panel.\+cpp}!On\+Zoom\+Fit\+Vertical\+ID@{On\+Zoom\+Fit\+Vertical\+ID}}\item[{\em 
+On\+Zoom\+Fit\+Vertical\+ID\hypertarget{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61a6be651161f793f51d95679059fcfb57a}{}\label{_track_panel_8cpp_ad559b3ed307be626eacea8b56942de61a6be651161f793f51d95679059fcfb57a}
+}]\end{description}
+\end{Desc}
+
+
+Definition at line 310 of file Track\+Panel.\+cpp.
+
+\subsubsection[{\texorpdfstring{anonymous enum}{anonymous enum}}]{\setlength{\rightskip}{0pt plus 5cm}anonymous enum}\hypertarget{_track_panel_8cpp_ad2d3a7869c500e9ee6bfbdcc1cd8ff46}{}\label{_track_panel_8cpp_ad2d3a7869c500e9ee6bfbdcc1cd8ff46}
+\begin{Desc}
+\item[Enumerator]\par
+\begin{description}
+\index{F\+R\+E\+Q\+\_\+\+S\+N\+A\+P\+\_\+\+D\+I\+S\+T\+A\+N\+CE@{F\+R\+E\+Q\+\_\+\+S\+N\+A\+P\+\_\+\+D\+I\+S\+T\+A\+N\+CE}!Track\+Panel.\+cpp@{Track\+Panel.\+cpp}}\index{Track\+Panel.\+cpp@{Track\+Panel.\+cpp}!F\+R\+E\+Q\+\_\+\+S\+N\+A\+P\+\_\+\+D\+I\+S\+T\+A\+N\+CE@{F\+R\+E\+Q\+\_\+\+S\+N\+A\+P\+\_\+\+D\+I\+S\+T\+A\+N\+CE}}\item[{\em 
+F\+R\+E\+Q\+\_\+\+S\+N\+A\+P\+\_\+\+D\+I\+S\+T\+A\+N\+CE\hypertarget{_track_panel_8cpp_ad2d3a7869c500e9ee6bfbdcc1cd8ff46abab198a93564721fbb1b49be9dbe2b30}{}\label{_track_panel_8cpp_ad2d3a7869c500e9ee6bfbdcc1cd8ff46abab198a93564721fbb1b49be9dbe2b30}
+}]\end{description}
+\end{Desc}
+
+
+Definition at line 3426 of file Track\+Panel.\+cpp.
+
+
+
+\subsection{Function Documentation}
+\index{Track\+Panel.\+cpp@{Track\+Panel.\+cpp}!between\+\_\+incexc@{between\+\_\+incexc}}
+\index{between\+\_\+incexc@{between\+\_\+incexc}!Track\+Panel.\+cpp@{Track\+Panel.\+cpp}}
+\subsubsection[{\texorpdfstring{between\+\_\+incexc(\+L\+O\+W l, M\+I\+D m, H\+I\+G\+H h)}{between_incexc(LOW l, MID m, HIGH h)}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class L\+OW , class M\+ID , class H\+I\+GH $>$ {\bf bool} between\+\_\+incexc (
+\begin{DoxyParamCaption}
+\item[{L\+OW}]{l, }
+\item[{M\+ID}]{m, }
+\item[{H\+I\+GH}]{h}
+\end{DoxyParamCaption}
+)}\hypertarget{_track_panel_8cpp_afcdedea96419683c76415bb68bb93564}{}\label{_track_panel_8cpp_afcdedea96419683c76415bb68bb93564}
+
+
+Definition at line 291 of file Track\+Panel.\+cpp.
+
+\index{Track\+Panel.\+cpp@{Track\+Panel.\+cpp}!clip\+\_\+bottom@{clip\+\_\+bottom}}
+\index{clip\+\_\+bottom@{clip\+\_\+bottom}!Track\+Panel.\+cpp@{Track\+Panel.\+cpp}}
+\subsubsection[{\texorpdfstring{clip\+\_\+bottom(\+C\+L\+I\+P\+P\+E\+E \&clippee, C\+L\+I\+P\+V\+A\+L val)}{clip_bottom(CLIPPEE &clippee, CLIPVAL val)}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class C\+L\+I\+P\+P\+EE , class C\+L\+I\+P\+V\+AL $>$ {\bf void} clip\+\_\+bottom (
+\begin{DoxyParamCaption}
+\item[{C\+L\+I\+P\+P\+EE \&}]{clippee, }
+\item[{C\+L\+I\+P\+V\+AL}]{val}
+\end{DoxyParamCaption}
+)}\hypertarget{_track_panel_8cpp_aeb6c6687a1c2f164448cdd651d694849}{}\label{_track_panel_8cpp_aeb6c6687a1c2f164448cdd651d694849}
+
+
+Definition at line 304 of file Track\+Panel.\+cpp.
+
+\index{Track\+Panel.\+cpp@{Track\+Panel.\+cpp}!clip\+\_\+top@{clip\+\_\+top}}
+\index{clip\+\_\+top@{clip\+\_\+top}!Track\+Panel.\+cpp@{Track\+Panel.\+cpp}}
+\subsubsection[{\texorpdfstring{clip\+\_\+top(\+C\+L\+I\+P\+P\+E\+E \&clippee, C\+L\+I\+P\+V\+A\+L val)}{clip_top(CLIPPEE &clippee, CLIPVAL val)}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class C\+L\+I\+P\+P\+EE , class C\+L\+I\+P\+V\+AL $>$ {\bf void} clip\+\_\+top (
+\begin{DoxyParamCaption}
+\item[{C\+L\+I\+P\+P\+EE \&}]{clippee, }
+\item[{C\+L\+I\+P\+V\+AL}]{val}
+\end{DoxyParamCaption}
+)}\hypertarget{_track_panel_8cpp_ae727a553a0cbf21f301b84a544c70aca}{}\label{_track_panel_8cpp_ae727a553a0cbf21f301b84a544c70aca}
+
+
+Definition at line 297 of file Track\+Panel.\+cpp.
+
+\index{Track\+Panel.\+cpp@{Track\+Panel.\+cpp}!E\+V\+T\+\_\+\+M\+E\+N\+U\+\_\+\+R\+A\+N\+GE@{E\+V\+T\+\_\+\+M\+E\+N\+U\+\_\+\+R\+A\+N\+GE}}
+\index{E\+V\+T\+\_\+\+M\+E\+N\+U\+\_\+\+R\+A\+N\+GE@{E\+V\+T\+\_\+\+M\+E\+N\+U\+\_\+\+R\+A\+N\+GE}!Track\+Panel.\+cpp@{Track\+Panel.\+cpp}}
+\subsubsection[{\texorpdfstring{E\+V\+T\+\_\+\+M\+E\+N\+U\+\_\+\+R\+A\+N\+G\+E(\+On\+Channel\+Left\+I\+D, On\+Channel\+Mono\+I\+D, Track\+Panel\+::\+On\+Channel\+Change) wx\+Cursor $\ast$\+Make\+Cursor(int W\+X\+U\+N\+U\+S\+E\+D(\+Cursor\+Id)}{EVT_MENU_RANGE(OnChannelLeftID, OnChannelMonoID, TrackPanel::OnChannelChange) wxCursor *MakeCursor(int WXUNUSED(CursorId)}}]{\setlength{\rightskip}{0pt plus 5cm}E\+V\+T\+\_\+\+M\+E\+N\+U\+\_\+\+R\+A\+N\+GE (
+\begin{DoxyParamCaption}
+\item[{{\bf On\+Channel\+Left\+ID}}]{, }
+\item[{{\bf On\+Channel\+Mono\+ID}}]{, }
+\item[{{\bf Track\+Panel\+::\+On\+Channel\+Change}}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{_track_panel_8cpp_a71b7571eb34f9bd037742769f46ceee9}{}\label{_track_panel_8cpp_a71b7571eb34f9bd037742769f46ceee9}
+Makes a cursor from an X\+PM, uses Cursor\+Id as a fallback. T\+O\+DO\+: Move this function to some other source file for reuse elsewhere. \index{Track\+Panel.\+cpp@{Track\+Panel.\+cpp}!Set\+If\+Not\+Null@{Set\+If\+Not\+Null}}
+\index{Set\+If\+Not\+Null@{Set\+If\+Not\+Null}!Track\+Panel.\+cpp@{Track\+Panel.\+cpp}}
+\subsubsection[{\texorpdfstring{Set\+If\+Not\+Null(\+T $\ast$p\+Value, const T Value)}{SetIfNotNull(T *pValue, const T Value)}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T $>$ {\bf void} Set\+If\+Not\+Null (
+\begin{DoxyParamCaption}
+\item[{{\bf T} $\ast$}]{p\+Value, }
+\item[{{\bf const} {\bf T}}]{Value}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{_track_panel_8cpp_a07aa4410f8fd1fbac865a15892b9a736}{}\label{_track_panel_8cpp_a07aa4410f8fd1fbac865a15892b9a736}
+
+
+Definition at line 3472 of file Track\+Panel.\+cpp.
+
+\index{Track\+Panel.\+cpp@{Track\+Panel.\+cpp}!Set\+Mask@{Set\+Mask}}
+\index{Set\+Mask@{Set\+Mask}!Track\+Panel.\+cpp@{Track\+Panel.\+cpp}}
+\subsubsection[{\texorpdfstring{Set\+Mask()}{SetMask()}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Image} Set\+Mask (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{_track_panel_8cpp_a798fca3c5159f3a011132156bc4f56aa}{}\label{_track_panel_8cpp_a798fca3c5159f3a011132156bc4f56aa}
+\index{Track\+Panel.\+cpp@{Track\+Panel.\+cpp}!Set\+Mask\+Colour@{Set\+Mask\+Colour}}
+\index{Set\+Mask\+Colour@{Set\+Mask\+Colour}!Track\+Panel.\+cpp@{Track\+Panel.\+cpp}}
+\subsubsection[{\texorpdfstring{Set\+Mask\+Colour(255, 0, 0)}{SetMaskColour(255, 0, 0)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Image} Set\+Mask\+Colour (
+\begin{DoxyParamCaption}
+\item[{255}]{, }
+\item[{0}]{, }
+\item[{0}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{_track_panel_8cpp_a14453f00b9411c0791353c15fc6d9990}{}\label{_track_panel_8cpp_a14453f00b9411c0791353c15fc6d9990}
+\index{Track\+Panel.\+cpp@{Track\+Panel.\+cpp}!Set\+Option@{Set\+Option}}
+\index{Set\+Option@{Set\+Option}!Track\+Panel.\+cpp@{Track\+Panel.\+cpp}}
+\subsubsection[{\texorpdfstring{Set\+Option(wx\+I\+M\+A\+G\+E\+\_\+\+O\+P\+T\+I\+O\+N\+\_\+\+C\+U\+R\+\_\+\+H\+O\+T\+S\+P\+O\+T\+\_\+\+X, Hot\+X-\/\+Hot\+Adjust)}{SetOption(wxIMAGE_OPTION_CUR_HOTSPOT_X, HotX-HotAdjust)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Image} Set\+Option (
+\begin{DoxyParamCaption}
+\item[{wx\+I\+M\+A\+G\+E\+\_\+\+O\+P\+T\+I\+O\+N\+\_\+\+C\+U\+R\+\_\+\+H\+O\+T\+S\+P\+O\+T\+\_\+X}]{, }
+\item[{{\bf HotX}-\/}]{Hot\+Adjust}
+\end{DoxyParamCaption}
+)}\hypertarget{_track_panel_8cpp_a74a65b060223e97138bf395172ca2520}{}\label{_track_panel_8cpp_a74a65b060223e97138bf395172ca2520}
+\index{Track\+Panel.\+cpp@{Track\+Panel.\+cpp}!Set\+Option@{Set\+Option}}
+\index{Set\+Option@{Set\+Option}!Track\+Panel.\+cpp@{Track\+Panel.\+cpp}}
+\subsubsection[{\texorpdfstring{Set\+Option(wx\+I\+M\+A\+G\+E\+\_\+\+O\+P\+T\+I\+O\+N\+\_\+\+C\+U\+R\+\_\+\+H\+O\+T\+S\+P\+O\+T\+\_\+\+Y, Hot\+Y-\/\+Hot\+Adjust)}{SetOption(wxIMAGE_OPTION_CUR_HOTSPOT_Y, HotY-HotAdjust)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Image} Set\+Option (
+\begin{DoxyParamCaption}
+\item[{wx\+I\+M\+A\+G\+E\+\_\+\+O\+P\+T\+I\+O\+N\+\_\+\+C\+U\+R\+\_\+\+H\+O\+T\+S\+P\+O\+T\+\_\+Y}]{, }
+\item[{{\bf HotY}-\/}]{Hot\+Adjust}
+\end{DoxyParamCaption}
+)}\hypertarget{_track_panel_8cpp_afe73cd8abf3b46ca6b5501768ad042f2}{}\label{_track_panel_8cpp_afe73cd8abf3b46ca6b5501768ad042f2}
+\index{Track\+Panel.\+cpp@{Track\+Panel.\+cpp}!within@{within}}
+\index{within@{within}!Track\+Panel.\+cpp@{Track\+Panel.\+cpp}}
+\subsubsection[{\texorpdfstring{within(\+A a, B b, D\+I\+S\+T d)}{within(A a, B b, DIST d)}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class A , class B , class D\+I\+ST $>$ {\bf bool} within (
+\begin{DoxyParamCaption}
+\item[{{\bf A}}]{a, }
+\item[{{\bf B}}]{b, }
+\item[{D\+I\+ST}]{d}
+\end{DoxyParamCaption}
+)}\hypertarget{_track_panel_8cpp_ab4369791699474ab3b61abb763dbe858}{}\label{_track_panel_8cpp_ab4369791699474ab3b61abb763dbe858}
+
+
+Definition at line 285 of file Track\+Panel.\+cpp.
+
+
+
+\subsection{Variable Documentation}
+\index{Track\+Panel.\+cpp@{Track\+Panel.\+cpp}!Hot\+Adjust@{Hot\+Adjust}}
+\index{Hot\+Adjust@{Hot\+Adjust}!Track\+Panel.\+cpp@{Track\+Panel.\+cpp}}
+\subsubsection[{\texorpdfstring{Hot\+Adjust}{HotAdjust}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf const} {\bf int} Hot\+Adjust =0}\hypertarget{_track_panel_8cpp_ad5bc86b19e27ab2dabb6581286ed059c}{}\label{_track_panel_8cpp_ad5bc86b19e27ab2dabb6581286ed059c}
+
+
+Definition at line 426 of file Track\+Panel.\+cpp.
+
+\index{Track\+Panel.\+cpp@{Track\+Panel.\+cpp}!HotX@{HotX}}
+\index{HotX@{HotX}!Track\+Panel.\+cpp@{Track\+Panel.\+cpp}}
+\subsubsection[{\texorpdfstring{HotX}{HotX}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf const} char {\bf int} HotX}\hypertarget{_track_panel_8cpp_a8e3bc98230a8c07cf1fa538be2180afb}{}\label{_track_panel_8cpp_a8e3bc98230a8c07cf1fa538be2180afb}
+
+
+Definition at line 421 of file Track\+Panel.\+cpp.
+
+\index{Track\+Panel.\+cpp@{Track\+Panel.\+cpp}!HotY@{HotY}}
+\index{HotY@{HotY}!Track\+Panel.\+cpp@{Track\+Panel.\+cpp}}
+\subsubsection[{\texorpdfstring{HotY}{HotY}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf const} char {\bf int} {\bf int} HotY}\hypertarget{_track_panel_8cpp_a9614b5e020cb0112ddffb09edf5f6253}{}\label{_track_panel_8cpp_a9614b5e020cb0112ddffb09edf5f6253}
+{\bfseries Initial value\+:}
+\begin{DoxyCode}
+\{
+   wxCursor * \hyperlink{_track_panel_8cpp_a05b64122c94645f8a4cefd4d93b47f1e}{pCursor}
+\end{DoxyCode}
+
+
+Definition at line 422 of file Track\+Panel.\+cpp.
+
+\index{Track\+Panel.\+cpp@{Track\+Panel.\+cpp}!Image@{Image}}
+\index{Image@{Image}!Track\+Panel.\+cpp@{Track\+Panel.\+cpp}}
+\subsubsection[{\texorpdfstring{Image}{Image}}]{\setlength{\rightskip}{0pt plus 5cm}wx\+Image Image = wx\+Image(wx\+Bitmap({\bf p\+Xpm}).Convert\+To\+Image())}\hypertarget{_track_panel_8cpp_ada56b55720b370c07ae23c07d31516d1}{}\label{_track_panel_8cpp_ada56b55720b370c07ae23c07d31516d1}
+
+
+Definition at line 431 of file Track\+Panel.\+cpp.
+
+\index{Track\+Panel.\+cpp@{Track\+Panel.\+cpp}!n\+Rates@{n\+Rates}}
+\index{n\+Rates@{n\+Rates}!Track\+Panel.\+cpp@{Track\+Panel.\+cpp}}
+\subsubsection[{\texorpdfstring{n\+Rates}{nRates}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf const} {\bf int} n\+Rates =12}\hypertarget{_track_panel_8cpp_a3de95f88110d982efab006ba65ba37ec}{}\label{_track_panel_8cpp_a3de95f88110d982efab006ba65ba37ec}
+
+
+Definition at line 9049 of file Track\+Panel.\+cpp.
+
+\index{Track\+Panel.\+cpp@{Track\+Panel.\+cpp}!p\+Cursor@{p\+Cursor}}
+\index{p\+Cursor@{p\+Cursor}!Track\+Panel.\+cpp@{Track\+Panel.\+cpp}}
+\subsubsection[{\texorpdfstring{p\+Cursor}{pCursor}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf return} p\+Cursor = new wx\+Cursor( {\bf Image} )}\hypertarget{_track_panel_8cpp_a05b64122c94645f8a4cefd4d93b47f1e}{}\label{_track_panel_8cpp_a05b64122c94645f8a4cefd4d93b47f1e}
+
+
+Definition at line 437 of file Track\+Panel.\+cpp.
+
+\index{Track\+Panel.\+cpp@{Track\+Panel.\+cpp}!p\+Xpm@{p\+Xpm}}
+\index{p\+Xpm@{p\+Xpm}!Track\+Panel.\+cpp@{Track\+Panel.\+cpp}}
+\subsubsection[{\texorpdfstring{p\+Xpm}{pXpm}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf const} char$\ast$ p\+Xpm\mbox{[}36\mbox{]}}\hypertarget{_track_panel_8cpp_a63096d6582a75d647088db680060c12a}{}\label{_track_panel_8cpp_a63096d6582a75d647088db680060c12a}
+
+
+Definition at line 421 of file Track\+Panel.\+cpp.
+

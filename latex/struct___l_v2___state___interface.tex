@@ -1,0 +1,92 @@
+\hypertarget{struct___l_v2___state___interface}{}\section{\+\_\+\+L\+V2\+\_\+\+State\+\_\+\+Interface Struct Reference}
+\label{struct___l_v2___state___interface}\index{\+\_\+\+L\+V2\+\_\+\+State\+\_\+\+Interface@{\+\_\+\+L\+V2\+\_\+\+State\+\_\+\+Interface}}
+
+
+{\ttfamily \#include $<$state.\+h$>$}
+
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{state_8h_afb5cc1033410d51fdcdbfdd09fc7d808}{L\+V2\+\_\+\+State\+\_\+\+Status}($\ast$ \hyperlink{struct___l_v2___state___interface_ae564742663a6d908d9745c9eb8bdb347}{save} )(\hyperlink{lv2_8h_a95eafb0a5290f30bcdc8c0f8eb992eaf}{L\+V2\+\_\+\+Handle} instance, \hyperlink{state_8h_a609f1abc2c5891f85c276f52394cb6d6}{L\+V2\+\_\+\+State\+\_\+\+Store\+\_\+\+Function} store, \hyperlink{state_8h_a385b5b586c09dd03f1065cd0105daa6d}{L\+V2\+\_\+\+State\+\_\+\+Handle} handle, \hyperlink{lib-src_2ffmpeg_2win32_2stdint_8h_a6eb1e68cc391dd753bc8ce896dbb8315}{uint32\+\_\+t} flags, \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{lv2_8h_a78d13b607443404459db283371723234}{L\+V2\+\_\+\+Feature} $\ast$\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} $\ast$features)
+\item 
+\hyperlink{state_8h_afb5cc1033410d51fdcdbfdd09fc7d808}{L\+V2\+\_\+\+State\+\_\+\+Status}($\ast$ \hyperlink{struct___l_v2___state___interface_af1b48ea50175bfef63d4dd35d09d90b8}{restore} )(\hyperlink{lv2_8h_a95eafb0a5290f30bcdc8c0f8eb992eaf}{L\+V2\+\_\+\+Handle} instance, \hyperlink{state_8h_a722a422fa5c4e623240387dcec82c064}{L\+V2\+\_\+\+State\+\_\+\+Retrieve\+\_\+\+Function} retrieve, \hyperlink{state_8h_a385b5b586c09dd03f1065cd0105daa6d}{L\+V2\+\_\+\+State\+\_\+\+Handle} handle, \hyperlink{lib-src_2ffmpeg_2win32_2stdint_8h_a6eb1e68cc391dd753bc8ce896dbb8315}{uint32\+\_\+t} flags, \hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} \hyperlink{lv2_8h_a78d13b607443404459db283371723234}{L\+V2\+\_\+\+Feature} $\ast$\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} $\ast$features)
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+L\+V2 Plugin \hyperlink{struct_state}{State} Interface.
+
+When the plugin\textquotesingle{}s extension\+\_\+data is called with argument L\+V2\+\_\+\+S\+T\+A\+T\+E\+\_\+\+\_\+interface, the plugin M\+U\+ST return an L\+V2\+\_\+\+State\+\_\+\+Interface structure, which remains valid for the lifetime of the plugin.
+
+The host can use the contained function pointers to save and restore the state of a plugin instance at any time, provided the threading restrictions of the functions are met.
+
+Stored data is only guaranteed to be compatible between instances of plugins with the same U\+RI (i.\+e. if a change to a plugin would cause a fatal error when restoring state saved by a previous version of that plugin, the plugin U\+RI M\+U\+ST change just as it must when ports change incompatibly). Plugin authors should consider this possibility, and always store sensible data with meaningful types to avoid such problems in the future. 
+
+Definition at line 189 of file state.\+h.
+
+
+
+\subsection{Member Data Documentation}
+\index{\+\_\+\+L\+V2\+\_\+\+State\+\_\+\+Interface@{\+\_\+\+L\+V2\+\_\+\+State\+\_\+\+Interface}!restore@{restore}}
+\index{restore@{restore}!\+\_\+\+L\+V2\+\_\+\+State\+\_\+\+Interface@{\+\_\+\+L\+V2\+\_\+\+State\+\_\+\+Interface}}
+\subsubsection[{\texorpdfstring{restore}{restore}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf L\+V2\+\_\+\+State\+\_\+\+Status}($\ast$ \+\_\+\+L\+V2\+\_\+\+State\+\_\+\+Interface\+::restore) ({\bf L\+V2\+\_\+\+Handle} instance, {\bf L\+V2\+\_\+\+State\+\_\+\+Retrieve\+\_\+\+Function} retrieve, {\bf L\+V2\+\_\+\+State\+\_\+\+Handle} handle, {\bf uint32\+\_\+t} flags, {\bf const} {\bf L\+V2\+\_\+\+Feature} $\ast${\bf const} $\ast$features)}\hypertarget{struct___l_v2___state___interface_af1b48ea50175bfef63d4dd35d09d90b8}{}\label{struct___l_v2___state___interface_af1b48ea50175bfef63d4dd35d09d90b8}
+Restore plugin state using a host-\/provided {\ttfamily retrieve} callback.
+
+
+\begin{DoxyParams}{Parameters}
+{\em instance} & The instance handle of the plugin. \\
+\hline
+{\em retrieve} & The host-\/provided retrieve callback. \\
+\hline
+{\em handle} & An opaque pointer to host data which M\+U\+ST be passed as the handle parameter to {\ttfamily retrieve} if it is called. \\
+\hline
+{\em flags} & Currently unused. \\
+\hline
+{\em features} & Extensible parameter for passing any additional features to be used for this restore.\\
+\hline
+\end{DoxyParams}
+The plugin M\+AY assume a restored value was set by a previous call to \hyperlink{struct___l_v2___state___interface_ae564742663a6d908d9745c9eb8bdb347}{L\+V2\+\_\+\+State\+\_\+\+Interface.\+save()} by a plugin with the same U\+RI.
+
+The plugin M\+U\+ST gracefully fall back to a default value when a value can not be retrieved. This allows the host to reset the plugin state with an empty map.
+
+The {\ttfamily handle} pointer and {\ttfamily store} function M\+U\+ST N\+OT be used beyond the scope of \hyperlink{struct___l_v2___state___interface_af1b48ea50175bfef63d4dd35d09d90b8}{restore()}.
+
+This function is in the \char`\"{}\+Instantiation\char`\"{} threading class as defined by L\+V2. This means it M\+U\+ST N\+OT be called concurrently with any other function on the same plugin instance. 
+
+Definition at line 257 of file state.\+h.
+
+\index{\+\_\+\+L\+V2\+\_\+\+State\+\_\+\+Interface@{\+\_\+\+L\+V2\+\_\+\+State\+\_\+\+Interface}!save@{save}}
+\index{save@{save}!\+\_\+\+L\+V2\+\_\+\+State\+\_\+\+Interface@{\+\_\+\+L\+V2\+\_\+\+State\+\_\+\+Interface}}
+\subsubsection[{\texorpdfstring{save}{save}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf L\+V2\+\_\+\+State\+\_\+\+Status}($\ast$ \+\_\+\+L\+V2\+\_\+\+State\+\_\+\+Interface\+::save) ({\bf L\+V2\+\_\+\+Handle} instance, {\bf L\+V2\+\_\+\+State\+\_\+\+Store\+\_\+\+Function} store, {\bf L\+V2\+\_\+\+State\+\_\+\+Handle} handle, {\bf uint32\+\_\+t} flags, {\bf const} {\bf L\+V2\+\_\+\+Feature} $\ast${\bf const} $\ast$features)}\hypertarget{struct___l_v2___state___interface_ae564742663a6d908d9745c9eb8bdb347}{}\label{struct___l_v2___state___interface_ae564742663a6d908d9745c9eb8bdb347}
+Save plugin state using a host-\/provided {\ttfamily store} callback.
+
+
+\begin{DoxyParams}{Parameters}
+{\em instance} & The instance handle of the plugin. \\
+\hline
+{\em store} & The host-\/provided store callback. \\
+\hline
+{\em handle} & An opaque pointer to host data which M\+U\+ST be passed as the handle parameter to {\ttfamily store} if it is called. \\
+\hline
+{\em flags} & Flags describing desired properties of this save. These flags may be used to determine the most appropriate values to store. \\
+\hline
+{\em features} & Extensible parameter for passing any additional features to be used for this save.\\
+\hline
+\end{DoxyParams}
+The plugin is expected to store everything necessary to completely restore its state later. Plugins S\+H\+O\+U\+LD store simple P\+OD data whenever possible, and consider the possibility of state being restored much later on a different machine.
+
+The {\ttfamily handle} pointer and {\ttfamily store} function M\+U\+ST N\+OT be used beyond the scope of \hyperlink{struct___l_v2___state___interface_ae564742663a6d908d9745c9eb8bdb347}{save()}.
+
+This function has its own special threading class\+: it may not be called concurrently with any \char`\"{}\+Instantiation\char`\"{} function, but it may be called concurrently with functions in any other class, unless the definition of that class prohibits it (e.\+g. it may not be called concurrently with a \char`\"{}\+Discovery\char`\"{} function, but it may be called concurrently with an \char`\"{}\+Audio\char`\"{} function. The plugin is responsible for any locking or lock-\/free techniques necessary to make this possible.
+
+Note that in the simple case where state is only modified by \hyperlink{struct___l_v2___state___interface_af1b48ea50175bfef63d4dd35d09d90b8}{restore()}, there are no synchronization issues since \hyperlink{struct___l_v2___state___interface_ae564742663a6d908d9745c9eb8bdb347}{save()} is never called concurrently with \hyperlink{struct___l_v2___state___interface_af1b48ea50175bfef63d4dd35d09d90b8}{restore()} (though \hyperlink{namespacewaflib_1_1_task_a859c6336afe027ae782f84b9e49a4f0f}{run()} may read it during a save).
+
+Plugins that dynamically modify state while running, however, must take care to do so in such a way that a concurrent call to \hyperlink{struct___l_v2___state___interface_ae564742663a6d908d9745c9eb8bdb347}{save()} will save a consistent representation of plugin state for a single instant in time. 
+
+Definition at line 226 of file state.\+h.
+
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/lib-\/src/lv2/lv2/lv2/lv2plug.\+in/ns/ext/state/\hyperlink{state_8h}{state.\+h}\end{DoxyCompactItemize}

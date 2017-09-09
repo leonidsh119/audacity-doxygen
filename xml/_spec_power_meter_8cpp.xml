@@ -1,0 +1,149 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="_spec_power_meter_8cpp" kind="file" language="C++">
+    <compoundname>SpecPowerMeter.cpp</compoundname>
+    <includes local="no">cmath</includes>
+    <includes local="no">cstdlib</includes>
+    <includes local="no">wx/defs.h</includes>
+    <includes refid="src_2fft_8h" local="yes">../FFT.h</includes>
+    <includes refid="_spec_power_meter_8h" local="yes">SpecPowerMeter.h</includes>
+    <incdepgraph>
+      <node id="47311">
+        <label>../FFT.h</label>
+        <link refid="src_2fft_8h"/>
+        <childnode refid="47310" relation="include">
+        </childnode>
+        <childnode refid="47312" relation="include">
+        </childnode>
+        <childnode refid="47313" relation="include">
+        </childnode>
+      </node>
+      <node id="47312">
+        <label>wx/wxchar.h</label>
+      </node>
+      <node id="47308">
+        <label>cmath</label>
+      </node>
+      <node id="47313">
+        <label>Experimental.h</label>
+        <link refid="_experimental_8h"/>
+        <childnode refid="47310" relation="include">
+        </childnode>
+      </node>
+      <node id="47310">
+        <label>wx/defs.h</label>
+      </node>
+      <node id="47307">
+        <label>C:/_dev/OpenU/Audacity/audacity/src/import/SpecPowerMeter.cpp</label>
+        <link refid="SpecPowerMeter.cpp"/>
+        <childnode refid="47308" relation="include">
+        </childnode>
+        <childnode refid="47309" relation="include">
+        </childnode>
+        <childnode refid="47310" relation="include">
+        </childnode>
+        <childnode refid="47311" relation="include">
+        </childnode>
+        <childnode refid="47314" relation="include">
+        </childnode>
+      </node>
+      <node id="47309">
+        <label>cstdlib</label>
+      </node>
+      <node id="47314">
+        <label>SpecPowerMeter.h</label>
+        <link refid="_spec_power_meter_8h"/>
+      </node>
+    </incdepgraph>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="comment">/**********************************************************************</highlight></codeline>
+<codeline lineno="2"><highlight class="comment"></highlight></codeline>
+<codeline lineno="3"><highlight class="comment"><sp/><sp/>Audacity:<sp/>A<sp/>Digital<sp/>Audio<sp/>Editor</highlight></codeline>
+<codeline lineno="4"><highlight class="comment"></highlight></codeline>
+<codeline lineno="5"><highlight class="comment"><sp/><sp/>SpecPowerMeter.cpp</highlight></codeline>
+<codeline lineno="6"><highlight class="comment"></highlight></codeline>
+<codeline lineno="7"><highlight class="comment"><sp/><sp/>Philipp<sp/>Sibler</highlight></codeline>
+<codeline lineno="8"><highlight class="comment"></highlight></codeline>
+<codeline lineno="9"><highlight class="comment">******************************************************************/</highlight><highlight class="comment">/*******************************************************************/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="18"><highlight class="normal"></highlight></codeline>
+<codeline lineno="19"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;cmath&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="20"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;cstdlib&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="21"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;wx/defs.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="22"><highlight class="normal"></highlight></codeline>
+<codeline lineno="23"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;../FFT.h&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="24"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="_spec_power_meter_8h" kindref="compound">SpecPowerMeter.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="25"><highlight class="normal"></highlight></codeline>
+<codeline lineno="26" refid="class_spec_power_meter_1a0198127b07059d8e35554f2164302b9a" refkind="member"><highlight class="normal"><ref refid="class_spec_power_meter_1a0198127b07059d8e35554f2164302b9a" kindref="member">SpecPowerMeter::SpecPowerMeter</ref>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>sigLen)</highlight></codeline>
+<codeline lineno="27"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="28"><highlight class="normal"><sp/><sp/><sp/>mSigLen<sp/>=<sp/>sigLen;</highlight></codeline>
+<codeline lineno="29"><highlight class="normal"><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="30"><highlight class="normal"><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Init<sp/>buffers</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="31"><highlight class="normal"><sp/><sp/><sp/>mSigI<sp/>=<sp/></highlight><highlight class="keyword">new</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal">[sigLen];</highlight></codeline>
+<codeline lineno="32"><highlight class="normal"><sp/><sp/><sp/>mSigFR<sp/>=<sp/></highlight><highlight class="keyword">new</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal">[sigLen];</highlight></codeline>
+<codeline lineno="33"><highlight class="normal"><sp/><sp/><sp/>mSigFI<sp/>=<sp/></highlight><highlight class="keyword">new</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal">[sigLen];</highlight></codeline>
+<codeline lineno="34"><highlight class="normal"><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>n<sp/>=<sp/>0;<sp/>n<sp/>&lt;<sp/>sigLen;<sp/>n++)</highlight></codeline>
+<codeline lineno="35"><highlight class="normal"><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="36"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>mSigI[n]<sp/>=<sp/>0.0f;</highlight></codeline>
+<codeline lineno="37"><highlight class="normal"><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="38"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="39"><highlight class="normal"></highlight></codeline>
+<codeline lineno="40" refid="class_spec_power_meter_1a0513b896384d95e2f0932f2f2f05f6ec" refkind="member"><highlight class="normal"><ref refid="class_spec_power_meter_1a0513b896384d95e2f0932f2f2f05f6ec" kindref="member">SpecPowerMeter::~SpecPowerMeter</ref>()</highlight></codeline>
+<codeline lineno="41"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="42"><highlight class="normal"><sp/><sp/><sp/></highlight><highlight class="keyword">delete</highlight><highlight class="normal">[]<sp/>mSigI;</highlight></codeline>
+<codeline lineno="43"><highlight class="normal"><sp/><sp/><sp/></highlight><highlight class="keyword">delete</highlight><highlight class="normal">[]<sp/>mSigFR;</highlight></codeline>
+<codeline lineno="44"><highlight class="normal"><sp/><sp/><sp/></highlight><highlight class="keyword">delete</highlight><highlight class="normal">[]<sp/>mSigFI;</highlight></codeline>
+<codeline lineno="45"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="46"><highlight class="normal"></highlight></codeline>
+<codeline lineno="47" refid="class_spec_power_meter_1ab483dd11010e89a1c369eec38079163f" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/><ref refid="class_spec_power_meter_1ab483dd11010e89a1c369eec38079163f" kindref="member">SpecPowerMeter::CalcPower</ref>(</highlight><highlight class="keywordtype">float</highlight><highlight class="normal">*<sp/>sig,<sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>fc,<sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>bw)</highlight></codeline>
+<codeline lineno="48"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="49"><highlight class="normal"><sp/><sp/><sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>pwr;</highlight></codeline>
+<codeline lineno="50"><highlight class="normal"><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>loBin,<sp/>hiBin;</highlight></codeline>
+<codeline lineno="51"><highlight class="normal"><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="52"><highlight class="normal"><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Given<sp/>the<sp/>bandwidth<sp/>bw,<sp/>get<sp/>the<sp/>boundary<sp/>bin<sp/>numbers</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="53"><highlight class="normal"><sp/><sp/><sp/>loBin<sp/>=<sp/>Freq2Bin(fc<sp/>-<sp/>(bw<sp/>/<sp/>2.0<ref refid="rfft2d_test_m_l_8m_1aacd36fb6ac9ce14cec71f2ca852524d4" kindref="member">f</ref>));</highlight></codeline>
+<codeline lineno="54"><highlight class="normal"><sp/><sp/><sp/>hiBin<sp/>=<sp/>Freq2Bin(fc<sp/>+<sp/>(bw<sp/>/<sp/>2.0<ref refid="rfft2d_test_m_l_8m_1aacd36fb6ac9ce14cec71f2ca852524d4" kindref="member">f</ref>));</highlight></codeline>
+<codeline lineno="55"><highlight class="normal"><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(loBin<sp/>==<sp/>hiBin)</highlight></codeline>
+<codeline lineno="56"><highlight class="normal"><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="57"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>hiBin<sp/>=<sp/>loBin<sp/>+<sp/>1;</highlight></codeline>
+<codeline lineno="58"><highlight class="normal"><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="59"><highlight class="normal"><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="60"><highlight class="normal"><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Calc<sp/>the<sp/>FFT</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="61"><highlight class="normal"><sp/><sp/><sp/><ref refid="src_2_f_f_t_8cpp_1a2e6a370e8fb32b62ccce6a44d05b7d06" kindref="member">FFT</ref>(mSigLen,<sp/>0,<sp/>sig,<sp/>mSigI,<sp/>mSigFR,<sp/>mSigFI);</highlight></codeline>
+<codeline lineno="62"><highlight class="normal"><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="63"><highlight class="normal"><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Calc<sp/>the<sp/>in-band<sp/>power</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="64"><highlight class="normal"><sp/><sp/><sp/>pwr<sp/>=<sp/>CalcBinPower(mSigFR,<sp/>mSigFI,<sp/>loBin,<sp/>hiBin);</highlight></codeline>
+<codeline lineno="65"><highlight class="normal"><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="66"><highlight class="normal"><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>pwr;<sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="67"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="68"><highlight class="normal"></highlight></codeline>
+<codeline lineno="69"><highlight class="normal"></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>SpecPowerMeter::CalcBinPower(</highlight><highlight class="keywordtype">float</highlight><highlight class="normal">*<sp/>sig_f_r,<sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal">*<sp/>sig_f_i,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>loBin,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>hiBin)</highlight></codeline>
+<codeline lineno="70"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="71"><highlight class="normal"><sp/><sp/><sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>pwr<sp/>=<sp/>0.0f;</highlight></codeline>
+<codeline lineno="72"><highlight class="normal"><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="73"><highlight class="normal"><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>n<sp/>=<sp/>loBin;<sp/>n<sp/>&lt;<sp/>hiBin;<sp/>n++)</highlight></codeline>
+<codeline lineno="74"><highlight class="normal"><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="75"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>pwr<sp/>+=<sp/>((sig_f_r[n]*sig_f_r[n])+(sig_f_i[n]*sig_f_i[n]));</highlight></codeline>
+<codeline lineno="76"><highlight class="normal"><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="77"><highlight class="normal"><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="78"><highlight class="normal"><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>pwr;</highlight></codeline>
+<codeline lineno="79"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="80"><highlight class="normal"></highlight></codeline>
+<codeline lineno="81"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>SpecPowerMeter::Freq2Bin(</highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>fc)</highlight></codeline>
+<codeline lineno="82"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="83"><highlight class="normal"><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>bin;</highlight></codeline>
+<codeline lineno="84"><highlight class="normal"><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="85"><highlight class="normal"><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>There<sp/>is<sp/>no<sp/>round()<sp/>in<sp/>(older)<sp/>MSVSs<sp/>...</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="86"><highlight class="normal"><sp/><sp/><sp/>bin<sp/>=<sp/>floor((</highlight><highlight class="keywordtype">double</highlight><highlight class="normal">)fc<sp/>*<sp/>mSigLen);</highlight></codeline>
+<codeline lineno="87"><highlight class="normal"><sp/><sp/><sp/>bin<sp/>%=<sp/>mSigLen;</highlight></codeline>
+<codeline lineno="88"><highlight class="normal"><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="89"><highlight class="normal"><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>bin;<sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="90"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="91"><highlight class="normal"></highlight></codeline>
+    </programlisting>
+    <location file="C:/_dev/OpenU/Audacity/audacity/src/import/SpecPowerMeter.cpp"/>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,925 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/lib-src/portaudio-v19/src/hostapi/alsa/pa_linux_alsa.c" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/lib-src/portaudio-v19/src/hostapi/alsa/pa_linux_alsa.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <alsa/asoundlib\&.h>\fP
+.br
+\fC#include <sys/poll\&.h>\fP
+.br
+\fC#include <string\&.h>\fP
+.br
+\fC#include <limits\&.h>\fP
+.br
+\fC#include <math\&.h>\fP
+.br
+\fC#include <pthread\&.h>\fP
+.br
+\fC#include <signal\&.h>\fP
+.br
+\fC#include <time\&.h>\fP
+.br
+\fC#include <sys/mman\&.h>\fP
+.br
+\fC#include 'portaudio\&.h'\fP
+.br
+\fC#include 'pa_util\&.h'\fP
+.br
+\fC#include 'pa_unix_util\&.h'\fP
+.br
+\fC#include 'pa_allocation\&.h'\fP
+.br
+\fC#include 'pa_hostapi\&.h'\fP
+.br
+\fC#include 'pa_stream\&.h'\fP
+.br
+\fC#include 'pa_cpuload\&.h'\fP
+.br
+\fC#include 'pa_process\&.h'\fP
+.br
+\fC#include 'pa_endianness\&.h'\fP
+.br
+\fC#include 'pa_debugprint\&.h'\fP
+.br
+\fC#include 'pa_linux_alsa\&.h'\fP
+.br
+
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "struct \fBPaAlsaStreamComponent\fP"
+.br
+.ti -1c
+.RI "struct \fBPaAlsaStream\fP"
+.br
+.ti -1c
+.RI "struct \fBPaAlsaHostApiRepresentation\fP"
+.br
+.ti -1c
+.RI "struct \fBPaAlsaDeviceInfo\fP"
+.br
+.ti -1c
+.RI "struct \fBHwDevInfo\fP"
+.br
+.in -1c
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBALSA_PCM_NEW_HW_PARAMS_API\fP"
+.br
+.ti -1c
+.RI "#define \fBALSA_PCM_NEW_SW_PARAMS_API\fP"
+.br
+.ti -1c
+.RI "#define \fBSND_PCM_TSTAMP_ENABLE\fP   SND_PCM_TSTAMP_MMAP"
+.br
+.ti -1c
+.RI "#define \fBALSA_VERSION_INT\fP(major,  minor,  subminor)   ((major << 16) | (minor << 8) | subminor)"
+.br
+.ti -1c
+.RI "#define \fBRATE_MAX_DEVIATE_RATIO\fP   100"
+.br
+.ti -1c
+.RI "#define \fB_PA_DEFINE_FUNC\fP(x)   typedef typeof(x) x##_ft; static x##_ft *alsa_##x = 0"
+.br
+.ti -1c
+.RI "#define \fB__alsa_snd_alloca\fP(ptr,  type)   do { size_t __alsa_alloca_size = alsa_##type##_sizeof(); (*ptr) = (type##_t *) alloca(__alsa_alloca_size); memset(*ptr, 0, __alsa_alloca_size); } while (0)"
+.br
+.ti -1c
+.RI "#define \fBalsa_snd_pcm_hw_params_alloca\fP(ptr)   \fB__alsa_snd_alloca\fP(ptr, snd_pcm_hw_params)"
+.br
+.ti -1c
+.RI "#define \fBalsa_snd_pcm_sw_params_alloca\fP(ptr)   \fB__alsa_snd_alloca\fP(ptr, snd_pcm_sw_params)"
+.br
+.ti -1c
+.RI "#define \fBalsa_snd_pcm_info_alloca\fP(ptr)   \fB__alsa_snd_alloca\fP(ptr, snd_pcm_info)"
+.br
+.ti -1c
+.RI "#define \fBalsa_snd_ctl_card_info_alloca\fP(ptr)   \fB__alsa_snd_alloca\fP(ptr, snd_ctl_card_info)"
+.br
+.ti -1c
+.RI "#define \fBalsa_snd_pcm_status_alloca\fP(ptr)   \fB__alsa_snd_alloca\fP(ptr, snd_pcm_status)"
+.br
+.ti -1c
+.RI "#define \fBalsa_snd_config_for_each\fP(pos,  \fBnext\fP,  \fBnode\fP)"
+.br
+.ti -1c
+.RI "#define \fBPA_ALSA_PATHNAME\fP   'libasound\&.so'"
+.br
+.ti -1c
+.RI "#define \fB_PA_LOAD_FUNC\fP(x)   alsa_##x = &x"
+.br
+.ti -1c
+.RI "#define \fBENSURE_\fP(expr,  code)"
+.br
+.ti -1c
+.RI "#define \fBASSERT_CALL_\fP(expr,  success)"
+.br
+.in -1c
+.SS "Typedefs"
+
+.in +1c
+.ti -1c
+.RI "typedef struct \fBPaAlsaStream\fP \fBPaAlsaStream\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBPaAlsaHostApiRepresentation\fP \fBPaAlsaHostApiRepresentation\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBPaAlsaDeviceInfo\fP \fBPaAlsaDeviceInfo\fP"
+.br
+.in -1c
+.SS "Enumerations"
+
+.in +1c
+.ti -1c
+.RI "enum \fBStreamDirection\fP { \fBStreamDirection_In\fP, \fBStreamDirection_Out\fP }"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_pcm_open)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_pcm_close)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_pcm_nonblock)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_pcm_frames_to_bytes)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_pcm_prepare)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_pcm_start)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_pcm_resume)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_pcm_wait)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_pcm_state)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_pcm_avail_update)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_pcm_areas_silence)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_pcm_mmap_begin)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_pcm_mmap_commit)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_pcm_readi)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_pcm_readn)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_pcm_writei)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_pcm_writen)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_pcm_drain)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_pcm_recover)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_pcm_drop)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_pcm_area_copy)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_pcm_poll_descriptors)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_pcm_poll_descriptors_count)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_pcm_poll_descriptors_revents)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_pcm_format_size)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_pcm_link)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_pcm_delay)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_pcm_hw_params_sizeof)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_pcm_hw_params_malloc)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_pcm_hw_params_free)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_pcm_hw_params_any)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_pcm_hw_params_set_access)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_pcm_hw_params_set_format)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_pcm_hw_params_set_channels)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_pcm_hw_params_set_rate_near)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_pcm_hw_params_set_rate)"
+.br
+.RI "\fI!! \fP"
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_pcm_hw_params_set_rate_resample)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_pcm_hw_params_set_buffer_size)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_pcm_hw_params_set_buffer_size_near)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_pcm_hw_params_set_buffer_size_min)"
+.br
+.RI "\fI!! \fP"
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_pcm_hw_params_set_period_size_near)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_pcm_hw_params_set_periods_integer)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_pcm_hw_params_set_periods_min)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_pcm_hw_params_get_buffer_size)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_pcm_hw_params_get_channels_min)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_pcm_hw_params_get_channels_max)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_pcm_hw_params_test_period_size)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_pcm_hw_params_test_format)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_pcm_hw_params_test_access)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_pcm_hw_params_dump)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_pcm_hw_params)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_pcm_hw_params_get_periods_min)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_pcm_hw_params_get_periods_max)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_pcm_hw_params_set_period_size)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_pcm_hw_params_get_period_size_min)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_pcm_hw_params_get_period_size_max)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_pcm_hw_params_get_buffer_size_max)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_pcm_hw_params_get_rate_min)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_pcm_hw_params_get_rate_max)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_pcm_hw_params_get_rate_numden)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_pcm_sw_params_sizeof)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_pcm_sw_params_malloc)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_pcm_sw_params_current)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_pcm_sw_params_set_avail_min)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_pcm_sw_params)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_pcm_sw_params_free)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_pcm_sw_params_set_start_threshold)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_pcm_sw_params_set_stop_threshold)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_pcm_sw_params_get_boundary)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_pcm_sw_params_set_silence_threshold)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_pcm_sw_params_set_silence_size)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_pcm_sw_params_set_xfer_align)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_pcm_sw_params_set_tstamp_mode)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_pcm_info)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_pcm_info_sizeof)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_pcm_info_malloc)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_pcm_info_free)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_pcm_info_set_device)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_pcm_info_set_subdevice)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_pcm_info_set_stream)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_pcm_info_get_name)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_pcm_info_get_card)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_ctl_pcm_next_device)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_ctl_pcm_info)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_ctl_open)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_ctl_close)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_ctl_card_info_malloc)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_ctl_card_info_free)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_ctl_card_info)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_ctl_card_info_sizeof)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_ctl_card_info_get_name)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_config)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_config_update)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_config_search)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_config_iterator_entry)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_config_iterator_first)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_config_iterator_end)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_config_iterator_next)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_config_get_string)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_config_get_id)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_config_update_free_global)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_pcm_status)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_pcm_status_sizeof)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_pcm_status_get_tstamp)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_pcm_status_get_state)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_pcm_status_get_trigger_tstamp)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_pcm_status_get_delay)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_card_next)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_asoundlib_version)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_strerror)"
+.br
+.ti -1c
+.RI "\fB_PA_DEFINE_FUNC\fP (snd_output_stdio_attach)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBPaAlsa_SetLibraryPathName\fP (\fBconst\fP char *pathName)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBPaAlsa_SetNumPeriods\fP (\fBint\fP numPeriods)"
+.br
+.ti -1c
+.RI "\fBPaError\fP \fBPaAlsa_Initialize\fP (\fBPaUtilHostApiRepresentation\fP **hostApi, \fBPaHostApiIndex\fP hostApiIndex)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBPaAlsa_InitializeStreamInfo\fP (\fBPaAlsaStreamInfo\fP *\fBinfo\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBPaAlsa_EnableRealtimeScheduling\fP (\fBPaStream\fP *\fBs\fP, \fBint\fP enable)"
+.br
+.ti -1c
+.RI "\fBPaError\fP \fBPaAlsa_GetStreamInputCard\fP (\fBPaStream\fP *\fBs\fP, \fBint\fP *card)"
+.br
+.ti -1c
+.RI "\fBPaError\fP \fBPaAlsa_GetStreamOutputCard\fP (\fBPaStream\fP *\fBs\fP, \fBint\fP *card)"
+.br
+.ti -1c
+.RI "\fBPaError\fP \fBPaAlsa_SetRetriesBusy\fP (\fBint\fP retries)"
+.br
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "\fBHwDevInfo\fP \fBpredefinedNames\fP []"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define __alsa_snd_alloca(ptr, type)   do { size_t __alsa_alloca_size = alsa_##type##_sizeof(); (*ptr) = (type##_t *) alloca(__alsa_alloca_size); memset(*ptr, 0, __alsa_alloca_size); } while (0)"
+
+.PP
+Definition at line 97 of file pa_linux_alsa\&.c\&.
+.SS "#define _PA_DEFINE_FUNC(x)   typedef typeof(x) x##_ft; static x##_ft *alsa_##x = 0"
+
+.PP
+Definition at line 94 of file pa_linux_alsa\&.c\&.
+.SS "#define _PA_LOAD_FUNC(x)   alsa_##x = &x"
+
+.SS "#define ALSA_PCM_NEW_HW_PARAMS_API"
+
+.PP
+Definition at line 50 of file pa_linux_alsa\&.c\&.
+.SS "#define ALSA_PCM_NEW_SW_PARAMS_API"
+
+.PP
+Definition at line 51 of file pa_linux_alsa\&.c\&.
+.SS "#define alsa_snd_config_for_each(pos, \fBnext\fP, \fBnode\fP)"
+\fBValue:\fP
+.PP
+.nf
+for (pos = alsa_snd_config_iterator_first(node),\
+         next = alsa_snd_config_iterator_next(pos);\
+         pos != alsa_snd_config_iterator_end(node); pos = next, next = alsa_snd_config_iterator_next(pos))
+.fi
+.PP
+Definition at line 233 of file pa_linux_alsa\&.c\&.
+.SS "#define alsa_snd_ctl_card_info_alloca(ptr)   \fB__alsa_snd_alloca\fP(ptr, snd_ctl_card_info)"
+
+.PP
+Definition at line 207 of file pa_linux_alsa\&.c\&.
+.SS "#define alsa_snd_pcm_hw_params_alloca(ptr)   \fB__alsa_snd_alloca\fP(ptr, snd_pcm_hw_params)"
+
+.PP
+Definition at line 170 of file pa_linux_alsa\&.c\&.
+.SS "#define alsa_snd_pcm_info_alloca(ptr)   \fB__alsa_snd_alloca\fP(ptr, snd_pcm_info)"
+
+.PP
+Definition at line 196 of file pa_linux_alsa\&.c\&.
+.SS "#define alsa_snd_pcm_status_alloca(ptr)   \fB__alsa_snd_alloca\fP(ptr, snd_pcm_status)"
+
+.PP
+Definition at line 226 of file pa_linux_alsa\&.c\&.
+.SS "#define alsa_snd_pcm_sw_params_alloca(ptr)   \fB__alsa_snd_alloca\fP(ptr, snd_pcm_sw_params)"
+
+.PP
+Definition at line 185 of file pa_linux_alsa\&.c\&.
+.SS "#define ALSA_VERSION_INT(major, minor, subminor)   ((major << 16) | (minor << 8) | subminor)"
+
+.PP
+Definition at line 88 of file pa_linux_alsa\&.c\&.
+.SS "#define ASSERT_CALL_(expr, success)"
+\fBValue:\fP
+.PP
+.nf
+do {\
+        int __pa_assert_error_id;\
+        __pa_assert_error_id = (expr);\
+        assert( success == __pa_assert_error_id );\
+    } while (0)
+.fi
+.PP
+Definition at line 580 of file pa_linux_alsa\&.c\&.
+.SS "#define ENSURE_(expr, code)"
+\fBValue:\fP
+.PP
+.nf
+do { \
+        int __pa_unsure_error_id;\
+        if( UNLIKELY( (__pa_unsure_error_id = (expr)) < 0 ) ) \
+        { \
+            /* PaUtil_SetLastHostErrorInfo should only be used in the main thread */ \
+            if( (code) == paUnanticipatedHostError && pthread_equal( pthread_self(), paUnixMainThread) ) \
+            { \
+                PaUtil_SetLastHostErrorInfo( paALSA, __pa_unsure_error_id, alsa_snd_strerror( __pa_unsure_error_id ) ); \
+            } \
+            PaUtil_DebugPrint( "Expression '" #expr "' failed in '" __FILE__ "', line: " STRINGIZE( __LINE__ ) "\n" ); \
+            if( (code) == paUnanticipatedHostError ) \
+                PA_DEBUG(( "Host error description: %s\n", alsa_snd_strerror( __pa_unsure_error_id ) )); \
+            result = (code); \
+            goto error; \
+        } \
+    } while (0)
+.fi
+.PP
+Definition at line 562 of file pa_linux_alsa\&.c\&.
+.SS "#define PA_ALSA_PATHNAME   'libasound\&.so'"
+
+.PP
+Definition at line 242 of file pa_linux_alsa\&.c\&.
+.SS "#define RATE_MAX_DEVIATE_RATIO   100"
+
+.PP
+Definition at line 91 of file pa_linux_alsa\&.c\&.
+.SS "#define SND_PCM_TSTAMP_ENABLE   SND_PCM_TSTAMP_MMAP"
+
+.PP
+Definition at line 84 of file pa_linux_alsa\&.c\&.
+.SH "Typedef Documentation"
+.PP 
+.SS "typedef struct \fBPaAlsaDeviceInfo\fP
+ \fBPaAlsaDeviceInfo\fP"
+
+.SS "typedef struct \fBPaAlsaHostApiRepresentation\fP
+ \fBPaAlsaHostApiRepresentation\fP"
+
+.SS "typedef struct \fBPaAlsaStream\fP
+ \fBPaAlsaStream\fP"
+
+.SH "Enumeration Type Documentation"
+.PP 
+.SS "enum \fBStreamDirection\fP"
+
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fIStreamDirection_In \fP\fP
+.TP
+\fB\fIStreamDirection_Out \fP\fP
+.PP
+Definition at line 596 of file pa_linux_alsa\&.c\&.
+.SH "Function Documentation"
+.PP 
+.SS "_PA_DEFINE_FUNC (snd_pcm_open)"
+
+.SS "_PA_DEFINE_FUNC (snd_pcm_close)"
+
+.SS "_PA_DEFINE_FUNC (snd_pcm_nonblock)"
+
+.SS "_PA_DEFINE_FUNC (snd_pcm_frames_to_bytes)"
+
+.SS "_PA_DEFINE_FUNC (snd_pcm_prepare)"
+
+.SS "_PA_DEFINE_FUNC (snd_pcm_start)"
+
+.SS "_PA_DEFINE_FUNC (snd_pcm_resume)"
+
+.SS "_PA_DEFINE_FUNC (snd_pcm_wait)"
+
+.SS "_PA_DEFINE_FUNC (snd_pcm_state)"
+
+.SS "_PA_DEFINE_FUNC (snd_pcm_avail_update)"
+
+.SS "_PA_DEFINE_FUNC (snd_pcm_areas_silence)"
+
+.SS "_PA_DEFINE_FUNC (snd_pcm_mmap_begin)"
+
+.SS "_PA_DEFINE_FUNC (snd_pcm_mmap_commit)"
+
+.SS "_PA_DEFINE_FUNC (snd_pcm_readi)"
+
+.SS "_PA_DEFINE_FUNC (snd_pcm_readn)"
+
+.SS "_PA_DEFINE_FUNC (snd_pcm_writei)"
+
+.SS "_PA_DEFINE_FUNC (snd_pcm_writen)"
+
+.SS "_PA_DEFINE_FUNC (snd_pcm_drain)"
+
+.SS "_PA_DEFINE_FUNC (snd_pcm_recover)"
+
+.SS "_PA_DEFINE_FUNC (snd_pcm_drop)"
+
+.SS "_PA_DEFINE_FUNC (snd_pcm_area_copy)"
+
+.SS "_PA_DEFINE_FUNC (snd_pcm_poll_descriptors)"
+
+.SS "_PA_DEFINE_FUNC (snd_pcm_poll_descriptors_count)"
+
+.SS "_PA_DEFINE_FUNC (snd_pcm_poll_descriptors_revents)"
+
+.SS "_PA_DEFINE_FUNC (snd_pcm_format_size)"
+
+.SS "_PA_DEFINE_FUNC (snd_pcm_link)"
+
+.SS "_PA_DEFINE_FUNC (snd_pcm_delay)"
+
+.SS "_PA_DEFINE_FUNC (snd_pcm_hw_params_sizeof)"
+
+.SS "_PA_DEFINE_FUNC (snd_pcm_hw_params_malloc)"
+
+.SS "_PA_DEFINE_FUNC (snd_pcm_hw_params_free)"
+
+.SS "_PA_DEFINE_FUNC (snd_pcm_hw_params_any)"
+
+.SS "_PA_DEFINE_FUNC (snd_pcm_hw_params_set_access)"
+
+.SS "_PA_DEFINE_FUNC (snd_pcm_hw_params_set_format)"
+
+.SS "_PA_DEFINE_FUNC (snd_pcm_hw_params_set_channels)"
+
+.SS "_PA_DEFINE_FUNC (snd_pcm_hw_params_set_rate_near)"
+
+.SS "_PA_DEFINE_FUNC (snd_pcm_hw_params_set_rate)"
+
+.PP
+!! 
+.SS "_PA_DEFINE_FUNC (snd_pcm_hw_params_set_rate_resample)"
+
+.SS "_PA_DEFINE_FUNC (snd_pcm_hw_params_set_buffer_size)"
+
+.SS "_PA_DEFINE_FUNC (snd_pcm_hw_params_set_buffer_size_near)"
+
+.SS "_PA_DEFINE_FUNC (snd_pcm_hw_params_set_buffer_size_min)"
+
+.PP
+!! 
+.SS "_PA_DEFINE_FUNC (snd_pcm_hw_params_set_period_size_near)"
+
+.SS "_PA_DEFINE_FUNC (snd_pcm_hw_params_set_periods_integer)"
+
+.SS "_PA_DEFINE_FUNC (snd_pcm_hw_params_set_periods_min)"
+
+.SS "_PA_DEFINE_FUNC (snd_pcm_hw_params_get_buffer_size)"
+
+.SS "_PA_DEFINE_FUNC (snd_pcm_hw_params_get_channels_min)"
+
+.SS "_PA_DEFINE_FUNC (snd_pcm_hw_params_get_channels_max)"
+
+.SS "_PA_DEFINE_FUNC (snd_pcm_hw_params_test_period_size)"
+
+.SS "_PA_DEFINE_FUNC (snd_pcm_hw_params_test_format)"
+
+.SS "_PA_DEFINE_FUNC (snd_pcm_hw_params_test_access)"
+
+.SS "_PA_DEFINE_FUNC (snd_pcm_hw_params_dump)"
+
+.SS "_PA_DEFINE_FUNC (snd_pcm_hw_params)"
+
+.SS "_PA_DEFINE_FUNC (snd_pcm_hw_params_get_periods_min)"
+
+.SS "_PA_DEFINE_FUNC (snd_pcm_hw_params_get_periods_max)"
+
+.SS "_PA_DEFINE_FUNC (snd_pcm_hw_params_set_period_size)"
+
+.SS "_PA_DEFINE_FUNC (snd_pcm_hw_params_get_period_size_min)"
+
+.SS "_PA_DEFINE_FUNC (snd_pcm_hw_params_get_period_size_max)"
+
+.SS "_PA_DEFINE_FUNC (snd_pcm_hw_params_get_buffer_size_max)"
+
+.SS "_PA_DEFINE_FUNC (snd_pcm_hw_params_get_rate_min)"
+
+.SS "_PA_DEFINE_FUNC (snd_pcm_hw_params_get_rate_max)"
+
+.SS "_PA_DEFINE_FUNC (snd_pcm_hw_params_get_rate_numden)"
+
+.SS "_PA_DEFINE_FUNC (snd_pcm_sw_params_sizeof)"
+
+.SS "_PA_DEFINE_FUNC (snd_pcm_sw_params_malloc)"
+
+.SS "_PA_DEFINE_FUNC (snd_pcm_sw_params_current)"
+
+.SS "_PA_DEFINE_FUNC (snd_pcm_sw_params_set_avail_min)"
+
+.SS "_PA_DEFINE_FUNC (snd_pcm_sw_params)"
+
+.SS "_PA_DEFINE_FUNC (snd_pcm_sw_params_free)"
+
+.SS "_PA_DEFINE_FUNC (snd_pcm_sw_params_set_start_threshold)"
+
+.SS "_PA_DEFINE_FUNC (snd_pcm_sw_params_set_stop_threshold)"
+
+.SS "_PA_DEFINE_FUNC (snd_pcm_sw_params_get_boundary)"
+
+.SS "_PA_DEFINE_FUNC (snd_pcm_sw_params_set_silence_threshold)"
+
+.SS "_PA_DEFINE_FUNC (snd_pcm_sw_params_set_silence_size)"
+
+.SS "_PA_DEFINE_FUNC (snd_pcm_sw_params_set_xfer_align)"
+
+.SS "_PA_DEFINE_FUNC (snd_pcm_sw_params_set_tstamp_mode)"
+
+.SS "_PA_DEFINE_FUNC (snd_pcm_info)"
+
+.SS "_PA_DEFINE_FUNC (snd_pcm_info_sizeof)"
+
+.SS "_PA_DEFINE_FUNC (snd_pcm_info_malloc)"
+
+.SS "_PA_DEFINE_FUNC (snd_pcm_info_free)"
+
+.SS "_PA_DEFINE_FUNC (snd_pcm_info_set_device)"
+
+.SS "_PA_DEFINE_FUNC (snd_pcm_info_set_subdevice)"
+
+.SS "_PA_DEFINE_FUNC (snd_pcm_info_set_stream)"
+
+.SS "_PA_DEFINE_FUNC (snd_pcm_info_get_name)"
+
+.SS "_PA_DEFINE_FUNC (snd_pcm_info_get_card)"
+
+.SS "_PA_DEFINE_FUNC (snd_ctl_pcm_next_device)"
+
+.SS "_PA_DEFINE_FUNC (snd_ctl_pcm_info)"
+
+.SS "_PA_DEFINE_FUNC (snd_ctl_open)"
+
+.SS "_PA_DEFINE_FUNC (snd_ctl_close)"
+
+.SS "_PA_DEFINE_FUNC (snd_ctl_card_info_malloc)"
+
+.SS "_PA_DEFINE_FUNC (snd_ctl_card_info_free)"
+
+.SS "_PA_DEFINE_FUNC (snd_ctl_card_info)"
+
+.SS "_PA_DEFINE_FUNC (snd_ctl_card_info_sizeof)"
+
+.SS "_PA_DEFINE_FUNC (snd_ctl_card_info_get_name)"
+
+.SS "_PA_DEFINE_FUNC (snd_config)"
+
+.SS "_PA_DEFINE_FUNC (snd_config_update)"
+
+.SS "_PA_DEFINE_FUNC (snd_config_search)"
+
+.SS "_PA_DEFINE_FUNC (snd_config_iterator_entry)"
+
+.SS "_PA_DEFINE_FUNC (snd_config_iterator_first)"
+
+.SS "_PA_DEFINE_FUNC (snd_config_iterator_end)"
+
+.SS "_PA_DEFINE_FUNC (snd_config_iterator_next)"
+
+.SS "_PA_DEFINE_FUNC (snd_config_get_string)"
+
+.SS "_PA_DEFINE_FUNC (snd_config_get_id)"
+
+.SS "_PA_DEFINE_FUNC (snd_config_update_free_global)"
+
+.SS "_PA_DEFINE_FUNC (snd_pcm_status)"
+
+.SS "_PA_DEFINE_FUNC (snd_pcm_status_sizeof)"
+
+.SS "_PA_DEFINE_FUNC (snd_pcm_status_get_tstamp)"
+
+.SS "_PA_DEFINE_FUNC (snd_pcm_status_get_state)"
+
+.SS "_PA_DEFINE_FUNC (snd_pcm_status_get_trigger_tstamp)"
+
+.SS "_PA_DEFINE_FUNC (snd_pcm_status_get_delay)"
+
+.SS "_PA_DEFINE_FUNC (snd_card_next)"
+
+.SS "_PA_DEFINE_FUNC (snd_asoundlib_version)"
+
+.SS "_PA_DEFINE_FUNC (snd_strerror)"
+
+.SS "_PA_DEFINE_FUNC (snd_output_stdio_attach)"
+
+.SS "\fBvoid\fP PaAlsa_EnableRealtimeScheduling (\fBPaStream\fP * s, \fBint\fP enable)"
+Instruct whether to enable real-time priority when starting the audio thread\&.
+.PP
+If this is turned on by the stream is started, the audio callback thread will be created with the FIFO scheduling policy, which is suitable for realtime operation\&. 
+.PP
+Definition at line 4552 of file pa_linux_alsa\&.c\&.
+.SS "\fBPaError\fP PaAlsa_GetStreamInputCard (\fBPaStream\fP * s, \fBint\fP * card)"
+Get the ALSA-lib card index of this stream's input device\&. 
+.PP
+Definition at line 4585 of file pa_linux_alsa\&.c\&.
+.SS "\fBPaError\fP PaAlsa_GetStreamOutputCard (\fBPaStream\fP * s, \fBint\fP * card)"
+Get the ALSA-lib card index of this stream's output device\&. 
+.PP
+Definition at line 4602 of file pa_linux_alsa\&.c\&.
+.SS "\fBPaError\fP PaAlsa_Initialize (\fBPaUtilHostApiRepresentation\fP ** hostApi, \fBPaHostApiIndex\fP hostApiIndex)"
+Uncommented because AlsaErrorHandler is unused for anything good yet\&. If AlsaErrorHandler is to be used, do not forget to register this callback in PaAlsa_Initialize, and unregister in Terminate\&. If AlsaErrorHandler is to be used, do not forget to unregister callback pointer in Terminate function\&.
+.PP
+Definition at line 738 of file pa_linux_alsa\&.c\&.
+.SS "\fBvoid\fP PaAlsa_InitializeStreamInfo (\fBPaAlsaStreamInfo\fP * info)"
+Initialize host API specific structure, call this before setting relevant attributes\&. 
+.PP
+Definition at line 4544 of file pa_linux_alsa\&.c\&.
+.SS "\fBvoid\fP PaAlsa_SetLibraryPathName (\fBconst\fP char * pathName)"
+Set the path and name of ALSA library file if PortAudio is configured to load it dynamically (see PA_ALSA_DYNAMIC)\&. This setting will overwrite the default name set by PA_ALSA_PATHNAME define\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIpathName\fP Full path with filename\&. Only filename can be used, but dlopen() will lookup default searchable directories (/usr/lib;/usr/local/lib) then\&. 
+.RE
+.PP
+
+.PP
+Definition at line 543 of file pa_linux_alsa\&.c\&.
+.SS "\fBint\fP PaAlsa_SetNumPeriods (\fBint\fP numPeriods)"
+Set the number of periods (buffer fragments) to configure devices with\&.
+.PP
+By default the number of periods is 4, this is the lowest number of periods that works well on the author's soundcard\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fInumPeriods\fP The number of periods\&. 
+.RE
+.PP
+
+.PP
+Definition at line 590 of file pa_linux_alsa\&.c\&.
+.SS "\fBPaError\fP PaAlsa_SetRetriesBusy (\fBint\fP retries)"
+Set the maximum number of times to retry opening busy device (sleeping for a short interval inbetween)\&. 
+.PP
+Definition at line 4619 of file pa_linux_alsa\&.c\&.
+.SH "Variable Documentation"
+.PP 
+.SS "\fBHwDevInfo\fP predefinedNames[]"
+
+.PP
+Definition at line 994 of file pa_linux_alsa\&.c\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

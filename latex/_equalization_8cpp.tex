@@ -1,0 +1,360 @@
+\hypertarget{_equalization_8cpp}{}\section{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/src/effects/\+Equalization.cpp File Reference}
+\label{_equalization_8cpp}\index{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/src/effects/\+Equalization.\+cpp@{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/src/effects/\+Equalization.\+cpp}}
+
+
+Implements Effect\+Equaliztaion, Equalization\+Dialog, \hyperlink{class_equalization_panel}{Equalization\+Panel}, \hyperlink{class_e_q_curve}{E\+Q\+Curve} and \hyperlink{class_e_q_point}{E\+Q\+Point}.  
+
+
+{\ttfamily \#include \char`\"{}../\+Audacity.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Equalization.\+h\char`\"{}}\\*
+{\ttfamily \#include $<$math.\+h$>$}\\*
+{\ttfamily \#include $<$vector$>$}\\*
+{\ttfamily \#include $<$wx/bitmap.\+h$>$}\\*
+{\ttfamily \#include $<$wx/button.\+h$>$}\\*
+{\ttfamily \#include $<$wx/msgdlg.\+h$>$}\\*
+{\ttfamily \#include $<$wx/brush.\+h$>$}\\*
+{\ttfamily \#include $<$wx/dcmemory.\+h$>$}\\*
+{\ttfamily \#include $<$wx/event.\+h$>$}\\*
+{\ttfamily \#include $<$wx/image.\+h$>$}\\*
+{\ttfamily \#include $<$wx/intl.\+h$>$}\\*
+{\ttfamily \#include $<$wx/choice.\+h$>$}\\*
+{\ttfamily \#include $<$wx/radiobut.\+h$>$}\\*
+{\ttfamily \#include $<$wx/stattext.\+h$>$}\\*
+{\ttfamily \#include $<$wx/string.\+h$>$}\\*
+{\ttfamily \#include $<$wx/textdlg.\+h$>$}\\*
+{\ttfamily \#include $<$wx/ffile.\+h$>$}\\*
+{\ttfamily \#include $<$wx/filefn.\+h$>$}\\*
+{\ttfamily \#include $<$wx/stdpaths.\+h$>$}\\*
+{\ttfamily \#include $<$wx/settings.\+h$>$}\\*
+{\ttfamily \#include $<$wx/checkbox.\+h$>$}\\*
+{\ttfamily \#include $<$wx/tooltip.\+h$>$}\\*
+{\ttfamily \#include $<$wx/utils.\+h$>$}\\*
+{\ttfamily \#include \char`\"{}../\+Experimental.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../\+A\+Color.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../\+Shuttle\+Gui.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../\+Platform\+Compatibility.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../\+File\+Names.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../\+Envelope.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../widgets/\+Linking\+Html\+Window.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../widgets/\+Error\+Dialog.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../\+F\+F\+T.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../\+Prefs.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../\+Project.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../\+Wave\+Track.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../widgets/\+Ruler.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../xml/\+X\+M\+L\+File\+Reader.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../\+Theme.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../\+All\+Theme\+Resources.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../float\+\_\+cast.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}File\+Dialog.\+h\char`\"{}}\\*
+{\ttfamily \#include $<$wx/arrimpl.\+cpp$>$}\\*
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{_equalization_8cpp_ae8267842038c7a32f5c84b202c8d1078}{E\+Q\+C\+U\+R\+V\+E\+S\+\_\+\+V\+E\+R\+S\+I\+ON}~1
+\item 
+\#define \hyperlink{_equalization_8cpp_a12aaeb8993c5880d76854c50eed444af}{E\+Q\+C\+U\+R\+V\+E\+S\+\_\+\+R\+E\+V\+I\+S\+I\+ON}~0
+\item 
+\#define \hyperlink{_equalization_8cpp_a5a09d43668bf6dde077f6d66994a1924}{U\+P\+D\+A\+T\+E\+\_\+\+A\+LL}~0
+\end{DoxyCompactItemize}
+\subsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \{ \\*
+\hyperlink{_equalization_8cpp_a6813be44df52c18b08debbebca7d09a8a865e8f0678202cf761a01e00822a46b3}{I\+D\+\_\+\+Length} = 10000, 
+\hyperlink{_equalization_8cpp_a6813be44df52c18b08debbebca7d09a8a44294da3b88eb67ae53b40b0fdf731e3}{I\+D\+\_\+d\+B\+Max}, 
+\hyperlink{_equalization_8cpp_a6813be44df52c18b08debbebca7d09a8afd50f9a85f9c0fb88de067a32ced5770}{I\+D\+\_\+d\+B\+Min}, 
+\hyperlink{_equalization_8cpp_a6813be44df52c18b08debbebca7d09a8aca7b2d755da0797c0bde5ed9301bca70}{I\+D\+\_\+\+Clear}, 
+\\*
+\hyperlink{_equalization_8cpp_a6813be44df52c18b08debbebca7d09a8a4ad50a93b4d88734e3ed5d0c1b1b54b3}{I\+D\+\_\+\+Invert}, 
+\hyperlink{_equalization_8cpp_a6813be44df52c18b08debbebca7d09a8a38c42b561d34c3591d595b1b31c5c26b}{I\+D\+\_\+\+Mode}, 
+\hyperlink{_equalization_8cpp_a6813be44df52c18b08debbebca7d09a8acaf86695a7ac58759c70efaef597ddf9}{I\+D\+\_\+\+Draw}, 
+\hyperlink{_equalization_8cpp_a6813be44df52c18b08debbebca7d09a8a29a2ac63cb4b8af03529a09714c74fad}{I\+D\+\_\+\+Graphic}, 
+\\*
+\hyperlink{_equalization_8cpp_a6813be44df52c18b08debbebca7d09a8a6644a2a240ed67dc4854400fd5cd1eb9}{I\+D\+\_\+\+Interp}, 
+\hyperlink{_equalization_8cpp_a6813be44df52c18b08debbebca7d09a8a8d60d95e842d2313104dd0c678c6c156}{I\+D\+\_\+\+Linear}, 
+\hyperlink{_equalization_8cpp_a6813be44df52c18b08debbebca7d09a8a6809b33964d31898a8fbcf15761e7708}{I\+D\+\_\+\+Grid}, 
+\hyperlink{_equalization_8cpp_a6813be44df52c18b08debbebca7d09a8a0a13d84560debae75635aa710581b2d3}{I\+D\+\_\+\+Curve}, 
+\\*
+\hyperlink{_equalization_8cpp_a6813be44df52c18b08debbebca7d09a8ab2267510288e8de373c84b3d4d7ef637}{I\+D\+\_\+\+Manage}, 
+\hyperlink{_equalization_8cpp_a6813be44df52c18b08debbebca7d09a8a205d9324ba15e225d56bc8ede59dd7a7}{I\+D\+\_\+\+Delete}, 
+\hyperlink{_equalization_8cpp_a6813be44df52c18b08debbebca7d09a8a973bbe1ccd5c880428d852aa95597c1e}{I\+D\+\_\+\+Slider}
+ \}
+\item 
+enum \hyperlink{_equalization_8cpp_a671f746774a3e3e4b9315ee9fc7eaf3a}{k\+Interpolations} \{ \\*
+\hyperlink{_equalization_8cpp_a671f746774a3e3e4b9315ee9fc7eaf3aaa46e4fdcc138a549e384640823b4b360}{k\+Bspline}, 
+\hyperlink{_equalization_8cpp_a671f746774a3e3e4b9315ee9fc7eaf3aaa160b4c3dcdb22ac16fe192d1904a049}{k\+Cosine}, 
+\hyperlink{_equalization_8cpp_a671f746774a3e3e4b9315ee9fc7eaf3aa49f7e2a4145afb40a6eba4ad063a2b01}{k\+Cubic}, 
+\hyperlink{_equalization_8cpp_a671f746774a3e3e4b9315ee9fc7eaf3aad98ef34cc74602dd8b0ed0787d9b4fe8}{k\+Num\+Interpolations}, 
+\\*
+\hyperlink{_tone_gen_8cpp_a671f746774a3e3e4b9315ee9fc7eaf3aac188c019178783e5be55110601309d7d}{k\+Linear}, 
+\hyperlink{_tone_gen_8cpp_a671f746774a3e3e4b9315ee9fc7eaf3aab3cdeeb0a68f089a01a04a855610ca49}{k\+Logarithmic}, 
+\hyperlink{_tone_gen_8cpp_a671f746774a3e3e4b9315ee9fc7eaf3aad98ef34cc74602dd8b0ed0787d9b4fe8}{k\+Num\+Interpolations}
+ \}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{_equalization_8cpp_a6e92acea45b553e7085d017e1de6a0ba}{Param} (Filter\+Length, \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int}, \hyperlink{_theme_8cpp_ad4baed404c66b57e257af684bdc5ecf2}{XO}(\char`\"{}Filter\+Length\char`\"{}), 4001, 21, 8191, 0)
+\item 
+\hyperlink{_equalization_8cpp_a5ad215fbf578a9e7643e8334ed2b8faa}{Param} (Curve\+Name, wx\+Char $\ast$, \hyperlink{_theme_8cpp_ad4baed404c66b57e257af684bdc5ecf2}{XO}(\char`\"{}Curve\+Name\char`\"{}), wxT(\char`\"{}unnamed\char`\"{}), wxT(\char`\"{}\char`\"{}), wxT(\char`\"{}\char`\"{}), wxT(\char`\"{}\char`\"{}))
+\item 
+\hyperlink{_equalization_8cpp_a9c0f627236c04727bf628dc4493ca72f}{Param} (Interp\+Lin, \hyperlink{mac_2config_2i386_2lib-src_2libsoxr_2soxr-config_8h_abb452686968e48b67397da5f97445f5b}{bool}, \hyperlink{_theme_8cpp_ad4baed404c66b57e257af684bdc5ecf2}{XO}(\char`\"{}Interpolate\+Lin\char`\"{}), false, \hyperlink{mac_2config_2i386_2lib-src_2libsoxr_2soxr-config_8h_a65e9886d74aaee76545e83dd09011727}{false}, \hyperlink{mac_2config_2i386_2lib-src_2libsoxr_2soxr-config_8h_a41f9c5fb8b08eb5dc3edce4dcb37fee7}{true}, \hyperlink{mac_2config_2i386_2lib-src_2libsoxr_2soxr-config_8h_a65e9886d74aaee76545e83dd09011727}{false})
+\item 
+\hyperlink{_equalization_8cpp_a4254d953daace9e07b75c0ad744a5fd8}{Param} (Interp\+Meth, \hyperlink{xmltok_8h_a5a0d4a5641ce434f1d23533f2b2e6653}{int}, \hyperlink{_theme_8cpp_ad4baed404c66b57e257af684bdc5ecf2}{XO}(\char`\"{}Interpolation\+Method\char`\"{}), 0, 0, 0, 0)
+\item 
+\hyperlink{_equalization_8cpp_a426e4b1b1fb6591c645237d7012de176}{Param} (Draw\+Mode, \hyperlink{mac_2config_2i386_2lib-src_2libsoxr_2soxr-config_8h_abb452686968e48b67397da5f97445f5b}{bool}, wxT(\char`\"{}\char`\"{}), \hyperlink{mac_2config_2i386_2lib-src_2libsoxr_2soxr-config_8h_a41f9c5fb8b08eb5dc3edce4dcb37fee7}{true}, \hyperlink{mac_2config_2i386_2lib-src_2libsoxr_2soxr-config_8h_a65e9886d74aaee76545e83dd09011727}{false}, \hyperlink{mac_2config_2i386_2lib-src_2libsoxr_2soxr-config_8h_a41f9c5fb8b08eb5dc3edce4dcb37fee7}{true}, \hyperlink{mac_2config_2i386_2lib-src_2libsoxr_2soxr-config_8h_a65e9886d74aaee76545e83dd09011727}{false})
+\item 
+\hyperlink{_equalization_8cpp_a0a2cf2e933dd9808ae564eabc3e8561f}{Param} (Draw\+Grid, \hyperlink{mac_2config_2i386_2lib-src_2libsoxr_2soxr-config_8h_abb452686968e48b67397da5f97445f5b}{bool}, wxT(\char`\"{}\char`\"{}), \hyperlink{mac_2config_2i386_2lib-src_2libsoxr_2soxr-config_8h_a41f9c5fb8b08eb5dc3edce4dcb37fee7}{true}, \hyperlink{mac_2config_2i386_2lib-src_2libsoxr_2soxr-config_8h_a65e9886d74aaee76545e83dd09011727}{false}, \hyperlink{mac_2config_2i386_2lib-src_2libsoxr_2soxr-config_8h_a41f9c5fb8b08eb5dc3edce4dcb37fee7}{true}, \hyperlink{mac_2config_2i386_2lib-src_2libsoxr_2soxr-config_8h_a65e9886d74aaee76545e83dd09011727}{false})
+\item 
+\hyperlink{_equalization_8cpp_af9a1cff1ad3341c5be5d190e214e714b}{Param} (d\+B\+Min, float, wxT(\char`\"{}\char`\"{}),-\/30.\+0,-\/120.\+0,-\/10.\+0, 0)
+\item 
+\hyperlink{_equalization_8cpp_abf13b30605744fb1dc17dec0fdf9b052}{Param} (d\+B\+Max, float, wxT(\char`\"{}\char`\"{}), 30.\+0, 0.\+0, 60.\+0, 0)
+\item 
+\hyperlink{_equalization_8cpp_aba2263c3424d7897d4fcf09772295e1a}{W\+X\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+O\+B\+J\+A\+R\+R\+AY} (E\+Q\+Point\+Array)
+\item 
+\hyperlink{_equalization_8cpp_abd1cf3408071da87ddf659a1ff33adcc}{W\+X\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+O\+B\+J\+A\+R\+R\+AY} (E\+Q\+Curve\+Array)
+\item 
+\hyperlink{_equalization_8cpp_a3bad134df05c84f76c87f9188852e456}{E\+V\+T\+\_\+\+C\+O\+M\+M\+A\+N\+D\+\_\+\+R\+A\+N\+GE} (\hyperlink{_nyquist_8cpp_a0efc1b13f14c790dd3d59de11e12bc6da973bbe1ccd5c880428d852aa95597c1e}{I\+D\+\_\+\+Slider}, \hyperlink{_nyquist_8cpp_a0efc1b13f14c790dd3d59de11e12bc6da973bbe1ccd5c880428d852aa95597c1e}{I\+D\+\_\+\+Slider}+\hyperlink{_equalization_8h_acc848db7792c76f398f7a28e797369c3}{N\+U\+M\+B\+E\+R\+\_\+\+O\+F\+\_\+\+B\+A\+N\+DS}-\/1, wx\+E\+V\+T\+\_\+\+C\+O\+M\+M\+A\+N\+D\+\_\+\+S\+L\+I\+D\+E\+R\+\_\+\+U\+P\+D\+A\+T\+ED, Effect\+Equalization\+::\+On\+Slider) \hyperlink{class_effect_equalization}{Effect\+Equalization}
+\begin{DoxyCompactList}\small\item\em 
+
+ \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Implements Effect\+Equaliztaion, Equalization\+Dialog, \hyperlink{class_equalization_panel}{Equalization\+Panel}, \hyperlink{class_e_q_curve}{E\+Q\+Curve} and \hyperlink{class_e_q_point}{E\+Q\+Point}. 
+
+
+
+\subsection{Macro Definition Documentation}
+\index{Equalization.\+cpp@{Equalization.\+cpp}!E\+Q\+C\+U\+R\+V\+E\+S\+\_\+\+R\+E\+V\+I\+S\+I\+ON@{E\+Q\+C\+U\+R\+V\+E\+S\+\_\+\+R\+E\+V\+I\+S\+I\+ON}}
+\index{E\+Q\+C\+U\+R\+V\+E\+S\+\_\+\+R\+E\+V\+I\+S\+I\+ON@{E\+Q\+C\+U\+R\+V\+E\+S\+\_\+\+R\+E\+V\+I\+S\+I\+ON}!Equalization.\+cpp@{Equalization.\+cpp}}
+\subsubsection[{\texorpdfstring{E\+Q\+C\+U\+R\+V\+E\+S\+\_\+\+R\+E\+V\+I\+S\+I\+ON}{EQCURVES_REVISION}}]{\setlength{\rightskip}{0pt plus 5cm}\#define E\+Q\+C\+U\+R\+V\+E\+S\+\_\+\+R\+E\+V\+I\+S\+I\+ON~0}\hypertarget{_equalization_8cpp_a12aaeb8993c5880d76854c50eed444af}{}\label{_equalization_8cpp_a12aaeb8993c5880d76854c50eed444af}
+
+
+Definition at line 145 of file Equalization.\+cpp.
+
+\index{Equalization.\+cpp@{Equalization.\+cpp}!E\+Q\+C\+U\+R\+V\+E\+S\+\_\+\+V\+E\+R\+S\+I\+ON@{E\+Q\+C\+U\+R\+V\+E\+S\+\_\+\+V\+E\+R\+S\+I\+ON}}
+\index{E\+Q\+C\+U\+R\+V\+E\+S\+\_\+\+V\+E\+R\+S\+I\+ON@{E\+Q\+C\+U\+R\+V\+E\+S\+\_\+\+V\+E\+R\+S\+I\+ON}!Equalization.\+cpp@{Equalization.\+cpp}}
+\subsubsection[{\texorpdfstring{E\+Q\+C\+U\+R\+V\+E\+S\+\_\+\+V\+E\+R\+S\+I\+ON}{EQCURVES_VERSION}}]{\setlength{\rightskip}{0pt plus 5cm}\#define E\+Q\+C\+U\+R\+V\+E\+S\+\_\+\+V\+E\+R\+S\+I\+ON~1}\hypertarget{_equalization_8cpp_ae8267842038c7a32f5c84b202c8d1078}{}\label{_equalization_8cpp_ae8267842038c7a32f5c84b202c8d1078}
+
+
+Definition at line 144 of file Equalization.\+cpp.
+
+\index{Equalization.\+cpp@{Equalization.\+cpp}!U\+P\+D\+A\+T\+E\+\_\+\+A\+LL@{U\+P\+D\+A\+T\+E\+\_\+\+A\+LL}}
+\index{U\+P\+D\+A\+T\+E\+\_\+\+A\+LL@{U\+P\+D\+A\+T\+E\+\_\+\+A\+LL}!Equalization.\+cpp@{Equalization.\+cpp}}
+\subsubsection[{\texorpdfstring{U\+P\+D\+A\+T\+E\+\_\+\+A\+LL}{UPDATE_ALL}}]{\setlength{\rightskip}{0pt plus 5cm}\#define U\+P\+D\+A\+T\+E\+\_\+\+A\+LL~0}\hypertarget{_equalization_8cpp_a5a09d43668bf6dde077f6d66994a1924}{}\label{_equalization_8cpp_a5a09d43668bf6dde077f6d66994a1924}
+
+
+Definition at line 146 of file Equalization.\+cpp.
+
+
+
+\subsection{Enumeration Type Documentation}
+\subsubsection[{\texorpdfstring{anonymous enum}{anonymous enum}}]{\setlength{\rightskip}{0pt plus 5cm}anonymous enum}\hypertarget{_equalization_8cpp_a6813be44df52c18b08debbebca7d09a8}{}\label{_equalization_8cpp_a6813be44df52c18b08debbebca7d09a8}
+\begin{Desc}
+\item[Enumerator]\par
+\begin{description}
+\index{I\+D\+\_\+\+Length@{I\+D\+\_\+\+Length}!Equalization.\+cpp@{Equalization.\+cpp}}\index{Equalization.\+cpp@{Equalization.\+cpp}!I\+D\+\_\+\+Length@{I\+D\+\_\+\+Length}}\item[{\em 
+I\+D\+\_\+\+Length\hypertarget{_equalization_8cpp_a6813be44df52c18b08debbebca7d09a8a865e8f0678202cf761a01e00822a46b3}{}\label{_equalization_8cpp_a6813be44df52c18b08debbebca7d09a8a865e8f0678202cf761a01e00822a46b3}
+}]\index{I\+D\+\_\+d\+B\+Max@{I\+D\+\_\+d\+B\+Max}!Equalization.\+cpp@{Equalization.\+cpp}}\index{Equalization.\+cpp@{Equalization.\+cpp}!I\+D\+\_\+d\+B\+Max@{I\+D\+\_\+d\+B\+Max}}\item[{\em 
+I\+D\+\_\+d\+B\+Max\hypertarget{_equalization_8cpp_a6813be44df52c18b08debbebca7d09a8a44294da3b88eb67ae53b40b0fdf731e3}{}\label{_equalization_8cpp_a6813be44df52c18b08debbebca7d09a8a44294da3b88eb67ae53b40b0fdf731e3}
+}]\index{I\+D\+\_\+d\+B\+Min@{I\+D\+\_\+d\+B\+Min}!Equalization.\+cpp@{Equalization.\+cpp}}\index{Equalization.\+cpp@{Equalization.\+cpp}!I\+D\+\_\+d\+B\+Min@{I\+D\+\_\+d\+B\+Min}}\item[{\em 
+I\+D\+\_\+d\+B\+Min\hypertarget{_equalization_8cpp_a6813be44df52c18b08debbebca7d09a8afd50f9a85f9c0fb88de067a32ced5770}{}\label{_equalization_8cpp_a6813be44df52c18b08debbebca7d09a8afd50f9a85f9c0fb88de067a32ced5770}
+}]\index{I\+D\+\_\+\+Clear@{I\+D\+\_\+\+Clear}!Equalization.\+cpp@{Equalization.\+cpp}}\index{Equalization.\+cpp@{Equalization.\+cpp}!I\+D\+\_\+\+Clear@{I\+D\+\_\+\+Clear}}\item[{\em 
+I\+D\+\_\+\+Clear\hypertarget{_equalization_8cpp_a6813be44df52c18b08debbebca7d09a8aca7b2d755da0797c0bde5ed9301bca70}{}\label{_equalization_8cpp_a6813be44df52c18b08debbebca7d09a8aca7b2d755da0797c0bde5ed9301bca70}
+}]\index{I\+D\+\_\+\+Invert@{I\+D\+\_\+\+Invert}!Equalization.\+cpp@{Equalization.\+cpp}}\index{Equalization.\+cpp@{Equalization.\+cpp}!I\+D\+\_\+\+Invert@{I\+D\+\_\+\+Invert}}\item[{\em 
+I\+D\+\_\+\+Invert\hypertarget{_equalization_8cpp_a6813be44df52c18b08debbebca7d09a8a4ad50a93b4d88734e3ed5d0c1b1b54b3}{}\label{_equalization_8cpp_a6813be44df52c18b08debbebca7d09a8a4ad50a93b4d88734e3ed5d0c1b1b54b3}
+}]\index{I\+D\+\_\+\+Mode@{I\+D\+\_\+\+Mode}!Equalization.\+cpp@{Equalization.\+cpp}}\index{Equalization.\+cpp@{Equalization.\+cpp}!I\+D\+\_\+\+Mode@{I\+D\+\_\+\+Mode}}\item[{\em 
+I\+D\+\_\+\+Mode\hypertarget{_equalization_8cpp_a6813be44df52c18b08debbebca7d09a8a38c42b561d34c3591d595b1b31c5c26b}{}\label{_equalization_8cpp_a6813be44df52c18b08debbebca7d09a8a38c42b561d34c3591d595b1b31c5c26b}
+}]\index{I\+D\+\_\+\+Draw@{I\+D\+\_\+\+Draw}!Equalization.\+cpp@{Equalization.\+cpp}}\index{Equalization.\+cpp@{Equalization.\+cpp}!I\+D\+\_\+\+Draw@{I\+D\+\_\+\+Draw}}\item[{\em 
+I\+D\+\_\+\+Draw\hypertarget{_equalization_8cpp_a6813be44df52c18b08debbebca7d09a8acaf86695a7ac58759c70efaef597ddf9}{}\label{_equalization_8cpp_a6813be44df52c18b08debbebca7d09a8acaf86695a7ac58759c70efaef597ddf9}
+}]\index{I\+D\+\_\+\+Graphic@{I\+D\+\_\+\+Graphic}!Equalization.\+cpp@{Equalization.\+cpp}}\index{Equalization.\+cpp@{Equalization.\+cpp}!I\+D\+\_\+\+Graphic@{I\+D\+\_\+\+Graphic}}\item[{\em 
+I\+D\+\_\+\+Graphic\hypertarget{_equalization_8cpp_a6813be44df52c18b08debbebca7d09a8a29a2ac63cb4b8af03529a09714c74fad}{}\label{_equalization_8cpp_a6813be44df52c18b08debbebca7d09a8a29a2ac63cb4b8af03529a09714c74fad}
+}]\index{I\+D\+\_\+\+Interp@{I\+D\+\_\+\+Interp}!Equalization.\+cpp@{Equalization.\+cpp}}\index{Equalization.\+cpp@{Equalization.\+cpp}!I\+D\+\_\+\+Interp@{I\+D\+\_\+\+Interp}}\item[{\em 
+I\+D\+\_\+\+Interp\hypertarget{_equalization_8cpp_a6813be44df52c18b08debbebca7d09a8a6644a2a240ed67dc4854400fd5cd1eb9}{}\label{_equalization_8cpp_a6813be44df52c18b08debbebca7d09a8a6644a2a240ed67dc4854400fd5cd1eb9}
+}]\index{I\+D\+\_\+\+Linear@{I\+D\+\_\+\+Linear}!Equalization.\+cpp@{Equalization.\+cpp}}\index{Equalization.\+cpp@{Equalization.\+cpp}!I\+D\+\_\+\+Linear@{I\+D\+\_\+\+Linear}}\item[{\em 
+I\+D\+\_\+\+Linear\hypertarget{_equalization_8cpp_a6813be44df52c18b08debbebca7d09a8a8d60d95e842d2313104dd0c678c6c156}{}\label{_equalization_8cpp_a6813be44df52c18b08debbebca7d09a8a8d60d95e842d2313104dd0c678c6c156}
+}]\index{I\+D\+\_\+\+Grid@{I\+D\+\_\+\+Grid}!Equalization.\+cpp@{Equalization.\+cpp}}\index{Equalization.\+cpp@{Equalization.\+cpp}!I\+D\+\_\+\+Grid@{I\+D\+\_\+\+Grid}}\item[{\em 
+I\+D\+\_\+\+Grid\hypertarget{_equalization_8cpp_a6813be44df52c18b08debbebca7d09a8a6809b33964d31898a8fbcf15761e7708}{}\label{_equalization_8cpp_a6813be44df52c18b08debbebca7d09a8a6809b33964d31898a8fbcf15761e7708}
+}]\index{I\+D\+\_\+\+Curve@{I\+D\+\_\+\+Curve}!Equalization.\+cpp@{Equalization.\+cpp}}\index{Equalization.\+cpp@{Equalization.\+cpp}!I\+D\+\_\+\+Curve@{I\+D\+\_\+\+Curve}}\item[{\em 
+I\+D\+\_\+\+Curve\hypertarget{_equalization_8cpp_a6813be44df52c18b08debbebca7d09a8a0a13d84560debae75635aa710581b2d3}{}\label{_equalization_8cpp_a6813be44df52c18b08debbebca7d09a8a0a13d84560debae75635aa710581b2d3}
+}]\index{I\+D\+\_\+\+Manage@{I\+D\+\_\+\+Manage}!Equalization.\+cpp@{Equalization.\+cpp}}\index{Equalization.\+cpp@{Equalization.\+cpp}!I\+D\+\_\+\+Manage@{I\+D\+\_\+\+Manage}}\item[{\em 
+I\+D\+\_\+\+Manage\hypertarget{_equalization_8cpp_a6813be44df52c18b08debbebca7d09a8ab2267510288e8de373c84b3d4d7ef637}{}\label{_equalization_8cpp_a6813be44df52c18b08debbebca7d09a8ab2267510288e8de373c84b3d4d7ef637}
+}]\index{I\+D\+\_\+\+Delete@{I\+D\+\_\+\+Delete}!Equalization.\+cpp@{Equalization.\+cpp}}\index{Equalization.\+cpp@{Equalization.\+cpp}!I\+D\+\_\+\+Delete@{I\+D\+\_\+\+Delete}}\item[{\em 
+I\+D\+\_\+\+Delete\hypertarget{_equalization_8cpp_a6813be44df52c18b08debbebca7d09a8a205d9324ba15e225d56bc8ede59dd7a7}{}\label{_equalization_8cpp_a6813be44df52c18b08debbebca7d09a8a205d9324ba15e225d56bc8ede59dd7a7}
+}]\index{I\+D\+\_\+\+Slider@{I\+D\+\_\+\+Slider}!Equalization.\+cpp@{Equalization.\+cpp}}\index{Equalization.\+cpp@{Equalization.\+cpp}!I\+D\+\_\+\+Slider@{I\+D\+\_\+\+Slider}}\item[{\em 
+I\+D\+\_\+\+Slider\hypertarget{_equalization_8cpp_a6813be44df52c18b08debbebca7d09a8a973bbe1ccd5c880428d852aa95597c1e}{}\label{_equalization_8cpp_a6813be44df52c18b08debbebca7d09a8a973bbe1ccd5c880428d852aa95597c1e}
+}]\end{description}
+\end{Desc}
+
+
+Definition at line 108 of file Equalization.\+cpp.
+
+\index{Equalization.\+cpp@{Equalization.\+cpp}!k\+Interpolations@{k\+Interpolations}}
+\index{k\+Interpolations@{k\+Interpolations}!Equalization.\+cpp@{Equalization.\+cpp}}
+\subsubsection[{\texorpdfstring{k\+Interpolations}{kInterpolations}}]{\setlength{\rightskip}{0pt plus 5cm}enum {\bf k\+Interpolations}}\hypertarget{_equalization_8cpp_a671f746774a3e3e4b9315ee9fc7eaf3a}{}\label{_equalization_8cpp_a671f746774a3e3e4b9315ee9fc7eaf3a}
+\begin{Desc}
+\item[Enumerator]\par
+\begin{description}
+\index{k\+Bspline@{k\+Bspline}!Equalization.\+cpp@{Equalization.\+cpp}}\index{Equalization.\+cpp@{Equalization.\+cpp}!k\+Bspline@{k\+Bspline}}\item[{\em 
+k\+Bspline\hypertarget{_equalization_8cpp_a671f746774a3e3e4b9315ee9fc7eaf3aaa46e4fdcc138a549e384640823b4b360}{}\label{_equalization_8cpp_a671f746774a3e3e4b9315ee9fc7eaf3aaa46e4fdcc138a549e384640823b4b360}
+}]\index{k\+Cosine@{k\+Cosine}!Equalization.\+cpp@{Equalization.\+cpp}}\index{Equalization.\+cpp@{Equalization.\+cpp}!k\+Cosine@{k\+Cosine}}\item[{\em 
+k\+Cosine\hypertarget{_equalization_8cpp_a671f746774a3e3e4b9315ee9fc7eaf3aaa160b4c3dcdb22ac16fe192d1904a049}{}\label{_equalization_8cpp_a671f746774a3e3e4b9315ee9fc7eaf3aaa160b4c3dcdb22ac16fe192d1904a049}
+}]\index{k\+Cubic@{k\+Cubic}!Equalization.\+cpp@{Equalization.\+cpp}}\index{Equalization.\+cpp@{Equalization.\+cpp}!k\+Cubic@{k\+Cubic}}\item[{\em 
+k\+Cubic\hypertarget{_equalization_8cpp_a671f746774a3e3e4b9315ee9fc7eaf3aa49f7e2a4145afb40a6eba4ad063a2b01}{}\label{_equalization_8cpp_a671f746774a3e3e4b9315ee9fc7eaf3aa49f7e2a4145afb40a6eba4ad063a2b01}
+}]\index{k\+Num\+Interpolations@{k\+Num\+Interpolations}!Equalization.\+cpp@{Equalization.\+cpp}}\index{Equalization.\+cpp@{Equalization.\+cpp}!k\+Num\+Interpolations@{k\+Num\+Interpolations}}\item[{\em 
+k\+Num\+Interpolations\hypertarget{_equalization_8cpp_a671f746774a3e3e4b9315ee9fc7eaf3aad98ef34cc74602dd8b0ed0787d9b4fe8}{}\label{_equalization_8cpp_a671f746774a3e3e4b9315ee9fc7eaf3aad98ef34cc74602dd8b0ed0787d9b4fe8}
+}]\index{k\+Linear@{k\+Linear}!Equalization.\+cpp@{Equalization.\+cpp}}\index{Equalization.\+cpp@{Equalization.\+cpp}!k\+Linear@{k\+Linear}}\item[{\em 
+k\+Linear\hypertarget{_equalization_8cpp_a671f746774a3e3e4b9315ee9fc7eaf3aac188c019178783e5be55110601309d7d}{}\label{_equalization_8cpp_a671f746774a3e3e4b9315ee9fc7eaf3aac188c019178783e5be55110601309d7d}
+}]\index{k\+Logarithmic@{k\+Logarithmic}!Equalization.\+cpp@{Equalization.\+cpp}}\index{Equalization.\+cpp@{Equalization.\+cpp}!k\+Logarithmic@{k\+Logarithmic}}\item[{\em 
+k\+Logarithmic\hypertarget{_equalization_8cpp_a671f746774a3e3e4b9315ee9fc7eaf3aab3cdeeb0a68f089a01a04a855610ca49}{}\label{_equalization_8cpp_a671f746774a3e3e4b9315ee9fc7eaf3aab3cdeeb0a68f089a01a04a855610ca49}
+}]\index{k\+Num\+Interpolations@{k\+Num\+Interpolations}!Equalization.\+cpp@{Equalization.\+cpp}}\index{Equalization.\+cpp@{Equalization.\+cpp}!k\+Num\+Interpolations@{k\+Num\+Interpolations}}\item[{\em 
+k\+Num\+Interpolations\hypertarget{_equalization_8cpp_a671f746774a3e3e4b9315ee9fc7eaf3aad98ef34cc74602dd8b0ed0787d9b4fe8}{}\label{_equalization_8cpp_a671f746774a3e3e4b9315ee9fc7eaf3aad98ef34cc74602dd8b0ed0787d9b4fe8}
+}]\end{description}
+\end{Desc}
+
+
+Definition at line 135 of file Equalization.\+cpp.
+
+
+
+\subsection{Function Documentation}
+\index{Equalization.\+cpp@{Equalization.\+cpp}!E\+V\+T\+\_\+\+C\+O\+M\+M\+A\+N\+D\+\_\+\+R\+A\+N\+GE@{E\+V\+T\+\_\+\+C\+O\+M\+M\+A\+N\+D\+\_\+\+R\+A\+N\+GE}}
+\index{E\+V\+T\+\_\+\+C\+O\+M\+M\+A\+N\+D\+\_\+\+R\+A\+N\+GE@{E\+V\+T\+\_\+\+C\+O\+M\+M\+A\+N\+D\+\_\+\+R\+A\+N\+GE}!Equalization.\+cpp@{Equalization.\+cpp}}
+\subsubsection[{\texorpdfstring{E\+V\+T\+\_\+\+C\+O\+M\+M\+A\+N\+D\+\_\+\+R\+A\+N\+G\+E(\+I\+D\+\_\+\+Slider, I\+D\+\_\+\+Slider+\+N\+U\+M\+B\+E\+R\+\_\+\+O\+F\+\_\+\+B\+A\+N\+D\+S-\/1, wx\+E\+V\+T\+\_\+\+C\+O\+M\+M\+A\+N\+D\+\_\+\+S\+L\+I\+D\+E\+R\+\_\+\+U\+P\+D\+A\+T\+E\+D, Effect\+Equalization\+::\+On\+Slider) Effect\+Equalization}{EVT_COMMAND_RANGE(ID_Slider, ID_Slider+NUMBER_OF_BANDS-1, wxEVT_COMMAND_SLIDER_UPDATED, EffectEqualization::OnSlider) EffectEqualization}}]{\setlength{\rightskip}{0pt plus 5cm}E\+V\+T\+\_\+\+C\+O\+M\+M\+A\+N\+D\+\_\+\+R\+A\+N\+GE (
+\begin{DoxyParamCaption}
+\item[{{\bf I\+D\+\_\+\+Slider}}]{, }
+\item[{{\bf I\+D\+\_\+\+Slider}+{\bf N\+U\+M\+B\+E\+R\+\_\+\+O\+F\+\_\+\+B\+A\+N\+DS}-\/}]{1, }
+\item[{wx\+E\+V\+T\+\_\+\+C\+O\+M\+M\+A\+N\+D\+\_\+\+S\+L\+I\+D\+E\+R\+\_\+\+U\+P\+D\+A\+T\+ED}]{, }
+\item[{Effect\+Equalization\+::\+On\+Slider}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{_equalization_8cpp_a3bad134df05c84f76c87f9188852e456}{}\label{_equalization_8cpp_a3bad134df05c84f76c87f9188852e456}
+
+
+
+
+ 
+
+
+
+Definition at line 189 of file Equalization.\+cpp.
+
+\index{Equalization.\+cpp@{Equalization.\+cpp}!Param@{Param}}
+\index{Param@{Param}!Equalization.\+cpp@{Equalization.\+cpp}}
+\subsubsection[{\texorpdfstring{Param(\+Filter\+Length, int, X\+O(""Filter\+Length""), 4001, 21, 8191, 0)}{Param(FilterLength, int, XO("FilterLength"), 4001, 21, 8191, 0)}}]{\setlength{\rightskip}{0pt plus 5cm}Param (
+\begin{DoxyParamCaption}
+\item[{Filter\+Length}]{, }
+\item[{{\bf int}}]{, }
+\item[{{\bf XO}(\char`\"{}Filter\+Length\char`\"{})}]{, }
+\item[{4001}]{, }
+\item[{21}]{, }
+\item[{8191}]{, }
+\item[{0}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{_equalization_8cpp_a6e92acea45b553e7085d017e1de6a0ba}{}\label{_equalization_8cpp_a6e92acea45b553e7085d017e1de6a0ba}
+\index{Equalization.\+cpp@{Equalization.\+cpp}!Param@{Param}}
+\index{Param@{Param}!Equalization.\+cpp@{Equalization.\+cpp}}
+\subsubsection[{\texorpdfstring{Param(\+Curve\+Name, wx\+Char $\ast$, X\+O(""Curve\+Name""), wx\+T(""unnamed""), wx\+T(""""), wx\+T(""""), wx\+T(""""))}{Param(CurveName, wxChar *, XO("CurveName"), wxT("unnamed"), wxT(""), wxT(""), wxT(""))}}]{\setlength{\rightskip}{0pt plus 5cm}Param (
+\begin{DoxyParamCaption}
+\item[{Curve\+Name}]{, }
+\item[{wx\+Char $\ast$}]{, }
+\item[{{\bf XO}(\char`\"{}Curve\+Name\char`\"{})}]{, }
+\item[{wxT(\char`\"{}unnamed\char`\"{})}]{, }
+\item[{wxT(\char`\"{}\char`\"{})}]{, }
+\item[{wxT(\char`\"{}\char`\"{})}]{, }
+\item[{wxT(\char`\"{}\char`\"{})}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{_equalization_8cpp_a5ad215fbf578a9e7643e8334ed2b8faa}{}\label{_equalization_8cpp_a5ad215fbf578a9e7643e8334ed2b8faa}
+\index{Equalization.\+cpp@{Equalization.\+cpp}!Param@{Param}}
+\index{Param@{Param}!Equalization.\+cpp@{Equalization.\+cpp}}
+\subsubsection[{\texorpdfstring{Param(\+Interp\+Lin, bool, X\+O(""Interpolate\+Lin""), false, false, true, false)}{Param(InterpLin, bool, XO("InterpolateLin"), false, false, true, false)}}]{\setlength{\rightskip}{0pt plus 5cm}Param (
+\begin{DoxyParamCaption}
+\item[{Interp\+Lin}]{, }
+\item[{{\bf bool}}]{, }
+\item[{{\bf XO}(\char`\"{}Interpolate\+Lin\char`\"{})}]{, }
+\item[{{\bf false}}]{, }
+\item[{{\bf false}}]{, }
+\item[{{\bf true}}]{, }
+\item[{{\bf false}}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{_equalization_8cpp_a9c0f627236c04727bf628dc4493ca72f}{}\label{_equalization_8cpp_a9c0f627236c04727bf628dc4493ca72f}
+\index{Equalization.\+cpp@{Equalization.\+cpp}!Param@{Param}}
+\index{Param@{Param}!Equalization.\+cpp@{Equalization.\+cpp}}
+\subsubsection[{\texorpdfstring{Param(\+Interp\+Meth, int, X\+O(""Interpolation\+Method""), 0, 0, 0, 0)}{Param(InterpMeth, int, XO("InterpolationMethod"), 0, 0, 0, 0)}}]{\setlength{\rightskip}{0pt plus 5cm}Param (
+\begin{DoxyParamCaption}
+\item[{Interp\+Meth}]{, }
+\item[{{\bf int}}]{, }
+\item[{{\bf XO}(\char`\"{}Interpolation\+Method\char`\"{})}]{, }
+\item[{0}]{, }
+\item[{0}]{, }
+\item[{0}]{, }
+\item[{0}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{_equalization_8cpp_a4254d953daace9e07b75c0ad744a5fd8}{}\label{_equalization_8cpp_a4254d953daace9e07b75c0ad744a5fd8}
+\index{Equalization.\+cpp@{Equalization.\+cpp}!Param@{Param}}
+\index{Param@{Param}!Equalization.\+cpp@{Equalization.\+cpp}}
+\subsubsection[{\texorpdfstring{Param(\+Draw\+Mode, bool, wx\+T(""""), true, false, true, false)}{Param(DrawMode, bool, wxT(""), true, false, true, false)}}]{\setlength{\rightskip}{0pt plus 5cm}Param (
+\begin{DoxyParamCaption}
+\item[{Draw\+Mode}]{, }
+\item[{{\bf bool}}]{, }
+\item[{wxT(\char`\"{}\char`\"{})}]{, }
+\item[{{\bf true}}]{, }
+\item[{{\bf false}}]{, }
+\item[{{\bf true}}]{, }
+\item[{{\bf false}}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{_equalization_8cpp_a426e4b1b1fb6591c645237d7012de176}{}\label{_equalization_8cpp_a426e4b1b1fb6591c645237d7012de176}
+\index{Equalization.\+cpp@{Equalization.\+cpp}!Param@{Param}}
+\index{Param@{Param}!Equalization.\+cpp@{Equalization.\+cpp}}
+\subsubsection[{\texorpdfstring{Param(\+Draw\+Grid, bool, wx\+T(""""), true, false, true, false)}{Param(DrawGrid, bool, wxT(""), true, false, true, false)}}]{\setlength{\rightskip}{0pt plus 5cm}Param (
+\begin{DoxyParamCaption}
+\item[{Draw\+Grid}]{, }
+\item[{{\bf bool}}]{, }
+\item[{wxT(\char`\"{}\char`\"{})}]{, }
+\item[{{\bf true}}]{, }
+\item[{{\bf false}}]{, }
+\item[{{\bf true}}]{, }
+\item[{{\bf false}}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{_equalization_8cpp_a0a2cf2e933dd9808ae564eabc3e8561f}{}\label{_equalization_8cpp_a0a2cf2e933dd9808ae564eabc3e8561f}
+\index{Equalization.\+cpp@{Equalization.\+cpp}!Param@{Param}}
+\index{Param@{Param}!Equalization.\+cpp@{Equalization.\+cpp}}
+\subsubsection[{\texorpdfstring{Param(d\+B\+Min, float, wx\+T(""""),-\/30.\+0,-\/120.\+0,-\/10.\+0, 0)}{Param(dBMin, float, wxT(""),-30.0,-120.0,-10.0, 0)}}]{\setlength{\rightskip}{0pt plus 5cm}Param (
+\begin{DoxyParamCaption}
+\item[{d\+B\+Min}]{, }
+\item[{float}]{, }
+\item[{wxT(\char`\"{}\char`\"{})}]{, }
+\item[{-\/30.}]{0, }
+\item[{-\/120.}]{0, }
+\item[{-\/10.}]{0, }
+\item[{0}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{_equalization_8cpp_af9a1cff1ad3341c5be5d190e214e714b}{}\label{_equalization_8cpp_af9a1cff1ad3341c5be5d190e214e714b}
+\index{Equalization.\+cpp@{Equalization.\+cpp}!Param@{Param}}
+\index{Param@{Param}!Equalization.\+cpp@{Equalization.\+cpp}}
+\subsubsection[{\texorpdfstring{Param(d\+B\+Max, float, wx\+T(""""), 30.\+0, 0.\+0, 60.\+0, 0)}{Param(dBMax, float, wxT(""), 30.0, 0.0, 60.0, 0)}}]{\setlength{\rightskip}{0pt plus 5cm}Param (
+\begin{DoxyParamCaption}
+\item[{d\+B\+Max}]{, }
+\item[{float}]{, }
+\item[{wxT(\char`\"{}\char`\"{})}]{, }
+\item[{30.}]{0, }
+\item[{0.}]{0, }
+\item[{60.}]{0, }
+\item[{0}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{_equalization_8cpp_abf13b30605744fb1dc17dec0fdf9b052}{}\label{_equalization_8cpp_abf13b30605744fb1dc17dec0fdf9b052}
+\index{Equalization.\+cpp@{Equalization.\+cpp}!W\+X\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+O\+B\+J\+A\+R\+R\+AY@{W\+X\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+O\+B\+J\+A\+R\+R\+AY}}
+\index{W\+X\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+O\+B\+J\+A\+R\+R\+AY@{W\+X\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+O\+B\+J\+A\+R\+R\+AY}!Equalization.\+cpp@{Equalization.\+cpp}}
+\subsubsection[{\texorpdfstring{W\+X\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+O\+B\+J\+A\+R\+R\+A\+Y(\+E\+Q\+Point\+Array)}{WX_DEFINE_OBJARRAY(EQPointArray)}}]{\setlength{\rightskip}{0pt plus 5cm}W\+X\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+O\+B\+J\+A\+R\+R\+AY (
+\begin{DoxyParamCaption}
+\item[{E\+Q\+Point\+Array}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{_equalization_8cpp_aba2263c3424d7897d4fcf09772295e1a}{}\label{_equalization_8cpp_aba2263c3424d7897d4fcf09772295e1a}
+\index{Equalization.\+cpp@{Equalization.\+cpp}!W\+X\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+O\+B\+J\+A\+R\+R\+AY@{W\+X\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+O\+B\+J\+A\+R\+R\+AY}}
+\index{W\+X\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+O\+B\+J\+A\+R\+R\+AY@{W\+X\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+O\+B\+J\+A\+R\+R\+AY}!Equalization.\+cpp@{Equalization.\+cpp}}
+\subsubsection[{\texorpdfstring{W\+X\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+O\+B\+J\+A\+R\+R\+A\+Y(\+E\+Q\+Curve\+Array)}{WX_DEFINE_OBJARRAY(EQCurveArray)}}]{\setlength{\rightskip}{0pt plus 5cm}W\+X\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+O\+B\+J\+A\+R\+R\+AY (
+\begin{DoxyParamCaption}
+\item[{E\+Q\+Curve\+Array}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{_equalization_8cpp_abd1cf3408071da87ddf659a1ff33adcc}{}\label{_equalization_8cpp_abd1cf3408071da87ddf659a1ff33adcc}

@@ -1,0 +1,155 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/lib-src/ffmpeg/libavutil/stereo3d.h" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/lib-src/ffmpeg/libavutil/stereo3d.h \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <stdint\&.h>\fP
+.br
+\fC#include 'frame\&.h'\fP
+.br
+
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "struct \fBAVStereo3D\fP"
+.br
+.in -1c
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBAV_STEREO3D_FLAG_INVERT\fP   (1 << 0)"
+.br
+.in -1c
+.SS "Typedefs"
+
+.in +1c
+.ti -1c
+.RI "typedef struct \fBAVStereo3D\fP \fBAVStereo3D\fP"
+.br
+.in -1c
+.SS "Enumerations"
+
+.in +1c
+.ti -1c
+.RI "enum \fBAVStereo3DType\fP { \fBAV_STEREO3D_2D\fP, \fBAV_STEREO3D_SIDEBYSIDE\fP, \fBAV_STEREO3D_TOPBOTTOM\fP, \fBAV_STEREO3D_FRAMESEQUENCE\fP, \fBAV_STEREO3D_CHECKERBOARD\fP, \fBAV_STEREO3D_SIDEBYSIDE_QUINCUNX\fP, \fBAV_STEREO3D_LINES\fP, \fBAV_STEREO3D_COLUMNS\fP }"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBAVStereo3D\fP * \fBav_stereo3d_alloc\fP (\fBvoid\fP)"
+.br
+.ti -1c
+.RI "\fBAVStereo3D\fP * \fBav_stereo3d_create_side_data\fP (\fBAVFrame\fP *frame)"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define AV_STEREO3D_FLAG_INVERT   (1 << 0)"
+Inverted views, Right/Bottom represents the left view\&. 
+.PP
+Definition at line 111 of file stereo3d\&.h\&.
+.SH "Typedef Documentation"
+.PP 
+.SS "typedef struct \fBAVStereo3D\fP  \fBAVStereo3D\fP"
+Stereo 3D type: this structure describes how two videos are packed within a single video surface, with additional information as needed\&.
+.PP
+\fBNote:\fP
+.RS 4
+The struct must be allocated with \fBav_stereo3d_alloc()\fP and its size is not a part of the public ABI\&. 
+.RE
+.PP
+
+.SH "Enumeration Type Documentation"
+.PP 
+.SS "enum \fBAVStereo3DType\fP"
+List of possible 3D Types 
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fIAV_STEREO3D_2D \fP\fP
+Video is not stereoscopic (and metadata has to be there)\&. 
+.TP
+\fB\fIAV_STEREO3D_SIDEBYSIDE \fP\fP
+Views are next to each other\&.
+.PP
+LLLLRRRR LLLLRRRR LLLLRRRR \&.\&.\&. 
+.TP
+\fB\fIAV_STEREO3D_TOPBOTTOM \fP\fP
+Views are on top of each other\&.
+.PP
+LLLLLLLL LLLLLLLL RRRRRRRR RRRRRRRR 
+.TP
+\fB\fIAV_STEREO3D_FRAMESEQUENCE \fP\fP
+Views are alternated temporally\&. 
+.PP
+.nf
+frame0   frame1   frame2   ...
+
+.fi
+.PP
+ LLLLLLLL RRRRRRRR LLLLLLLL LLLLLLLL RRRRRRRR LLLLLLLL LLLLLLLL RRRRRRRR LLLLLLLL \&.\&.\&. \&.\&.\&. \&.\&.\&. 
+.TP
+\fB\fIAV_STEREO3D_CHECKERBOARD \fP\fP
+Views are packed in a checkerboard-like structure per pixel\&.
+.PP
+LRLRLRLR RLRLRLRL LRLRLRLR \&.\&.\&. 
+.TP
+\fB\fIAV_STEREO3D_SIDEBYSIDE_QUINCUNX \fP\fP
+Views are next to each other, but when upscaling apply a checkerboard pattern\&. 
+.PP
+.nf
+LLLLRRRR          L L L L    R R R R
+LLLLRRRR    =>     L L L L  R R R R
+LLLLRRRR          L L L L    R R R R
+LLLLRRRR           L L L L  R R R R
+.fi
+.PP
+ 
+.TP
+\fB\fIAV_STEREO3D_LINES \fP\fP
+Views are packed per line, as if interlaced\&.
+.PP
+LLLLLLLL RRRRRRRR LLLLLLLL \&.\&.\&. 
+.TP
+\fB\fIAV_STEREO3D_COLUMNS \fP\fP
+Views are packed per column\&.
+.PP
+LRLRLRLR LRLRLRLR LRLRLRLR \&.\&.\&. 
+.PP
+Definition at line 28 of file stereo3d\&.h\&.
+.SH "Function Documentation"
+.PP 
+.SS "\fBAVStereo3D\fP* av_stereo3d_alloc (\fBvoid\fP)"
+Allocate an \fBAVStereo3D\fP structure and set its fields to default values\&. The resulting struct can be freed using \fBav_freep()\fP\&.
+.PP
+\fBReturns:\fP
+.RS 4
+An \fBAVStereo3D\fP filled with default values or NULL on failure\&. 
+.RE
+.PP
+
+.SS "\fBAVStereo3D\fP* av_stereo3d_create_side_data (\fBAVFrame\fP * frame)"
+Allocate a complete \fBAVFrameSideData\fP and add it to the frame\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIframe\fP The frame which side data is added to\&.
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+The \fBAVStereo3D\fP structure to be filled by caller\&. 
+.RE
+.PP
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

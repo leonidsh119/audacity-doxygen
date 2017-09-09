@@ -1,0 +1,151 @@
+.TH "ODFileDecoder" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+ODFileDecoder \- class to decode a particular file (one per file)\&. Saves info such as filename and length (after the header is read\&.)  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <ODDecodeTask\&.h>\fP
+.PP
+Inherited by \fBODFlacDecoder\fP\&.
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBODFileDecoder\fP (\fBconst\fP wxString &fName)"
+.br
+.RI "\fIThis should handle unicode converted to UTF-8 on mac/linux, but OD TODO:check on windows\&. \fP"
+.ti -1c
+.RI "virtual \fB~ODFileDecoder\fP ()"
+.br
+.ti -1c
+.RI "virtual \fBbool\fP \fBReadHeader\fP ()=0"
+.br
+.ti -1c
+.RI "virtual \fBbool\fP \fBInit\fP ()"
+.br
+.ti -1c
+.RI "virtual \fBbool\fP \fBSeekingAllowed\fP ()"
+.br
+.ti -1c
+.RI "virtual \fBint\fP \fBDecode\fP (\fBSampleBuffer\fP &\fBdata\fP, \fBsampleFormat\fP &\fBformat\fP, \fBsampleCount\fP \fBstart\fP, \fBsampleCount\fP \fBlen\fP, unsigned \fBint\fP channel)=0"
+.br
+.ti -1c
+.RI "wxString \fBGetFileName\fP ()"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBIsInitialized\fP ()"
+.br
+.in -1c
+.SS "Protected Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBvoid\fP \fBMarkInitialized\fP ()"
+.br
+.RI "\fIDerived classes should call this after they have parsed the header\&. \fP"
+.in -1c
+.SS "Protected Attributes"
+
+.in +1c
+.ti -1c
+.RI "\fBbool\fP \fBmInited\fP"
+.br
+.ti -1c
+.RI "\fBODLock\fP \fBmInitedLock\fP"
+.br
+.ti -1c
+.RI "wxString \fBmFName\fP"
+.br
+.ti -1c
+.RI "unsigned \fBint\fP \fBmSampleRate\fP"
+.br
+.ti -1c
+.RI "unsigned \fBint\fP \fBmNumSamples\fP"
+.br
+.ti -1c
+.RI "unsigned \fBint\fP \fBmNumChannels\fP"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+class to decode a particular file (one per file)\&. Saves info such as filename and length (after the header is read\&.) 
+.PP
+Definition at line 101 of file ODDecodeTask\&.h\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "ODFileDecoder::ODFileDecoder (\fBconst\fP wxString & fName)"
+
+.PP
+This should handle unicode converted to UTF-8 on mac/linux, but OD TODO:check on windows\&. 
+.PP
+Definition at line 291 of file ODDecodeTask\&.cpp\&.
+.SS "ODFileDecoder::~ODFileDecoder ()\fC [virtual]\fP"
+
+.PP
+Definition at line 297 of file ODDecodeTask\&.cpp\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "virtual \fBint\fP ODFileDecoder::Decode (\fBSampleBuffer\fP & data, \fBsampleFormat\fP & format, \fBsampleCount\fP start, \fBsampleCount\fP len, unsigned \fBint\fP channel)\fC [pure virtual]\fP"
+Decodes the samples for this blockfile from the real file into a float buffer\&. This is file specific, so subclasses must implement this only\&. the buffer should be created by the \fBODFileDecoder\fP implementing this method\&. It should set the format parameter so that the client code can deal with it\&. This class should call \fBReadHeader()\fP first, so it knows the length, and can prepare the file object if it needs to\&. returns negative value for failure, 0 or positive value for success\&. 
+.PP
+Implemented in \fBODFlacDecoder\fP\&.
+.SS "wxString ODFileDecoder::GetFileName ()\fC [inline]\fP"
+
+.PP
+Definition at line 124 of file ODDecodeTask\&.h\&.
+.SS "virtual \fBbool\fP ODFileDecoder::Init ()\fC [inline]\fP, \fC [virtual]\fP"
+
+.PP
+Definition at line 111 of file ODDecodeTask\&.h\&.
+.SS "\fBbool\fP ODFileDecoder::IsInitialized ()"
+
+.PP
+Definition at line 301 of file ODDecodeTask\&.cpp\&.
+.SS "\fBvoid\fP ODFileDecoder::MarkInitialized ()\fC [protected]\fP"
+
+.PP
+Derived classes should call this after they have parsed the header\&. 
+.PP
+Definition at line 311 of file ODDecodeTask\&.cpp\&.
+.SS "virtual \fBbool\fP ODFileDecoder::ReadHeader ()\fC [pure virtual]\fP"
+Read header\&. Subclasses must override\&. Probably should save the info somewhere\&. Ideally called once per decoding of a file\&. This complicates the task because 
+.PP
+Implemented in \fBODFlacDecoder\fP\&.
+.SS "virtual \fBbool\fP ODFileDecoder::SeekingAllowed ()\fC [inline]\fP, \fC [virtual]\fP"
+
+.PP
+Definition at line 113 of file ODDecodeTask\&.h\&.
+.SH "Member Data Documentation"
+.PP 
+.SS "wxString ODFileDecoder::mFName\fC [protected]\fP"
+
+.PP
+Definition at line 135 of file ODDecodeTask\&.h\&.
+.SS "\fBbool\fP ODFileDecoder::mInited\fC [protected]\fP"
+
+.PP
+Definition at line 132 of file ODDecodeTask\&.h\&.
+.SS "\fBODLock\fP ODFileDecoder::mInitedLock\fC [protected]\fP"
+
+.PP
+Definition at line 133 of file ODDecodeTask\&.h\&.
+.SS "unsigned \fBint\fP ODFileDecoder::mNumChannels\fC [protected]\fP"
+
+.PP
+Definition at line 139 of file ODDecodeTask\&.h\&.
+.SS "unsigned \fBint\fP ODFileDecoder::mNumSamples\fC [protected]\fP"
+
+.PP
+Definition at line 138 of file ODDecodeTask\&.h\&.
+.SS "unsigned \fBint\fP ODFileDecoder::mSampleRate\fC [protected]\fP"
+
+.PP
+Definition at line 137 of file ODDecodeTask\&.h\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

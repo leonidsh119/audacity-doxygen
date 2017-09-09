@@ -1,0 +1,144 @@
+.TH "C:/_dev/OpenU/Audacity/audacity/src/Diags.h" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C:/_dev/OpenU/Audacity/audacity/src/Diags.h \- 
+.SH SYNOPSIS
+.br
+.PP
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "struct \fBt_diag_struct\fP"
+.br
+.in -1c
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBDEFAULT_LOG_COUNT\fP   (10)"
+.br
+.ti -1c
+.RI "#define \fBMAKE_TIMER\fP(timername)   static \fBt_diag_struct\fP * timername = \fBNULL\fP;"
+.br
+.ti -1c
+.RI "#define \fBDIAG\fP(message)"
+.br
+.ti -1c
+.RI "#define \fBTRACK_MEM\fP(message,  amount)"
+.br
+.ti -1c
+.RI "#define \fBTIMER_START\fP(message,  timername)"
+.br
+.ti -1c
+.RI "#define \fBTIMER_STOP\fP(timername)"
+.br
+.in -1c
+.SS "Typedefs"
+
+.in +1c
+.ti -1c
+.RI "typedef long \fBt_diag_timer\fP"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBvoid\fP \fBdiagnostics_do_diag\fP (\fBt_diag_struct\fP *pDiag)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBdiagnostics_do_diag_mem\fP (\fBt_diag_struct\fP *pDiag, long amount)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBdiagnostics_do_perfmon_start\fP (\fBt_diag_struct\fP *pDiag, \fBt_diag_struct\fP **ppRememberMe)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBdiagnostics_do_perfmon_stop\fP (\fBt_diag_struct\fP **ppDiag)"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define DEFAULT_LOG_COUNT   (10)"
+
+.PP
+Definition at line 37 of file Diags\&.h\&.
+.SS "#define DIAG(message)"
+\fBValue:\fP
+.PP
+.nf
+{ \
+   static t_diag_struct diag = { DEFAULT_LOG_COUNT, DEFAULT_LOG_COUNT, 0,0,0,0,wxT(message)};\
+   if( --diag\&.countdown >=0 )\
+      diagnostics_do_diag( &diag );\
+}
+.fi
+.PP
+Definition at line 57 of file Diags\&.h\&.
+.SS "#define MAKE_TIMER(timername)   static \fBt_diag_struct\fP * timername = \fBNULL\fP;"
+
+.PP
+Definition at line 50 of file Diags\&.h\&.
+.SS "#define TIMER_START(message, timername)"
+\fBValue:\fP
+.PP
+.nf
+MAKE_TIMER( timername ); { \
+   static t_diag_struct diag = { DEFAULT_LOG_COUNT, DEFAULT_LOG_COUNT, 0,0,0,0,wxT(message)};\
+   if( --diag\&.countdown >=0 )\
+      diagnostics_do_perfmon_start( &diag, &timername );\
+}
+.fi
+.PP
+Definition at line 69 of file Diags\&.h\&.
+.SS "#define TIMER_STOP(timername)"
+\fBValue:\fP
+.PP
+.nf
+{ \
+   if( timername != NULL )\
+      diagnostics_do_perfmon_stop( &timername );\
+}
+.fi
+.PP
+Definition at line 76 of file Diags\&.h\&.
+.SS "#define TRACK_MEM(message, amount)"
+\fBValue:\fP
+.PP
+.nf
+{ \
+   static t_diag_struct diag = { DEFAULT_LOG_COUNT, DEFAULT_LOG_COUNT, 0,0,0,0,wxT(message)};\
+   if( --diag\&.countdown >=0 )\
+      diagnostics_do_diag_mem( &diag, amount );\
+}
+.fi
+.PP
+Definition at line 63 of file Diags\&.h\&.
+.SH "Typedef Documentation"
+.PP 
+.SS "typedef long \fBt_diag_timer\fP"
+
+.PP
+Definition at line 18 of file Diags\&.h\&.
+.SH "Function Documentation"
+.PP 
+.SS "\fBvoid\fP diagnostics_do_diag (\fBt_diag_struct\fP * pDiag)"
+
+.PP
+Definition at line 43 of file Diags\&.cpp\&.
+.SS "\fBvoid\fP diagnostics_do_diag_mem (\fBt_diag_struct\fP * pDiag, long amount)"
+
+.PP
+Definition at line 48 of file Diags\&.cpp\&.
+.SS "\fBvoid\fP diagnostics_do_perfmon_start (\fBt_diag_struct\fP * pDiag, \fBt_diag_struct\fP ** ppRememberMe)"
+
+.PP
+Definition at line 64 of file Diags\&.cpp\&.
+.SS "\fBvoid\fP diagnostics_do_perfmon_stop (\fBt_diag_struct\fP ** ppDiag)"
+
+.PP
+Definition at line 75 of file Diags\&.cpp\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

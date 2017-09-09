@@ -1,0 +1,153 @@
+.TH "lavc_parsing" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+lavc_parsing \- Frame parsing
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "struct \fBAVCodecParserContext\fP"
+.br
+.ti -1c
+.RI "struct \fBAVCodecParser\fP"
+.br
+.in -1c
+.SS "Typedefs"
+
+.in +1c
+.ti -1c
+.RI "typedef struct \fBAVCodecParserContext\fP \fBAVCodecParserContext\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBAVCodecParser\fP \fBAVCodecParser\fP"
+.br
+.in -1c
+.SS "Enumerations"
+
+.in +1c
+.ti -1c
+.RI "enum \fBAVPictureStructure\fP { \fBAV_PICTURE_STRUCTURE_UNKNOWN\fP, \fBAV_PICTURE_STRUCTURE_TOP_FIELD\fP, \fBAV_PICTURE_STRUCTURE_BOTTOM_FIELD\fP, \fBAV_PICTURE_STRUCTURE_FRAME\fP }"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBAVCodecParser\fP * \fBav_parser_next\fP (\fBAVCodecParser\fP *\fBc\fP)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBav_register_codec_parser\fP (\fBAVCodecParser\fP *parser)"
+.br
+.ti -1c
+.RI "\fBAVCodecParserContext\fP * \fBav_parser_init\fP (\fBint\fP codec_id)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_parser_parse2\fP (\fBAVCodecParserContext\fP *\fBs\fP, \fBAVCodecContext\fP *avctx, \fBuint8_t\fP **poutbuf, \fBint\fP *poutbuf_size, \fBconst\fP \fBuint8_t\fP *\fBbuf\fP, \fBint\fP buf_size, \fBint64_t\fP pts, \fBint64_t\fP dts, \fBint64_t\fP pos)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBav_parser_change\fP (\fBAVCodecParserContext\fP *\fBs\fP, \fBAVCodecContext\fP *avctx, \fBuint8_t\fP **poutbuf, \fBint\fP *poutbuf_size, \fBconst\fP \fBuint8_t\fP *\fBbuf\fP, \fBint\fP buf_size, \fBint\fP keyframe)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBav_parser_close\fP (\fBAVCodecParserContext\fP *\fBs\fP)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+
+.SH "Typedef Documentation"
+.PP 
+.SS "typedef struct \fBAVCodecParser\fP  \fBAVCodecParser\fP"
+
+.SS "typedef struct \fBAVCodecParserContext\fP  \fBAVCodecParserContext\fP"
+
+.SH "Enumeration Type Documentation"
+.PP 
+.SS "enum \fBAVPictureStructure\fP"
+
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fIAV_PICTURE_STRUCTURE_UNKNOWN \fP\fP
+.TP
+\fB\fIAV_PICTURE_STRUCTURE_TOP_FIELD \fP\fP
+.TP
+\fB\fIAV_PICTURE_STRUCTURE_BOTTOM_FIELD \fP\fP
+.TP
+\fB\fIAV_PICTURE_STRUCTURE_FRAME \fP\fP
+.PP
+Definition at line 4000 of file avcodec\&.h\&.
+.SH "Function Documentation"
+.PP 
+.SS "\fBint\fP av_parser_change (\fBAVCodecParserContext\fP * s, \fBAVCodecContext\fP * avctx, \fBuint8_t\fP ** poutbuf, \fBint\fP * poutbuf_size, \fBconst\fP \fBuint8_t\fP * buf, \fBint\fP buf_size, \fBint\fP keyframe)"
+
+.PP
+\fBReturns:\fP
+.RS 4
+0 if the output buffer is a subset of the input, 1 if it is allocated and must be freed 
+.RE
+.PP
+\fBDeprecated\fP
+.RS 4
+use \fBAVBitStreamFilter\fP 
+.RE
+.PP
+
+.SS "\fBvoid\fP av_parser_close (\fBAVCodecParserContext\fP * s)"
+
+.SS "\fBAVCodecParserContext\fP* av_parser_init (\fBint\fP codec_id)"
+
+.SS "\fBAVCodecParser\fP* av_parser_next (\fBAVCodecParser\fP * c)"
+
+.SS "\fBint\fP av_parser_parse2 (\fBAVCodecParserContext\fP * s, \fBAVCodecContext\fP * avctx, \fBuint8_t\fP ** poutbuf, \fBint\fP * poutbuf_size, \fBconst\fP \fBuint8_t\fP * buf, \fBint\fP buf_size, \fBint64_t\fP pts, \fBint64_t\fP dts, \fBint64_t\fP pos)"
+Parse a packet\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIs\fP parser context\&. 
+.br
+\fIavctx\fP codec context\&. 
+.br
+\fIpoutbuf\fP set to pointer to parsed buffer or NULL if not yet finished\&. 
+.br
+\fIpoutbuf_size\fP set to size of parsed buffer or zero if not yet finished\&. 
+.br
+\fIbuf\fP input buffer\&. 
+.br
+\fIbuf_size\fP input length, to signal EOF, this should be 0 (so that the last frame can be output)\&. 
+.br
+\fIpts\fP input presentation timestamp\&. 
+.br
+\fIdts\fP input decoding timestamp\&. 
+.br
+\fIpos\fP input byte position in stream\&. 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the number of bytes of the input bitstream used\&.
+.RE
+.PP
+Example: 
+.PP
+.nf
+1 while(in_len){
+2     len = av_parser_parse2(myparser, AVCodecContext, &data, &size,
+3                                      in_data, in_len,
+4                                      pts, dts, pos);
+5     in_data += len;
+6     in_len  -= len;
+7 
+8     if(size)
+9        decode_frame(data, size);
+10 }
+
+.fi
+.PP
+ 
+.SS "\fBvoid\fP av_register_codec_parser (\fBAVCodecParser\fP * parser)"
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

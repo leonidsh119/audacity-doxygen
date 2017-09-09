@@ -1,0 +1,259 @@
+.TH "pyportmidi.midi" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+pyportmidi.midi \- 
+.SH SYNOPSIS
+.br
+.PP
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "class \fBInput\fP"
+.br
+.ti -1c
+.RI "class \fBMidiException\fP"
+.br
+.ti -1c
+.RI "class \fBOutput\fP"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "def \fBinit\fP ()"
+.br
+.ti -1c
+.RI "def \fBquit\fP ()"
+.br
+.ti -1c
+.RI "def \fBget_count\fP ()"
+.br
+.ti -1c
+.RI "def \fBget_default_input_id\fP ()"
+.br
+.ti -1c
+.RI "def \fBget_default_output_id\fP ()"
+.br
+.ti -1c
+.RI "def \fBget_device_info\fP (an_id)"
+.br
+.ti -1c
+.RI "def \fBtime\fP ()"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+
+.PP
+.nf
+Module for interacting with midi input and output.
+
+The midi module can send output to midi devices, and get input
+from midi devices.  It can also list midi devices on the system.
+
+Including real midi devices, and virtual ones.
+
+It uses the portmidi library.  Is portable to which ever platforms
+portmidi supports (currently windows, OSX, and linux).
+
+.fi
+.PP
+ 
+.SH "Function Documentation"
+.PP 
+.SS "def pyportmidi\&.midi\&.get_count ()"
+
+.PP
+.nf
+gets the number of devices.
+pyportmidi.get_count(): return num_devices
+
+
+Device ids range from 0 to get_count() -1
+
+.fi
+.PP
+ 
+.PP
+Definition at line 74 of file midi\&.py\&.
+.SS "def pyportmidi\&.midi\&.get_default_input_id ()"
+
+.PP
+.nf
+gets default input device number
+pyportmidi.get_default_input_id(): return default_id
+
+
+Return the default device ID or -1 if there are no devices.
+The result can be passed to the Input()/Ouput() class.
+
+On the PC, the user can specify a default device by
+setting an environment variable. For example, to use device #1.
+
+    set PM_RECOMMENDED_INPUT_DEVICE=1
+
+The user should first determine the available device ID by using
+the supplied application "testin" or "testout".
+
+In general, the registry is a better place for this kind of info,
+and with USB devices that can come and go, using integers is not
+very reliable for device identification. Under Windows, if
+PM_RECOMMENDED_OUTPUT_DEVICE (or PM_RECOMMENDED_INPUT_DEVICE) is
+*NOT* found in the environment, then the default device is obtained
+by looking for a string in the registry under:
+    HKEY_LOCAL_MACHINE/SOFTWARE/PortMidi/Recommended_Input_Device
+and HKEY_LOCAL_MACHINE/SOFTWARE/PortMidi/Recommended_Output_Device
+for a string. The number of the first device with a substring that
+matches the string exactly is returned. For example, if the string
+in the registry is "USB", and device 1 is named
+"In USB MidiSport 1x1", then that will be the default
+input because it contains the string "USB".
+
+In addition to the name, get_device_info() returns "interf", which
+is the interface name. (The "interface" is the underlying software
+system or API used by PortMidi to access devices. Examples are
+MMSystem, DirectX (not implemented), ALSA, OSS (not implemented), etc.)
+At present, the only Win32 interface is "MMSystem", the only Linux
+interface is "ALSA", and the only Max OS X interface is "CoreMIDI".
+To specify both the interface and the device name in the registry,
+separate the two with a comma and a space, e.g.:
+    MMSystem, In USB MidiSport 1x1
+In this case, the string before the comma must be a substring of
+the "interf" string, and the string after the space must be a
+substring of the "name" name string in order to match the device.
+
+Note: in the current release, the default is simply the first device
+(the input or output device with the lowest PmDeviceID).
+
+.fi
+.PP
+ 
+.PP
+Definition at line 87 of file midi\&.py\&.
+.SS "def pyportmidi\&.midi\&.get_default_output_id ()"
+
+.PP
+.nf
+gets default output device number
+pyportmidi.get_default_output_id(): return default_id
+
+
+Return the default device ID or -1 if there are no devices.
+The result can be passed to the Input()/Ouput() class.
+
+On the PC, the user can specify a default device by
+setting an environment variable. For example, to use device #1.
+
+    set PM_RECOMMENDED_OUTPUT_DEVICE=1
+
+The user should first determine the available device ID by using
+the supplied application "testin" or "testout".
+
+In general, the registry is a better place for this kind of info,
+and with USB devices that can come and go, using integers is not
+very reliable for device identification. Under Windows, if
+PM_RECOMMENDED_OUTPUT_DEVICE (or PM_RECOMMENDED_INPUT_DEVICE) is
+*NOT* found in the environment, then the default device is obtained
+by looking for a string in the registry under:
+    HKEY_LOCAL_MACHINE/SOFTWARE/PortMidi/Recommended_Input_Device
+and HKEY_LOCAL_MACHINE/SOFTWARE/PortMidi/Recommended_Output_Device
+for a string. The number of the first device with a substring that
+matches the string exactly is returned. For example, if the string
+in the registry is "USB", and device 1 is named
+"In USB MidiSport 1x1", then that will be the default
+input because it contains the string "USB".
+
+In addition to the name, get_device_info() returns "interf", which
+is the interface name. (The "interface" is the underlying software
+system or API used by PortMidi to access devices. Examples are
+MMSystem, DirectX (not implemented), ALSA, OSS (not implemented), etc.)
+At present, the only Win32 interface is "MMSystem", the only Linux
+interface is "ALSA", and the only Max OS X interface is "CoreMIDI".
+To specify both the interface and the device name in the registry,
+separate the two with a comma and a space, e.g.:
+    MMSystem, In USB MidiSport 1x1
+In this case, the string before the comma must be a substring of
+the "interf" string, and the string after the space must be a
+substring of the "name" name string in order to match the device.
+
+Note: in the current release, the default is simply the first device
+(the input or output device with the lowest PmDeviceID).
+
+.fi
+.PP
+ 
+.PP
+Definition at line 138 of file midi\&.py\&.
+.SS "def pyportmidi\&.midi\&.get_device_info ( an_id)"
+
+.PP
+.nf
+returns information about a midi device
+pyportmidi.get_device_info(an_id): return (interf, name, input, output, opened) 
+
+interf - a text string describing the device interface, eg 'ALSA'.
+name - a text string for the name of the device, eg 'Midi Through Port-0'
+input - 0, or 1 if the device is an input device.
+output - 0, or 1 if the device is an output device.
+opened - 0, or 1 if the device is opened.
+
+If the id is out of range, the function returns None.
+
+.fi
+.PP
+ 
+.PP
+Definition at line 188 of file midi\&.py\&.
+.SS "def pyportmidi\&.midi\&.init ()"
+
+.PP
+.nf
+initialize the midi module
+pyportmidi.init(): return None
+
+Call the initialisation function before using the midi module.
+
+It is safe to call this more than once.
+
+.fi
+.PP
+ 
+.PP
+Definition at line 36 of file midi\&.py\&.
+.SS "def pyportmidi\&.midi\&.quit (\fBvoid\fP)"
+
+.PP
+.nf
+uninitialize the midi module
+pyportmidi.quit(): return None
+
+
+Called automatically atexit if you don't call it.
+
+It is safe to call this function more than once.
+
+.fi
+.PP
+ 
+.PP
+Definition at line 54 of file midi\&.py\&.
+.SS "def pyportmidi\&.midi\&.time ()"
+
+.PP
+.nf
+returns the current time in ms of the PortMidi timer
+pyportmidi.time(): return time
+
+The time is reset to 0, when the module is inited.
+
+.fi
+.PP
+ 
+.PP
+Definition at line 542 of file midi\&.py\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

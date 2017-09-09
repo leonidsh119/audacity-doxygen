@@ -1,0 +1,250 @@
+.TH "Vamp::Plugin" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Vamp::Plugin \- 
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <vamp\-sdk/Plugin\&.h>\fP
+.PP
+Inherits \fBVamp::PluginBase\fP\&.
+.PP
+Inherited by \fBAmplitudeFollower\fP, \fBFixedTempoEstimator\fP, \fBMyPlugin\fP, \fBPercussionOnsetDetector\fP, \fBPowerSpectrum\fP, \fBSpectralCentroid\fP, \fBVamp::HostExt::PluginRateExtractor\fP, \fBVamp::HostExt::PluginWrapper\fP, \fBVamp::PluginHostAdapter\fP, and \fBZeroCrossing\fP\&.
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "struct \fBFeature\fP"
+.br
+.ti -1c
+.RI "struct \fBOutputDescriptor\fP"
+.br
+.in -1c
+.SS "Public Types"
+
+.in +1c
+.ti -1c
+.RI "enum \fBInputDomain\fP { \fBTimeDomain\fP, \fBFrequencyDomain\fP }"
+.br
+.ti -1c
+.RI "typedef std::vector< \fBOutputDescriptor\fP > \fBOutputList\fP"
+.br
+.ti -1c
+.RI "typedef std::vector< \fBFeature\fP > \fBFeatureList\fP"
+.br
+.ti -1c
+.RI "typedef \fBstd::map\fP< \fBint\fP, \fBFeatureList\fP > \fBFeatureSet\fP"
+.br
+.in -1c
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "virtual \fB~Plugin\fP ()"
+.br
+.ti -1c
+.RI "virtual \fBbool\fP \fBinitialise\fP (size_t inputChannels, size_t stepSize, size_t blockSize)=0"
+.br
+.ti -1c
+.RI "virtual \fBvoid\fP \fBreset\fP ()=0"
+.br
+.ti -1c
+.RI "virtual \fBInputDomain\fP \fBgetInputDomain\fP () \fBconst\fP  =0"
+.br
+.ti -1c
+.RI "virtual size_t \fBgetPreferredBlockSize\fP () \fBconst\fP "
+.br
+.ti -1c
+.RI "virtual size_t \fBgetPreferredStepSize\fP () \fBconst\fP "
+.br
+.ti -1c
+.RI "virtual size_t \fBgetMinChannelCount\fP () \fBconst\fP "
+.br
+.ti -1c
+.RI "virtual size_t \fBgetMaxChannelCount\fP () \fBconst\fP "
+.br
+.ti -1c
+.RI "virtual \fBOutputList\fP \fBgetOutputDescriptors\fP () \fBconst\fP  =0"
+.br
+.ti -1c
+.RI "virtual \fBFeatureSet\fP \fBprocess\fP (\fBconst\fP float *\fBconst\fP *inputBuffers, \fBRealTime\fP timestamp)=0"
+.br
+.ti -1c
+.RI "virtual \fBFeatureSet\fP \fBgetRemainingFeatures\fP ()=0"
+.br
+.ti -1c
+.RI "virtual \fBstd::string\fP \fBgetType\fP () \fBconst\fP "
+.br
+.in -1c
+.SS "Protected Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBPlugin\fP (float inputSampleRate)"
+.br
+.in -1c
+.SS "Protected Attributes"
+
+.in +1c
+.ti -1c
+.RI "float \fBm_inputSampleRate\fP"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+\fBVamp::Plugin\fP is a base class for plugin instance classes that provide feature extraction from audio or related data\&.
+.PP
+In most cases, the input will be audio and the output will be a stream of derived data at a lower sampling resolution than the input\&.
+.PP
+Note that this class inherits several abstract methods from \fBPluginBase\fP\&. These must be implemented by the subclass\&.
+.PP
+PLUGIN LIFECYCLE
+.PP
+\fBFeature\fP extraction plugins are managed differently from real-time plugins (such as VST effects)\&. The main difference is that the parameters for a feature extraction plugin are configured before the plugin is used, and do not change during use\&.
+.PP
+.IP "1." 4
+Host constructs the plugin, passing it the input sample rate\&. The plugin may do basic initialisation, but should not do anything computationally expensive at this point\&. You must make sure your plugin is cheap to construct, otherwise you'll seriously affect the startup performance of almost all hosts\&. If you have serious initialisation to do, the proper place is in \fBinitialise()\fP (step 5)\&.
+.IP "2." 4
+Host may query the plugin's available outputs\&.
+.IP "3." 4
+Host queries programs and parameter descriptors, and may set some or all of them\&. Parameters that are not explicitly set should take their default values as specified in the parameter descriptor\&. When a program is set, the parameter values may change and the host will re-query them to check\&.
+.IP "4." 4
+Host queries the preferred step size, block size and number of channels\&. These may all vary depending on the parameter values\&. (Note however that you cannot make the number of distinct outputs dependent on parameter values\&.)
+.IP "5." 4
+\fBPlugin\fP is properly initialised with a call to initialise\&. This fixes the step size, block size, and number of channels, as well as all of the parameter and program settings\&. If the values passed in to initialise do not match the plugin's advertised preferred values from step 4, the plugin may refuse to initialise and return false (although if possible it should accept the new values)\&. Any computationally expensive setup code should take place here\&.
+.IP "6." 4
+Host finally checks the number of values, resolution, extents etc per output (which may vary depending on the number of channels, step size and block size as well as the parameter values)\&.
+.IP "7." 4
+Host will repeatedly call the process method to pass in blocks of input data\&. This method may return features extracted from that data (if the plugin is causal)\&.
+.IP "8." 4
+Host will call getRemainingFeatures exactly once, after all the input data has been processed\&. This may return any non-causal or leftover features\&.
+.IP "9." 4
+At any point after initialise was called, the host may optionally call the reset method and restart processing\&. (This does not mean it can change the parameters, which are fixed from initialise until destruction\&.)
+.PP
+.PP
+A plugin does not need to handle the case where setParameter or selectProgram is called after initialise has been called\&. It's the host's responsibility not to do that\&. Similarly, the plugin may safely assume that initialise is called no more than once\&. 
+.PP
+Definition at line 124 of file Plugin\&.h\&.
+.SH "Member Typedef Documentation"
+.PP 
+.SS "typedef std::vector<\fBFeature\fP> \fBVamp::Plugin::FeatureList\fP"
+
+.PP
+Definition at line 385 of file Plugin\&.h\&.
+.SS "typedef \fBstd::map\fP<\fBint\fP, \fBFeatureList\fP> \fBVamp::Plugin::FeatureSet\fP"
+
+.PP
+Definition at line 387 of file Plugin\&.h\&.
+.SS "typedef std::vector<\fBOutputDescriptor\fP> \fBVamp::Plugin::OutputList\fP"
+
+.PP
+Definition at line 327 of file Plugin\&.h\&.
+.SH "Member Enumeration Documentation"
+.PP 
+.SS "enum \fBVamp::Plugin::InputDomain\fP"
+
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fITimeDomain \fP\fP
+.TP
+\fB\fIFrequencyDomain \fP\fP
+.PP
+Definition at line 152 of file Plugin\&.h\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "virtual Vamp::Plugin::~Plugin ()\fC [inline]\fP, \fC [virtual]\fP"
+
+.PP
+Definition at line 127 of file Plugin\&.h\&.
+.SS "Vamp::Plugin::Plugin (float inputSampleRate)\fC [inline]\fP, \fC [protected]\fP"
+
+.PP
+Definition at line 433 of file Plugin\&.h\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "virtual \fBInputDomain\fP Vamp::Plugin::getInputDomain () const\fC [pure virtual]\fP"
+Get the plugin's required input domain\&.
+.PP
+If this is TimeDomain, the samples provided to the \fBprocess()\fP function (below) will be in the time domain, as for a traditional audio processing plugin\&.
+.PP
+If this is FrequencyDomain, the host will carry out a windowed \fBFFT\fP of size equal to the negotiated block size on the data before passing the frequency bin data in to \fBprocess()\fP\&. The input data for the \fBFFT\fP will be rotated so as to place the origin in the centre of the block\&. The plugin does not get to choose the window type -- the host will either let the user do so, or will use a Hanning window\&. 
+.PP
+Implemented in \fBVamp::HostExt::PluginInputDomainAdapter\fP, \fBVamp::PluginHostAdapter\fP, \fBVamp::HostExt::PluginWrapper\fP, \fBPowerSpectrum\fP, \fBAmplitudeFollower\fP, \fBSpectralCentroid\fP, \fBZeroCrossing\fP, \fBFixedTempoEstimator\fP, \fBPercussionOnsetDetector\fP, and \fBMyPlugin\fP\&.
+.SS "virtual size_t Vamp::Plugin::getMaxChannelCount () const\fC [inline]\fP, \fC [virtual]\fP"
+Get the maximum supported number of input channels\&. 
+.PP
+Reimplemented in \fBVamp::PluginHostAdapter\fP, \fBVamp::HostExt::PluginWrapper\fP, and \fBMyPlugin\fP\&.
+.PP
+Definition at line 204 of file Plugin\&.h\&.
+.SS "virtual size_t Vamp::Plugin::getMinChannelCount () const\fC [inline]\fP, \fC [virtual]\fP"
+Get the minimum supported number of input channels\&. 
+.PP
+Reimplemented in \fBVamp::PluginHostAdapter\fP, \fBVamp::HostExt::PluginWrapper\fP, and \fBMyPlugin\fP\&.
+.PP
+Definition at line 199 of file Plugin\&.h\&.
+.SS "virtual \fBOutputList\fP Vamp::Plugin::getOutputDescriptors () const\fC [pure virtual]\fP"
+Get the outputs of this plugin\&. An output's index in this list is used as its numeric index when looking it up in the FeatureSet returned from the \fBprocess()\fP call\&. 
+.PP
+Implemented in \fBVamp::HostExt::PluginBufferingAdapter\fP, \fBVamp::PluginHostAdapter\fP, \fBVamp::HostExt::PluginWrapper\fP, \fBFixedTempoEstimator\fP, \fBPercussionOnsetDetector\fP, \fBPowerSpectrum\fP, \fBAmplitudeFollower\fP, \fBSpectralCentroid\fP, \fBZeroCrossing\fP, and \fBMyPlugin\fP\&.
+.SS "virtual size_t Vamp::Plugin::getPreferredBlockSize () const\fC [inline]\fP, \fC [virtual]\fP"
+Get the preferred block size (window size -- the number of sample frames passed in each block to the \fBprocess()\fP function)\&. This should be called before \fBinitialise()\fP\&.
+.PP
+A plugin that can handle any block size may return 0\&. The final block size will be set in the \fBinitialise()\fP call\&. 
+.PP
+Reimplemented in \fBVamp::HostExt::PluginBufferingAdapter\fP, \fBVamp::HostExt::PluginInputDomainAdapter\fP, \fBVamp::PluginHostAdapter\fP, \fBVamp::HostExt::PluginWrapper\fP, \fBFixedTempoEstimator\fP, \fBPercussionOnsetDetector\fP, and \fBMyPlugin\fP\&.
+.PP
+Definition at line 179 of file Plugin\&.h\&.
+.SS "virtual size_t Vamp::Plugin::getPreferredStepSize () const\fC [inline]\fP, \fC [virtual]\fP"
+Get the preferred step size (window increment -- the distance in sample frames between the start frames of consecutive blocks passed to the \fBprocess()\fP function) for the plugin\&. This should be called before \fBinitialise()\fP\&.
+.PP
+A plugin may return 0 if it has no particular interest in the step size\&. In this case, the host should make the step size equal to the block size if the plugin is accepting input in the time domain\&. If the plugin is accepting input in the frequency domain, the host may use any step size\&. The final step size will be set in the \fBinitialise()\fP call\&. 
+.PP
+Reimplemented in \fBVamp::HostExt::PluginInputDomainAdapter\fP, \fBVamp::PluginHostAdapter\fP, \fBVamp::HostExt::PluginBufferingAdapter\fP, \fBVamp::HostExt::PluginWrapper\fP, \fBFixedTempoEstimator\fP, \fBPercussionOnsetDetector\fP, and \fBMyPlugin\fP\&.
+.PP
+Definition at line 194 of file Plugin\&.h\&.
+.SS "virtual \fBFeatureSet\fP Vamp::Plugin::getRemainingFeatures ()\fC [pure virtual]\fP"
+After all blocks have been processed, calculate and return any remaining features derived from the complete input\&. 
+.PP
+Implemented in \fBVamp::HostExt::PluginBufferingAdapter\fP, \fBVamp::PluginHostAdapter\fP, \fBVamp::HostExt::PluginSummarisingAdapter\fP, \fBVamp::HostExt::PluginWrapper\fP, \fBFixedTempoEstimator\fP, \fBPercussionOnsetDetector\fP, \fBAmplitudeFollower\fP, \fBPowerSpectrum\fP, \fBSpectralCentroid\fP, \fBZeroCrossing\fP, and \fBMyPlugin\fP\&.
+.SS "virtual \fBstd::string\fP Vamp::Plugin::getType () const\fC [inline]\fP, \fC [virtual]\fP"
+Used to distinguish between \fBVamp::Plugin\fP and other potential sibling subclasses of \fBPluginBase\fP\&. Do not reimplement this function in your subclass\&. 
+.PP
+Implements \fBVamp::PluginBase\fP\&.
+.PP
+Definition at line 430 of file Plugin\&.h\&.
+.SS "virtual \fBbool\fP Vamp::Plugin::initialise (size_t inputChannels, size_t stepSize, size_t blockSize)\fC [pure virtual]\fP"
+Initialise a plugin to prepare it for use with the given number of input channels, step size (window increment, in sample frames) and block size (window size, in sample frames)\&.
+.PP
+The input sample rate should have been already specified at construction time\&.
+.PP
+Return true for successful initialisation, false if the number of input channels, step size and/or block size cannot be supported\&. 
+.PP
+Implemented in \fBVamp::HostExt::PluginChannelAdapter\fP, \fBVamp::HostExt::PluginBufferingAdapter\fP, \fBVamp::HostExt::PluginInputDomainAdapter\fP, \fBVamp::HostExt::PluginSummarisingAdapter\fP, \fBVamp::PluginHostAdapter\fP, \fBVamp::HostExt::PluginWrapper\fP, \fBPowerSpectrum\fP, \fBAmplitudeFollower\fP, \fBSpectralCentroid\fP, \fBZeroCrossing\fP, \fBFixedTempoEstimator\fP, \fBPercussionOnsetDetector\fP, and \fBMyPlugin\fP\&.
+.SS "virtual \fBFeatureSet\fP Vamp::Plugin::process (\fBconst\fP float *\fBconst\fP * inputBuffers, \fBRealTime\fP timestamp)\fC [pure virtual]\fP"
+Process a single block of input data\&.
+.PP
+If the plugin's inputDomain is TimeDomain, inputBuffers will point to one array of floats per input channel, and each of these arrays will contain blockSize consecutive audio samples (the host will zero-pad as necessary)\&. The timestamp in this case will be the real time in seconds of the start of the supplied block of samples\&.
+.PP
+If the plugin's inputDomain is FrequencyDomain, inputBuffers will point to one array of floats per input channel, and each of these arrays will contain blockSize/2+1 consecutive pairs of real and imaginary component floats corresponding to bins 0\&.\&.(blockSize/2) of the \fBFFT\fP output\&. That is, bin 0 (the first pair of floats) contains the DC output, up to bin blockSize/2 which contains the Nyquist-frequency output\&. There will therefore be blockSize+2 floats per channel in total\&. The timestamp will be the real time in seconds of the centre of the \fBFFT\fP input window (i\&.e\&. the very first block passed to process might contain the \fBFFT\fP of half a block of zero samples and the first half-block of the actual data, with a timestamp of zero)\&.
+.PP
+Return any features that have become available after this process call\&. (These do not necessarily have to fall within the process block, except for OneSamplePerStep outputs\&.) 
+.PP
+Implemented in \fBVamp::HostExt::PluginBufferingAdapter\fP, \fBVamp::HostExt::PluginChannelAdapter\fP, \fBVamp::PluginHostAdapter\fP, \fBVamp::HostExt::PluginInputDomainAdapter\fP, \fBVamp::HostExt::PluginSummarisingAdapter\fP, \fBVamp::HostExt::PluginWrapper\fP, \fBFixedTempoEstimator\fP, \fBPercussionOnsetDetector\fP, \fBAmplitudeFollower\fP, \fBPowerSpectrum\fP, \fBSpectralCentroid\fP, \fBZeroCrossing\fP, and \fBMyPlugin\fP\&.
+.SS "virtual \fBvoid\fP Vamp::Plugin::reset ()\fC [pure virtual]\fP"
+Reset the plugin after use, to prepare it for another clean run\&. Not called for the first initialisation (i\&.e\&. initialise must also do a reset)\&. 
+.PP
+Implemented in \fBVamp::HostExt::PluginBufferingAdapter\fP, \fBVamp::HostExt::PluginInputDomainAdapter\fP, \fBVamp::HostExt::PluginSummarisingAdapter\fP, \fBVamp::PluginHostAdapter\fP, \fBVamp::HostExt::PluginWrapper\fP, \fBPowerSpectrum\fP, \fBAmplitudeFollower\fP, \fBSpectralCentroid\fP, \fBZeroCrossing\fP, \fBFixedTempoEstimator\fP, \fBPercussionOnsetDetector\fP, and \fBMyPlugin\fP\&.
+.SH "Member Data Documentation"
+.PP 
+.SS "float Vamp::Plugin::m_inputSampleRate\fC [protected]\fP"
+
+.PP
+Definition at line 436 of file Plugin\&.h\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

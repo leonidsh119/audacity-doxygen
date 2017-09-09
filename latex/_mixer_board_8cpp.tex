@@ -1,0 +1,212 @@
+\hypertarget{_mixer_board_8cpp}{}\section{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/src/\+Mixer\+Board.cpp File Reference}
+\label{_mixer_board_8cpp}\index{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/src/\+Mixer\+Board.\+cpp@{C\+:/\+\_\+dev/\+Open\+U/\+Audacity/audacity/src/\+Mixer\+Board.\+cpp}}
+{\ttfamily \#include \char`\"{}Audacity.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Experimental.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Mixer\+Board.\+h\char`\"{}}\\*
+{\ttfamily \#include $<$math.\+h$>$}\\*
+{\ttfamily \#include $<$wx/dcmemory.\+h$>$}\\*
+{\ttfamily \#include $<$wx/arrimpl.\+cpp$>$}\\*
+{\ttfamily \#include $<$wx/icon.\+h$>$}\\*
+{\ttfamily \#include $<$wx/settings.\+h$>$}\\*
+{\ttfamily \#include \char`\"{}A\+Color.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Audio\+I\+O.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Project.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Track\+Panel.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Undo\+Manager.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Wave\+Track.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}widgets/\+Meter.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../images/\+Musical\+Instruments.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../images/\+Audacity\+Logo48x48.\+xpm\char`\"{}}\\*
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{_mixer_board_8cpp_a394480c11287401db62b4343878cc2c2}{k\+Inset}~4
+\item 
+\#define \hyperlink{_mixer_board_8cpp_ae2a40501fe96047e38ea6dcb0e024629}{k\+Double\+Inset}~(2 $\ast$ \hyperlink{_mixer_board_8cpp_a394480c11287401db62b4343878cc2c2}{k\+Inset})
+\item 
+\#define \hyperlink{_mixer_board_8cpp_a5ee887524017859f5b59932f6df8dc15}{k\+Triple\+Inset}~(3 $\ast$ \hyperlink{_mixer_board_8cpp_a394480c11287401db62b4343878cc2c2}{k\+Inset})
+\item 
+\#define \hyperlink{_mixer_board_8cpp_a02682053e334a2556fde39183dd0bcf9}{k\+Quadruple\+Inset}~(4 $\ast$ \hyperlink{_mixer_board_8cpp_a394480c11287401db62b4343878cc2c2}{k\+Inset})
+\item 
+\#define \hyperlink{_mixer_board_8cpp_a7979342a76cff74c0a0bc43cd5b14b34}{T\+R\+A\+C\+K\+\_\+\+N\+A\+M\+E\+\_\+\+H\+E\+I\+G\+HT}~18
+\item 
+\#define \hyperlink{_mixer_board_8cpp_acf44c071d292940c7e2422171e885ee2}{M\+U\+S\+I\+C\+A\+L\+\_\+\+I\+N\+S\+T\+R\+U\+M\+E\+N\+T\+\_\+\+H\+E\+I\+G\+H\+T\+\_\+\+A\+N\+D\+\_\+\+W\+I\+D\+TH}~48
+\item 
+\#define \hyperlink{_mixer_board_8cpp_a97057d4174bc585c7b47f4989329d587}{M\+U\+T\+E\+\_\+\+S\+O\+L\+O\+\_\+\+H\+E\+I\+G\+HT}~16
+\item 
+\#define \hyperlink{_mixer_board_8cpp_af8e3432e29e214665cc49da898f42b19}{P\+A\+N\+\_\+\+H\+E\+I\+G\+HT}~24
+\item 
+\#define \hyperlink{_mixer_board_8cpp_af17f9b4dfab635972964e336e6125e81}{k\+Left\+Side\+Stack\+Width}~\hyperlink{_mixer_board_8cpp_acf44c071d292940c7e2422171e885ee2}{M\+U\+S\+I\+C\+A\+L\+\_\+\+I\+N\+S\+T\+R\+U\+M\+E\+N\+T\+\_\+\+H\+E\+I\+G\+H\+T\+\_\+\+A\+N\+D\+\_\+\+W\+I\+D\+TH} -\/ \hyperlink{_mixer_board_8cpp_ae2a40501fe96047e38ea6dcb0e024629}{k\+Double\+Inset}
+\item 
+\#define \hyperlink{_mixer_board_8cpp_a1c91fbcdb121fbb4fe77ddd86564271a}{k\+Right\+Side\+Stack\+Width}~\hyperlink{_mixer_board_8cpp_acf44c071d292940c7e2422171e885ee2}{M\+U\+S\+I\+C\+A\+L\+\_\+\+I\+N\+S\+T\+R\+U\+M\+E\+N\+T\+\_\+\+H\+E\+I\+G\+H\+T\+\_\+\+A\+N\+D\+\_\+\+W\+I\+D\+TH} + \hyperlink{_mixer_board_8cpp_ae2a40501fe96047e38ea6dcb0e024629}{k\+Double\+Inset}
+\item 
+\#define \hyperlink{_mixer_board_8cpp_ae56daa3eceb1236d74b531740c913ae1}{k\+Mixer\+Track\+Cluster\+Width}~\hyperlink{_mixer_board_8cpp_af17f9b4dfab635972964e336e6125e81}{k\+Left\+Side\+Stack\+Width} + \hyperlink{_mixer_board_8cpp_a1c91fbcdb121fbb4fe77ddd86564271a}{k\+Right\+Side\+Stack\+Width} + \hyperlink{_mixer_board_8cpp_a02682053e334a2556fde39183dd0bcf9}{k\+Quadruple\+Inset}
+\item 
+\#define \hyperlink{_mixer_board_8cpp_ab809deb2f3b3489b22ac0408e8a4c57b}{M\+I\+X\+E\+R\+\_\+\+B\+O\+A\+R\+D\+\_\+\+M\+I\+N\+\_\+\+H\+E\+I\+G\+HT}~460
+\item 
+\#define \hyperlink{_mixer_board_8cpp_aadf033a3fa7629f599603473c50d82d1}{M\+I\+X\+E\+R\+\_\+\+B\+O\+A\+R\+D\+\_\+\+M\+I\+N\+\_\+\+W\+I\+D\+TH}~\hyperlink{_mixer_board_8cpp_a5ee887524017859f5b59932f6df8dc15}{k\+Triple\+Inset} + \hyperlink{_mixer_board_8cpp_ae56daa3eceb1236d74b531740c913ae1}{k\+Mixer\+Track\+Cluster\+Width} + \hyperlink{_mixer_board_8cpp_a5ee887524017859f5b59932f6df8dc15}{k\+Triple\+Inset}
+\end{DoxyCompactItemize}
+\subsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \{ \\*
+\hyperlink{_mixer_board_8cpp_acf031a18714fab9c47677ce9eba30e70a1e9f768681302d1fdd68f6b1100f1d44}{I\+D\+\_\+\+B\+I\+T\+M\+A\+P\+B\+U\+T\+T\+O\+N\+\_\+\+M\+U\+S\+I\+C\+A\+L\+\_\+\+I\+N\+S\+T\+R\+U\+M\+E\+NT} = 13000, 
+\hyperlink{_mixer_board_8cpp_acf031a18714fab9c47677ce9eba30e70a4d7fb6a4a33dc6b7e443a00623e1e902}{I\+D\+\_\+\+S\+L\+I\+D\+E\+R\+\_\+\+P\+AN}, 
+\hyperlink{_mixer_board_8cpp_acf031a18714fab9c47677ce9eba30e70a9d857fc99e3a2544f7fed64322cc8f74}{I\+D\+\_\+\+S\+L\+I\+D\+E\+R\+\_\+\+G\+A\+IN}, 
+\hyperlink{_mixer_board_8cpp_acf031a18714fab9c47677ce9eba30e70aaa087c8f4f7af1fd0abe38e46f8a7dcd}{I\+D\+\_\+\+T\+O\+G\+G\+L\+E\+B\+U\+T\+T\+O\+N\+\_\+\+M\+U\+TE}, 
+\\*
+\hyperlink{_mixer_board_8cpp_acf031a18714fab9c47677ce9eba30e70acd61beb65928b919cc463b10a01a6a16}{I\+D\+\_\+\+T\+O\+G\+G\+L\+E\+B\+U\+T\+T\+O\+N\+\_\+\+S\+O\+LO}
+ \}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{_mixer_board_8cpp_a264c80382eba8379056bfe599ee5ded4}{W\+X\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+O\+B\+J\+A\+R\+R\+AY} (Musical\+Instrument\+Array)
+\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{getopt1_8c_a2c212835823e3c54a8ab6d95c652660e}{const} wx\+Size \hyperlink{_mixer_board_8cpp_ac704a08bc6ba65f1818dd1b7f27e4050}{k\+Default\+Size}
+\end{DoxyCompactItemize}
+
+
+\subsection{Macro Definition Documentation}
+\index{Mixer\+Board.\+cpp@{Mixer\+Board.\+cpp}!k\+Double\+Inset@{k\+Double\+Inset}}
+\index{k\+Double\+Inset@{k\+Double\+Inset}!Mixer\+Board.\+cpp@{Mixer\+Board.\+cpp}}
+\subsubsection[{\texorpdfstring{k\+Double\+Inset}{kDoubleInset}}]{\setlength{\rightskip}{0pt plus 5cm}\#define k\+Double\+Inset~(2 $\ast$ {\bf k\+Inset})}\hypertarget{_mixer_board_8cpp_ae2a40501fe96047e38ea6dcb0e024629}{}\label{_mixer_board_8cpp_ae2a40501fe96047e38ea6dcb0e024629}
+
+
+Definition at line 122 of file Mixer\+Board.\+cpp.
+
+\index{Mixer\+Board.\+cpp@{Mixer\+Board.\+cpp}!k\+Inset@{k\+Inset}}
+\index{k\+Inset@{k\+Inset}!Mixer\+Board.\+cpp@{Mixer\+Board.\+cpp}}
+\subsubsection[{\texorpdfstring{k\+Inset}{kInset}}]{\setlength{\rightskip}{0pt plus 5cm}\#define k\+Inset~4}\hypertarget{_mixer_board_8cpp_a394480c11287401db62b4343878cc2c2}{}\label{_mixer_board_8cpp_a394480c11287401db62b4343878cc2c2}
+
+
+Definition at line 121 of file Mixer\+Board.\+cpp.
+
+\index{Mixer\+Board.\+cpp@{Mixer\+Board.\+cpp}!k\+Left\+Side\+Stack\+Width@{k\+Left\+Side\+Stack\+Width}}
+\index{k\+Left\+Side\+Stack\+Width@{k\+Left\+Side\+Stack\+Width}!Mixer\+Board.\+cpp@{Mixer\+Board.\+cpp}}
+\subsubsection[{\texorpdfstring{k\+Left\+Side\+Stack\+Width}{kLeftSideStackWidth}}]{\setlength{\rightskip}{0pt plus 5cm}\#define k\+Left\+Side\+Stack\+Width~{\bf M\+U\+S\+I\+C\+A\+L\+\_\+\+I\+N\+S\+T\+R\+U\+M\+E\+N\+T\+\_\+\+H\+E\+I\+G\+H\+T\+\_\+\+A\+N\+D\+\_\+\+W\+I\+D\+TH} -\/ {\bf k\+Double\+Inset}}\hypertarget{_mixer_board_8cpp_af17f9b4dfab635972964e336e6125e81}{}\label{_mixer_board_8cpp_af17f9b4dfab635972964e336e6125e81}
+
+
+Definition at line 131 of file Mixer\+Board.\+cpp.
+
+\index{Mixer\+Board.\+cpp@{Mixer\+Board.\+cpp}!k\+Mixer\+Track\+Cluster\+Width@{k\+Mixer\+Track\+Cluster\+Width}}
+\index{k\+Mixer\+Track\+Cluster\+Width@{k\+Mixer\+Track\+Cluster\+Width}!Mixer\+Board.\+cpp@{Mixer\+Board.\+cpp}}
+\subsubsection[{\texorpdfstring{k\+Mixer\+Track\+Cluster\+Width}{kMixerTrackClusterWidth}}]{\setlength{\rightskip}{0pt plus 5cm}\#define k\+Mixer\+Track\+Cluster\+Width~{\bf k\+Left\+Side\+Stack\+Width} + {\bf k\+Right\+Side\+Stack\+Width} + {\bf k\+Quadruple\+Inset}}\hypertarget{_mixer_board_8cpp_ae56daa3eceb1236d74b531740c913ae1}{}\label{_mixer_board_8cpp_ae56daa3eceb1236d74b531740c913ae1}
+
+
+Definition at line 133 of file Mixer\+Board.\+cpp.
+
+\index{Mixer\+Board.\+cpp@{Mixer\+Board.\+cpp}!k\+Quadruple\+Inset@{k\+Quadruple\+Inset}}
+\index{k\+Quadruple\+Inset@{k\+Quadruple\+Inset}!Mixer\+Board.\+cpp@{Mixer\+Board.\+cpp}}
+\subsubsection[{\texorpdfstring{k\+Quadruple\+Inset}{kQuadrupleInset}}]{\setlength{\rightskip}{0pt plus 5cm}\#define k\+Quadruple\+Inset~(4 $\ast$ {\bf k\+Inset})}\hypertarget{_mixer_board_8cpp_a02682053e334a2556fde39183dd0bcf9}{}\label{_mixer_board_8cpp_a02682053e334a2556fde39183dd0bcf9}
+
+
+Definition at line 124 of file Mixer\+Board.\+cpp.
+
+\index{Mixer\+Board.\+cpp@{Mixer\+Board.\+cpp}!k\+Right\+Side\+Stack\+Width@{k\+Right\+Side\+Stack\+Width}}
+\index{k\+Right\+Side\+Stack\+Width@{k\+Right\+Side\+Stack\+Width}!Mixer\+Board.\+cpp@{Mixer\+Board.\+cpp}}
+\subsubsection[{\texorpdfstring{k\+Right\+Side\+Stack\+Width}{kRightSideStackWidth}}]{\setlength{\rightskip}{0pt plus 5cm}\#define k\+Right\+Side\+Stack\+Width~{\bf M\+U\+S\+I\+C\+A\+L\+\_\+\+I\+N\+S\+T\+R\+U\+M\+E\+N\+T\+\_\+\+H\+E\+I\+G\+H\+T\+\_\+\+A\+N\+D\+\_\+\+W\+I\+D\+TH} + {\bf k\+Double\+Inset}}\hypertarget{_mixer_board_8cpp_a1c91fbcdb121fbb4fe77ddd86564271a}{}\label{_mixer_board_8cpp_a1c91fbcdb121fbb4fe77ddd86564271a}
+
+
+Definition at line 132 of file Mixer\+Board.\+cpp.
+
+\index{Mixer\+Board.\+cpp@{Mixer\+Board.\+cpp}!k\+Triple\+Inset@{k\+Triple\+Inset}}
+\index{k\+Triple\+Inset@{k\+Triple\+Inset}!Mixer\+Board.\+cpp@{Mixer\+Board.\+cpp}}
+\subsubsection[{\texorpdfstring{k\+Triple\+Inset}{kTripleInset}}]{\setlength{\rightskip}{0pt plus 5cm}\#define k\+Triple\+Inset~(3 $\ast$ {\bf k\+Inset})}\hypertarget{_mixer_board_8cpp_a5ee887524017859f5b59932f6df8dc15}{}\label{_mixer_board_8cpp_a5ee887524017859f5b59932f6df8dc15}
+
+
+Definition at line 123 of file Mixer\+Board.\+cpp.
+
+\index{Mixer\+Board.\+cpp@{Mixer\+Board.\+cpp}!M\+I\+X\+E\+R\+\_\+\+B\+O\+A\+R\+D\+\_\+\+M\+I\+N\+\_\+\+H\+E\+I\+G\+HT@{M\+I\+X\+E\+R\+\_\+\+B\+O\+A\+R\+D\+\_\+\+M\+I\+N\+\_\+\+H\+E\+I\+G\+HT}}
+\index{M\+I\+X\+E\+R\+\_\+\+B\+O\+A\+R\+D\+\_\+\+M\+I\+N\+\_\+\+H\+E\+I\+G\+HT@{M\+I\+X\+E\+R\+\_\+\+B\+O\+A\+R\+D\+\_\+\+M\+I\+N\+\_\+\+H\+E\+I\+G\+HT}!Mixer\+Board.\+cpp@{Mixer\+Board.\+cpp}}
+\subsubsection[{\texorpdfstring{M\+I\+X\+E\+R\+\_\+\+B\+O\+A\+R\+D\+\_\+\+M\+I\+N\+\_\+\+H\+E\+I\+G\+HT}{MIXER_BOARD_MIN_HEIGHT}}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+I\+X\+E\+R\+\_\+\+B\+O\+A\+R\+D\+\_\+\+M\+I\+N\+\_\+\+H\+E\+I\+G\+HT~460}\hypertarget{_mixer_board_8cpp_ab809deb2f3b3489b22ac0408e8a4c57b}{}\label{_mixer_board_8cpp_ab809deb2f3b3489b22ac0408e8a4c57b}
+
+
+Definition at line 951 of file Mixer\+Board.\+cpp.
+
+\index{Mixer\+Board.\+cpp@{Mixer\+Board.\+cpp}!M\+I\+X\+E\+R\+\_\+\+B\+O\+A\+R\+D\+\_\+\+M\+I\+N\+\_\+\+W\+I\+D\+TH@{M\+I\+X\+E\+R\+\_\+\+B\+O\+A\+R\+D\+\_\+\+M\+I\+N\+\_\+\+W\+I\+D\+TH}}
+\index{M\+I\+X\+E\+R\+\_\+\+B\+O\+A\+R\+D\+\_\+\+M\+I\+N\+\_\+\+W\+I\+D\+TH@{M\+I\+X\+E\+R\+\_\+\+B\+O\+A\+R\+D\+\_\+\+M\+I\+N\+\_\+\+W\+I\+D\+TH}!Mixer\+Board.\+cpp@{Mixer\+Board.\+cpp}}
+\subsubsection[{\texorpdfstring{M\+I\+X\+E\+R\+\_\+\+B\+O\+A\+R\+D\+\_\+\+M\+I\+N\+\_\+\+W\+I\+D\+TH}{MIXER_BOARD_MIN_WIDTH}}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+I\+X\+E\+R\+\_\+\+B\+O\+A\+R\+D\+\_\+\+M\+I\+N\+\_\+\+W\+I\+D\+TH~{\bf k\+Triple\+Inset} + {\bf k\+Mixer\+Track\+Cluster\+Width} + {\bf k\+Triple\+Inset}}\hypertarget{_mixer_board_8cpp_aadf033a3fa7629f599603473c50d82d1}{}\label{_mixer_board_8cpp_aadf033a3fa7629f599603473c50d82d1}
+
+
+Definition at line 954 of file Mixer\+Board.\+cpp.
+
+\index{Mixer\+Board.\+cpp@{Mixer\+Board.\+cpp}!M\+U\+S\+I\+C\+A\+L\+\_\+\+I\+N\+S\+T\+R\+U\+M\+E\+N\+T\+\_\+\+H\+E\+I\+G\+H\+T\+\_\+\+A\+N\+D\+\_\+\+W\+I\+D\+TH@{M\+U\+S\+I\+C\+A\+L\+\_\+\+I\+N\+S\+T\+R\+U\+M\+E\+N\+T\+\_\+\+H\+E\+I\+G\+H\+T\+\_\+\+A\+N\+D\+\_\+\+W\+I\+D\+TH}}
+\index{M\+U\+S\+I\+C\+A\+L\+\_\+\+I\+N\+S\+T\+R\+U\+M\+E\+N\+T\+\_\+\+H\+E\+I\+G\+H\+T\+\_\+\+A\+N\+D\+\_\+\+W\+I\+D\+TH@{M\+U\+S\+I\+C\+A\+L\+\_\+\+I\+N\+S\+T\+R\+U\+M\+E\+N\+T\+\_\+\+H\+E\+I\+G\+H\+T\+\_\+\+A\+N\+D\+\_\+\+W\+I\+D\+TH}!Mixer\+Board.\+cpp@{Mixer\+Board.\+cpp}}
+\subsubsection[{\texorpdfstring{M\+U\+S\+I\+C\+A\+L\+\_\+\+I\+N\+S\+T\+R\+U\+M\+E\+N\+T\+\_\+\+H\+E\+I\+G\+H\+T\+\_\+\+A\+N\+D\+\_\+\+W\+I\+D\+TH}{MUSICAL_INSTRUMENT_HEIGHT_AND_WIDTH}}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+U\+S\+I\+C\+A\+L\+\_\+\+I\+N\+S\+T\+R\+U\+M\+E\+N\+T\+\_\+\+H\+E\+I\+G\+H\+T\+\_\+\+A\+N\+D\+\_\+\+W\+I\+D\+TH~48}\hypertarget{_mixer_board_8cpp_acf44c071d292940c7e2422171e885ee2}{}\label{_mixer_board_8cpp_acf44c071d292940c7e2422171e885ee2}
+
+
+Definition at line 127 of file Mixer\+Board.\+cpp.
+
+\index{Mixer\+Board.\+cpp@{Mixer\+Board.\+cpp}!M\+U\+T\+E\+\_\+\+S\+O\+L\+O\+\_\+\+H\+E\+I\+G\+HT@{M\+U\+T\+E\+\_\+\+S\+O\+L\+O\+\_\+\+H\+E\+I\+G\+HT}}
+\index{M\+U\+T\+E\+\_\+\+S\+O\+L\+O\+\_\+\+H\+E\+I\+G\+HT@{M\+U\+T\+E\+\_\+\+S\+O\+L\+O\+\_\+\+H\+E\+I\+G\+HT}!Mixer\+Board.\+cpp@{Mixer\+Board.\+cpp}}
+\subsubsection[{\texorpdfstring{M\+U\+T\+E\+\_\+\+S\+O\+L\+O\+\_\+\+H\+E\+I\+G\+HT}{MUTE_SOLO_HEIGHT}}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+U\+T\+E\+\_\+\+S\+O\+L\+O\+\_\+\+H\+E\+I\+G\+HT~16}\hypertarget{_mixer_board_8cpp_a97057d4174bc585c7b47f4989329d587}{}\label{_mixer_board_8cpp_a97057d4174bc585c7b47f4989329d587}
+
+
+Definition at line 128 of file Mixer\+Board.\+cpp.
+
+\index{Mixer\+Board.\+cpp@{Mixer\+Board.\+cpp}!P\+A\+N\+\_\+\+H\+E\+I\+G\+HT@{P\+A\+N\+\_\+\+H\+E\+I\+G\+HT}}
+\index{P\+A\+N\+\_\+\+H\+E\+I\+G\+HT@{P\+A\+N\+\_\+\+H\+E\+I\+G\+HT}!Mixer\+Board.\+cpp@{Mixer\+Board.\+cpp}}
+\subsubsection[{\texorpdfstring{P\+A\+N\+\_\+\+H\+E\+I\+G\+HT}{PAN_HEIGHT}}]{\setlength{\rightskip}{0pt plus 5cm}\#define P\+A\+N\+\_\+\+H\+E\+I\+G\+HT~24}\hypertarget{_mixer_board_8cpp_af8e3432e29e214665cc49da898f42b19}{}\label{_mixer_board_8cpp_af8e3432e29e214665cc49da898f42b19}
+
+
+Definition at line 129 of file Mixer\+Board.\+cpp.
+
+\index{Mixer\+Board.\+cpp@{Mixer\+Board.\+cpp}!T\+R\+A\+C\+K\+\_\+\+N\+A\+M\+E\+\_\+\+H\+E\+I\+G\+HT@{T\+R\+A\+C\+K\+\_\+\+N\+A\+M\+E\+\_\+\+H\+E\+I\+G\+HT}}
+\index{T\+R\+A\+C\+K\+\_\+\+N\+A\+M\+E\+\_\+\+H\+E\+I\+G\+HT@{T\+R\+A\+C\+K\+\_\+\+N\+A\+M\+E\+\_\+\+H\+E\+I\+G\+HT}!Mixer\+Board.\+cpp@{Mixer\+Board.\+cpp}}
+\subsubsection[{\texorpdfstring{T\+R\+A\+C\+K\+\_\+\+N\+A\+M\+E\+\_\+\+H\+E\+I\+G\+HT}{TRACK_NAME_HEIGHT}}]{\setlength{\rightskip}{0pt plus 5cm}\#define T\+R\+A\+C\+K\+\_\+\+N\+A\+M\+E\+\_\+\+H\+E\+I\+G\+HT~18}\hypertarget{_mixer_board_8cpp_a7979342a76cff74c0a0bc43cd5b14b34}{}\label{_mixer_board_8cpp_a7979342a76cff74c0a0bc43cd5b14b34}
+
+
+Definition at line 126 of file Mixer\+Board.\+cpp.
+
+
+
+\subsection{Enumeration Type Documentation}
+\subsubsection[{\texorpdfstring{anonymous enum}{anonymous enum}}]{\setlength{\rightskip}{0pt plus 5cm}anonymous enum}\hypertarget{_mixer_board_8cpp_acf031a18714fab9c47677ce9eba30e70}{}\label{_mixer_board_8cpp_acf031a18714fab9c47677ce9eba30e70}
+\begin{Desc}
+\item[Enumerator]\par
+\begin{description}
+\index{I\+D\+\_\+\+B\+I\+T\+M\+A\+P\+B\+U\+T\+T\+O\+N\+\_\+\+M\+U\+S\+I\+C\+A\+L\+\_\+\+I\+N\+S\+T\+R\+U\+M\+E\+NT@{I\+D\+\_\+\+B\+I\+T\+M\+A\+P\+B\+U\+T\+T\+O\+N\+\_\+\+M\+U\+S\+I\+C\+A\+L\+\_\+\+I\+N\+S\+T\+R\+U\+M\+E\+NT}!Mixer\+Board.\+cpp@{Mixer\+Board.\+cpp}}\index{Mixer\+Board.\+cpp@{Mixer\+Board.\+cpp}!I\+D\+\_\+\+B\+I\+T\+M\+A\+P\+B\+U\+T\+T\+O\+N\+\_\+\+M\+U\+S\+I\+C\+A\+L\+\_\+\+I\+N\+S\+T\+R\+U\+M\+E\+NT@{I\+D\+\_\+\+B\+I\+T\+M\+A\+P\+B\+U\+T\+T\+O\+N\+\_\+\+M\+U\+S\+I\+C\+A\+L\+\_\+\+I\+N\+S\+T\+R\+U\+M\+E\+NT}}\item[{\em 
+I\+D\+\_\+\+B\+I\+T\+M\+A\+P\+B\+U\+T\+T\+O\+N\+\_\+\+M\+U\+S\+I\+C\+A\+L\+\_\+\+I\+N\+S\+T\+R\+U\+M\+E\+NT\hypertarget{_mixer_board_8cpp_acf031a18714fab9c47677ce9eba30e70a1e9f768681302d1fdd68f6b1100f1d44}{}\label{_mixer_board_8cpp_acf031a18714fab9c47677ce9eba30e70a1e9f768681302d1fdd68f6b1100f1d44}
+}]\index{I\+D\+\_\+\+S\+L\+I\+D\+E\+R\+\_\+\+P\+AN@{I\+D\+\_\+\+S\+L\+I\+D\+E\+R\+\_\+\+P\+AN}!Mixer\+Board.\+cpp@{Mixer\+Board.\+cpp}}\index{Mixer\+Board.\+cpp@{Mixer\+Board.\+cpp}!I\+D\+\_\+\+S\+L\+I\+D\+E\+R\+\_\+\+P\+AN@{I\+D\+\_\+\+S\+L\+I\+D\+E\+R\+\_\+\+P\+AN}}\item[{\em 
+I\+D\+\_\+\+S\+L\+I\+D\+E\+R\+\_\+\+P\+AN\hypertarget{_mixer_board_8cpp_acf031a18714fab9c47677ce9eba30e70a4d7fb6a4a33dc6b7e443a00623e1e902}{}\label{_mixer_board_8cpp_acf031a18714fab9c47677ce9eba30e70a4d7fb6a4a33dc6b7e443a00623e1e902}
+}]\index{I\+D\+\_\+\+S\+L\+I\+D\+E\+R\+\_\+\+G\+A\+IN@{I\+D\+\_\+\+S\+L\+I\+D\+E\+R\+\_\+\+G\+A\+IN}!Mixer\+Board.\+cpp@{Mixer\+Board.\+cpp}}\index{Mixer\+Board.\+cpp@{Mixer\+Board.\+cpp}!I\+D\+\_\+\+S\+L\+I\+D\+E\+R\+\_\+\+G\+A\+IN@{I\+D\+\_\+\+S\+L\+I\+D\+E\+R\+\_\+\+G\+A\+IN}}\item[{\em 
+I\+D\+\_\+\+S\+L\+I\+D\+E\+R\+\_\+\+G\+A\+IN\hypertarget{_mixer_board_8cpp_acf031a18714fab9c47677ce9eba30e70a9d857fc99e3a2544f7fed64322cc8f74}{}\label{_mixer_board_8cpp_acf031a18714fab9c47677ce9eba30e70a9d857fc99e3a2544f7fed64322cc8f74}
+}]\index{I\+D\+\_\+\+T\+O\+G\+G\+L\+E\+B\+U\+T\+T\+O\+N\+\_\+\+M\+U\+TE@{I\+D\+\_\+\+T\+O\+G\+G\+L\+E\+B\+U\+T\+T\+O\+N\+\_\+\+M\+U\+TE}!Mixer\+Board.\+cpp@{Mixer\+Board.\+cpp}}\index{Mixer\+Board.\+cpp@{Mixer\+Board.\+cpp}!I\+D\+\_\+\+T\+O\+G\+G\+L\+E\+B\+U\+T\+T\+O\+N\+\_\+\+M\+U\+TE@{I\+D\+\_\+\+T\+O\+G\+G\+L\+E\+B\+U\+T\+T\+O\+N\+\_\+\+M\+U\+TE}}\item[{\em 
+I\+D\+\_\+\+T\+O\+G\+G\+L\+E\+B\+U\+T\+T\+O\+N\+\_\+\+M\+U\+TE\hypertarget{_mixer_board_8cpp_acf031a18714fab9c47677ce9eba30e70aaa087c8f4f7af1fd0abe38e46f8a7dcd}{}\label{_mixer_board_8cpp_acf031a18714fab9c47677ce9eba30e70aaa087c8f4f7af1fd0abe38e46f8a7dcd}
+}]\index{I\+D\+\_\+\+T\+O\+G\+G\+L\+E\+B\+U\+T\+T\+O\+N\+\_\+\+S\+O\+LO@{I\+D\+\_\+\+T\+O\+G\+G\+L\+E\+B\+U\+T\+T\+O\+N\+\_\+\+S\+O\+LO}!Mixer\+Board.\+cpp@{Mixer\+Board.\+cpp}}\index{Mixer\+Board.\+cpp@{Mixer\+Board.\+cpp}!I\+D\+\_\+\+T\+O\+G\+G\+L\+E\+B\+U\+T\+T\+O\+N\+\_\+\+S\+O\+LO@{I\+D\+\_\+\+T\+O\+G\+G\+L\+E\+B\+U\+T\+T\+O\+N\+\_\+\+S\+O\+LO}}\item[{\em 
+I\+D\+\_\+\+T\+O\+G\+G\+L\+E\+B\+U\+T\+T\+O\+N\+\_\+\+S\+O\+LO\hypertarget{_mixer_board_8cpp_acf031a18714fab9c47677ce9eba30e70acd61beb65928b919cc463b10a01a6a16}{}\label{_mixer_board_8cpp_acf031a18714fab9c47677ce9eba30e70acd61beb65928b919cc463b10a01a6a16}
+}]\end{description}
+\end{Desc}
+
+
+Definition at line 135 of file Mixer\+Board.\+cpp.
+
+
+
+\subsection{Function Documentation}
+\index{Mixer\+Board.\+cpp@{Mixer\+Board.\+cpp}!W\+X\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+O\+B\+J\+A\+R\+R\+AY@{W\+X\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+O\+B\+J\+A\+R\+R\+AY}}
+\index{W\+X\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+O\+B\+J\+A\+R\+R\+AY@{W\+X\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+O\+B\+J\+A\+R\+R\+AY}!Mixer\+Board.\+cpp@{Mixer\+Board.\+cpp}}
+\subsubsection[{\texorpdfstring{W\+X\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+O\+B\+J\+A\+R\+R\+A\+Y(\+Musical\+Instrument\+Array)}{WX_DEFINE_OBJARRAY(MusicalInstrumentArray)}}]{\setlength{\rightskip}{0pt plus 5cm}W\+X\+\_\+\+D\+E\+F\+I\+N\+E\+\_\+\+O\+B\+J\+A\+R\+R\+AY (
+\begin{DoxyParamCaption}
+\item[{Musical\+Instrument\+Array}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{_mixer_board_8cpp_a264c80382eba8379056bfe599ee5ded4}{}\label{_mixer_board_8cpp_a264c80382eba8379056bfe599ee5ded4}
+
+
+\subsection{Variable Documentation}
+\index{Mixer\+Board.\+cpp@{Mixer\+Board.\+cpp}!k\+Default\+Size@{k\+Default\+Size}}
+\index{k\+Default\+Size@{k\+Default\+Size}!Mixer\+Board.\+cpp@{Mixer\+Board.\+cpp}}
+\subsubsection[{\texorpdfstring{k\+Default\+Size}{kDefaultSize}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf const} wx\+Size k\+Default\+Size}\hypertarget{_mixer_board_8cpp_ac704a08bc6ba65f1818dd1b7f27e4050}{}\label{_mixer_board_8cpp_ac704a08bc6ba65f1818dd1b7f27e4050}
+{\bfseries Initial value\+:}
+\begin{DoxyCode}
+=
+   wxSize(\hyperlink{_mixer_board_8cpp_aadf033a3fa7629f599603473c50d82d1}{MIXER\_BOARD\_MIN\_WIDTH}, \hyperlink{_mixer_board_8cpp_ab809deb2f3b3489b22ac0408e8a4c57b}{MIXER\_BOARD\_MIN\_HEIGHT})
+\end{DoxyCode}
+
+
+Definition at line 1744 of file Mixer\+Board.\+cpp.
+

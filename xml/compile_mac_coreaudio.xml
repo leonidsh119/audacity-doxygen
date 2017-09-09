@@ -1,0 +1,54 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="compile_mac_coreaudio" kind="page">
+    <compoundname>compile_mac_coreaudio</compoundname>
+    <title>Building Portaudio for Mac OS X</title>
+    <detaileddescription>
+<sect1 id="compile_mac_coreaudio_1comp_mac_ca_1">
+<title>Requirements</title>
+<para>OS X 10.4 or later. PortAudio v19 currently only compiles and runs on OS X version 10.4 or later. Because of its heavy reliance on memory barriers, it&apos;s not clear how easy it would be to back-port PortAudio to OS X version 10.3. Leopard support requires the 2007 snapshot or later.</para><para>Apple&apos;s Xcode and its related tools installed in the default location. There is no Xcode project for PortAudio.</para><para>Mac 10.4 SDK. Look for &quot;/Developer/SDKs/MacOSX10.4u.sdk&quot; folder on your system. It may be installed with XCode. If not then you can download it from Apple Developer Connection. <ulink url="http://connect.apple.com/">http://connect.apple.com/</ulink></para></sect1>
+<sect1 id="compile_mac_coreaudio_1comp_mac_ca_2">
+<title>Building</title>
+<para>To build PortAudio, simply use the Unix-style &quot;./configure &amp;&amp; make&quot;:</para><para><programlisting><codeline><highlight class="normal">./configure<sp/>&amp;&amp;<sp/>make</highlight></codeline>
+</programlisting></para><para>You do <bold>not</bold> need to do &quot;make install&quot;, and we don&apos;t recommend it; however, you may be using software that instructs you to do so, in which case you should follow those instructions. (Note from Phil: I had to do &quot;sudo make install&quot; after the command above, otherwise XCode complained that it could not find &quot;/usr/local/lib/libportaudio.dylib&quot; when I compiled an example.)</para><para>The result of these steps will be a file named &quot;libportaudio.dylib&quot; in the directory &quot;usr/local/lib/&quot;.</para><para>By default, this will create universal binaries and therefore requires the Universal SDK from Apple, included with XCode 2.1 and higher.</para></sect1>
+<sect1 id="compile_mac_coreaudio_1comp_mac_ca_3">
+<title>Other Build Options</title>
+<para>There are a variety of other options for building PortAudio. The default described above is recommended as it is the most supported and tested; however, your needs may differ and require other options, which are described below.</para><sect2 id="">
+<title></title>
+<para>By default, PortAudio is built as a universal binary. This includes 64-bit versions if you are compiling on 10.5, Leopard. If you want a &quot;thin&quot;, or single architecture library, you have two options:</para><para>build a non-universal library using configure options. use lipo(1) on whatever part of the library you plan to use.</para><para>Note that the first option may require an extremely recent version of PortAudio (February 5th &apos;08 at least).</para></sect2>
+<sect2 id="">
+<title></title>
+<para>To build a non-universal library for the host architecture, simply use the <emphasis><ndash/>disable-mac-universal</emphasis> option with configure.</para><para><programlisting><codeline><highlight class="normal">./configure<sp/>--disable-mac-universal<sp/>&amp;&amp;<sp/>make</highlight></codeline>
+</programlisting></para><para>The <emphasis><ndash/>disable-mac-universal</emphasis> option may also be used in conjunction with environment variables to give you more control over the universal binary build process. For example, to build a universal binary for the i386 and ppc architectures using the 10.4u sdk (which is the default on 10.4, but not 10.5), you might specify this configure command line:</para><para><programlisting><codeline><highlight class="normal">CFLAGS=&quot;-O2<sp/>-g<sp/>-Wall<sp/>-arch<sp/>i386<sp/>-arch<sp/>ppc<sp/>-isysroot<sp/>/Developer/SDKs/MacOSX10.4u.sdk<sp/>-mmacosx-version-min=10.3&quot;<sp/>\</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>LDFLAGS=&quot;-arch<sp/>i386<sp/>-arch<sp/>ppc<sp/>-isysroot<sp/>/Developer/SDKs/MacOSX10.4u.sdk<sp/>-mmacosx-version-min=10.3&quot;<sp/>\</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>./configure<sp/>--disable-mac-universal<sp/>--disable-dependency-tracking</highlight></codeline>
+</programlisting></para><para>For more info, see Apple&apos;s documentation on the matter:</para><para><ulink url="http://developer.apple.com/technotes/tn2005/tn2137.html">http://developer.apple.com/technotes/tn2005/tn2137.html</ulink> <ulink url="http://developer.apple.com/documentation/Porting/Conceptual/PortingUnix/intro/chapter_1_section_1.html">http://developer.apple.com/documentation/Porting/Conceptual/PortingUnix/intro/chapter_1_section_1.html</ulink></para></sect2>
+<sect2 id="">
+<title></title>
+<para>The second option is to build normally, and use lipo (1) to extract the architectures you want. For example, if you want a &quot;thin&quot;, i386 library only:</para><para><programlisting><codeline><highlight class="normal">lipo<sp/>lib/.libs/libportaudio.a<sp/>-thin<sp/>i386<sp/>-output<sp/>libportaudio.a</highlight></codeline>
+</programlisting></para><para>or if you want to extract a single architecture fat file:</para><para><programlisting><codeline><highlight class="normal">lipo<sp/>lib/.libs/libportaudio.a<sp/>-extract<sp/>i386<sp/>-output<sp/>libportaudio.a</highlight></codeline>
+</programlisting></para></sect2>
+<sect2 id="">
+<title></title>
+<para>By default, PortAudio on the mac is built without any debugging options. This is because asserts are generally inappropriate for a production environment and debugging information has been suspected, though not proven, to cause trouble with some interfaces. If you would like to compile with debugging, you must run configure with the appropriate flags. For example:</para><para><programlisting><codeline><highlight class="normal">./configure<sp/>--enable-mac-debug<sp/>&amp;&amp;<sp/>make</highlight></codeline>
+</programlisting></para><para>This will enable -g and disable -DNDEBUG which will effectively enable asserts.</para></sect2>
+</sect1>
+<sect1 id="compile_mac_coreaudio_1comp_mac_ca_4">
+<title>Using the Library in XCode Projects</title>
+<para>If you are planning to follow the rest of the tutorial, several project types will work. You can create a &quot;Standard Tool&quot; under &quot;Command Line Utility&quot;. If you are not following the rest of the tutorial, any type of project should work with PortAudio, but these instructions may not work perfectly.</para><para>Once you&apos;ve compiled PortAudio, the easiest and recommended way to use PortAudio in your XCode project is to add &quot;&lt;portaudio&gt;/include/portaudio.h&quot; and &quot;&lt;portaudio&gt;/lib/.libs/libportaudio.a&quot; to your project. Because &quot;&lt;portaudio&gt;/lib/.libs/&quot; is a hidden directory, you won&apos;t be able to navigate to it using the finder or the standard Mac OS file dialogs by clicking on files and folders. You can use command-shift-G in the finder to specify the exact path, or, from the shell, if you are in the portaudio directory, you can enter this command:</para><para><programlisting><codeline><highlight class="normal">open<sp/>lib/.libs</highlight></codeline>
+</programlisting></para><para>Then drag the &quot;libportaudio.a&quot; file into your XCode project and place it in the &quot;External Frameworks and Libraries&quot; group, if the project type has it. If not you can simply add it to the top level folder of the project.</para><para>You will need to add the following frameworks to your XCode project:</para><para><itemizedlist>
+<listitem><para>CoreAudio.framework</para></listitem><listitem><para>AudioToolbox.framework</para></listitem><listitem><para>AudioUnit.framework</para></listitem><listitem><para>CoreServices.framework</para></listitem><listitem><para>Carbon.framework</para></listitem></itemizedlist>
+</para></sect1>
+<sect1 id="compile_mac_coreaudio_1comp_mac_ca_5">
+<title>Using the Library in Other Projects</title>
+<para>For gcc/Make style projects, include &quot;include/portaudio.h&quot; and link &quot;libportaudio.a&quot;, and use the frameworks listed in the previous section. How you do so depends on your build.</para></sect1>
+<sect1 id="compile_mac_coreaudio_1comp_mac_ca_6">
+<title>Using Mac-only Extensions to PortAudio</title>
+<para>For additional, Mac-only extensions to the PortAudio interface, you may also want to grab &quot;include/pa_mac_core.h&quot;. This file contains some special, mac-only features relating to sample-rate conversion, channel mapping, performance and device hogging. See &quot;src/hostapi/coreaudio/notes.txt&quot; for more details on these features.</para></sect1>
+<sect1 id="compile_mac_coreaudio_1comp_mac_ca_7">
+<title>What Happened to Makefile.darwin?</title>
+<para>Note, there used to be a special makefile just for darwin. This is no longer supported because you can build universal binaries from the standard configure routine. If you find this file in your directory structure it means you have an outdated version of PortAudio.</para><para><programlisting><codeline><highlight class="normal">make<sp/>-f<sp/>Makefile.darwin</highlight></codeline>
+</programlisting></para><para>Back to the Tutorial: <ref refid="tutorial_start" kindref="compound">PortAudio Tutorials</ref> </para></sect1>
+    </detaileddescription>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,446 @@
+.TH "zix" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+zix \- Zix
+.SS "Typedefs"
+
+.in +1c
+.ti -1c
+.RI "typedef \fBint\fP(* \fBZixComparator\fP) (\fBconst\fP \fBvoid\fP *\fBa\fP, \fBconst\fP \fBvoid\fP *\fBb\fP, \fBvoid\fP *user_data)"
+.br
+.ti -1c
+.RI "typedef \fBbool\fP(* \fBZixEqualFunc\fP) (\fBconst\fP \fBvoid\fP *\fBa\fP, \fBconst\fP \fBvoid\fP *\fBb\fP)"
+.br
+.ti -1c
+.RI "typedef \fBvoid\fP(* \fBZixDestroyFunc\fP) (\fBvoid\fP *ptr)"
+.br
+.ti -1c
+.RI "typedef \fBint\fP(* \fBZixComparator\fP) (\fBconst\fP \fBvoid\fP *\fBa\fP, \fBconst\fP \fBvoid\fP *\fBb\fP, \fBvoid\fP *user_data)"
+.br
+.ti -1c
+.RI "typedef \fBbool\fP(* \fBZixEqualFunc\fP) (\fBconst\fP \fBvoid\fP *\fBa\fP, \fBconst\fP \fBvoid\fP *\fBb\fP)"
+.br
+.ti -1c
+.RI "typedef \fBvoid\fP(* \fBZixDestroyFunc\fP) (\fBvoid\fP *ptr)"
+.br
+.in -1c
+.SS "Enumerations"
+
+.in +1c
+.ti -1c
+.RI "enum \fBZixStatus\fP { \fBZIX_STATUS_SUCCESS\fP, \fBZIX_STATUS_ERROR\fP, \fBZIX_STATUS_NO_MEM\fP, \fBZIX_STATUS_NOT_FOUND\fP, \fBZIX_STATUS_EXISTS\fP, \fBZIX_STATUS_BAD_ARG\fP, \fBZIX_STATUS_BAD_PERMS\fP, \fBZIX_STATUS_SUCCESS\fP, \fBZIX_STATUS_ERROR\fP, \fBZIX_STATUS_NO_MEM\fP, \fBZIX_STATUS_NOT_FOUND\fP, \fBZIX_STATUS_EXISTS\fP, \fBZIX_STATUS_BAD_ARG\fP, \fBZIX_STATUS_BAD_PERMS\fP }"
+.br
+.ti -1c
+.RI "enum \fBZixStatus\fP { \fBZIX_STATUS_SUCCESS\fP, \fBZIX_STATUS_ERROR\fP, \fBZIX_STATUS_NO_MEM\fP, \fBZIX_STATUS_NOT_FOUND\fP, \fBZIX_STATUS_EXISTS\fP, \fBZIX_STATUS_BAD_ARG\fP, \fBZIX_STATUS_BAD_PERMS\fP, \fBZIX_STATUS_SUCCESS\fP, \fBZIX_STATUS_ERROR\fP, \fBZIX_STATUS_NO_MEM\fP, \fBZIX_STATUS_NOT_FOUND\fP, \fBZIX_STATUS_EXISTS\fP, \fBZIX_STATUS_BAD_ARG\fP, \fBZIX_STATUS_BAD_PERMS\fP }"
+.br
+.in -1c
+.SS "Tree"
+
+.in +1c
+.ti -1c
+.RI "typedef struct \fBZixTreeImpl\fP \fBZixTree\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBZixTreeNodeImpl\fP \fBZixTreeIter\fP"
+.br
+.ti -1c
+.RI "ZIX_API \fBZixTree\fP * \fBzix_tree_new\fP (\fBbool\fP allow_duplicates, \fBZixComparator\fP cmp, \fBvoid\fP *cmp_data, \fBZixDestroyFunc\fP destroy)"
+.br
+.ti -1c
+.RI "ZIX_API \fBvoid\fP \fBzix_tree_free\fP (\fBZixTree\fP *\fBt\fP)"
+.br
+.ti -1c
+.RI "ZIX_API size_t \fBzix_tree_size\fP (\fBconst\fP \fBZixTree\fP *\fBt\fP)"
+.br
+.ti -1c
+.RI "ZIX_API \fBZixStatus\fP \fBzix_tree_insert\fP (\fBZixTree\fP *\fBt\fP, \fBvoid\fP *e, \fBZixTreeIter\fP **ti)"
+.br
+.ti -1c
+.RI "ZIX_API \fBZixStatus\fP \fBzix_tree_remove\fP (\fBZixTree\fP *\fBt\fP, \fBZixTreeIter\fP *ti)"
+.br
+.ti -1c
+.RI "ZIX_API \fBZixStatus\fP \fBzix_tree_find\fP (\fBconst\fP \fBZixTree\fP *\fBt\fP, \fBconst\fP \fBvoid\fP *e, \fBZixTreeIter\fP **ti)"
+.br
+.ti -1c
+.RI "ZIX_API \fBvoid\fP * \fBzix_tree_get\fP (\fBconst\fP \fBZixTreeIter\fP *ti)"
+.br
+.ti -1c
+.RI "ZIX_API \fBZixTreeIter\fP * \fBzix_tree_begin\fP (\fBZixTree\fP *\fBt\fP)"
+.br
+.ti -1c
+.RI "ZIX_API \fBZixTreeIter\fP * \fBzix_tree_end\fP (\fBZixTree\fP *\fBt\fP)"
+.br
+.ti -1c
+.RI "ZIX_API \fBbool\fP \fBzix_tree_iter_is_end\fP (\fBconst\fP \fBZixTreeIter\fP *\fBi\fP)"
+.br
+.ti -1c
+.RI "ZIX_API \fBZixTreeIter\fP * \fBzix_tree_rbegin\fP (\fBZixTree\fP *\fBt\fP)"
+.br
+.ti -1c
+.RI "ZIX_API \fBZixTreeIter\fP * \fBzix_tree_rend\fP (\fBZixTree\fP *\fBt\fP)"
+.br
+.ti -1c
+.RI "ZIX_API \fBbool\fP \fBzix_tree_iter_is_rend\fP (\fBconst\fP \fBZixTreeIter\fP *\fBi\fP)"
+.br
+.ti -1c
+.RI "ZIX_API \fBZixTreeIter\fP * \fBzix_tree_iter_next\fP (\fBZixTreeIter\fP *\fBi\fP)"
+.br
+.ti -1c
+.RI "ZIX_API \fBZixTreeIter\fP * \fBzix_tree_iter_prev\fP (\fBZixTreeIter\fP *\fBi\fP)"
+.br
+.in -1c
+.SS "Hash"
+
+.in +1c
+.ti -1c
+.RI "typedef struct \fBZixHashImpl\fP \fBZixHash\fP"
+.br
+.ti -1c
+.RI "typedef \fBuint32_t\fP(* \fBZixHashFunc\fP) (\fBconst\fP \fBvoid\fP *\fBvalue\fP)"
+.br
+.ti -1c
+.RI "typedef \fBvoid\fP(* \fBZixHashVisitFunc\fP) (\fBvoid\fP *\fBvalue\fP, \fBvoid\fP *user_data)"
+.br
+.ti -1c
+.RI "ZIX_API \fBZixHash\fP * \fBzix_hash_new\fP (\fBZixHashFunc\fP hash_func, \fBZixEqualFunc\fP equal_func, size_t value_size)"
+.br
+.ti -1c
+.RI "ZIX_API \fBvoid\fP \fBzix_hash_free\fP (\fBZixHash\fP *\fBhash\fP)"
+.br
+.ti -1c
+.RI "ZIX_API size_t \fBzix_hash_size\fP (\fBconst\fP \fBZixHash\fP *\fBhash\fP)"
+.br
+.ti -1c
+.RI "ZIX_API \fBZixStatus\fP \fBzix_hash_insert\fP (\fBZixHash\fP *\fBhash\fP, \fBconst\fP \fBvoid\fP *\fBvalue\fP, \fBconst\fP \fBvoid\fP **inserted)"
+.br
+.ti -1c
+.RI "ZIX_API \fBZixStatus\fP \fBzix_hash_remove\fP (\fBZixHash\fP *\fBhash\fP, \fBconst\fP \fBvoid\fP *\fBvalue\fP)"
+.br
+.ti -1c
+.RI "ZIX_API \fBconst\fP \fBvoid\fP * \fBzix_hash_find\fP (\fBconst\fP \fBZixHash\fP *\fBhash\fP, \fBconst\fP \fBvoid\fP *\fBvalue\fP)"
+.br
+.ti -1c
+.RI "ZIX_API \fBvoid\fP \fBzix_hash_foreach\fP (\fBZixHash\fP *\fBhash\fP, \fBZixHashVisitFunc\fP \fBf\fP, \fBvoid\fP *user_data)"
+.br
+.in -1c
+.SS "Tree"
+
+.in +1c
+.ti -1c
+.RI "typedef struct \fBZixTreeImpl\fP \fBZixTree\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBZixTreeNodeImpl\fP \fBZixTreeIter\fP"
+.br
+.ti -1c
+.RI "ZIX_API \fBvoid\fP * \fBzix_tree_get\fP (\fBZixTreeIter\fP *ti)"
+.br
+.ti -1c
+.RI "ZIX_API \fBbool\fP \fBzix_tree_iter_is_end\fP (\fBZixTreeIter\fP *\fBi\fP)"
+.br
+.ti -1c
+.RI "ZIX_API \fBbool\fP \fBzix_tree_iter_is_rend\fP (\fBZixTreeIter\fP *\fBi\fP)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+
+.SH "Typedef Documentation"
+.PP 
+.SS "typedef \fBint\fP(* ZixComparator) (\fBconst\fP \fBvoid\fP *\fBa\fP, \fBconst\fP \fBvoid\fP *\fBb\fP, \fBvoid\fP *user_data)"
+\fBFunction\fP for comparing two elements\&. 
+.PP
+Definition at line 68 of file common\&.h\&.
+.SS "typedef \fBint\fP(* ZixComparator) (\fBconst\fP \fBvoid\fP *\fBa\fP, \fBconst\fP \fBvoid\fP *\fBb\fP, \fBvoid\fP *user_data)"
+\fBFunction\fP for comparing two elements\&. 
+.PP
+Definition at line 68 of file common\&.h\&.
+.SS "typedef \fBvoid\fP(* ZixDestroyFunc) (\fBvoid\fP *ptr)"
+\fBFunction\fP to destroy an element\&. 
+.PP
+Definition at line 78 of file common\&.h\&.
+.SS "typedef \fBvoid\fP(* ZixDestroyFunc) (\fBvoid\fP *ptr)"
+\fBFunction\fP to destroy an element\&. 
+.PP
+Definition at line 78 of file common\&.h\&.
+.SS "typedef \fBbool\fP(* ZixEqualFunc) (\fBconst\fP \fBvoid\fP *\fBa\fP, \fBconst\fP \fBvoid\fP *\fBb\fP)"
+\fBFunction\fP for testing equality of two elements\&. 
+.PP
+Definition at line 73 of file common\&.h\&.
+.SS "typedef \fBbool\fP(* ZixEqualFunc) (\fBconst\fP \fBvoid\fP *\fBa\fP, \fBconst\fP \fBvoid\fP *\fBb\fP)"
+\fBFunction\fP for testing equality of two elements\&. 
+.PP
+Definition at line 73 of file common\&.h\&.
+.SS "typedef struct \fBZixHashImpl\fP \fBZixHash\fP"
+
+.PP
+Definition at line 36 of file hash\&.h\&.
+.SS "typedef \fBuint32_t\fP(* ZixHashFunc) (\fBconst\fP \fBvoid\fP *\fBvalue\fP)"
+\fBFunction\fP for computing the hash of an element\&. 
+.PP
+Definition at line 41 of file hash\&.h\&.
+.SS "typedef \fBvoid\fP(* ZixHashVisitFunc) (\fBvoid\fP *\fBvalue\fP, \fBvoid\fP *user_data)"
+\fBFunction\fP to visit a hash element\&. 
+.PP
+Definition at line 46 of file hash\&.h\&.
+.SS "typedef struct \fBZixTreeImpl\fP \fBZixTree\fP"
+A balanced binary search tree\&. 
+.PP
+Definition at line 38 of file tree\&.h\&.
+.SS "typedef struct \fBZixTreeImpl\fP \fBZixTree\fP"
+A balanced binary search tree\&. 
+.PP
+Definition at line 38 of file tree\&.h\&.
+.SS "typedef struct \fBZixTreeNodeImpl\fP \fBZixTreeIter\fP"
+An iterator over a ZixTree\&. 
+.PP
+Definition at line 43 of file tree\&.h\&.
+.SS "typedef struct \fBZixTreeNodeImpl\fP \fBZixTreeIter\fP"
+An iterator over a ZixTree\&. 
+.PP
+Definition at line 43 of file tree\&.h\&.
+.SH "Enumeration Type Documentation"
+.PP 
+.SS "enum \fBZixStatus\fP"
+
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fIZIX_STATUS_SUCCESS \fP\fP
+.TP
+\fB\fIZIX_STATUS_ERROR \fP\fP
+.TP
+\fB\fIZIX_STATUS_NO_MEM \fP\fP
+.TP
+\fB\fIZIX_STATUS_NOT_FOUND \fP\fP
+.TP
+\fB\fIZIX_STATUS_EXISTS \fP\fP
+.TP
+\fB\fIZIX_STATUS_BAD_ARG \fP\fP
+.TP
+\fB\fIZIX_STATUS_BAD_PERMS \fP\fP
+.TP
+\fB\fIZIX_STATUS_SUCCESS \fP\fP
+.TP
+\fB\fIZIX_STATUS_ERROR \fP\fP
+.TP
+\fB\fIZIX_STATUS_NO_MEM \fP\fP
+.TP
+\fB\fIZIX_STATUS_NOT_FOUND \fP\fP
+.TP
+\fB\fIZIX_STATUS_EXISTS \fP\fP
+.TP
+\fB\fIZIX_STATUS_BAD_ARG \fP\fP
+.TP
+\fB\fIZIX_STATUS_BAD_PERMS \fP\fP
+.PP
+Definition at line 55 of file common\&.h\&.
+.SS "enum \fBZixStatus\fP"
+
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fIZIX_STATUS_SUCCESS \fP\fP
+.TP
+\fB\fIZIX_STATUS_ERROR \fP\fP
+.TP
+\fB\fIZIX_STATUS_NO_MEM \fP\fP
+.TP
+\fB\fIZIX_STATUS_NOT_FOUND \fP\fP
+.TP
+\fB\fIZIX_STATUS_EXISTS \fP\fP
+.TP
+\fB\fIZIX_STATUS_BAD_ARG \fP\fP
+.TP
+\fB\fIZIX_STATUS_BAD_PERMS \fP\fP
+.TP
+\fB\fIZIX_STATUS_SUCCESS \fP\fP
+.TP
+\fB\fIZIX_STATUS_ERROR \fP\fP
+.TP
+\fB\fIZIX_STATUS_NO_MEM \fP\fP
+.TP
+\fB\fIZIX_STATUS_NOT_FOUND \fP\fP
+.TP
+\fB\fIZIX_STATUS_EXISTS \fP\fP
+.TP
+\fB\fIZIX_STATUS_BAD_ARG \fP\fP
+.TP
+\fB\fIZIX_STATUS_BAD_PERMS \fP\fP
+.PP
+Definition at line 55 of file common\&.h\&.
+.SH "Function Documentation"
+.PP 
+.SS "ZIX_API \fBconst\fP \fBvoid\fP* zix_hash_find (\fBconst\fP \fBZixHash\fP * hash, \fBconst\fP \fBvoid\fP * value)"
+Search for an item in \fChash\fP\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIhash\fP The hash table\&. 
+.br
+\fIvalue\fP The value to search for\&. 
+.RE
+.PP
+
+.PP
+Definition at line 140 of file hash\&.c\&.
+.SS "ZIX_API \fBvoid\fP zix_hash_foreach (\fBZixHash\fP * hash, \fBZixHashVisitFunc\fP f, \fBvoid\fP * user_data)"
+Call \fCf\fP on each value in \fChash\fP\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIhash\fP The hash table\&. 
+.br
+\fIf\fP The function to call on each value\&. 
+.br
+\fIuser_data\fP The user_data parameter passed to \fCf\fP\&. 
+.RE
+.PP
+
+.PP
+Definition at line 217 of file hash\&.c\&.
+.SS "ZIX_API \fBvoid\fP zix_hash_free (\fBZixHash\fP * hash)"
+Free \fChash\fP\&. 
+.PP
+Definition at line 72 of file hash\&.c\&.
+.SS "ZIX_API \fBZixStatus\fP zix_hash_insert (\fBZixHash\fP * hash, \fBconst\fP \fBvoid\fP * value, \fBconst\fP \fBvoid\fP ** inserted)"
+Insert an item into \fChash\fP\&.
+.PP
+If no matching value is found, ZIX_STATUS_SUCCESS will be returned, and \fCinserted\fP will be pointed to the copy of \fCvalue\fP made in the new hash node\&.
+.PP
+If a matching value already exists, ZIX_STATUS_EXISTS will be returned, and \fCinserted\fP will be pointed to the existing value\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIhash\fP The hash table\&. 
+.br
+\fIvalue\fP The value to be inserted\&. 
+.br
+\fIinserted\fP The copy of \fCvalue\fP in the hash table\&. 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+ZIX_STATUS_SUCCESS, ZIX_STATUS_EXISTS, or ZIX_STATUS_NO_MEM\&. 
+.RE
+.PP
+
+.PP
+Definition at line 149 of file hash\&.c\&.
+.SS "ZIX_API \fBZixHash\fP* zix_hash_new (\fBZixHashFunc\fP hash_func, \fBZixEqualFunc\fP equal_func, size_t value_size)"
+Create a new hash table\&.
+.PP
+To minimize space overhead, unlike many hash tables this stores a single value, not a key and a value\&. Any size of value can be stored, but all the values in the hash table must be the same size, and the values must be safe to copy with memcpy\&. To get key:value behaviour, simply insert a struct with a key and value into the hash\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIhash_func\fP The hashing function\&. 
+.br
+\fIequal_func\fP A function to test value equality\&. 
+.br
+\fIvalue_size\fP The size of the values to be stored\&. 
+.RE
+.PP
+
+.PP
+Definition at line 56 of file hash\&.c\&.
+.SS "ZIX_API \fBZixStatus\fP zix_hash_remove (\fBZixHash\fP * hash, \fBconst\fP \fBvoid\fP * value)"
+Remove an item from \fChash\fP\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIhash\fP The hash table\&. 
+.br
+\fIvalue\fP The value to remove\&. 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+ZIX_STATUS_SUCCES or ZIX_STATUS_NOT_FOUND\&. 
+.RE
+.PP
+
+.PP
+Definition at line 187 of file hash\&.c\&.
+.SS "ZIX_API size_t zix_hash_size (\fBconst\fP \fBZixHash\fP * hash)"
+Return the number of elements in \fChash\fP\&. 
+.PP
+Definition at line 88 of file hash\&.c\&.
+.SS "ZIX_API \fBZixTreeIter\fP* zix_tree_begin (\fBZixTree\fP * t)"
+Return an iterator to the first (smallest) element in \fCt\fP\&. 
+.PP
+Definition at line 621 of file tree\&.c\&.
+.SS "ZIX_API \fBZixTreeIter\fP* zix_tree_end (\fBZixTree\fP * t)"
+Return an iterator the the element one past the last element in \fCt\fP\&. 
+.PP
+Definition at line 635 of file tree\&.c\&.
+.SS "ZIX_API \fBZixStatus\fP zix_tree_find (\fBconst\fP \fBZixTree\fP * t, \fBconst\fP \fBvoid\fP * e, \fBZixTreeIter\fP ** ti)"
+Set \fCti\fP to an element equal to \fCe\fP in \fCt\fP\&. If no such item exists, \fCti\fP is set to NULL\&. 
+.PP
+Definition at line 596 of file tree\&.c\&.
+.SS "ZIX_API \fBvoid\fP zix_tree_free (\fBZixTree\fP * t)"
+Free \fCt\fP\&. 
+.PP
+Definition at line 99 of file tree\&.c\&.
+.SS "ZIX_API \fBvoid\fP* zix_tree_get (\fBZixTreeIter\fP * ti)"
+Return the data associated with the given tree item\&. 
+.PP
+Definition at line 615 of file tree\&.c\&.
+.SS "ZIX_API \fBvoid\fP* zix_tree_get (\fBconst\fP \fBZixTreeIter\fP * ti)"
+Return the data associated with the given tree item\&. 
+.PP
+Definition at line 615 of file tree\&.c\&.
+.SS "ZIX_API \fBZixStatus\fP zix_tree_insert (\fBZixTree\fP * t, \fBvoid\fP * e, \fBZixTreeIter\fP ** ti)"
+Insert the element \fCe\fP into \fCt\fP and point \fCti\fP at the new element\&. 
+.PP
+Definition at line 340 of file tree\&.c\&.
+.SS "ZIX_API \fBbool\fP zix_tree_iter_is_end (\fBconst\fP \fBZixTreeIter\fP * i)"
+Return true iff \fCi\fP is an iterator to the end of its tree\&. 
+.PP
+Definition at line 661 of file tree\&.c\&.
+.SS "ZIX_API \fBbool\fP zix_tree_iter_is_end (\fBZixTreeIter\fP * i)"
+Return true iff \fCi\fP is an iterator to the end of its tree\&. 
+.PP
+Definition at line 661 of file tree\&.c\&.
+.SS "ZIX_API \fBbool\fP zix_tree_iter_is_rend (\fBZixTreeIter\fP * i)"
+Return true iff \fCi\fP is an iterator to the reverse end of its tree\&. 
+.PP
+Definition at line 667 of file tree\&.c\&.
+.SS "ZIX_API \fBbool\fP zix_tree_iter_is_rend (\fBconst\fP \fBZixTreeIter\fP * i)"
+Return true iff \fCi\fP is an iterator to the reverse end of its tree\&. 
+.PP
+Definition at line 667 of file tree\&.c\&.
+.SS "ZIX_API \fBZixTreeIter\fP* zix_tree_iter_next (\fBZixTreeIter\fP * i)"
+Return an iterator that points to the element one past \fCi\fP\&. 
+.PP
+Definition at line 673 of file tree\&.c\&.
+.SS "ZIX_API \fBZixTreeIter\fP* zix_tree_iter_prev (\fBZixTreeIter\fP * i)"
+Return an iterator that points to the element one before \fCi\fP\&. 
+.PP
+Definition at line 696 of file tree\&.c\&.
+.SS "ZIX_API \fBZixTree\fP* zix_tree_new (\fBbool\fP allow_duplicates, \fBZixComparator\fP cmp, \fBvoid\fP * cmp_data, \fBZixDestroyFunc\fP destroy)"
+Create a new (empty) tree\&. 
+.PP
+Definition at line 70 of file tree\&.c\&.
+.SS "ZIX_API \fBZixTreeIter\fP* zix_tree_rbegin (\fBZixTree\fP * t)"
+Return an iterator to the last (largest) element in \fCt\fP\&. 
+.PP
+Definition at line 641 of file tree\&.c\&.
+.SS "ZIX_API \fBZixStatus\fP zix_tree_remove (\fBZixTree\fP * t, \fBZixTreeIter\fP * ti)"
+Remove the item pointed at by \fCti\fP from \fCt\fP\&. 
+.PP
+Definition at line 439 of file tree\&.c\&.
+.SS "ZIX_API \fBZixTreeIter\fP* zix_tree_rend (\fBZixTree\fP * t)"
+Return an iterator the the element one before the first element in \fCt\fP\&. 
+.PP
+Definition at line 655 of file tree\&.c\&.
+.SS "ZIX_API size_t zix_tree_size (\fBconst\fP \fBZixTree\fP * t)"
+Return the number of elements in \fCt\fP\&. 
+.PP
+Definition at line 108 of file tree\&.c\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.

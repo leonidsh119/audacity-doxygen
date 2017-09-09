@@ -1,0 +1,61 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="group__porting__1__1__2__to__1__1__3" kind="group">
+    <compoundname>porting_1_1_2_to_1_1_3</compoundname>
+    <title>Porting from FLAC 1.1.2 to 1.1.3</title>
+    <briefdescription>
+<para>This module describes porting from <ref refid="namespace_f_l_a_c" kindref="compound">FLAC</ref> 1.1.2 to <ref refid="namespace_f_l_a_c" kindref="compound">FLAC</ref> 1.1.3. </para>    </briefdescription>
+    <detaileddescription>
+<para>The main change between the APIs in 1.1.2 and 1.1.3 is that they have been simplified. First, libOggFLAC has been merged into libFLAC and libOggFLAC++ has been merged into libFLAC++. Second, both the three decoding layers and three encoding layers have been merged into a single stream decoder and stream encoder. That is, the functionality of FLAC__SeekableStreamDecoder and FLAC__FileDecoder has been merged into <ref refid="struct_f_l_a_c_____stream_decoder" kindref="compound">FLAC__StreamDecoder</ref>, and FLAC__SeekableStreamEncoder and FLAC__FileEncoder into <ref refid="struct_f_l_a_c_____stream_encoder" kindref="compound">FLAC__StreamEncoder</ref>. Only the <ref refid="struct_f_l_a_c_____stream_decoder" kindref="compound">FLAC__StreamDecoder</ref> and <ref refid="struct_f_l_a_c_____stream_encoder" kindref="compound">FLAC__StreamEncoder</ref> remain. What this means is there is now a single API that can be used to encode or decode streams to/from native <ref refid="namespace_f_l_a_c" kindref="compound">FLAC</ref> or Ogg <ref refid="namespace_f_l_a_c" kindref="compound">FLAC</ref> and the single API can work on both seekable and non-seekable streams.</para><para>Instead of creating an encoder or decoder of a certain layer, now the client will always create a <ref refid="struct_f_l_a_c_____stream_encoder" kindref="compound">FLAC__StreamEncoder</ref> or <ref refid="struct_f_l_a_c_____stream_decoder" kindref="compound">FLAC__StreamDecoder</ref>. The old layers are now differentiated by the initialization function. For example, for the decoder, FLAC__stream_decoder_init() has been replaced by <ref refid="group__flac__stream__decoder_1ga32c28a56a2bdfa2333edbd3d991894d7" kindref="member">FLAC__stream_decoder_init_stream()</ref>. This init function takes callbacks for the I/O, and the seeking callbacks are optional. This allows the client to use the same object for seekable and non-seekable streams. For decoding a <ref refid="namespace_f_l_a_c" kindref="compound">FLAC</ref> file directly, the client can use <ref refid="group__flac__stream__decoder_1ga1692108a97012d1c5f79baf7df012c33" kindref="member">FLAC__stream_decoder_init_file()</ref> and pass just a filename and fewer callbacks; most of the other callbacks are supplied internally. For situations where fopen()ing by filename is not possible (e.g. Unicode filenames on Windows) the client can instead open the file itself and supply the FILE* to <ref refid="group__flac__stream__decoder_1ga38f9eb46bf112af205f86b4cbac9980c" kindref="member">FLAC__stream_decoder_init_FILE()</ref>. The init functions now returns a FLAC__StreamDecoderInitStatus instead of FLAC__StreamDecoderState. Since the callbacks and client data are now passed to the init function, the FLAC__stream_decoder_set_*_callback() functions and FLAC__stream_decoder_set_client_data() are no longer needed. The rest of the calls to the decoder are the same as before.</para><para>There are counterpart init functions for Ogg <ref refid="namespace_f_l_a_c" kindref="compound">FLAC</ref>, e.g. <ref refid="group__flac__stream__decoder_1ga78bf285b54e5aaee73a214c108683a72" kindref="member">FLAC__stream_decoder_init_ogg_stream()</ref>. All the rest of the calls and callbacks are the same as for native <ref refid="namespace_f_l_a_c" kindref="compound">FLAC</ref>.</para><para>As an example, in <ref refid="namespace_f_l_a_c" kindref="compound">FLAC</ref> 1.1.2 a seekable stream decoder would have been set up like so:</para><para><programlisting><codeline><highlight class="normal">FLAC__SeekableStreamDecoder<sp/>*decoder<sp/>=<sp/>FLAC__seekable_stream_decoder_new();</highlight></codeline>
+<codeline><highlight class="normal">if(decoder<sp/>==<sp/>NULL)<sp/>do_something;</highlight></codeline>
+<codeline><highlight class="normal">FLAC__seekable_stream_decoder_set_md5_checking(decoder,<sp/>true);</highlight></codeline>
+<codeline><highlight class="normal">[...<sp/>other<sp/>settings<sp/>...]</highlight></codeline>
+<codeline><highlight class="normal">FLAC__seekable_stream_decoder_set_read_callback(decoder,<sp/>my_read_callback);</highlight></codeline>
+<codeline><highlight class="normal">FLAC__seekable_stream_decoder_set_seek_callback(decoder,<sp/>my_seek_callback);</highlight></codeline>
+<codeline><highlight class="normal">FLAC__seekable_stream_decoder_set_tell_callback(decoder,<sp/>my_tell_callback);</highlight></codeline>
+<codeline><highlight class="normal">FLAC__seekable_stream_decoder_set_length_callback(decoder,<sp/>my_length_callback);</highlight></codeline>
+<codeline><highlight class="normal">FLAC__seekable_stream_decoder_set_eof_callback(decoder,<sp/>my_eof_callback);</highlight></codeline>
+<codeline><highlight class="normal">FLAC__seekable_stream_decoder_set_write_callback(decoder,<sp/>my_write_callback);</highlight></codeline>
+<codeline><highlight class="normal">FLAC__seekable_stream_decoder_set_metadata_callback(decoder,<sp/>my_metadata_callback);</highlight></codeline>
+<codeline><highlight class="normal">FLAC__seekable_stream_decoder_set_error_callback(decoder,<sp/>my_error_callback);</highlight></codeline>
+<codeline><highlight class="normal">FLAC__seekable_stream_decoder_set_client_data(decoder,<sp/>my_client_data);</highlight></codeline>
+<codeline><highlight class="normal">if(FLAC__seekable_stream_decoder_init(decoder)<sp/>!=<sp/>FLAC__SEEKABLE_STREAM_DECODER_OK)<sp/>do_something;</highlight></codeline>
+</programlisting></para><para>In <ref refid="namespace_f_l_a_c" kindref="compound">FLAC</ref> 1.1.3 it is like this:</para><para><programlisting><codeline><highlight class="normal">FLAC__StreamDecoder<sp/>*decoder<sp/>=<sp/>FLAC__stream_decoder_new();</highlight></codeline>
+<codeline><highlight class="normal">if(decoder<sp/>==<sp/>NULL)<sp/>do_something;</highlight></codeline>
+<codeline><highlight class="normal">FLAC__stream_decoder_set_md5_checking(decoder,<sp/>true);</highlight></codeline>
+<codeline><highlight class="normal">[...<sp/>other<sp/>settings<sp/>...]</highlight></codeline>
+<codeline><highlight class="normal">if(FLAC__stream_decoder_init_stream(</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>decoder,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>my_read_callback,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>my_seek_callback,<sp/><sp/><sp/><sp/><sp/><sp/>//<sp/>or<sp/>NULL</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>my_tell_callback,<sp/><sp/><sp/><sp/><sp/><sp/>//<sp/>or<sp/>NULL</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>my_length_callback,<sp/><sp/><sp/><sp/>//<sp/>or<sp/>NULL</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>my_eof_callback,<sp/><sp/><sp/><sp/><sp/><sp/><sp/>//<sp/>or<sp/>NULL</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>my_write_callback,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>my_metadata_callback,<sp/><sp/>//<sp/>or<sp/>NULL</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>my_error_callback,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>my_client_data</highlight></codeline>
+<codeline><highlight class="normal">)<sp/>!=<sp/>FLAC__STREAM_DECODER_INIT_STATUS_OK)<sp/>do_something;</highlight></codeline>
+</programlisting></para><para>or you could do;</para><para><programlisting><codeline><highlight class="normal">[...]</highlight></codeline>
+<codeline><highlight class="normal">FILE<sp/>*file<sp/>=<sp/>fopen(&quot;somefile.flac&quot;,&quot;rb&quot;);</highlight></codeline>
+<codeline><highlight class="normal">if(file<sp/>==<sp/>NULL)<sp/>do_somthing;</highlight></codeline>
+<codeline><highlight class="normal">if(FLAC__stream_decoder_init_FILE(</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>decoder,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>file,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>my_write_callback,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>my_metadata_callback,<sp/><sp/>//<sp/>or<sp/>NULL</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>my_error_callback,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>my_client_data</highlight></codeline>
+<codeline><highlight class="normal">)<sp/>!=<sp/>FLAC__STREAM_DECODER_INIT_STATUS_OK)<sp/>do_something;</highlight></codeline>
+</programlisting></para><para>or just:</para><para><programlisting><codeline><highlight class="normal">[...]</highlight></codeline>
+<codeline><highlight class="normal">if(FLAC__stream_decoder_init_file(</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>decoder,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>&quot;somefile.flac&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>my_write_callback,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>my_metadata_callback,<sp/><sp/>//<sp/>or<sp/>NULL</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>my_error_callback,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>my_client_data</highlight></codeline>
+<codeline><highlight class="normal">)<sp/>!=<sp/>FLAC__STREAM_DECODER_INIT_STATUS_OK)<sp/>do_something;</highlight></codeline>
+</programlisting></para><para>Another small change to the decoder is in how it handles unparseable streams. Before, when the decoder found an unparseable stream (reserved for when the decoder encounters a stream from a future encoder that it can&apos;t parse), it changed the state to <computeroutput>FLAC__STREAM_DECODER_UNPARSEABLE_STREAM</computeroutput>. Now the decoder instead drops sync and calls the error callback with a new error code <computeroutput>FLAC__STREAM_DECODER_ERROR_STATUS_UNPARSEABLE_STREAM</computeroutput>. This is more robust. If your error callback does not discriminate on the the error state, your code does not need to be changed.</para><para>The encoder now has a new setting: <ref refid="group__flac__stream__encoder_1ga83d38fd6fca7abbf8363bdc2536a299e" kindref="member">FLAC__stream_encoder_set_apodization()</ref>. This is for setting the method used to window the data before LPC analysis. You only need to add a call to this function if the default is not suitable. There are also two new convenience functions that may be useful: <ref refid="group__flac__metadata__object_1ga897138ca0a985d8741f73d6657f38845" kindref="member">FLAC__metadata_object_cuesheet_calculate_cddb_id()</ref> and <ref refid="group__flac__metadata__level0_1ga6ee2633dc179c2a0cb5fef5762faf0fd" kindref="member">FLAC__metadata_get_cuesheet()</ref>.</para><para>The <emphasis>bytes</emphasis> parameter to FLAC__StreamDecoderReadCallback, FLAC__StreamEncoderReadCallback, and FLAC__StreamEncoderWriteCallback is now <computeroutput>size_t</computeroutput> instead of <computeroutput>unsigned</computeroutput>. </para>    </detaileddescription>
+  </compounddef>
+</doxygen>

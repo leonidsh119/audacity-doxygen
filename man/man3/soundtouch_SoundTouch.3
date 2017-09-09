@@ -1,0 +1,266 @@
+.TH "soundtouch::SoundTouch" 3 "Thu Apr 28 2016" "Audacity" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+soundtouch::SoundTouch \- 
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <SoundTouch\&.h>\fP
+.PP
+Inherits \fBsoundtouch::FIFOProcessor\fP\&.
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBSoundTouch\fP ()"
+.br
+.ti -1c
+.RI "virtual \fB~SoundTouch\fP ()"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBsetRate\fP (float newRate)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBsetTempo\fP (float newTempo)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBsetRateChange\fP (float newRate)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBsetTempoChange\fP (float newTempo)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBsetPitch\fP (float newPitch)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBsetPitchOctaves\fP (float newPitch)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBsetPitchSemiTones\fP (\fBint\fP newPitch)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBsetPitchSemiTones\fP (float newPitch)"
+.br
+.ti -1c
+.RI "\fBvoid\fP \fBsetChannels\fP (\fBuint\fP numChannels)"
+.br
+.RI "\fISets the number of channels, 1 = mono, 2 = stereo\&. \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBsetSampleRate\fP (\fBuint\fP srate)"
+.br
+.RI "\fISets sample rate\&. \fP"
+.ti -1c
+.RI "\fBvoid\fP \fBflush\fP ()"
+.br
+.ti -1c
+.RI "virtual \fBvoid\fP \fBputSamples\fP (\fBconst\fP \fBSAMPLETYPE\fP *\fBsamples\fP, \fBuint\fP \fBnumSamples\fP)"
+.br
+.ti -1c
+.RI "virtual \fBvoid\fP \fBclear\fP ()"
+.br
+.ti -1c
+.RI "\fBBOOL\fP \fBsetSetting\fP (\fBint\fP settingId, \fBint\fP \fBvalue\fP)"
+.br
+.ti -1c
+.RI "\fBint\fP \fBgetSetting\fP (\fBint\fP settingId) \fBconst\fP "
+.br
+.ti -1c
+.RI "virtual \fBuint\fP \fBnumUnprocessedSamples\fP () \fBconst\fP "
+.br
+.RI "\fIReturns number of samples currently unprocessed\&. \fP"
+.in -1c
+.SS "Static Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "static \fBconst\fP char * \fBgetVersionString\fP ()"
+.br
+.RI "\fIGet \fBSoundTouch\fP library version string\&. \fP"
+.ti -1c
+.RI "static \fBuint\fP \fBgetVersionId\fP ()"
+.br
+.RI "\fIGet \fBSoundTouch\fP library version Id\&. \fP"
+.in -1c
+.SS "Protected Attributes"
+
+.in +1c
+.ti -1c
+.RI "\fBuint\fP \fBchannels\fP"
+.br
+.RI "\fINumber of channels\&. \fP"
+.ti -1c
+.RI "float \fBrate\fP"
+.br
+.RI "\fIEffective 'rate' value calculated from 'virtualRate', 'virtualTempo' and 'virtualPitch'\&. \fP"
+.ti -1c
+.RI "float \fBtempo\fP"
+.br
+.RI "\fIEffective 'tempo' value calculated from 'virtualRate', 'virtualTempo' and 'virtualPitch'\&. \fP"
+.in -1c
+.SS "Additional Inherited Members"
+.SH "Detailed Description"
+.PP 
+Definition at line 144 of file SoundTouch\&.h\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "SoundTouch::SoundTouch ()"
+
+.PP
+Definition at line 96 of file SoundTouch\&.cpp\&.
+.SS "SoundTouch::~SoundTouch ()\fC [virtual]\fP"
+
+.PP
+Definition at line 119 of file SoundTouch\&.cpp\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "\fBvoid\fP SoundTouch::clear (\fBvoid\fP)\fC [virtual]\fP"
+Clears all the samples in the object's output and internal processing buffers\&. 
+.PP
+Implements \fBsoundtouch::FIFOSamplePipe\fP\&.
+.PP
+Definition at line 480 of file SoundTouch\&.cpp\&.
+.SS "\fBvoid\fP SoundTouch::flush ()"
+Flushes the last samples from the processing pipeline to the output\&. Clears also the internal processing buffers\&. Note: This function is meant for extracting the last samples of a sound stream\&. This function may introduce additional blank samples in the end of the sound stream, and thus it's not recommended to call this function in the middle of a sound stream\&. 
+.PP
+Definition at line 345 of file SoundTouch\&.cpp\&.
+.SS "\fBint\fP SoundTouch::getSetting (\fBint\fP settingId) const"
+Reads a setting controlling the processing system behaviour\&. See the 'SETTING_\&.\&.\&.' defines for available setting ID's\&.
+.PP
+\fBReturns:\fP
+.RS 4
+the setting value\&. 
+.RE
+.PP
+
+.PP
+\fBParameters:\fP
+.RS 4
+\fIsettingId\fP Setting ID number, see SETTING_\&.\&.\&. defines\&. 
+.RE
+.PP
+
+.PP
+Definition at line 439 of file SoundTouch\&.cpp\&.
+.SS "\fBuint\fP SoundTouch::getVersionId ()\fC [static]\fP"
+
+.PP
+Get \fBSoundTouch\fP library version Id\&. 
+.PP
+Definition at line 137 of file SoundTouch\&.cpp\&.
+.SS "\fBconst\fP char * SoundTouch::getVersionString ()\fC [static]\fP"
+
+.PP
+Get \fBSoundTouch\fP library version string\&. 
+.PP
+Definition at line 128 of file SoundTouch\&.cpp\&.
+.SS "\fBuint\fP SoundTouch::numUnprocessedSamples () const\fC [virtual]\fP"
+
+.PP
+Returns number of samples currently unprocessed\&. 
+.PP
+Definition at line 489 of file SoundTouch\&.cpp\&.
+.SS "\fBvoid\fP SoundTouch::putSamples (\fBconst\fP \fBSAMPLETYPE\fP * samples, \fBuint\fP numSamples)\fC [virtual]\fP"
+Adds 'numSamples' pcs of samples from the 'samples' memory position into the input of the object\&. Notice that sample rate \fIhas_to\fP be set before calling this function, otherwise throws a runtime_error exception\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIsamples\fP Pointer to sample buffer\&. 
+.br
+\fInumSamples\fP Number of samples in buffer\&. Notice that in case of stereo-sound a single sample contains data for both channels\&. 
+.RE
+.PP
+
+.PP
+Implements \fBsoundtouch::FIFOSamplePipe\fP\&.
+.PP
+Definition at line 293 of file SoundTouch\&.cpp\&.
+.SS "\fBvoid\fP SoundTouch::setChannels (\fBuint\fP numChannels)"
+
+.PP
+Sets the number of channels, 1 = mono, 2 = stereo\&. 
+.PP
+Definition at line 144 of file SoundTouch\&.cpp\&.
+.SS "\fBvoid\fP SoundTouch::setPitch (float newPitch)"
+Sets new pitch control value\&. Original pitch = 1\&.0, smaller values represent lower pitches, larger values higher pitch\&. 
+.PP
+Definition at line 199 of file SoundTouch\&.cpp\&.
+.SS "\fBvoid\fP SoundTouch::setPitchOctaves (float newPitch)"
+Sets pitch change in octaves compared to the original pitch (-1\&.00 \&.\&. +1\&.00) 
+.PP
+Definition at line 209 of file SoundTouch\&.cpp\&.
+.SS "\fBvoid\fP SoundTouch::setPitchSemiTones (\fBint\fP newPitch)"
+Sets pitch change in semi-tones compared to the original pitch (-12 \&.\&. +12) 
+.PP
+Definition at line 219 of file SoundTouch\&.cpp\&.
+.SS "\fBvoid\fP SoundTouch::setPitchSemiTones (float newPitch)"
+
+.PP
+Definition at line 226 of file SoundTouch\&.cpp\&.
+.SS "\fBvoid\fP SoundTouch::setRate (float newRate)"
+Sets new rate control value\&. Normal rate = 1\&.0, smaller values represent slower rate, larger faster rates\&. 
+.PP
+Definition at line 159 of file SoundTouch\&.cpp\&.
+.SS "\fBvoid\fP SoundTouch::setRateChange (float newRate)"
+Sets new rate control value as a difference in percents compared to the original rate (-50 \&.\&. +100 %) 
+.PP
+Definition at line 169 of file SoundTouch\&.cpp\&.
+.SS "\fBvoid\fP SoundTouch::setSampleRate (\fBuint\fP srate)"
+
+.PP
+Sets sample rate\&. 
+.PP
+Definition at line 283 of file SoundTouch\&.cpp\&.
+.SS "\fBBOOL\fP SoundTouch::setSetting (\fBint\fP settingId, \fBint\fP value)"
+Changes a setting controlling the processing system behaviour\&. See the 'SETTING_\&.\&.\&.' defines for available setting ID's\&.
+.PP
+\fBReturns:\fP
+.RS 4
+'TRUE' if the setting was succesfully changed 
+.RE
+.PP
+
+.PP
+\fBParameters:\fP
+.RS 4
+\fIsettingId\fP Setting ID number\&. see SETTING_\&.\&.\&. defines\&. 
+.br
+\fIvalue\fP New setting value\&. 
+.RE
+.PP
+
+.PP
+Definition at line 390 of file SoundTouch\&.cpp\&.
+.SS "\fBvoid\fP SoundTouch::setTempo (float newTempo)"
+Sets new tempo control value\&. Normal tempo = 1\&.0, smaller values represent slower tempo, larger faster tempo\&. 
+.PP
+Definition at line 179 of file SoundTouch\&.cpp\&.
+.SS "\fBvoid\fP SoundTouch::setTempoChange (float newTempo)"
+Sets new tempo control value as a difference in percents compared to the original tempo (-50 \&.\&. +100 %) 
+.PP
+Definition at line 189 of file SoundTouch\&.cpp\&.
+.SH "Member Data Documentation"
+.PP 
+.SS "\fBuint\fP soundtouch::SoundTouch::channels\fC [protected]\fP"
+
+.PP
+Number of channels\&. 
+.PP
+Definition at line 171 of file SoundTouch\&.h\&.
+.SS "float soundtouch::SoundTouch::rate\fC [protected]\fP"
+
+.PP
+Effective 'rate' value calculated from 'virtualRate', 'virtualTempo' and 'virtualPitch'\&. 
+.PP
+Definition at line 174 of file SoundTouch\&.h\&.
+.SS "float soundtouch::SoundTouch::tempo\fC [protected]\fP"
+
+.PP
+Effective 'tempo' value calculated from 'virtualRate', 'virtualTempo' and 'virtualPitch'\&. 
+.PP
+Definition at line 177 of file SoundTouch\&.h\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Audacity from the source code\&.
